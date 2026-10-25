@@ -1,0 +1,10 @@
+== /srv/opentallas-scratch2/claude/path-qc-nk/diag/r5d_orig: 2066 FF hold-violating endpoints, wns -316.66
+  IN->REG                                       n= 1299 wns= -316.66
+  REG->CORE:romleaf/rst@ck                      n=    2 wns=  -94.64
+  REG->CORE:romleaf/rst@ck_t2                   n=    1 wns=  -78.60
+  R2R_XTAP                                      n=  541 wns=  -56.23
+  REG->CORE:romleaf/data@ck                     n=    3 wns=  -27.73
+  R2R_SAMETAP                                   n=   95 wns=  -23.07
+  REG->CORE:node/data@ck_t28                    n=  125 wns=  -12.95
+  top R2R (launch tap, capture tap): [(('ck_t39', 'ck_t24'), 185), (('ck_t23', 'ck_t24'), 50), (('ck_t25', 'ck_t40'), 39), (('ck_t17', 'ck_t19'), 36), (('ck_t24', 'ck_t24'), 35), (('ck_t33', 'ck_t40'), 35), (('ck_t33', 'ck_t41'), 32), (('ck_t32', 'ck_t4'), 24)]
+  IN-> capture taps: [('ck_t28', 905), ('ck_t21', 271), ('ck_t35', 123)]

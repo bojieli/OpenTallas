@@ -384,7 +384,8 @@ def kit_budget(gen_phys, P=None):
     given), the hold padding rule."""
     sh = gen_phys.ft_hop_in_share(P) if P is not None else gen_phys.FT_HOP_IN_SHARE
     return dict(io=float(gen_phys.IO_BUDGET), ft_in_share=float(sh),
-                hold_out_min_ps=float(gen_phys.HOLD_OUT_MIN_PS))
+                hold_out_min_ps=float(gen_phys.hold_out_min_ps(P) if P is not None else gen_phys.HOLD_OUT_MIN_PS),
+                seam_hold_ps=float(gen_phys.seam_hold(P)["seam_ps"]) if P is not None else None)
 
 
 def standin(seam_cls, P, m, kb):
@@ -413,7 +414,8 @@ def standin(seam_cls, P, m, kb):
     else:
         setup = (T - POLICY["unc_setup_ps"] - skew - ss["clk_q_max_ps"] - wire_ps - ss["setup_ps"])
         basis = "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)"
-    hold = tol - kb["hold_out_min_ps"]                            # O_min - I_min = 0 - (-tol)
+    # -O_min - I_min: legacy 0 - (-tol); CLOCK-RESET IO-HOLD seam_hold: sender + receiver = seam_ps
+    hold = kb["seam_hold_ps"] if kb.get("seam_hold_ps") is not None else tol - kb["hold_out_min_ps"]
     return dict(cls=seam_cls, basis=basis, setup_policy_ps=round(setup, 1), hold_policy_ps=round(hold, 1),
                 margin_setup_ps=round(m_setup, 1), margin_hold_ps=round(m_hold, 1),
                 setup_ps=round(setup - m_setup, 1), hold_ps=round(hold - m_hold, 1))

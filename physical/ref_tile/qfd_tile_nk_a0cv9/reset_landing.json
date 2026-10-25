@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_tile_nk_a0c",
+ "enable": true,
+ "stages": 4,
+ "clock": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
+ "reset_release_cycles": 4,
+ "distributed_chain": true,
+ "first_copies": {
+  "rst_n": 1
+ },
+ "copies": {
+  "rst_n": 32
+ }
+}

@@ -9,10 +9,13 @@ def scan(P,tn):
  if not slots:return dict(slots=0,over_reach_bits=0,st_in_core=0,max_hop_um=0,failures=[])
  by=defaultdict(dict)
  for bus,bit,layer,x,y,f in gen_phys.type_pins(P,tn):by[bus][bit]=(x,y,f)
- blocks=list(g2.probe_blockages(t));covered={c.get('inst') for c in blocks};blocks += [c for c in t.get('hard_cores',[]) if c.get('inst') not in covered and 'origin_um' in c and 'outline_um' in c]
- rect=[]
- for c in blocks:
-  x,y=c['origin_um'];w,h=c['outline_um'];rect.append((x+1,y+1,x+w-1,y+h-1))
+ boxes=S.placed_macro_boxes(t)
+ # Preserve legacy conservative logical-leaf blockages, with authoritative
+ # physical contents/core boxes (including track offsets) taking precedence.
+ for c in g2.probe_blockages(t):
+  if c['inst'] not in boxes:
+   x,y=c['origin_um'];w,h=c['outline_um'];boxes[c['inst']]=(x,y,x+w,y+h)
+ rect=[(x0+1,y0+1,x1-1,y1-1) for x0,y0,x1,y1 in boxes.values()]
  def inset(p):
   x,y,f=p;return {'E':(x-1,y),'W':(x+1,y),'N':(x,y-1),'S':(x,y+1)}[f]
  out=[];worst=0;allover=0;allinside=0

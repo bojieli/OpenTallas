@@ -1,0 +1,8 @@
+n	worst_ps	class (btab_s7 5_1_grt pre-hold FF, reg->reg/macro)
+1	-4.98	ptw_data -> u_twpd/q$_DFF_P_/D
+2	-5.63	g_btb.g_r.u_rce/q -> g_btb.u_m/r_ce_in
+20	-7.71	g_btb.g_r.u_ra/q -> g_btb.u_m/r_addr_in
+2	-8.53	g_btb.g_r.u_we/q -> g_btb.u_m/w_ce_in
+12	-13.80	g_btb.g_r.u_wa/q -> g_btb.u_m/w_addr_in
+408	-17.56	g_btb.g_r.u_wd/q -> g_btb.u_m/wd_in
+121	-10.44	u_twpd/q -> g_btb.g_r.u_wd/q$_DFF_P_/D

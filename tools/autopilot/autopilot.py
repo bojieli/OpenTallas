@@ -83,11 +83,12 @@ MAX_NOTRUN = 3                                          # 'NOT RUN' (never admit
 KIT_RE = re.compile(r"^([A-Za-z0-9_.-]+):(/srv/opentallas-scratch2?/claude/[A-Za-z0-9_./+=-]+)$")
 SRC_RE = re.compile(r"^[A-Za-z0-9_./-]+@[0-9a-f]{7,40}$")
 GEOM_OK = ("PASS", "PASS-COND")
-QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode"]
+QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode", "canary_fix"]
 TSV_HEAD = {
     "signed.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\tmirror\ttt_wns_ps\tff_wns_ps\tlane",
     "review.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tpng\tpaths\tlane",
     "structural.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tlane",
+    "geom_alerts.tsv": "time\tid\tdie\ttype\tsrc\tkit\tstatus\tunit\tgeom_was\tverdict\tlane",
 }
 DRY = False
 
@@ -168,17 +169,52 @@ def geom_tag(ref):
     return LG.tag_of(m.group(1) if m else (ref or ""))
 
 
+def _kit_ident(r):
+    return (r["type"], r["kit"], r["src"].split("@")[-1], r["id"])
+
+
+def geom_groups(rows):
+    """{GEOM tag: [(type, kit, src sha, row id), ...]} over the valid queued rows: a verdict applies to a row only when
+    the reply names its type / kit dir / row id, or a sha / __suffix no other row of the tag shares (2026-10-25
+    btab_s7 + prog_s7 share PATH-QC-SRAMIF-S7 and @90bf56dfa)"""
+    out = {}
+    for r in rows.values():
+        if r["error"] or not r["geom_ref"]:
+            continue
+        tag = geom_tag(r["geom_ref"])
+        if tag:
+            out.setdefault(tag, []).append(_kit_ident(r))
+    return out
+
+
 def resolve_geom(rows, geom_text):
     """GEOM PASS -> submit within one tick: a row queued before its verdict (geom REQ/WAIT, geom_ref = the GEOM REQ
-    tag) takes the verdict from lanes/GEOM-REVIEW.md once a REPLY/VERDICT of that tag names the kit"""
+    tag) takes the verdict from lanes/GEOM-REVIEW.md once a REPLY/VERDICT of that tag names the kit (by type, kit dir
+    basename or row id; the shared branch sha alone never names one of several rows under the tag -> AMBIGUOUS-GEOM).
+    Re-resolved EVERY tick and the LATEST verdict of that tag naming the kit wins (LG.geom_verdicts keeps the newest
+    reply after the newest REQ), so a later FAIL demotes an earlier PASS-COND (2026-10-25: R5 9a237c656129 got a
+    plan-only PASS-COND 09:59, post-CTS FAIL 10:06).  A row queued as PASS/PASS-COND by hand with a tagged geom_ref is
+    checked too, but only ever DEMOTED (latest verdict FAIL), never changed by a PASS.  admit_new never demotes a job
+    that is already submitted: it records a geom_alerts.tsv row + a LOOP-GAPS line for the coordinator instead."""
+    groups = geom_groups(rows)
     for r in rows.values():
-        if r["error"] or r["geom"].upper() in GEOM_OK or not r["geom_ref"]:
+        if r["error"] or not r["geom_ref"]:
             continue
-        v = LG.geom_verdicts(geom_text, geom_tag(r["geom_ref"]), r["type"], r["src"].split("@")[-1])
-        if v:
-            r["geom_auto"] = f"{v[0]} {time.strftime('%Y-%m-%d %H:%M', time.localtime(v[1]))}: {v[2].strip()[:200]}"
-            r["geom"] = v[0]
-            r["geom_ref"] = f"GEOM-REVIEW [{geom_tag(r['geom_ref'])}] {time.strftime('%m-%d %H:%M', time.localtime(v[1]))}"
+        tag = geom_tag(r["geom_ref"])
+        if not tag:
+            continue
+        v = LG.geom_verdicts(geom_text, tag, r["type"], _kit_ident(r)[2], kit=r["kit"], rid=r["id"],
+                             others=[g for g in groups.get(tag, []) if g[3] != r["id"]])
+        if not v:
+            continue
+        queued_ok = r["geom"].upper() in GEOM_OK
+        if queued_ok and v[0] in GEOM_OK:
+            continue                                   # a hand-entered PASS stays exactly as the lane wrote it
+        r["geom_auto"] = f"{v[0]} {time.strftime('%Y-%m-%d %H:%M', time.localtime(v[1]))}: {v[2].strip()[:200]}"
+        if queued_ok:
+            r["geom_queued"] = r["geom"]
+        r["geom"] = v[0]
+        r["geom_ref"] = f"GEOM-REVIEW [{tag}] {time.strftime('%m-%d %H:%M', time.localtime(v[1]))}"
 
 
 def parse_queue(text):
@@ -287,7 +323,8 @@ out["config"] = os.path.isfile(os.path.join(K, "config.mk"))
 out["has_run"] = os.path.isdir(os.path.join(K, "run"))
 out["signoff_dirs"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(K, "signoff*")) if os.path.isdir(p))
 B = os.path.join(K, "run", "results", "asap7", "*", "base")
-out["routed"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(B, "5_*.odb")) + glob.glob(os.path.join(B, "6_*.odb")))
+out["routed"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(B, "5_*.odb")) + glob.glob(os.path.join(B, "6_*.odb"))
+                       if not os.path.basename(p).startswith("5_1_grt"))
 out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS") if os.path.exists(os.path.join(K, f))]
 lm = [os.path.getmtime(p) for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*")) +
       glob.glob(os.path.join(K, "*.log"))]
@@ -650,11 +687,41 @@ def submit(st, j, attempt_note=""):
             f"{attempt_note} (src {j['src']}, geom {j['geom']} {j['geom_ref']})")
 
 
+def geom_fail_after_submit(st, j, r):
+    """a GEOM verdict that is no longer PASS for a job already submitted / running / finished: never demoted or
+    cancelled here (owner: the autopilot does not stop runs on its own); warn once per verdict in log.txt, add a
+    geom_alerts.tsv row (rsynced to rtx-pro) and keep a GEOM-FAIL-AFTER-SUBMIT line in LOOP-GAPS while it runs"""
+    if r["error"] or r["mode"] == "adopt" or "FAIL" not in r["geom"].upper():
+        return                                         # only a FAIL verdict (a new REQ is a re-review, not a FAIL)
+    if not (j.get("geom") or "").upper() in GEOM_OK:
+        return
+    key = r.get("geom_auto") or f"line {r['line']} geom {r['geom']}"
+    if j.get("geom_fail_alert") == key:
+        return
+    j["geom_fail_alert"] = key
+    j["geom_fail_alert_t"] = time.time()
+    log(f"WARN GEOM-FAIL-AFTER-SUBMIT {j['id']} {r['die']}/{r['type']} status {j.get('status')} unit "
+        f"{j.get('unit', '-')}: submitted on GEOM {j.get('geom')} ({j.get('geom_ref')}), now {r['geom']} -- NOT demoted "
+        f"or cancelled by the autopilot; COORD/owner decide (cancel: systemctl --user stop {j.get('unit', '<unit>')}) "
+        f"-- {key[:200]}")
+    tsv_append("geom_alerts.tsv", j["id"], [r["die"], r["type"], r["src"], r["kit"], j.get("status"),
+                                            j.get("unit", ""), f"{j.get('geom')} {j.get('geom_ref')}", key[:300],
+                                            r["lane"]])
+    save_state(st)
+
+
+def canary_wave_gate(row):
+    import canary_gate
+    return canary_gate.assess(row, os.environ.get("AP_CANARY_ROOT", "/srv/opentallas-scratch2/claude/flow-canary/runs"),
+                              HOME / "OpenTallas", sh)
+
+
 def admit_new(st, rows):
     submitted = 0
     for rid, r in sorted(rows.items(), key=lambda kv: kv[1]["line"]):
         j = st["jobs"].get(rid)
-        if j and j.get("status") not in (None, "WAIT-GEOM", "REJECTED"):
+        if j and j.get("status") not in (None, "WAIT-GEOM", "WAIT-CANARY", "REJECTED"):
+            geom_fail_after_submit(st, j, r)
             continue                                   # already handled; the queue never restarts a job
         if j and j.get("status") == "REJECTED" and j.get("queue_line") == r["line"]:
             continue                                   # re-judged only when the row is re-appended
@@ -669,13 +736,31 @@ def admit_new(st, rows):
                 j = st["jobs"][rid] = dict(r)
                 log(f"WAIT {rid} {r['die']}/{r['type']}: GEOM '{r['geom']}' (needs PASS + geom_ref)")
                 set_status(st, j, "WAIT-GEOM", r["geom"])
-            if r.get("geom_auto") and j.get("geom_auto") != r["geom_auto"]:
+            was = j.get("geom") or ""
+            if was.upper() in GEOM_OK or j.get("status") != "WAIT-GEOM":
+                why = r.get("geom_auto") or f"queue line {r['line']}: geom '{r['geom']}' geom_ref '{r['geom_ref']}'"
+                log(f"DEMOTE {rid} {r['die']}/{r['type']}: GEOM {was or '?'} -> {r['geom']} ({j.get('status')} -> "
+                    f"WAIT-GEOM; not submitted) -- {why}")
+                j.update(geom=r["geom"], geom_ref=r["geom_ref"], queue_line=r["line"])
+                j["geom_auto"] = r.get("geom_auto", "")
+                set_status(st, j, "WAIT-GEOM", f"demoted: {why}")
+            elif r.get("geom_auto") and j.get("geom_auto") != r["geom_auto"]:
                 j["geom_auto"] = r["geom_auto"]
+                j.update(geom=r["geom"], geom_ref=r["geom_ref"])
                 log(f"WAIT {rid} {r['die']}/{r['type']}: GEOM verdict {r['geom_auto']} -- not submitted")
                 set_status(st, j, "WAIT-GEOM", r["geom_auto"])
             continue
         if r.get("geom_auto") and (not j or j.get("geom_auto") != r["geom_auto"]):
             log(f"GEOM {rid} {r['die']}/{r['type']}: verdict from lanes/GEOM-REVIEW.md -> {r['geom_auto']}")
+        allowed, canary_why = canary_wave_gate(r)
+        if not allowed:
+            j = st["jobs"].setdefault(rid, dict(r))
+            j.update(r)
+            set_status(st, j, "WAIT-CANARY", canary_why)
+            log(f"HOLD {rid} {r['die']}/{r['type']}: {canary_why}")
+            continue
+        if r.get("canary_fix"):
+            log(f"CORRECTIVE {rid} {r['die']}/{r['type']}: {canary_why}")
         if submitted >= MAX_SUBMIT_PER_TICK:
             break
         p = rpy(r["host"], PROBE_KIT, {"kit": r["path"], "runner": r["runner"]}, timeout=120)
@@ -920,31 +1005,41 @@ def record_failure(st, j):
         log(f"KEEP {j['id']}: flow exit 0 without signoff.json (sign-off tool problem?) -- data kept for a GOAL=post re-sign")
         set_status(st, j, "DONE-" + cls, j.get("reasons", "")[:200])
         return
-    # owner rule: failed job data deleted at once (logs, reports, signoff records and the review bundle stay)
-    d = ({"errors": ["live hub client owns kit or its staging ancestor"]} if hub_procs(j["path"]) else
-         rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800))
-    if d.get("error") or d.get("errors"):
-        log(f"DELETE {j['id']} on {host}: {d.get('error') or d.get('errors')}; retry next tick")
-        j["delete_pending"] = True
-    else:
-        j["delete_pending"] = False
-        log(f"DELETED {j['id']} bulk data on {host}: {', '.join(d.get('deleted') or ['nothing left'])}")
+    # Keep the physical checkpoint until the owning lane has diagnosed the failure.
+    # A signoff/log summary cannot replace the ODB/netlist for structural path analysis.
+    j["delete_pending"] = False
+    log(f"KEEP {j['id']} failed physical checkpoints for owner diagnosis; no automatic bulk deletion")
     set_status(st, j, "DONE-" + cls, j.get("reasons", "")[:200])
 
 
+def failure_resolutions():
+    """Owner releases bulk data only after diagnosis/evidence consumption: id TAB DELETE TAB evidence."""
+    resolved = {}
+    for line in read_coord("autopilot/failure-resolved.tsv").splitlines():
+        if line.lstrip().startswith("#"):
+            continue
+        f = line.split("\t", 2)
+        if len(f) == 3 and f[1].strip() == "DELETE" and f[2].strip():
+            resolved[f[0].strip()] = f[2].strip()
+    return resolved
+
+
 def retry_pending(st):
+    released = failure_resolutions()
     for j in list(st["jobs"].values()):
         if j.get("status") == "SIGNED" and not DRY:
             archive(st, j)
-        elif str(j.get("status", "")).startswith("DONE-") and j.get("delete_pending"):
-            host = ssh_host(j.get("probe") or j["host"])
-            if hub_procs(j["path"]):
+        elif str(j.get("status", "")).startswith("DONE-") and not j.get("data_deleted"):
+            if j["id"] not in released or hub_procs(j["path"]):
                 continue
+            host = ssh_host(j.get("probe") or j["host"])
             d = rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800)
             if not (d.get("error") or d.get("errors")):
-                j["delete_pending"] = False
-                log(f"DELETED {j['id']} bulk data on {host}: {', '.join(d.get('deleted') or ['nothing left'])}")
+                j.update(delete_pending=False, data_deleted=not DRY, diagnostic_evidence=released[j["id"]])
+                log(f"DELETED {j['id']} diagnosed failure bulk data on {host}: "
+                    f"{released[j['id']]}: {', '.join(d.get('deleted') or ['nothing left'])}")
                 save_state(st)
+
 
 
 # ------------------------------------------------------------------------------------------------ commands
@@ -1013,6 +1108,13 @@ def write_loop_gaps(st, rows, geom_text):
         lane_texts[ln] = t if t else None
     gaps += LG.gaps_review(trows, lane_texts, geom_text, now)
     gaps += LG.gaps_ready(read_coord("lanes/COORD-REVIEW-QUEUE.md"), now)
+    gaps += LG.gaps_geom_ambiguous(geom_text, geom_groups(rows), now)
+    for j in jobs:                                     # oldest-first render; keeps the line while the run is live
+        if j.get("geom_fail_alert") and j.get("status") == "RUNNING":
+            gaps.append((j.get("geom_fail_alert_t") or now,
+                         f"GEOM-FAIL-AFTER-SUBMIT {j['id']} {j.get('die')}/{j.get('type')} unit {j.get('unit', '-')}: "
+                         f"submitted on {j.get('geom')}, later verdict {j['geom_fail_alert'][:160]} -- COORD: cancel or "
+                         f"keep (autopilot never cancels)"))
     waiting = [r for r in rows.values() if not r["error"] and
                (st["jobs"].get(r["id"]) or {}).get("status") in (None, "WAIT-GEOM")]
     rc, out, _ = sh([OT_RUN, "--status"], timeout=120)
@@ -1028,13 +1130,39 @@ def write_loop_gaps(st, rows, geom_text):
     except Exception as e:
         log(f"OWNERS failed: {type(e).__name__}: {e}")
         head = [f"# OWNERSHIP unavailable this tick: {type(e).__name__}: {str(e)[:200]}"]
-    text = LG.render(gaps, now, head)
+    text = hub_sync_banner(now) + LG.render(gaps, now, head)
     if DRY:
         print(text, end="")
         return
     tmp = AP_DIR / f".LOOP-GAPS.txt.{os.getpid()}"
     tmp.write_text(text)
     os.replace(tmp, AP_DIR / "LOOP-GAPS.txt")
+
+
+HUB_SYNC_STALE_S = 45 * 60      # hub_git_sync.sh runs before every tick (10 min); 45 min without a success is a failure
+
+
+def hub_sync_banner(now):
+    """first line of LOOP-GAPS.txt while the hub checkout sync fails (10-25: the hub sat at 08:29 for 86 min, silently):
+    autopilot/HUB-SYNC-FAILED (written by hub_git_sync.sh) or a HUB-SYNC-OK older than HUB_SYNC_STALE_S"""
+    try:
+        f = (AP_DIR / "HUB-SYNC-FAILED").read_text().splitlines()
+    except OSError:
+        f = None
+    if f is not None:
+        since = f[0][6:].strip() if f and f[0].startswith("since ") else "?"
+        why = " ".join(l.strip() for l in f[1:] if l.strip())
+        return f"HUB-SYNC-FAILED since {since}: {why or 'see hub_git_sync.sh output'}\n"
+    ok = AP_DIR / "HUB-SYNC-OK"
+    try:
+        age = now - ok.stat().st_mtime
+        last = ok.read_text().split("\n", 1)[0].strip()
+    except OSError:
+        return ""                                      # never synced by hub_git_sync.sh (tests, manual runs)
+    if age > HUB_SYNC_STALE_S:
+        return (f"HUB-SYNC-FAILED since {last.rsplit(' ', 1)[0] if ' ' in last else last}: "
+                f"no successful hub checkout sync for {age / 60:.0f} min (hub_git_sync.sh not running?)\n")
+    return ""
 
 
 def write_file(name, text):

@@ -203,7 +203,29 @@ def test_leaf_affinity_state_is_global_when_sourced_from_a_proc():
     t = (HERE / "leaf_affinity.tcl").read_text()
     first_set = t.index("set la_um")
     import re
-    m = re.search(r"^global (la_\w+ ?){3}$", t, re.M)
-    assert m and set(m.group(0).split()[1:]) == {"la_ck", "la_d", "la_par"}
+    m = re.search(r"^global (la_\w+ ?)+$", t, re.M)
+    assert m and set(m.group(0).split()[1:]) == {"la_ck", "la_d", "la_par", "la_clock"}
     decl = m.start()
     assert decl < first_set
+
+
+def _code_lines(text):
+    return [ln.split("#", 1)[0] for ln in text.splitlines() if not ln.lstrip().startswith("#")]
+
+
+def test_postcts_gate_propagates_clocks_before_estimating_parasitics():
+    # FLOW 10-25 (GEOM-REVIEW-2 09:41): rsz estimate_parasitics skips nets driven from an ideal clock, so estimating
+    # before set_propagated_clock left the clock tree without wire RC (pin-reg CK ve_m 193 vs 316 ps TT).
+    lines = _code_lines((HERE / "postcts_gate.tcl").read_text())
+    i_prop = next(i for i, ln in enumerate(lines) if "set_propagated_clock" in ln)
+    i_est = next(i for i, ln in enumerate(lines) if "estimate_parasitics" in ln)
+    assert i_prop < i_est
+
+
+@pytest.mark.parametrize("name", ["postcts_gate.tcl", "hold_gate.tcl", "repair_ff.tcl", "rc_calib_probe.tcl"])
+def test_top_level_gate_scripts_propagate_before_first_estimate(name):
+    # every stand-alone measuring script (read_db, no ORFS session) must propagate clocks before its first estimate
+    lines = _code_lines((HERE / name).read_text())
+    est = [i for i, ln in enumerate(lines) if "estimate_parasitics" in ln]
+    prop = [i for i, ln in enumerate(lines) if "set_propagated_clock" in ln]
+    assert est and prop and min(prop) < min(est), name

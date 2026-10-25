@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS fail-closed source gate",
+  "tests": "5 focused Tcl fixtures PASS: wrong family and connected/no-sink cases reject in balance and report-only modes, actual ck family with SDC clk measures250ps fixture",
+  "actual_interface_probe": {
+    "host": "epyc2",
+    "job": "oth-ubuntu-2570950-1792939434",
+    "input": "/srv/opentallas-scratch2/claude/codex-proto-0719/flow/rr_h0_s1/run/results/asap7/kr_dsdv_eng_rr_h0_c/base/4_cts.odb",
+    "real_clock_ports": [
+      "ck"
+    ],
+    "requested_family": "clk",
+    "old_output": "tap mean insertion1000000000..0ps; OT_TAP_CHECK OK",
+    "new_output": "OT_TAP_CHECK FAIL: no active measured taps; available clock ports {ck}",
+    "exit": 0,
+    "scope": "real OpenDB port-family census only; timing helpers intentionally inert, no STA or netlist mutation"
+  },
+  "remedy": "core recipe OT_TAP_PORT=ck and OT_TAP_CLOCK=clk; active real timing check still required"
+}

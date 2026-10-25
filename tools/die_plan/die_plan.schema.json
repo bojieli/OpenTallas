@@ -502,6 +502,35 @@
           },
           "minItems": 1
          },
+         "phy_macro_um": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+         },
+         "core_strip_um": {
+          "type": "array",
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          }
+         },
+         "core_edge_bumps": {
+          "enum": [
+           "relocate",
+           "drop"
+          ]
+         },
+         "phy_area_target_mm2": {
+          "type": "number",
+          "exclusiveMinimum": 0
+         },
          "note": {
           "type": "string"
          }
@@ -764,6 +793,20 @@
        "insertion_basis": {
         "type": "string"
        },
+       "out_hold_guarantee_ps": {
+        "type": "number"
+       },
+       "keepouts_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        }
+       },
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0
@@ -948,6 +991,211 @@
          "minItems": 2,
          "maxItems": 2
         },
+        "straps": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "required": [
+           "port",
+           "width",
+           "value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "port": {
+            "enum": [
+             "strap_corner",
+             "strap_hid",
+             "strap_bsel"
+            ]
+           },
+           "width": {
+            "const": 2
+           },
+           "value": {
+            "type": [
+             "integer",
+             "string"
+            ],
+            "minimum": 0,
+            "maximum": 3,
+            "pattern": "^2'[bB][01]{2}$"
+           },
+           "note": {
+            "type": "string"
+           }
+          }
+         }
+        },
+        "parent_id_straps": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "tile_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "tile_tid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "map_lane_j": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "lane_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "strap_corner": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_hid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_bsel": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          }
+         }
+        },
+        "parent_id_leaf": {
+         "type": "string"
+        },
+        "bump_ports": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "required": [
+           "pin",
+           "dir",
+           "width"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "pin": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+           },
+           "dir": {
+            "enum": [
+             "input",
+             "output"
+            ]
+           },
+           "width": {
+            "type": "integer",
+            "minimum": 1
+           },
+           "note": {
+            "type": "string"
+           }
+          }
+         }
+        },
         "orient": {
          "enum": [
           "R0",
@@ -1003,6 +1251,10 @@
         "lib": {
          "type": "string"
         },
+        "obs_max": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
         "note": {
          "type": "string"
         }
@@ -1036,6 +1288,21 @@
        "depth": {
         "type": "integer",
         "minimum": 1
+       },
+       "start_role": {
+        "enum": [
+         "bootstrap",
+         "mission"
+        ]
+       },
+       "core_start_roles": {
+        "type": "object",
+        "additionalProperties": {
+         "enum": [
+          "bootstrap",
+          "mission"
+         ]
+        }
        }
       }
      },
@@ -1064,6 +1331,175 @@
           "rework",
           "new"
          ]
+        },
+        "parent_id_straps": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "tile_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "tile_tid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "map_lane_j": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "lane_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "strap_corner": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_hid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_bsel": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          }
+         }
+        },
+        "parent_id_leaf": {
+         "type": "string"
+        },
+        "bump_ports": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "required": [
+           "pin",
+           "dir",
+           "width"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "pin": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+           },
+           "dir": {
+            "enum": [
+             "input",
+             "output"
+            ]
+           },
+           "width": {
+            "type": "integer",
+            "minimum": 1
+           },
+           "note": {
+            "type": "string"
+           }
+          }
+         }
         },
         "kit": {
          "type": "string"
@@ -1635,6 +2071,33 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "seam_hold": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "sender_ps",
+      "seam_ps"
+     ],
+     "properties": {
+      "sender_ps": {
+       "type": "number",
+       "minimum": 0
+      },
+      "seam_ps": {
+       "type": "number",
+       "minimum": 0
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
+    "io_hold": {
+     "enum": [
+      "legacy",
+      "sender_min"
+     ]
+    },
     "common_latency_ps": {
      "type": "number",
      "exclusiveMinimum": 0
@@ -1782,6 +2245,10 @@
       "none",
       "broadcast"
      ]
+    },
+    "start_port": {
+     "type": "string",
+     "minLength": 1
     },
     "part_depth": {
      "type": "integer",

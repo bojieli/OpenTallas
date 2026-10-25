@@ -32,5 +32,82 @@
    "sl_W5_su_l0",
    "sl_W5_su_l1"
   ]
- }
+ },
+ "unloaded_removed": [
+  {
+   "src": "u_shared",
+   "src_bus": "shared_fault",
+   "dst": "sys_face",
+   "dst_bus": "io_shared_fault",
+   "kind": "ctl",
+   "bits": 1,
+   "census": 2,
+   "pair": [
+    "coll_ucie",
+    "glue"
+   ],
+   "dropped_lanes": [
+    "coll_ucie__shared_fault_io_shared_fault"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  }
+ ],
+ "bind_narrowed": [
+  {
+   "census": 2,
+   "pair": [
+    "coll_core",
+    "coll_s"
+   ],
+   "src": "u_collective",
+   "src_bus": "tx_rec_s1",
+   "dst": "face_s1",
+   "dst_bus": "tx",
+   "template_bits": 549,
+   "bound_bits": 548,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 2,
+   "pair": [
+    "coll_s",
+    "coll_core"
+   ],
+   "src": "face_s1",
+   "src_bus": "rx",
+   "dst": "u_collective",
+   "dst_bus": "rx_rec_s1",
+   "template_bits": 547,
+   "bound_bits": 536,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 2,
+   "pair": [
+    "coll_core",
+    "coll_n"
+   ],
+   "src": "u_collective",
+   "src_bus": "tx_rec_s0",
+   "dst": "face_s0",
+   "dst_bus": "tx",
+   "template_bits": 549,
+   "bound_bits": 548,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 2,
+   "pair": [
+    "coll_n",
+    "coll_core"
+   ],
+   "src": "face_s0",
+   "src_bus": "rx",
+   "dst": "u_collective",
+   "dst_bus": "rx_rec_s0",
+   "template_bits": 547,
+   "bound_bits": 542,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  }
+ ]
 }

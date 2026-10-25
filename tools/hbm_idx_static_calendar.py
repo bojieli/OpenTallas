@@ -42,7 +42,9 @@ def shifts(pin, chain=0):
     return {t: v - base for t, v in cal.items()}, core
 
 
-def compile_program(pins='registered', gap=100, score_chain=0):
+def compile_program(pins='registered', gap=100, score_chain=0, vm_period=1, vm_phase=0):
+    if vm_period not in (1,2) or not 0<=vm_phase<vm_period:
+        raise ValueError('VM period must be1/2 and phase within period')
     pin = PIN_TABLES[pins]
     sh, core = shifts(pin, score_chain)
     events = []          # (historical edge, tile, field values)
@@ -61,11 +63,15 @@ def compile_program(pins='registered', gap=100, score_chain=0):
             for _ in range(n):
                 emit('sel', ps=selector_pass)
 
+    wait(vm_phase)
     emit('vmq', weight=1)
     events.append((0, 'sel', dict(op=1)))                         # clear frame (selector) in the first slot
     wait(16)
+    if vm_period==2:
+        wait((vm_phase-t[0])%2)
     for q in range(128):
         emit('vmq', query=1, index=q)
+        wait(vm_period-1)
     wait(28)
     for h in range(32):
         emit('q', head=1, index=h)
@@ -137,6 +143,8 @@ def compile_program(pins='registered', gap=100, score_chain=0):
     )
     meta = dict(length=length, historical_length=hist_len, pins=pins, pin_table=pin, score_chain=score_chain, calendar_shift=sh,
                 core_shift=core, gap=gap, marks=marks, predicted=pred,
+                vm_period=vm_period,vm_phase=vm_phase,
+                vm_request_instruction_edges=[e+sh[tile] for e,tile,f in events if tile=='vmq' and (f.get('weight') or f.get('query'))],
                 scope='source-compiled schedule for the pin-registered IDX tiles; exact timeline proven by '
                       'rtl/test/hbm_idx_static/run_scheduled.sh (calendar SRAM + parent, full shape)')
     return prog, meta
@@ -149,10 +157,12 @@ def main():
     ap.add_argument('--gap', type=int, default=100)
     ap.add_argument('--score-chain', type=int, default=0,
                     help='IDX-SCORE chained cluster: scorer outputs this many edges later (ot_hbm_idx_score_cluster: 4)')
+    ap.add_argument('--vm-period',type=int,choices=[1,2],default=1,help='native L74 serializer needs request II2')
+    ap.add_argument('--vm-phase',type=int,choices=[0,1],default=0,help='request instruction phase; bind start accounts for actual fixed output age')
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    p, meta = compile_program(a.pins, a.gap, a.score_chain)
+    p, meta = compile_program(a.pins, a.gap, a.score_chain,a.vm_period,a.vm_phase)
     rows = [sum((p[i + j] if i + j < len(p) else 0) << (32 * j) for j in range(8)) for i in range(0, len(p), 8)]
     meta['rows'] = len(rows)
     (out / 'calendar.hex').write_text(''.join(f'{r:064x}\n' for r in rows))

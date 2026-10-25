@@ -1,0 +1,33 @@
+{
+  "verdict": "PASS-COND",
+  "picture": "t8_reset_leaf.png",
+  "vehicle": "S81 slice_station__t8 isolated placed ODB; reset leaf overlay only",
+  "source": "main reset leaf assignment 2c83110df4 + single terminal1ac1b41c91",
+  "findings": [
+    "37 actual placed control sinks use terminal reset launch flops, maximum Manhattan hop327.348um <405um; original bad448um branch is absent.",
+    "Sparse regular placement bands permit local reset branches; no new long cross-partition reset segment. Red launch sites remain inside local standardcell bands, blue consumer positions unchanged.",
+    "Overlay has no detailed PDN or routed extraction, so full kit independent geometry and P&R/signoff remain required."
+  ],
+  "functional": {
+    "added_cycles": 0,
+    "checks_per_mode": 179,
+    "modes": [
+      "plain reset",
+      "explicit START"
+    ],
+    "epoch_and_control_state": "lockstep PASS",
+    "mutants": [
+      "wrong-depth terminal caught",
+      "raw/wrong-gate terminal caught"
+    ]
+  },
+  "actual_odb": {
+    "host": "epyc1",
+    "input": "/srv/opentallas-scratch2/claude/codex-reset-leafs-0553/t8_leaf_repoint.odb",
+    "job": "oth-ubuntu-1936021-1792938320",
+    "exit": 0,
+    "sinks": 37,
+    "max_hop_um": 327.348,
+    "further_reassigned": 0
+  }
+}

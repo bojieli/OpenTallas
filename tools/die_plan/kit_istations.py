@@ -18,7 +18,16 @@ anywhere.  The plan however FIXES where those stages sit (internal_stations[].re
 Cycle effect: +len(regs_um) - (existing pads) register stages on that bus = the plan lane's fixed_cycles; the plan's
 latency table (gen.py latency) carries it.  Report the bind delta when the bound RTL had none (kit RTL then differs
 from the bind by exactly these stages: re-bind on the plan to make it authoritative).
-usage: kit_istations.py PLAN.json TYPE KIT_RTL_DIR     ->  KIT_RTL_DIR/istations.tcl + edited bound module"""
+S81-PLAN R3 (10-25): core<->core entries (conn 'core:<launch pin>|core:<capture>') are no longer skipped.  Each is
+mapped to a link class of the leaf RTL's station chains (CORE_CLASSES: ot_s81sl_leaf CS_* depths, see
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv).  Fail closed when an entry matches no class, when the entries of one class
+(per lane for the h trees) carry unequal stage counts, when a class has no RTL stations (vn_a -> vn_b c_s: vn_b's
+fixed chain timeline), or when the RTL depth of the class (the CS_* override on the bound module's leaf instance, 0 when
+absent) differs from the plan's count.  --apply writes the plan's depths onto the leaf instance first (h trees:
+--h-tree G,GS_IN,GS_OUT, default 4,0,0).  Stage j of a chain is FIRM at the bits-weighted centroid of its entries'
+regs_um[j] (ordered from the RTL launch side; regs_um is reversed where the plan's launch pin is the RTL's capture side).
+usage: kit_istations.py PLAN.json TYPE KIT_RTL_DIR [--apply] [--h-tree G,GSI,GSO]
+       ->  KIT_RTL_DIR/istations.tcl + edited bound module"""
 import json
 import re
 import sys
@@ -37,7 +46,7 @@ proc is_place {pat x y tag} {
   set hit 0
   foreach i [$ff_blk getInsts] {
     set nm [$i getName]
-    if {![string match $pat $nm]} continue
+    if {![string match $pat [string map {\\\\ {}} $nm]]} continue
     if {![string match "*DFF*" [[$i getMaster] getName]]} continue
     set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
     if {$got eq ""} { lappend is_miss $nm; continue }
@@ -129,7 +138,149 @@ proc is_bits {inst bus face W lx ly k n dir tag {offset 0}} {
 """
 
 
+# (class, RTL launch side, regex on 'launch|capture' of the plan entry (inst paths relative to the leaf u_lf), plan
+#  launch is the RTL launch side?) -- first match wins.  Classes: CS_<CLASS>_D on ot_s81sl_leaf.
+_P = r"core:u_lf\."
+CORE_CLASSES = [
+    ("cs", rf"^{_P}u_vn\.u_a\.c_s\|u_lf\.u_vn\.u_b", True),
+    ("hi", rf"^{_P}u_vn\.u_[ab]\.(hq_|hr_)\w+\|u_lf\.u_vp\.g_ln\[\d+\]\.u_l$", True),    # glue -> lane
+    ("ho", rf"^{_P}u_vn\.u_[ab]\.hw_\w+\|u_lf\.u_vp\.g_ln\[\d+\]\.u_l$", False),          # lane -> glue -> vn
+    ("vni", rf"^{_P}u_vn\.u_[ab]\.(n_go|n_pre|wl_\w+|hw_\w+|hr_\w+)\|u_lf\.u_vp\.u_b[01]$", False),
+    ("vno", rf"^{_P}u_vn\.u_[ab]\.hq_\w+\|u_lf\.u_vp\.u_b[01]$", True),
+    ("y", rf"^{_P}u_vn\.u_[ab]\.y\w*\|u_lf\.u_vq\.", True),
+    ("y", rf"^{_P}u_vq\.y\w*\|u_lf\.u_vn\.", False),
+    ("u", rf"^{_P}u_vq\.(u|um)\w*\|u_lf\.u_vs\.", False),
+    ("u", rf"^{_P}u_vs\.(u|um)\w*\|u_lf\.u_vq\.", True),
+    ("sw", rf"^{_P}u_vs\.sw_\w+\|u_lf\.u_vsw\.i_", True),
+    ("swr", rf"^{_P}u_vs\.sw_\w+\|u_lf\.u_vsw\.o_", False),
+    ("sw", rf"^{_P}u_vsw\.i_\w+\|u_lf\.u_vs\.", False),
+    ("swr", rf"^{_P}u_vsw\.o_\w+\|u_lf\.u_vs\.", True),
+    ("ra", rf"^{_P}u_vs\.ra_\w+\|u_lf\.u_rxsf\.", True),
+    ("rar", rf"^{_P}u_vs\.ra_\w+\|u_lf\.u_rxsb\.", False),
+    ("rar", rf"^{_P}u_rxsb\.o_\w+\|u_lf\.u_vs\.", True),
+    ("ve", rf"^{_P}u_vs\.ve_(r|a)\w*\|u_lf\.u_ve\.", True),
+    ("ver", rf"^{_P}u_vs\.ve_\w+\|u_lf\.u_ve\.", False),        # ve_p* / ve_o* / fault: ve -> vs
+    ("ve", rf"^{_P}u_ve\.u_[ms]\.(r|a)_\w+\|u_lf\.u_vs\.", False),
+    ("ver", rf"^{_P}u_ve\.u_[ms]\.\w+\|u_lf\.u_vs\.", True),
+    ("pvs", rf"^{_P}u_vs\.x_q\w+\|u_lf\.u_vp\.u_b[01]$", False),
+    ("vsp", rf"^{_P}u_vs\.x_\w+\|u_lf\.u_vp\.u_b[01]$", True),
+]
+CLASS_PARAM = {c: f"CS_{c.upper()}_D" for c, _, _ in CORE_CLASSES if c != "cs"}
+H_CLASSES = ("hi", "ho")
+LEAF_INST = "u_lf"
+
+
+def core_class(e):
+    key = f"{e.get('launch', e['conn'].split('|')[0])}|{e.get('capture', e['conn'].split('|')[-1].replace('core:', ''))}"
+    for c, rx, fwd in CORE_CLASSES:
+        if re.match(rx, key):
+            lane = re.search(r"g_ln\[(\d+)\]", key)
+            return c, fwd, int(lane.group(1)) if lane and c in H_CLASSES else None
+    return None, None, None
+
+
+def _glob(path):
+    """inst path -> Tcl glob: '.' or '/' separators, literal brackets (is_place strips name escapes)."""
+    return "*" + path.replace(".", "?").replace("[", "\\[").replace("]", "\\]") + "[./]*"
+
+
+def leaf_params(txt):
+    m = re.search(rf"\bot_s81sl_leaf\b\s*(#\((?P<p>(?:[^()]|\([^()]*\))*)\))?\s*{LEAF_INST}\s*\(", txt)
+    if not m:
+        raise SystemExit(f"kit_istations: core<->core stations planned but the bound module has no ot_s81sl_leaf {LEAF_INST}")
+    return m, {k: int(v) for k, v in re.findall(r"\.(CS_\w+)\s*\(\s*(\d+)\s*\)", m.group("p") or "")}
+
+
+def core_stations(t, txt, apply, htree, tcl, rep):
+    """Map core<->core entries onto the leaf's station chains; returns the (maybe re-parameterised) bound text."""
+    groups = {}
+    for e in t.get("internal_stations", []):
+        if e.get("conn", "").startswith("bus:"):
+            continue
+        c, fwd, lane = core_class(e)
+        if c is None:
+            raise SystemExit(f"kit_istations: core<->core entry {e['conn']} matches no leaf station class (fail closed)")
+        regs = [list(r) for r in e["regs_um"]]
+        if not fwd:
+            regs.reverse()
+        groups.setdefault((c, lane), []).append((regs, int(e.get("bits", 1)), e["conn"]))
+    if not groups:
+        return txt
+    depth = {}
+    for (c, lane), es in groups.items():
+        ns = sorted({len(r) for r, _, _ in es})
+        if len(ns) != 1:
+            raise SystemExit(f"kit_istations: class {c}{'' if lane is None else f' lane {lane}'}: unequal planned stage "
+                             f"counts {ns} within one interface (fail closed)")
+        if c == "cs" and ns[0]:
+            raise SystemExit("kit_istations: vn_a -> vn_b c_s stations planned, but vn_b's chain adders read c_s on a "
+                             "fixed edge (hard cores): no RTL realises them; re-plan vn_a / vn_b within reach")
+        if c in depth and depth[c] != ns[0]:
+            raise SystemExit(f"kit_istations: class {c}: lanes carry unequal stage counts {depth[c]} / {ns[0]} "
+                             "(every lane must see one depth: static schedule)")
+        depth[c] = ns[0]
+    if "hi" in depth or "ho" in depth:
+        lanes = {lane for (c, lane) in groups if c in H_CLASSES}
+        for c in H_CLASSES:
+            if c in depth and {l for (cc, l) in groups if cc == c} != lanes:
+                raise SystemExit(f"kit_istations: class {c}: planned on a subset of the lanes (fail closed)")
+    m, have = leaf_params(txt)
+    want = {CLASS_PARAM[c]: d for c, d in depth.items() if c != "cs"}
+    G, GSI, GSO = htree
+    if apply:
+        want.update(CS_H_G=G, CS_HI_GS=min(GSI, want.get("CS_HI_D", 0)), CS_HO_GS=min(GSO, want.get("CS_HO_D", 0)))
+        merged = dict(have)
+        merged.update(want)
+        ps = ", ".join(f".{k}({v})" for k, v in sorted(merged.items()))
+        rest = [p.strip() for p in re.split(r",(?![^()]*\))", m.group("p") or "") if p.strip() and not p.strip().startswith(".CS_")]
+        newp = ", ".join(rest + [ps])
+        txt = txt[:m.start()] + f"ot_s81sl_leaf #({newp}) {LEAF_INST} (" + txt[m.end():]
+        m, have = leaf_params(txt)
+    for k, v in sorted(want.items()):
+        if k.endswith("_D") and have.get(k, 0) != v:
+            raise SystemExit(f"kit_istations: leaf RTL {k} = {have.get(k, 0)} but the plan stations {v} stage(s) "
+                             "(fail closed; --apply sets the plan's depths)")
+    G, GSI, GSO = have.get("CS_H_G", 4), have.get("CS_HI_GS", 0), have.get("CS_HO_GS", 0)
+
+    def centroid(es, j):
+        w = sum(b for _, b, _ in es)
+        return (round(sum(r[j][0] * b for r, b, _ in es) / w, 3), round(sum(r[j][1] * b for r, b, _ in es) / w, 3))
+
+    sites = []
+    for c, d in sorted(depth.items()):
+        if c in H_CLASSES:
+            gs = GSI if c == "hi" else GSO
+            for j in range(d):
+                shared = j < gs if c == "hi" else j >= d - gs
+                if shared:
+                    for g in range(16 // G):
+                        es = [x for l in range(G * g, G * g + G) for x in groups.get((c, l), [])]
+                        jj = j if c == "hi" else j - (d - gs)
+                        sites.append((f"{LEAF_INST}.u_vp.g_{c}g[{g}].u_cst.gd.s[{jj}].u", centroid(es, j), c))
+                else:
+                    jj = j - gs if c == "hi" else j
+                    for l in sorted(l for (cc, l) in groups if cc == c):
+                        sites.append((f"{LEAF_INST}.u_vp.g_ln[{l}].u_cst_{c}.gd.s[{jj}].u", centroid(groups[(c, l)], j), c))
+        else:
+            for j in range(d):
+                sites.append((f"{LEAF_INST}.u_cst_{c}.gd.s[{j}].u", centroid(groups[(c, None)], j), c))
+    for nm, (x, y), c in sites:
+        tcl.append(f"is_place {{{_glob(nm)}}} {x} {y} cst:{c}")
+    rep.append(dict(core_classes={c: dict(param=CLASS_PARAM.get(c), stages=d,
+                                          entries=sum(len(v) for (cc, _), v in groups.items() if cc == c))
+                                  for c, d in sorted(depth.items())},
+                    h_tree=dict(G=G, GS_IN=GSI, GS_OUT=GSO), placed_stages=len(sites)))
+    return txt
+
+
 def main(argv):
+    apply = "--apply" in argv
+    argv = [a for a in argv if a != "--apply"]
+    htree = (4, 0, 0)
+    if "--h-tree" in argv:
+        i = argv.index("--h-tree")
+        htree = tuple(int(x) for x in argv[i + 1].split(","))
+        del argv[i:i + 2]
     if len(argv) != 3:
         raise SystemExit(__doc__)
     plan, tn, kd = argv[0], argv[1], Path(argv[2]).resolve()
@@ -145,8 +296,7 @@ def main(argv):
     for e in t.get("internal_stations", []):
         conn = e.get("conn", "")
         if not conn.startswith("bus:"):
-            rep.append(dict(conn=conn, skipped="not a bus connection (core<->core stations: core RTL owns them)"))
-            continue
+            continue                       # core<->core: core_stations() below
         bus = conn[4:]
         n = gen_rtl.sv_id(bus)
         regs = e["regs_um"]
@@ -223,6 +373,7 @@ def main(argv):
             for (x, y), nm in zip(regs, names):
                 tcl.append(f"is_place {{*{nm}[./]*}} {x} {y} ist:{bus}")
         rep.append(dict(conn=conn, planned=len(regs), bound_pads=have, inserted=need, stations=names))
+    txt = core_stations(t, txt, apply, htree, tcl, rep)
     # plan cells with a FIRM site (no hard view): their flops at the site
     for c in t.get("contents", []):
         if "origin_um" in c and not c.get("lef"):

@@ -1,0 +1,4 @@
+IDX_VM_QUERY_N12 MUT3 rq_rly1 rr_rly2 commits514 reads514 blocks128 quant31 errors0 fault1 firstblock35 lastblock289 firstquant315
+L74_IDX_PERIOD period=2 req_phase=1 rr_phase=1 phase_errors=0
+FATAL: rtl/test/hbm_idx_static/tb_vm_query_n12.sv:101: n+12 operand reader query/weight/quant/latency mismatch
+       Time: 4280000  Scope: tb_vm_query_n12

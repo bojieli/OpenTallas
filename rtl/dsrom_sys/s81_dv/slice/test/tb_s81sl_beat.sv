@@ -14,7 +14,12 @@
 // RTL mutants: +define+OT_S81SL_VP_MUT_POSTLAST (vp's old POST row order: comb a0..a0+3, post a0+4) and
 // +define+OT_S81SL_VP_MUT_NORMIMM (NORMR ignores the row) must FAIL.
 module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37, parameter integer VQ_XMEM = 0,
-                       parameter integer NORMR = 1);
+                       parameter integer NORMR = 1,
+                       // S81-PLAN R3 (10-25): the leaf's core<->core station depths (ot_s81sl_leaf CS_*); the vn / vq seams
+                       // are wired here exactly as ot_s81sl_leaf wires them (u_cst_vni / _vno / _y / _m)
+                       parameter integer CS_HI_D = 0, parameter integer CS_HI_GS = 0, parameter integer CS_HO_D = 0,
+                       parameter integer CS_HO_GS = 0, parameter integer CS_H_G = 4, parameter integer CS_VNI_D = 0,
+                       parameter integer CS_VNO_D = 0, parameter integer CS_Y_D = 0);
     reg clk = 1'b0;
     always #0.5 clk = ~clk;
     reg [15:0] h0 [0:255];
@@ -60,10 +65,23 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
     end
     wire xq_v = xo_v && xo[3:1] == 3'd1, xb_v = xo_v && xo[3:1] == 3'd2;
     wire [531:0] xq_d = xo[21 +: 532]; wire [1023:0] xb_d = xo[21 +: 1024];
-    ot_s81sl_vp u_p (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
+    wire hw_v_n, hw_hf_n, hr_v_n, hr_hf_n, n_go_n, wl_v_n; wire [2:0] hw_j_n, hr_j_n, wl_i_n; wire [255:0] hw_d_n, wl_d_n;
+    wire [127:0] n_pre_n; wire hq_v_n; wire [255:0] hq_d_n; wire y_v_n; wire [2:0] y_i_n; wire [127:0] y_n;
+    wire m_v_p, m_q_p, m_b_p; wire [7:0] m_i_p;
+    ot_s81sl_cst #(.W(3 + 1 + 256 + 3 + 1 + 128 + 3 + 256), .V(4), .D(CS_VNI_D)) u_cst_vni (.clk(clk), .rst_n(rst_n),
+        .d({hw_j, hw_hf, hw_d, hr_j, hr_hf, n_pre, wl_i, wl_d}), .dv({hw_v, hr_v, n_go, wl_v}),
+        .q({hw_j_n, hw_hf_n, hw_d_n, hr_j_n, hr_hf_n, n_pre_n, wl_i_n, wl_d_n}), .qv({hw_v_n, hr_v_n, n_go_n, wl_v_n}));
+    ot_s81sl_cst #(.W(256), .V(1), .D(CS_VNO_D)) u_cst_vno (.clk(clk), .rst_n(rst_n), .d(hq_d_n), .dv(hq_v_n),
+        .q(hq_d), .qv(hq_v));
+    ot_s81sl_cst #(.W(3 + 128), .V(1), .D(CS_Y_D)) u_cst_y (.clk(clk), .rst_n(rst_n), .d({y_i_n, y_n}), .dv(y_v_n),
+        .q({y_i, y}), .qv(y_v));
+    ot_s81sl_cst #(.W(2 + 8), .V(1), .D(CS_VNI_D + CS_Y_D)) u_cst_m (.clk(clk), .rst_n(rst_n), .d({m_q_p, m_b_p, m_i_p}),
+        .dv(m_v_p), .q({m_q, m_b, m_i}), .qv(m_v));
+    ot_s81sl_vp #(.CS_HI_D(CS_HI_D), .CS_HI_GS(CS_HI_GS), .CS_HO_D(CS_HO_D), .CS_HO_GS(CS_HO_GS), .CS_H_G(CS_H_G),
+                  .HQX(CS_VNI_D + CS_VNO_D)) u_p (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(2'b00), .cw_a(24'd0), .cw_d(64'd0), .lo_v(lo_v), .lo_d(lo_d),
         .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d), .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf),
-        .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
+        .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v_p), .m_q(m_q_p), .m_b(m_b_p), .m_i(m_i_p),
         .s_v(), .s_d(), .x_rv(1'b0), .x_ra(10'd0), .x_qv(), .x_qd(), .x_wv(1'b0), .x_wa(10'd0), .x_wm(8'd0), .x_wd(256'd0),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(fp));
 `ifdef OT_S81SL_VN_UNSPLIT
@@ -71,10 +89,10 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
 `else
     ot_s81sl_vn_sp u_n (   // S81/RTLSPLIT: the leaf's vn (vn_a + vn_b)
 `endif
-        .clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
-        .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
-        .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d), .p_v(p_v), .p_d(p_d),
-        .y_v(y_v), .y_i(y_i), .y(y), .fault(fn));
+        .clk(clk), .rst_n(rst_n), .hw_v(hw_v_n), .hw_j(hw_j_n), .hw_hf(hw_hf_n), .hw_d(hw_d_n),
+        .hr_v(hr_v_n), .hr_j(hr_j_n), .hr_hf(hr_hf_n), .hq_v(hq_v_n), .hq_d(hq_d_n), .n_go(n_go_n), .n_pre(n_pre_n),
+        .wl_v(wl_v_n), .wl_i(wl_i_n), .wl_d(wl_d_n), .rb_v(rb_v), .rb_d(rb_d), .p_v(p_v), .p_d(p_d),
+        .y_v(y_v_n), .y_i(y_i_n), .y(y_n), .fault(fn));
     localparam [3:0] SID = BEAT / 5; localparam [2:0] KL = BEAT % 5;
     ot_s81sl_vq #(.AQ_XMEM(VQ_XMEM)) u_q (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y), .u_v(1'b0), .u_i(3'd0), .u(256'd0),
         .sid(SID), .k(KL), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i), .um_v(1'b0), .um_q(1'b0), .um_b(1'b0), .um_i(8'd0), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(fq));

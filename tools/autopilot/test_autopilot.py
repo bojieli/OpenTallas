@@ -163,9 +163,23 @@ class FakeHosts:
         return True
 
 
+class TestCheckpointRetention(Base):
+    def test_pending_delete_waits_for_explicit_owner_resolution(self):
+        j={"id":"x", "path":"/kit", "host":"epyc2", "status":"DONE-STRUCTURAL", "delete_pending":True}
+        self.ap.read_coord=lambda p:""
+        self.ap.hub_procs=lambda p:[]
+        self.ap.rpy=lambda *a,**kw:self.fail("deleted before owner diagnosis")
+        self.ap.retry_pending({"jobs":{"x":j}})
+        self.ap.read_coord=lambda p:"x\tDELETE\tresults/geom_review/diagnosis.json\n"
+        self.ap.rpy=lambda *a,**kw:{"deleted":["/kit/run/results"]}
+        self.ap.retry_pending({"jobs":{"x":j}})
+        self.assertTrue(j["data_deleted"])
+
+
 class TickBase(Base):
     def setUp(self):
         super().setUp()
+        self.ap.canary_wave_gate = lambda row: (True, "fixture reference PASS")
         self.f = FakeHosts(self.ap)
         self.ap.rpy = self.f.rpy
         self.ap.launch_unit = self.f.launch
@@ -235,7 +249,7 @@ class TestTick(TickBase):
         self.assertEqual(len(rows), 2)                   # header + one row
         self.assertNotIn(path, [c[2]["kit"] for c in self.f.calls if c[1] == self.ap.PROBE_DELETE[:40]])
 
-    def test_near_miss_goes_to_review_no_eco_and_deletes(self):
+    def test_near_miss_keeps_checkpoint_until_diagnosed(self):
         self.queue(ROW)
         self.tick()
         path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
@@ -258,7 +272,7 @@ class TestTick(TickBase):
         self.assertIn("/r/paths.png", rv)
         self.assertIn("/r/paths_ff_hold.txt", rv)
         self.assertEqual(len(self.f.launched), 2)        # the run + the render, never an ECO / re-route
-        self.assertTrue(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
+        self.assertFalse(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
 
     def test_infra_oom_resubmits_once_with_more_mem_then_marks(self):
         self.queue(ROW)
@@ -423,6 +437,91 @@ class TestGeomAutoSubmit(TickBase):
         self.assertNotIn("def456", g)
 
 
+
+class TestGeomDemote(TickBase):
+    """2026-10-25 R5 9a237c656129: plan-only PASS-COND 09:59, post-CTS FAIL 10:06 on the same tag -> must not route"""
+    REQ_ROW = ROW[:4] + ["REQ", "[PROTO-KITS]"] + ROW[6:]
+
+    def geom(self, text):
+        (Path(self.tmp.name) / "coord" / "lanes" / "GEOM-REVIEW.md").write_text(text)
+
+    def log(self):
+        return (Path(self.tmp.name) / "log.txt").read_text()
+
+    REQ = f"GEOM REQ [PROTO-KITS] slice_station__t5 kit\n"
+
+    def test_latest_verdict_wins_both_orders(self):
+        import loopgaps as L
+        pc_fail = (f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 plan "
+                   f"PASS-COND\n{ts(10)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 post-CTS: FAIL, no route\n")
+        self.assertEqual(L.geom_verdicts(pc_fail, "PROTO-KITS", "slice_station__t5", "")[0], "FAIL")
+        fail_pass = (f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: FAIL\n"
+                     f"{ts(10)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 fixed: PASS\n")
+        self.assertEqual(L.geom_verdicts(fail_pass, "PROTO-KITS", "slice_station__t5", "")[0], "PASS")
+        rows = self.ap.parse_queue("\t".join(self.REQ_ROW))
+        self.ap.resolve_geom(rows, pc_fail)
+        self.assertEqual(list(rows.values())[0]["geom"], "FAIL")
+        rows = self.ap.parse_queue("\t".join(self.REQ_ROW))
+        self.ap.resolve_geom(rows, fail_pass)
+        self.assertEqual(list(rows.values())[0]["geom"], "PASS")
+
+    def test_correction_clause_mixing_fail_and_pass_cond_is_fail(self):
+        import loopgaps as L                               # real btab_s6 09:07 wording
+        t = (f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: PASS-COND\n"
+             f"{ts(5)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: FAIL (corrects my 09:0x PASS-COND; autopilot "
+             f"abc must not route). Measured\n")
+        self.assertEqual(L.geom_verdicts(t, "PROTO-KITS", "slice_station__t5", "")[0], "FAIL")
+
+    def held_on_pass_cond(self, row):
+        self.ap.canary_wave_gate = lambda r: (False, "canary unbound")
+        self.queue(row)
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 plan "
+                  f"PASS-COND\n")
+        (j,) = self.tick().values()
+        self.assertEqual((j["status"], j["geom"]), ("WAIT-CANARY", "PASS-COND"))
+
+    def test_later_fail_demotes_held_row_and_it_never_routes(self):
+        self.held_on_pass_cond(self.REQ_ROW)
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 plan "
+                  f"PASS-COND\n{ts(5)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 post-CTS: FAIL, no route\n")
+        (j,) = self.tick().values()
+        self.assertEqual((j["status"], j["geom"]), ("WAIT-GEOM", "FAIL"))
+        self.assertIn("DEMOTE", self.log())
+        self.assertIn("PASS-COND -> FAIL", self.log())
+        self.ap.canary_wave_gate = lambda r: (True, "bound")
+        (j,) = self.tick().values()
+        self.assertEqual((j["status"], self.f.launched), ("WAIT-GEOM", []))
+
+    def test_hand_pass_cond_row_is_demoted_by_later_fail_never_promoted(self):
+        hand = ROW[:4] + ["PASS-COND", "GEOM-REVIEW [PROTO-KITS] reply"] + ROW[6:]
+        self.held_on_pass_cond(hand)
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(5)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: FAIL\n")
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "WAIT-GEOM")
+
+    def test_hand_fail_row_demotes_canary_hold(self):
+        self.held_on_pass_cond(self.REQ_ROW)
+        self.queue(self.REQ_ROW, ROW[:4] + ["FAIL", ""] + ROW[6:])         # the coordinator's 10:1x hand demotion
+        (j,) = self.tick().values()
+        self.assertEqual((j["status"], j["geom"]), ("WAIT-GEOM", "FAIL"))
+        self.assertIn("DEMOTE", self.log())
+
+    def test_fail_after_submit_warns_never_demotes(self):
+        self.queue(self.REQ_ROW)
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: PASS\n")
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "RUNNING")
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: PASS\n"
+                  f"{ts(5)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 corrected: FAIL\n")
+        (j,) = self.tick().values()
+        self.tick()
+        self.assertEqual((j["status"], len(self.f.launched)), ("RUNNING", 1))
+        self.assertEqual(self.log().count("WARN GEOM-FAIL-AFTER-SUBMIT"), 1)
+        alerts = (Path(self.tmp.name) / "geom_alerts.tsv").read_text().splitlines()
+        self.assertEqual(len(alerts), 2)
+        self.assertIn("GEOM-FAIL-AFTER-SUBMIT", (Path(self.tmp.name) / "LOOP-GAPS.txt").read_text())
+
+
 class TestRender(unittest.TestCase):
     LOG = """Startpoint: a/q_reg (rising edge-triggered flip-flop clocked by clk)
 Endpoint: b/q_reg (rising edge-triggered flip-flop clocked by clk)
@@ -505,6 +604,7 @@ class TestOwnership(TickBase):
         repo = p / "repo"
         os.environ["AP_REPO_FILES"] = str(repo)
         self.ap = importlib.reload(self.ap)                # re-read the env (REPO_FILES)
+        self.ap.canary_wave_gate = lambda row: (True, "fixture reference PASS")
         self.f = FakeHosts(self.ap)
         self.ap.rpy, self.ap.launch_unit = self.f.rpy, self.f.launch
         self.ap.unit_active = lambda u: u in self.f.active
@@ -753,6 +853,96 @@ class TestReviewIdentity(unittest.TestCase):
                "  t12 PASS-COND route; t18 FAIL pins\n"
         self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t12", "")[0], "PASS-COND")
         self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t18", "")[0], "FAIL")
+
+
+class TestSharedShaRows(Base):
+    """2026-10-25 10:30 [PATH-QC-SRAMIF-S7]: btab_s7 and prog_s7 share tag + branch sha; a PASS-COND for btab_s7 that
+    quotes the sha must never clear prog_s7"""
+    SRC = "claude/path-qc-sramif-1025@90bf56dfa"
+    REQ = ("2026-10-25 10:27 PDT PATH-QC-SRAMIF: GEOM REQ [PATH-QC-SRAMIF-S7] shared QC SRAM-IF fix. src "
+           "claude/path-qc-sramif-1025@90bf56dfa\n  btab_s7 intel1:/x/btab_s7: S6_GRT_GATE PASS -> enqueued --geom REQ.\n"
+           "2026-10-25 10:28 PDT PATH-QC-SRAMIF: GEOM REQ [PATH-QC-SRAMIF-S7] update: prog_s7 enqueued\n")
+
+    def rows(self, *types):
+        return self.ap.parse_queue("\n".join("\t".join(
+            ["qwen_compute", f"qfd_dv_s8x_{t}__s7", f"intel1:/srv/opentallas-scratch2/claude/path-qc-sramif/{t}_s7",
+             self.SRC, "REQ", "PATH-QC-SRAMIF-S7", "24", "30000", "PATH-QC"]) for t in types))
+
+    def geom(self, rows):
+        return {r["type"]: r["geom"] for r in rows.values()}
+
+    def test_btab_reply_quoting_shared_sha_clears_btab_only(self):
+        reply = ("2026-10-25 10:30 PDT GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] qfd_dv_s8x_btab__s7 (btab_s7, "
+                 "claude/path-qc-sramif-1025@90bf56dfa): PASS-COND -> route (autopilot row, 1 variant).\n"
+                 "  Not covered by this reply (no route token): prog_s7 routes after it posts its own hold-gate line.\n")
+        rows = self.rows("btab", "prog")
+        self.ap.resolve_geom(rows, self.REQ + reply)
+        self.assertEqual(self.geom(rows), {"qfd_dv_s8x_btab__s7": "PASS-COND", "qfd_dv_s8x_prog__s7": "REQ"})
+        # the kit dir basename names the row too; the shared suffix 's7' does not
+        rows = self.rows("btab", "prog")
+        self.ap.resolve_geom(rows, self.REQ + "2026-10-25 10:31 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] btab_s7 "
+                                              "@90bf56dfa PASS-COND route; s7 viewed\n")
+        self.assertEqual(self.geom(rows), {"qfd_dv_s8x_btab__s7": "PASS-COND", "qfd_dv_s8x_prog__s7": "REQ"})
+        self.assertEqual(self.ap.LG.gaps_geom_ambiguous(self.REQ + reply, self.ap.geom_groups(rows), 0), [])
+
+    def test_single_row_tag_sha_only_still_resolves(self):
+        rows = self.rows("btab")
+        self.ap.resolve_geom(rows, self.REQ + "2026-10-25 10:31 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] "
+                                              "claude/path-qc-sramif-1025@90bf56dfa: PASS-COND route\n")
+        self.assertEqual(self.geom(rows), {"qfd_dv_s8x_btab__s7": "PASS-COND"})
+
+    def test_sha_only_reply_on_shared_tag_is_ambiguous(self):
+        reply = ("2026-10-25 10:31 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] claude/path-qc-sramif-1025@90bf56dfa: "
+                 "PASS-COND route\n")
+        rows = self.rows("btab", "prog")
+        self.ap.resolve_geom(rows, self.REQ + reply)
+        self.assertEqual(self.geom(rows), {"qfd_dv_s8x_btab__s7": "REQ", "qfd_dv_s8x_prog__s7": "REQ"})
+        now = time.mktime(time.strptime("2026-10-25 11:00", "%Y-%m-%d %H:%M"))
+        (g,) = self.ap.LG.gaps_geom_ambiguous(self.REQ + reply, self.ap.geom_groups(rows), now)
+        self.assertIn("AMBIGUOUS-GEOM [PATH-QC-SRAMIF-S7]", g[1])
+
+    def test_later_per_row_repost_clears_ambiguous(self):
+        """2026-10-25 S81-CORES/LEGACY b1 + HBM-KITS/B2: the reviewer re-posted per row after a sha-only reply; a row
+        named by a LATER reply (type, kit dir or row id) is no longer AMBIGUOUS-GEOM, an unnamed one still is"""
+        sha_only = ("2026-10-25 10:31 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] claude/path-qc-sramif-1025@90bf56dfa: "
+                    "PASS-COND route\n")
+        now = time.mktime(time.strptime("2026-10-25 11:00", "%Y-%m-%d %H:%M"))
+        rows = self.rows("btab", "prog")
+        groups = self.ap.geom_groups(rows)
+        repost = ("2026-10-25 10:40 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] (re-post per row)\n"
+                  "    REPLY [PATH-QC-SRAMIF-S7] btab_s7: PASS-COND route\n")
+        (g,) = self.ap.LG.gaps_geom_ambiguous(self.REQ + sha_only + repost, groups, now)
+        self.assertIn("reply reaches qfd_dv_s8x_prog__s7 only", g[1])
+        repost += "    REPLY [PATH-QC-SRAMIF-S7] qfd_dv_s8x_prog__s7: FAIL outline\n"
+        self.assertEqual(self.ap.LG.gaps_geom_ambiguous(self.REQ + sha_only + repost, groups, now), [])
+        # a reply naming the row BEFORE the sha-only one does not clear it
+        self.assertEqual(len(self.ap.LG.gaps_geom_ambiguous(
+            self.REQ + repost.replace("10:40", "10:30") + sha_only, groups, now)), 1)
+
+    def test_later_fail_naming_type_demotes_and_mixed_reads_fail(self):
+        t = (self.REQ + "2026-10-25 10:30 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] btab_s7 PASS-COND route; "
+             "prog_s7 PASS-COND route\n2026-10-25 10:40 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] prog_s7 FAIL "
+             "(corrects my PASS-COND) @90bf56dfa\n")
+        rows = self.rows("btab", "prog")
+        self.ap.resolve_geom(rows, t)
+        self.assertEqual(self.geom(rows), {"qfd_dv_s8x_btab__s7": "PASS-COND", "qfd_dv_s8x_prog__s7": "FAIL"})
+
+    def test_kit_hash_names_row_and_reconcile_withdraw_reads_fail(self):
+        import loopgaps as L
+        hb = [("ot_hbm_idx_qctl_static_324c16535028", "epyc2:/k/a", "aea2ae39b3", "r1"),
+              ("ot_hbm_static_cfg_collar_6ca949259674", "epyc2:/k/b", "aea2ae39b3", "r2")]
+        t = ("2026-10-25 07:17 HBM-KITS: GEOM REQ [HBM-KITS/B2 07:17] 2 kits @aea2ae39b3\n"
+             "2026-10-25 07:24 CODEX GEOM-REVIEW: REPLY [HBM-KITS/B2 07:17] claude/hbm-kits-1025r@aea2ae39b3:\n"
+             "  (1) idx_qctl 324c16535028: FAIL outline; (2) cfg_collar 6ca949259674: placement PASS-COND\n")
+        self.assertEqual(L.geom_verdicts(t, "HBM-KITS/B2", *hb[0][:1], hb[0][2], kit=hb[0][1], others=hb[1:])[0], "FAIL")
+        self.assertEqual(L.geom_verdicts(t, "HBM-KITS/B2", *hb[1][:1], hb[1][2], kit=hb[1][1], others=hb[:1])[0],
+                         "PASS-COND")
+        w = (self.REQ + "2026-10-25 10:30 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] btab_s7: PASS-COND -> route\n"
+             "2026-10-25 10:45 GEOM-REVIEW-2: RECONCILE [PATH-QC-SRAMIF-S7] btab_s7: this WITHDRAWS my 10:30 route "
+             "PASS-COND\n")
+        rows = self.rows("btab", "prog")
+        self.ap.resolve_geom(rows, w)
+        self.assertEqual(self.geom(rows), {"qfd_dv_s8x_btab__s7": "FAIL", "qfd_dv_s8x_prog__s7": "REQ"})
 
 
 if __name__ == "__main__":

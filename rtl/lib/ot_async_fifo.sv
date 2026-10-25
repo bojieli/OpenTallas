@@ -214,6 +214,12 @@ module ot_async_fifo #(
 `ifndef SYNTHESIS
     // Gray pointers may only change one bit per local write/read event.
     reg [PTR_W-1:0] wr_gray_prev, rd_gray_prev;
+    // Simulation history becomes meaningful only after reset has reached this
+    // clock domain. Datapath/control power-on values may differ before boot.
+    // These checker flags are removed together with this simulation-only block.
+    reg wr_gray_check_armed = 1'b0, rd_gray_check_armed = 1'b0;
+    always @(posedge wr_clk) if (!wr_domain_rst_n) wr_gray_check_armed <= 1'b1;
+    always @(posedge rd_clk) if (!rd_domain_rst_n) rd_gray_check_armed <= 1'b1;
     wire [PTR_W-1:0] wr_gray_delta = wr_gray ^ wr_gray_prev;
     wire [PTR_W-1:0] rd_gray_delta = rd_gray ^ rd_gray_prev;
     wire [PTR_W-1:0] gray_one = {{(PTR_W-1){1'b0}},1'b1};
@@ -223,7 +229,7 @@ module ot_async_fifo #(
         if (!wr_domain_rst_n)
             wr_gray_prev <= {PTR_W{1'b0}};
         else begin
-            if (wr_gray_multi)
+            if (wr_gray_check_armed && wr_gray_multi)
                 $error("ot_async_fifo write Gray pointer changed multiple bits");
             wr_gray_prev <= wr_gray;
         end
@@ -232,7 +238,7 @@ module ot_async_fifo #(
         if (!rd_domain_rst_n)
             rd_gray_prev <= {PTR_W{1'b0}};
         else begin
-            if (rd_gray_multi)
+            if (rd_gray_check_armed && rd_gray_multi)
                 $error("ot_async_fifo read Gray pointer changed multiple bits");
             rd_gray_prev <= rd_gray;
         end

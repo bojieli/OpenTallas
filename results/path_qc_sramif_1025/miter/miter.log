@@ -1,0 +1,18 @@
+MITER N=20000 seed=1 btab_mism=0 prog_mism=0 fault_mism=0 mif0_vs_orig_prog=0 nonzero_cmp btab=19474 prog=18897
+MITER N=20000 seed=7 btab_mism=0 prog_mism=0 fault_mism=0 mif0_vs_orig_prog=0 nonzero_cmp btab=19431 prog=18747
+MITER N=20000 seed=1234 btab_mism=0 prog_mism=0 fault_mism=0 mif0_vs_orig_prog=0 nonzero_cmp btab=19420 prog=18970
+MUTANT mut_bt
+BTAB MISMATCH c=47
+BTAB MISMATCH c=50
+BTAB MISMATCH c=52
+MITER N=20000 seed=3 btab_mism=19540 prog_mism=0 fault_mism=0 mif0_vs_orig_prog=0 nonzero_cmp btab=19435 prog=18858
+MUTANT mut_pg
+PROG MISMATCH c=51
+PROG MISMATCH c=94
+PROG MISMATCH c=97
+MITER N=20000 seed=3 btab_mism=0 prog_mism=19327 fault_mism=0 mif0_vs_orig_prog=0 nonzero_cmp btab=19435 prog=18858
+MUTANT mut_bw
+BTAB MISMATCH c=47
+BTAB MISMATCH c=87
+BTAB MISMATCH c=89
+MITER N=20000 seed=3 btab_mism=19435 prog_mism=0 fault_mism=0 mif0_vs_orig_prog=0 nonzero_cmp btab=19435 prog=18858

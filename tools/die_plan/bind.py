@@ -462,6 +462,32 @@ def rel(path, root):
     return path[len(root) + 1:] if root and path.startswith(root + ".") else path
 
 
+def variant_port_bits(ports, variant, params, mapping):
+    """Validate an explicit LSB-first bit selection before changing any leaf.
+
+    Opt-in substitute_inst.port_bits preserves each selected as-built net and
+    rejects implicit width changes on every shared port in that rule.
+    """
+    if not isinstance(mapping, dict):
+        raise BindError("port_bits must be a port-to-index-list object")
+    selected = {}
+    env = variant.env({k: v for k, v in params.items() if k in variant.params})
+    for pn, indices in mapping.items():
+        if pn not in ports or pn not in variant.ports:
+            raise BindError(f"{pn}: not a shared original/variant port")
+        if not isinstance(indices, list) or any(type(i) is not int for i in indices):
+            raise BindError(f"{pn}: expected integer source indices in LSB-first order")
+        if len(set(indices)) != len(indices) or any(i < 0 or i >= len(ports[pn]) for i in indices):
+            raise BindError(f"{pn}: duplicate or out-of-range source index")
+        selected[pn] = [ports[pn][i] for i in indices]
+    for pn in set(ports) & set(variant.ports):
+        width = variant.width(pn, env)
+        actual = len(selected.get(pn, ports[pn]))
+        if width is None or width != actual:
+            raise BindError(f"{pn}: variant width {width}, selected width {actual}; explicit mapping required")
+    return selected
+
+
 class Binder:
     def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
@@ -699,6 +725,20 @@ class Binder:
                 ins_new = [p for p in new_ports if vm.ports[p][0] != "output"]
                 if ins_new:
                     self.errors.append(f"VARIANT_NEW_INPUT {c.path} -> {m}: {ins_new} (not in the as-built master)")
+                # An interior pin removal (e.g. ASTK am.g at bit1) must name
+                # retained source indices explicitly. Never truncate the old
+                # vector to the variant width: that would drop real MSB data.
+                selected = {}
+                if "port_bits" in r:
+                    try:
+                        selected = variant_port_bits(c.ports, vm, c.params, r["port_bits"])
+                    except BindError as e:
+                        self.errors.append(f"VARIANT_PORT_BITS {c.path} -> {m}: {e}")
+                        continue
+                    for p, bs in selected.items():
+                        if c.dirs.get(p) == "input":
+                            self.variant_removed[f"{m}.{p}"] += len(c.ports[p]) - len(bs)
+                    c.ports.update(selected)
                 for p in [p for p in c.ports if p not in vm.ports]:
                     d = c.dirs.get(p)
                     if d == "input":
@@ -736,10 +776,12 @@ class Binder:
                 self.errors.append(f"MAP_PARTITION {c.path} -> {p}: not a plan partition")
                 continue
             self.cpart[ci] = p
-            self.members[p].append(ci)
             lo = self.R.local_of(c.path)
             if lo:
                 self.local[ci] = lo
+        self.glue_moved = self._glue_follow_sinks() if self.ab.get("glue_follows_sinks") else {}
+        for ci, p in self.cpart.items():
+            self.members[p].append(ci)
         for u in unmapped[:200]:
             self.errors.append(f"UNMAPPED {u} ({F.cells[[c.path for c in F.cells].index(u)].module})")
         if len(unmapped) > 200:
@@ -754,6 +796,65 @@ class Binder:
             for k, v in seen.items():
                 if len(v) > 1:
                     self.errors.append(f"LOCAL_NAME_CLASH {p}: {k} <- {v[:4]}")
+
+    def _glue_follow_sinks(self):
+        """asbuilt.glue_follows_sinks (opt-in; PATH-S81/COLL 10-25, COORD re-decision): a bit-preserving glue cell
+        ($buf / $pos / $not = a continuous assign of the as-built RTL, no state) whose partition comes only from a
+        parent-prefix fallback of the map follows its loads when every load bit sits in ONE other partition.  E.g. the
+        S81 lep slice top 'assign lrx0 = {rx0[512], rx0[513], rx0[511:0], n0rxv}' feeds u_ln0 (LP) but was mapped with
+        the slice top to C, so the bind read lk -> C -> LP for a pure wire.  A load on a die output, an unmapped cell
+        (transport / reducer / source) or a split load set keeps the cell where the map put it.  Fixpoint over chains of
+        such cells.  Only a pure pass-through moves: when an input bit is driven from the cell's own partition the cell
+        stays (a move would only shift the crossing and split replicated types by an anonymous glue name).  Returns
+        {(from part, to part): cells moved}."""
+        G, F = self.G, self.F
+        top_out = set()
+        for pn, (d, bits) in F.top_ports.items():
+            if d != "input":
+                top_out.update(b for b in bits if not isinstance(b, str))
+        cand = [ci for ci in self.cpart if G.kind[ci] == "glue"
+                and getattr(F.cells[ci], "ytype", None) in ("$buf", "$pos", "$not") and F.cells[ci].path not in self.R.parts]
+        cset = set(cand)                 # a chain of such cells is judged by its ends: inputs from a candidate are skipped
+        moved = defaultdict(int)
+        for _ in range(16):
+            changed = False
+            for ci in cand:
+                ps, ok = set(), True
+                for pn, bits in F.cells[ci].ports.items():
+                    if G.dirs[ci].get(pn) != "output":
+                        continue
+                    for b in bits:
+                        if isinstance(b, str):
+                            continue
+                        if b in top_out:
+                            ok = False
+                        for lci, _pn, _i in G.loads.get(b, ()):
+                            lp = self.cpart.get(lci)
+                            if lp is None:
+                                ok = False
+                            ps.add(lp)
+                if ok and len(ps) == 1:
+                    (np,) = ps
+                    # only a pure pass-through moves: no input bit is driven from the cell's own partition (moving
+                    # such a cell would only shift a crossing and split replicated types by an anonymous glue name)
+                    own = self.cpart[ci]
+                    for pn, bits in F.cells[ci].ports.items():
+                        if G.dirs[ci].get(pn) != "input":
+                            continue
+                        for b in bits:
+                            sv = G.source(b) if not isinstance(b, str) else ("const",)
+                            if sv[0] == "pin" and sv[1] not in cset and self.cpart.get(sv[1]) == own:
+                                ok = False
+                    if ok and np != own:
+                        moved[(self.cpart[ci], np)] += 1
+                        self.cpart[ci] = np
+                        self.local.pop(ci, None)
+                        changed = True
+            if not changed:
+                break
+        self.warns.append(f"GLUE_FOLLOWS_SINKS {sum(moved.values())} bit-preserving glue cells moved to their loads' "
+                          f"partition: " + ", ".join(f"{a}->{b} {n}" for (a, b), n in sorted(moved.items())[:40]))
+        return dict(moved)
 
     def rel_of(self, ci):
         if ci in self.local:
@@ -831,6 +932,12 @@ class Binder:
             self.errors.append(f"TIED {pin}[{i}] = {s[1]} ({s[2]})") if cnt["tied"] <= 200 else None
             return ("tied", s[1])
         if k == "top":
+            sp = self.plan.get("reset", {}).get("start_port")
+            if sp and s[1] == sp:
+                # declared functional START level (reset.start_port): bound to the partition's local registered
+                # START tap start_t<k> (bootstrap types; emit fails closed elsewhere)
+                cnt["start"] += 1
+                return ("start",)
             cnt["die_io"] += 1
             return ("top", s[1], s[2])
         if k == "multi":
@@ -1813,6 +1920,47 @@ class Binder:
             self._wavefront_plan = schema.Plan(self.plan, self.plan_dir / "die_plan.json")
         return self._wavefront_plan
 
+    def bump_pins(self):
+        """declared HARD-IP LINE SIDE (B2, PATH-QC-B12 10-25): a plan type's contents[] / hard_cores[] entry may list
+        `bump_ports` [{pin, dir, width}] = pins of that hard core that leave the die (its bumps, e.g. a UCIe PHY's
+        link_* / far_*).  The as-built die has no line side, so these pins are ABSENT from the as-built netlist; the
+        binder connects each one to a partition port bump_<leaf>_<pin> and to a die-top port <partition>_<pin> (sv_id names) of the
+        same direction (no register, no logic: the bump is the hard IP's own pin).  Data-driven, no names; a plan
+        without the declaration binds byte-identically.  -> {part: [dict(ci, rel, pin, dir, width, pport, dport)]}"""
+        if getattr(self, "_bumps", None) is not None:
+            return self._bumps
+        F = self.F
+        res = {}
+        for p in sorted(self.members):
+            t = self.types[self.parts[p]["type"]]
+            for e in t.get("contents", []) + t.get("hard_cores", []):
+                if not e.get("bump_ports"):
+                    continue
+                cands = [ci for ci in self.members[p] if self.G.kind[ci] == "leaf" and
+                         (not e.get("module") or F.cells[ci].module == e["module"])]
+                named = [ci for ci in cands if e["inst"] in (self.rel_of(ci), "u_" + self.rel_of(ci), F.cells[ci].path)]
+                pick = named or cands
+                if len(pick) != 1:
+                    raise BindError(f"bump_ports {p}/{e['inst']} ({e.get('module')}): expected one bound hard-core leaf, "
+                                    f"found {len(pick)}")
+                ci = pick[0]
+                rel = self.rel_of(ci)
+                for b in e["bump_ports"]:
+                    pin, d, w = b["pin"], b["dir"], int(b["width"])
+                    if d not in ("input", "output") or w < 1:
+                        raise BindError(f"bump_ports {p}/{e['inst']}.{pin}: dir {d!r} / width {w} invalid")
+                    if pin in F.cells[ci].ports:
+                        raise BindError(f"bump_ports {p}/{e['inst']}.{pin}: an as-built pin of {F.cells[ci].path}; a "
+                                        "declared bump (hard-IP line side) must be absent from the as-built netlist")
+                    res.setdefault(p, []).append(dict(ci=ci, rel=rel, pin=pin, dir=d, width=w,
+                                                      pport=short_id(f"bump_{rel}__{pin}", 90),
+                                                      dport=short_id(f"{sv_id(p)}__{pin}", 120)))
+        names = [b["dport"] for bs in res.values() for b in bs]
+        if len(names) != len(set(names)):
+            raise BindError(f"bump_ports: die-top port names collide {sorted(n for n in names if names.count(n) > 1)[:5]}")
+        self._bumps = res
+        return res
+
     def emit(self, out):
         out = Path(out) / "rtl"            # generated RTL only; rewritten from scratch on every bind
         if out.exists():
@@ -1825,7 +1973,7 @@ class Binder:
             import reset_tree as RT
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
-            for name in ("ot_dp_rrelay", "ot_dp_rsync_s2", "ot_dp_rsync_s3"):
+            for name in ("ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3"):
                 m = re.search(r"module " + name + r"\b.*?\nendmodule", gen_rtl.CELLS, re.S)
                 cells += "\n(* keep_hierarchy *)\n" + m.group(0) + "\n"
             W = RT.wf_plan(P)
@@ -1837,6 +1985,8 @@ class Binder:
         files = [out / "bind_cells.sv"]
         self.pnames = {}
         self.io_used = {}
+        self.parent_id_ports = {}
+        self.parent_id_values = {}
         for tn, ps in sorted(self.by_type.items()):
             t = self.types[tn]
             txt, pnames = self.emit_type(tn, ps[0])
@@ -1847,6 +1997,19 @@ class Binder:
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
         f.write_text(self.emit_top())
         files.append(f)
+        man = dict(schema="opentallas.parent_id_straps.v1", types=self.parent_id_ports,
+                   instances=self.parent_id_values, added_data_cycles=0)
+        if any(self.parent_id_ports.values()):
+            (out.parent / "bind_parent_id_straps.json").write_text(json.dumps(man, indent=1) + "\n")
+        # tie-off audit (OWNER 10-25 option B): a literal on a partition pin is legal ONLY on a declared ID strap;
+        # each strap bit then gets its own TIEHI/TIELO next to the pin (die_constant_cells.tcl; strap_ties_check.tcl)
+        import straps as STR
+        aud = STR.audit_top_ties(f.read_text(), man, {self.types[tn]["module"]: tn for tn in self.types})
+        (out.parent / "bind_tie_audit.json").write_text(json.dumps(aud, indent=1) + "\n")
+        if aud["verdict"] != "PASS":
+            raise BindError(f"tie-off audit: {aud['reason']}")
+        if aud["rows"]:
+            (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(aud["rows"]))
         return files
 
     def _pname(self, k):
@@ -1860,6 +2023,16 @@ class Binder:
         mod = t["module"]
         params = self.tparams[tn]
         pdecl, pnames = [], {}
+        if not hasattr(self, "parent_id_ports"):      # emit_type used without emit() (unit vehicles)
+            self.parent_id_ports, self.parent_id_values = {}, {}
+        id_decls = {}
+        if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", [])):
+            from parent_id_straps import type_parent_id_straps, validate_parent_id_straps
+            try:
+                id_decls = type_parent_id_straps(t)
+            except ValueError as e:
+                raise BindError(str(e)) from e
+        id_ports = {}
         # strap parameters: one per (leaf, port), the port width, constant bits in place
         straps = defaultdict(dict)
         for k, vals in params.items():
@@ -1873,14 +2046,37 @@ class Binder:
             v0 = ["0"] * w
             for b, vals in bitsv.items():
                 v0[b] = vals[0] if vals[0] in "01" else "0"
-            pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")
+            if pn in id_decls.get(r, {}):
+                # OWNER 10-25 option B rule 1: the partition-level ID input is a declared strap, named strap_*
+                nm = short_id(f"strap_{r}__{pn}", 80)
+                actual_inputs = {name: len(bits) for name, bits in F.cells[ci].ports.items()
+                                 if G.dirs[ci].get(name) == "input"}
+                try:
+                    validate_parent_id_straps({"parent_id_straps": id_decls[r]}, actual_inputs)
+                except ValueError as e:
+                    raise BindError(f"parent ID {tn}.{r}: {e}") from e
+                if set(bitsv) != set(range(w)) or any(vals[0] not in "01" for vals in bitsv.values()):
+                    raise BindError(f"parent ID {tn}.{r}.{pn}: every bit must be a declared known strap")
+                expected = id_decls[r][pn]["value"]
+                if int(''.join(reversed(v0)), 2) != expected:
+                    raise BindError(f"parent ID {tn}.{r}.{pn}: representative as-built value disagrees with {expected}")
+                id_ports[nm] = dict(leaf=r, port=pn, width=w)
+            else:
+                pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")
             pnames[("strap", r, pn)] = (nm, w)
+        used_ids = {(x["leaf"], x["port"]) for x in id_ports.values()}
+        missing_ids = {(r, pn) for r, ids in id_decls.items() for pn in ids} - used_ids
+        if missing_ids:
+            raise BindError(f"parent ID {tn}: declarations do not match bound known strap inputs {sorted(missing_ids)}")
+        self.__dict__.setdefault("parent_id_ports", {})[tn] = id_ports   # test vehicles skip __init__ and emit
         for k, vals in params.items():
             if k[0] == "param":
                 nm = short_id(f"P_{k[1]}__{k[2]}", 80)
                 pdecl.append(f"    parameter {nm} = {vals[0]}")
                 pnames[k] = (nm, None)
         ports = ["    input  wire clk", "    input  wire arst_n"]
+        ports += [f"    input wire [{d['width'] - 1}:0] {nm}   // parent-tied ID strap (OWNER 10-25 B): quasi-static"
+                  for nm, d in sorted(id_ports.items())]
         # die IO inputs (pads) read by this partition's leaves: one partition port per die port, named io_<port>
         io = set()
         for ci in self.members[p]:
@@ -1897,6 +2093,11 @@ class Binder:
         doms = sorted(self.clk_dom[p] - {self.default_domain(p)}, key=lambda d: self.cport(p, d))
         for d in doms:
             ports.append(f"    input  wire {self.cport(p, d)}")
+        bumps = {}
+        for b in self.bump_pins().get(p, []):
+            ports.append(f"    {b['dir']:6} wire [{b['width'] - 1}:0] {b['pport']}   // hard-IP line side (bump) "
+                         f"{b['rel']}.{b['pin']} -> die port")
+            bumps.setdefault(b["ci"], []).append((b["pin"], b["pport"]))
         decl, body = [], []
         P = self.wavefront_plan()
         rtree = None
@@ -2076,6 +2277,12 @@ class Binder:
                     return f"~({reset})"
                 need_rst = True
                 return "rst"
+            if k == "start":
+                if rtree is None or rtree.get("start_tap") is None:
+                    raise BindError(f"START consumer {F.cells[ci].path}.{pn}[{i}] in partition {p} (type {tn}): only "
+                                    "a reset.start_role 'bootstrap' type publishes a local START tap; a mission type's "
+                                    "control state is already START-gated")
+                return f"start_t{rtree['start_tap']}"
             if k == "strap":
                 nm, _w = pnames[("strap", self.rel_of(ci), pn)]
                 return f"{nm}[{i}]"
@@ -2114,6 +2321,7 @@ class Binder:
                 elif dd == "input":
                     e = [expr(self.sinks[(ci, pn, i)], ci, pn, i) for i in range(len(bits))]
                     conns.append((pn, _concat(e)))
+            conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":
                 insts.append(_glue(c, dict(conns), r))
                 continue
@@ -2168,6 +2376,8 @@ class Binder:
                 ports.insert(1, "    input  wire start")
         io = sorted({n for tn in self.by_type for n in self.io_used.get(tn, [])})
         ports += [f"    input  wire [{len(self.F.top_ports[n][1]) - 1}:0] {sv_id(n)}" for n in io]
+        bumps = self.bump_pins()
+        ports += [f"    {b['dir']:6} wire [{b['width'] - 1}:0] {b['dport']}" for p in sorted(bumps) for b in bumps[p]]
         wires, insts = [], []
         reset_in, reset_out = {}, {}
         P = self.wavefront_plan()
@@ -2194,6 +2404,7 @@ class Binder:
             t = self.types[tn]
             pn = self.pnames[tn]
             ov = []
+            parent_ids = []
             for k, (nm, w) in sorted(pn.items(), key=lambda kv: kv[1][0]):
                 if k[0] == "strap":
                     r, port = k[1], k[2]
@@ -2203,11 +2414,22 @@ class Binder:
                     for kk, val in self.tvals[tn][p].items():
                         if kk[0] == "strap" and kk[1] == r and kk[2] == port:
                             v[kk[3]] = val if val in "01" else "0"
-                    ov.append(f".{nm}({width}'b{''.join(reversed(v))})")
+                    if nm in self.__dict__.get("parent_id_ports", {}).get(tn, {}):
+                        actual_bits = {kk[3]: val for kk, val in self.tvals[tn][p].items()
+                                       if kk[0] == "strap" and kk[1] == r and kk[2] == port}
+                        if set(actual_bits) != set(range(width)) or any(val not in "01" for val in actual_bits.values()):
+                            raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID bits")
+                        expr = f"{width}'b{''.join(reversed(v))}"
+                        parent_ids.append((nm, expr))
+                        self.__dict__.setdefault("parent_id_values", {}).setdefault(p, {})[nm] = dict(width=width,
+                            value=int(''.join(reversed(v)), 2))
+                    else:
+                        ov.append(f".{nm}({width}'b{''.join(reversed(v))})")
                 else:
                     ov.append(f".{nm}({self.tvals[tn][p].get(k)})")
             dd = self.default_domain(p)
             cs = [f"        .clk(clk_{sv_id(dd)})", f"        .arst_n({reset_in.get(p, 'rst_n')})"]
+            cs += [f"        .{nm}({expr})" for nm, expr in parent_ids]
             if p in start_in:
                 cs.append(f"        .start_i({start_in[p]})")
             cs += [f"        .{port}({net})" for port, net in sorted(reset_out.get(p, {}).items())]
@@ -2215,6 +2437,7 @@ class Binder:
                 cs.append(f"        .{self.cport(p, d)}(clk_{sv_id(d)})")
             for n in self.io_used.get(tn, []):
                 cs.append(f"        .io_{sv_id(n)}({sv_id(n)})")
+            cs += [f"        .{b['pport']}({b['dport']})" for b in bumps.get(p, [])]
             for port, w in sorted(conn[p]):
                 cs.append(f"        .{port}({w})")
             pstr = (" #(" + ", ".join(ov) + ")") if ov else ""
@@ -2289,6 +2512,8 @@ class Binder:
                               undriven=c.get("undriven", 0), multiply_bound=c.get("multi_driven", 0),
                               straps=c.get("strap", 0), plan_driven=c.get("plan_driven", 0)),
                    errors=self.errors[:2000], n_errors=len(self.errors), warnings=self.warns[:500])
+        if getattr(self, "glue_moved", None):
+            rep["glue_moved"] = {f"{a}->{b}": n for (a, b), n in sorted(self.glue_moved.items())}
         return rep, lat
 
 
@@ -2480,6 +2705,19 @@ def cmd_bind(a):
     sinks = {}
     for (ci, pn, i), d in B.sinks.items():
         sinks[f"{B.F.cells[ci].path}.{pn}[{i}]"] = _desc_json(B, d, B.cpart.get(ci))
+    try:
+        bumps = B.bump_pins()
+    except BindError:
+        bumps = {}                          # already reported as an EMIT error
+    for p, bs in sorted(bumps.items()):
+        for b in bs:
+            if b["dir"] == "input":         # the die-top port drives the hard core's line-side input (bind_verify)
+                for i in range(b["width"]):
+                    sinks[f"{B.F.cells[b['ci']].path}.{b['pin']}[{i}]"] = ["top", b["dport"]]
+    if bumps:
+        rep["bump_ports"] = [dict(die_port=b["dport"], dir=b["dir"], width=b["width"], partition=p,
+                                  leaf=f"{sv_id(p)}.{short_id('u_' + b['rel'], 90)}", pin=b["pin"], part_port=b["pport"])
+                             for p, bs in sorted(bumps.items()) for b in bs]
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
     bg = B.bus_groups()
     rep["bus_groups"] = bg["summary"]
@@ -2941,7 +3179,7 @@ def cmd_kit_rtl(a):
         rep.get("extra_lib", []) + bindf_prefer(out, base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
-                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
     picks = {}
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks)
     if cl_missing:

@@ -1,0 +1,53 @@
+[
+ {
+  "type": "kv3_hg",
+  "slot": "ft2",
+  "width": 1056,
+  "stations": 4,
+  "in_macro_points": 520,
+  "moved": 565,
+  "max_bit_hop_um": 366.39
+ },
+ {
+  "type": "kv3_hg_v3",
+  "slot": "ft3",
+  "width": 1056,
+  "stations": 4,
+  "in_macro_points": 520,
+  "moved": 565,
+  "max_bit_hop_um": 392.31
+ },
+ {
+  "type": "kv3_hg_v1_r2",
+  "slot": "ft3",
+  "width": 1056,
+  "stations": 4,
+  "in_macro_points": 520,
+  "moved": 565,
+  "max_bit_hop_um": 366.39
+ },
+ {
+  "type": "kv3_hgi_v6",
+  "slot": "ft8",
+  "width": 1044,
+  "stations": 4,
+  "in_macro_points": 1518,
+  "infeasible": "kv3_hgi_v6/ft8 bit 0 stage 1: no macro-free point within reach"
+ },
+ {
+  "type": "kv3_hgi_v7",
+  "slot": "ft4",
+  "width": 1044,
+  "stations": 4,
+  "in_macro_points": 1518,
+  "infeasible": "kv3_hgi_v7/ft4 bit 0 stage 1: no macro-free point within reach"
+ },
+ {
+  "type": "kv3_hgi_v8",
+  "slot": "ft4",
+  "width": 1044,
+  "stations": 4,
+  "in_macro_points": 1518,
+  "infeasible": "kv3_hgi_v8/ft4 bit 0 stage 1: no macro-free point within reach"
+ }
+]

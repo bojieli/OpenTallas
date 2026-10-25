@@ -88,6 +88,10 @@ class LecError(Exception):
     pass
 
 
+class LintFail(Exception):
+    """RTL lint failure (implicit nets): fails the kit like NOT EQUIVALENT (exit 1)."""
+
+
 class Unproven(Exception):
     pass
 
@@ -98,9 +102,16 @@ def parse_config(kit):
     env = {}
     for line in (Path(kit) / "config.mk").read_text().splitlines():
         line = line.split("#", 1)[0].rstrip()
-        m = re.match(r"^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?+]?=\s*(.*)$", line)
-        if m:
-            env[m[1]] = m[2].strip()
+        m = re.match(r"^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*([:?+]?)=\s*(.*)$", line)
+        if not m:
+            continue
+        var, op, val = m[1], m[2], m[3].strip()
+        if op == "+" and env.get(var):        # make += appends (HEAD0719 kits: VERILOG_FILES += ot_s81hd_rom_addr_copy.sv)
+            env[var] = f"{env[var]} {val}" if val else env[var]
+        elif op == "?" and var in env:        # make ?= sets only an undefined variable
+            pass
+        else:
+            env[var] = val
     if "DESIGN_NAME" not in env or "VERILOG_FILES" not in env:
         raise LecError(f"{kit}/config.mk: no DESIGN_NAME / VERILOG_FILES")
     return env
@@ -162,9 +173,9 @@ def top_params(env):
     return list(zip(t[0::2], t[1::2]))
 
 
-def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True):
+def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
-    cells have no Verilog body in the sources (read as blackbox cells)."""
+    cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
     files = [kpath(kit, f) for f in env["VERILOG_FILES"].split()]
     incs = [kpath(kit, d) for d in env.get("VERILOG_INCLUDE_DIRS", "").split()]
     defs = env.get("VERILOG_DEFINES", "").split()
@@ -172,7 +183,7 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True):
         defs.append("-DSYNTHESIS")
     cmds = [f"read_liberty -lib -ignore_miss_func {l}" for l in lib_bbs]
     if frontend == "slang":
-        a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]]
+        a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
         a += [f"-I{i}" for i in incs] + defs + files
         for k, v in top_params(env):
             a += ["-G", f"{k}={v}"]
@@ -228,6 +239,25 @@ def gate_script(env, netlist, stubs, wrap, lecff, out):
     s += [f"read_verilog {stubs}", f"read_verilog {netlist}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
           "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc", "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
+
+
+IMPLICIT_NET = re.compile(r"^(\S+?):(\d+):\d+: warning: implicit net '([^']+)' created \[-Wimplicit-net\]")
+
+
+def implicit_net_lint(env, kit, lib_bbs, out, log):
+    """lint gate (LEC 10-25): an identifier used before its declaration (or never declared) in a port connection
+    becomes an implicit 1-bit net.  yosys-slang (--compat=vcs, the synthesis frontend) leaves that net undriven
+    while read_verilog binds the later declaration: ot_s81eng_aq_n32 g_ec .ep_next(ep_next) tied 8 exponent
+    registers to 0 in every synthesised eng netlist.  Industry practice (`default_nettype none`, lint
+    UndrivenNet / implicit-net rules): any implicit net fails the kit.  Returns [(file, line, net)]."""
+    s = read_rtl_cmds(env, kit, "slang", lib_bbs, slang_extra=["-Wimplicit-net"])
+    run_yosys("\n".join(s) + "\n", out / "lint.ys", log)
+    hits = []
+    for l in Path(str(out / "lint.ys") + ".log").read_text(errors="replace").splitlines():
+        m = IMPLICIT_NET.match(l.strip())
+        if m and (m[1], m[2], m[3]) not in hits:
+            hits.append((m[1], m[2], m[3]))
+    return hits
 
 
 def bb_script(env, kit, frontend, lib_bbs, out):
@@ -369,7 +399,8 @@ def flop_key(name):
     if v:
         inv = v[1] == "IQN"
         n = TYPE_SFX.sub("", n[:v.start()])
-    return n.replace("\\", "").replace(" ", ""), inv
+    # OpenROAD-exported netlists (3_place / 6_final) keep the hierarchy separator '/' in flop names
+    return n.replace("\\", "").replace(" ", "").replace("/", "."), inv
 
 
 def port_key(n, b):
@@ -434,6 +465,7 @@ class Aig:
         self.ands = array("q")
         self.outs, self.onames = [], []
         self.strash = {}
+        self.parity_expr, self.parity_cache = {}, {}
 
     def add_input(self, name):
         if self.ands:
@@ -443,6 +475,19 @@ class Aig:
         return 2 * self.ni
 
     def AND(self, a, b):
+        # ~(x & y) & ~(~x & ~y) == x ^ y. Recognise the AIG XOR
+        # encoding while importing both frontends so differently factored CRC
+        # matrices share one GF(2) expression before SAT (no assumptions).
+        if a & 1 and b & 1 and a > 1 and b > 1:
+            ia, ib = (a >> 1) - self.ni - 1, (b >> 1) - self.ni - 1
+            if ia >= 0 and ib >= 0:
+                x = self.ands[2 * ia:2 * ia + 2]
+                y = self.ands[2 * ib:2 * ib + 2]
+                if set(x) == {v ^ 1 for v in y}:
+                    return self.XOR(*x)
+        return self._and(a, b)
+
+    def _and(self, a, b):
         if a < b:
             a, b = b, a
         if b == 0 or a == (b ^ 1):
@@ -457,8 +502,38 @@ class Aig:
             self.strash[(a, b)] = r
         return r
 
+    def _parity(self, a):
+        if a <= 1:
+            return frozenset(), a
+        if a in self.parity_expr:
+            return self.parity_expr[a]
+        if a ^ 1 in self.parity_expr:
+            terms, const = self.parity_expr[a ^ 1]
+            return terms, const ^ 1
+        return frozenset([a & ~1]), a & 1
+
     def XOR(self, a, b):
-        return self.AND(self.AND(a, b ^ 1) ^ 1, self.AND(a ^ 1, b) ^ 1) ^ 1
+        aa, ac = self._parity(a)
+        bb, bc = self._parity(b)
+        terms, const = aa ^ bb, ac ^ bc
+        if not terms:
+            return const
+        if terms in self.parity_cache:
+            return self.parity_cache[terms] ^ const
+
+        def build(ts):
+            if len(ts) == 1:
+                return ts[0]
+            mid = len(ts) // 2
+            x, y = build(ts[:mid]), build(ts[mid:])
+            r = self._and(self._and(x, y ^ 1) ^ 1, self._and(x ^ 1, y) ^ 1) ^ 1
+            self.parity_expr[r] = (frozenset(ts), 0)
+            return r
+
+        r = build(sorted(terms))
+        self.parity_expr[r] = (terms, 0)
+        self.parity_cache[terms] = r
+        return r ^ const
 
     def write(self, path, outs=None):
         outs = self.outs if outs is None else outs
@@ -489,6 +564,23 @@ class Aig:
             else:
                 k = v - self.ni - 1
                 stack += (self.ands[2 * k] >> 1, self.ands[2 * k + 1] >> 1)
+        return ins
+
+    def near_inputs(self, lit, depth):
+        """the inputs / registers within `depth` AND levels of `lit` (a hold mux puts its own Q at depth <= 3)."""
+        seen, front, ins = set(), [lit >> 1], set()
+        for _ in range(depth + 1):
+            nxt = []
+            for v in front:
+                if v == 0 or v in seen:
+                    continue
+                seen.add(v)
+                if v <= self.ni:
+                    ins.add(v)
+                else:
+                    k = v - self.ni - 1
+                    nxt += (self.ands[2 * k] >> 1, self.ands[2 * k + 1] >> 1)
+            front = nxt
         return ins
 
     def simulate(self, words, seed=1):
@@ -555,8 +647,11 @@ class Lec:
         self.tonly = sorted(k for k in set(self.tp) - set(self.gp))
         # hypotheses on unmatched flops: key -> ('const', c) | ('eq', side, other_key, inv)
         self.hyp = {}
+        # state-encoding constraints (FSM recoding): (side, keys, allowed value tuples) assumed on the current state
+        # and proved on the next state together with the hypotheses (an inductive invariant like the others)
+        self.cons = []
 
-    def build(self, with_compare=True, with_hyp=True, extra=None, free_const=None):
+    def build(self, with_compare=True, with_hyp=True, extra=None, free_const=None, hold_matched=()):
         """one AIG with every matched key point a shared input; a hypothesised gold-only flop becomes its constant /
         its partner's input; other unmatched key points and X sources are free inputs.  Outputs: XOR per matched
         compare point (with_compare) and per hypothesis (D(flop) vs constant / partner's D).
@@ -584,6 +679,11 @@ class Lec:
             if h:                                 # register correspondence among matched flops: k == representative
                 merged.append(k)
                 continue
+            if free_const is not None and k in hold_matched:
+                shared[k] = free_const            # cofactor: these matched registers held at the constant too
+                bind(lg, self.gp[k], free_const)
+                bind(lt, self.tp[k], free_const)
+                continue
             v = m.add_input(k)
             kind[v >> 1] = ("matched", k)
             shared[k] = v
@@ -610,7 +710,7 @@ class Lec:
                 h = self.hyp.get((side, k))
                 if h and h[0] == "const":
                     bind(lmap, p[k], h[1])
-                elif h and h[0] == "eq":
+                elif h and h[0] in ("eq", "cube"):
                     later.append((side, k, h))
                 elif free_const is not None and k.startswith("ff:"):
                     bind(lmap, p[k], free_const)  # cofactor: unpaired registers held at a constant
@@ -619,9 +719,13 @@ class Lec:
                     kind[v >> 1] = (side + "_only", k)
                     bind(lmap, p[k], v)
         # hypotheses 'eq': bind to the partner's (already bound) value; chains resolve in passes, cycles are dropped
+        cubes = []
         while later:
             nxt = []
             for side, k, h in later:
+                if h[0] == "cube":                 # bound after the X inputs (ANDs come after every input)
+                    cubes.append((side, k, h))
+                    continue
                 _, oside, ok, inv = h
                 olmap, op = (lg, self.gp) if oside == "gold" else (lt, self.tp)
                 if ok in shared:
@@ -653,6 +757,14 @@ class Lec:
                 v = m.add_input(f"{side}:anon{lit >> 1}")
                 kind[v >> 1] = (side + "_anon", f"anon{lit >> 1}")
                 bind(lmap, lit, v)
+        for side, k, h in cubes:                  # gate one-hot state bit == (gold state vector == code)
+            _, oside, oks, ovals = h
+            olmap, op = (lg, self.gp) if oside == "gold" else (lt, self.tp)
+            v = 1
+            for ok, ov in zip(oks, ovals):
+                v = m.AND(v, olmap[op[ok] & ~1] ^ (op[ok] & 1) ^ (ov ^ 1))
+            lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
+            bind(lmap, p[k], v)
         for d, lmap in ((self.gold, lg), (self.gate, lt)):
             base = 2 * (d["I"] + d["L"])
             a = d["ands"]
@@ -695,6 +807,14 @@ class Lec:
                     m.onames.append(f"hyp:bothg:{k}")
                     continue
                 d = self.dlit[(side, k)]
+                if h[0] == "cube":
+                    _, oside, oks, ovals = h
+                    c = 1
+                    for ok, ov in zip(oks, ovals):
+                        c = m.AND(c, self.dlit[(oside, ok)] ^ (ov ^ 1))
+                    m.outs.append(m.XOR(d, c))
+                    m.onames.append(f"hyp:{side}:{k}")
+                    continue
                 if h[0] == "const":
                     m.outs.append(m.AND(d ^ h[1], nx(k)) if side == "gold" else d ^ h[1])
                 else:
@@ -706,6 +826,23 @@ class Lec:
                     xm = nx(k) if side == "gold" else (nx(ok) if oside == "gold" and ok in self.gc else 1)
                     m.outs.append(m.AND(m.XOR(d, od ^ inv), xm))
                 m.onames.append(f"hyp:{side}:{k}")
+        if self.cons:
+            def member(lits, allowed):
+                v = 0
+                for vals in allowed:
+                    c = 1
+                    for l, b in zip(lits, vals):
+                        c = m.AND(c, l ^ (b ^ 1))
+                    v = m.AND(v ^ 1, c ^ 1) ^ 1
+                return v
+            cur = lambda sd, k: G(self.gp[k]) if sd == "gold" else T(self.tp[k])
+            assume = 1
+            for sd, keys, allowed in self.cons:
+                assume = m.AND(assume, member([cur(sd, k) for k in keys], allowed))
+            m.outs = [m.AND(o, assume) for o in m.outs]
+            for sd, keys, allowed in self.cons:
+                m.outs.append(m.AND(assume, member([self.dlit[(sd, k)] for k in keys], allowed) ^ 1))
+                m.onames.append(f"cons:{sd}:{keys[0]}")
         return m, kind
 
 
@@ -724,6 +861,74 @@ def aig_outputs(path):
         for _ in range(L):
             f.readline()
         return [int(f.readline().split()[0]) for _ in range(O)]
+
+
+def xor_sat(m, ids, log):
+    """Optional XOR-aware SAT for CRC/status cones ABC leaves undecided.
+
+    Keep the complete original AIG CNF for every cone. Native XOR equations
+    are redundant exact identities from the Boolean normaliser, never design
+    assumptions. If pycryptosat is absent the caller retains UNDECIDED.
+    """
+    if os.environ.get("LEC_SOLVER_PATH") and os.environ["LEC_SOLVER_PATH"] not in sys.path:
+        sys.path.append(os.environ["LEC_SOLVER_PATH"])       # pycryptosat (cp310 wheel extracted), see via_docker
+    try:
+        import pycryptosat
+    except ImportError:
+        return {}
+    need = set()
+    stack = [m.outs[i] >> 1 for i in ids]
+    while stack:
+        v = stack.pop()
+        if not v or v in need:
+            continue
+        need.add(v)
+        if v > m.ni:
+            k = v - m.ni - 1
+            stack.extend(t >> 1 for t in m.ands[2 * k:2 * k + 2])
+    solver = pycryptosat.Solver(threads=1)
+    if need:
+        # Also declare a cone consisting solely of an unconstrained input.
+        solver.add_clause([max(need), -max(need)])
+
+    def clause(lits):
+        if 1 not in lits:
+            solver.add_clause([-(x >> 1) if x & 1 else x >> 1 for x in lits if x > 1])
+
+    for k in range(len(m.ands) // 2):
+        n = 2 * (m.ni + k + 1)
+        if n >> 1 not in need:
+            continue
+        x, y = m.ands[2 * k:2 * k + 2]
+        clause([n ^ 1, x])
+        clause([n ^ 1, y])
+        clause([n, x ^ 1, y ^ 1])
+    nx = 0
+    for lit, (terms, const) in m.parity_expr.items():
+        if lit >> 1 not in need or any(t >> 1 not in need for t in terms):
+            continue
+        vs = collections.Counter([lit >> 1] + [t >> 1 for t in terms])
+        vs = [v for v, n in vs.items() if n & 1]
+        rhs = bool(const ^ (lit & 1))
+        if not vs:
+            if rhs:
+                raise LecError("inconsistent Boolean XOR identity")
+            continue
+        solver.add_xor_clause(vs, rhs)
+        nx += 1
+    statuses = {}
+    for i in ids:
+        lit = m.outs[i]
+        if lit <= 1:
+            statuses[m.onames[i]] = "differs" if lit else "proved"
+            continue
+        start = time.time()
+        sat, _ = solver.solve(assumptions=[-(lit >> 1) if lit & 1 else lit >> 1])
+        statuses[m.onames[i]] = "proved" if sat is False else "differs" if sat is True else "undecided"
+        log.append(f"XOR SAT {getattr(pycryptosat, '__version__', 'unknown')}: {m.onames[i]} "
+                   f"{statuses[m.onames[i]]}, {len(need)} cone variables, {nx} redundant XORs, "
+                   f"{time.time() - start:.3f}s")
+    return statuses
 
 
 def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
@@ -791,6 +996,9 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
                                    "differs" if (u, sat, undec) == (0, 1, 0) else "undecided")
                 for i, status in zip(ids, res):
                     st[m.onames[i]] = status
+    unknown = [i for i, n in enumerate(m.onames) if st[n] == "undecided"]
+    if unknown:
+        st.update(xor_sat(m, unknown, log))
     return st
 
 
@@ -1012,9 +1220,139 @@ def anchored(L):
     adders, 2026-10-25)."""
     ms = set(L.matched)
     return {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and (sd != "gold" or h[2] in ms)}
+def register_alias_proposals(L, log):
+    """Propose an exact register/_r alias across frontends; every proposal is
+    still proved on its next-state cone before any result is accepted."""
+    n = 0
+    strip = lambda k: re.sub(r"_r(?=(?:\[\d+\])*$)", "", k)
+    by_name = collections.defaultdict(list)
+    for k in L.gonly:
+        by_name[strip(k)].append(k)
+    for k in L.tonly:
+        cand = by_name.get(strip(k), [])
+        if len(cand) == 1 and ("gate", k) not in L.hyp:
+            L.hyp[("gate", k)] = ("eq", "gold", cand[0], 0)
+            n += 1
+    log.append(f"register aliases: {n} same-name / _r relations proposed")
 
 
-def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
+def cone_sim(m, lits, fixed, words, seed):
+    """bit-parallel simulation of only the cone of `lits` (inputs: `fixed` {var: int}, others random)."""
+    import random
+    rnd = random.Random(seed)
+    W = 64 * words
+    mask = (1 << W) - 1
+    need, stack = set(), [l >> 1 for l in lits]
+    while stack:
+        v = stack.pop()
+        if v == 0 or v in need:
+            continue
+        need.add(v)
+        if v > m.ni:
+            k = v - m.ni - 1
+            stack += (m.ands[2 * k] >> 1, m.ands[2 * k + 1] >> 1)
+    val = {0: 0}
+    for v in sorted(need):
+        if v <= m.ni:
+            val[v] = fixed[v] if v in fixed else rnd.getrandbits(W)
+        else:
+            k = v - m.ni - 1
+            r0, r1 = m.ands[2 * k], m.ands[2 * k + 1]
+            val[v] = (val[r0 >> 1] ^ (mask if r0 & 1 else 0)) & (val[r1 >> 1] ^ (mask if r1 & 1 else 0))
+    return [val[l >> 1] ^ (mask if l & 1 else 0) for l in lits], mask
+
+
+def fsm_proposals(L, log, words=2, max_bits=4):
+    """FSM state recoding (yosys fsm: a binary RTL state vector B[n-1:0] becomes one-hot gate flops B#t[i]).
+    For each such vector the code -> one-hot-bit map is found by simulating both next-state functions from every
+    (code, one-hot bit) pair; a map consistent with every observed transition is proposed as
+      gate B#t[pi(c)] == (gold B == c)    (a 'cube' hypothesis: the gate flop is bound to the gold state compare)
+      gold B in dom(pi)                   (a state constraint: the codes the recoded FSM implements)
+    Both are proved inductively with every other hypothesis (assumed on the current state, proved on the next); a
+    wrong map can only fail and be dropped, never hide a difference."""
+    m, kind = L.build(with_compare=False, with_hyp=False)
+    var = {}
+    for v, (kd, k) in kind.items():
+        if kd in ("gold_only", "gate_only"):
+            var[(kd[:4], k)] = v
+    bound = {k for (sd, k) in L.hyp} | {h[2] for h in L.hyp.values() if h[0] == "eq"}
+    gb, tb = collections.defaultdict(dict), collections.defaultdict(dict)
+    for k in L.gonly:
+        a = IDXK.match(k)
+        if k.startswith("ff:") and a and k not in bound and ("gold", k) in var:
+            gb[a.group(1)][int(a.group(2))] = k
+    for k in L.tonly:
+        a = IDXK.match(k)
+        if k.startswith("ff:") and a and a.group(1).endswith("#t") and k not in bound and ("gate", k) in var:
+            tb[a.group(1)[:-2]][int(a.group(2))] = k
+    n_new = 0
+    for base in sorted(set(gb) & set(tb)):
+        gk = [gb[base][i] for i in sorted(gb[base])]
+        tk = [tb[base][i] for i in sorted(tb[base])]
+        n, nt = len(gk), len(tk)
+        if not (1 < n <= max_bits and 2 < nt <= (1 << n)) or sorted(gb[base]) != list(range(n)):
+            continue
+        import math
+        if math.comb(1 << n, nt) * math.factorial(nt) > 200000:
+            log.append(f"fsm: {base} ({n} gold / {nt} gate bits): encoding search too large, none proposed")
+            continue
+        dl = [L.dlit[("gold", k)] for k in gk] + [L.dlit[("gate", k)] for k in tk]
+        R = {}
+        for c in range(1 << n):
+            for j in range(nt):
+                ones = (1 << (64 * words)) - 1
+                fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
+                fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
+                vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + j)
+                obs = collections.Counter()
+                for lane in range(64 * words):
+                    gn = sum(((vals[b] >> lane) & 1) << b for b in range(n))
+                    tn = [(vals[n + i] >> lane) & 1 for i in range(nt)]
+                    obs[(gn, tn.index(1) if sum(tn) == 1 else -1)] += 1
+                R[(c, j)] = obs
+        # the next states also depend on registers not yet paired (a renamed alias of a state flag is a free input
+        # on each side), so a transition agrees only where those agree: pick the map with the most agreeing
+        # transitions (unique best, a majority of all lanes); the induction proof decides
+        import itertools
+        lanes = 64 * words
+        best, second, pi = -1, -1, None
+        for codes in itertools.combinations(range(1 << n), nt):
+            for perm in itertools.permutations(range(nt)):
+                cand = dict(zip(codes, perm))
+                sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
+                         if ti >= 0 and cand.get(gn) == ti)
+                if sc > best:
+                    best, second, pi = sc, best, cand
+                elif sc > second:
+                    second = sc
+        if pi is None or best == second or 2 * best <= nt * lanes:
+            log.append(f"fsm: {base} ({n} gold / {nt} gate bits): no unique encoding (best {best}, next {second} of "
+                       f"{nt * lanes} transitions), none proposed")
+            continue
+        for c, j in sorted(pi.items()):
+            L.hyp[("gate", tk[j])] = ("cube", "gold", list(gk), [(c >> b) & 1 for b in range(n)])
+            n_new += 1
+        L.cons.append(("gold", list(gk), [[(c >> b) & 1 for b in range(n)] for c in sorted(pi)]))
+        log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j]}" for c, j in sorted(pi.items())))
+    return n_new
+
+
+def drop_failed(L, bad):
+    """drop failing hypotheses / constraints (a failing constraint takes its FSM's cube hypotheses with it)."""
+    for n in bad:
+        if n.startswith("cons:"):
+            _, sd, k = n.split(":", 2)
+            for c in [c for c in L.cons if c[0] == sd and c[1][0] == k]:
+                L.cons.remove(c)
+                for key, h in list(L.hyp.items()):
+                    if h[0] == "cube" and list(h[2]) == list(c[1]):
+                        L.hyp.pop(key)
+            continue
+        _, sd, k = n.split(":", 2)
+        L.hyp.pop(("both" if sd == "bothg" else sd, k), None)
+
+
+def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
     duplicates, or the two frontends named a register differently, e.g. a register that drives an output port):
       1. pairing by simulation: gold-only and gate-only flops (and matched flops, for merges) are paired when their
@@ -1025,12 +1363,24 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
       3. proof: every hypothesis (D(flop) == partner's D / == constant) is an output of one miter, proved by ABC with
          all hypotheses assumed: an inductive invariant.  Failing hypotheses are dropped and the loop repeats (new
          candidates for `rounds` rounds, then refinement only, which shrinks monotonically to an inductive set).
-    Unpaired flops stay free inputs."""
+    Unpaired flops stay free inputs.
+    rounds=24 (was 10): in deep lane trees (dsdv_gunit_l4 g_lv[3..4], kv3_astk zn u_tag) a merged valid line
+    (u_tv.line[4] == u_k5.g_r.v == valid_out) is dropped while its upstream index-line constants are still being
+    refined and needs adding rounds after them; 10 left it free -> false NOT EQUIVALENT (gunit_l4 895 points,
+    EQUIVALENT at 24 rounds, 738 s)."""
     relayout(L, log)
     renamed(L, log)
     replica_proposals(L, log)
+    register_alias_proposals(L, log)
+    fsm_proposals(L, log)
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
-    for rnd in range(rounds + 40):
+    # refine-only rounds drop at least one hypothesis each, so they always end; past rounds + 40 they go on
+    # while the time budget lasts (s81 hd_tile: false copies along 60-stage skew delay lines peel one stage
+    # per round -- stopping at 64 rounds freed every unmatched flop and left 83 points differing)
+    t_ref, budget = time.time(), float(os.environ.get("OT_LEC_REFINE_S", "3600"))
+    for rnd in range(rounds + 1000):
+        if rnd >= rounds + 40 and time.time() - t_ref > budget:
+            break
         adding = rnd < rounds           # then refine only: drop what fails until the set is inductive
         before = dict(L.hyp)
         if adding:
@@ -1049,6 +1399,15 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                 for k in L.matched:
                     if k.startswith("ff:"):
                         msig.setdefault(sv("gold", k), []).append(k)
+                # gold-only registers that already have a gate partner act as matched for pairing: synthesis may
+                # merge a second gold register into the same gate flop (eng lookup: roff[j] <= r8[j][4:3] is
+                # baddr[j][4:3] since r256 is 0 mod 256; gate keeps only baddr#t[j][4:3], whose gold partner is
+                # the gold-only baddr[j][4:3]; with matched-only candidates roff stayed free -> q_off differed)
+                for (sd, c), h in L.hyp.items():
+                    ok = h[2] if h[0] == "eq" else None
+                    if sd == "gate" and h[1] == "gold" and ok in L.gp and ok not in L.tp and ok.startswith("ff:") \
+                            and ("gold", ok) not in L.hyp:
+                        msig.setdefault(sv("gold", ok), []).append(ok)
                 new = 0
                 free_g = [k for k in L.gonly if k.startswith("ff:") and ("gold", k) not in L.hyp and k not in gbound]
                 # (a bit that simulates constant pairs here only once its constant hypothesis has failed: the
@@ -1072,8 +1431,11 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                     a, b = IDXK.match(k), h[0] == "eq" and IDXK.match(h[2])
                     if sd == "gold" and a and b and a.group(1) == b.group(1):
                         strides[a.group(1)][int(b.group(2)) - int(a.group(2))] += 1
+                # a cohort representative (partnered: other gold flops' "eq" partner) pairs too: synthesis may
+                # have merged the whole cohort into a third, name-matched register (kv3_pv_pair: every lane's
+                # u_prod.v3 == the slice's fc[2]; the rep left free made all 32 lane fault registers differ)
                 for k in L.gonly:
-                    if not k.startswith("ff:") or ("gold", k) in L.hyp or k in partnered:
+                    if not k.startswith("ff:") or ("gold", k) in L.hyp:
                         continue
                     s = sv("gold", k)
                     if s in (0, mask) and tried[("gold", k, "c")] < 1:
@@ -1095,7 +1457,9 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                         if hit:
                             break
                         for c in closest(k, msig.get(t, [])):
-                            if tried[("gold", k, c, inv)] < 2:
+                            # (an anchored gold-only candidate may itself have been paired this pass: never
+                            # bind to a register already bound, or two anchored registers bind to each other)
+                            if c != k and ("gold", c) not in L.hyp and tried[("gold", k, c, inv)] < 2:
                                 hit = ("gold", k, ("eq", "gold", c, inv))
                                 break
                         if hit:
@@ -1145,6 +1509,77 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                             if tried[("gate", c, k, 0)] < 2:
                                 L.hyp[("gate", c)] = ("eq", "gold", k, 0)
                                 new += 1
+                    # load-enable registers merged by synthesis into a MATCHED sibling bit (no reset, one enable,
+                    # equal data: QC su8 fa[313]/fa[314] -> fa[315]): with the unpaired registers and the matched
+                    # bits of their own vectors held at 0 / at 1 (self-hold removed, other state random), a gold-only
+                    # register pairs with the one matched sibling of its (non-constant) cofactor signature, several
+                    # gold registers may share it; induction decides
+                    ug = [k for k in ug if ("gold", k) not in L.hyp]
+                    vb = {IDX.match(k).group(1) for k in ug if IDX.match(k)}
+                    hold = {k for k in L.matched if k.startswith("ff:") and IDX.match(k) and IDX.match(k).group(1) in vb}
+                    if ug and hold:
+                        hof = []
+                        for c in (0, 1):
+                            mc, _ = L.build(with_compare=False, with_hyp=False, free_const=c, hold_matched=hold)
+                            vc, _ = mc.simulate(words, seed=37 * rnd + it + 3)
+                            hof.append(lambda side, k, vc=vc, dl=dict(L.dlit): lit_val(vc, mask, dl[(side, k)]))
+                        hm = {}
+                        for k in hold:
+                            if ("both", k) not in L.hyp:
+                                hm.setdefault((hof[0]("gold", k), hof[1]("gold", k)), []).append(k)
+                        hg = {k: (hof[0]("gold", k), hof[1]("gold", k)) for k in ug}
+                        m, kind = L.build(with_compare=False, with_hyp=False)
+                        v2, _ = m.simulate(words, seed=41 * rnd + it + 7)
+                        looks_const = {k for k in ug if lit_val(v2, mask, L.dlit[("gold", k)]) in (0, mask)}
+                        for k, a in hg.items():
+                            if a[0] in (0, mask) and a[1] in (0, mask):
+                                continue
+                            # several siblings may look alike (sign-extension / borrow bits): nearest name first,
+                            # a failed pair moves on to the next one
+                            # (a constant-looking register tries its constant first; at most 3 siblings per register)
+                            if tried[("gold", k, "sib")] >= 3 or (tried[("gold", k, "c")] < 1 and
+                                                                   k in looks_const):
+                                continue
+                            c = next((c for c in closest(k, hm.get(a, [])) if tried[("gold", k, c, 0)] < 1), None)
+                            if c:
+                                tried[("gold", k, "sib")] += 1
+                                L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+                                new += 1
+                    # merged into a matched register of ANOTHER vector (HBM tkm tile: self-holding X[0..3][j] ->
+                    # up_out[86 i + j], gt[64..67][j] -> q_bg[8][86 j + 85]): the same cofactor test with every
+                    # SELF-HOLDING matched register (own Q within 8 AND levels of its next state: the hold mux) held at
+                    # 0 / at 1 -- holding every matched register would make enables / data constant too; a pair
+                    # proposed here is proved by induction like any other
+                    ug2 = [k for k in ug if ("gold", k) not in L.hyp and tried[("gold", k, "sib")] < 3]
+                    if ug2:
+                        m, kind = L.build(with_compare=False, with_hyp=False)
+                        var_of = {kk: v for v, (t, kk) in kind.items() if t == "matched"}
+                        hall = {k for k in L.matched if k.startswith("ff:") and k in var_of and
+                                var_of[k] in m.near_inputs(L.dlit[("gold", k)], 8)}
+                        hof = []
+                        for c in (0, 1):
+                            mc, _ = L.build(with_compare=False, with_hyp=False, free_const=c, hold_matched=hall)
+                            vc, _ = mc.simulate(words, seed=43 * rnd + it + 11)
+                            hof.append(lambda side, k, vc=vc, dl=dict(L.dlit): lit_val(vc, mask, dl[(side, k)]))
+                        hm = {}
+                        for k in hall:
+                            if ("both", k) not in L.hyp:
+                                a = (hof[0]("gold", k), hof[1]("gold", k))
+                                if a[0] not in (0, mask) or a[1] not in (0, mask):
+                                    hm.setdefault(a, []).append(k)
+                        m, kind = L.build(with_compare=False, with_hyp=False)
+                        v2, _ = m.simulate(words, seed=47 * rnd + it + 13)
+                        for k in ug2:
+                            a = (hof[0]("gold", k), hof[1]("gold", k))
+                            if (a[0] in (0, mask) and a[1] in (0, mask)) or len(hm.get(a, [])) > 8 or \
+                                    (tried[("gold", k, "c")] < 1 and lit_val(v2, mask, L.dlit[("gold", k)]) in (0, mask)):
+                                continue
+                            c = next((c for c in closest(k, hm.get(a, [])) if tried[("gold", k, c, 0)] < 1), None)
+                            if c:
+                                tried[("gold", k, "sib")] += 1
+                                tried[("gold", k, c, 0)] += 1
+                                L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+                                new += 1
                 # Duplicate feedback copies can choose different representatives in each frontend.
                 # Group on gold signatures even before individual gold/gate D functions agree;
                 # the hypothesis miter below proves the equality on BOTH sides simultaneously.
@@ -1170,11 +1605,17 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
             # constants for the gold-only flops left: fixpoint in simulation, starting from 0
             partners = anchored(L)
             # (a constant that failed while its neighbours were wrong is retried once its next state has become
-            # a structural constant under the hypotheses now in place)
+            # a structural constant under the hypotheses now in place -- for a self-holding register, with the
+            # unpaired registers (itself) held at 0: eng u_e.hq_atom[30] <= iss ? baddr[][35] : hq_atom[30] is
+            # dropped in early rounds and becomes constant only once the cb_q -> r8 -> baddr chain is proved)
+            m, kind = L.build(with_compare=False, with_hyp=False, free_const=0)
+            zdl = dict(L.dlit)
+            m, kind = L.build(with_compare=False, with_hyp=False)
             for side, keys in (("gold", L.gonly), ("gate", L.tonly)):    # gate-only flops: constant candidates too
                 for k in keys:
                     if k.startswith("ff:") and (side, k) not in L.hyp and k not in partners and \
-                            (tried[(side, k, "c")] < 2 or L.dlit.get((side, k), 2) in (0, 1)):
+                            (tried[(side, k, "c")] < 2 or L.dlit.get((side, k), 2) in (0, 1) or
+                             (zdl.get((side, k)) == 0 and tried[(side, k, "c")] < 6)):
                         L.hyp[(side, k)] = ("const", L.dlit.get((side, k)) if L.dlit.get((side, k)) in (0, 1) else 0)
             # matched flops whose next state simulates constant on both sides (synthesis may have merged such a
             # flop into another constant one, so the gate's copy is a different, free register)
@@ -1187,6 +1628,27 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                 a, b = lit_val(val, mask, L.dlit[("gold", k)]), lit_val(val, mask, L.dlit[("gate", k)])
                 if a == b and a in (0, mask):
                     L.hyp[("both", k)] = ("const", 1 if a else 0)
+            # self-holding constants: a matched register that only ever reloads a constant or holds itself
+            # (eng u_e.hq_atom[30] <= iss ? baddr[][35] (constant 0) : hq_atom[30]) simulates non-constant from a
+            # random state; with the free matched registers held at c its next state is c on both sides, and its
+            # own Q is in its next-state cone.  Candidate only; induction decides.
+            var_of = {kk: v for v, (t, kk) in kind.items() if t == "matched"}
+            gdl = dict(L.dlit)
+            cands = {k for k in L.matched if k.startswith("ff:") and ("both", k) not in L.hyp and k not in reps
+                     and tried[("both", k, "c")] < 2}
+            selfc = []
+            for c in (0, 1):
+                mc, _ = L.build(with_compare=False, with_hyp=False, free_const=c, hold_matched=cands)
+                vc, _ = mc.simulate(words, seed=997 + c)
+                want = mask if c else 0
+                for k in sorted(cands):
+                    if lit_val(vc, mask, L.dlit[("gold", k)]) == want and lit_val(vc, mask, L.dlit[("gate", k)]) == want \
+                            and k in var_of and len(selfc) < 4096 and (var_of[k] in m.cone_inputs(gdl[("gold", k)])):
+                        selfc.append((k, c))
+            m, kind = L.build(with_compare=False, with_hyp=False)
+            for k, c in selfc:
+                if ("both", k) not in L.hyp:
+                    L.hyp[("both", k)] = ("const", c)
             for it in range(sim_iters):
                 m, kind = L.build(with_compare=False, with_hyp=False)
                 val, mask = m.simulate(words, seed=1000 + it)
@@ -1207,6 +1669,10 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                         changed += 1
                 if not changed:
                     break
+        if adding:
+            # State relations rejected before aliases/copies settled can become
+            # inductive later; retry while candidates are still being added.
+            fsm_proposals(L, log)
         if not L.hyp:
             return
         m, kind = L.build(with_compare=False, with_hyp=True)
@@ -1219,14 +1685,18 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
             if L.hyp == before or not adding:
                 return
             continue
+        drop_failed(L, [n for n in bad if n.startswith("cons:")])
         for n in bad:
+            if n.startswith("cons:"):
+                continue
             _, side, k = n.split(":", 2)
             side = "both" if side == "bothg" else side
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
-            tried[(side, k, "c") if h[0] == "const" else (side, k, h[2], h[3])] += 1
+            tried[(side, k, "c") if h[0] == "const" else (side, k, str(h[2]), str(h[3]))] += 1
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
+    L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
 
 
@@ -1266,6 +1736,15 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         for f in env["VERILOG_FILES"].split():
             srcmods |= set(src_modules(kpath(kit, f)))
         lib_bbs = [l for l in macro_libs(env, kit) if not set(lib_cells(l)) <= srcmods]
+        # 0. lint: implicit nets fail the kit before any proof (see implicit_net_lint)
+        hits = implicit_net_lint(env, kit, lib_bbs, out, log)
+        rec["implicit_nets"] = [dict(file=f.replace("/work/", "", 1), line=int(n), net=w) for f, n, w in hits[:200]]
+        if hits:
+            rec["verdict"] = "LINT FAIL"
+            rec["reason"] = (f"{len(hits)} implicit net(s) created (identifier used before its declaration or "
+                             f"undeclared; undriven in the yosys-slang synthesis): " +
+                             ", ".join(f"{Path(f).name}:{n} {w}" for f, n, w in hits[:8]))
+            raise LintFail(rec["reason"])
         # 1. black boxes of the gold elaboration (ports) -> one stub file for both sides
         run_yosys(bb_script(env, kit, gold_fe, lib_bbs, out / "bb"), out / "bb.ys", log)
         bbports = parse_bb_verilog(out / "bb.v")
@@ -1369,6 +1848,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             if rec["x_dont_care_points"]["n"]:
                 rec["note"] += (f"; {rec['x_dont_care_points']['n']} of them reach an RTL X (don't care: equal "
                                 f"wherever the RTL is not X)")
+    except LintFail:
+        pass
     except Unproven as e:
         rec["verdict"], rec["reason"] = "UNPROVEN", str(e)
     except (LecError, OSError, subprocess.SubprocessError, ValueError, KeyError) as e:
@@ -1392,8 +1873,12 @@ def via_docker(args, image, mem):
     Path(out).mkdir(parents=True, exist_ok=True)
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
-           "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}",
-           image, "bash", "-lc"]
+           "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}"]
+    # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
+    sol = os.environ.get("OT_LEC_SOLVER", "")
+    if sol and os.path.isdir(sol):
+        cmd += ["-v", f"{os.path.abspath(sol)}:/lecsolver:ro", "-e", "LEC_SOLVER_PATH=/lecsolver"]
+    cmd += [image, "bash", "-lc"]
     inner = ["python3", "-I", "/lec.py", "/work", "--out", "/lecout", "--conflicts", str(args.conflicts), "--jobs", str(args.jobs)]
     if args.netlist:
         n = str(Path(args.netlist).resolve())
@@ -1441,7 +1926,7 @@ def main(argv=None):
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "
           f"({r['t_total_s']} s)")
-    return {"EQUIVALENT": 0, "NOT EQUIVALENT": 1, "UNPROVEN": 2}.get(r["verdict"], 3)
+    return {"EQUIVALENT": 0, "NOT EQUIVALENT": 1, "LINT FAIL": 1, "UNPROVEN": 2}.get(r["verdict"], 3)
 
 
 if __name__ == "__main__":
