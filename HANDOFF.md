@@ -264,3 +264,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 21:42 PDT COORD: METHODOLOGY section 10 rulings on 15 contradictions (14 ruled, 9.6 0.9 GHz domain -> owner).
 2026-10-24 21:43 PDT KV: kv44 bound top on v3.8x published for TOK-QK (claude/kv-bind-1024r @1de24d72a, bound_kv44; bind/verify/lint/port-bind PASS, BIND_GATE INCOMPLETE = smoke pending; boot image must be recompiled: RT 32, RL 64). Decision 14 PHY check: hck = die clock supported (DFI 1:4 @ 9.6 Gb/s, calendar duty <= 0.73).
 2026-10-24 21:45 PDT COORD: INFRA.WATCH done (STALE 15->0, main f83206311c pushed by the infra agent directly -- ROOT-MERGE to note; team-level evidence can mask single TODO tasks: S81.XDIE/S81.IR checked by hand).
+2026-10-24 21:45 PDT COORD: prune pass 2 done (epyc2 scratch2 84->69%, rtx-pro 86->73%, 601 GiB idle worktrees, rescues pushed). Lasting fix = sparse lane worktrees (git -C, verified paths only).

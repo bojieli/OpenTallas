@@ -65,7 +65,7 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 
 ## INFRA · fleet and coordination
 - [ ] INFRA.SIGNOFF 138 old modules need re-signoff (DBs lost) · S81 / QC / KV / HBM · RUNNING
-- [ ] INFRA.DISK epyc2 scratch 87%, rtx-pro 83% (full 43 GB worktrees) · COORD · RUNNING · prune pass 2
+- [ ] INFRA.DISK New lane worktrees sparse (no full 43 GB checkouts); disks now epyc2 69% rtx-pro 73% · COORD · TODO
 
 ## WAITS · who
 ### Waiting on the owner
