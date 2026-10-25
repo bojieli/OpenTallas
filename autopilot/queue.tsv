@@ -341,3 +341,4 @@ s81_head	ot_s81hd_elemB_cv	epyc1:/srv/opentallas-scratch2/claude/path-s81-headb/
 s81	ot_s81ph_native_sel_hist_bank	epyc1:/srv/opentallas-scratch2/claude/kits-spare2/hb/ot_s81ph_native_sel_hist_bank_hb	claude/kits-spare2-hb-1025@7d5b9515ca	REQ	[KITS-SPARE-2/HB hist_bank]	8	13000	KITS-SPARE	finish		8
 hbm	ot_hbm_accel_smh_bdc	epyc1:/srv/opentallas-scratch2/claude/path-hbm-sm/kits/ot_hbm_accel_smh_bdc_34c62882e5f9	claude/path-hbm-sm-1025@50ba781067	REQ	PATH-HBM-SM-CLUSTER	24	59985	PATH-HBM-SM	finish		8
 hbm	ot_hbm_accel_smh_tct	epyc1:/srv/opentallas-scratch2/claude/path-hbm-sm/kits/ot_hbm_accel_smh_tct_87946dfc1f6d	claude/path-hbm-sm-1025@50ba781067	REQ	PATH-HBM-SM-CLUSTER	24	66897	PATH-HBM-SM	finish		8
+hbm	ot_hbm_su_static_sfustore_hw_f4c4041231a5	epyc2:/srv/opentallas-scratch2/claude/hbm-kits-1025/batch2/runs/ot_hbm_su_static_sfustore_hw_f4c4041231a5	claude/hbm-kits-b2-1025@282321554f	FAIL		32	25000	HBM-KITS	finish		8
