@@ -81,7 +81,7 @@ PAIR_SKEW_MAX_PS = 80.0
 # IO virtual-clock reference: 'sdc' (kit SDC value), 'pin-flop-mean' (FF only, opt-in with a contract), 'rebind'
 # (FLOW 10-25, default for kits with a per-corner insertion binding: TT and FF each rebound to their routed pin-register
 # mean, clock check FAILs when a mean is more than the tolerance from the bound value)
-VCLK_MODES = ("sdc", "pin-flop-mean", "rebind")
+VCLK_MODES = ("sdc", "pin-flop-mean", "rebind", "bound-ff")
 PAIR_VERIFY_TOL_PS = 1.0             # credited path-end skew vs CK-arrival skew - CPPR (integrity check)
 PAIR_CREDIT_MAX = 5000                 # exact-credit path searches per check before the worst becomes a bound
 SPREAD_MAX_PS = PAIR_SKEW_MAX_PS  # legacy record field; spread is information only
@@ -272,6 +272,19 @@ if {[llength $so_vclk] == 1 && $so_ff_n > 0 && $so_ff_bad == 0 && [dict size $so
 }
 """
 
+# FLOW-FIX 10-25 'bound-ff' (hard-core latency contract kits, ROOT-MERGE2: no rebind inside a core): the FF session
+# times IO against the kit's DECLARED FF insertion (sdc_lint ctx insertion_ff_ps, the same value the in-flow FF hold
+# repair bound), never silently against the single SDC (TT) vclk latency.
+FF_BOUND_TCL = r"""
+if {[llength $so_vclk] == 1} {
+  set_clock_latency -source @FF_BOUND@ [lindex $so_vclk 0]
+  so FF_VCLK applied mode bound_ff clock [get_full_name [lindex $so_vclk 0]] latency_ps @FF_BOUND@
+} else {
+  set so_reference_ok 0
+  so FF_VCLK unavailable mode bound_ff vclks [llength $so_vclk]
+}
+"""
+
 SESSION_TCL = r"""
 proc so {k args} { puts "SO $k [join $args { }]" }
 proc so_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }; return [format %.2f [sta::time_sta_ui $t]] }
@@ -418,7 +431,7 @@ exit
 
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
-                ff_vclk="sdc"):
+                ff_vclk="sdc", ff_bound_ps=None):
     if spef:
         par, src = "read_spef /base/6_final.spef", "spef"
     else:
@@ -429,7 +442,12 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
     # FLOW 10-25 'rebind' (ruling 9.7 / 5e): EVERY sign-off corner times its IO paths against that corner's routed
     # RCX pin-register mean; the clock check bounds it against the kit's per-corner bound insertion
     on = (corner == "ff" and ff_vclk == "pin-flop-mean") or (corner in ("tt", "ff") and ff_vclk == "rebind")
-    t = SESSION_TCL.replace("@FF_VCLK@", FF_VCLK_TCL if on else "")
+    if corner == "ff" and ff_vclk == "bound-ff":
+        if ff_bound_ps is None:
+            raise ValueError("bound-ff needs the declared FF insertion (ff_bound_ps)")
+        t = SESSION_TCL.replace("@FF_VCLK@", FF_BOUND_TCL.replace("@FF_BOUND@", f"{float(ff_bound_ps):.6f}"))
+    else:
+        t = SESSION_TCL.replace("@FF_VCLK@", FF_VCLK_TCL if on else "")
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@FANOUT_MAX@", str(int(fanout_max))),
@@ -580,7 +598,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     for i, lp in enumerate(mlibs):
         mounts.append((f"ml{i}", str(Path(lp).parent)))
         ml_ctr.append(f"/ml{i}/{Path(lp).name}")
-    (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name, ff_vclk=ff_vclk))
+    (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name, ff_vclk=ff_vclk,
+                                                    ff_bound_ps=disc.get("ff_bound_ps")))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -733,6 +752,33 @@ def run_face_guard(disc, clock_ports=()):
 
 
 # ---- verdict -------------------------------------------------------------------------------------------------------
+FF_REF_TOL_PS = 10.0   # COORD 10-25 (GEOM-REVIEW-3 HBM argmax la1/s2f2): FF IO latency == TT vs measured FF mean
+
+
+def ff_reference_problem(rec, cff, requested):
+    """COORD 10-25: FF hold must be timed against a per-corner FF insertion reference, never silently against the
+    kit SDC's single (TT) IO vclk latency.  HBM argmax la1/s2f2 signed FF hold vs 250 ps while its routed FF
+    pin-register mean was 198.4 ps (-27.8 reported, ~+24 real).  -> 'FAIL_SIGNOFF ff_ref_missing: ...' or None.
+      * ff_vclk 'sdc' (no rebind / pin-flop-mean reference) and no per-corner FF bound -> FAIL;
+      * a FF bound equal to the TT value while the measured FF pin-register mean differs from it by > 10 ps -> FAIL."""
+    pol = rec.get("policy", {})
+    b = pol.get("insertion_bound") or {}
+    ffm = (cff.get("insertion_pinflops") or {}).get("mean")
+    if requested == "bound-ff":
+        if pol.get("ff_vclk_bound_ps") is None:
+            return "FAIL_SIGNOFF ff_ref_missing: bound-ff requested without a declared FF insertion"
+        return None
+    if requested == "sdc" and b.get("ff") is None:
+        return ("FAIL_SIGNOFF ff_ref_missing: no per-corner FF insertion reference (ff_vclk sdc: FF hold timed against "
+                "the single SDC/TT IO vclk latency" + (f"; measured FF pin-register mean {ffm:.1f} ps" if ffm is not None
+                                                       else "") + "); regenerate the kit with the per-corner binding")
+    if b.get("ff") is not None and b.get("tt") is not None and abs(float(b["ff"]) - float(b["tt"])) < 0.5 \
+            and ffm is not None and abs(ffm - float(b["ff"])) > FF_REF_TOL_PS:
+        return (f"FAIL_SIGNOFF ff_ref_missing: FF IO latency {float(b['ff']):g} ps equals the TT value while the measured "
+                f"FF pin-register mean is {ffm:.1f} ps (> {FF_REF_TOL_PS:g} ps apart)")
+    return None
+
+
 def evaluate(rec, insertion_target=None):
     """fills rec['checks'] and rec['verdict'] / rec['reasons'] from rec['corners'] + record checks."""
     C = rec.get("corners", {})
@@ -768,12 +814,16 @@ def evaluate(rec, insertion_target=None):
         # STD_* is printed even when the overlay could not be applied. In that
         # case it is only another raw-SDC measurement, not boundary-hold proof.
         reference = C["ff"].get("ff_vclk_reference")
-        reference_ok = (requested == "sdc" or (reference or "").startswith("applied mode pin_flop_mean "))
+        reference_ok = (requested == "sdc" or (reference or "").startswith("applied mode pin_flop_mean ")
+                        or (requested == "bound-ff" and (reference or "").startswith("applied mode bound_ff ")))
         if not ov.startswith("applied ") or not reference_ok:
             v = "NOT RUN"
+        why = None if v != "NOT RUN" else "standard boundary-hold overlay was not applied or requested FF clock reference was unavailable"
+        ffr = ff_reference_problem(rec, C["ff"], requested)
+        if ffr:
+            v, why = "FAIL", ffr
         put("hold_ff", v, wns_ps=w, tns_ps=C["ff"].get("std_tns_min"), violators=C["ff"].get("std_nviol_min"),
-            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov, ff_vclk_reference=reference,
-            reason=None if v != "NOT RUN" else "standard boundary-hold overlay was not applied or requested FF clock reference was unavailable")
+            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov, ff_vclk_reference=reference, reason=why)
     else:
         put("hold_ff", "NOT RUN")
     if ok_corner("ss"):
@@ -874,7 +924,8 @@ def evaluate(rec, insertion_target=None):
 
 def _detail(k, c):
     if k in ("setup_tt", "hold_ff") and c.get("wns_ps") is not None:
-        return f" WNS {c['wns_ps']:+.2f} ps, {int(c.get('violators') or 0)} endpoints"
+        r = f"; {c['reason']}" if k == "hold_ff" and str(c.get("reason") or "").startswith("FAIL_SIGNOFF") else ""
+        return f" WNS {c['wns_ps']:+.2f} ps, {int(c.get('violators') or 0)} endpoints{r}"
     if k == "drv" and c.get("failing"):
         return " " + ", ".join(f"{x.upper()} slew {v['slew']} cap {v['cap']}" for x, v in c["failing"].items())
     if k == "unconstrained" and c.get("counts"):
@@ -929,6 +980,18 @@ def cmd_run(a):
         # (ROOT-MERGE2 10-25: no FLOW per-corner insertion binding inside a hard-core contract kit either.)
         if a.insertion_target is not None:
             raise SystemExit("signoff: --insertion-target conflicts with the kit's hard-core latency contract")
+        # FLOW-FIX 10-25 (COORD: no silent FF fallback to the SDC/TT vclk): a core kit whose sdc_lint ctx declares the
+        # per-corner FF insertion (insertion_ff_ps: HBM / KV / QC core generators, the value the in-flow FF-only GRT
+        # hold repair bound) times FF hold against that declared value ('bound-ff'); no rebind, no clock-check bound
+        # (ROOT-MERGE2).  Without it the FF hold check FAILs ff_ref_missing.
+        if getattr(a, "ff_bound_ps", None) is not None:                # explicit declared value (CLI-checked)
+            disc["ff_bound_ps"] = float(a.ff_bound_ps)
+        elif disc.get("sdc_lint_ctx"):
+            lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text())
+            if lctx.get("insertion_ff_ps") is not None and a.ff_vclk in ("auto", "bound-ff"):
+                a.ff_vclk = "bound-ff"
+                disc["ff_bound_ps"] = float(lctx["insertion_ff_ps"]) / float(lctx.get("time_unit_ps") or 1.0)
+                a.ff_vclk_contract = a.ff_vclk_contract or f"declared core FF insertion {disc['sdc_lint_ctx']}"
     elif disc.get("sdc_lint_ctx"):                                  # die-plan kit: the bound (plan) insertion
         lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text())
         if a.insertion_target is None:
@@ -948,6 +1011,7 @@ def cmd_run(a):
                            spread_max_ps=SPREAD_MAX_PS, spread_corners=list(SPREAD_CORNERS),
                            insertion_tol_ps=INSERTION_TOL_PS, fanout_max=FANOUT_MAX,
                            ff_vclk=a.ff_vclk, ff_vclk_contract=a.ff_vclk_contract, insertion_bound=bound,
+                           ff_vclk_bound_ps=disc.get("ff_bound_ps"),
                            hold_overlay="set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
                            derate="none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); "
                                   "ocv5_* = flat late 1.05 / early 0.95, information only",
@@ -1016,11 +1080,18 @@ def main(argv=None):
                    help="IO virtual-clock reference: auto = rebind when the kit carries a per-corner insertion "
                         "binding (FLOW 10-25), else sdc; pin-flop-mean = opt-in FF-only measured reference")
     r.add_argument("--ff-vclk-contract", help="source-pinned measured core clock contract authorizing the FF reference")
+    r.add_argument("--ff-bound-ps", type=float,
+                   help="bound-ff: declared FF IO insertion (ps) for an already-routed core kit whose sdc_lint ctx has no "
+                        "insertion_ff_ps; requires --ff-vclk bound-ff and --ff-vclk-contract naming its source")
     r.add_argument("--dry", action="store_true")
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)
     a = ap.parse_args(argv)
+    if a.cmd == "run" and a.ff_bound_ps is not None and a.ff_vclk != "bound-ff":
+        ap.error("--ff-bound-ps requires --ff-vclk bound-ff")
+    if a.cmd == "run" and a.ff_bound_ps is not None and not (a.ff_vclk_contract or "").strip():
+        ap.error("--ff-bound-ps requires --ff-vclk-contract (source of the declared FF insertion)")
     if a.cmd == "run" and a.ff_vclk == "pin-flop-mean" and not (a.ff_vclk_contract or "").strip():
         ap.error("--ff-vclk pin-flop-mean requires --ff-vclk-contract (measured core clock contract)")
     return cmd_run(a) if a.cmd == "run" else cmd_verdict(a)
