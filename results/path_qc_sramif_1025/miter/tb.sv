@@ -21,19 +21,22 @@ module tb;
   always @(posedge ck) begin o_bq_d <= o_bq; o_pq_d <= o_pq; end
   integer c, i, eb = 0, ep = 0, ef = 0, ez = 0, nzb = 0, nzp = 0, rdb = 0;
   integer seed = 1;
+  reg [63:0] xs;
+  function [31:0] r32; input dummy; begin xs = xs ^ (xs << 13); xs = xs ^ (xs >> 7); xs = xs ^ (xs << 17); r32 = xs[31:0]; end endfunction
   task rnd; begin
-    bs_re = ($random(seed) & 3) != 0;
-    bs_addr = {(($random(seed) & 31) == 0) ? $random(seed) : 15'd0, 9'd0} | ($random(seed) & 9'h1ff);
-    tw_we = ($random(seed) & 3) == 0;
-    tw_kind = (($random(seed) & 7) == 0) ? $random(seed) : 2'd2;
-    tw_kind_p = (($random(seed) & 7) == 0) ? $random(seed) : 2'd3;
-    tw_addr = $random(seed);
-    for (i = 0; i < 32; i = i + 1) tw_data[32*i +: 32] = $random(seed);
-    p_re = ($random(seed) & 3) != 0;
-    p_idx = $random(seed);
+    bs_re = (r32(0) & 3) != 0;
+    bs_addr = {((r32(0) & 31) == 0) ? r32(0) : 15'd0, 9'd0} | (r32(0) & 9'h1ff);
+    tw_we = (r32(0) & 3) == 0;
+    tw_kind = ((r32(0) & 7) == 0) ? r32(0) : 2'd2;
+    tw_kind_p = ((r32(0) & 7) == 0) ? r32(0) : 2'd3;
+    tw_addr = r32(0);
+    for (i = 0; i < 32; i = i + 1) tw_data[32*i +: 32] = r32(0);
+    p_re = (r32(0) & 3) != 0;
+    p_idx = r32(0);
   end endtask
   initial begin
     if (!$value$plusargs("seed=%d", seed)) seed = 1;
+    xs = 64'h9E3779B97F4A7C15 ^ {32'd0, seed};
     rst_n = 0; rnd;
     for (c = 0; c < N; c = c + 1) begin
       @(negedge ck);

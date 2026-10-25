@@ -15,6 +15,11 @@ if top == 'qfd_dv_s8x_btab':
     for b in range(4):
         exp.update({f'g_btb[{b}].g_r.u_rce': 1, f'g_btb[{b}].g_r.u_ra': 7, f'g_btb[{b}].g_r.u_we': 1,
                     f'g_btb[{b}].g_r.u_wa': 7, f'g_btb[{b}].g_r.u_wd': 256})
+elif top == 'qfd_dv_s8x_vmr':
+    exp = {'g_rs1.u_rs': 25}
+    for b in range(2):
+        exp.update({f'g_wr[{b}].g_r.u_d': 256, f'g_wr[{b}].g_r.u_r': 10, f'g_wr[{b}].g_r.u_e': 1, f'g_wr[{b}].g_r.u_m': 8,
+                    f'g_bank[{b}].g_rr.u_rce': 1, f'g_bank[{b}].g_rr.u_ra': 10})
 else:
     exp = {'g_cb1.u_rbk': 1}
     for b in range(2):

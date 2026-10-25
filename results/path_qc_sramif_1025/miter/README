@@ -6,3 +6,7 @@ Checks every cycle after warm-up: new.q(t+1) == orig.q(t) (bs_q, p_q), fault(t) 
   mut_pg: prog u_hi read-enable decoded for the other bank (wrong-bank read)    -> must mismatch
   mut_bw: btab per-SRAM write-data landing takes bank bk^1's slice (wrong bank) -> must mismatch
 Simulator: Verilator 5.032 (verilator/verilator:v5.032, --binary --timing).
+vmr (tb_vmr.sv, miter_vmr.log): ORIG_vmr vs qfd_dv_s8x_vmr #(.MIF(1)); rows 0..15 so reads hit written rows and same-row
+read/write collisions occur; q(t+1) == orig q(t), fault equal; also MIF=0 vs ORIG (0 mismatches).  Mutants:
+  mut_vb: per-bank read-enable decoded for the other bank                         -> must mismatch
+  mut_vc: collision compare against the landing (mwe/mrow) instead of the relay   -> must mismatch (collision timing)

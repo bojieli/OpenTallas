@@ -25,7 +25,12 @@
 endmodule
 
 // ===================================================================================================== VM replica leaf
-module qfd_dv_s8x_vmr #(parameter integer MUT = 0) (
+// MIF (PATH-QC-SRAMIF 2026-10-25, GEOM-REVIEW F6 amend on vmr_s6h): MIF=0 = the vm8 replica (the shared pa_addr/pa_re pin
+// registers drive both banks' r_addr/r_ce through the bank/collision decode, 37-145 um).  MIF=1 = per-bank read landing
+// registers (r_ce with the bank and write-collision decode in front, r_addr), anchored at each bank's pin edge; the write
+// path gets a shared relay stage in front of the per-bank g_mw landings, so MIF=1 is exactly MIF=0 delayed by one cycle
+// on q (read +1, VM write +1, read/write collision order unchanged); fault unchanged.
+module qfd_dv_s8x_vmr #(parameter integer MUT = 0, parameter integer MIF = 0) (
     input  wire            ck,
     input  wire            rst_n,
     // read port (W face)
@@ -169,16 +174,31 @@ module qfd_dv_s8x_vmr #(parameter integer MUT = 0) (
     wire [9:0]   mrow [0:1];
     wire         mwe [0:1];
     wire [7:0]   mms [0:1];
+    wire [255:0] rwd [0:1];   // landing D: MIF=0 the write decode; MIF=1 the relay stage (= the MIF=0 landing, one cycle early)
+    wire [9:0]   rrow [0:1];
+    wire         rwe [0:1];
+    wire [7:0]   rms [0:1];
+    generate for (bk = 0; bk < 2; bk = bk + 1) begin : g_wr
+        if (MIF == 0) begin : g_d
+            assign rwd[bk] = wb_d[bk]; assign rrow[bk] = l_row[bk]; assign rwe[bk] = l_we[bk]; assign rms[bk] = wb_ms[bk];
+        end else begin : g_r
+            qfd_dv_s8x_kff #(.W(256), .ID(6400 + bk)) u_d (.ck(ck), .d(wb_d[bk]), .q(rwd[bk]));
+            qfd_dv_s8x_kff #(.W(10), .ID(6410 + bk)) u_r (.ck(ck), .d(l_row[bk]), .q(rrow[bk]));
+            qfd_dv_s8x_kff #(.W(1), .ID(6420 + bk)) u_e (.ck(ck), .d(l_we[bk]), .q(rwe[bk]));
+            qfd_dv_s8x_kff #(.W(8), .ID(6430 + bk)) u_m (.ck(ck), .d(wb_ms[bk]), .q(rms[bk]));
+        end
+    end endgenerate
     generate for (bk = 0; bk < 2; bk = bk + 1) begin : g_mw
-        qfd_dv_s8x_kff #(.W(256), .ID(6000 + bk)) u_d (.ck(ck), .d(wb_d[bk]), .q(mwd[bk]));
-        qfd_dv_s8x_kff #(.W(10), .ID(6100 + bk)) u_r (.ck(ck), .d(l_row[bk]), .q(mrow[bk]));
-        qfd_dv_s8x_kff #(.W(1), .ID(6200 + bk)) u_e (.ck(ck), .d(l_we[bk]), .q(mwe[bk]));
-        qfd_dv_s8x_kff #(.W(8), .ID(6300 + bk)) u_m (.ck(ck), .d(wb_ms[bk]), .q(mms[bk]));
+        qfd_dv_s8x_kff #(.W(256), .ID(6000 + bk)) u_d (.ck(ck), .d(rwd[bk]), .q(mwd[bk]));
+        qfd_dv_s8x_kff #(.W(10), .ID(6100 + bk)) u_r (.ck(ck), .d(rrow[bk]), .q(mrow[bk]));
+        qfd_dv_s8x_kff #(.W(1), .ID(6200 + bk)) u_e (.ck(ck), .d(rwe[bk]), .q(mwe[bk]));
+        qfd_dv_s8x_kff #(.W(8), .ID(6300 + bk)) u_m (.ck(ck), .d(rms[bk]), .q(mms[bk]));
     end endgenerate
     // ---------------------------------------------------------------- reads: 2 banks
     wire [511:0] vm_rd;
     generate for (bk = 0; bk < 2; bk = bk + 1) begin : g_bank
-        wire coll = mwe[bk] && mrow[bk] == pa_addr[4 +: 10];
+        // MIF=1: the collision compare runs one cycle early against the relay stage (rwe/rrow = next mwe/mrow)
+        wire coll = MIF == 0 ? (mwe[bk] && mrow[bk] == pa_addr[4 +: 10]) : (rwe[bk] && rrow[bk] == pa_addr[4 +: 10]);
 `ifdef OT_S8_MUT_COLL
         wire coll_u = 1'b0;                     // bench mutant: read of the row being written NOT suppressed
 `else
@@ -186,17 +206,34 @@ module qfd_dv_s8x_vmr #(parameter integer MUT = 0) (
 `endif
         wire [255:0] wm;
         for (gs = 0; gs < 8; gs = gs + 1) begin : g_m assign wm[32*gs +: 32] = {32{mms[bk][gs]}}; end
+        wire m_rce; wire [9:0] m_ra;
+        if (MIF == 0) begin : g_rd
+            assign m_rce = pa_re[0] && pa_addr[3] == bk[0] && !coll_u; assign m_ra = pa_addr[4 +: 10];
+        end else begin : g_rr
+            qfd_dv_s8x_kff #(.W(1), .ID(6500 + bk)) u_rce (.ck(ck), .d(pa_re[0] && pa_addr[3] == bk[0] && !coll_u), .q(m_rce));
+            qfd_dv_s8x_kff #(.W(10), .ID(6510 + bk)) u_ra (.ck(ck), .d(pa_addr[4 +: 10]), .q(m_ra));
+        end
         ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(ck),
-            .r_ce_in(pa_re[0] && pa_addr[3] == bk[0] && !coll_u),
-            .r_addr_in(pa_addr[4 +: 10]),
+            .r_ce_in(m_rce),
+            .r_addr_in(m_ra),
             .rd_out(vm_rd[bk*256 +: 256]),
             .w_ce_in(mwe[bk]), .w_addr_in(mrow[bk]), .wd_in(mwd[bk]), .w_mask_in(wm),
             .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
+    // bank / lane offsets of the read the SRAMs latch this edge (MIF=1: one cycle later, from a delayed copy)
+    wire [24:0] rsel_n;
+    assign rsel_n[0] = pa_addr[3];
+    generate for (gl = 0; gl < 8; gl = gl + 1) begin : g_rsel assign rsel_n[1 + 3*gl +: 3] = pa_addr[24*gl +: 3]; end endgenerate
+    wire [24:0] rsel;
+    generate if (MIF == 0) begin : g_rs0
+        assign rsel = rsel_n;
+    end else begin : g_rs1
+        qfd_dv_s8x_kff #(.W(25), .ID(6520)) u_rs (.ck(ck), .d(rsel_n), .q(rsel));
+    end endgenerate
     reg s1_bank; reg [23:0] s1_off; reg [511:0] cap;
     always @(posedge ck) begin
-        s1_bank <= pa_addr[3];
-        for (lc = 0; lc < 8; lc = lc + 1) s1_off[3*lc +: 3] <= pa_addr[24*lc +: 3];
+        s1_bank <= rsel[0];
+        s1_off <= rsel[24:1];
         cap <= vm_rd;
     end
     wire [255:0] wsel;
