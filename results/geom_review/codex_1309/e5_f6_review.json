@@ -1,6 +1,6 @@
 {
   "timestamp": "2026-10-25 14:09 PDT",
-  "source": "be69",
+  "source": "be69ca1ba739a34dfb4eb82a95aaec9e7f7fca15",
   "netlist": "3c0b",
   "kit": "epyc2:codex-s81-eng-1309/e5_review_probe",
   "verdict": "PASS placement F6 only; noCTS until clockproof/LEC",
@@ -22,5 +22,8 @@
   "conditions": [
     "Currentclockplanproof independentreview+LEC/sourcegates beforeCTS",
     "No GRT/DRT/SIGNED token"
-  ]
+  ],
+  "rr_sha256": "6b6811f18fee4b3593cea8e6d37f751ffcde6279fc4789ebe87ab58383af24d3",
+  "netlist_sha256": "3c0b4fcea48b725e3ba7a9500902faf048f695f4e38521afcd62e3d4614d5db6",
+  "odb_sha256": "a93a9bfd8606e8049b33b9c86c039f31b4010c2a05824b01928b40fc82b3e4f9"
 }
