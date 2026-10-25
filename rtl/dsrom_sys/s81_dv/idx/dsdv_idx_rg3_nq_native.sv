@@ -59,7 +59,9 @@ module dsdv_idx_rg3_nq_native #(
     output wire [275:0]  so,
     output reg  [183:0]  rqo,           // 4 x 46-b request lanes, u = 2 r + q: {tag10, len 4, addr 30, sl, v}
     input  wire [1087:0] rri,           // 4 x 272-b response lanes, u = 2 r + q: {data 256, tag10, beat 4, pop, v}
-    output reg  [9:0]    st
+    // S81/PORTFIX-FLT 10-25 (S81 DECISION 4): ONE 1-bit sticky fault = |fc (the 8 sticky fault causes), registered
+    // (the former st[0], same edge).  The 10-b status st = {fc, act, fault} is dropped (detail codes: bench taps only).
+    output reg           fault
 );
     initial if (IQD > 1024 || SQD > 1024 || LFD > 1024 || DQR > 31 || DQR < 1) $fatal(1, "dsdv_idx_rg3: queue / budget sizes");
     localparam integer OW = 6;          // own_n width (DQR <= 31)
@@ -81,7 +83,7 @@ module dsdv_idx_rg3_nq_native #(
     ot_rst_relay #(.REGIONS(24), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r1 (.clk(ck), .rst_n_in(r0[0]), .rst_n({rlx[3:0], rl[19:0]}));
     ot_rst_relay #(.REGIONS(22), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r2 (.clk(ck), .rst_n_in(r0[1]), .rst_n({rlx[5:4], rl[39:20]}));
     reg  [7:0] fc;                                  // sticky fault causes
-    wire       fault = |fc;
+    wire       fc_any = |fc;
     reg  [3:0] me;                                  // region A id (strap)
     always @(posedge ck) me <= {sid[3:1], 1'b0};
 
@@ -1136,7 +1138,7 @@ module dsdv_idx_rg3_nq_native #(
         if (hj2[9]) et[15:0] <= th0[15:0] + 16'd10; else et[15:0] <= etn[15:0];
         if (hj2[10]) et[19:16] <= 4'd0 + 4'(({4'd0, th0[15:0]} + 20'd10) >> 16); else et[19:16] <= etn[19:16];
         if (srk[2]) begin p1_lv[7:0] <= tk_r ? blv[!epk[2]][7:0] : 8'd0; p1_lv[15:8] <= tk_r ? blv[!epk[6]][15:8] : 8'd0;
-                          p1_last <= ew == nw - 16'd1; p1_f <= (tk_r && bf[!epk[7]]) || late_r || fault; end
+                          p1_last <= ew == nw - 16'd1; p1_f <= (tk_r && bf[!epk[7]]) || late_r || fc_any; end
     end
     always @(posedge ck or negedge rl[37])
         if (!rl[37]) begin slot_r <= 1'b0; srk <= 4'd0; tk_r <= 1'b0; late_r <= 1'b0; p1_r <= 1'b0; p1_d <= 1'b0; end
@@ -1178,5 +1180,5 @@ module dsdv_idx_rg3_nq_native #(
             end
         end
     always @(posedge ck or negedge rl[39])
-        if (!rl[39]) begin fc <= 8'd0; st <= 10'd0; end else begin fc <= fc | fc_set | fw; st <= {fc, act, fault}; end
+        if (!rl[39]) begin fc <= 8'd0; fault <= 1'b0; end else begin fc <= fc | fc_set | fw; fault <= fc_any; end
 endmodule

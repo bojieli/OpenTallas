@@ -19,7 +19,7 @@ from collections import defaultdict
 from pathlib import Path
 
 plan, abf, out = sys.argv[1], sys.argv[2], Path(sys.argv[3])
-TOOLS = Path(plan).resolve().parents[3] / "tools" / "die_plan"
+TOOLS = Path(__file__).resolve().parents[4] / "tools" / "die_plan"
 sys.path.insert(0, str(TOOLS))
 import bind as BD  # noqa: E402
 

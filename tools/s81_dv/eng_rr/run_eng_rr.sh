@@ -1,7 +1,7 @@
 #!/bin/bash
 # S81-RTLGAP/RG-ENG (10-21): fleet runner of tb_dsdv_eng_rr (Engram row-read path + join, dsdv_eng_rr.sv).
 #   run_eng_rr.sh <git ref> <work dir>   (on a fleet host with the git mirror; Verilator 5.050 = the closure daemon's)
-# Builds base + 4 mutants (XQ_MUT 1/2, TAP_MUT 1/2), runs each, python bit-exact check (hdc_golden_v41), writes
+# Builds base + mutants (XQ_MUT 1/2, TAP_MUT 1/2, RA512 parity, one-scale, CFG_MUT 1/2 = S81/PORTFIX-CFG 10-25), runs each, python bit-exact check (hdc_golden_v41), writes
 # <work>/check.json {pass, mutants[{name, failed, log}]} and keeps every run log.
 set -u
 REF=${1:?ref}; W=$(realpath -m ${2:?work}); mkdir -p $W/src
@@ -58,8 +58,10 @@ build tap1 -GTAP_MUT=1 &
 build tap2 -GTAP_MUT=2 &
 build rpar +define+OT_ENGRAM_MUT_RA512_PAR &
 build onesc +define+OT_ENGRAM_MUT_ONESCALE &
+build cfg1 -GCFG_MUT=1 &
+build cfg2 -GCFG_MUT=2 &
 wait
-run base; run xq1; run xq2; run tap1; run tap2; run rpar; run onesc
+run base; run xq1; run xq2; run tap1; run tap2; run rpar; run onesc; run cfg1; run cfg2
 n=base; for a in "+SEED=2 +LAT=160" "+SEED=3 +LAT=60"; do /usr/bin/time -v -o $W/var.run.time $W/obj_base/sim +OT_ROM_DIR=$W/rom $a > $W/var_${a//[ +=]/_}.log 2>&1; python3 tools/s81_dv/eng_rr/check_eng_rr.py $W/var_${a//[ +=]/_}.log $W/src >> $W/var_${a//[ +=]/_}.log 2>&1; echo "base $a: $(grep -h 'TB_ENG_RR PASS\|TB_ENG_RR FAIL' $W/var_${a//[ +=]/_}.log) $(grep -h 'ENG_RR_PY PASS\|ENG_RR_PY FAIL' $W/var_${a//[ +=]/_}.log)" >> $W/status; done
 python3 - $W <<'PY'
 import json, sys, re
@@ -68,7 +70,7 @@ w = Path(sys.argv[1])
 def verdict(n):
     t = (w / f'{n}.log').read_text()
     return ('TB_ENG_RR PASS' in t) and ('ENG_RR_PY PASS' in t)
-muts = [dict(name=n, failed=not verdict(n), log=f'{n}.log') for n in ('xq1', 'xq2', 'tap1', 'tap2', 'rpar', 'onesc')]
+muts = [dict(name=n, failed=not verdict(n), log=f'{n}.log') for n in ('xq1', 'xq2', 'tap1', 'tap2', 'rpar', 'onesc', 'cfg1', 'cfg2')]
 j = dict(bench='tb_dsdv_eng_rr', ref=(w / 'ref.txt').read_text().strip(), pass_=verdict('base'), mutants=muts)
 j['pass'] = j.pop('pass_')
 (w / 'check.json').write_text(json.dumps(j, indent=1) + '\n')

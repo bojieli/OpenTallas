@@ -1193,6 +1193,10 @@ class Binder:
         ft = sorted((h["ibus"], h["obus"], L["width"], h["stations"]) for L, h in self.ft_bus[p])
         sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft,
                    clocks=tuple(sorted(self.cport(p, d) for d in self.clk_dom[p])))
+        if self.ab.get("io_roles"):
+            sig["die_io"] = tuple((role, v["direction"], v["width"],
+                                   tuple((self.rel_of(d[1]), d[2], d[3]) for d in v["drivers"]))
+                                  for role, v in sorted(self.io_bindings(p).items()))
         return sig, inst_vals
 
     def align_landings(self):
@@ -1683,7 +1687,60 @@ class Binder:
             return (k, tuple(self._rel_desc(p, x, inst_vals, where + (j,)) for j, x in enumerate(d[1])))
         if k == "clk":
             return ("clk", self.cport(p, d[1]))
+        if k == "top" and self.ab.get("io_roles"):
+            return ("top", self.io_role(p, d[1]), d[2])
         return d
+
+    def io_bindings(self, p):
+        """Partition-local IO roles; actual pad names remain per-instance.
+
+        Opt in with asbuilt.io_roles [[fullmatch_regex, replacement], ...].
+        This permits one PHY type at several die edges without sharing their
+        pad nets. Direct leaf-driven die outputs are preserved as well.
+        """
+        if not hasattr(self, "_io_bindings"):
+            self._io_bindings = {}
+        if p in self._io_bindings:
+            return self._io_bindings[p]
+        rules = [(re.compile(a), b) for a, b in self.ab.get("io_roles", [])]
+        names = set()
+        for ci in self.members[p]:
+            for pn, bits in self.F.cells[ci].ports.items():
+                if self.G.dirs[ci].get(pn) == "input":
+                    for i in range(len(bits)):
+                        d = self.sinks[(ci, pn, i)]
+                        for x in (d[1] if d[0] in ("or", "and") else [d]):
+                            if x[0] == "top":
+                                names.add(x[1])
+        if self.ab.get("io_roles"):
+            if not hasattr(self, "_io_outputs"):
+                self._io_outputs = defaultdict(dict)
+                for name, (direction, bits) in self.F.top_ports.items():
+                    if direction != "output":
+                        continue
+                    drivers = [self.G.source(b) for b in bits]
+                    owners = {self.cpart.get(d[1]) for d in drivers if d[0] == "pin"}
+                    if len(owners) != 1 or None in owners or any(d[0] != "pin" or d[4] for d in drivers):
+                        raise BindError(f"DIE_IO_OUTPUT {name}: requires direct leaf drivers in one partition")
+                    self._io_outputs[next(iter(owners))][name] = drivers
+            names.update(self._io_outputs.get(p, {}))
+        result = {}
+        for name in sorted(names):
+            role = name
+            for rx, repl in rules:
+                if rx.fullmatch(name):
+                    role = rx.sub(repl, name)
+                    break
+            if role in result:
+                raise BindError(f"IO_ROLE_COLLISION {p}: {result[role]['name']} and {name} -> {role}")
+            direction, bits = self.F.top_ports[name]
+            result[role] = dict(name=name, direction=direction, width=len(bits),
+                                drivers=getattr(self, "_io_outputs", {}).get(p, {}).get(name, []))
+        self._io_bindings[p] = result
+        return result
+
+    def io_role(self, p, name):
+        return next(role for role, v in self.io_bindings(p).items() if v["name"] == name)
 
     def clk_role(self, p, d):
         """asbuilt.clock_roles [[regex, replacement], ...] (KV-P5 15:59 type-split ask): the partition-local name of die
@@ -1887,9 +1944,15 @@ class Binder:
                         for x in (d[1] if d[0] in ("or", "and") else [d]):
                             if x[0] == "top":
                                 io.add(x[1])
-        self.io_used[tn] = sorted(io)
-        for n in sorted(io):
-            ports.append(f"    input  wire [{len(F.top_ports[n][1]) - 1}:0] io_{sv_id(n)}   // die IO {n}")
+        if self.ab.get("io_roles"):
+            bindings = self.io_bindings(p)
+            self.io_used[tn] = sorted(bindings)
+            for role, v in sorted(bindings.items()):
+                ports.append(f"    {v['direction']} wire [{v['width'] - 1}:0] io_{sv_id(role)}   // die IO role {role}")
+        else:
+            self.io_used[tn] = sorted(io)
+            for n in sorted(io):
+                ports.append(f"    input  wire [{len(F.top_ports[n][1]) - 1}:0] io_{sv_id(n)}   // die IO {n}")
         doms = sorted(self.clk_dom[p] - {self.default_domain(p)}, key=lambda d: self.cport(p, d))
         for d in doms:
             ports.append(f"    input  wire {self.cport(p, d)}")
@@ -1962,6 +2025,11 @@ class Binder:
                     nm = short_id(f"w_{self.rel_of(ci)}__{pn}", 90)
                     drv_w[(ci, pn)] = nm
                     decl.append(f"    wire [{len(bits) - 1}:0] {nm};")
+        if self.ab.get("io_roles"):
+            for role, v in sorted(self.io_bindings(p).items()):
+                if v["direction"] == "output":
+                    exprs = [f"{drv_w[(d[1], d[2])]}[{d[3]}]" for d in v["drivers"]]
+                    body.append(f"    assign io_{sv_id(role)} = {_concat(exprs)};")
         ub = []
         render = None
         if self.pc:
@@ -2076,7 +2144,8 @@ class Binder:
                     raise BindError(f"plan-driven sink {self.F.cells[ci].path}.{pn}[{i}] in a partition without plan cells")
                 return render(d[1])
             if k == "top" and d[1] in F.top_ports:
-                return f"io_{sv_id(d[1])}[{d[2]}]"
+                role = self.io_role(p, d[1]) if self.ab.get("io_roles") else d[1]
+                return f"io_{sv_id(role)}[{d[2]}]"
             if k in ("tied", "top", "err"):
                 # never a constant: an unresolved bit stays an undriven wire, reported (bind_report proof)
                 nm = f"ub_{len(ub)}"
@@ -2153,8 +2222,12 @@ class Binder:
         die = sv_id(self.plan["die"]["name"])
         doms = sorted({d for p in self.members for d in self.clk_dom[p]} | {self.ab.get("default_clock", "core")})
         ports = ["    input  wire rst_n"] + [f"    input  wire clk_{sv_id(d)}" for d in doms]
-        io = sorted({n for tn in self.by_type for n in self.io_used.get(tn, [])})
-        ports += [f"    input  wire [{len(self.F.top_ports[n][1]) - 1}:0] {sv_id(n)}" for n in io]
+        if self.ab.get("io_roles"):
+            io = sorted({v["name"] for p in self.members for v in self.io_bindings(p).values()})
+            ports += [f"    {self.F.top_ports[n][0]} wire [{len(self.F.top_ports[n][1]) - 1}:0] {sv_id(n)}" for n in io]
+        else:
+            io = sorted({n for tn in self.by_type for n in self.io_used.get(tn, [])})
+            ports += [f"    input  wire [{len(self.F.top_ports[n][1]) - 1}:0] {sv_id(n)}" for n in io]
         wires, insts = [], []
         reset_in, reset_out = {}, {}
         P = self.wavefront_plan()
@@ -2193,7 +2266,8 @@ class Binder:
             for d in sorted(self.clk_dom[p] - {dd}, key=lambda d: self.cport(p, d)):
                 cs.append(f"        .{self.cport(p, d)}(clk_{sv_id(d)})")
             for n in self.io_used.get(tn, []):
-                cs.append(f"        .io_{sv_id(n)}({sv_id(n)})")
+                actual = self.io_bindings(p)[n]["name"] if self.ab.get("io_roles") else n
+                cs.append(f"        .io_{sv_id(n)}({sv_id(actual)})")
             for port, w in sorted(conn[p]):
                 cs.append(f"        .{port}({w})")
             pstr = (" #(" + ", ".join(ov) + ")") if ov else ""

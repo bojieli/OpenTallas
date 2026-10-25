@@ -13,7 +13,9 @@
 //   exact (+2 edges); every fault / status output 0.  Bit-exactness of the XQ payloads vs hdc_golden_v41
 //   (decode_engram_rows -> quant_fp8) is checked by tools/s81_dv/eng_rr/check_eng_rr.py on the OB / XQ log lines.
 // Mutants: XQ_MUT 1 (idx), 2 (e0 / e1 swapped) -> python FAIL; TAP_MUT 1 (demux without sc: steals reader scan beats),
-//   2 (pops unfiltered) -> TB_ENG_RR FAIL.
+//   2 (pops unfiltered) -> TB_ENG_RR FAIL.  CFG_MUT 1 (rank bits swapped), 2 (cfg decode on kind only: decoys / rung
+//   CTL traffic load) -> TB_ENG_RR FAIL (S81/PORTFIX-CFG 10-25; the DUT is the die master dsdv_eng_rr, configured by a
+//   CTL cfg op beat on the rung; +define+OT_ENG_CFG_STRAPREF adds the old-strap dsdv_eng_rr_c in bit-exact lockstep).
 module tb_dsdv_eng_rr;
     parameter integer XQ_MUT = 0;
     parameter integer TAP_MUT = 0;
@@ -40,27 +42,56 @@ module tb_dsdv_eng_rr;
     // ------------------------------------------------------------------ DUT cluster
     reg  [52:0]  f_ks = 0;
     wire [42:0]  rco_h; wire [267:0] pci_h;
-    reg  [275:0] vi_s = 0, vi_n = 0; wire [275:0] vo_s, vo_n; wire [3:0] st;
-    dsdv_eng_rr_c #(.RETURN_AGE(RETURN_AGE), .PCBASE(PCBASE), .XQ_MUT(XQ_MUT)) u_rr (.ck(ck), .rst_n(rst), .cfg_en(1'b1),
-        .cfg_layer(1'b1), .cfg_rank(RANK), .f_ks(f_ks), .rco(rco_h), .pci(pci_h), .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n),
-        .vo_n(vo_n), .st(st));
+    reg  [275:0] vi_s = 0, vi_n = 0; wire [275:0] vo_s, vo_n; wire [3:0] st; wire fault;
+    // S81/PORTFIX-CFG 10-25: the DUT is the die master dsdv_eng_rr (no cfg straps): its {en, layer, rank} = {1, 1, RANK}
+    // (the old strap values of this bench) is loaded by a CTL cfg op beat on vi_s after reset, followed by three decoy
+    // beats (another uid, op bit 0, a slice mask bit set) that must not load; every one passes the rung unchanged.
+    parameter integer CFG_MUT = 0;
+    dsdv_eng_rr #(.RETURN_AGE(RETURN_AGE), .PCBASE(PCBASE), .XQ_MUT(XQ_MUT), .CFG_MUT(CFG_MUT)) u_top (.ck(ck), .rst_n(rst),
+        .f_ks(f_ks), .rco(rco_h), .pci(pci_h), .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .fault(fault));
+    assign st = u_top.u_c.st;
+    function automatic [275:0] cfg_beat(input [7:0] uid, input op, input [15:0] smask, input en, input ly, input [1:0] rk,
+                                        input [31:0] junk);
+        reg [185:0] p;
+        p = {157'(junk), uid, op, rk, ly, en, smask};
+        cfg_beat = {69'd0, p, 8'(junk), 4'(junk >> 8), 5'(junk >> 12), 3'd0, 1'b1};
+    endfunction
+`ifdef OT_ENG_CFG_STRAPREF
+    // strap reference: the unchanged inner module with the OLD die straps {1, 1, RANK}, same inputs, in lockstep; every
+    // output bit compared on every edge after reset release, and fault == OR of its st one edge later.
+    wire [42:0] rco_rf; wire [275:0] vo_s_rf, vo_n_rf; wire [3:0] st_rf; reg [3:0] st_rf_d = 0;
+    dsdv_eng_rr_c #(.RETURN_AGE(RETURN_AGE), .PCBASE(PCBASE), .XQ_MUT(XQ_MUT)) u_ref (.ck(ck), .rst_n(rst), .cfg_en(1'b1),
+        .cfg_layer(1'b1), .cfg_rank(RANK), .f_ks(f_ks), .rco(rco_rf), .pci(pci_h), .vi_s(vi_s), .vo_s(vo_s_rf), .vi_n(vi_n),
+        .vo_n(vo_n_rf), .st(st_rf));
+    longint sr_cyc = 0, sr_bad = 0;
+    always @(posedge ck) st_rf_d <= st_rf;
+    always @(negedge ck) if (rst) begin
+        sr_cyc <= sr_cyc + 1;
+        if (rco_rf !== rco_h || vo_s_rf !== vo_s || vo_n_rf !== vo_n || st_rf !== st || fault !== |st_rf_d) begin
+            sr_bad <= sr_bad + 1;
+            if (sr_bad < 4) $display("TB_ENG_RR_STRAPREF mismatch cyc %0d rco %0d vo_s %0d vo_n %0d st %b/%b fault %b",
+                                     cyc, rco_rf !== rco_h, vo_s_rf !== vo_s, vo_n_rf !== vo_n, st, st_rf, fault);
+        end
+    end
+`endif
 `ifdef OT_S81ENG_RR_SPLIT_LOCKSTEP
     // CORE-S81-ENG 10-23: the three-core split (dsdv_eng_rr_split = cores E + H0 + H1) runs in LOCKSTEP beside the monolith on
     // the same inputs; every output bit is compared on every edge after reset release (and the crossing against the
     // monolith's lookup -> xq nets).  SPLIT_MUT 1 / 2 = negative controls (hash crossing bit flip / layer halves swapped).
     parameter integer SPLIT_MUT = 0;
-    wire [42:0] rco_sp; wire [275:0] vo_s_sp, vo_n_sp; wire [3:0] st_sp;
-    dsdv_eng_rr_split #(.RETURN_AGE(RETURN_AGE), .PCBASE(PCBASE), .XQ_MUT(XQ_MUT), .SPLIT_MUT(SPLIT_MUT)) u_sp (.ck(ck),
-        .rst_n(rst), .cfg_en(1'b1), .cfg_layer(1'b1), .cfg_rank(RANK), .f_ks(f_ks), .rco(rco_sp), .pci(pci_h), .vi_s(vi_s),
-        .vo_s(vo_s_sp), .vi_n(vi_n), .vo_n(vo_n_sp), .st(st_sp));
+    wire [42:0] rco_sp; wire [275:0] vo_s_sp, vo_n_sp; wire [3:0] st_sp; wire fault_sp;
+    dsdv_eng_rr_split #(.RETURN_AGE(RETURN_AGE), .PCBASE(PCBASE), .XQ_MUT(XQ_MUT), .SPLIT_MUT(SPLIT_MUT), .CFG_MUT(CFG_MUT)) u_sp (
+        .ck(ck), .rst_n(rst), .f_ks(f_ks), .rco(rco_sp), .pci(pci_h), .vi_s(vi_s),
+        .vo_s(vo_s_sp), .vi_n(vi_n), .vo_n(vo_n_sp), .fault(fault_sp));
+    assign st_sp = u_sp.st;
     longint lk_cyc = 0, lk_bad = 0, lk_xv = 0, lk_rco = 0, lk_vo = 0;
     always @(negedge ck) if (rst) begin
         lk_cyc <= lk_cyc + 1;
-        if (u_rr.o_v) lk_xv <= lk_xv + 1;
+        if (u_top.u_c.o_v) lk_xv <= lk_xv + 1;
         if (rco_h[0]) lk_rco <= lk_rco + 1;
         if (vo_s[0] || vo_n[0]) lk_vo <= lk_vo + 1;
-        if (rco_sp !== rco_h || vo_s_sp !== vo_s || vo_n_sp !== vo_n || st_sp !== st ||
-            u_sp.hx_w !== u_rr.u_lkp.u_e.win_n) begin
+        if (rco_sp !== rco_h || vo_s_sp !== vo_s || vo_n_sp !== vo_n || st_sp !== st || fault_sp !== fault ||
+            u_sp.hx_w !== u_top.u_c.u_lkp.u_e.win_n) begin
             lk_bad <= lk_bad + 1;
             if (lk_bad < 4) $display("TB_ENG_RR_LOCKSTEP mismatch cyc %0d rco %0d vo_s %0d vo_n %0d st %b/%b", cyc,
                                      rco_sp !== rco_h, vo_s_sp !== vo_s, vo_n_sp !== vo_n, st_sp, st);
@@ -74,7 +105,7 @@ module tb_dsdv_eng_rr;
             lk_xbad <= lk_xbad + 1;
             if (lk_xbad < 4) $display("TB_ENG_RR_LOCKSTEP crossing mismatch cyc %0d", cyc);
         end
-        lk_hres_d <= u_rr.u_lkp.u_e.hres; lk_arm <= rst;
+        lk_hres_d <= u_top.u_c.u_lkp.u_e.hres; lk_arm <= rst;
     end
 `endif
     // ------------------------------------------------------------------ taps, chains, controllers, PHY
@@ -143,12 +174,12 @@ module tb_dsdv_eng_rr;
     integer win_n = 0, ob_n = 0, xq_n [0:1], rd_rq = 0, rd_beats = 0, rd_pops = 0, rung_n = 0;
     reg [7:0] rowb [0:5][0:271];
     integer req_j = 0;
-    always @(negedge ck) if (rst && u_rr.hq_v) begin : g_fill
+    always @(negedge ck) if (rst && u_top.u_c.hq_v) begin : g_fill
         integer j, kk, off; reg [31:0] crc, m; longint atom, key; reg [35:0] ba;
-        j = u_rr.hq_tag;
-        ba = u_rr.u_lkp.u_e.baddr[j];
+        j = u_top.u_c.hq_tag;
+        ba = u_top.u_c.u_lkp.u_e.baddr[j];
         off = ba[4:0];
-        if (ba[35:5] !== u_rr.hq_atom) begin e_ob = e_ob + 1; $display("TB_ENG_RR request atom %h != baddr %h", u_rr.hq_atom, ba); end
+        if (ba[35:5] !== u_top.u_c.hq_atom) begin e_ob = e_ob + 1; $display("TB_ENG_RR request atom %h != baddr %h", u_top.u_c.hq_atom, ba); end
         crc = 32'hffffffff;
         for (kk = 0; kk < 264; kk = kk + 1) begin : g_b
             integer bi;
@@ -169,13 +200,13 @@ module tb_dsdv_eng_rr;
         end
     end
     // lookup row beats: = the image row; logged for the python bit-exact check
-    always @(negedge ck) if (rst && u_rr.o_v) begin : g_ob
+    always @(negedge ck) if (rst && u_top.u_c.o_v) begin : g_ob
         integer j, kk; reg [263:0] exp_;
-        j = u_rr.o_col - 5'(6 * RANK);
-        for (kk = 0; kk < 32; kk = kk + 1) exp_[8 * kk +: 8] = rowb[j][32 * u_rr.o_beat + kk];
-        exp_[263:256] = rowb[j][256 + u_rr.o_beat];
-        if (u_rr.o_d !== exp_) begin e_ob = e_ob + 1; if (e_ob <= 4) $display("TB_ENG_RR row beat mismatch col %0d beat %0d", u_rr.o_col, u_rr.o_beat); end
-        $display("OB %0d %0d %0d %h", win_n - 1, u_rr.o_col, u_rr.o_beat, u_rr.o_d);
+        j = u_top.u_c.o_col - 5'(6 * RANK);
+        for (kk = 0; kk < 32; kk = kk + 1) exp_[8 * kk +: 8] = rowb[j][32 * u_top.u_c.o_beat + kk];
+        exp_[263:256] = rowb[j][256 + u_top.u_c.o_beat];
+        if (u_top.u_c.o_d !== exp_) begin e_ob = e_ob + 1; if (e_ob <= 4) $display("TB_ENG_RR row beat mismatch col %0d beat %0d", u_top.u_c.o_col, u_top.u_c.o_beat); end
+        $display("OB %0d %0d %0d %h", win_n - 1, u_top.u_c.o_col, u_top.u_c.o_beat, u_top.u_c.o_d);
         ob_n = ob_n + 1;
     end
     // latency record (priced into the compiler schedule): f_ks start -> win_v / first request / max response age at the
@@ -183,18 +214,18 @@ module tb_dsdv_eng_rr;
     longint t_ks = 0, l_win = 0, l_rq = 0, l_x0 = 0, l_x1 = 0; integer age_max = 0, nfr = 0;
     always @(negedge ck) if (rst) begin
         if (f_ks[52]) begin t_ks = cyc; nfr = 0; end
-        if (u_rr.win_v) l_win = cyc - t_ks;
-        if (u_rr.hq_v && u_rr.hq_tag == 0) l_rq = cyc - t_ks;
-        if (u_rr.u_lkp.u_e.hr_valid && u_rr.u_lkp.u_e.age > age_max) age_max = u_rr.u_lkp.u_e.age;
-        if (u_rr.u_xq.tx) begin if (nfr == 0) l_x0 = cyc - t_ks; nfr = nfr + 1; l_x1 = cyc - t_ks; end
+        if (u_top.u_c.win_v) l_win = cyc - t_ks;
+        if (u_top.u_c.hq_v && u_top.u_c.hq_tag == 0) l_rq = cyc - t_ks;
+        if (u_top.u_c.u_lkp.u_e.hr_valid && u_top.u_c.u_lkp.u_e.age > age_max) age_max = u_top.u_c.u_lkp.u_e.age;
+        if (u_top.u_c.u_xq.tx) begin if (nfr == 0) l_x0 = cyc - t_ks; nfr = nfr + 1; l_x1 = cyc - t_ks; end
     end
     // ------------------------------------------------------------------ windows: NgramHashState model
     function automatic [16:0] cid(input [20:0] t); cid = 17'((longint'(t) * 7919 + 11) % 99092); endfunction
     reg [16:0] hist [0:63][0:2];
     reg [67:0] exp_win [$];
-    always @(negedge ck) if (rst && u_rr.win_v) begin
-        if (exp_win.size() == 0 || u_rr.win_ids !== exp_win[0]) begin
-            e_win = e_win + 1; $display("TB_ENG_RR window %0d mismatch %h exp %h", win_n, u_rr.win_ids, exp_win.size() ? exp_win[0] : 68'd0);
+    always @(negedge ck) if (rst && u_top.u_c.win_v) begin
+        if (exp_win.size() == 0 || u_top.u_c.win_ids !== exp_win[0]) begin
+            e_win = e_win + 1; $display("TB_ENG_RR window %0d mismatch %h exp %h", win_n, u_top.u_c.win_ids, exp_win.size() ? exp_win[0] : 68'd0);
         end
         if (exp_win.size()) void'(exp_win.pop_front());
         win_n = win_n + 1;
@@ -223,7 +254,7 @@ module tb_dsdv_eng_rr;
                 end else fn[d] = fn[d] + 1;
             end
         end
-        prev_tx = u_rr.u_xq.tx;
+        prev_tx = u_top.u_c.u_xq.tx;
     end
     // ------------------------------------------------------------------ rung pass-through (+2 edges)
     // ------------------------------------------------------------------ bench reader (controller RD, both lanes)
@@ -263,6 +294,20 @@ module tb_dsdv_eng_rr;
         users[0] = 3; users[1] = 7; users[2] = 3; users[3] = 9; users[4] = 3; users[5] = 7;
         for (u = 0; u < 64; u = u + 1) posn[u] = 0;
         repeat (20) @(posedge ck); rst = 1; t0 = cyc;
+        // boot config (S81/PORTFIX-CFG): the cfg op, then decoys that must not load (another uid / op 0 / slice mask set)
+        repeat (24) @(negedge ck);
+        vi_s = cfg_beat(8'hE6, 1'b1, 16'd0, 1'b1, 1'b1, RANK, 32'h5a5a_1234); rung_n = rung_n + 1;
+        @(negedge ck); vi_s = 0; repeat (3) @(negedge ck);
+        vi_n = cfg_beat(8'hE7, 1'b1, 16'd0, 1'b0, 1'b0, ~RANK, 32'h0bad_0001); rung_n = rung_n + 1;
+        @(negedge ck); vi_n = 0; repeat (3) @(negedge ck);
+        vi_s = cfg_beat(8'hE6, 1'b0, 16'd0, 1'b0, 1'b0, ~RANK, 32'h0bad_0002); rung_n = rung_n + 1;
+        @(negedge ck); vi_s = 0; repeat (3) @(negedge ck);
+        vi_n = cfg_beat(8'hE6, 1'b1, 16'h0040, 1'b0, 1'b0, ~RANK, 32'h0bad_0003); rung_n = rung_n + 1;
+        @(negedge ck); vi_n = 0; repeat (6) @(negedge ck);
+        if ({u_top.u_cfg.cfg_rank, u_top.u_cfg.cfg_layer, u_top.u_cfg.cfg_en} !== {RANK, 2'b11}) begin
+            e_flt = e_flt + 1; $display("TB_ENG_RR cfg register %b%b%b != %b11", u_top.u_cfg.cfg_rank, u_top.u_cfg.cfg_layer,
+                                        u_top.u_cfg.cfg_en, RANK);
+        end
         n = 0;
         for (w = 0; w < NW; w = w + 1) begin
             tw = t0 + 200 + w * SP;
@@ -307,9 +352,13 @@ module tb_dsdv_eng_rr;
         if (xq_n[0] != 24 * NW || xq_n[1] != 24 * NW) begin e_xq = e_xq + 1; $display("TB_ENG_RR XQ trains %0d / %0d != %0d", xq_n[0], xq_n[1], 24 * NW); end
         if (rqq[0].size() != 0 || rqq[1].size() != 0) begin e_rd = e_rd + 1; $display("TB_ENG_RR reader requests unanswered %0d %0d", rqq[0].size(), rqq[1].size()); end
         if (rd_pops != rd_rq) begin e_rd = e_rd + 1; $display("TB_ENG_RR reader pops %0d != requests %0d", rd_pops, rd_rq); end
-        if (st !== 4'd0 || tf !== 16'd0) begin e_flt = e_flt + 1; $display("TB_ENG_RR faults st %b taps %b", st, tf); end
+        if (st !== 4'd0 || fault !== 1'b0 || tf !== 16'd0) begin e_flt = e_flt + 1; $display("TB_ENG_RR faults st %b fault %b taps %b", st, fault, tf); end
         for (kk = 0; kk < 16; kk = kk + 1) if (rd[kk][561] !== 1'b0) begin e_flt = e_flt + 1; $display("TB_ENG_RR controller %0d status fault", kk); end
         errs = e_win + e_ob + e_xq + e_rd + e_rung + e_flt;
+`ifdef OT_ENG_CFG_STRAPREF
+        $display("TB_ENG_RR_STRAPREF cfg_mut %0d cycles %0d mismatches %0d", CFG_MUT, sr_cyc, sr_bad);
+        if (sr_bad != 0) errs = errs + 1;
+`endif
 `ifdef OT_S81ENG_RR_SPLIT_LOCKSTEP
         $display("TB_ENG_RR_LOCKSTEP split_mut %0d cycles %0d row_beats %0d rco_words %0d rung_words %0d mismatches %0d",
                  SPLIT_MUT, lk_cyc, lk_xv, lk_rco, lk_vo, lk_bad + lk_xbad);

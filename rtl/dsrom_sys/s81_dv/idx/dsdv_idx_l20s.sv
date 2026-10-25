@@ -938,6 +938,8 @@ endmodule
 // beats join u_sel.vo_n in ONE output register (vo_n leaves a flop: the northbound rung bk_sel -> seqhost is one edge
 // longer for every beat, priced in the rung schedule); a relay beat in a cycle where u_sel.vo_n is not idle (all-zero)
 // is a sticky fault (static schedule, never arbitrated).  fault = u_sel.fault | the encoder / merge faults (registered).
+// S81/PORTFIX-FLT 10-25: fault = sticky (registered) OR of u_sel.fault, u_vm.fault, u_tx.st[0] and the encoder / merge
+// faults; the vm_fault / tx_st ports are gone (die fault ring: 1-bit feeder bk_sel -> gunit -> s_3N C stop).
 // SELE 0 = the pre-H23 master (no encoder, vo_n / fault straight from u_sel).
 // ===================================================================================================================
 module dsdv_bk_sel_vmtx #(
@@ -946,7 +948,9 @@ module dsdv_bk_sel_vmtx #(
     parameter integer TX_MUT = 0,
     parameter bit     TX_SRAM = 1,
     parameter integer SELE = 1,
-    parameter integer SEL_MUT = 0
+    parameter integer SEL_MUT = 0,
+    parameter integer IDX_MUT = 0,
+    parameter integer VM_MUT = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -964,17 +968,21 @@ module dsdv_bk_sel_vmtx #(
     input  wire [V-1:0]  ca,
     input  wire [V-1:0]  cb,
     output wire          fault,
-    output wire          vm_fault,
     output wire [V-1:0]  tl_o,
-    output wire [15:0]   tx_st
+    output wire [V-1:0]  tpn_o,
+    output wire [V-1:0]  tps_o,
+    input  wire [V-1:0]  tpn_i
 );
-    wire [V-1:0] vi_m;
-    dsdv_idx_vmux #(.V(V)) u_vm (.ck(clk), .rst(rst_n), .i_r(vi_s), .i_s(vi_idx), .i_a(ca), .i_b(cb), .o(vi_m), .fault(vm_fault));
+    wire vm_fault; wire [15:0] tx_st; // internal detail; one sticky fault output
+    wire [V-1:0] vi_m, lo;
     wire [V-1:0] sel_vo_n; wire sel_f;
+    reg  [V-1:0] lp_q;
+    dsdv_idx_vmux6 #(.V(V), .MUT(VM_MUT)) u_vm (.ck(clk), .rst(rst_n), .i_r(vi_s), .i_s(vi_idx), .i_a(ca), .i_b(cb),
+        .i_n(tpn_i), .i_l(lp_q), .o(vi_m), .fault(vm_fault));
     dsdv_bk_sel #(.V(V), .MUT(MUT)) u_sel (.clk(clk), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek),
         .uid(uid), .eg_n(eg_n), .vi_s(vi_m), .vo_n(sel_vo_n), .vi_n(vi_n), .vo_s(vo_s), .fault(sel_f));
     dsdv_idx_tx_n32 #(.V(V), .IK(4), .EK(5), .UID(8'h5C), .SRAM_MACRO(TX_SRAM), .MUT(TX_MUT)) u_tx (
-        .ck(clk), .rst(rst_n), .vi(vi_m), .vo(vo_s), .lo(tl_o), .st(tx_st));
+        .ck(clk), .rst(rst_n), .vi(vi_m), .vo(vo_s), .lo(lo), .st(tx_st));
     generate if (SELE != 0) begin : g_sel
         wire [V-1:0] eo; wire ef;
         dsdv_bk_selids #(.V(V), .EK(5), .UID(8'h5C), .MUT(SEL_MUT)) u_ids (.ck(clk), .rst(rst_n), .vo(vo_s), .o(eo), .fault(ef));
@@ -984,11 +992,93 @@ module dsdv_bk_sel_vmtx #(
             else begin
                 vn[0] <= sel_vo_n[0] | eo[0];
                 if (eo[0] && sel_vo_n != {V{1'b0}}) mf <= 1'b1;               // relay beat on a busy rung slot
-                fq <= sel_f | ef | mf;
+                fq <= fq | sel_f | ef | mf | vm_fault | tx_st[0];
             end
         always @(posedge clk) vn[V-1:1] <= sel_vo_n[V-1:1] | eo[V-1:1];
         assign vo_n = vn; assign fault = fq;
     end else begin : g_nosel
-        assign vo_n = sel_vo_n; assign fault = sel_f;
+        reg fq;
+        always @(posedge clk or negedge rst_n) if (!rst_n) fq <= 1'b0; else fq <= fq | sel_f | vm_fault | tx_st[0];
+        assign vo_n = sel_vo_n; assign fault = fq;
     end endgenerate
+    // ---- TX destination (control state only is reset: 2-flop landing of rst_n)
+    reg rs0, rs1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin rs0 <= 1'b0; rs1 <= 1'b0; end else begin rs0 <= 1'b1; rs1 <= rs0; end
+    wire octl = vo_s[0] && vo_s[3:1] == 3'd0 && vo_s[28:21] == 8'h5C && vo_s[31:29] == 3'd2;
+    reg [1:0] dst; reg lpe;
+    always @(posedge clk or negedge rs1)
+        if (!rs1) begin dst <= 2'd0; lpe <= 1'b0; end
+        else if (octl) begin dst <= (IDX_MUT == 1) ? 2'd0 : vo_s[21+101 -: 2]; lpe <= vo_s[21+102]; end
+    // ---- outputs: data = lo, valid gated by DST; the loop-back beat (registered, lane 3) -> vmux i_l
+    always @(posedge clk or negedge rs1) if (!rs1) lp_q[0] <= 1'b0; else lp_q[0] <= lo[0] && lpe;
+    // The selector's HDR binds each input lane to a quarter.  The local copy
+    // occupies physical lane3. Preserve TX's original-global-rank qslot so
+    // selector drain order remains quarter0..3 across both TP4 merge stages.
+    wire [V-1:0] loop_word;
+    dsdv_idx_loop_lane3 #(.V(V), .MUT(IDX_MUT)) u_loop_word (.i(lo), .o(loop_word));
+    always @(posedge clk) lp_q[V-1:1] <= loop_word[V-1:1];
+    assign tl_o  = {lo[V-1:1], lo[0] && dst == 2'd0};
+    assign tpn_o = {lo[V-1:1], lo[0] && dst == 2'd1};
+    assign tps_o = {lo[V-1:1], lo[0] && dst == 2'd2};
+endmodule
+
+
+module dsdv_idx_vmux6 #(
+    parameter integer V = 276,
+    parameter integer MUT = 0
+) (
+    input  wire          ck,
+    input  wire          rst,
+    input  wire [V-1:0]  i_r,
+    input  wire [V-1:0]  i_s,
+    input  wire [V-1:0]  i_a,
+    input  wire [V-1:0]  i_b,
+    input  wire [V-1:0]  i_n,
+    input  wire [V-1:0]  i_l,
+    output reg  [V-1:0]  o,
+    output reg           fault
+);
+    localparam integer NI = 6, NJ = (V - 1 + 23) / 24;
+    reg rs0;
+    always @(posedge ck or negedge rst) if (!rst) rs0 <= 1'b0; else rs0 <= 1'b1;
+    wire [NI:0] rl;
+    genvar k, c;
+    generate for (k = 0; k <= NI; k = k + 1) begin : g_reset
+        dsdv_vm_bit #(.ID(k)) u (.ck(ck), .rn(rst), .d(rs0), .q(rl[k]));
+    end endgenerate
+    wire [NI*V-1:0] iv = {i_l, i_n, i_b, i_a, i_s, i_r};
+    reg  [NI*V-1:0] r;                     // input stage (data no reset)
+    wire [NI*NJ-1:0] vk;                   // kept valid copies, one per 24-b data slice
+    generate for (k = 0; k < NI; k = k + 1) begin : g_in
+        localparam integer KS = (MUT == 1 && k == 4) ? 2 : k;
+        for (c = 0; c < NJ; c = c + 1) begin : g_c
+            dsdv_vm_bit #(.ID(100 * (k + 1) + c)) u (.ck(ck), .rn(rl[k]), .d(iv[KS*V]), .q(vk[k*NJ+c]));
+        end
+        always @(posedge ck or negedge rl[NI]) if (!rl[NI]) r[k*V] <= 1'b0; else r[k*V] <= iv[k*V];
+        always @(posedge ck) r[k*V+1 +: V-1] <= iv[k*V+1 +: V-1];
+    end endgenerate
+    always @(posedge ck or negedge rl[NI])
+        if (!rl[NI]) begin o[0] <= 1'b0; fault <= 1'b0; end
+        else begin
+            o[0] <= r[0] | r[V] | r[2*V] | r[3*V] | r[4*V] | ((MUT == 2) ? 1'b0 : r[5*V]);
+            if ((3'(r[0]) + 3'(r[V]) + 3'(r[2*V]) + 3'(r[3*V]) + 3'(r[4*V]) + 3'(r[5*V])) > 3'd1) fault <= 1'b1;
+        end
+    generate for (c = 0; c < NJ; c = c + 1) begin : g_out
+        localparam integer LO = 1 + 24 * c, SW = (V - LO < 24) ? V - LO : 24;
+        always @(posedge ck)
+            o[LO +: SW] <= (r[0*V+LO +: SW] & {SW{vk[0*NJ+c]}}) | (r[1*V+LO +: SW] & {SW{vk[1*NJ+c]}}) |
+                           (r[2*V+LO +: SW] & {SW{vk[2*NJ+c]}}) | (r[3*V+LO +: SW] & {SW{vk[3*NJ+c]}}) |
+                           (r[4*V+LO +: SW] & {SW{vk[4*NJ+c]}}) | (r[5*V+LO +: SW] & {SW{vk[5*NJ+c]}});
+    end endgenerate
+endmodule
+
+
+module dsdv_idx_loop_lane3 #(parameter integer V=276, MUT=0)(
+    input wire [V-1:0] i, output reg [V-1:0] o);
+    always @* begin
+        o = i;
+        if (MUT != 2) o[5:4] = 2'd3;
+        if (MUT == 3 && i[0] && i[3:1] == 3'd4 && !i[6] && i[7] && i[19:16] == 4'd1)
+            o[51:50] = 2'd2;
+    end
 endmodule

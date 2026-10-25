@@ -19,9 +19,9 @@ module ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72 #(
     input wire [76:0] hb_status_t_host,input wire [53:0] hb_status_t_kd,
     input wire hb_starter_armed,
     output wire [514:0] hb_f_host,output wire [52:0] hb_ks,output wire [2:0] hb_ks_slot,
-    output wire [5:0] hb_arm_mask,output wire hb_arm_commit,
-    output wire [11:0] hb_fault,output wire [7:0] hb_hbc_fault,output wire [3:0] hb_return_fault,
-    output wire hb_ctx_valid,
+    // S81/PORTFIX-FLT 10-25 (S81 DECISION 4): the HBC receiver's one 1-bit sticky fault (was hb_arm_mask[5:0],
+    // hb_arm_commit, hb_fault[11:0], hb_hbc_fault[7:0], hb_return_fault[3:0], hb_ctx_valid); region K, leaves a flop.
+    output wire hb_fault,
     input wire rst_n,
     input wire [3:0] sid,
     input wire [1103:0] ri_e,
@@ -149,16 +149,14 @@ module ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72 #(
     // real host/KS outputs and booked sequencer status cross the die boundary.
     // The unused external-return arm of RETURN_LOCAL=1 reads actual local_ro;
     // the selected return emitter exclusively captures the real landed status.
-    wire [47:0] hb_receiver_edge,hb_boot_edge;
     dsdv_hostb_stage_hbc #(.ENABLE(HBC_ENABLE),.LOCAL_STAGE(HBC_LOCAL_STAGE),.LOCAL_RANK(HBC_LOCAL_RANK),
       .PHASE_BOUND(HBC_PHASE_BOUND),.CLOCK_RESET_ID(HBC_CLOCK_RESET_ID),
       .BOOT_HEADER_EDGE(HBC_BOOT_HEADER_EDGE),.BOOT_COMMIT_EDGE(HBC_BOOT_COMMIT_EDGE),
       .VARIABLE_WORDS(1),.ALLOW_RELOAD(1),.RETURN_LOCAL(1),.RETURN_REQUIRE_KIT(1),.RETURN_ARRIVAL_DEADLINE(HBC_RETURN_ARRIVAL_DEADLINE)) u_hbc(
       .ck(ck_K),.rst_n(lpr_K_leaves[LPR_LEAVES_K-1]),.job_active(hb_status_t_host[65]),.starter_armed(hb_starter_armed),
       .from_prev(lri_ep),.local_ro(lro__l_K),.return_ro(lro__l_K),
-      .status_t_host(hb_status_t_host),.status_t_kd(hb_status_t_kd),.return_fault(hb_return_fault),
+      .status_t_host(hb_status_t_host),.status_t_kd(hb_status_t_kd),
       .to_local(lri),.next_ro(lro_ep),.f_host(hb_f_host),.ks_descriptor(hb_ks),.ks_slot(hb_ks_slot),
-      .arm_mask(hb_arm_mask),.arm_commit(hb_arm_commit),.fault(hb_fault),.context_valid(hb_ctx_valid),
-      .receiver_edge(hb_receiver_edge),.boot_edge(hb_boot_edge),.hbc_fault(hb_hbc_fault));
+      .fault(hb_fault));
     dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)) u_land (.clk(ck_ML), .rst_n(lpr_c_u_land), .wv(mwv_ml), .wd(mwd_ml), .rc(mu_rc_ml), .rv(mrv_ml), .rd(mrd_ml), .fault(mf_ml)); // region ML
 endmodule

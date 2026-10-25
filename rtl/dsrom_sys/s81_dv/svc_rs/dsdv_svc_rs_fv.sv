@@ -6,7 +6,8 @@
 // The 14 tree slices instantiate dsdv_svc_rs_c (ENTRY 0) like dsdv_svc_rs; the entries (rsv_05 / rsv_11) wrap
 // dsdv_svc_rs_pvso_entry #(.FM).  The strap sid must select the role the variant was made for (core: sticky
 // fault on a role face outside FM).  Entry q is the die's 513-b q lane {d 512, v}: the all-faces port's two
-// upper bits (q[514] transport fault / q[513], never driven by the die's slice bo source) are not ports.
+// upper bits (q[514] transport fault / q[513], never driven by the die's slice bo source) are not ports (PORTFIX-DEAD:
+// dsdv_svc_rs_pvso_entry q is [512:0]; its program has TF 0, so no q[514] reader).
 
 // slice role faces: DI N, DO -, UI -, UO N, RI -, RO N, GI -, GO N, SI N, SO -
 module dsdv_svc_rs_fv_0110101001 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
@@ -477,7 +478,6 @@ module dsdv_svc_rs_pvso_entry_fv_c66c0e0ee0 #(parameter integer MUT = 0, paramet
     input wire [32:0] j, output wire [1:0] jd, input wire [512:0] q, input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg, output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x,
     input wire [561:0] local_pv_landed, input wire [561:0] peer_pv,
-    output wire so_ready, output wire so_done, output wire [11:0] so_fault_code,
     output wire [804:0] dn_o_e,
     output wire [804:0] dn_o_s,
     output wire [804:0] dn_o_w,
@@ -566,11 +566,10 @@ module dsdv_svc_rs_pvso_entry_fv_c66c0e0ee0 #(parameter integer MUT = 0, paramet
     assign so_d_s = c_so_d[3227:2152];
     assign so_d_w = c_so_d[4303:3228];
     dsdv_svc_rs_pvso_entry #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .FM(40'hc66c0e0ee0)) u (
-        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q({2'b00, q}), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),
+        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),
         .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
-        .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .local_pv_landed(local_pv_landed), .peer_pv(peer_pv),
-        .so_ready(so_ready), .so_done(so_done), .so_fault_code(so_fault_code)
+        .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .local_pv_landed(local_pv_landed), .peer_pv(peer_pv)
 `ifdef RS_OBS
         , .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st), .obs(obs)
 `endif
@@ -1069,7 +1068,6 @@ module dsdv_svc_rs_pvso_entry_fv_6aa60e0ee0 #(parameter integer MUT = 0, paramet
     input wire [32:0] j, output wire [1:0] jd, input wire [512:0] q, input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg, output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x,
     input wire [561:0] local_pv_landed, input wire [561:0] peer_pv,
-    output wire so_ready, output wire so_done, output wire [11:0] so_fault_code,
     output wire [804:0] dn_o_e,
     output wire [804:0] dn_o_s,
     output wire [804:0] dn_o_w,
@@ -1158,11 +1156,10 @@ module dsdv_svc_rs_pvso_entry_fv_6aa60e0ee0 #(parameter integer MUT = 0, paramet
     assign so_d_e = c_so_d[2151:1076];
     assign so_d_s = c_so_d[3227:2152];
     dsdv_svc_rs_pvso_entry #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .FM(40'h6aa60e0ee0)) u (
-        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q({2'b00, q}), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),
+        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),
         .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
-        .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .local_pv_landed(local_pv_landed), .peer_pv(peer_pv),
-        .so_ready(so_ready), .so_done(so_done), .so_fault_code(so_fault_code)
+        .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .local_pv_landed(local_pv_landed), .peer_pv(peer_pv)
 `ifdef RS_OBS
         , .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st), .obs(obs)
 `endif

@@ -6,10 +6,11 @@
 //                  PROTOCOL v1.1: header word [511:508] type, [491:480] len = payload words that follow) into
 //                    o_s  -> the svc_rs ENTRY q port (unchanged traffic: every frame whose type is NOT an index frame)
 //                    o_i  -> the index query chain (iq -> dsdv_idx_qf qs): frames of type 4 (IDX_S), 8 (IDX_G), 10
-//                            (rank-tree frame), the only types dsdv_idx_qf / dsdv_idx_rg* consume.
+//                            (rank-tree frame), 11 (qf CONFIG frame: die uid, S81/PORTFIX-CFG 10-25), the only types
+//                            dsdv_idx_qf / dsdv_idx_rg* consume.
 //                  The svc entry's job endpoint (ot_s81_svc_job) discards and faults on any q frame without an armed job,
 //                  so the index frames must NOT reach it; the svc q types in use are 1, 2, 3, 7, 9, 12, 13, 14
-//                  (dsdv_svc_att, dsdv_sm_wire), disjoint from {4, 8, 10}.
+//                  (dsdv_svc_att, dsdv_sm_wire), disjoint from {4, 8, 10, 11}.
 //                  Static: the whole frame (header + len valid words, gaps allowed) follows its header's route; no
 //                  ready / credit; 1 edge pin -> pin on both outputs (the svc q path +1 edge: handed to the compiler's
 //                  band-B schedule, DRIVE-S81-IDX4 README).  Reset: valid / framing state only (2-flop landed release);
@@ -20,7 +21,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_idx_bsplit #(
     parameter integer BW = 513,
-    parameter integer MUT = 0      // bench negative control only: 1 = type 10 (tree frame) stays on the svc output
+    parameter integer MUT = 0      // bench negative control only: 1 = type 10 (tree frame) stays on the svc output, 2 = type 11
 ) (
     input  wire           ck,
     input  wire           rst_n,
@@ -34,7 +35,8 @@ module dsdv_idx_bsplit #(
     wire        v    = i[0];
     wire [3:0]  ty   = i[512:509];          // d[511:508]
     wire [11:0] ln   = i[492:481];          // d[491:480]
-    wire        hidx = (ty == 4'd4) || (ty == 4'd8) || (ty == 4'd10 && MUT != 1);
+    // S81/PORTFIX-CFG 10-25: type 11 = the dsdv_idx_qf CONFIG frame (die uid), also routed to the index chain
+    wire        hidx = (ty == 4'd4) || (ty == 4'd8) || (ty == 4'd10 && MUT != 1) || (ty == 4'd11 && MUT != 2);
     reg         infr, rt;
     reg  [11:0] left;
     wire        r_now = infr ? rt : hidx;   // route of this word

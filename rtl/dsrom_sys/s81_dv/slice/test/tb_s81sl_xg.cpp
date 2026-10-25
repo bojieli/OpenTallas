@@ -150,7 +150,8 @@ int main(int argc, char** argv) {
         for (int w = 0; w < 7; w++) r.f_cnt[w] = 0;
         bool go = false;
         x.is_v = 0; for (int w = 0; w < 5; w++) x.is_d[w] = 0;
-        for (int w = 0; w < 35; w++) { x.ri_w[w] = RIW.count(i) ? RIW[i][w] : 0; x.ri_e[w] = RIE.count(i) ? RIE[i][w] : 0; x.ci_b[w] = 0; }
+        for (int w = 0; w < 35; w++) { x.ri_w[w] = RIW.count(i) ? RIW[i][w] : 0; x.ri_e[w] = RIE.count(i) ? RIE[i][w] : 0; }
+        for (unsigned w = 0; w < sizeof(x.ci_b) / sizeof(x.ci_b[0]); ++w) x.ci_b[w] = 0;
         for (int w = 0; w < 9; w++) x.vi[w] = VIN.count(i) ? VIN[i][w] : 0;
         for (int w = 0; w < 44; w++) x.xf[w] = XFD.count(i) ? XFD[i][w] : 0;
         x.xf_v = XFV.count(i) ? XFV[i] : 0; x.xf_s = XFS.count(i) ? XFS[i] : 0;
@@ -188,7 +189,7 @@ int main(int argc, char** argv) {
         if (i > 40 && ((r.t_iss >> 2) & 1)) rfault++;
         if (i > 40 && r.cal_fault) rcal++;
         if (x.fault && xfault_at < 0) xfault_at = i;
-        if (x.xw_v != (x.xw_d[0] & 1)) { printf("FAIL xw_v != xw_d[0] at %d\n", i); return 1; }
+        // PORTFIX-DEAD D-XWV: xw_v (= xw_d[0]) is no longer a port of ot_s81sl_xg
         // own / V-assembled beats leave on the line with the default hops (E 7 - col, W col); W / E arrivals (hops 1)
         // are delivered, never forwarded; no control-plane / NX delivery for x beats
         { uint32_t ve = getbits(x.ro_e, 0, 1), ke = getbits(x.ro_e, 1, 3), he = getbits(x.ro_e, 4, 5);

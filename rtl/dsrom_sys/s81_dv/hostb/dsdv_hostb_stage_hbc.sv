@@ -29,6 +29,11 @@
 // presented), no longer external pins: nothing outside may tie them.
 // The book reads the loader's kept same-edge copies context_valid_bk / receiver_edge_bk
 // (native census: context_valid 35 loads, receiver_edge bits 33-38 loads > 32).
+// S81/PORTFIX-FLT 10-25 (S81 DECISION 4): ONE output `fault` = the registered sticky OR of the stage RX/TX faults
+// (dsdv_hostb_stage fault[11:0]), the HBC1 loader faults (hbc_fault[7:0]) and the return-emitter faults
+// (return_fault[3:0]).  The status outputs arm_mask / arm_commit (starter arm state), context_valid and the 48-b
+// receiver_edge / boot_edge counters are no longer ports (internal nets of the same names, bench taps only).
+// Reset: the sticky fault is control state, cleared by rst_n (landed by its own 2-stage reset sync).
 module dsdv_hostb_stage_hbc #(
  parameter integer ENABLE=0, LOCAL_STAGE=255, LOCAL_RANK=4, PHASE_BOUND=0,
  parameter integer RETURN_LOCAL=0, RETURN_REQUIRE_KIT=1, VARIABLE_WORDS=0, ALLOW_RELOAD=0,
@@ -40,20 +45,22 @@ module dsdv_hostb_stage_hbc #(
  input wire ck,rst_n,job_active,starter_armed,
  input wire [1103:0] from_prev,local_ro,return_ro,
  input wire [76:0] status_t_host,input wire [53:0] status_t_kd,
- output wire [3:0] return_fault,
  output wire [1103:0] to_local,next_ro,
  output wire [514:0] f_host,output wire [52:0] ks_descriptor,
- output wire [2:0] ks_slot,output wire [5:0] arm_mask,
- output wire arm_commit,output wire [11:0] fault,
- output wire context_valid,output wire [47:0] receiver_edge,boot_edge,
- output wire [7:0] hbc_fault);
+ output wire [2:0] ks_slot,
+ output reg fault);
+ wire [3:0] return_fault;wire [5:0] arm_mask;wire arm_commit;wire [11:0] stage_fault;
+ wire context_valid;wire [47:0] receiver_edge,boot_edge;wire [7:0] hbc_fault;
+ wire fault_rn;ot_reset_sync #(.ASYNC_STAGES(2)) u_fault_rst(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(fault_rn));
+ always @(posedge ck or negedge fault_rn)
+  if(!fault_rn)fault<=1'b0;else fault<=fault|(|stage_fault)|(|hbc_fault)|(|return_fault);
  generate if(ENABLE==0)begin:g_original
   dsdv_hostb_stage #(.ENABLE(0)) u_stage(.ck(ck),.rst_n(rst_n),.configured(1'b0),.local_stage(8'd0),.local_rank(2'd0),
    .epoch_id(32'd0),.programme_id(64'd0),.receiver_edge(48'd0),.transit_body_edge(48'd0),.expected_tid(16'd0),
    .expected_header_stage(8'd0),.expected_user(10'd0),.expected_position(21'd0),.expected_token(21'd0),
    .header_slot(1'b0),.job_active(job_active),.starter_armed(starter_armed),.from_prev(from_prev),.local_ro(local_ro),
    .return_ro(return_ro),.forward_slot(1'b0),.return_slot(1'b0),.to_local(to_local),.next_ro(next_ro),
-   .f_host(f_host),.ks_descriptor(ks_descriptor),.ks_slot(ks_slot),.arm_mask(arm_mask),.arm_commit(arm_commit),.fault(fault));
+   .f_host(f_host),.ks_descriptor(ks_descriptor),.ks_slot(ks_slot),.arm_mask(arm_mask),.arm_commit(arm_commit),.fault(stage_fault));
   assign return_fault=0;
   assign context_valid=0;assign receiver_edge=0;assign boot_edge=0;assign hbc_fault=0;
  end else begin:g_hbc
@@ -93,7 +100,7 @@ module dsdv_hostb_stage_hbc #(
    .header_slot(next_header_slot),.job_active(job_active),.starter_armed(starter_armed),.from_prev(after_hbc),
    .local_ro(local_ro),.return_ro(actual_return),.forward_slot(next_forward_slot),.return_slot(source_return_tx_slot),
    .to_local(to_local),.next_ro(next_ro),.f_host(f_host),.ks_descriptor(ks_descriptor),.ks_slot(ks_slot),
-   .arm_mask(arm_mask),.arm_commit(arm_commit),.fault(fault));
+   .arm_mask(arm_mask),.arm_commit(arm_commit),.fault(stage_fault));
  end endgenerate
 endmodule
 `default_nettype wire

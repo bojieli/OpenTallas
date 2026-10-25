@@ -11,8 +11,11 @@ module tb_hostb_stage_hbc;
  dsdv_hostb_stage_hbc #(.ENABLE(1),.LOCAL_STAGE(1),.LOCAL_RANK(0),.PHASE_BOUND(1),.CLOCK_RESET_ID(64'h5381C7C0DE1021),
   .BOOT_HEADER_EDGE(48'd20),.BOOT_COMMIT_EDGE(48'd30)) dut(.ck(ck),.rst_n(rst_n),.job_active(1'b0),.starter_armed(1'b0),
   .from_prev(ring),.local_ro(1104'd0),.return_ro(1104'd0),
-  .to_local(to_local),.next_ro(next_ro),.f_host(f_host),.ks_descriptor(ks),.ks_slot(ks_slot),.arm_mask(arm_mask),
-  .arm_commit(arm_commit),.fault(fault),.context_valid(context_valid),.receiver_edge(receiver_edge),.boot_edge(boot_edge),.hbc_fault(hbc_fault));
+  .to_local(to_local),.next_ro(next_ro),.f_host(f_host),.ks_descriptor(ks),.ks_slot(ks_slot),
+  .fault(flt));
+ // S81/PORTFIX-FLT 10-25: the unit's ports are one 1-bit sticky fault (flt); the former status ports are tapped
+ wire flt;assign arm_mask=dut.arm_mask;assign arm_commit=dut.arm_commit;assign fault=dut.stage_fault;assign context_valid=dut.context_valid;
+ assign receiver_edge=dut.receiver_edge;assign boot_edge=dut.boot_edge;assign hbc_fault=dut.hbc_fault;
  string vec;
  initial begin
   if(!$value$plusargs("VEC=%s",vec))$fatal(1,"+VEC");
@@ -45,6 +48,7 @@ module tb_hostb_stage_hbc;
     4: if(writes!=0||context_valid||fault[7]!=1||hbc_fault[5]!=1)$fatal(1,"FAIL no-COMMIT mutant");
     5: if(writes!=0||context_valid||fault[7]!=1||hbc_fault[3]!=1)$fatal(1,"FAIL corrupt-body mutant");
    endcase
+   if(flt!==((|fault)||(|hbc_fault)))$fatal(1,"FAIL mode%0d 1-bit fault %b != sticky OR of rx/tx %h hbc %h",mode,flt,fault,hbc_fault);
    $display("PASS mode=%0d",mode);$finish;
   end
  end
