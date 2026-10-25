@@ -945,6 +945,14 @@ def evaluate(rec, insertion_target=None):
     rec["checks"] = ch
     rec["reasons"] = reasons
     rec["verdict"] = "SIGNED" if not reasons else "NOT SIGNED"
+    # Option-A local closure is provisional until its actual assembled parent
+    # proves all assumed input ports. Legacy records take the identical path.
+    ctx_file = (rec.get('inputs') or {}).get('sdc_lint_ctx')
+    a_context = bool(ctx_file and Path(ctx_file).is_file() and
+                     json.loads(Path(ctx_file).read_text()).get('hold_in_min_ports_ps'))
+    if rec.get('io_hold') or a_context:
+        from io_hold_qualification import apply_obligation
+        apply_obligation(rec)
     return rec
 
 

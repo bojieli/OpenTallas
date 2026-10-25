@@ -528,3 +528,69 @@ def test_gold_script_marks_kept_registers():
     s = lec.gold_script({"VERILOG_FILES": "a.v", "DESIGN_NAME": "t"}, "/k", "verilog", [], "s.v", "w.v", "f.v", "/o/gold")
     assert s.index("a:keep %i") < s.index("setattr -mod -unset keep_hierarchy")
     assert "A:keep_hierarchy" in s and "select -write /o/gold.keep" in s
+
+
+def test_cut_output_alias_is_proved_and_mutated_cut_is_rejected(tmp_path, monkeypatch):
+    """KV e0: slang calls bit41 q while verilog calls the same cut flop g_r.r."""
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    def design(name, reg, bad):
+        p = tmp_path / (name + '.aig')
+        # Inputs d0,d1; two latches, named cut flop and the common consumer.
+        p.write_bytes(f'aig 4 2 2 0 0\n{4 if bad else 2}\n6\n'.encode())
+        mp = {'input': {0: [('d0', 0)], 1: [('d1', 0)]}, 'output': {},
+              'latch': {0: [(f'u_dut.u_c3.{reg}$_DFF_P_.lecq', 0)],
+                        1: [('u_dut.out$_DFF_P_.lecq', 0)]}}
+        return lec.read_aig(p), mp
+    for mutant in (False, True):
+        g, gm = design('gold', 'g_r.r[41]', False)
+        t, tm = design('gate', 'q[41]', mutant)
+        L = lec.Lec(g, gm, t, tm)
+        lec.register_alias_proposals(L, [])
+        assert L.hyp[('gate', 'ff:u_dut.u_c3.q[41]')] == ('eq', 'gold', 'ff:u_dut.u_c3.g_r.r[41]', 0)
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        statuses = _sim_prove(m)
+        assert ('differs' in statuses.values()) == mutant
+
+
+def test_structural_constant_closure_proves_both_sides_and_rejects_mutant(tmp_path):
+    for mutant in (False, True):
+        g, gm = _seq(tmp_path, 'pad_gold', ['d'], ['a', 'b', 'o'],
+                     lambda m, x: {'a':0,'b':x['a'],'o':x['b']})
+        t, tm = _seq(tmp_path, 'pad_gate', ['d'], ['p', 'q', 'o'],
+                     lambda m, x: {'p':x['d'] if mutant else 0,'q':x['p'],'o':x['q']})
+        L = lec.Lec(g, gm, t, tm)
+        assert lec.structural_constant_closure(L, []) >= 2
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        statuses = _sim_prove(m)
+        assert ('differs' in statuses.values()) == mutant
+        if not mutant:
+            assert all(k in L.hyp for k in [('gold', 'ff:u_dut.a'), ('gold', 'ff:u_dut.b'),
+                                           ('gate', 'ff:u_dut.p'), ('gate', 'ff:u_dut.q')])
+
+
+def test_explicit_platform_buffer_loads_functional_liberty_for_gold_and_lint(tmp_path, monkeypatch):
+    (tmp_path / 'rtl.v').write_text('module t(input a, output y); HB4xp67_ASAP7_75t_R u_b(.A(a),.Y(y)); endmodule\n')
+    monkeypatch.setattr(lec, 'NLDM', str(tmp_path))
+    monkeypatch.setattr(lec, 'STD_LIBS', ['buf.lib'])
+    monkeypatch.setattr(lec, 'lib_cells', lambda p: ['HB4xp67_ASAP7_75t_R'])
+    env = {'VERILOG_FILES': '/work/rtl.v', 'DESIGN_NAME': 't'}
+    for frontend in ('verilog', 'slang'):
+        cmds = lec.read_rtl_cmds(env, tmp_path, frontend, [])
+        assert cmds[0] == f'read_liberty -ignore_miss_func {tmp_path}/buf.lib'
+        assert not any('read_liberty -lib ' in c for c in cmds)
+
+
+def test_structural_twin_closure_rare_carry_and_valid_pipe(tmp_path):
+    for mutant in (False, True):
+        g, gm = _seq(tmp_path, 'tw_gold', ['d', 'wrong'], ['carry', 'copy', 'valid', 'dup', 'out'],
+                     lambda m,x: {'carry':x['d'], 'copy':x['d'], 'valid':x['carry'],
+                                  'dup':x['copy'], 'out':x['dup']})
+        t, tm = _seq(tmp_path, 'tw_gate', ['d', 'wrong'], ['carry', 'valid', 'out'],
+                     lambda m,x: {'carry':x['wrong'] if mutant else x['d'],
+                                  'valid':x['carry'], 'out':x['valid']})
+        L = lec.Lec(g, gm, t, tm)
+        assert lec.structural_twin_closure(L, []) == 2
+        assert ('gold', 'ff:u_dut.dup') in L.hyp
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        status = _sim_prove(m)
+        assert ('differs' in status.values()) == mutant

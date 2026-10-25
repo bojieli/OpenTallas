@@ -1,6 +1,6 @@
 {
   "area": {
-    "array_efficiency": 0.041981423015328284,
+    "array_efficiency": 0.06040184331797233,
     "array_height_um": 3.456,
     "array_width_um": 154.8288,
     "bank_control_height_um": 0.0,
@@ -12,7 +12,7 @@
     "core_width_um": 167.3288,
     "data_array_area_um2": 535.0883327999999,
     "decoder_width_um": 12.5,
-    "density_mb_per_mm2": 1.2854394172339891,
+    "density_mb_per_mm2": 1.84945875336727,
     "geometry_constants_um": {
       "column_fixed": 9.082108840386176,
       "column_per_mux_bit": 0.5,
@@ -23,15 +23,19 @@
       "rom_column_fixed": 5.0,
       "rom_decoder_fixed": 3.2
     },
-    "macro_area_um2": 12745.836000000001,
-    "macro_height_um": 76.14,
+    "macro_area_um2": 8858.808,
+    "macro_height_um": 52.92,
     "macro_width_um": 167.4,
     "outline": {
+      "pin_faces": {
+        "left": "519 pins: clk, r_ce_in, r_addr_in, rd_out",
+        "right": "534 pins: w_ce_in, w_addr_in, then per group k wd_in[32k +: 32], w_mask_in[k]"
+      },
       "pin_limited": true,
-      "pin_stretch_um": 58.857,
-      "pins_per_edge": 775,
-      "signal_pins": 1549,
-      "snap_overhead_um2": 39.556
+      "pin_stretch_um": 35.721,
+      "pins_per_edge": 534,
+      "signal_pins": 1053,
+      "snap_overhead_um2": 23.847
     },
     "physical_array_area_um2": 535.0883328
   },
@@ -199,8 +203,10 @@
   "spec": {
     "banks": 1,
     "bits": 512,
+    "mask_gran": 32,
     "mux": 1,
     "name": "ot_sram_1r1w_32x512_m1",
+    "pin_faces": "rw",
     "ports": "1r1w",
     "spare_cols": 0,
     "spare_rows": 0,
@@ -229,7 +235,7 @@
       "clk_to_q_ps": 266.3265726487341,
       "corner": "ff",
       "hold_ps": 19.67222053777778,
-      "leakage_nw": 63729.18,
+      "leakage_nw": 44294.04,
       "min_period_ps": 266.2972719984522,
       "min_pulse_ps": 106.51890879938088,
       "out_r_kohm": 0.31724855211381614,
@@ -263,7 +269,7 @@
       "clk_to_q_ps": 397.8879253564404,
       "corner": "ss",
       "hold_ps": 30.074020584583334,
-      "leakage_nw": 63729.18,
+      "leakage_nw": 44294.04,
       "min_period_ps": 398.25092117228064,
       "min_pulse_ps": 159.30036846891227,
       "out_r_kohm": 0.7083491406580278,
@@ -297,7 +303,7 @@
       "clk_to_q_ps": 317.0953225853712,
       "corner": "tt",
       "hold_ps": 21.600259385555557,
-      "leakage_nw": 63729.18,
+      "leakage_nw": 44294.04,
       "min_period_ps": 317.1893148363112,
       "min_pulse_ps": 126.8757259345245,
       "out_r_kohm": 0.4562575976456151,
@@ -311,11 +317,11 @@
     }
   },
   "views": {
-    "ot_sram_1r1w_32x512_m1.lef": "86a00a7ae731d63d3ec4c22bc22b18c4b431d21a5ecc1f81853134cdbf09a6ce",
-    "ot_sram_1r1w_32x512_m1.v": "36d6c40d8ac6ea92330a01b30b92e08658b437c24d2f279065144ea5d3420f00",
-    "ot_sram_1r1w_32x512_m1_bb.v": "fcab940df8c7bd8f8c396c9c0e85ea4cc3bbaf6ce29f4a86d4775a37b4e9df72",
-    "ot_sram_1r1w_32x512_m1_ff.lib": "b8c4c17739cfc0a8c075ff32c0cde49993cb291d987e2ea2af03de654d74834b",
-    "ot_sram_1r1w_32x512_m1_ss.lib": "137da16f1bc598931bab64f1c9208e37f2d6361463382572a9850439647fad21",
-    "ot_sram_1r1w_32x512_m1_tt.lib": "435fe50a180c8aa2ca27ec17701310cf850a59688a7a424d2fc14d099194689f"
+    "ot_sram_1r1w_32x512_m1.lef": "4356890ac882b3ff22ce1244386931bd161c93ade9342921b25b4f577d3ada68",
+    "ot_sram_1r1w_32x512_m1.v": "736ec304041fc14a54912b73750cdca992635530bb31a47b3b4893a2ab52b708",
+    "ot_sram_1r1w_32x512_m1_bb.v": "e4ac8fc1b23432e7b48ef051c152989cf028ca29a78bef8dabcaa9a35a6c5d25",
+    "ot_sram_1r1w_32x512_m1_ff.lib": "c02e3852c2cd479bbf17a474bec2f0f37ec9711bc6197cdbdb241d2a84aa7d31",
+    "ot_sram_1r1w_32x512_m1_ss.lib": "b4ffeb7f58fc2136cd07d2f7648c521c398177e6801cd7c18b0c166ec8ffc86e",
+    "ot_sram_1r1w_32x512_m1_tt.lib": "301a96e90885249af4cf7f0f9c23ec3ef5d3d84a9b747c0e76f4bec9031b655a"
   }
 }

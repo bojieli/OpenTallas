@@ -1,0 +1,48 @@
+{
+ "scope": "Analytical +1 vsw LR=1 delta on the same current plan, not current bound RTL token evidence",
+ "base_main": "eccf35226c",
+ "cycle_change_per_SW_command": 1,
+ "workloads": {
+  "ar": {
+   "dag_old_cycles": 1387238.6,
+   "dag_new_cycles": 1387278.6,
+   "dag_added_cycles": 40.0,
+   "map_old_cycles": 1528877.6,
+   "map_new_cycles": 1528917.6,
+   "map_added_cycles": 40.0,
+   "old_tok_s": 784.9,
+   "new_tok_s": 784.9,
+   "calendar_cross_check_before": {
+    "calendar_T_after_override": 1387238.6,
+    "diff": 0.0,
+    "this_T": 1387238.6
+   },
+   "calendar_cross_check_after": {
+    "calendar_T_after_override": 1387278.6,
+    "diff": 0.0,
+    "this_T": 1387278.6
+   }
+  },
+  "mtp": {
+   "dag_old_cycles": 1794497.8,
+   "dag_new_cycles": 1794545.8,
+   "dag_added_cycles": 48.0,
+   "map_old_cycles": 1815229.6,
+   "map_new_cycles": 1815279.6,
+   "map_added_cycles": 50.0,
+   "old_tok_s": 2749.4,
+   "new_tok_s": 2749.3,
+   "calendar_cross_check_before": {
+    "calendar_T_after_override": 1799977.8,
+    "diff": 5480.0,
+    "this_T": 1794497.8
+   },
+   "calendar_cross_check_after": {
+    "calendar_T_after_override": 1800025.8,
+    "diff": 5480.0,
+    "this_T": 1794545.8
+   }
+  }
+ },
+ "verdict": "PASS"
+}

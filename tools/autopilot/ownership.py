@@ -60,7 +60,7 @@ import loopgaps as LG
 DIES = [("s81", "s81", "s81"), ("s81_head", "s81_head", "s81_head"), ("qwen_compute", "qwen_compute", "qwen_compute"),
         ("qwen_kvsys", "qwen_kvsys", "qwen_kvsys"), ("hbm", "hbm_arch/B2n", "B2n")]
 CANONICAL_SPLIT = "physical/die_plan/hbm/cores/harden/canonical_ports_split.json"   # HBM split piece -> RTL master
-STATES = ["PLAN-STRUCTURAL", "NEEDS-KIT", "KIT-PLACED", "GEOM-REQ", "ROUTING", "REVIEW", "FIX", "SIGNED"]
+STATES = ["PLAN-STRUCTURAL", "NEEDS-KIT", "KIT-PLACED", "GEOM-REQ", "ROUTING", "REVIEW", "FIX", "WAIT-PARENT", "SIGNED"]
 UNOWNED_S = 60 * 60
 OWNER_WINDOW_S = 24 * 3600
 NOT_LANES = re.compile(r"^(_|GEOM-REVIEW|COORD-REVIEW-QUEUE|AUTOPILOT|ROOT-MERGE)")
@@ -80,6 +80,7 @@ NEXT = {
     "ROUTING": "wait: the autopilot classifies the run",
     "REVIEW": "visual review of the bundle, structural fix, GEOM REQ",
     "FIX": "structural fix -> GEOM REQ -> rebuild",
+    "WAIT-PARENT": "matching actual parent seam receipt required; preserve physical views",
     "SIGNED": "-",
 }
 
@@ -473,6 +474,9 @@ def build(inp, now=None):
                 signed.setdefault(k, f"autopilot {j.get('id')} SIGNED")
             if st == "RUNNING":
                 e["live"].append((f"{j.get('unit') or 'adopted'} {j.get('id')}", j.get("lane") or "", "route"))
+            if st == "WAIT-PARENT":
+                t = j.get("updated") or now
+                e["events"].append((t, "WAIT-PARENT", f"autopilot {j.get('id')} local physical PASS; actual parent receipt owed"))
             if st == "WAIT-GEOM":
                 t = j.get("updated") or now
                 e["events"].append((t, "GEOM-REQ", f"autopilot {j.get('id')} WAIT-GEOM {j.get('geom_ref', '')}"[:120]))

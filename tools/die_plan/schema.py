@@ -16,7 +16,9 @@ Conventions (binding for every tool):
   DIE frame; the destination uses the opposite face.  `window_um` = [lo, hi] along that face in DIE coordinates
   (y for E/W faces, x for N/S faces).  For a port whose src is "@die", `face` is the dst partition's face on the
   die edge.  Both partitions get pins at exactly the same die coordinates (pin_positions()).
-- Every port is registered on both sides (a boundary flop at the source pin and at the destination pin).
+- Every port is registered on both sides (a boundary flop at the source pin and at the destination pin).  On the side
+  of a REGISTERED-PIN hard partition (its single hard core declares `registered_pins`, tools/die_plan/hard_pinreg.py)
+  that flop is the macro's own registered pin (lib: setup+hold / clk->q), not a generated station.
 - A feedthrough slot `S` of a partition type defines two buses `S_i` (in, on `in_face`) and `S_o` (out, on `out_face`),
   with `stations` reset-less data registers (+ one reset epoch bit) between them.
 - A lane is an ordered list of ports; consecutive ports meet inside a partition at the `_i`/`_o` buses of one ft slot.
@@ -111,22 +113,27 @@ _bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", 
                                                          "note": {"type": "string"}}}}
 
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
+_physical_id_widths = {"strap_corner": 2, "strap_hid": 2, "strap_bsel": 2, "strap_tile_tid": 6}
 _parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
     name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
-           "properties": {"width": ({"type": "integer", "const": 2} if name in ("strap_corner", "strap_hid", "strap_bsel")
+           "properties": {"width": ({"type": "integer", "const": _physical_id_widths[name]} if name in _physical_id_widths
                                    else {"type": "integer", "minimum": 1}),
                           "value": {"type": "integer", "minimum": 0,
-                                    **({"maximum": 3} if name in ("strap_corner", "strap_hid", "strap_bsel") else {})}}}
-    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "strap_corner", "strap_hid", "strap_bsel")}}
+                                    **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
+    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", *_physical_id_widths)}}
 
-# Native KV quadrant/head/bank IDs only; this is not a generic configuration strap.
+# Exact identity ports only. G0's semantic validator enforces each port's width;
+# allOf gives full JSON-Schema consumers the same cross-field restriction.
 _core_id_straps = {"type": "array", "items": {
     "type": "object", "required": ["port", "width", "value"], "additionalProperties": False,
-    "properties": {"port": {"enum": ["strap_corner", "strap_hid", "strap_bsel"]},
-                   "width": {"const": 2},
-                   "value": {"type": ["integer", "string"], "minimum": 0, "maximum": 3,
-                             "pattern": "^2'[bB][01]{2}$"},
-                   "note": {"type": "string"}}}}
+    "properties": {"port": {"enum": list(_physical_id_widths)},
+                   "width": {"enum": [2, 6]},
+                   "value": {"type": ["integer", "string"], "minimum": 0, "maximum": 63,
+                             "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6})$"},
+                   "note": {"type": "string"}},
+    "allOf": [{"if": {"properties": {"port": {"const": "strap_tile_tid"}}},
+               "then": {"properties": {"width": {"const": 6}, "value": {"maximum": 63, "pattern": "^6'[bB][01]{6}$"}}},
+               "else": {"properties": {"width": {"const": 2}, "value": {"maximum": 3, "pattern": "^2'[bB][01]{2}$"}}}}]}}
 
 SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -340,6 +347,10 @@ SCHEMA = {
                                        # hardened views (repo-relative): the partition kit places the core as a
                                        # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       # REGISTERED-PIN hard partition (COORD 10-25 11:31; hard_pinreg.py): the single
+                                       # hard core of a hard type whose registered boundary pins (lib: setup+hold on
+                                       # every input, clk->q on every output) are the partition's boundary registers
+                                       "registered_pins": {"type": "boolean"},
                                        # routing obstruction top layer of the core (its LEF OBS/PIN top; G2 probe
                                        # obstructs M1..obs_max, default partition_signal_max when absent)
                                        "obs_max": _layer,
@@ -367,6 +378,10 @@ SCHEMA = {
                                        # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
                                        # at origin_um (type frame) with orient (mandatory when lef is given)
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       # REGISTERED-PIN hard partition (COORD 10-25 11:31; hard_pinreg.py): the single
+                                       # hard core of a hard type whose registered boundary pins (lib: setup+hold on
+                                       # every input, clk->q on every output) are the partition's boundary registers
+                                       "registered_pins": {"type": "boolean"},
                                        "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
                                        "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf

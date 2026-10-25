@@ -127,7 +127,9 @@ def _sta(hold_ff, pairs_ff=30.0, neg=0, nopath=False):
         ps = {g: dict(n=4, max=pairs_ff, min=-5.0, max_pair=["a", "b"], min_pair=["a", "b"], p99=pairs_ff, over=0,
                       crpr_hold=2.0, crpr_setup=1.0, max_cppr=pairs_ff - 2.0, min_cppr=-4.0) for g in seams}
         corners[c] = dict(exit=0, seams=seams, pairskew=ps)
-    return dict(mode="flat", corners=corners)
+    return dict(mode="flat", corners=corners, period_ps=833,unc_setup_ps=60,unc_hold_ps=25,spine="tree",instances={"pfa":PAIR["partition_types"]["fa"]["module"],"pfb":PAIR["partition_types"]["fb"]["module"]},
+                view_evidence={t["module"]:dict(kind="real",spef_present=True,netlist_sha256="fixture",spef_sha256="fixture")
+                               for t in PAIR["partition_types"].values()})
 
 
 def test_parent_check_pass_fail_and_coverage():

@@ -1,0 +1,158 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-25T18:38:21+0000",
+ "verdict": "EQUIVALENT",
+ "top": "qfd_native59_qbank",
+ "netlist": "/work/gate.v",
+ "synth_frontend": "slang",
+ "gold_frontend": "verilog",
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_sram_1r1w_32x512_m1": 8
+ },
+ "ports": {
+  "inputs": 563,
+  "outputs": 1076
+ },
+ "t_aig_s": 24.5,
+ "t_corr_s": 792.2,
+ "keypoints": {
+  "gold": {
+   "inputs": 572,
+   "flops": 24173,
+   "outputs": 0,
+   "ands": 336733
+  },
+  "gate": {
+   "inputs": 572,
+   "flops": 24115,
+   "outputs": 0,
+   "ands": 350635
+  },
+  "matched": 15306,
+  "gold_constant_flops": {
+   "n": 0,
+   "first": []
+  },
+  "paired_flops": {
+   "n": 4579,
+   "first": [
+    "both:ff:u_dut.bb_c[10]=ff:u_dut.bb_c[0]",
+    "both:ff:u_dut.bb_c[15]=ff:u_dut.bb_c[0]",
+    "both:ff:u_dut.bb_c[16]=ff:u_dut.bb_c[11]",
+    "both:ff:u_dut.bb_c[17]=ff:u_dut.bb_c[12]",
+    "both:ff:u_dut.bb_c[18]=ff:u_dut.bb_c[13]",
+    "both:ff:u_dut.bb_c[19]=ff:u_dut.bb_c[14]",
+    "both:ff:u_dut.bb_c[1]=ff:u_dut.bb_c[11]",
+    "both:ff:u_dut.bb_c[20]=ff:u_dut.bb_c[0]",
+    "both:ff:u_dut.bb_c[21]=ff:u_dut.bb_c[11]",
+    "both:ff:u_dut.bb_c[22]=ff:u_dut.bb_c[12]",
+    "both:ff:u_dut.bb_c[23]=ff:u_dut.bb_c[13]",
+    "both:ff:u_dut.bb_c[24]=ff:u_dut.bb_c[14]",
+    "both:ff:u_dut.bb_c[25]=ff:u_dut.bb_c[0]",
+    "both:ff:u_dut.bb_c[26]=ff:u_dut.bb_c[11]",
+    "both:ff:u_dut.bb_c[27]=ff:u_dut.bb_c[12]",
+    "both:ff:u_dut.bb_c[28]=ff:u_dut.bb_c[13]",
+    "both:ff:u_dut.bb_c[29]=ff:u_dut.bb_c[14]",
+    "both:ff:u_dut.bb_c[2]=ff:u_dut.bb_c[12]",
+    "both:ff:u_dut.bb_c[30]=ff:u_dut.bb_c[0]",
+    "both:ff:u_dut.bb_c[31]=ff:u_dut.bb_c[11]",
+    "both:ff:u_dut.bb_c[32]=ff:u_dut.bb_c[12]",
+    "both:ff:u_dut.bb_c[33]=ff:u_dut.bb_c[13]",
+    "both:ff:u_dut.bb_c[34]=ff:u_dut.bb_c[14]",
+    "both:ff:u_dut.bb_c[35]=ff:u_dut.bb_c[0]",
+    "both:ff:u_dut.bb_c[36]=ff:u_dut.bb_c[11]",
+    "both:ff:u_dut.bb_c[37]=ff:u_dut.bb_c[12]",
+    "both:ff:u_dut.bb_c[38]=ff:u_dut.bb_c[13]",
+    "both:ff:u_dut.bb_c[39]=ff:u_dut.bb_c[14]",
+    "both:ff:u_dut.bb_c[3]=ff:u_dut.bb_c[13]",
+    "both:ff:u_dut.bb_c[4]=ff:u_dut.bb_c[14]",
+    "both:ff:u_dut.bb_c[5]=ff:u_dut.bb_c[0]",
+    "both:ff:u_dut.bb_c[6]=ff:u_dut.bb_c[11]",
+    "both:ff:u_dut.bb_c[7]=ff:u_dut.bb_c[12]",
+    "both:ff:u_dut.bb_c[8]=ff:u_dut.bb_c[13]",
+    "both:ff:u_dut.bb_c[9]=ff:u_dut.bb_c[14]",
+    "both:ff:u_dut.g_face_local.g_beat[0].q[0]=ff:u_dut.f_qb[0]",
+    "both:ff:u_dut.g_face_local.g_beat[0].q[1]=ff:u_dut.f_qb[1]",
+    "both:ff:u_dut.g_face_local.g_beat[0].q[2]=ff:u_dut.f_qb[2]",
+    "both:ff:u_dut.g_face_local.g_beat[0].q[3]=ff:u_dut.f_qb[3]",
+    "both:ff:u_dut.g_face_local.g_beat[0].q[4]=ff:u_dut.f_qb[4]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 9,
+  "gate_x_sources": 9,
+  "gold_only_compare": {
+   "n": 58,
+   "first": [
+    "ff:u_dut.rst_cp_bp[10]",
+    "ff:u_dut.rst_cp_bp[11]",
+    "ff:u_dut.rst_cp_bp[12]",
+    "ff:u_dut.rst_cp_bp[13]",
+    "ff:u_dut.rst_cp_bp[14]",
+    "ff:u_dut.rst_cp_bp[15]",
+    "ff:u_dut.rst_cp_bp[16]",
+    "ff:u_dut.rst_cp_bp[17]",
+    "ff:u_dut.rst_cp_bp[18]",
+    "ff:u_dut.rst_cp_bp[19]",
+    "ff:u_dut.rst_cp_bp[1]",
+    "ff:u_dut.rst_cp_bp[20]",
+    "ff:u_dut.rst_cp_bp[21]",
+    "ff:u_dut.rst_cp_bp[22]",
+    "ff:u_dut.rst_cp_bp[23]",
+    "ff:u_dut.rst_cp_bp[24]",
+    "ff:u_dut.rst_cp_bp[25]",
+    "ff:u_dut.rst_cp_bp[26]",
+    "ff:u_dut.rst_cp_bp[27]",
+    "ff:u_dut.rst_cp_bp[28]",
+    "ff:u_dut.rst_cp_bp[29]",
+    "ff:u_dut.rst_cp_bp[2]",
+    "ff:u_dut.rst_cp_bp[30]",
+    "ff:u_dut.rst_cp_bp[31]",
+    "ff:u_dut.rst_cp_bp[32]",
+    "ff:u_dut.rst_cp_bp[33]",
+    "ff:u_dut.rst_cp_bp[34]",
+    "ff:u_dut.rst_cp_bp[35]",
+    "ff:u_dut.rst_cp_bp[36]",
+    "ff:u_dut.rst_cp_bp[37]",
+    "ff:u_dut.rst_cp_bp[38]",
+    "ff:u_dut.rst_cp_bp[39]",
+    "ff:u_dut.rst_cp_bp[3]",
+    "ff:u_dut.rst_cp_bp[4]",
+    "ff:u_dut.rst_cp_bp[5]",
+    "ff:u_dut.rst_cp_bp[6]",
+    "ff:u_dut.rst_cp_bp[7]",
+    "ff:u_dut.rst_cp_bp[8]",
+    "ff:u_dut.rst_cp_bp[9]",
+    "ff:u_dut.rst_cp_bs[10]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 0.1,
+ "x_dont_care_points": {
+  "n": 0,
+  "first": []
+ },
+ "counts": {
+  "compare_points": 29119,
+  "proved": 29119,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "29119 compare points proved; 15306 key points matched by name, 4579 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs)",
+ "t_total_s": 822.5
+}

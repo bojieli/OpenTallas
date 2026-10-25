@@ -74,6 +74,25 @@ def parse_grt(text):
     m = re.findall(r"OT_REACH (\S+) max ([\d.]+) p90 ([\d.]+) n (\d+)", text)
     res["reach"] = {k: dict(max_um=float(a), p90_um=float(b), taps=int(n)) for k, a, b, n in m}
     res["done"] = "OT_DONE" in text
+    # GRT-0114 is emitted as a WARNING even when reduction underflows uint16
+    # capacity (e.g. cap0 -> reducedCap65480). The subsequent zero-overflow
+    # table is invalid and must not qualify through an older done/overflow-only
+    # consumer. Preserve what the tool printed separately for diagnosis.
+    invalid = []
+    for ln in text.splitlines():
+        pair = re.search(r"cap,\s*reducedCap:\s*(-?\d+)\s*,\s*(-?\d+)", ln)
+        impossible = pair and (int(pair[1]) < 0 or int(pair[2]) < 0 or int(pair[2]) > int(pair[1]))
+        if "GRT-0114" in ln or impossible:
+            invalid.append(ln.strip())
+    res["capacity_valid"] = not invalid
+    if invalid:
+        res["capacity_errors"] = invalid[:5]
+        res["errors"] = sorted(set(res["errors"]) | {"GRT-CAPACITY-UNDERFLOW"} |
+                               ({"GRT-0114"} if "GRT-0114" in text else set()))
+        res["tool_done"] = res["done"]
+        res["reported_total_overflow"] = res["total_overflow"]
+        res["total_overflow"] = None
+        res["done"] = False    # not a valid completed physical routing proof
     return res
 
 

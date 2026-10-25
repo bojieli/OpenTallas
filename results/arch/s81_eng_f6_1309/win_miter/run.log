@@ -1,0 +1,9 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-eng-1309/win_miter
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-s81-eng-1309/win_miter
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-eng-1309/win_miter
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-s81-eng-1309/win_miter
+ot-run: localhost      admits   122 GB (avail 300, reserve 0, fresh 111.9, peak 1.2, headroom 0, waiters 0/0 GB) load 63/256 running 28 disk 1273 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-340892-1792960023 after 1 s
+PASS Win +1readstage ALLoutputs3seeds, noforwardmutantCAUGHT
+ot-run: RAN on localhost (unit oth-ubuntu-340892-1792960023): exit 0

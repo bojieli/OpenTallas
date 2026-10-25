@@ -88,6 +88,7 @@ TSV_HEAD = {
     "signed.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\tmirror\ttt_wns_ps\tff_wns_ps\tlane",
     "review.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tpng\tpaths\tlane",
     "structural.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tlane",
+    "provisional.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tlocal_verdict\treasons\tlane",
     "geom_alerts.tsv": "time\tid\tdie\ttype\tsrc\tkit\tstatus\tunit\tgeom_was\tverdict\tlane",
 }
 DRY = False
@@ -262,8 +263,10 @@ def validate_row(r):
         return "cells not a number (expected std cells required)"
     if c > CELL_CAP:
         return f"cells {int(c)} > {CELL_CAP} (OpenROAD cap per run)"
-    if r["goal"] not in ("", "auto", "route", "finish"):
-        return "goal must be route|finish|auto"
+    if r["goal"] not in ("", "auto", "route", "finish", "cts"):
+        return "goal must be route|finish|auto|cts"
+    if r["goal"] == "cts" and not r["runner"]:
+        return "cts diagnostic goal requires an explicit CTS-only runner"
     if r["threads"] and not r["threads"].isdigit():
         return "threads not an integer"
     if r["runner"] and not r["runner"].startswith("/"):
@@ -375,7 +378,8 @@ so.sort(key=os.path.getmtime)
 if so:
     d = jl(so[-1]) or {}
     c = d.get("checks") or {}
-    out["signoff"] = {"path": so[-1], "verdict": d.get("verdict"), "reasons": d.get("reasons"),
+    out["signoff"] = {"path": so[-1], "verdict": d.get("verdict"), "local_verdict": d.get("local_verdict"),
+        "release_qualified": d.get("release_qualified"), "parent_qualification": d.get("parent_qualification"), "reasons": d.get("reasons"),
         "fails": sorted(k for k, v in c.items() if isinstance(v, dict) and v.get("verdict") == "FAIL"),
         "tt_wns": (c.get("setup_tt") or {}).get("wns_ps"), "ff_wns": (c.get("hold_ff") or {}).get("wns_ps"),
         "drc": (c.get("drc") or {}).get("count"), "antenna": (c.get("antenna") or {}).get("count"),
@@ -509,6 +513,8 @@ def classify(c, client):
     class: SIGNED | NEAR-MISS | STRUCTURAL | CRASH ; kind refines it (infra / tool / ...)"""
     so = c.get("signoff")
     if so:
+        if so.get("verdict") == "LOCAL_PASS_NEEDS_PARENT" and so.get("local_verdict") == "SIGNED":
+            return "WAIT-PARENT", "parent-receipt-pending", "; ".join(so.get("reasons") or []) or "matching actual parent seam receipt required"
         if so.get("verdict") == "SIGNED":
             return "SIGNED", "signed", "SIGNED"
         reasons = "; ".join(so.get("reasons") or []) or "NOT SIGNED"
@@ -888,6 +894,12 @@ def after_class(st, j):
     cls = j["status"]
     if cls == "SIGNED":
         archive(st, j)
+    elif cls == "WAIT-PARENT":
+        j["delete_pending"] = False
+        tsv_append("provisional.tsv", j["id"], [j["die"], j["type"], j["src"],
+                   ssh_host(j.get("probe") or j["host"]), j["kit"],
+                   (j.get("signoff") or {}).get("local_verdict"), j.get("reasons", ""), j.get("lane", "")])
+        log(f"KEEP {j['id']} local physical PASS needs actual parent receipt; no release archive or failure cleanup")
     elif cls in ("NEAR-MISS", "STRUCTURAL", "CRASH"):
         if (j.get("signoff") or {}).get("odb"):
             start_review(st, j)
@@ -1029,6 +1041,13 @@ def retry_pending(st):
     for j in list(st["jobs"].values()):
         if j.get("status") == "SIGNED" and not DRY:
             archive(st, j)
+        elif j.get("status") == "WAIT-PARENT":
+            if hub_procs(j["path"]):
+                continue
+            c = probe_job(j)
+            so = (c or {}).get("signoff") or {}
+            if so and so.get("verdict") != "LOCAL_PASS_NEEDS_PARENT":
+                finish(st, j, c, {"parent_receipt_recheck": True})
         elif str(j.get("status", "")).startswith("DONE-") and not j.get("data_deleted"):
             if j["id"] not in released or hub_procs(j["path"]):
                 continue

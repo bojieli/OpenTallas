@@ -176,6 +176,22 @@ def top_params(env):
     return list(zip(t[0::2], t[1::2]))
 
 
+def rtl_standard_libs(env, kit):
+    """Resolve explicit ASAP7 cell instances in RTL to the real functional
+    Liberty models, as on the gate side (e.g. ot_hdly's HB4xp67 buffer)."""
+    referenced, defined = set(), set()
+    for f in env["VERILOG_FILES"].split():
+        p = kpath(kit, f)
+        try:
+            text = Path(p).read_text(errors="replace")
+        except OSError:
+            continue
+        referenced.update(re.findall(r"\b[A-Za-z_]\w*_ASAP7_75t_[RLS]\b", text))
+        defined.update(src_modules(p))
+    needed = referenced - defined
+    return [f"{NLDM}/{l}" for l in STD_LIBS if needed and needed.intersection(lib_cells(f"{NLDM}/{l}"))]
+
+
 def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
     cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
@@ -184,7 +200,9 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     defs = env.get("VERILOG_DEFINES", "").split()
     if "-DSYNTHESIS" not in defs:
         defs.append("-DSYNTHESIS")
-    cmds = [f"read_liberty -lib -ignore_miss_func {l}" for l in lib_bbs]
+    # Functional cells must never be replaced by free black-box outputs.
+    cmds = [f"read_liberty -ignore_miss_func {l}" for l in rtl_standard_libs(env, kit)]
+    cmds += [f"read_liberty -lib -ignore_miss_func {l}" for l in lib_bbs]
     if frontend == "slang":
         a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
         a += [f"-I{i}" for i in incs] + defs + files
@@ -1232,10 +1250,12 @@ def anchored(L):
     ms = set(L.matched)
     return {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and (sd != "gold" or h[2] in ms)}
 def register_alias_proposals(L, log):
-    """Propose an exact register/_r alias across frontends; every proposal is
-    still proved on its next-state cone before any result is accepted."""
+    """Propose register aliases across frontends, including a cut's output q
+    versus its internal g_r.r register. Every relation is proved/refined."""
     n = 0
-    strip = lambda k: re.sub(r"_r(?=(?:\[\d+\])*$)", "", k)
+    def strip(k):
+        k = re.sub(r"_r(?=(?:\[\d+\])*$)", "", k)
+        return re.sub(r"\.(?:g_r|g_rv|g_reg)\.r((?:\[\d+\])*)$", r".q\1", k)
     by_name = collections.defaultdict(list)
     for k in L.gonly:
         by_name[strip(k)].append(k)
@@ -1244,7 +1264,7 @@ def register_alias_proposals(L, log):
         if len(cand) == 1 and ("gate", k) not in L.hyp:
             L.hyp[("gate", k)] = ("eq", "gold", cand[0], 0)
             n += 1
-    log.append(f"register aliases: {n} same-name / _r relations proposed")
+    log.append(f"register aliases: {n} same-name / register-output relations proposed")
 
 
 def cone_sim(m, lits, fixed, words, seed):
@@ -1470,6 +1490,68 @@ def care_pairs(L, words, seed, tried, keys, cap=256):
                 taken.add(("gate", c))
             new += 1
     return new
+
+
+def structural_constant_closure(L, log):
+    """Propose exact next-state constants through both sides' padding pipes.
+
+    Called after the existing hypotheses have proved. Every added relation is
+    included in the next simultaneous induction proof before acceptance.
+    """
+    total = 0
+    while True:
+        L.build(with_compare=False, with_hyp=False)
+        new = []
+        for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
+            for k in keys:
+                d = L.dlit.get((side, k), 2)
+                if k.startswith("ff:") and (side, k) not in L.hyp and d in (0, 1):
+                    new.append(((side, k), ("const", d)))
+        for k in L.matched:
+            g, t = L.dlit.get(("gold", k), 2), L.dlit.get(("gate", k), 3)
+            if k.startswith("ff:") and ("both", k) not in L.hyp and g == t and g in (0, 1):
+                new.append((("both", k), ("const", g)))
+        if not new:
+            break
+        L.hyp.update(new)
+        total += len(new)
+    if total:
+        log.append(f"structural constant closure: {total} relations proposed")
+    return total
+
+
+
+def structural_twin_closure(L, log):
+    """Propose same-side duplicate FFs by exact next-state literal identity.
+
+    Unlike random signatures this finds rare carry bits and arbitrarily deep
+    merged valid pipes. All proposals enter the next induction miter.
+    """
+    total = 0
+    while True:
+        L.build(with_compare=False, with_hyp=False)
+        new = []
+        for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
+            twins = {}
+            for c in L.matched:
+                d = L.dlit.get((side, c), 0)
+                if c.startswith("ff:") and d > 1 and (side, c) not in L.hyp:
+                    twins.setdefault(d >> 1, []).append((c, d))
+            for k in keys:
+                d = L.dlit.get((side, k), 0)
+                if not k.startswith("ff:") or (side, k) in L.hyp or d <= 1:
+                    continue
+                choices = twins.get(d >> 1, [])
+                if choices:
+                    c, dc = min(choices)
+                    new.append(((side, k), ("eq", side, c, (d ^ dc) & 1)))
+        if not new:
+            break
+        L.hyp.update(new)
+        total += len(new)
+    if total:
+        log.append(f"structural twin closure: {total} relations proposed")
+    return total
 
 
 def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
@@ -1803,6 +1885,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         log.append(f"correspondence round {rnd}: {len(st)} hypotheses, {len(bad)} failed "
                    f"({sum(st[n] == 'undecided' for n in bad)} undecided) {bad[:6]}")
         if not bad:
+            if structural_constant_closure(L, log) or structural_twin_closure(L, log):
+                continue     # prove the new constants before returning
             if L.hyp == before or not adding:
                 return
             continue
