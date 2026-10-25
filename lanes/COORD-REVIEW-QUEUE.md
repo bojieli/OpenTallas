@@ -344,3 +344,17 @@ READY [S81-CORES3/LB 2026-10-25 06:33 PDT] claude/s81-cores3-lb-1025@fb31ca9fe (
  - claude/tok-ds-entry-1025@10f0bf6cc -> 4df2f6974; claude/tok-ds-replay-1025@494c7aa4f8 -> ff224cbc3 (entry receipt + strict cut 0S/0N replay).
  - codex/geom-0555-1025@d26526746 -> 0f5d931c2 (review records).
  SKIPPED: codex/root-0553@90e4b2660d (NOT READY per Codex; its content is covered by the merges above).
+[COORD 06:35 PDT] APPROVED-IF claude/s81-vs-xm-1025@4893d8a65 (xmirror const_rename carried into _xm pin tables + LEF; vs_xm 2374->2536, vq_xm 638->702 pins = lfp tables; content OK): it changes plan pin inputs of 3 vq + 42 vs instances, so it is a plan delta -> S81 folds it into the S81-PLAN2 batched delta (G0C 0 err on the batch, then re-kit vs_xm/vq_xm, vq render before kit). Not merged alone. Its base ca0e381352 is already on main (0f5d931c2).
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/s81-head-delta-1025@f5223815f2 (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/kv-cores-1025r@b2d259015e (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/s81-head-serdes-1025@40b869fba (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/cp1-preflight-1025@87ea53a6b (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/clock-reset-1025@e84452a8fd (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/lec-gate-1025r@f9fc3f4a0 (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/clock-hold-1025@4ab537cdb8 (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/flow-hold-basis-1025@ae2710f26 (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/pass-recon-1025@191864172 (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/kv-cores-pvpc-1025r@aba4a9446c (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/s81-faultfeed-1025@3a58b44a01 (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/s81-cores-legacy-1025@ca0e381352 (ancestor of origin/main 0f5d931c2)
+[COORD 2026-10-25 06:35 PDT] APPROVED+MERGED claude/kv-cores-chain-1025r2@99997558cc (ancestor of origin/main 0f5d931c2)
