@@ -726,6 +726,20 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
                 qualification='PARTIAL: previous-sublayer pre row must have a source-bound producer and transfer')
 
 
+BK_SEL_INST = 'u_bk_sel'
+BK_SEL_UID = 0x5B            # die strap u_bk_sel.uid (lower_bk asserts it on the build)
+
+
+def bk_drain_consumed(die, payload186):
+    """RTL rule of ot_dsdv_vstop with BK_DRAIN_SINK=1 (canonical 10-24): a kind-0 V CTL beat whose payload
+    p[7:0] = the BK uid and p[10:8] = op 1 (drain) is removed from the S rung at u_bk_sel (beat [28:21] / [31:29])."""
+    try:
+        uid = die.strap(BK_SEL_INST, 'uid')
+    except (KeyError, AttributeError):
+        uid = None
+    return (payload186 & 0xFF) == (BK_SEL_UID if uid is None else uid) and (payload186 >> 8) & 7 == 1
+
+
 def row_ctl_events(die, prog):
     """LB2-S81/EVENTS: every V calendar row (engine VN / VS) puts its CTL template on the slice control plane: the beat
     arrives at each slice of its slice mask (on the engine's tier) at issue + ctl_path edges, on the ctl_path entry port.
@@ -745,6 +759,14 @@ def row_ctl_events(die, prog):
         ti = r.get('tix', r['arg'] & 0x7F)
         mask = prog.templates[ti] & 0xFFFF
         tier = 'N' if r['eng'] == ENG['VN'] else 'S'
+        if tier == 'S' and bk_drain_consumed(die, prog.templates[ti]):
+            # canonical BK addressed-drain sink (COORD ruling 2026-10-24 18:55; ot_dsdv_vstop BK_DRAIN_SINK=1): the
+            # u_bk_sel rung stop between u_seqhost and u_s_4S consumes a kind-0 CTL beat addressed to its uid with op 1,
+            # so the beat never reaches a slice (no vi / line arrival); record the consumption only.
+            prog.events.append(dict(cycle=r['issue'], inst=BK_SEL_INST, port='vi_n', dir='internal', kind='BKDRAIN',
+                                    tag=f"{prog.tnames[ti]}", payload=f'template {ti}', from_row=r['issue'],
+                                    note='consumed at the BK stop (addressed drain sink); no slice CTL arrival'))
+            continue
         for sid in range(16):
             sl = sid_of.get(sid)
             if not (mask >> sid) & 1 or sl is None or not sl.endswith(tier):
