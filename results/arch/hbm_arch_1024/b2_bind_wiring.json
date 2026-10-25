@@ -211,7 +211,7 @@
   },
   "hb_idx__ctl": {
    "master": "ot_hbm_idx_rootctl_static_am",
-   "params": ".VM_RT(30), .CR_RT(98), .SEL_LAT(4), .RSTL(1), .FAN32(1), .SID(2'd3), .NQ(2), .NL(1)"
+   "params": ".VM_RT(56), .CR_RT(170), .SEL_LAT(4), .RSTL(1), .FAN32(1), .SID(2'd3), .NQ(2), .NL(1)"
   },
   "hb_idx__selector": {
    "master": "ot_hbm_idx_selector_static_sel",
@@ -223,7 +223,7 @@
   },
   "hb_argmax": {
    "master": "ot_hbm_argmax_static_sw_vm_r2",
-   "params": ".TP(192), .VMX(35), .ACK(111), .SID(2'd3)"
+   "params": ".TP(192), .VMX(61), .ACK(183), .SID(2'd3)"
   },
   "hb_idx__nwsh": {
    "master": "ot_hbm_idx_vm_share2_static_r",
@@ -231,7 +231,7 @@
   },
   "hb_idx__op_NE": {
    "master": "ot_hbm_idx_vm_query_static_n12",
-   "params": ".VM_RT_EXTRA(61)"
+   "params": ".VM_RT_EXTRA(113)"
   },
   "hb_idx__op_NW": {
    "master": "ot_hbm_idx_vm_query_static_n12",
@@ -243,35 +243,35 @@
   },
   "hc_NE0": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
-   "params": ".READ_RETURN(23), .WRITE_RETURN(29)"
+   "params": ".READ_RETURN(23), .WRITE_RETURN(37)"
   },
   "hc_NE1": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
-   "params": ".READ_RETURN(23), .WRITE_RETURN(22)"
+   "params": ".READ_RETURN(23), .WRITE_RETURN(25)"
   },
   "hc_NE2": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
-   "params": ".READ_RETURN(23), .WRITE_RETURN(24)"
+   "params": ".READ_RETURN(23), .WRITE_RETURN(28)"
   },
   "hc_NE3": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
-   "params": ".READ_RETURN(23), .WRITE_RETURN(23)"
+   "params": ".READ_RETURN(23), .WRITE_RETURN(24)"
   },
   "hc_NW0": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
-   "params": ".READ_RETURN(23), .WRITE_RETURN(29)"
+   "params": ".READ_RETURN(23), .WRITE_RETURN(37)"
   },
   "hc_NW1": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
-   "params": ".READ_RETURN(23), .WRITE_RETURN(22)"
+   "params": ".READ_RETURN(23), .WRITE_RETURN(25)"
   },
   "hc_NW2": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
-   "params": ".READ_RETURN(23), .WRITE_RETURN(24)"
+   "params": ".READ_RETURN(23), .WRITE_RETURN(28)"
   },
   "hc_NW3": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
-   "params": ".READ_RETURN(23), .WRITE_RETURN(23)"
+   "params": ".READ_RETURN(23), .WRITE_RETURN(24)"
   },
   "hcollgi_NE": {
    "master": "ot_hgi_coll_gq_issue",
@@ -291,67 +291,67 @@
   },
   "sfu_NE0": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf",
-   "params": ".READ_RETURN(19), .WRITE_RETURN(25)"
+   "params": ".READ_RETURN(19), .WRITE_RETURN(33)"
   },
   "sfu_NE1": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf",
-   "params": ".READ_RETURN(19), .WRITE_RETURN(18)"
+   "params": ".READ_RETURN(19), .WRITE_RETURN(21)"
   },
   "sfu_NE2": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf",
-   "params": ".READ_RETURN(19), .WRITE_RETURN(20)"
+   "params": ".READ_RETURN(19), .WRITE_RETURN(24)"
   },
   "sfu_NE3": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf",
-   "params": ".READ_RETURN(19), .WRITE_RETURN(19)"
+   "params": ".READ_RETURN(19), .WRITE_RETURN(20)"
   },
   "sfu_NW0": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf",
-   "params": ".READ_RETURN(19), .WRITE_RETURN(25)"
+   "params": ".READ_RETURN(19), .WRITE_RETURN(33)"
   },
   "sfu_NW1": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf",
-   "params": ".READ_RETURN(19), .WRITE_RETURN(18)"
+   "params": ".READ_RETURN(19), .WRITE_RETURN(21)"
   },
   "sfu_NW2": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf",
-   "params": ".READ_RETURN(19), .WRITE_RETURN(20)"
+   "params": ".READ_RETURN(19), .WRITE_RETURN(24)"
   },
   "sfu_NW3": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf",
-   "params": ".READ_RETURN(19), .WRITE_RETURN(19)"
+   "params": ".READ_RETURN(19), .WRITE_RETURN(20)"
   },
   "su_NE0": {
    "master": "ot_hbm_su_static_pgslice_lg",
-   "params": ".QID(3), .G(0), .READ_RETURN(15), .WRITE_RETURN(21), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+   "params": ".QID(3), .G(0), .READ_RETURN(15), .WRITE_RETURN(29), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
   },
   "su_NE1": {
    "master": "ot_hbm_su_static_pgslice_lg",
-   "params": ".QID(3), .G(1), .READ_RETURN(15), .WRITE_RETURN(14), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+   "params": ".QID(3), .G(1), .READ_RETURN(15), .WRITE_RETURN(17), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
   },
   "su_NE2": {
    "master": "ot_hbm_su_static_pgslice_lg",
-   "params": ".QID(3), .G(2), .READ_RETURN(15), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+   "params": ".QID(3), .G(2), .READ_RETURN(15), .WRITE_RETURN(20), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
   },
   "su_NE3": {
    "master": "ot_hbm_su_static_pgslice_lg",
-   "params": ".QID(3), .G(3), .READ_RETURN(15), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+   "params": ".QID(3), .G(3), .READ_RETURN(15), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
   },
   "su_NW0": {
    "master": "ot_hbm_su_static_pgslice_lg",
-   "params": ".QID(2), .G(0), .READ_RETURN(15), .WRITE_RETURN(21), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+   "params": ".QID(2), .G(0), .READ_RETURN(15), .WRITE_RETURN(29), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
   },
   "su_NW1": {
    "master": "ot_hbm_su_static_pgslice_lg",
-   "params": ".QID(2), .G(1), .READ_RETURN(15), .WRITE_RETURN(14), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+   "params": ".QID(2), .G(1), .READ_RETURN(15), .WRITE_RETURN(17), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
   },
   "su_NW2": {
    "master": "ot_hbm_su_static_pgslice_lg",
-   "params": ".QID(2), .G(2), .READ_RETURN(15), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+   "params": ".QID(2), .G(2), .READ_RETURN(15), .WRITE_RETURN(20), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
   },
   "su_NW3": {
    "master": "ot_hbm_su_static_pgslice_lg",
-   "params": ".QID(2), .G(3), .READ_RETURN(15), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+   "params": ".QID(2), .G(3), .READ_RETURN(15), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
   }
  },
  "rebuild": {

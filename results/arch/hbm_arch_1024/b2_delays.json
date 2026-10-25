@@ -1,5 +1,7 @@
 {
  "schema": "opentallas.hbm_b2.delays.v1",
+ "plan_source": "physical/die_plan/hbm_arch/B2n/die_plan.json @ claude/hbm-1024r b590f6e2f (read only; first/last port of every lane + latency.lanes) -- extract for tools/hbm_b2/b2_delays.py --plan",
+ "plan_sha": "b590f6e2f",
  "plan_note": "HBM-ARCH concept (B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels); gen_arch.py; quad-tile array, beachfront PHYs, seam fabric, root tile; r2 cores_b2.py: hard c",
  "rule": "HBM-BIND (2026-10-24): table-driven B2 transport delays.  The r18h5 as-built delay params (VM_RT, VM_RT_EXTRA,\nBANK_RT, VMX, CR_RT, ACK, SEL_LAT, ...) are placeholders on the B2 die; this tool re-derives them from a die plan's\nlane latency table (die_plan.json latency.lanes) and the B2 die top (tools/hbm_b2/b2_top.py output), so a new plan\n(B2m -> B2n ...) regenerates them with one command:",
  "bank_latency": {
@@ -11,8 +13,8 @@
  },
  "params": {
   "hb_argmax": {
-   "VMX": 35,
-   "ACK": 111
+   "VMX": 61,
+   "ACK": 183
   },
   "hb_coll_NE": {
    "VM_RT": 3
@@ -21,15 +23,15 @@
    "VM_RT": 3
   },
   "hb_idx__ctl": {
-   "VM_RT": 30,
+   "VM_RT": 56,
    "SEL_LAT": 4,
-   "CR_RT": 98
+   "CR_RT": 170
   },
   "hb_idx__nwsh": {
    "BANK_RT": 7
   },
   "hb_idx__op_NE": {
-   "VM_RT_EXTRA": 61
+   "VM_RT_EXTRA": 113
   },
   "hb_idx__op_NW": {
    "VM_RT_EXTRA": 5
@@ -39,35 +41,35 @@
   },
   "hc_NE0": {
    "READ_RETURN": 23,
-   "WRITE_RETURN": 29
+   "WRITE_RETURN": 37
   },
   "hc_NE1": {
    "READ_RETURN": 23,
-   "WRITE_RETURN": 22
+   "WRITE_RETURN": 25
   },
   "hc_NE2": {
    "READ_RETURN": 23,
-   "WRITE_RETURN": 24
+   "WRITE_RETURN": 28
   },
   "hc_NE3": {
    "READ_RETURN": 23,
-   "WRITE_RETURN": 23
+   "WRITE_RETURN": 24
   },
   "hc_NW0": {
    "READ_RETURN": 23,
-   "WRITE_RETURN": 29
+   "WRITE_RETURN": 37
   },
   "hc_NW1": {
    "READ_RETURN": 23,
-   "WRITE_RETURN": 22
+   "WRITE_RETURN": 25
   },
   "hc_NW2": {
    "READ_RETURN": 23,
-   "WRITE_RETURN": 24
+   "WRITE_RETURN": 28
   },
   "hc_NW3": {
    "READ_RETURN": 23,
-   "WRITE_RETURN": 23
+   "WRITE_RETURN": 24
   },
   "hcollgi_NE": {
    "VM_RT": 3
@@ -83,67 +85,67 @@
   },
   "sfu_NE0": {
    "READ_RETURN": 19,
-   "WRITE_RETURN": 25
+   "WRITE_RETURN": 33
   },
   "sfu_NE1": {
    "READ_RETURN": 19,
-   "WRITE_RETURN": 18
+   "WRITE_RETURN": 21
   },
   "sfu_NE2": {
    "READ_RETURN": 19,
-   "WRITE_RETURN": 20
+   "WRITE_RETURN": 24
   },
   "sfu_NE3": {
    "READ_RETURN": 19,
-   "WRITE_RETURN": 19
+   "WRITE_RETURN": 20
   },
   "sfu_NW0": {
    "READ_RETURN": 19,
-   "WRITE_RETURN": 25
+   "WRITE_RETURN": 33
   },
   "sfu_NW1": {
    "READ_RETURN": 19,
-   "WRITE_RETURN": 18
+   "WRITE_RETURN": 21
   },
   "sfu_NW2": {
    "READ_RETURN": 19,
-   "WRITE_RETURN": 20
+   "WRITE_RETURN": 24
   },
   "sfu_NW3": {
    "READ_RETURN": 19,
-   "WRITE_RETURN": 19
+   "WRITE_RETURN": 20
   },
   "su_NE0": {
    "READ_RETURN": 15,
-   "WRITE_RETURN": 21
+   "WRITE_RETURN": 29
   },
   "su_NE1": {
    "READ_RETURN": 15,
-   "WRITE_RETURN": 14
+   "WRITE_RETURN": 17
   },
   "su_NE2": {
    "READ_RETURN": 15,
-   "WRITE_RETURN": 16
+   "WRITE_RETURN": 20
   },
   "su_NE3": {
    "READ_RETURN": 15,
-   "WRITE_RETURN": 15
+   "WRITE_RETURN": 16
   },
   "su_NW0": {
    "READ_RETURN": 15,
-   "WRITE_RETURN": 21
+   "WRITE_RETURN": 29
   },
   "su_NW1": {
    "READ_RETURN": 15,
-   "WRITE_RETURN": 14
+   "WRITE_RETURN": 17
   },
   "su_NW2": {
    "READ_RETURN": 15,
-   "WRITE_RETURN": 16
+   "WRITE_RETURN": 20
   },
   "su_NW3": {
    "READ_RETURN": 15,
-   "WRITE_RETURN": 15
+   "WRITE_RETURN": 16
   }
  },
  "derivations": [
@@ -175,11 +177,11 @@
    "inst": "hb_idx__ctl",
    "param": "VM_RT",
    "have": 75,
-   "want": 30,
+   "want": 56,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hb_idx__ctl.VM_RT = 75, bank contract + lanes need 30 (budget: pad every bank lane to it: {'vmb_NE0': 45, 'vmb_NE1': 45, 'vmb_NE2': 45, 'vmb_NE3': 45, 'vmb_NE4': 45, 'vmb_NE5': 45, 'vmb_NE6': 45, 'vmb_NE7': 45}) (ref 0 at round trip 6; actual 36 = bank 6 + pin 1 + lanes)"
+    "hb_idx__ctl.VM_RT = 75, bank contract + lanes need 56 (budget: pad every bank lane to it: {'vmb_NE0': 19, 'vmb_NE1': 19, 'vmb_NE2': 19, 'vmb_NE3': 19, 'vmb_NE4': 19, 'vmb_NE5': 19, 'vmb_NE6': 19, 'vmb_NE7': 19}) (ref 0 at round trip 6; actual 62 = bank 6 + pin 1 + lanes)"
    ]
   },
   {
@@ -208,11 +210,11 @@
    "inst": "hc_NE0",
    "param": "WRITE_RETURN",
    "have": 43,
-   "want": 29,
+   "want": 37,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hc_NE0.WRITE_RETURN = 43, bank contract + lanes need 29 (budget: pad every bank lane to it: {'vmb_NE0': 14, 'vmb_NE1': 14}) (ref 15 at round trip 11; actual 25 = bank 3 + pin 1 + lanes + taps via sfu_NE0 (padded 21 + 4))"
+    "hc_NE0.WRITE_RETURN = 43, bank contract + lanes need 37 (budget: pad every bank lane to it: {'vmb_NE0': 6, 'vmb_NE1': 6}) (ref 15 at round trip 11; actual 33 = bank 3 + pin 1 + lanes + taps via sfu_NE0 (padded 29 + 4))"
    ]
   },
   {
@@ -230,11 +232,11 @@
    "inst": "hc_NE1",
    "param": "WRITE_RETURN",
    "have": 43,
-   "want": 22,
+   "want": 25,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hc_NE1.WRITE_RETURN = 43, bank contract + lanes need 22 (budget: pad every bank lane to it: {'vmb_NE2': 21, 'vmb_NE3': 21}) (ref 15 at round trip 11; actual 18 = bank 3 + pin 1 + lanes + taps via sfu_NE1 (padded 14 + 4))"
+    "hc_NE1.WRITE_RETURN = 43, bank contract + lanes need 25 (budget: pad every bank lane to it: {'vmb_NE2': 18, 'vmb_NE3': 18}) (ref 15 at round trip 11; actual 21 = bank 3 + pin 1 + lanes + taps via sfu_NE1 (padded 17 + 4))"
    ]
   },
   {
@@ -252,11 +254,11 @@
    "inst": "hc_NE2",
    "param": "WRITE_RETURN",
    "have": 43,
-   "want": 24,
+   "want": 28,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hc_NE2.WRITE_RETURN = 43, bank contract + lanes need 24 (budget: pad every bank lane to it: {'vmb_NE4': 19, 'vmb_NE5': 19}) (ref 15 at round trip 11; actual 20 = bank 3 + pin 1 + lanes + taps via sfu_NE2 (padded 16 + 4))"
+    "hc_NE2.WRITE_RETURN = 43, bank contract + lanes need 28 (budget: pad every bank lane to it: {'vmb_NE4': 15, 'vmb_NE5': 15}) (ref 15 at round trip 11; actual 24 = bank 3 + pin 1 + lanes + taps via sfu_NE2 (padded 20 + 4))"
    ]
   },
   {
@@ -274,11 +276,11 @@
    "inst": "hc_NE3",
    "param": "WRITE_RETURN",
    "have": 43,
-   "want": 23,
+   "want": 24,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hc_NE3.WRITE_RETURN = 43, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NE6': 20, 'vmb_NE7': 20}) (ref 15 at round trip 11; actual 19 = bank 3 + pin 1 + lanes + taps via sfu_NE3 (padded 15 + 4))"
+    "hc_NE3.WRITE_RETURN = 43, bank contract + lanes need 24 (budget: pad every bank lane to it: {'vmb_NE6': 19, 'vmb_NE7': 19}) (ref 15 at round trip 11; actual 20 = bank 3 + pin 1 + lanes + taps via sfu_NE3 (padded 16 + 4))"
    ]
   },
   {
@@ -296,11 +298,11 @@
    "inst": "hc_NW0",
    "param": "WRITE_RETURN",
    "have": 43,
-   "want": 29,
+   "want": 37,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hc_NW0.WRITE_RETURN = 43, bank contract + lanes need 29 (budget: pad every bank lane to it: {'vmb_NW0': 14, 'vmb_NW1': 14}) (ref 15 at round trip 11; actual 25 = bank 3 + pin 1 + lanes + taps via sfu_NW0 (padded 21 + 4))"
+    "hc_NW0.WRITE_RETURN = 43, bank contract + lanes need 37 (budget: pad every bank lane to it: {'vmb_NW0': 6, 'vmb_NW1': 6}) (ref 15 at round trip 11; actual 33 = bank 3 + pin 1 + lanes + taps via sfu_NW0 (padded 29 + 4))"
    ]
   },
   {
@@ -318,11 +320,11 @@
    "inst": "hc_NW1",
    "param": "WRITE_RETURN",
    "have": 43,
-   "want": 22,
+   "want": 25,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hc_NW1.WRITE_RETURN = 43, bank contract + lanes need 22 (budget: pad every bank lane to it: {'vmb_NW2': 21, 'vmb_NW3': 21}) (ref 15 at round trip 11; actual 18 = bank 3 + pin 1 + lanes + taps via sfu_NW1 (padded 14 + 4))"
+    "hc_NW1.WRITE_RETURN = 43, bank contract + lanes need 25 (budget: pad every bank lane to it: {'vmb_NW2': 18, 'vmb_NW3': 18}) (ref 15 at round trip 11; actual 21 = bank 3 + pin 1 + lanes + taps via sfu_NW1 (padded 17 + 4))"
    ]
   },
   {
@@ -340,11 +342,11 @@
    "inst": "hc_NW2",
    "param": "WRITE_RETURN",
    "have": 43,
-   "want": 24,
+   "want": 28,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hc_NW2.WRITE_RETURN = 43, bank contract + lanes need 24 (budget: pad every bank lane to it: {'vmb_NW4': 19, 'vmb_NW5': 19}) (ref 15 at round trip 11; actual 20 = bank 3 + pin 1 + lanes + taps via sfu_NW2 (padded 16 + 4))"
+    "hc_NW2.WRITE_RETURN = 43, bank contract + lanes need 28 (budget: pad every bank lane to it: {'vmb_NW4': 15, 'vmb_NW5': 15}) (ref 15 at round trip 11; actual 24 = bank 3 + pin 1 + lanes + taps via sfu_NW2 (padded 20 + 4))"
    ]
   },
   {
@@ -362,11 +364,11 @@
    "inst": "hc_NW3",
    "param": "WRITE_RETURN",
    "have": 43,
-   "want": 23,
+   "want": 24,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hc_NW3.WRITE_RETURN = 43, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NW6': 20, 'vmb_NW7': 20}) (ref 15 at round trip 11; actual 19 = bank 3 + pin 1 + lanes + taps via sfu_NW3 (padded 15 + 4))"
+    "hc_NW3.WRITE_RETURN = 43, bank contract + lanes need 24 (budget: pad every bank lane to it: {'vmb_NW6': 19, 'vmb_NW7': 19}) (ref 15 at round trip 11; actual 20 = bank 3 + pin 1 + lanes + taps via sfu_NW3 (padded 16 + 4))"
    ]
   },
   {
@@ -406,11 +408,11 @@
    "inst": "sfu_NE0",
    "param": "WRITE_RETURN",
    "have": 29,
-   "want": 25,
+   "want": 33,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "sfu_NE0.WRITE_RETURN = 29, bank contract + lanes need 25 (budget: pad every bank lane to it: {'vmb_NE0': 4, 'vmb_NE1': 4}) (ref 11 at round trip 7; actual 21 = bank 3 + pin 1 + lanes + taps via su_NE0 (padded 17 + 4))"
+    "sfu_NE0.WRITE_RETURN = 29, bank contract + lanes need 33 (ref 11 at round trip 7; actual 29 = bank 3 + pin 1 + lanes + taps via su_NE0 (padded 25 + 4))"
    ]
   },
   {
@@ -428,11 +430,11 @@
    "inst": "sfu_NE1",
    "param": "WRITE_RETURN",
    "have": 29,
-   "want": 18,
+   "want": 21,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "sfu_NE1.WRITE_RETURN = 29, bank contract + lanes need 18 (budget: pad every bank lane to it: {'vmb_NE2': 11, 'vmb_NE3': 11}) (ref 11 at round trip 7; actual 14 = bank 3 + pin 1 + lanes + taps via su_NE1 (padded 10 + 4))"
+    "sfu_NE1.WRITE_RETURN = 29, bank contract + lanes need 21 (budget: pad every bank lane to it: {'vmb_NE2': 8, 'vmb_NE3': 8}) (ref 11 at round trip 7; actual 17 = bank 3 + pin 1 + lanes + taps via su_NE1 (padded 13 + 4))"
    ]
   },
   {
@@ -450,11 +452,11 @@
    "inst": "sfu_NE2",
    "param": "WRITE_RETURN",
    "have": 29,
-   "want": 20,
+   "want": 24,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "sfu_NE2.WRITE_RETURN = 29, bank contract + lanes need 20 (budget: pad every bank lane to it: {'vmb_NE4': 9, 'vmb_NE5': 9}) (ref 11 at round trip 7; actual 16 = bank 3 + pin 1 + lanes + taps via su_NE2 (padded 12 + 4))"
+    "sfu_NE2.WRITE_RETURN = 29, bank contract + lanes need 24 (budget: pad every bank lane to it: {'vmb_NE4': 5, 'vmb_NE5': 5}) (ref 11 at round trip 7; actual 20 = bank 3 + pin 1 + lanes + taps via su_NE2 (padded 16 + 4))"
    ]
   },
   {
@@ -472,11 +474,11 @@
    "inst": "sfu_NE3",
    "param": "WRITE_RETURN",
    "have": 29,
-   "want": 19,
+   "want": 20,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "sfu_NE3.WRITE_RETURN = 29, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NE6': 10, 'vmb_NE7': 10}) (ref 11 at round trip 7; actual 15 = bank 3 + pin 1 + lanes + taps via su_NE3 (padded 11 + 4))"
+    "sfu_NE3.WRITE_RETURN = 29, bank contract + lanes need 20 (budget: pad every bank lane to it: {'vmb_NE6': 9, 'vmb_NE7': 9}) (ref 11 at round trip 7; actual 16 = bank 3 + pin 1 + lanes + taps via su_NE3 (padded 12 + 4))"
    ]
   },
   {
@@ -494,11 +496,11 @@
    "inst": "sfu_NW0",
    "param": "WRITE_RETURN",
    "have": 29,
-   "want": 25,
+   "want": 33,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "sfu_NW0.WRITE_RETURN = 29, bank contract + lanes need 25 (budget: pad every bank lane to it: {'vmb_NW0': 4, 'vmb_NW1': 4}) (ref 11 at round trip 7; actual 21 = bank 3 + pin 1 + lanes + taps via su_NW0 (padded 17 + 4))"
+    "sfu_NW0.WRITE_RETURN = 29, bank contract + lanes need 33 (ref 11 at round trip 7; actual 29 = bank 3 + pin 1 + lanes + taps via su_NW0 (padded 25 + 4))"
    ]
   },
   {
@@ -516,11 +518,11 @@
    "inst": "sfu_NW1",
    "param": "WRITE_RETURN",
    "have": 29,
-   "want": 18,
+   "want": 21,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "sfu_NW1.WRITE_RETURN = 29, bank contract + lanes need 18 (budget: pad every bank lane to it: {'vmb_NW2': 11, 'vmb_NW3': 11}) (ref 11 at round trip 7; actual 14 = bank 3 + pin 1 + lanes + taps via su_NW1 (padded 10 + 4))"
+    "sfu_NW1.WRITE_RETURN = 29, bank contract + lanes need 21 (budget: pad every bank lane to it: {'vmb_NW2': 8, 'vmb_NW3': 8}) (ref 11 at round trip 7; actual 17 = bank 3 + pin 1 + lanes + taps via su_NW1 (padded 13 + 4))"
    ]
   },
   {
@@ -538,11 +540,11 @@
    "inst": "sfu_NW2",
    "param": "WRITE_RETURN",
    "have": 29,
-   "want": 20,
+   "want": 24,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "sfu_NW2.WRITE_RETURN = 29, bank contract + lanes need 20 (budget: pad every bank lane to it: {'vmb_NW4': 9, 'vmb_NW5': 9}) (ref 11 at round trip 7; actual 16 = bank 3 + pin 1 + lanes + taps via su_NW2 (padded 12 + 4))"
+    "sfu_NW2.WRITE_RETURN = 29, bank contract + lanes need 24 (budget: pad every bank lane to it: {'vmb_NW4': 5, 'vmb_NW5': 5}) (ref 11 at round trip 7; actual 20 = bank 3 + pin 1 + lanes + taps via su_NW2 (padded 16 + 4))"
    ]
   },
   {
@@ -560,11 +562,11 @@
    "inst": "sfu_NW3",
    "param": "WRITE_RETURN",
    "have": 29,
-   "want": 19,
+   "want": 20,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "sfu_NW3.WRITE_RETURN = 29, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NW6': 10, 'vmb_NW7': 10}) (ref 11 at round trip 7; actual 15 = bank 3 + pin 1 + lanes + taps via su_NW3 (padded 11 + 4))"
+    "sfu_NW3.WRITE_RETURN = 29, bank contract + lanes need 20 (budget: pad every bank lane to it: {'vmb_NW6': 9, 'vmb_NW7': 9}) (ref 11 at round trip 7; actual 16 = bank 3 + pin 1 + lanes + taps via su_NW3 (padded 12 + 4))"
    ]
   },
   {
@@ -582,11 +584,11 @@
    "inst": "su_NE0",
    "param": "WRITE_RETURN",
    "have": 19,
-   "want": 21,
+   "want": 29,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "su_NE0.WRITE_RETURN = 19, bank contract + lanes need 21 (ref 7 at round trip 3; actual 17 = bank 3 + pin 1 + lanes)"
+    "su_NE0.WRITE_RETURN = 19, bank contract + lanes need 29 (ref 7 at round trip 3; actual 25 = bank 3 + pin 1 + lanes)"
    ]
   },
   {
@@ -604,11 +606,11 @@
    "inst": "su_NE1",
    "param": "WRITE_RETURN",
    "have": 19,
-   "want": 14,
+   "want": 17,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "su_NE1.WRITE_RETURN = 19, bank contract + lanes need 14 (budget: pad every bank lane to it: {'vmb_NE2': 5, 'vmb_NE3': 5}) (ref 7 at round trip 3; actual 10 = bank 3 + pin 1 + lanes)"
+    "su_NE1.WRITE_RETURN = 19, bank contract + lanes need 17 (budget: pad every bank lane to it: {'vmb_NE2': 2, 'vmb_NE3': 2}) (ref 7 at round trip 3; actual 13 = bank 3 + pin 1 + lanes)"
    ]
   },
   {
@@ -626,11 +628,11 @@
    "inst": "su_NE2",
    "param": "WRITE_RETURN",
    "have": 19,
-   "want": 16,
+   "want": 20,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "su_NE2.WRITE_RETURN = 19, bank contract + lanes need 16 (budget: pad every bank lane to it: {'vmb_NE4': 3, 'vmb_NE5': 3}) (ref 7 at round trip 3; actual 12 = bank 3 + pin 1 + lanes)"
+    "su_NE2.WRITE_RETURN = 19, bank contract + lanes need 20 (ref 7 at round trip 3; actual 16 = bank 3 + pin 1 + lanes)"
    ]
   },
   {
@@ -648,11 +650,11 @@
    "inst": "su_NE3",
    "param": "WRITE_RETURN",
    "have": 19,
-   "want": 15,
+   "want": 16,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "su_NE3.WRITE_RETURN = 19, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NE6': 4, 'vmb_NE7': 4}) (ref 7 at round trip 3; actual 11 = bank 3 + pin 1 + lanes)"
+    "su_NE3.WRITE_RETURN = 19, bank contract + lanes need 16 (budget: pad every bank lane to it: {'vmb_NE6': 3, 'vmb_NE7': 3}) (ref 7 at round trip 3; actual 12 = bank 3 + pin 1 + lanes)"
    ]
   },
   {
@@ -670,11 +672,11 @@
    "inst": "su_NW0",
    "param": "WRITE_RETURN",
    "have": 19,
-   "want": 21,
+   "want": 29,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "su_NW0.WRITE_RETURN = 19, bank contract + lanes need 21 (ref 7 at round trip 3; actual 17 = bank 3 + pin 1 + lanes)"
+    "su_NW0.WRITE_RETURN = 19, bank contract + lanes need 29 (ref 7 at round trip 3; actual 25 = bank 3 + pin 1 + lanes)"
    ]
   },
   {
@@ -692,11 +694,11 @@
    "inst": "su_NW1",
    "param": "WRITE_RETURN",
    "have": 19,
-   "want": 14,
+   "want": 17,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "su_NW1.WRITE_RETURN = 19, bank contract + lanes need 14 (budget: pad every bank lane to it: {'vmb_NW2': 5, 'vmb_NW3': 5}) (ref 7 at round trip 3; actual 10 = bank 3 + pin 1 + lanes)"
+    "su_NW1.WRITE_RETURN = 19, bank contract + lanes need 17 (budget: pad every bank lane to it: {'vmb_NW2': 2, 'vmb_NW3': 2}) (ref 7 at round trip 3; actual 13 = bank 3 + pin 1 + lanes)"
    ]
   },
   {
@@ -714,11 +716,11 @@
    "inst": "su_NW2",
    "param": "WRITE_RETURN",
    "have": 19,
-   "want": 16,
+   "want": 20,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "su_NW2.WRITE_RETURN = 19, bank contract + lanes need 16 (budget: pad every bank lane to it: {'vmb_NW4': 3, 'vmb_NW5': 3}) (ref 7 at round trip 3; actual 12 = bank 3 + pin 1 + lanes)"
+    "su_NW2.WRITE_RETURN = 19, bank contract + lanes need 20 (ref 7 at round trip 3; actual 16 = bank 3 + pin 1 + lanes)"
    ]
   },
   {
@@ -736,33 +738,33 @@
    "inst": "su_NW3",
    "param": "WRITE_RETURN",
    "have": 19,
-   "want": 15,
+   "want": 16,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "su_NW3.WRITE_RETURN = 19, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NW6': 4, 'vmb_NW7': 4}) (ref 7 at round trip 3; actual 11 = bank 3 + pin 1 + lanes)"
+    "su_NW3.WRITE_RETURN = 19, bank contract + lanes need 16 (budget: pad every bank lane to it: {'vmb_NW6': 3, 'vmb_NW7': 3}) (ref 7 at round trip 3; actual 12 = bank 3 + pin 1 + lanes)"
    ]
   },
   {
    "inst": "hb_idx__op_NE",
    "param": "VM_RT_EXTRA",
    "have": 171,
-   "want": 61,
+   "want": 113,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hb_idx__op_NE.VM_RT_EXTRA = 171, need 61 (ref 4 + share hb_idx__ctl excess 30 + face extra 0 + lanes 29 - ref lanes 2)"
+    "hb_idx__op_NE.VM_RT_EXTRA = 171, need 113 (ref 4 + share hb_idx__ctl excess 56 + face extra 0 + lanes 55 - ref lanes 2)"
    ]
   },
   {
    "inst": "hb_argmax",
    "param": "VMX",
    "have": 89,
-   "want": 35,
+   "want": 61,
    "status": "FAIL",
    "rule": "d4g_bank_latency",
    "bad": [
-    "hb_argmax.VMX = 89, need 35 (ref 5 + share hb_idx__ctl excess 30 + face extra 0 + lanes 0 - ref lanes 0)"
+    "hb_argmax.VMX = 89, need 61 (ref 5 + share hb_idx__ctl excess 56 + face extra 0 + lanes 0 - ref lanes 0)"
    ]
   },
   {
@@ -843,21 +845,21 @@
    "inst": "hb_idx__ctl",
    "param": "CR_RT",
    "have": 36,
-   "want": 98,
-   "formula": "0 + 1 (hub pin) + lane(cq) 12 + lane(cr) 17 + remote 68 (SID 3; 16 + LINK 26 + 26)"
+   "want": 170,
+   "formula": "0 + 1 (hub pin) + lane(cq) 24 + lane(cr) 31 + remote 114 (SID 3; 16 + LINK 49 + 49)"
   },
   {
    "inst": "hb_argmax",
    "param": "ACK",
    "have": 52,
-   "want": 111,
-   "formula": "13 + 1 (hub pin) + lane(cq) 12 + lane(cr) 17 + remote 68 (SID 3; 16 + LINK 26 + 26)"
+   "want": 183,
+   "formula": "13 + 1 (hub pin) + lane(cq) 24 + lane(cr) 31 + remote 114 (SID 3; 16 + LINK 49 + 49)"
   }
  ],
  "score_chain": {
   "edges": {
-   "NW": 9,
-   "NE": 9
+   "NW": 19,
+   "NE": 19
   },
   "formula": "lane(score -> xq_N) + 2 (xq node) + lane(xq_N -> selector)"
  },
