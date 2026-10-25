@@ -69,8 +69,14 @@ MODE = {7: 0, 8: 1, 9: 2}
 DST_VM, DST_AR = 1, 2
 BT = dict(qkv=0, o=8, gu=32, down=48, lm_head=72)      # BTAB word base per matrix (one layout for every slice)
 BT_WORDS = 512
-STN_LEAD = 6            # the round's STN lands this many edges before its first far word (>= 1: cfg before fv)
-RV_SLACK = 16           # + the measured far -> result latency: a round's STN lands after the previous round's results
+# Bound stations reject config overlapping ANY producer word, including the near half
+# which arrives SKEW=14 edges before far. Pre-arm before that half and its config fanout.
+STN_LEAD = 20 if D.SLICE_RTL == 's8' else 6
+# l8_ar already includes the local result latency plus the outward register stages.
+# The bound ctl own_ch and fdn ch_dn_o are two outgoing registers, so its
+# local station result precedes the measured AR pin edge by two. Reconfigure
+# after that local result; legacy slice2 keeps its historical sixteen-edge guard.
+RV_SLACK = -2 if D.SLICE_RTL == 's8' else 16
 XC_TO_WORD0 = 2         # cc_o at W5 on edge X -> io_collective cmd pin X + a, internal c = X + a + 1, word 0 at in pins
                         # c + 1 = X + a + 2 (a = 2 on both the cc and the ar lanes: dv2f14bq relay ages)
 LU, LS = 53, 376        # qfd_io_collective_static OT_QFDS_LU / OT_QFDS_LS defaults (die params; Q-COLLCAL: LS 377 open)
@@ -151,7 +157,7 @@ def rounds_of(own, name):
             bl = sorted(units[s], key=lambda b: (b['pair'] or 0, b['block']))
             lst.append((s, bl, 'fin'))
             if m['level'] == 9:
-                lst.append((s + 1, bl, 'snd'))
+                lst.append((s ^ 1, bl, 'snd'))
         out.append(lst)
     return out
 
@@ -338,8 +344,15 @@ def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None,
     lw = D.lower()                               # the RMSNorm ROOT fields (one ROOT cfg serves the norm and the head)
     rt = lw['root']
     pre = t0 - 60
-    c = D.cmd_amax(15, clear=1)
-    chain.put(pre, 15, c, 'AMAX clear (all)')
+    if D.SLICE_RTL == 's8':
+        # Pair-head senders have no local candidate and never emit. Opening them
+        # would leave MU state open and make the next token's clear fault.
+        receivers = sorted({b['slice'] for b in own['lm_head']['blocks']})
+        for i, s in enumerate(receivers):
+            chain.put(pre + i + smap['cmd_arrival'][s], s, D.cmd_amax(s, clear=1), f'AMAX clear s{s}')
+    else:
+        c = D.cmd_amax(15, clear=1)
+        chain.put(pre, 15, c, 'AMAX clear (all)')
     for s in range(N):
         c = D.cmd_root(s, int(s == 0), rt['nb'], rt['ss'], fuse=int(s == 0), rx=rt['rx'], eps=rt['eps'] if s == 0 else 0,
                        k=rt['k'] if s == 0 else 0, amnb=(AMNB - (1 if mutant == 'amnb5' else 0)) if s == 0 else 0)
@@ -354,8 +367,9 @@ def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None,
     ready = {s: last[s] + rv + 8 for s in recv}       # + the 5-edge compare tree and the running best
     # the root emits first (its candidate merges locally); far receivers next, collision-free on the dn chain
     occ, emits = {}, {}
-    e0 = chain.put(ready[0], 0, D.cmd_amax(0, emit=1), 'AMAX emit s0 (root)', earliest=ready[0] - 40)
-    emits[0] = e0 + smap['cmd_arrival'][0]
+    if 0 in ready:
+        e0 = chain.put(ready[0], 0, D.cmd_amax(0, emit=1), 'AMAX emit s0 (root)', earliest=ready[0] - 40)
+        emits[0] = e0 + smap['cmd_arrival'][0]
     t = max(ready.values())
     for s in sorted((x for x in recv if x), reverse=True):
         while True:
@@ -487,7 +501,7 @@ def splice(tile_first=40, ctlm_args=None, ages=None):
             for c in ssq_cmds:
                 put(p['at'] - R['R_CMD'] + c['edge'] - e_min, int(c['cmd'], 16) & ~(0x1FF << 4) | (p['pc'] << 4),
                     f'SU PC{p["pc"]} {c["label"]}')
-            span = max(c['edge'] for c in ssq_cmds) - e_min + lw['ages']['ssq_psum_out'][-1] + 2 * (N - 1) + 61
+            span = max(c['edge'] for c in ssq_cmds) - e_min + lw['ages']['ssq_psum_out'][-1] + D.SC_HOP * (N - 1) + 61
             if p['at'] + span > p['done']:
                 overrun.append(dict(pc=p['pc'], priced_done=p['done'], lowered_done=p['at'] + span))
         elif p['kind'] == 'SU':
