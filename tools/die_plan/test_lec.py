@@ -25,6 +25,11 @@ def test_flop_key_polarity_and_names():
     assert lec.flop_key("u_dut.a.r[0]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq") == ("u_dut.a.r[0]", True)
 
 
+def test_odb_hierarchy_separator():
+    # OpenROAD write_verilog keeps '/' between hierarchy levels in flop instance names (3_place / 6_final)
+    assert lec.flop_key("u_twca/q[0]$_DFF_P_.IQN$_DFF_P_.lecq") == ("u_twca.q[0]", True)
+
+
 def test_genblk_scopes_are_dropped():
     assert lec.GENBLK.sub("", "u_dut.u_s.genblk1.genblk1.g_l5.genblk12.r[0]") == "u_dut.u_s.g_l5.r[0]"
     assert lec.GENBLK.sub("", "genblk2.a.mygenblk1.b") == "a.mygenblk1.b"

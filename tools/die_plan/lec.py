@@ -392,7 +392,8 @@ def flop_key(name):
     if v:
         inv = v[1] == "IQN"
         n = TYPE_SFX.sub("", n[:v.start()])
-    return n.replace("\\", "").replace(" ", ""), inv
+    # OpenROAD-exported netlists (3_place / 6_final) keep the hierarchy separator '/' in flop names
+    return n.replace("\\", "").replace(" ", "").replace("/", "."), inv
 
 
 def port_key(n, b):
@@ -1419,7 +1420,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                         if hit:
                             break
                         for c in closest(k, msig.get(t, [])):
-                            if c != k and tried[("gold", k, c, inv)] < 2:
+                            # (an anchored gold-only candidate may itself have been paired this pass: never
+                            # bind to a register already bound, or two anchored registers bind to each other)
+                            if c != k and ("gold", c) not in L.hyp and tried[("gold", k, c, inv)] < 2:
                                 hit = ("gold", k, ("eq", "gold", c, inv))
                                 break
                         if hit:
