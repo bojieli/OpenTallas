@@ -38,9 +38,10 @@ def main(argv=None):
     ap.add_argument("--runner", default="")
     ap.add_argument("--threads", default="")
     ap.add_argument("--mode", default="", choices=["", "submit", "adopt"])
+    ap.add_argument("--canary-fix", default="", help="explicit corrective kit: newest canary SRC_COMMIT@/abs/run/canary.json")
     ap.add_argument("--no-commit", action="store_true")
     a = ap.parse_args(argv)
-    row = [a.die, a.type, a.kit, a.src, a.geom, a.geom_ref, a.mem, a.cells, a.lane, a.goal, a.runner, a.threads, a.mode]
+    row = [a.die, a.type, a.kit, a.src, a.geom, a.geom_ref, a.mem, a.cells, a.lane, a.goal, a.runner, a.threads, a.mode, a.canary_fix]
     if any("\t" in x or "\n" in x for x in row):
         sys.exit("enqueue: no tabs/newlines in fields")
     line = "\t".join(row).rstrip("\t")
@@ -52,6 +53,8 @@ def main(argv=None):
               f"'{AP.geom_tag(r['geom_ref'])}' naming {r['type']} (or a PASS row appended later)")
     q = COORD / "autopilot" / "queue.tsv"
     q.parent.mkdir(parents=True, exist_ok=True)
+    if q.exists() and any(l.startswith(("<<<<<<< ", "=======", ">>>>>>> ")) for l in q.read_text().splitlines()):
+        sys.exit("enqueue: REFUSED: queue has unresolved merge markers; resolve preserving both sides first")
     new = not q.exists()
     with open(q, "a") as f:
         if new:
@@ -61,6 +64,15 @@ def main(argv=None):
     if not a.no_commit:
         subprocess.run([str(COORD / "bin" / "coord-commit.sh"), f"AUTOPILOT enqueue {a.die}/{a.type} {r['id']}",
                         "autopilot/queue.tsv"], check=True)
+        fetched = subprocess.run(["git", "-C", str(COORD), "fetch", "-q", "origin", "coord/state"])
+        published = subprocess.run(["git", "-C", str(COORD), "show", "origin/coord/state:autopilot/queue.tsv"],
+                                   capture_output=True, text=True)
+        if fetched.returncode or published.returncode or line not in published.stdout.splitlines():
+            sys.exit("enqueue: NOT SUBMITTED: queue row is local only; coord/state publication could not be verified")
+        print("enqueue: PUBLISHED to origin/coord/state; hub tick fetches this exact row")
+    else:
+        print("enqueue: DRAFT ONLY (--no-commit): row is local; hub will not see it until coord/state is committed and pushed",
+              file=sys.stderr)
     return 0
 
 
