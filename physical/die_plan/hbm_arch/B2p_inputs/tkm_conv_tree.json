@@ -1,0 +1,42 @@
+{
+ "net": "conv root->tile31 N conv pin",
+ "path": [
+  [
+   1047.768,
+   673.9200000000004
+  ],
+  [
+   1047.768,
+   678.2400000000005
+  ],
+  [
+   1369.44,
+   678.2400000000005
+  ],
+  [
+   1369.44,
+   5317.92
+  ],
+  [
+   349.92,
+   5317.92
+  ],
+  [
+   349.92,
+   3512.16
+  ],
+  [
+   28.248,
+   3512.16
+  ],
+  [
+   28.248,
+   3516.48
+  ]
+ ],
+ "path_um": 8116.9,
+ "stations": 20,
+ "max_hop_um": 400,
+ "token_CB": 21,
+ "note": "1-bit registered relay, stations at <=400 um along E channel x1369.44 / top band y5317.92 / gap corridor x349.92 (halo-free sites); clr is systolic (in-tile), no tree"
+}
