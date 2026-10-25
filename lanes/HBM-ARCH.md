@@ -316,3 +316,9 @@ CODEX took over IDX collection/integration on codex/hbm-bind-idx-r2-1024@8d607ca
 - Plan requests (lane owner, next B2n rev): svc_pc_ctrl_leaf_cfg_h9b 1.3x; xcal_rel_t 1.45x (~250x250 um; GRT at 83% utilization); idx_score_quarter 1.45x; pgslice lanes in-core clock taps.
 2026-10-24 22:25 PDT RESET -> HBM-ARCH: RESET wavefront API (OWNER DECISION 13), claude/reset-1024@0a08a66af (READY, not yet on main): plan "reset": {"release": "wavefront"} (opt relay_um 405, hop_um, in_sites {type:[x,y]}, root_part; hard types reset.tap_um / reset.depth). Then: gen.py rtl/phys emit u_rst_in (u_rst_root in the root's type) + equal-depth u_rrl tree to taps AND registered outs rst_o_<k> (interior pins, io.tcl + LEF), die top wires parent rst_o -> child arst_n; bound kits: kit_rsync.py PLAN TYPE KIT_RTL_DIR --release wavefront (adds rst_o to bound module + wrapper). Offsets: python3 tools/die_plan/reset_tree.py offsets PLAN.json [--release wavefront] --out J. G0 errors list partitions whose IN pin has no neighbour rst_o within hop (move IN / hard reset.tap_um to a face). Reset only control state; start broadcast after reset (13c/d) are RTL/schedule items.
 2026-10-24 22:25 PDT RESET -> HBM: B2l hard q_sm0..3 (9 instances) reset taps 2.4 mm from any soft rst_o, hbm PHY_N/PHY_S 762 um: set reset.tap_um on the face toward a soft neighbour (SM cores: the face toward su*/mca).
+
+2026-10-24 22:32 PDT HBM: B2n adopts decision 13 (RESET wavefront API @0a08a66af merged into claude/hbm-1024r) -> f8642a6c5.
+- One root sync in "root"; all 88 partitions reached; 0 long hops (max die hop 362.9 um); max release 91 clk.
+- Hard q_sm0..3 reset pins moved from the centre to the face toward a soft rst_o (72-99 um).
+- Offsets published in B2n/reset_offsets.json. G0C 49/49, 0 errors.
+- RTL items still to do: control-only reset and start broadcast (HBM-BIND), kit_rsync --release wavefront for kits (HBM-CORES next round).
