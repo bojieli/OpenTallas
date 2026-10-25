@@ -375,3 +375,36 @@ NEW hcpost SIGNED epyc2:codex-s81-core-eco/hcpost_route_h5/signoff_codex/signoff
 - OWNER?/RTL: (1) cfg7_seq_bfp: 14 output pin regs shared with internal logic -> dedicated output pin flops in RTL; (2) gunit_l0r r_f sticky output -> separate pin flop; (3) qbank_S + xfin outlines too small for current RTL (qbank_S 2-flop stations; xfin ENG mode 72.5k um2 synth area) -> plan outline growth; (4) IO seam-hold budget (input min-delay -tol vs core insertion) drives 6-32k hold buffers per core: same question as split-core cond. (2) 03:33 / decision 5.
 2026-10-25 05:38 PDT S81-CORES2: adopt178 station kits t6 and t27 (m0/m5) are generated (main 26028effc, gen.py phys --hold-ff-margin 0/5 --max-wire-um 100) at epyc1:/srv/opentallas-scratch2/claude/s81-cores2/kits178/m{0,5}/slice_station__t{6,27}. 4 PLACE jobs are in ot-run: m0 t27 on epyc2, m5 t6 and m5 t27 on intel2, m0 t6 waiting on epyc1. Next: render the placement, check the CTS-hang risk on t27 taps, post a GEOM REQ, then enqueue route.
 2026-10-25 05:39 PDT LEC-CP1-INFRA -> S81/S81-CORES/TOK-DS: LEC found a REAL synthesis difference in every S81 eng netlist (eng_rr_e engfix AND codex/eng-inactive-1025): rtl/dsrom_sys/s81_dv/eng/ot_s81eng_aq_n32.sv (main, since e684da414 10-23; kit copy physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/) ~l.110: the g_ec loop connects .ep_next(ep_next)/.dm_next(dm_next) BEFORE 'wire [10:0] ep_next/dm_next' (and ce) are declared; yosys-slang makes undriven implicit nets g_ec[i].ep_next/dm_next (16 'used but has no driver' warnings in 1_2_yosys.log), so all 8 u_xq.u_aq.g_ec[i].u_e dm/ep exponent regs are TIELO 0 in the netlist; read_verilog + Verilator bind to the module wires, so benches pass (same class as csa31). 120 LEC compare points (dm 88 / ep 32). FIX (S81 RTL owner, batched change): declare ce/ep_next/dm_next above the g_ec loop, re-synth, re-LEC, re-sign-off every eng view. Remaining eng LEC residue after improved correspondence = FSM recode (~38 pts, tool gap) + q_off X (fixed by 99c01e3d9) + 34 undecided; details lanes/LEC.md.
+
+## PARKED 2026-10-25 05:39 PDT (S81-CORES main lane)
+- MERGED on main: rxsb views, eng_rr_h1 views (from this lane). New signed-off views this session: 2.
+- Branches:
+  - claude/s81-cores-split-1025@58011cfe4c: H-tree with regional taps + SRAM taps. Post-CTS register spread 40 ps (was 136). Insertion ~360 ps, still above the contract.
+  - claude/s81-cores-c3-1025@487266aa1: renders + review JSON.
+  - claude/s81-cores-legacy-1025@8513a912ee: 18 legacy re-kits from main, raw face_guard check after synth.
+- AUTOPILOT queue (all waiting on GEOM verdicts): vn_a_t42 38286eb7249e, qbank_N 8da8b06c0f6a, gunit_l1c f29da44f1d33, gunit_l3 33608da6d7ab, gunit_l4 128f9f71c397.
+- GEOM REQs open:
+  - [S81-CORES/C3]: hcore, eng_rr_e, vq, rxsf.
+  - [S81-CORES/SPLIT]: vn_a, vn_b, vsw.
+  - [S81-CORES/LEGACY b1, b2].
+- Live jobs: LEGACY stage-1 on epyc1 ot-run (spilled to epyc3); epyc1 client pids bksel_c 2832196, l5_n32 2832205, eg 2832211, xrt3 2832213, xfin 2832210. Next agent: review them post-CTS and enqueue the PASS ones with enqueue.py --geom REQ.
+- FLOW owns ve_m, ve_s, rr_h0 (proof rebuilds).
+- Cores blocked on the FLOW per-corner insertion binding (9.7/5e) and GRT->RCX RC calibration (F2): vn_a/vn_b/vsw, vq.
+- Structural fixes still owed:
+  - Clock F3/F5 rebuild: bk_g, gunit_l0/l1/l2, xrt1.
+  - Re-place with SRAM interface registers within 20 um: vn_b, vsw.
+  - Re-floorplan: eng_rr_e (macros block M1-M4, M5 vertical only; GRT overflow 235k).
+  - attn_hcore: WPRE kit failed preflight face_guard (shared 9). Needs a face-clean recipe + reset entry register (fix B).
+- RTL owed (parent lane / RTL owner):
+  - attn_hcore: reset entry register + 4 regional reset relays.
+  - vq: bf load enable replicated per quarter.
+  - rxsf: u_exp split into 2 stages.
+  - vsw: north v_q re-registered near consumers.
+  - cfg7_seq_bfp: dedicated output-pin flops (14 shared).
+  - gunit_l0r: r_f gets a separate pin flop.
+  - LEC 05:39: ot_s81eng_aq_n32 exponents tied 0 (slang implicit net); needs an RTL fix before any eng core rebuild.
+- Station routes (S81/KITS): every route fails face_guard 'shared'. That is a structural gen.py issue; about 30 W-kits look stalled since ~02:00.
+- OWNER?
+  1. Split cores: accept insertion ~360 ps bound per corner with a parent early tap (5e), or must each core meet 250+-40 itself?
+  2. eng_rr_e: re-floorplan the macros, or grant M6 for routing over them?
+  3. qbank_S and xfin outlines are too small for current RTL (xfin needs 72.5k um2 of cells in a 32.9k um2 outline): grow them in the plan delta?
