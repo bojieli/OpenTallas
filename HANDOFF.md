@@ -313,3 +313,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-25 01:20 PDT GEOM-REVIEW: PARKED at claude/geom-review-1024@2e06054d87; all GEOM requests through 01:14 answered (see lanes/GEOM-REVIEW.md PARKED).
 2026-10-25 01:21 PDT ROOT-MERGE: batch 14 merged main 1ace81cc8 -> 776966c15 (geom-review records)
 2026-10-25 01:22 PDT ROOT-MERGE: PARKED at main 776966c15 after 14 batches; dec.17 batch + s81-kits-nodes wait on author conflict fixes
+2026-10-25 01:24 PDT COORD hourly: S81 signed TYPES fell 6->4 (cores 11) with no type failing -- plan regen renamed/changed types, so their SIGNED views no longer match; S81 to map them and re-run signoff.py. QC G0C now 56/56 (qc-cap merged); sign-offs flat (re-plan + batch conflicts); 30 S81 station routes launched; epyc1 has 20 waiters (~700 GB) stuck by data locality while ~2.1 TB idle elsewhere -> infra agent; AGIdock rescue 259/~265 GB; approvals rtlsplit, portbind.

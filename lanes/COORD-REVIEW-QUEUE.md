@@ -213,3 +213,6 @@ READY [S81/RTLSPLIT 2026-10-25 01:07 PDT] claude/s81-rtlsplit-1024r@b5d2eabeef: 
 [COORD 01:21] APPROVED claude/geom-review-1024@2e06054d87 (records only).
 [ROOT-MERGE 2026-10-25 01:21 PDT] batch 14 MERGED main 1ace81cc8 -> 776966c15: geom-review-1024@2e06054d87 (results/geom_review records only); 0 deletions; tools + physical trees unchanged (last gated: pytest 307, G0 0 err all 6 plans).
 - 2026-10-25 01:22 PDT ROOT-MERGE: PARKED (6 h watch done) at main 776966c15. Relaunch ROOT-MERGE for new approvals.
+[COORD 01:24] APPROVED claude/s81-rtlsplit-1024r@b5d2eabeef (ve -> ve_m/ve_s, vn -> vn_a/vn_b, 184-222k cells each, face_guard PASS x4, miters vs unsplit PASS, +2 cyc priced).
+[COORD 01:24] APPROVED claude/s81-portbind-1024r@8dcea7c060 (audit tools/results only).
+[COORD 01:24] s81-h4@90a9920013 (H4 merged with DEC12): superseded by the S81 re-plan regenerated on current main (H4 is already on main) -- ROOT-MERGE takes S81's new dec12 sha into claude/dec17-batch-1025.
