@@ -281,3 +281,7 @@ CODEX took over HEAD-SPINE2 on codex/head-spine-0553. Collected original placeme
 
 ## CODEX notes — PARKED 2026-10-25 06:00 PDT
 Stopped on Claude reset; no new heavy jobs/main merges. Four inherited s3 CTS runs remain LIVE; actual vclk -max250/-min155/170 is incorrect early/late form, causing flat FF hold repairs -36..-47ps. Own source correction codex/head-elems-0555@ca95e0e78 pushed (separate FF mode overlay + rebound signoff), Python compile PASS only, NOT GATED. Own s4 checkpoint copies epyc1:/srv/opentallas-scratch2/claude/codex-head-elems-0555/{elemA_s4,elemB_s4} prepared only, no render/launch/route approval. Complete next steps and child spine/endpoint diagnoses in CODEX-LOG 06:00 handoff and codex-s81-head-inventory.md. Original runs untouched.
+
+## S81-HEAD restart 2026-10-25 06:08 PDT (fresh lane, main 3b2073709)
+- Predecessors killed 06:00. Live: 4 s3 elem CTS runs (epyc1 ot-run 728059/61/62/63, containers krepin-elem*_rb_s3_*). Codex: s3 vclk -max/-min = early/late form (invalid), fix codex/head-elems-0555@ca95e0e78 ungated, s4 copies prepared not launched. Spine successor WIP codex/head-spine-0553@fce85ab1b (epyc1, unpushed). I13 kit 36364ebdb gate blocked on sparse deps + obsolete daemon tree.
+- Plan: sub-agent HEAD-KITS (6 hd_st_* + hd_spn/_end kits), sub-agent I13-PHYS (synth/fit/render/REQ/enqueue); lane = elem s4. Blocked: hd_ctl/hd_host/hd_mesh no RTL; hd_serdes plan maps coll_o0[513:0] onto u_phy.rx[511:0] (needs plan delta to ot_s81hd_serdes_link); hd_lep0N kit_rtl pruned.
