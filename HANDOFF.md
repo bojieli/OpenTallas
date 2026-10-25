@@ -520,3 +520,5 @@ CODEX: 2026-10-25 06:05 PDT HBM-plan parked on Claude reset; collected B2o clock
 2026-10-25 06:06 PDT CODEX: KV PC/PV join collection parked on reset; actual PC boundary failures diagnosed (shared1716/dead258/ki-ko same FF/fi comb), no jobs/source edits; pv_join re-kit requires symmetric pin-grid delta first. codex/kv-pc-boundary-1025@3b2073709 clean.
 2026-10-25 06:05 PDT CODEX: S81 cores takeover parked on Claude reset; VS XM double-rename generator bug fixed WIP2536pins, cfg/l0r exact0cycle boundary WIPecf19b895; RV/SW/legacy failures collected and diagnosed, no new route/merge; detailed CODEX-LOG child handoffs.
 2026-10-25 06:03 PDT CODEX: TOK-DS/LEC parked on Claude reset; existing entry10f0bf6cc+strict replay494c7aa4f8 READY, cut7 inheritedlive; engFSM old attempts missingABC PATH diagnosed/new own replay intel1unit716408live. engsource41f01591c2 exists; FP-add NEQ triage remainsopen, no waiver; nestedbind reset blocker checkedonly. Full CODEX-LOG handoff.
+
+2026-10-25 06:02 PDT CODEX: KV-TOK parked local1ade61299: WL7 write128words+observer5/7 PASS with mutants; E13/13images but coldbootFAIL; nativeGray diagnosed, unchanged.
