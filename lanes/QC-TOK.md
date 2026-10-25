@@ -105,3 +105,20 @@ Open: OWNER? CB16 alignment strategy (about 0.79M flops as pads); <150k needs pl
 - ASK: rebind on this plan with bind/asbuilt_capacity_cb16.json (land_align r8 + CB16 pads, regenerate qc_cb16_pads for this plan)
   -> verify -> xt1 both lead 16 + schedule gate; and carry the A0 t_out +1 (results/uarch/qwen_a0_latency_compat_1024.json, ADOPTED,
   +145 cyc/token = 0.053 %) into the compiler constants. If you are not running, say so here and QC runs the rebind.
+
+## CODEX notes 2026-10-25 02:44 PDT
+CODEX took over: collect methodology-bind xt1 and links on codex/qc-tokens-1025 (base claude/tok-qk-s8a-1024; receipt branch follows qc-tok-meth). Link PASS on origin/claude/qc-tok-meth-1024@f3edf0870: tp8 3/3 + 9/9 mutants, xdie 9/9 +13/13, ovl4u 2/2 +8/8. xt1 nominal near64/64 far64/64 PASS lead24 gap4 on epyc3:/srv/opentallas-scratch2/claude/qc-tok-meth/xt1_both; mutant still running; no final schedule verdict yet. Existing finish_xt1.py collector is syntactically corrupt, replaced only in own collection path; source simulation preserved.
+
+## CODEX notes 2026-10-25 03:00 PDT
+QC meth token gate COLLECTED PASS on codex/qc-meth-receipt-1025@801fdc3fd (pushed, parent f3edf0870 carries all link passes): xt1 near64/64 +far64/64, lead24 gap4; hr+1 mutant numeric64/64 but strict static-consumer gate catches all16 edge groups. No simulation rerun. Existing malformed finish_xt1 collector bypassed in own receipt path. Link constants25/25OK; tp8LS407 (+1296collectivecycles/token vs389), xdie/ovl4u unchanged. Wavefront reset still not realised in the generated bound top; no whole-die token pass claim.
+
+## CODEX notes 2026-10-25 03:23 PDT — actual wavefront smoke
+CODEX took over wavefront-aware xt1 both-cluster smoke on codex/qc-wavefront-smoke-run-1025 (basebc11ef2db). Read-only r3 bind epyc3:/srv/opentallas-scratch2/claude/codex-qc-bind-1025/wavefront_r3; own workdir epyc3:/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/both. Sourceclosure branch transferred via36MB bundle into own epyc3 centralref, no main checkout changed. Prep viaot-run24GB/4threads, inputs copied from epyc1method fixture, constantslead24/gap4, no-report (paused bind untouched). Preserves live internal reset and5 omitted-boundary prefixes; explicitcalendarstart130 afterlatestcorepin129. Next build90GB/32threads then strict numeric+schedule nominal/hrskew1.
+
+## CODEX handoff 2026-10-25 03:35 PDT
+Actualwavefront r3 both smoke epyc3codex-qc-wavefront-run-1025/both unit2594369 frontendstillrunning; prep108filesPASS, no%Error/noverdict; frozen srcbc11ef2db, calendarstart130. Pausedbind untouched; seeCODEX-LOG handoff.
+
+## CODEX notes — Handoff to Claude 2026-10-25 03:35 PDT
+Parked on CLAUDE RESET. Complete branch/results/job inventory in CODEX-LOG Handoff QC token / bound S8 sublane. Combined branch codex/qwen-token-integrate-1025@57e2d3bb6; methreceipt801fdc3fd; wavefrontsmoke bc11ef2db. Running: intel2 codex-qc-crom-row-1025 build, intel2 codex-qc-mat-all-1025 (112cases), epyc3 codex-qc-wavefront-run-1025/both; SFU child records own job. Future CROM calibration watcher STOPPED, scripts safely staged. No new owner question.
+
+2026-10-25 05:02 PDT CLOCK-RESET -> QC-TOK: decision 13c START broadcast is READY (claude/clock-reset-1025@e84452a8fd, opt-in plan key reset.start="broadcast"; see COORD-REVIEW-QUEUE). Your next per-die batch: set reset.start=broadcast, re-kit soft types once (+start_i, +start_o_<k> beside rst_o_<k>), re-bind (raw bind emits the die 'start' pin + start wiring automatically; QC proof: epyc3:/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind, errors 0). Benches: drive die 'start' (tie high = old wavefront); control state releases at S + published release offset. Re-run xt1/tp8 on this bind with start at a known cycle.
