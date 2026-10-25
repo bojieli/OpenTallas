@@ -266,3 +266,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 21:45 PDT COORD: INFRA.WATCH done (STALE 15->0, main f83206311c pushed by the infra agent directly -- ROOT-MERGE to note; team-level evidence can mask single TODO tasks: S81.XDIE/S81.IR checked by hand).
 2026-10-24 21:45 PDT COORD: prune pass 2 done (epyc2 scratch2 84->69%, rtx-pro 86->73%, 601 GiB idle worktrees, rescues pushed). Lasting fix = sparse lane worktrees (git -C, verified paths only).
 2026-10-24 21:58 PDT TOK-DS: S81.HW scope note + S81.MTP breakdown on claude/tok-ds-hwmtp-1024@d6dec66d5 (record 2,528.6 = 6f law binding; causal pipeline 2,763; bk_sel ca/cb/tl_o have no plan lanes -> S81 request)
+2026-10-24 22:00 PDT COORD: TOK-DS HW/MTP analysis in (claude/tok-ds-hwmtp-1024@d6dec66d5): 58/65 L2 gaps compiler-only; H4 bk_sel merge lanes missing in v4.8 -> ruled option A; MTP 2,528.6 (stretch law) vs 2,763.0 (pipeline law) -> owner.
