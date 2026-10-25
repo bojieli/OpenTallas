@@ -157,3 +157,18 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
   the PHY/DFI boundary; pc lanes stay core). Boot/token benches: start on the explicit start broadcast, not the reset edge; datapath
   flops unreset -> next KV vehicle build (on kv44 bound top) uses --x-initial unique + random init (+verilator+rand+reset+2) so no
   bench relies on datapath reset values. kv43abc (pre-13/14 vehicle) kept as diagnostic of A/B/C integration only.
+- 2026-10-24 22:21 PDT TOK-QK: D DONE claude/kv-tok-d-1024 @644381b68 (merged into claude/kv-tok-1024 @52f9f945d). Codex apply_D NOT adopted (10 face
+  flops only; wrong direction under decision 14). No FIFO on DFI po/pi (fixed RL/WL offsets, ELASTIC=0) -> DFI ratio-locked.
+  apply_D default dfi-core (decision 14): 68 clk_clk_hbm_<Q> pins -> clk_core, 0 lane changes; fallback --mode hbm-lanes (327 lane regs
+  in 25 types -> clk_hbm, per-partition HBM reset sync, epoch via ot_dp_lsync). bind.py lane_clock "endpoint" (LANE_CDC /
+  PORT_DOMAIN_UNDECLARED fail the bind) + port_domains.py + lane_clock_audit.py (kv43abc: 201 type lanes / 81,464 die bits wrong
+  clock, no other bare crossings, 251 lanes unresolved = host leaf). pcpart: dfi-core 4/4 done&ok; hbm-lanes 16/16 sweep PASS;
+  old binding mutant FAIL 12/16. Reset findings (out of D scope, to RESET/KV): hbm_rst_n core->HBM, kvpc hrst single flop on pll_hbm,
+  phy ft chain core reset over HBM stations.
+  KV-R8 (rebind, 14a): hck/grp_r2c hck/ctrl_kc.pll_hbm/PHY clk from core PLL; bind.py lane_clock endpoint + port_domains_kv43.json;
+  PHY model makes HBM clock from a ratio PLL. DFI-ratio check must recompile calendar constants in 833 ps cycles (1:1 example:
+  RL 23->29, WL 5->7, tRCD 19->24, tRP 16->20, tRAS 28->35, tREFI 3808->4679, tRFC 342->421 ...; + BRAW, PHYSICAL_CMD_EDGES, WDONE/CVL).
+- 2026-10-24 22:21 PDT TOK-QK: kv43abcd (A+B+C+D dfi-core, XINIT=unique for decision 13) staged + building epyc2 (scratch2/claude/kv-tok/kv43abcd_build,
+  epyc1 ~/wt/tok-qw-logs/kv43abcd_build3.otrun.log). kv43abc build still live (diagnostic). Next: run_suite on kv43abcd with
+  RUNARGS="+verilator+rand+reset+2"; NOTE the kv43 vehicle still uses the kv41 boot image (calendar constants in HBM edges) -- with
+  dfi-core the PHY bench model runs RL/WL in core cycles, so a boot/token PASS of record waits for lane KV's recompiled image on kv44.
