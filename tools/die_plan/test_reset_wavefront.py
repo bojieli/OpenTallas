@@ -213,3 +213,47 @@ def test_face_flops_leaves_reset_outs_to_reset_tree():
     ff = (HERE / "face_flops.tcl").read_text()
     m = re.search(r"set ff_skip_re \{(.*?)\}\s", ff)
     assert m and re.match(m.group(1), "rst_o_3") and re.match(m.group(1), "arst_n") and not re.match(m.group(1), "x_o")
+
+
+def test_hard_core_reset_gets_equal_depth_local_relay_and_reach_gate():
+    raw = wave(TINY)
+    raw["partition_types"]["src"]["hard_cores"] = [dict(
+        inst="u_core.g_h[0].u_hc", module="core", origin_um=[50, 50], outline_um=[200, 300],
+        orient="MY", track_offset_um=[0.108, 0.012],
+        pins=[dict(name="rst_n", layer="M4", xy=[0, 150])])]
+    P = schema.Plan(raw)
+    T = RT.for_type(P, "src")
+    c, = T["core_resets"]
+    assert c["pin_um"] == [250.108, 200.012]
+    q = next(r for r in T["relays"] if r["q"] == f"rst_n_t{c['tap']}")
+    assert q["depth"] == T["depth"] and RT.verify(T) == []
+    assert RT._man(q["xy"], c["pin_um"]) <= RT.relay_um(P)
+    assert RT._free(q["xy"], RT.blockages(P.types["src"]), (RT.CLEAR_UM, RT.CLEAR_UM, 859.68, 859.68))
+    text = RT.tcl_text(T)
+    assert "OT_RESET_CORE unresolved u_core.g_h[0].u_hc.rst_n" in text
+    assert f"core:{c['tap']} rst_n_t{c['tap']}" in text
+    offsets = RT.wf_plan(P)
+    row = next(r for r in offsets["parts"].values() if r["type"] == "src")
+    assert row["core_release"]["u_core.g_h[0].u_hc.rst_n"] == row["release"] + 1
+    mutant = copy.deepcopy(T)
+    next(r for r in mutant["relays"] if r["q"] == q["q"])["xy"] = [800, 800]
+    assert any("hard-core reset" in e for e in RT.verify(mutant))
+
+
+def test_core_reset_tcl_literal_hierarchy_with_brackets():
+    # Tcl glob syntax must not interpret the generate-array brackets in a hard-core instance name.
+    raw = wave(TINY)
+    raw["partition_types"]["src"]["hard_cores"] = [dict(inst="u_hc[0]", origin_um=[50, 50],
+        outline_um=[200, 300], pins=[dict(name="rst_n", layer="M4", xy=[0, 150])])]
+    text = RT.tcl_text(RT.for_type(schema.Plan(raw), "src"))
+    block = next(l for l in text.splitlines() if l.startswith("foreach i [$ff_blk getInsts]"))
+    stub = """proc blk {method} {return {i1 i2 i3}}
+proc i1 {method} {return {u_hc[0]}}
+proc i2 {method} {return {u_bound/u_hc[0]}}
+proc i3 {method} {return {u_hc0}}
+set ff_blk blk
+set rtr_ci {}
+"""
+    out = subprocess.run(["tclsh"], input=stub+block+'\nputs $rtr_ci\n', text=True, capture_output=True)
+    assert out.returncode == 0 and not out.stderr
+    assert out.stdout.strip() == "i1 i2"
