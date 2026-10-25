@@ -4,10 +4,11 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-sys.path.insert(0,'/srv/opentallas-scratch/claude/wt/codex-qc-bitstations-1025/tools/die_plan')
+sys.path.insert(0,str(Path(__file__).resolve().parents[3]/'tools'/'die_plan'))
 import schema as S,gen_phys,check
-root=Path('/srv/opentallas-scratch/claude/codex-qca0-review-1025');raw=json.load(open(root/'candidate_channels2.json'));P=S.Plan(raw);report=json.load(open(root/'candidate_channels2_report.json'));types=sorted({s['type'] for r in report['rounds'] for s in r['slots']})
-out=root/'bitstation_channels2_review';out.mkdir(exist_ok=True)
+# Usage: render_record.py PLAN.json STATION_REPORT.json OUTPUT_DIR
+raw=json.load(open(sys.argv[1]));P=S.Plan(raw);report=json.load(open(sys.argv[2]));types=sorted({s['type'] for r in report['rounds'] for s in r['slots']})
+out=Path(sys.argv[3]);out.mkdir(parents=True,exist_ok=True)
 fig,axes=plt.subplots(3,6,figsize=(24,15))
 for ax,tn in zip(axes.flat,types):
  t=P.types[tn];W,H=t['outline_um'];ax.add_patch(Rectangle((0,0),W,H,fill=False,color='black',lw=.7));pins={(b,i):(x,y,f) for b,i,_,x,y,f in gen_phys.type_pins(P,tn)}
