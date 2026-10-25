@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_b2.native_bind_rtl.v1",
  "rule": "HBM-BIND 2026-10-24 (OWNER: B2l accepted, bind natively; host in-band). Per item: module, params, bench, mutants caught, verdict. Wiring / param-only items are in b2_bind_wiring.json (applied by tools/hbm_b2/b2_top.py; port-bind report b2_top/pb_w.log).",
  "source_branch": "claude/hbm-bind-1024r",
- "source_sha_at_write": "fde7c2480e16806bc569b7488173e0d66a569ad1",
+ "source_sha_at_write": "688b7752a07a9408c5ad3f978dd6697f0ae4ed29",
  "rtl_items": [
   {
    "id": "R-HOST",
@@ -72,10 +72,10 @@
    "id": "R-IDX",
    "item": "IDX 2-list + rootctl/argmax SID strap (merged codex/hbm-bind-idx-r2-1024@8d607ca2e = idx child 2353af4c8)",
    "module": "ot_hbm_idx_rootctl_static_am SID/NQ/NL, ot_hbm_idx_selector_static_sel NL, ot_hbm_idx_topk_link_static NL, ot_hbm_argmax_static_sw_vm_r2 SID + CNTW",
-   "params": "B2: ctl SID 3 NQ 2 NL 1 (VM_RT 30, CR_RT 98, SEL_LAT 4 from b2_delays.json); selector/link NL 1; argmax SID 3 (VMX 35, ACK 111 -> CNTW 8)",
+   "params": "B2 (delays from B2n claude/hbm-1024r b590f6e2f): ctl SID 3 NQ 2 NL 1, VM_RT 56, CR_RT 170, SEL_LAT 4; op_NE VM_RT_EXTRA 113; selector/link NL 1; argmax SID 3, VMX 61, ACK 183 -> CNTW 8",
    "bench": "run_idx_rootctl_nq.sh, run_idx_selector_nl.sh, run_idx_link_nl.sh, run_argmax_r2_sid.sh (vs as-built d34578d6f refs), run_argmax_r2_ack.sh (new: ACK 13+XA lockstep vs ACK 13), run_argmax_r2.sh",
-   "result": "rootctl 4 cfgs x 99,780/0; selector NL4/2/1 9,436/0; link 3,966-4,300/0; argmax SID 4 cfgs 59,990/0; ACK XA 0/49/98 PASS (event offset = XA)",
-   "mutants": "rootctl B2MUT 1-4 FAIL; selector SMUT 1/4 FAIL; link LMUT 1-3 FAIL; argmax SIDMUT FAIL (59,642 err); ACK CMUT 1 (6-bit counter at ACK 111) FAIL",
+   "result": "rootctl 4 cfgs x 99,780/0; selector NL4/2/1 9,436/0; link 3,966-4,300/0; argmax SID 4 cfgs 59,990/0; ACK XA 0/49/98/170 PASS (event offset = XA)",
+   "mutants": "rootctl B2MUT 1-4 FAIL; selector SMUT 1/4 FAIL; link LMUT 1-3 FAIL; argmax SIDMUT FAIL (59,642 err); ACK CMUT 1 (6-bit counter at ACK 111 / 183) FAIL",
    "default_bitexact": "rootctl/selector/link/argmax defaults vs as-built refs every edge (B2 0 / NL 4 / S 0 legs)",
    "verdict": "PASS",
    "by": "sub-agent IDX (2353af4c8) + Codex merge 8d607ca2e + HBM-BIND (wiring R-IDX, CNTW, delays)"
