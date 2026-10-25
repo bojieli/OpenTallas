@@ -67,3 +67,4 @@ time	die	signed_types	signed_cores
 2026-10-25 14:23	qwen_compute	0	2
 2026-10-25 14:23	qwen_kvsys	0	4
 2026-10-25 14:23	hbm	0	0
+2026-10-25 15:23 PDT	s81 4/17	qwen_compute 0/2	qwen_kvsys 0/4	hbm 0/0	delta 0 all dies (flat since ~08:00; causes: abs canary gating -> fixed fd915bf9fe; FF-only grt TT bug -> fixed 5fc807d2d8; rebuilds on main started)
