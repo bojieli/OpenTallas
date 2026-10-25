@@ -205,3 +205,26 @@ Many 'within' kits still have a longest tree 300-580 ps (SRAM / far sinks); pin-
 ## HBM lane (rtx-pro, steward of HBM-ARCH/ELEM-HBM/TRIAL-HBM) -- started 2026-10-24 19:27 PDT
 - 2026-10-24 19:27 PDT HBM: resumed. Branch claude/hbm-1024r (from claude/hbm-arch-1024 @c411a12b86 + main), wt rtx-pro:/home/ubuntu/wt/hbm-1024r. Sub-agents: HBM-ELEM (89 B2l core kits collect, SPLIT2, core insertion list -> early taps, IO vclk = core I), HBM-BIND (native-bind RTL per b2_native_bind_delta.json, benches+mutants). Me: B2m plan (in-band host, pipelined reset, SerDes PHY supply+bump rows, balanced binary H-tree, gen_phys %g bug).
 - 2026-10-24 19:27 PDT HBM: adopted epyc3 codex-hbm/B2l_fabric_buf12_legal_r4 (container hbm-fabric-buf12-3701110): 4.63M cells / 4.43M nets M8-M9 only, GRT extra iteration 1/30 since 11:54 (7.5 h, single thread, 24 GB); NOT FINISHED, diagnostic on superseded B2l clock; left running.
+
+## HBM-BIND
+- 2026-10-24 19:31 PDT HBM-BIND: started. Branch claude/hbm-bind-1024r (off origin/main d13ff7c78), wt rtx-pro:/home/ubuntu/wt/hbm-bind-1024r (sparse).
+- 2026-10-24 19:31 PDT HBM-BIND: TP-384 EARLY REPORT (analysed first, as asked).
+  (1) NUMERICS: NOT a blocker by construction. The only cross-rank FP reduction in the native DS programme is the wo_a o-group
+      reduce (GROUP_REDUCE_MCAST s=8, golden pairwise head order). The TP-192 rule (tools/w19_hbm_tp96_isa.py HEAD_REPL=TP//96,
+      replica t computes wo_a rows [og*1024+t*ZROWS,+ZROWS) over the WHOLE 512-wide head K window) extends to TP-384 as
+      HEAD_REPL=4, ZROWS=256: every output element keeps the golden chunk-8 csum subtree and the same 8-head pairwise tree;
+      no zero padding enters any sum (ARGMAX/TOPK merges are order-free total orders; ALL_GATHER even split copies).
+      Evidence still owed: ds_native OT_DS_TP=384 layer run (needs 'assert TP in (96,192,384)'); NOT RUNNABLE now -- the
+      released-checkpoint subset/W17 refs (old ot-epyc5 dsfix) are not on the new fleet (TOK-HBM: no checkpoints).
+  (2) CONTRACT/FORMAT blocker (needs OWNER/contract call, class: ISA + link format, numerics unchanged): 8-bit rank/group
+      fields are in the HGI-1 encoding and the delivery-flit meta, not only in RTL params:
+      COLL inst p_tkm_cfg_g inst[761+:8], cfg_gbase inst[769+:8] (ot_hfd_coll_q_hard_v8g.sv:120); IDX.OWNED G = param[15:8]
+      (machine.u_idx_owned legal 1,2,4,8,96); coll_group_size D_LEGAL (NAT16-G1 gap already open for 192); delivery flit
+      meta src rank [528+:8] ({v,kind8,src8,gi16}, ot_hgi_coll_amerge/argmax_static); argmax_static legal-G list + gbase+g<=256;
+      ~140 [7:0] rank/src/gsz/gbase declarations over ~40 collective/index files (record/decode/ep/qrec/qep/tkm*/idx_client).
+      tkm_static already derives RANK_W=clog2(TP) (9 at 384) -> tkm element width +1 b.
+      Options: (a) widen to 9 b (meta: take src[8] from a spare meta bit; inst: 2 spare bits) -- golden machine + compiler +
+      RTL change together; (b) keep 8-bit fields and run TP-384 as 2 x 192-rank halves (not exact for TOPK/ARGMAX group-wide
+      merges without a second merge level -> +1 collective/merge, priced). Recommend (a). I proceed with the die-internal
+      2-quadrant RTL (independent of TP) and leave the TP field widening until the call.
+  OWNER?: approve HGI-1 field widening for TP-384 (option a) or pick (b).
