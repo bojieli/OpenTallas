@@ -6,7 +6,7 @@ Failing-path classification of the four old ASTK routes (Codex corner recoveries
   * ctl : cal_r (calendar ages) -> 16-b compares (l_slot / z_slot) -> ap[42:1] select (+ z_k -> 16x133-b z_hd mux)
           WS -47.6, ES -34.1, EN -9.0
 Fix (industry practice: register duplication + next-state decode registers, zero added cycles):
-  * zn  : the store read address / slot select is captured into NGRP same-edge kept replicas (one per 128/NGRP-bit
+  * zn  : (non-head zn only: zn_0 zi are core pins) the store read address / slot select is captured into NGRP same-edge kept replicas (one per 128/NGRP-bit
           slice of oa/ob), each driving only its slice (extends Codex's verified r4 4-replica candidate).
   * ctl : l_slot / z_slot and z_k are computed from the NEXT-state of schedule_age / schedule_active / cal_r / nblk and
           registered (l_slot_r, z_slot_r, 5 slice copies of z_k_r); those registers equal the combinational originals
@@ -95,9 +95,8 @@ def apply_kit(rtl_dir, mut=False):
     d = Path(rtl_dir)
     p = d / "qkd_astk_leaves.sv"
     p.write_text(zn(p.read_text(), "qkd_astk_zn", mut))
-    p = d / "qkd_astk_zn_head_p.sv"
-    if p.exists():
-        p.write_text(zn(p.read_text(), "qkd_astk_zn_head_p", mut))
+    # the chain-head zn (zn_0) lands its zi on core PINS: one landing flop per pin (face_guard), so no same-edge
+    # replicas there; its read-address fanout is left to the default recipe (fanout-24 post-route repair).
     p = d / "qkd_astk_static_leaves.sv"
     p.write_text(ctl(p.read_text(), mut))
 
