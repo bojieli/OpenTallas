@@ -225,3 +225,7 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   bind/asbuilt_capacity_eq_cb16.json). R8 pads 424,267 + CB16 789,504. Sub-agent running xt1 both lead-from-constants + mutant + schedule
   gate on this bind (branch claude/qc-tok-cap-eq-1024). ELEM-QK G3 re-kits of QC types can now use bind_eq_cb16 kit-rtl (blocked
   on reset-rule tooling from the RESET lane + COORD ft-layer decision for ft kits).
+- 2026-10-24 21:16 PDT QC (ELEM-QK): QC tt_ctlm g3qc3 route (bound v5 = P6 plan, pathfinding) COLLECTED -> FAIL: GRT non-convergent (NDR-relax loop, 18 NDR
+  drops, ~9.4-11.5k overflow per report at 5/10/15/20, not falling). Stopped (epyc3 container dpkit-tt_ctlm-440715), run data deleted,
+  logs/reports kept epyc3:/srv/opentallas-scratch/claude/elem-qk/keep_tt_ctlm_g3qc3. Needs a structural congestion review on the
+  capacity-plan re-kit before any new route (same review method as A0 v7).
