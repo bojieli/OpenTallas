@@ -1,0 +1,25 @@
+{
+ "verdict": "PASS planned geometry; actual G2 required",
+ "plan_sha256": "630b6b6ce684c3e0719f0b507f3f8c48430e70ba8f3121819fa11f8b2212d226",
+ "pictures": [
+  "epyc1:/srv/opentallas-scratch2/claude/codex-s81-plan-1309/review_final/ft_sites_contact.png"
+ ],
+ "reviewers": [
+  "Codex plan",
+  "GEOM queue independent"
+ ],
+ "findings": [
+  "Current main core outlines/pins preserved. Six native M2-M5 leaf master LEF OBS caps release M6/M7; these are planned abstract caps, not new SIGNED views.",
+  "Full-face aligned L1 seam windows avoid obsolete narrow common channels. Contiguous128-bit station bands keep common per-slot depth; all paired Manhattan hops <=401.49um across353changedslots, whole cells clear core envelopes by1.08um.",
+  "Per-bit cells occupy existing free corridors. Centroid connecting lines depict grouping; reach uses actual paired-bit Manhattan distances.",
+  "28lane latency increases:sum49,max6. Token/source adoption must use exact derived latency, not stale baseline.",
+  "Actual current G2 post-DPL insts.tsv/wholecell/405gate mandatory. Die relayB zerooverflow is prior structural evidence only."
+ ],
+ "g0c": {
+  "verdict": "FAIL",
+  "errors": 222,
+  "all_error_check": "complete internal_station contracts",
+  "station_macro_intersections": 0,
+  "geometry_stations_latency_seam_errors": 0
+ }
+}
