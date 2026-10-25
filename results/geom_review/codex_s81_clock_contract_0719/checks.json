@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS geometry; physical rebuild required",
+  "image": "vn_a_clock_contract.png",
+  "findings": [
+    "Viewed both canonical and derivedXM pin maps: S-face centre clear; nearest other pin >164um. N centre occupied, so S selected. Data/flow/pin ordering unchanged; clockroot nearer corecentre.",
+    "All915 otherpins perview byte-equivalent,916pins total each. M3trackphase correct. SameRTL/0cycles; actual clock/P&R gate remains required."
+  ],
+  "ot_s81sl_vn_a": {
+    "clock": {
+      "name": "clk",
+      "layer": "M3",
+      "x": 178.209,
+      "y": 0.019
+    },
+    "pins": 916,
+    "nearest_other_pin_um": 164.12199999999999
+  },
+  "ot_s81sl_vn_a_xm": {
+    "clock": {
+      "name": "clk",
+      "layer": "M3",
+      "x": 178.173,
+      "y": 0.019
+    },
+    "pins": 916,
+    "nearest_other_pin_um": 164.158
+  }
+}
