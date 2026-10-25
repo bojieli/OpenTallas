@@ -8,6 +8,23 @@
 module tb_s81c_hgrp #(parameter integer GID = 1) (input wire clk);
     localparam integer H = 16, TD = 32, BW = 3;
     reg rst_n = 1'b0;
+    // S81-CORES2/EH 10-25: DUT reset pin (-DOT_S81C_HCORE_RSTE releases 2 cycles later inside the core, so the bench
+    // releases the DUT pin 2 cycles earlier) and DUT control (-DOT_S81C_HCORE_CTLA: ld_grp / ld_w2v one cycle ahead;
+    // negative control -DOT_TB_CTLA_MUT feeds them on time and must FAIL)
+    reg rst_n_d = 1'b0;
+    reg [7:0] nx_grp = 8'd0;
+    reg nx_w2v = 1'b0;
+    wire [7:0] d_grp;
+    wire d_w2v;
+`ifdef OT_S81C_HCORE_CTLA
+`ifdef OT_TB_CTLA_MUT
+    assign d_grp = ld_grp; assign d_w2v = ld_w2v;
+`else
+    assign d_grp = nx_grp; assign d_w2v = nx_w2v;
+`endif
+`else
+    assign d_grp = ld_grp; assign d_w2v = ld_w2v;
+`endif
     reg ld_v, ld_mode, ld_w2v, iv;
     reg [BW-1:0] ld_bank, ibank;
     reg [7:0] ld_grp;
@@ -37,8 +54,8 @@ module tb_s81c_hgrp #(parameter integer GID = 1) (input wire clk);
             end
         end
         wire [7:0] gidh = G;
-        ot_s81c_attn_hcore u_c (.clk(clk), .rst_n(rst_n), .gid(gidh), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
-            .ld_grp(ld_grp), .ld_w(ld_w[511:0]), .ld_wp(wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib),
+        ot_s81c_attn_hcore u_c (.clk(clk), .rst_n(rst_n_d), .gid(gidh), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+            .ld_grp(d_grp), .ld_w(ld_w[511:0]), .ld_wp(wp), .ld_w2v(d_w2v), .iv(iv), .ibank(ibank), .ib(ib),
             .ov(hov[gh]), .oy(d_oy[gh*32 +: 32]), .oflt(d_of[gh]));
     end endgenerate
     assign d_ov = hov[0];
@@ -57,12 +74,19 @@ module tb_s81c_hgrp #(parameter integer GID = 1) (input wire clk);
     always @(posedge clk) begin
         cyc <= cyc + 1;
         if (cyc == 3) rst_n <= 1'b1;
+`ifdef OT_S81C_HCORE_RSTE
+        if (cyc == 1) rst_n_d <= 1'b1;
+`else
+        if (cyc == 3) rst_n_d <= 1'b1;
+`endif
         // stimulus: phase A (cycles < 400) mostly loads; then mixed
         ld_v <= (cyc < 400) ? (rnd(0) % 8 != 0) : (rnd(0) % 4 == 0);
         ld_mode <= rnd(0) % 3 == 0;
-        ld_w2v <= rnd(0) % 2;
+        nx_w2v <= rnd(0) % 2;
+        ld_w2v <= nx_w2v;
         ld_bank <= rnd(0) % 6;                      // 5 = no bank (writes nothing)
-        ld_grp <= (rnd(0) % 16 == 0) ? (rnd(0) % 256) : (rnd(0) % 3 == 0) ? (GID * 4 + rnd(0) % 4) : (rnd(0) % 17);
+        ld_grp <= nx_grp;
+        nx_grp <= (rnd(0) % 16 == 0) ? (rnd(0) % 256) : (rnd(0) % 3 == 0) ? (GID * 4 + rnd(0) % 4) : (rnd(0) % 17);
         for (i = 0; i < 32; i = i + 1) ld_w[i*32 +: 32] <= rnd(0);
         iv <= (cyc < 300) ? 1'b0 : (rnd(0) % 4 != 0);
         ibank <= rnd(0) % 5;

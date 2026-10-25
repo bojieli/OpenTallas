@@ -25,7 +25,11 @@
 module ot_s81c_attn_hcore #(
     // S81-P10 (opt-in, off by default): hgrp_s WPRE = 1, the write predicates captured at R0 (same values, same edges);
     // the hard-core kit sets it with -DOT_S81C_HCORE_WPRE
-`ifdef OT_S81C_HCORE_WPRE
+`ifdef OT_S81C_HCORE_CTLA
+    // S81-CORES2/EH 10-25: control-ahead (ld_grp / ld_w2v one cycle ahead of the rest of the load word), every pin
+    // registered once (face_guard clean) and the predicates still captured on the data's R0 edge (hgrp_s WPRE 2)
+    parameter integer WPRE = 2
+`elsif OT_S81C_HCORE_WPRE
     parameter integer WPRE = 1
 `else
     parameter integer WPRE = 0
@@ -48,9 +52,23 @@ module ot_s81c_attn_hcore #(
     output wire [31:0]       oy,
     output wire              oflt
 );
+    // S81-CORES2/EH 10-25 (-DOT_S81C_HCORE_RSTE, decision 13b): the rst_n pin drives only the reset ENTRY flop and the
+    // relay flop (async assert, synchronous release); the relay (kept, placed at the core centroid) drives every
+    // reset pin of the core over a full cycle.  Release +2 cycles, static and equal for all 1024 cores (hardened once).
+    wire rst_core_n;
+`ifdef OT_S81C_HCORE_RSTE
+    (* keep = "true", dont_touch = "true" *) reg rst_e_q, rst_r_q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin rst_e_q <= 1'b0; rst_r_q <= 1'b0; end
+        else begin rst_e_q <= 1'b1; rst_r_q <= rst_e_q; end
+    end
+    assign rst_core_n = rst_r_q;
+`else
+    assign rst_core_n = rst_n;
+`endif
     ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(1), .TD(32), .NBANK(5), .BW(3), .PWORDS(2), .FPL(4), .FML(6), .F12(1),
                               .PCOLP(1), .WPRE(WPRE)) u_h (
-        .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .clk(clk), .rst_n(rst_core_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
         .ld_w({512'd0, ld_w}), .ld_wp(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy),
         .oflt(oflt));
 endmodule
