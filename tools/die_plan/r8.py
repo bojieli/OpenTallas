@@ -344,6 +344,51 @@ def load_landing(path):
     return {m["id"]: m["landed"] for m in js["members"]}, js
 
 
+def rebase(bg, bind_lat, plan_tab):
+    """bus groups bound on an older plan -> the plan being priced: each member's bound depth moves by its lane's cycle
+    change (plan_tab[lane].cycles - the bind's plan_cycles for that lane, bind_latency.json `buses`).  As-built depths
+    are the netlist's and do not move.  Returns (bus groups copy, stats); members whose lane is in neither table keep
+    their bound depth (counted)."""
+    was = {b["lane"]: b["plan_cycles"] for b in bind_lat.get("buses", []) if b.get("lane") is not None}
+    out = json.loads(json.dumps(bg))
+    st = dict(members=0, moved=0, kept_no_lane=0, max_shift=0, min_shift=0)
+    for g in out.get("landing", []):
+        for m in g["members"]:
+            st["members"] += 1
+            ln = m.get("lane")
+            if ln not in was or ln not in plan_tab:
+                st["kept_no_lane"] += 1
+                continue
+            d = plan_tab[ln]["cycles"] - was[ln]
+            m["bound_stages"] += d
+            st["moved"] += bool(d)
+            st["max_shift"], st["min_shift"] = max(st["max_shift"], d), min(st["min_shift"], d)
+    return out, st
+
+
+def lane_fold(members, lanes):
+    """R8 landing pads folded per plan lane: {lane: dict(r8_pad, r8_pad_min, r8_members, r8_padded)}.  A lane's word is
+    usable when its LAST member lands, so the lane's pad = the largest member pad on it (members of one lane share its
+    bound depth: landed = lane cycles + pad).  Lanes not in `lanes` (UNPLANNED bind paths) come back as `other`."""
+    out, other = {}, {}
+    for m in members:
+        ln = m.get("lane")
+        if ln is None:
+            continue
+        d = (out if ln in lanes else other).setdefault(ln, dict(r8_pad=0, r8_pad_min=None, r8_members=0, r8_padded=0))
+        d["r8_pad"] = max(d["r8_pad"], m["pad"])
+        d["r8_pad_min"] = m["pad"] if d["r8_pad_min"] is None else min(d["r8_pad_min"], m["pad"])
+        d["r8_members"] += 1
+        d["r8_padded"] += bool(m["pad"])
+    return out, other
+
+
+def configure(exempt=(), landed=(), window=4, stage_cycles=0.5, over="keep"):
+    """set the module options (the CLI flags of `pads` / `check`)"""
+    EXEMPT[:] = [re.compile(x) for x in exempt]
+    LANDED.update(rx=[re.compile(x) for x in landed], window=window, stage_cycles=stage_cycles, over=over)
+
+
 def write_pads(raw, bg, out_dir, replica="all", bus="part"):
     mem, used = solve(bg, raw, replica, bus)
     sm = summary(bg, mem, used)
@@ -391,9 +436,7 @@ def main(argv=None):
             a.add_argument("--landing")
             a.add_argument("--json")
     a = ap.parse_args(argv)
-    EXEMPT[:] = [re.compile(x) for x in a.exempt]
-    LANDED.update(rx=[re.compile(x) for x in a.landed], window=a.landed_window, stage_cycles=a.landed_stage_cycles,
-                  over=a.landed_over_margin)
+    configure(a.exempt, a.landed, a.landed_window, a.landed_stage_cycles, a.landed_over_margin)
     raw = S.load(a.plan)
     bg = json.loads(Path(a.bus_groups).read_text())
     if a.cmd == "pads":
