@@ -1,0 +1,80 @@
+{
+ "schema": "opentallas.kv.core_harden.v1",
+ "module": "kv3_head_eighth_e6",
+ "kit": "kv3_head_eighth_e6__216x216",
+ "kit_hash": "c9bb01234d3c47d6",
+ "run": "epyc1:/srv/opentallas-scratch/claude/kv-g3/cores/kits38x/kv3_head_eighth_e6__216x216",
+ "outline_um": [
+  216.0,
+  216.0
+ ],
+ "pins": 1356,
+ "plan_pins": 1354,
+ "added_pins": 2,
+ "clocks": [
+  "g_front_3_u_front__clk"
+ ],
+ "macros": [],
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "sdc_lint": "SDC_LINT PASS /work errors 0 liberty 16",
+ "face_guard_report_only": "FAIL",
+ "synth_cells": null,
+ "instances": 356013,
+ "std_util": 0.454007,
+ "grt_overflow": null,
+ "drc": 0,
+ "antenna": 0,
+ "pin_audit": "PASS 1356/1356",
+ "sta": {
+  "tt": {
+   "corner": "tt",
+   "parasitics": "spef",
+   "setup_wns_ps": -12.12496774498524,
+   "setup_ws_ps": -12.12496774498524,
+   "setup_tns_ps": -42.98550421689595,
+   "setup_viol_endpoints": 20,
+   "hold_wns_ps": 0,
+   "hold_ws_ps": 5.8001659263011405,
+   "hold_tns_ps": 0.0,
+   "hold_viol_endpoints": 0
+  },
+  "ff": {
+   "corner": "ff",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 147.24704847641405,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": -7.4617534671701415,
+   "hold_ws_ps": -7.4617534671701415,
+   "hold_tns_ps": -555.4107751481779,
+   "hold_viol_endpoints": 419
+  },
+  "ss": null
+ },
+ "signoff": {
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "setup_tt: FAIL WNS -12.12 ps, 20 endpoints",
+   "hold_ff: FAIL WNS -7.46 ps, 416 endpoints",
+   "drv: FAIL TT slew 340.0 cap 0.0, FF slew 369.0 cap 0.0",
+   "face_guard: FAIL {'shared': 42, 'feedthrough': 41}"
+  ],
+  "checks": {
+   "setup_tt": "FAIL",
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "PASS",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
+ },
+ "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 1356/1356, TT setup WS -12.12496774498524, FF hold WS -7.4617534671701415)",
+ "views_status": "abstract_only (not SIGNED)",
+ "views": "physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6"
+}

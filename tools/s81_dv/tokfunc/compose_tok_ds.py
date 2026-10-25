@@ -926,6 +926,10 @@ def calendar_summary(recs, one):
                     cal2_structural=ca['cal2_structural'], added_hops=ca['added_hops'],
                     forward_x_chain_delta=ca['forward_x_chain_delta'], T=T_ar, tok_s=round(F / T_ar, 1)),
             mtp=dict(T_composer=cm['T_composer'], T_step=T_mtp, tok_s=cm.get('tok_s'),
+                     law_of_record='causal six-position pipeline (owner decision15)',
+                     stretch_sensitivity=dict(T_step=mtp['pipeline_graph']['T_mtp_law_6f'],
+                         tok_s=round(tau * F / mtp['pipeline_graph']['T_mtp_law_6f'], 1))
+                         if mtp.get('pipeline_graph') else None,
                      schedule_verdict=cm.get('schedule_verdict', 'PASS'))),
         qualified=dict(
             ar=dict(users=ar['users'], period=ar['period'], per_user_tok_s=ar['per_user_tok_s'],
@@ -1030,6 +1034,11 @@ def write_readme(c1, cal, out):
     L.append(f'| MTP (tau 4.159) | {m["T_cycles"]:,.0f} / step = {m["per_accepted_cycles"]:,.0f} / token | '
              f'{m["tok_s"]:,.1f} | {mt:,.0f} / step | {4.159 * F_CLK / mt:,.1f} | {m["pct"]["measured_current_rtl"]} % | '
              f'{m["pct"]["measured_old_rtl"]} % | {m["pct"]["priced"]} % | {m["pct"]["modelled_phy"]} % |\n')
+    sensitivity = sm.get('stretch_sensitivity')
+    if sensitivity:
+        L.append(f'Owner decision15 uses the checker-qualified six-position pipeline above. The prior stretch law '
+                 f'remains a sensitivity: {sensitivity["T_step"]:,.0f} cycles/step, '
+                 f'{sensitivity["tok_s"]:,.1f} tok/s. It does not bound the rate of record.\n')
     L.append('The grade percentages are shares of the DAG composition. "Priced" splits as AR '
              f'{a["pct"]["priced_split"]} and MTP {m["pct"]["priced_split"]}.')
     L.append('The 241-stage map figure is the dv_mu_calendar_phys single-user timeline on the same node cycles. On top of '

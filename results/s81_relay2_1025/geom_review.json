@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.geom_self_review.v1",
+ "lane": "CLOCK-RESET/relay2",
+ "date": "2026-10-25 04:38 PDT",
+ "reviewer": "CLOCK-RESET/relay2 (author self-review; independent GEOM PASS requested in lanes/GEOM-REVIEW.md)",
+ "rtl": "main dc23a738f 2-flop stations (rtl/dsrom_sys/s81_static_net/gen/dsfd_rstg.sv, ot_s81_sstn_payload536.sv)",
+ "kits": {
+  "dsfd_rstg_r2": {"image": "rstg_r2.png", "stage": "5_1_grt (post-CTS/GRT placement)", "outline_um": [38.88, 34.56],
+   "cells": 654, "flops": 132, "max_bin": 0.91, "bins5_over_0p8": 1,
+   "faces": {"N": "66 i pins M5, 21.0/um vs cap 24.3", "S": "66 o pins M5, 21.0/um vs cap 24.3", "W": "ck + rs"},
+   "observations": ["capture flops cluster at the N face under the i pins, launch flops at the S face over the o pins: both faces registered, no shared flop",
+                    "capture->launch path ~20 um straight N->S, macro-free, clock pin W mid-height",
+                    "one 5-um bin at 0.91 (face flop cluster under a 3-um pin span), plan outline is generous (132 flops in 1343 um2 core)"],
+   "verdict": "PASS-COND", "condition": "routed DRC 0 + TT/FF signoff"},
+  "ot_s81_sstn_payload536_r2": {"image": "payload536_r2.png", "stage": "5_1_grt", "outline_um": [86.4, 25.92],
+   "cells": 4872, "flops": 1072, "max_bin": 0.87, "bins5_over_0p8": 1,
+   "faces": {"S": "536 i pins, 7.0/um vs cap 24.3", "N": "536 o pins, 7.0/um vs cap 24.3", "W": "ck + rs"},
+   "observations": ["capture band along the S face (i), launch band along the N face (o), bit-aligned columns, ~10 um N-S hop",
+                    "no macros, PDN stripes continuous, clock W mid-height; one E-end bin 0.87"],
+   "verdict": "PASS-COND", "condition": "routed DRC 0 + TT/FF signoff"}
+ }
+}
