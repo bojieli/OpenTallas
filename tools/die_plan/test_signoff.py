@@ -28,7 +28,8 @@ OLD_SDC = GOOD_SDC.replace("set_input_delay -min -40.0000", "set_input_delay -mi
     "set_output_delay -max 166.6000", "set_output_delay 166.6000")
 
 
-def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, slew=0, unconstrained=0, done=True):
+def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, slew=0, unconstrained=0, done=True,
+                 pair_setup=30.0, pair_hold=25.0):
     out = {}
     for c, (smax, smin, sp) in dict(ss=(ss_setup, 30.0, 50.0), ff=(150.0, ff_hold, 30.0),
                                     tt=(tt_setup, 10.0, spread_tt)).items():
@@ -45,7 +46,11 @@ def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, sl
              "SO_PATH_END",
              "SO_CK 1 250.0 clk", f"SO_CK 1 {250.0 + sp} clk", "SO_CK 0 260.0 clk", "SO CK_ERRORS 0",
              "SO OCV5_WNS_MAX -3", "SO OCV5_WNS_MIN -1",
-             "SO PAIR_max 2 30 30 30 launch capture", "SO PAIR_min 2 25 25 25 launch capture", "SO PAIR_DONE 1"]
+             "SO PAIR_COUNTS regs 3 data_pins 3 pairs 2 inter_clock 0",
+             f"SO PAIR_max n 2 worst {pair_setup} bounded 0 signed {-pair_setup} launch a capture b crpr 4.0 p99_raw 31 "
+             "searched 1 nopath 0 verify 0.010",
+             f"SO PAIR_min n 2 worst {pair_hold} bounded 0 signed {pair_hold} launch a capture b crpr 4.0 p99_raw 26 "
+             "searched 1 nopath 0 verify 0.020", "SO PAIR_SECONDS 1", "SO PAIR_DONE 1"]
         if done:
             L.append("SO DONE 1")
         out[c] = "\n".join(L)
@@ -55,7 +60,7 @@ def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, sl
 def record(**kw):
     rec = dict(name="blk", corners={})
     for c, t in session_text(**{k: v for k, v in kw.items() if k in ("tt_setup", "ss_setup", "ff_hold", "spread_tt", "slew",
-                                                                         "unconstrained", "done")}).items():
+                                                                         "unconstrained", "done", "pair_setup", "pair_hold")}).items():
         r = signoff.corner_result(signoff.parse_session(t))
         r.update(corner=c, macro_missing=[])
         rec["corners"][c] = r
@@ -122,12 +127,46 @@ def test_spread_over_80_is_information_only():
 
 
 def test_related_pair_skew_missing_or_over_limit_blocks():
-    rec = record()
-    rec["corners"]["tt"]["pair_skew"]["checks"]["max"]["worst_abs_ps"] = 85.4
-    assert signoff.evaluate(rec)["checks"]["clock"]["verdict"] == "FAIL"
+    rec = signoff.evaluate(record(pair_setup=85.4))
+    assert rec["checks"]["clock"]["verdict"] == "FAIL"
+    assert any("TT setup related pair skew 85.4 ps > 80 (a -> b)" in p for p in rec["checks"]["clock"]["problems"])
     rec = record()
     del rec["corners"]["ff"]["pair_skew"]
     assert signoff.evaluate(rec)["checks"]["clock"]["verdict"] == "FAIL"
+    rec = record()
+    rec["corners"]["tt"]["pair_skew"]["done"] = False
+    assert signoff.evaluate(rec)["checks"]["clock"]["verdict"] == "FAIL"
+
+
+def test_pair_skew_parsed_from_session():
+    ps = record()["corners"]["ff"]["pair_skew"]
+    assert ps["done"] and ps["counts"]["pairs"] == 2
+    h = ps["checks"]["min"]
+    assert h["worst_abs_ps"] == 25.0 and h["worst_signed_ps"] == 25.0 and h["worst_crpr_ps"] == 4.0
+    assert h["worst_launch"] == "a" and h["worst_capture"] == "b" and not h["bounded"]
+    assert ps["checks"]["max"]["worst_signed_ps"] == -30.0
+
+
+def test_pair_skew_at_limit_passes_and_hold_side_fails_at_ff():
+    assert signoff.evaluate(record(pair_hold=80.0))["checks"]["clock"]["verdict"] == "PASS"
+    rec = signoff.evaluate(record(pair_hold=80.5))
+    assert any(p.startswith("FF hold related pair skew 80.5") for p in rec["checks"]["clock"]["problems"])
+
+
+def test_pair_skew_verify_mismatch_blocks():
+    rec = record()
+    rec["corners"]["tt"]["pair_skew"]["checks"]["min"]["verify_ps"] = 3.0
+    rec = signoff.evaluate(rec)
+    assert rec["checks"]["clock"]["verdict"] == "FAIL"
+    assert any("cross-check" in p for p in rec["checks"]["clock"]["problems"])
+
+
+def test_session_measures_pairs_before_source_latency_zeroing():
+    t = signoff.session_tcl("tt", [], "/base/6_final.spef")
+    assert t.index("ot_ps_measure") < t.index("set_clock_latency -source 0")
+    assert t.index("unset_timing_derate") < t.index("ot_ps_measure")
+    assert t.count("read_sdc /sdc/golden.sdc") == 1
+    assert "@PAIR" not in t and "proc ot_ps_measure" in t
 
 
 def test_insertion_target():

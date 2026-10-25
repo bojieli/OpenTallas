@@ -57,6 +57,7 @@ import datetime
 import gzip
 import json
 import os
+import math
 import re
 import shlex
 import subprocess
@@ -75,6 +76,8 @@ PERIOD_PS = 833.0
 UNC_SETUP_PS, UNC_HOLD_PS = 60.0, 25.0
 INSERTION_PS, INSERTION_TOL_PS = 250.0, 40.0
 PAIR_SKEW_MAX_PS = 80.0
+PAIR_VERIFY_TOL_PS = 1.0             # credited path-end skew vs CK-arrival skew - CPPR (integrity check)
+PAIR_CREDIT_MAX = 5000                 # exact-credit path searches per check before the worst becomes a bound
 SPREAD_MAX_PS = PAIR_SKEW_MAX_PS  # legacy record field; spread is information only
 FANOUT_MAX = 64
 SPREAD_CORNERS = ("tt", "ff")
@@ -282,6 +285,25 @@ set_timing_derate -early 0.95
 so OCV5_WNS_MAX [so_ps [sta::worst_slack_cmd max]]
 so OCV5_WNS_MIN [so_ps [sta::worst_slack_cmd min]]
 unset_timing_derate
+# ---- related flop-pair skew with CPPR (owner gate, BRIEFING decision 5) ----
+# Measured on the golden SDC exactly as loaded (source latencies, propagated clocks, derate removed), BEFORE the
+# insertion diagnostic below zeroes clock source latency; only the clock uncertainty is zeroed (clk_skew must not
+# carry it) and nothing after this block reads slack.
+set ::ot_ps_lib_only 1
+@PAIR_SKEW@
+unset ::ot_ps_lib_only
+ot_ps_zero_unc
+set so_t0 [clock seconds]
+set so_pm [ot_ps_measure @PAIR_CREDIT_MAX@]
+ot_ps_write $so_pm /out/pair_skew.tsv @C@
+so PAIR_COUNTS regs [dict get $so_pm regs] data_pins [dict get $so_pm data_pins] pairs [dict get $so_pm pairs] inter_clock [dict get $so_pm inter_clock]
+foreach dly {max min} {
+  set m [dict get $so_pm $dly]
+  so PAIR_$dly {*}[concat {*}[lmap k {n worst bounded signed launch capture crpr p99_raw searched nopath verify} {list $k [dict get $m $k]}]]
+}
+so PAIR_SECONDS [expr {[clock seconds] - $so_t0}]
+unset so_pm
+so PAIR_DONE 1
 # ---- clock: active-edge arrival at register clock pins, pin flops ----
 @CLOCK_FAMILY@
 set so_regs {}
@@ -323,21 +345,6 @@ dict for {i p} $so_regs {
   puts "SO_CK [expr {[dict exists $so_bnd $i] ? 1 : 0}] [format %.2f $a] [get_full_name [lindex $cl 0]]"
 }
 so CK_ERRORS $so_ck_err
-# Related pairs use the original source latencies (including early hard-core taps).
-# Restore the SDC after the insertion-only diagnostic zeroed physical clock source latency.
-read_sdc /sdc/golden.sdc
-set_propagated_clock [all_clocks]
-set ::ot_ps_lib_only 1
-@PAIR_SKEW@
-unset ::ot_ps_lib_only
-ot_ps_zero_unc
-set so_pair_limit [expr {max(1, [llength [all_registers -data_pins]])}]
-foreach dly {max min} {
-  set rows [ot_ps_pairs $dly $so_pair_limit]
-  # count/worst-absolute/worst-signed/p99 and names; no path sample is used for the gate.
-  so PAIR_$dly {*}[ot_ps_summary $rows]
-}
-so PAIR_DONE 1
 so DONE 1
 exit
 """
@@ -354,7 +361,8 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@FANOUT_MAX@", str(int(fanout_max))),
                  ("@CLOCK_FAMILY@", _clock_family_tcl()),
-                 ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text())):
+                 ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text()),
+                 ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
     return t
 
@@ -454,19 +462,37 @@ def corner_result(parsed):
     out["ck_errors"] = _f(kv.get("CK_ERRORS"))
     out["insertion_all"] = stats(allck)
     out["insertion_pinflops"] = stats(bnd)
-    pairs = {}
-    for dly in ("max", "min"):
-        fields = (kv.get(f"PAIR_{dly}") or "").split()
-        if len(fields) >= 4:
-            pairs[dly] = dict(n=_f(fields[0]), worst_abs_ps=_f(fields[1]),
-                              worst_signed_ps=_f(fields[2]), p99_abs_ps=_f(fields[3]),
-                              worst_launch=fields[4] if len(fields) > 4 else None,
-                              worst_capture=fields[5] if len(fields) > 5 else None)
-    out["pair_skew"] = dict(done=kv.get("PAIR_DONE") == "1", checks=pairs,
-                            measurement="worst timing path per register endpoint, setup and hold, CPPR credited")
+    out["pair_skew"] = pair_skew_result(kv)
     out["ocv5_wns_max"] = _f(kv.get("OCV5_WNS_MAX"))
     out["ocv5_wns_min"] = _f(kv.get("OCV5_WNS_MIN"))
     return out
+
+
+def _kvlist(text):
+    """'k1 v1 k2 v2 ...' -> dict (values as text)"""
+    f = (text or "").split()
+    return dict(zip(f[0::2], f[1::2]))
+
+
+def pair_skew_result(kv):
+    """the SO PAIR_* lines of a corner session (pair_skew.tcl ot_ps_measure): per check (max = setup, min = hold) the
+    EXHAUSTIVE related-pair count, the worst CPPR-credited damage (setup: launch late vs capture early; hold: capture
+    late vs launch early; = the die_sta.py pair skew), whether it is exact or a bound, and the uncredited p99."""
+    checks = {}
+    for dly in ("max", "min"):
+        d = _kvlist(kv.get(f"PAIR_{dly}"))
+        if not d:
+            continue
+        checks[dly] = dict(n=_f(d.get("n")), worst_abs_ps=_f(d.get("worst")), bounded=d.get("bounded") == "1",
+                           worst_signed_ps=_f(d.get("signed")), worst_launch=d.get("launch"),
+                           worst_capture=d.get("capture"), worst_crpr_ps=_f(d.get("crpr")),
+                           p99_raw_ps=_f(d.get("p99_raw")), searched=_f(d.get("searched")),
+                           nopath=_f(d.get("nopath")), verify_ps=_f(d.get("verify")))
+    cnt = {k: _f(v) for k, v in _kvlist(kv.get("PAIR_COUNTS")).items()}
+    return dict(done=kv.get("PAIR_DONE") == "1", checks=checks, counts=cnt, seconds=_f(kv.get("PAIR_SECONDS")),
+                measurement="every same-clock register pair with a timing fan-in relation (exhaustive); worst "
+                            "damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+                tsv="pair_skew.tsv")
 
 
 def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False):
@@ -680,10 +706,16 @@ def evaluate(rec, insertion_target=None):
             else:
                 for k, value in checks.items():
                     n, worst = value.get("n"), value.get("worst_abs_ps")
-                    if not n or worst is None or not __import__("math").isfinite(worst):
-                        why.append(f"{c.upper()} {k}: no finite related pair measurement")
+                    side = "setup" if k == "max" else "hold"
+                    if not n or worst is None or not math.isfinite(worst):
+                        why.append(f"{c.upper()} {side}: no finite related pair measurement")
                     elif worst > PAIR_SKEW_MAX_PS:
-                        why.append(f"{c.upper()} {k} related pair skew {worst:.1f} ps > {PAIR_SKEW_MAX_PS:g}")
+                        why.append(f"{c.upper()} {side} related pair skew {worst:.1f} ps > {PAIR_SKEW_MAX_PS:g} "
+                                   f"({value.get('worst_launch')} -> {value.get('worst_capture')}"
+                                   f"{', bound' if value.get('bounded') else ''})")
+                    if (value.get("verify_ps") or 0.0) > PAIR_VERIFY_TOL_PS:
+                        why.append(f"{c.upper()} {side}: pair skew path/arrival cross-check differs by "
+                                   f"{value['verify_ps']:.2f} ps > {PAIR_VERIFY_TOL_PS:g} (measurement suspect)")
             if (C[c].get("ck_errors") or 0) > 0:
                 why.append(f"{c.upper()}: {int(C[c]['ck_errors'])} register clock pins without a unique clock arrival")
         if insertion_target is not None:
@@ -746,13 +778,13 @@ def summary_line(rec):
 
     def g(k, f):
         return (C.get(k) or {}).get(f)
-    pf = {}
+    pf, ps = {}, {}
     for c in ("tt", "ff"):
         x = ((((C.get("clock") or {}).get("by_corner") or {}).get(c) or {}).get("pinflops") or {})
         pf[c] = x.get("spread")
     return (f"{rec.get('name')}: {rec.get('verdict')} | TT setup {g('setup_tt', 'wns_ps')} | FF hold "
             f"{g('hold_ff', 'wns_ps')} (sdc {g('hold_ff', 'sdc_wns_ps')}) | SS setup (info) {g('ss', 'setup_wns_ps')} | "
-            f"spread TT/FF {pf['tt']}/{pf['ff']} | DRC {g('drc', 'count')} ant {g('antenna', 'count')} | "
+            f"pair skew TT/FF {ps['tt']:.1f}/{ps['ff']:.1f} (spread info {pf['tt']}/{pf['ff']}) | DRC {g('drc', 'count')} ant {g('antenna', 'count')} | "
             f"sdc_lint {g('sdc_lint', 'verdict')} face_guard {g('face_guard', 'verdict')}")
 
 

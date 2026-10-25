@@ -1,47 +1,40 @@
-# pair_skew.tcl -- related launch/capture flop-pair clock skew WITH CPPR credit (owner gate 2026-10-23).
+# pair_skew.tcl -- related launch/capture flop-pair clock skew WITH CPPR credit (owner gate, BRIEFING decision 5).
 #
-# Sourced inside an OpenSTA (`sta`) or OpenROAD session in which the design, libraries, parasitics and SDC are already
-# loaded.  Gate (tools/die_plan/pair_skew.py gate): worst |pair skew| <= 80 ps at TT and FF, intra-partition pairs and
-# seam pairs.  The max-min spread over all (face) flops is REPORTED only.
+# Sourced inside an OpenSTA / OpenROAD session in which the design, libraries, parasitics and SDC are already loaded
+# (signoff.py session, or standalone with OT_PS_OUT set).  Gate: worst related-pair skew <= 80 ps at TT and FF; the
+# max-min pin-flop spread is INFORMATION only.
 #
-# Definition (ps):  pair skew = effective capture clock arrival - launch clock arrival, CPPR credited:
-#   setup (max):  Ccap_min + crpr - Llaunch_max
-#   hold  (min):  Ccap_max - crpr - Llaunch_min
-# Positive = the capture clock is late (helps setup, hurts hold).
+# Definitions (ps, same as die_sta.py: capture CK arrival - launch CK arrival, CPPR credited):
+#   setup check (max):  s = Cmin + crpr_s - Lmax      (negative = early capture, hurts setup; damage = -s)
+#   hold  check (min):  h = Cmax - crpr_h - Lmin      (positive = late capture,  hurts hold;  damage = +h)
+# A pair's skew in either direction shows up as damage on one of the two checks, so the gate is
+#   max over related pairs of max(-s, h) <= 80.
 #
-# OpenSTA PathEnd::clk_skew (verified on CP1 r9, uncertainty zeroed) = src - tgt - crpr with crpr >= 0 for BOTH checks:
-#   setup: clk_skew = Lmax - Cmin - crpr  -> pair = -clk_skew
-#   hold : clk_skew = Lmin - Cmax - crpr  -> pair = -clk_skew - 2 crpr   (OpenSTA subtracts the hold credit with the
-#          setup sign: e.g. rsync p0->p1 TT: Lmin 191.26, Cmax 199.58, crpr 4.96 -> clk_skew -13.27, pair +3.36)
-# so crpr is recovered per path end from the check itself:
-#   setup: crpr = data_required - target_clk_path.arrival + margin - capture edge
-#   hold : crpr = target_clk_path.arrival + margin - data_required + capture edge
-# (margin = library setup / hold time, sign as in the library; the capture edge = target_clk_edge time + whole target
-# periods, removed by rounding since crpr << period; clock uncertainty is zeroed first so it enters neither term).
-# PathEnd / Path methods return SECONDS; get_property values are in the library unit (ps on ASAP7).
+# Related pairs are EXHAUSTIVE (not the worst-slack path per endpoint): for every register data pin (async pins
+# excluded) every register in its timing fan-in (get_fanin -startpoints_only, same clock) is a launch register.
+# Pass 1 (all pairs, no path search): raw damage from the CK pin rise arrivals without CPPR credit -- an upper bound,
+# since CPPR >= 0 only reduces damage.  Pass 2 (per check, descending raw damage): the pair's own timing path
+# (find_timing_paths -from launch -to capture data pin) gives the exact credited skew; the search stops as soon as the
+# next pair's raw bound is <= the credited worst (the worst is then EXACT), or after OT_PS_CREDIT_MAX searches (the
+# worst is then a BOUND: max(credited worst, next raw), flagged bounded=1).
 #
-# IMPORTANT (OpenSTA pitfall, sta_die.tcl): an arrival query while PathEnd objects are live re-runs the search and frees
-# them (segfault).  Every needed value is copied into plain Tcl lists first; CK arrivals are queried afterwards.
+# Exact values from a path end (OpenSTA PathEnd::clk_skew = Lsrc - Ctgt - crpr, crpr >= 0 for BOTH checks; verified
+# against report_checks on kr_dsdv_svc_sx_hrow_c 2026-10-24 and CP1 r9; uncertainty zeroed first):
+#   setup: s = -clk_skew                 crpr_s = data_required - tgt_arrival + margin   (mod period, edge removed)
+#   hold : h = -clk_skew - 2 crpr_h      crpr_h = tgt_arrival + margin - data_required   (mod period, edge removed)
+# Each credited pair is cross-checked against the CK pin arrivals (Cmin + crpr - Lmax etc.); max |difference| is
+# reported as verify_ps (a large value means an edge/arrival mismatch -- treat the measurement as suspect).
 #
-# env: OT_PS_OUT (TSV path; unset -> procs only), CORNER (label), OT_PS_MAX_PATHS (default 200000),
-#      OT_PS_FACE ("[prefix=]file ..." face-flop lists, first tab field = instance name, prefix = hierarchy instance
-#      for a die run), OT_PS_VERIFY (N: re-derive the first N pairs per check from CK pin arrivals by name; report max
-#      |difference| as an "H verify_*" line), OT_PS_SCOPE (kit: one partition, every pair intra; default die).
-# TSV (tab separated):  H <key> <value> ... ;  P <max|min> <launch inst> <capture inst> <skew_ps> <slack_ps> <crpr_ps>
-#      (slack with clock uncertainty zeroed) ;  C <inst> <ck_rise_ps> <face 0|1>
+# OpenSTA pitfall (sta_die.tcl): an arrival query while PathEnd objects are live re-runs the search and frees them.
+# All CK arrivals are read BEFORE any path search; path-end values are copied into Tcl values at once.
+#
+# This script must NOT change the session's SDC beyond the clock uncertainty (ot_ps_zero_unc), which the caller
+# runs last-in-session or restores.  It never re-reads an SDC and never touches clock source latency.
+#
+# env (standalone): OT_PS_OUT (TSV path), CORNER (label), OT_PS_CREDIT_MAX (default 5000).
+# TSV: H <key> <value> ; P <max|min> <launch> <capture> <skew_ps> <crpr_ps> <raw_damage_ps>
 
 proc ot_ps_ps {s} { return [expr {$s * 1e12}] }
-
-proc ot_ps_signoff {} {
-  # signoff numbers with the session's own uncertainties (seconds -> ps)
-  set r {}
-  foreach {k cmd mm} {wns_ps worst_slack_cmd max tns_ps total_negative_slack_cmd max
-                      whs_ps worst_slack_cmd min ths_ps total_negative_slack_cmd min} {
-    if {[catch {set v [sta::$cmd $mm]}]} { set v NA } else { set v [format %.2f [ot_ps_ps $v]] }
-    lappend r $k $v
-  }
-  return $r
-}
 
 proc ot_ps_zero_unc {} {
   set cl [all_clocks]
@@ -56,46 +49,9 @@ proc ot_ps_zero_unc {} {
 
 proc ot_ps_inst {pinname} { return [regsub {/[^/]+$} $pinname {}] }
 
-proc ot_ps_pairs {dly {maxp 200000}} {
-  # reg->reg setup (max) / hold (min) path ends, worst per endpoint -> {launch capture skew_ps slack_ps crpr_ps}
-  set pes [find_timing_paths -from [all_registers -clock_pins] -to [all_registers -data_pins] -path_delay $dly \
-             -group_path_count $maxp -endpoint_path_count 1 -unique_paths_to_endpoint]
-  set raw {}; set per {}
-  foreach pe $pes {
-    if {![$pe is_check] || [$pe is_gated_clock] || [$pe is_latch_check]} continue
-    set role [$pe check_role]
-    if {$role ne "setup" && $role ne "hold"} continue
-    set tp [$pe target_clk_path]
-    if {$tp eq "NULL" || $tp eq ""} continue
-    set ck [$pe target_clk]
-    if {![dict exists $per $ck]} { dict set per $ck [expr {[get_property $ck period] * 1e-12}] }
-    lappend raw [list [get_full_name [get_property $pe startpoint]] [get_full_name [get_property $pe endpoint]] \
-                   $role [$pe clk_skew] [$pe data_required_time] [$tp arrival] [$pe margin] [$pe slack] \
-                   [[$pe target_clk_edge] time] [dict get $per $ck]]
-  }
-  unset pes
-  set rows {}
-  foreach r $raw {
-    lassign $r sp ep role sk req tarr mg sl et per
-    # required = capture edge (waveform time et + whole periods) + tarr +/- crpr -/+ margin; remove the edge
-    if {$role eq "setup"} {
-      set x [expr {$req - $tarr + $mg - $et}]
-      set crpr [expr {$x - $per * round($x / $per)}]
-      set pair [expr {-$sk}]
-    } else {
-      set x [expr {$req - $tarr - $mg - $et}]
-      set crpr [expr {-($x - $per * round($x / $per))}]
-      set pair [expr {-$sk - 2.0 * $crpr}]
-    }
-    lappend rows [list [ot_ps_inst $sp] [ot_ps_inst $ep] [format %.2f [ot_ps_ps $pair]] [format %.2f [ot_ps_ps $sl]] \
-                    [format %.2f [ot_ps_ps $crpr]]]
-  }
-  return $rows
-}
-
-proc ot_ps_rise {pin} {
-  # rise-edge clock arrival (tap_balance.tcl tb_rise): arrival_max_rise can be the falling edge (+T/2)
-  if {[catch {set a [get_property $pin arrival_max_rise]}] || $a eq "" || $a eq "INF" || $a eq "-INF"} { return "" }
+proc ot_ps_rise {pin which} {
+  # rise-edge clock arrival (tap_balance.tcl tb_rise): arrival_<which>_rise can be the falling edge (+T/2)
+  if {[catch {set a [get_property $pin arrival_${which}_rise]}] || $a eq "" || [string match *INF* $a]} { return "" }
   set c [get_property $pin clocks]
   if {![llength $c]} { return "" }
   set half [expr {[get_property [lindex $c 0] period] / 2.0}]
@@ -103,115 +59,149 @@ proc ot_ps_rise {pin} {
   return $a
 }
 
-proc ot_ps_ck {} {
-  # {inst ck_rise_ps} for every register clock pin
-  set out {}
+proc ot_ps_regs {} {
+  # inst -> {ckpin clock late early} for every register clock pin with exactly one clock and a rise arrival
+  set R {}
   foreach p [all_registers -clock_pins] {
-    set a [ot_ps_rise $p]
-    if {$a eq ""} continue
-    lappend out [list [ot_ps_inst [get_full_name $p]] [format %.2f $a]]
+    set cl [get_property $p clocks]
+    if {[llength $cl] != 1} continue
+    set a [ot_ps_rise $p max]; set b [ot_ps_rise $p min]
+    if {$a eq "" || $b eq ""} continue
+    dict set R [ot_ps_inst [get_full_name $p]] [list [get_full_name $p] [get_full_name [lindex $cl 0]] $a $b]
+  }
+  return $R
+}
+
+proc ot_ps_related {R} {
+  # exhaustive related pairs: {launch capture capture_data_pin raw_setup_damage raw_hold_damage}, unique per pair
+  # (worst raw over the capture register's data pins) + counters {pairs inter_clock data_pins}
+  set async {}
+  foreach p [all_registers -async_pins] { dict set async [get_full_name $p] 1 }
+  set P {}; set nx 0; set nd 0
+  foreach d [all_registers -data_pins] {
+    set dn [get_full_name $d]
+    if {[dict exists $async $dn]} continue
+    set c [ot_ps_inst $dn]
+    if {![dict exists $R $c]} continue
+    incr nd
+    lassign [dict get $R $c] cck cclk clate cearly
+    foreach s [get_fanin -to $d -startpoints_only -flat] {
+      set l [ot_ps_inst [get_full_name $s]]
+      if {![dict exists $R $l]} continue
+      lassign [dict get $R $l] lck lclk llate learly
+      if {$lclk ne $cclk} { incr nx; continue }
+      set ds [expr {$llate - $cearly}]
+      set dh [expr {$clate - $learly}]
+      set k "$l\t$c"
+      if {[dict exists $P $k]} {
+        lassign [dict get $P $k] - - - os oh
+        if {$ds <= $os && $dh <= $oh} continue
+        set ds [expr {max($ds, $os)}]; set dh [expr {max($dh, $oh)}]
+      }
+      dict set P $k [list $l $c $dn $ds $dh]
+    }
+  }
+  return [list $P [dict size $P] $nx $nd]
+}
+
+proc ot_ps_path {l dn dly} {
+  # exact credited skew of one pair and check: {skew_ps crpr_ps} or {} when no constrained reg->reg path exists
+  set lck [get_pins -quiet "[lindex [dict get $::ot_ps_R $l] 0]"]
+  if {![llength $lck] || [catch {set pes [find_timing_paths -from $lck -to [get_pins $dn] -path_delay $dly \
+                                              -group_path_count 1 -endpoint_path_count 1]}] || ![llength $pes]} { return {} }
+  set pe [lindex $pes 0]
+  if {![$pe is_check] || [$pe is_latch_check]} { return {} }
+  set role [$pe check_role]
+  set tp [$pe target_clk_path]
+  if {$tp eq "NULL" || $tp eq ""} { return {} }
+  set per [expr {[get_property [$pe target_clk] period] * 1e-12}]
+  set sk [$pe clk_skew]; set req [$pe data_required_time]; set tarr [$tp arrival]; set mg [$pe margin]
+  set et [[$pe target_clk_edge] time]
+  unset pes pe tp
+  if {$role eq "setup"} {
+    set x [expr {$req - $tarr + $mg - $et}]
+    set crpr [expr {$x - $per * round($x / $per)}]
+    set sk [expr {-$sk}]
+  } elseif {$role eq "hold"} {
+    set x [expr {$req - $tarr - $mg - $et}]
+    set crpr [expr {-($x - $per * round($x / $per))}]
+    set sk [expr {-$sk - 2.0 * $crpr}]
+  } else { return {} }
+  return [list [ot_ps_ps $sk] [ot_ps_ps $crpr]]
+}
+
+proc ot_ps_p99 {v} {
+  set n [llength $v]; if {!$n} { return NA }
+  set s [lsort -real $v]
+  return [format %.2f [lindex $s [expr {max(0, int(ceil(0.99 * $n)) - 1)}]]]
+}
+
+proc ot_ps_measure {{credit_max 5000}} {
+  # -> dict: pairs inter_clock data_pins ; per check (max|min): n worst bounded signed launch capture crpr p99_raw
+  #    searched nopath verify rows ({launch capture skew crpr raw})
+  set ::ot_ps_R [ot_ps_regs]
+  lassign [ot_ps_related $::ot_ps_R] P np nx nd
+  set out [dict create pairs $np inter_clock $nx data_pins $nd regs [dict size $::ot_ps_R]]
+  foreach dly {max min} {
+    set idx [expr {$dly eq "max" ? 3 : 4}]
+    set raw {}
+    dict for {k v} $P { lappend raw [list [lindex $v $idx] [lindex $v 0] [lindex $v 1] [lindex $v 2]] }
+    set raw [lsort -real -decreasing -index 0 $raw]
+    set worst ""; set wrow {}; set rows {}; set ns 0; set nnp 0; set vfy 0.0; set bounded 0; set next ""
+    foreach r $raw {
+      lassign $r rd l c dn
+      if {$worst ne "" && $rd <= $worst} { set next ""; break }
+      if {$ns >= $credit_max} { set bounded 1; set next $rd; break }
+      incr ns
+      set e [ot_ps_path $l $dn $dly]
+      if {![llength $e]} { incr nnp; continue }
+      lassign $e sk cr
+      set dmg [expr {$dly eq "max" ? -$sk : $sk}]
+      # cross-check vs the CK pin arrivals: damage = raw - crpr
+      set d [expr {abs(($rd - $cr) - $dmg)}]
+      if {$d > $vfy} { set vfy $d }
+      lappend rows [list $l $c [format %.2f $sk] [format %.2f $cr] [format %.2f $rd]]
+      if {$worst eq "" || $dmg > $worst} { set worst $dmg; set wrow [list $l $c $sk $cr] }
+    }
+    if {$bounded && $worst ne "" && $next > $worst} { set worst $next }
+    set p99 [ot_ps_p99 [lmap r $raw {lindex $r 0}]]
+    lassign $wrow wl wc wsk wcr
+    dict set out $dly [dict create n [llength $raw] worst [expr {$worst eq "" ? "NA" : [format %.2f $worst]}] \
+      bounded $bounded signed [expr {$wsk eq "" ? "NA" : [format %.2f $wsk]}] launch $wl capture $wc \
+      crpr [expr {$wcr eq "" ? "NA" : [format %.2f $wcr]}] p99_raw $p99 searched $ns nopath $nnp \
+      verify [format %.3f $vfy] rows $rows]
   }
   return $out
 }
 
-proc ot_ps_ckpin {inst} {
-  foreach c {CLK CK clk} { set q [get_pins -quiet "$inst/$c"]; if {[llength $q]} { return $q } }
-  return ""
-}
-
-proc ot_ps_verify {rows dly n} {
-  # re-derive pair skew from the CK pins' max/min rise arrivals by name, crpr taken from the row: max |difference| ps
-  # (setup checks the clk_skew decomposition and crpr; hold checks the sign-corrected crpr credit)
-  set worst 0.0; set k 0
-  foreach r [lrange $rows 0 [expr {$n - 1}]] {
-    lassign $r l c sk sl crpr
-    set lp [ot_ps_ckpin $l]; set cp [ot_ps_ckpin $c]
-    if {$lp eq "" || $cp eq ""} continue
-    if {$dly eq "max"} {
-      set la [get_property $lp arrival_max_rise]; set ca [get_property $cp arrival_min_rise]
-      set ref [expr {$ca + $crpr - $la}]
-    } else {
-      set la [get_property $lp arrival_min_rise]; set ca [get_property $cp arrival_max_rise]
-      set ref [expr {$ca - $crpr - $la}]
+proc ot_ps_write {M fn corner} {
+  set fh [open $fn w]
+  puts $fh "H\tcorner\t$corner"
+  foreach k {regs data_pins pairs inter_clock} { puts $fh "H\t$k\t[dict get $M $k]" }
+  puts $fh "H\tcrpr\t[sta::crpr_enabled] [sta::crpr_mode]"
+  foreach dly {max min} {
+    set m [dict get $M $dly]
+    foreach k {n worst bounded signed launch capture crpr p99_raw searched nopath verify} {
+      puts $fh "H\t${dly}_$k\t[dict get $m $k]"
     }
-    # arrival_*_rise can be the falling-edge arrival (+T/2: tb_rise); compare modulo T/2
-    set half [expr {[get_property [lindex [get_property $cp clocks] 0] period] / 2.0}]
-    set d [expr {$ref - $sk}]
-    set d [expr {abs($d - $half * round($d / $half))}]
-    if {$d > $worst} { set worst $d }
-    incr k
+    foreach r [dict get $m rows] { puts $fh "P\t$dly\t[join $r \t]" }
   }
-  return [list $k [format %.3f $worst]]
-}
-
-proc ot_ps_faces {spec} {
-  set f {}
-  foreach item $spec {
-    set pre ""; set file $item
-    if {[regexp {^([^=]+)=(.+)$} $item -> pre file]} { set pre "$pre/" }
-    if {![file exists $file]} { puts "OT_PS_WARN face list $file missing"; continue }
-    set fh [open $file r]
-    while {[gets $fh line] >= 0} {
-      set n [string map {\\ {}} [lindex [split $line \t] 0]]
-      if {$n ne ""} { dict set f "$pre$n" 1 }
-    }
-    close $fh
-  }
-  return $f
-}
-
-proc ot_ps_summary {rows} {
-  # {n worst_abs worst_signed p99_abs launch capture} over rows
-  if {![llength $rows]} { return {0 NA NA NA {} {}} }
-  set ab {}; set w -1; set ws 0; set wl ""; set wc ""
-  foreach r $rows {
-    set s [lindex $r 2]; set a [expr {abs($s)}]; lappend ab $a
-    if {$a > $w} { set w $a; set ws $s; set wl [lindex $r 0]; set wc [lindex $r 1] }
-  }
-  set ab [lsort -real $ab]
-  set i [expr {int(ceil(0.99 * [llength $ab])) - 1}]
-  if {$i < 0} { set i 0 }
-  return [list [llength $rows] [format %.2f $w] $ws [format %.2f [lindex $ab $i]] $wl $wc]
+  close $fh
 }
 
 proc ot_ps_main {} {
-  set out $::env(OT_PS_OUT)
   set corner [expr {[info exists ::env(CORNER)] ? $::env(CORNER) : "NA"}]
-  set maxp [expr {[info exists ::env(OT_PS_MAX_PATHS)] ? $::env(OT_PS_MAX_PATHS) : 200000}]
+  set cm [expr {[info exists ::env(OT_PS_CREDIT_MAX)] ? $::env(OT_PS_CREDIT_MAX) : 5000}]
   set t0 [clock seconds]
   set_propagated_clock [all_clocks]
-  set so [ot_ps_signoff]
-  puts "OT_PS_SIGNOFF $corner $so"
   ot_ps_zero_unc
-  set P {}
-  foreach dly {max min} { dict set P $dly [ot_ps_pairs $dly $maxp] }
-  set V {}
-  if {[info exists ::env(OT_PS_VERIFY)] && $::env(OT_PS_VERIFY) > 0} {
-    foreach dly {max min} { dict set V $dly [ot_ps_verify [dict get $P $dly] $dly $::env(OT_PS_VERIFY)] }
-  }
-  set ck [ot_ps_ck]
-  set face [expr {[info exists ::env(OT_PS_FACE)] ? [ot_ps_faces $::env(OT_PS_FACE)] : {}}]
-  set fh [open $out w]
-  puts $fh "H\tcorner\t$corner"
-  puts $fh "H\tscope\t[expr {[info exists ::env(OT_PS_SCOPE)] ? $::env(OT_PS_SCOPE) : {die}}]"
-  foreach {k v} $so { puts $fh "H\t$k\t$v" }
-  puts $fh "H\tcrpr\t[sta::crpr_enabled] [sta::crpr_mode]"
-  puts $fh "H\tmax_paths\t$maxp"
-  puts $fh "H\tface_list\t[dict size $face]"
-  dict for {dly v} $V { puts $fh "H\tverify_$dly\t$v" }
+  set M [ot_ps_measure $cm]
+  ot_ps_write $M $::env(OT_PS_OUT) $corner
   foreach dly {max min} {
-    foreach r [dict get $P $dly] { puts $fh "P\t$dly\t[join $r \t]" }
+    set m [dict get $M $dly]
+    puts "OT_PS $corner $dly n [dict get $m n] worst [dict get $m worst] bounded [dict get $m bounded] signed [dict get $m signed] [dict get $m launch] -> [dict get $m capture] crpr [dict get $m crpr] p99_raw [dict get $m p99_raw] verify [dict get $m verify]"
   }
-  foreach r $ck {
-    lassign $r i a
-    puts $fh "C\t$i\t$a\t[expr {[dict exists $face $i] ? 1 : 0}]"
-  }
-  close $fh
-  foreach dly {max min} {
-    puts "OT_PS $corner $dly [ot_ps_summary [dict get $P $dly]]"
-    if {[dict exists $V $dly]} { puts "OT_PS_VERIFY $corner $dly [dict get $V $dly]" }
-  }
-  puts "OT_PS_DONE $corner $out [expr {[clock seconds] - $t0}] s"
+  puts "OT_PS_DONE $corner [expr {[clock seconds] - $t0}] s"
 }
 
 if {![info exists ::ot_ps_lib_only] && [info exists ::env(OT_PS_OUT)]} { ot_ps_main }
