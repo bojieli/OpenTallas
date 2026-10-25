@@ -1509,6 +1509,9 @@ class Binder:
             if not m:
                 self.root[p] = ""
 
+        import native_istations
+        native_istations.annotate(self)
+
     def _route(self, srcs, dst, keys, out_of, heapq, only=None):
         """fewest-hop lane path from any partition holding `keys` to dst over lanes with room for the bits they do not
         already carry (ties: lane id).  Falls back to the widest path when no lane path has room for the whole block."""
@@ -2268,6 +2271,8 @@ class Binder:
             self.pnames[tn] = pnames
             f = out / f"{t['module']}.sv"
             f.write_text(txt)
+            import native_istations
+            native_istations.materialize(self, tn, f)
             files.append(f)
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
         f.write_text(self.emit_top())
@@ -2786,7 +2791,7 @@ class Binder:
         lat = []
         for L in self.links:
             st = L["stages"]
-            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L)
+            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0))
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
                             leaves=_seg_summary(L, F), forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
@@ -3539,7 +3544,7 @@ def lane_pad(L):
     """the latency table's pad on a plan lane: table cycles - (2 boundary flops + ft stations), when positive"""
     if L.get("spine") or not L.get("lane") or "cycles" not in L:
         return 0
-    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])))
+    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0)))
 
 
 def _desc_json(B, d, ci_part=None):

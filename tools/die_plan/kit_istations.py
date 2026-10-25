@@ -259,9 +259,9 @@ def main(argv):
             raise SystemExit(f"kit_istations: {tn}: internal station on unknown bus {bus}")
         W = b["width"]
         prev = sorted(int(m) for m in re.findall(rf"\bu_ist_{re.escape(n)}_(\d+)\b", txt))
-        if prev and (b["dir"] != "in" or prev != list(range(len(prev)))):
-            raise SystemExit(f"kit_istations: {tn} {bus}: stations already inserted (re-application is supported only "
-                             "for an in bus with a complete u_ist_ chain; run on a fresh kit-rtl copy)")
+        if prev and prev != list(range(len(prev))):
+            raise SystemExit(f"kit_istations: {tn} {bus}: stations already inserted (re-application requires "
+                             "a complete u_ist_ chain; run on a fresh kit-rtl copy)")
         pads = sorted(int(m) for m in re.findall(rf"\bu_b(?:in|out)_{re.escape(n)}_pad(\d+)\b", txt))
         have = len(pads) + len(prev)
         need = len(regs) - have
