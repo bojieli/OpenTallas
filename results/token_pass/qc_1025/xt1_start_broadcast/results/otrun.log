@@ -1,0 +1,16 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/qc-tok-start-1025/both
+ot-run: epyc3          admits   511 GB (avail 772, reserve 0, fresh 132.9, peak 63.1, headroom 0, waiters 0/0 GB) load 89/96 running 27 disk 6370 GB 
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/qc-tok-start-1025/both
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/qc-tok-start-1025/both
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/qc-tok-start-1025/both
+ot-run: LOAD SPILL not possible (lane references keep growing (9 lanes)); running on epyc3 at 2.43 x cores
+ot-run: -> epyc3
+ot-heavy: admitted on eternal-dove as oth-ubuntu-4108029-1792930541 after 1 s
+[mut=0] RESULT XT1N PASS mode=nominal near=64/64 far=64/64
+[mut=1] RESULT XT1N PASS mode=nominal near=64/64 far=64/64
+[neg=early_cal_at_s] RESULT XT1N FAIL mode=nominal near=0/64 far=0/64
+[neg=early_cal_by1] RESULT XT1N PASS mode=nominal near=64/64 far=64/64
+[neg=start_never] RESULT XT1N FAIL mode=nominal near=0/64 far=0/64
+TIMES built=1 build_s=2751 sim_s=1971 obj=/srv/opentallas-scratch2/claude/qc-tok-start-1025/both/obj_089b730b0c7dba35
+ot-run: RAN on epyc3 (unit oth-ubuntu-4108029-1792930541): exit 0
+done Sun Oct 25 06:34:24 AM PDT 2026
