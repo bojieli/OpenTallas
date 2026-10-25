@@ -448033,7 +448033,8 @@
      1080.0,
      838.08
     ],
-    "sync_stages": 2
+    "sync_stages": 2,
+    "start_role": "bootstrap"
    },
    "contents": [
     {
@@ -594455,7 +594456,8 @@
      639.36,
      838.08
     ],
-    "sync_stages": 2
+    "sync_stages": 2,
+    "start_role": "bootstrap"
    },
    "contents": [
     {
@@ -817806,7 +817808,8 @@
      1080.0,
      518.4000000000001
     ],
-    "sync_stages": 2
+    "sync_stages": 2,
+    "start_role": "bootstrap"
    },
    "contents": [
     {
@@ -940115,7 +940118,22 @@
  "reset": {
   "source": {
    "part": "@die",
-   "bus": "rst_n"
+   "bus": "rst_n",
+   "pad": "io_pad_por_n",
+   "analog_loads": [
+    {
+     "inst": "u_pll",
+     "pin": "por_n",
+     "note": "PLL analog power-on reset: the clock source cannot be synchronised to itself"
+    }
+   ],
+   "por_pins": "por_n",
+   "lock": {
+    "inst": "u_pll",
+    "pin": "locked",
+    "stable_cycles": 16
+   },
+   "note": "PATH-KV DECISION 10-25 14:19 + CLOCK-RESET A/B 14:32: one reset pad = die reset root pin; raw loads {u_rst_root.async_rst_n, u_pll.por_n}; por_n leaves rebound to the wavefront; lock qualifies the root release synchronously (por_gate.py)"
   },
   "sync_stages": 2,
   "data_reset": false,
