@@ -694,7 +694,7 @@ exit $rc
 
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15):
     raw = S.load(plan_path)
-    P = S.Plan(raw)
+    P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
     out = Path(out)
     for d in ("abstracts", "grt", "clock", "psm", "sta/parts"):
