@@ -13,6 +13,8 @@ class BoundSources:
         report = json.loads((self.root / 'bind_report.json').read_text())
         if report.get('n_errors') != 0 or report.get('errors'):
             raise ValueError('current bound source projection requires zero strict binding errors: ' + str(report.get('n_errors')) + '; ' + str((report.get('errors') or ['no error detail'])[0])[:300])
+        if report.get('type_splits'):
+            raise ValueError('current bound source projection refuses unresolved partition type splits')
         tops = list((self.root / 'rtl').glob('*_bound_top.sv'))
         if len(tops) != 1:
             raise ValueError('current bound source projection needs one complete emitted top')
