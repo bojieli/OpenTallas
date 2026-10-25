@@ -28,14 +28,10 @@ proc ot_mm_read_libs {} {
   foreach c [list [ot_mm_sc] BC] { foreach l [ot_mm_libs $c] { log_cmd read_liberty $l } }
 }
 proc ot_mm_read_sdc {sdc} {
-  # Scene creation clears the mode's external pin/wire loads and fanout.
-  # Establish both scenes before evaluating the original SDC once per mode.
-  set_mode ss
-  set_mode ff
-  define_scene [ot_mm_sc] -mode ss -liberty [ot_mm_libs [ot_mm_sc]]
-  define_scene BC -mode ff -liberty [ot_mm_libs BC]
   log_cmd read_sdc -mode ss $sdc
   log_cmd read_sdc -mode ff $sdc
+  define_scene [ot_mm_sc] -mode ss -liberty [ot_mm_libs [ot_mm_sc]]
+  define_scene BC -mode ff -liberty [ot_mm_libs BC]
   # ff mode never checks setup; before CTS (ideal clocks) it checks nothing either, so placement repairs exactly as a
   # WC-only flow did.  Only the CTS (3_place.sdc) and global-route (4_cts.sdc) stages sync it before their repair.
   set_mode ff
@@ -96,27 +92,6 @@ proc ot_mm_scene_shim {on} {
     rename ::report_clock_latency {}; rename ::ot_mm_orig_report_clock_latency ::report_clock_latency
   }
 }
-# FF sign-off SDCs can recreate a real root at the sign-off period after the
-# copied route SDC created its link-budget virtual clock at the route period.
-# These virtual clocks represent that exact root, so keep their periods equal.
-# Recreating the existing clock updates its waveform in place; IO constraints,
-# latency and uncertainty remain attached. Other virtual/window clocks stay put.
-proc ot_mm_sync_link_periods {} {
-  if {[llength [info commands ot_single_clock_check]]} { ot_single_clock_check }
-  foreach c [all_clocks] {
-    set vn [get_full_name $c]
-    if {![regexp {^ot_lb_v_(.+)$} $vn -> rn] || [llength [get_property $c sources]]} continue
-    set rc [get_clocks -quiet $rn]
-    if {[llength $rc] != 1 || ![llength [get_property $rc sources]]} continue
-    set vt [get_property $c period]
-    set rt [get_property $rc period]
-    if {abs($vt - $rt) > 0.000001} {
-      set wave [lmap edge [$c waveform] {expr {$edge / [$c period] * $rt}}]
-      create_clock -name $vn -period $rt -waveform $wave
-      puts "OT_HOLD_MM virtual period: $vn $vt -> $rt (reference $rn)"
-    }
-  }
-}
 proc ot_mm_sync {} {
   if {![info exists ::ot_mm_active] || $::ot_mm_stage ni {3_place.sdc 4_cts.sdc}} { return }
   set f $::env(RESULTS_DIR)/ot_mm_ss_[clock clicks].sdc
@@ -126,13 +101,6 @@ proc ot_mm_sync {} {
   read_sdc $f
   file delete $f
   set_propagated_clock [all_clocks]
-  # MMFF-PARASITICS (el1011-q-kvd 2026-10-12): the FF SDCs below MEASURE BC clock arrivals (QDM reference pin, io_ref
-  # pin flops) and turn them into the input-min / output-min delays.  Until now the BC scene was estimated only at the
-  # END of this proc, so a tree built in the stage (clock spine, CTS) was measured WITHOUT wire parasitics:
-  # qkd_d2d_ref (ot_qkvd_kv_end, 1.56 ns TT spine) read BC 745.7 ps at the reference flop, the estimated BC tree is
-  # 1,180-1,242 ps, and 2,143 input pins got a 500 ps fake hold hole (FF hold -501.9, flat over 2,000 repair
-  # iterations: EARLY_FAIL_HOLD).  Estimate first so the reference and the hold check see the same tree.
-  estimate_parasitics [expr {$::ot_mm_stage eq "4_cts.sdc" ? "-global_routing" : "-placement"}]
   set ot_mm_ioref_read 0
   ot_mm_scene_shim 1
   if {[info exists ::env(OT_MM_FF_SDC)]} {
@@ -151,7 +119,6 @@ proc ot_mm_sync {} {
   if {!$ot_mm_ioref_read && [file exists $ot_mm_ioref_file]} {
     puts "OT_HOLD_MM: ff mode reads $ot_mm_ioref_file (loop default, appended last)"; read_sdc $ot_mm_ioref_file
   }
-  ot_mm_sync_link_periods
   ot_mm_scene_shim 0
   set_false_path -setup -from [all_clocks]
   set_mode ss
@@ -176,83 +143,6 @@ proc ot_mm_ws {check scene} {
     set s [get_property $p slack]; if {$s ne "INF" && $s < $w} { set w $s }
   }
   return $w
-}
-
-# RC-CAL (ROOT-RST 2026-10-19, s81lk_kp4_dec-p1-e86bf8cae): route-time HOLD repair times the clock trees on the
-# RCX-calibrated upper-layer RC, not on the platform setRC.tcl values.  setRC.tcl (asap7) prices M6 / M7 wire at
-# 0.187 / 0.163 fF/um; OpenRCX extracts an isolated clock trunk on those layers at 0.096-0.108 fF/um and 13.1-14.9
-# ohm/um (kp4_dec BUFx24 spine trunks N147_r1 / N73_r1 / N73_r2 / N73 / N36, smhq spine M6 / M7 medians).  The spine's
-# wire-dominated BUFx24 trunk was therefore estimated ~90 ps LATE at GRT-FF (pin flops p_d__ot_q median 506.8 GRT vs
-# 415.0 routed) while the cell-dominated pad chain to the hard child u_syn tracked (299.9 vs 275.4): the GRT hold repair
-# saw +30 on parent pin flop -> u_syn/p_d paths that signed off at -64.76.  Measured on the same 5_1_grt.odb with these
-# values: p_d__ot_q 440.0 / u_syn 286.7 (pair error 67 -> 14 ps); a TritonCTS block (hcoll_kqs_leaf, no M6 / M7
-# clock) is unchanged.  Scope: ONLY the hold part of repair_timing_helper (setup repair, GRT, and every other stage keep
-# the platform RC; restored right after).  GRT stage (global routes present): set_layer_rc M6 / M7.  CTS stage (placement
-# parasitics): set_wire_rc -clock, and only when a clock spine was built in this session (a TritonCTS tree's low-layer
-# clock wiring is NOT over-estimated: the clock-wide value moved hcoll -16 ps the wrong way).  Data wires on M6 / M7
-# also get the lower C, which only makes them faster under a min-delay check (conservative for hold).
-# Knobs: OT_RC_CAL=0 off; OT_RC_CAL_R / OT_RC_CAL_C in setRC.tcl units (defaults 1.40E-02 = 14 ohm/um, 1.05E-01 fF/um),
-# OT_RC_CAL_LAYERS (default "M6 M7").  asap7 only.  The spine balancing (clock_spine.tcl) uses the same procs.
-proc ot_rc_cal_on {} {
-  expr {(![info exists ::env(OT_RC_CAL)] || $::env(OT_RC_CAL) ne "0") &&
-        [info exists ::env(PLATFORM)] && $::env(PLATFORM) eq "asap7"}
-}
-proc ot_rc_cal_rc {} {
-  set r [expr {[info exists ::env(OT_RC_CAL_R)] && [string is double -strict $::env(OT_RC_CAL_R)] ? $::env(OT_RC_CAL_R) : 1.40E-02}]
-  set c [expr {[info exists ::env(OT_RC_CAL_C)] && [string is double -strict $::env(OT_RC_CAL_C)] ? $::env(OT_RC_CAL_C) : 1.05E-01}]
-  return [list $r $c]
-}
-proc ot_rc_cal_mode {} {
-  # the parasitics the stage estimates: global routes present -> -global_routing, else -placement
-  if {![catch {grt::have_routes} h] && $h} { return "-global_routing" }
-  return "-placement"
-}
-proc ot_rc_cal_spine {} {
-  expr {([info exists ::ot_sp_all_insts] && [llength $::ot_sp_all_insts]) ||
-        ([info exists ::ot_sp_insts] && [llength $::ot_sp_insts])}
-}
-# set the calibrated RC for KIND (hold | spine); returns 1 when anything was changed (the caller re-estimates and later
-# calls ot_rc_cal_restore)
-proc ot_rc_cal_apply {kind} {
-  if {![ot_rc_cal_on]} { return 0 }
-  lassign [ot_rc_cal_rc] r c
-  set mode [ot_rc_cal_mode]
-  if {$mode eq "-global_routing"} {
-    set ls [expr {[info exists ::env(OT_RC_CAL_LAYERS)] ? $::env(OT_RC_CAL_LAYERS) : "M6 M7"}]
-    foreach l $ls { set_layer_rc -layer $l -resistance $r -capacitance $c }
-    puts "OT_RC_CAL $kind: $mode layers $ls R $r C $c (RCX-calibrated upper-layer RC; platform setRC restored after)"
-    return 1
-  }
-  if {$kind ne "spine" && ![ot_rc_cal_spine]} { return 0 }
-  set_wire_rc -clock -resistance $r -capacitance $c
-  puts "OT_RC_CAL $kind: $mode clock wire R $r C $c (spine clock; platform setRC restored after)"
-  return 1
-}
-proc ot_rc_cal_restore {} {
-  source $::env(PLATFORM_DIR)/setRC.tcl
-  puts "OT_RC_CAL restored platform setRC.tcl"
-}
-# Run BODY with calibrated hold RC. Numeric FF I/O references must be measured
-# with that same RC, and measured again after restoring platform RC. Unsync FIRST:
-# writing the SS SDC while its temporary hold exception is active would copy that
-# exception to FF and hide real hold paths. Never refresh a scene that was not
-# already synced by the caller; non-MM and setup-only behavior stays unchanged.
-proc ot_rc_cal_hold {body} {
-  set on [ot_rc_cal_apply hold]
-  set refresh [expr {$on && [info exists ::ot_mm_synced]}]
-  try {
-    if {$on} {
-      estimate_parasitics [ot_rc_cal_mode]
-      if {$refresh} { ot_mm_unsync; ot_mm_sync }
-    }
-    return [uplevel 1 $body]
-  } finally {
-    if {$on} {
-      ot_rc_cal_restore
-      estimate_parasitics [ot_rc_cal_mode]
-      if {$refresh} { ot_mm_unsync; ot_mm_sync }
-    }
-  }
 }
 
 # HOLD-STALL GUARD (unstick 2026-10-08).  repair_timing's hold repair has no progress limit: 138 loop jobs sat 4-25 h in
@@ -429,23 +319,37 @@ proc ot_hold_stop {rt_args} {
   catch { lassign [ot_hold_stats] w t v; puts [format "OT_HOLD_STOP stage=%s done: hold ws %.2f tns %.1f viol %d" $stage $w $t $v] }
   return 1
 }
+# Owner 2026-10-25: structural FF hold failures must stop BEFORE repair_timing. Its
+# -max_iterations bounds inner passes, not the endpoint sweep, so the stall guard
+# cannot interrupt a single call that adds hundreds of thousands of buffers.
+# Count true negative-slack endpoints (ot_hold_stats), never the repair margin.
+proc ot_hold_structural_gate {} {
+  lassign [ot_hold_stats] w t n
+  if {$w >= -100.0 && $n <= 2000} { return }
+  set stage [ot_hold_stage]
+  set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair" $stage $w $n]
+  puts $msg
+  catch {
+    set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_structural_${stage}.rpt" : "ot_hold_structural_${stage}.rpt"}]
+    set fh [open $f w]; puts $fh $msg; close $fh
+  }
+  return -code error -errorcode {OPENTALLAS HOLD_STRUCTURAL} $msg
+}
 proc ot_repair_timing {rt_args} {
   if {![ot_hold_guard_on] || [lsearch -exact $rt_args -setup] >= 0 || [lsearch -exact $rt_args -hold] >= 0} {
-    if {[lsearch -exact $rt_args -setup] >= 0} { return [log_cmd repair_timing {*}$rt_args] }
-    if {[lsearch -exact $rt_args -hold] < 0} { return [log_cmd repair_timing {*}[ot_hm_guard $rt_args]] }
-    # a hold-only call: RC-CAL clock trees
-    return [ot_rc_cal_hold { log_cmd repair_timing {*}[ot_hm_guard $rt_args] }]
+    if {[lsearch -exact $rt_args -setup] < 0} {
+      ot_hold_structural_gate
+      set rt_args [ot_hm_guard $rt_args]
+    }
+    return [log_cmd repair_timing {*}$rt_args]
   }
-  log_cmd repair_timing {*}$rt_args -setup
-  # RC-CAL: the whole hold part (margin guard statistics, stop cap, chunks) times the RCX-calibrated clock trees
-  return [ot_rc_cal_hold { ot_repair_hold_guarded $rt_args }]
-}
-proc ot_repair_hold_guarded {rt_args} {
   set hm 0.0
   set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
   set chunk [expr {int([ot_env_num OT_HOLD_CHUNK 1000])}]
   set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
   set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
+  log_cmd repair_timing {*}$rt_args -setup
+  ot_hold_structural_gate
   set hm_asked $hm
   set rt_args [ot_hm_guard $rt_args]
   if {[ot_hold_stop $rt_args]} { return }
@@ -488,12 +392,4 @@ proc ot_repair_hold_guarded {rt_args} {
     if {[clock seconds] - $t0 > $maxs} { ot_hold_window_report "hold repair over [expr {$maxs / 3600.0}] h" $hist; break }
     set prev $cur
   }
-}
-
-# MACRO-CLK (2026-10-10): this helper is sourced in every ORFS stage of every run_abi3_physical / hbm_accel_smh route, so
-# it carries the flow-default macro clock clustering (clock_tree_synthesis wrapper; physical/common_flow/
-# macro_cts_cluster.tcl, which the closure loop ships into older snapshots next to this file).
-if {[info commands ot_mcc_cts_orig] eq ""} {
-  set ot_mcc_file [file join [file dirname [file dirname [file normalize [info script]]]] physical common_flow macro_cts_cluster.tcl]
-  if {[file exists $ot_mcc_file]} { source $ot_mcc_file } else { puts "OT_MACRO_CTS unavailable: $ot_mcc_file missing" }
 }
