@@ -32,7 +32,12 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     // SID (HBM-BIND B2 2026-10-24): quadrant strap = the quadrant whose VM (read group 4 share in the IDX root, hub cq/cr)
     // this engine reads and writes: a (non-mirror) and o sectors must equal it. Default 0 = the as-built SW engine (the
     // literal localparam sid = 0), bit-identical. B2 (NW + NE die): 3 (NE). No latency change.
-    parameter [1:0] SID = 2'd0
+    parameter [1:0] SID = 2'd0,
+    // CNTW (HBM-BIND B2 2026-10-24): width of the E_WAIT / E_END edge counter (all-ones = the STREAM "armed" sentinel).
+    // 6 (as built, bit-identical) holds ACK / ELAT <= 62. The B2 die's hub echo crosses the two-stop VM ring (ACK = 13 +
+    // CR_RT, tools/hbm_b2/b2_delays.py: 111 on B2m), so the counter widens to 8 automatically when ACK or ELAT > 62.
+    // Same edges for every ACK / ELAT (bench rtl/test/hbm_netlist_v16/run_argmax_r2_ack.sh; mutant = CNTW 6 at ACK 111).
+    parameter integer CNTW = (ACK > 62 || ELAT > 62) ? 8 : 6
 )(
     input  wire          clk,
     input  wire          rst_n,
@@ -77,7 +82,8 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     for (genvar l = 0; l < 8; l = l + 1) begin : g_rq assign vm_rq[17*l +: 17] = {rq_v[l], rq_d}; end   // sector is don't-care when !v
     assign cq = {cq_v, cq_d};
     localparam [3:0] E_IDLE=0, E_CHK=1, E_ROW=2, E_RD=3, E_WAIT=4, E_W0=5, E_W1=6, E_END=7;
-    reg [3:0] st; reg [5:0] cnt; reg flt;
+    reg [3:0] st; reg [CNTW-1:0] cnt; reg flt;
+    localparam [CNTW-1:0] CSENT = {CNTW{1'b1}};
     reg mode_q, am_q; reg [17:0] imm_q, ab_q, n_q, ob_q; reg [15:0] ois_q; reg legal_q;
     wire legal = n_p != 18'd0 && imm_p < 18'd262143 &&
                  (mode_p || (am_p ? ab_p[17:16] == 2'd0 : ab_p[17:16] == sid)) &&
@@ -152,18 +158,18 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     always @(posedge clk or negedge rst_ctl) begin
         if (!rst_ctl) begin
             st <= E_IDLE; busy_i <= 1'b0; busy_x <= 1'b0; done <= 1'b0; fault <= 1'b0; nan_flag <= 1'b0; flt <= 1'b0; cq_v <= 1'b0;
-            cq_seq <= 2'd0; wr_now <= 1'b0; cnt <= 6'd0; res_bad <= 1'b0;
+            cq_seq <= 2'd0; wr_now <= 1'b0; cnt <= '0; res_bad <= 1'b0;
         end else begin
             done <= 1'b0; fault <= 1'b0; cq_v <= 1'b0; wr_now <= 1'b0;
             if (busy_i && st != E_CHK && (ack_bad || (!mode_q && rd_bad))) flt <= 1'b1;
-            if (o_v && !(st == E_WAIT && cnt == 6'd0)) flt <= 1'b1;      // engine out must be exactly on L+ELAT
+            if (o_v && !(st == E_WAIT && cnt == '0)) flt <= 1'b1;      // engine out must be exactly on L+ELAT
             case (st)
                 E_IDLE: if (go_p) begin busy_i <= 1'b1; busy_x <= 1'b1; st <= E_CHK; end
                 E_CHK: begin
                     flt <= 1'b0; res_bad <= 1'b0; le <= ab_q + n_q - 18'd1;
                     if (!legal_q) begin fault <= 1'b1; busy_i <= 1'b0; busy_x <= 1'b0; st <= E_IDLE; end
                     else st <= mode_q ? E_WAIT : E_ROW;
-                    cnt <= 6'd63;                          // STREAM: armed by the last beat
+                    cnt <= CSENT;                          // STREAM: armed by the last beat
                 end
                 E_ROW: begin i_sec <= ab_q[17:3]; i_left <= le[17:3] - ab_q[17:3]; i_first <= 1'b1; st <= E_RD; end
                 E_RD: begin
@@ -171,9 +177,9 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
                     if (rd_last) st <= E_WAIT;
                 end
                 E_WAIT: begin
-                    if (e_v && e_last) cnt <= 6'(ELAT - 1);   // the engine samples the last beat at this edge: L
-                    else if (cnt != 6'd63 && cnt != 6'd0) cnt <= cnt - 6'd1;
-                    if (cnt == 6'd0) begin                     // L + ELAT: engine out_v
+                    if (e_v && e_last) cnt <= CNTW'(ELAT - 1);   // the engine samples the last beat at this edge: L
+                    else if (cnt != CSENT && cnt != '0) cnt <= cnt - 1'b1;
+                    if (cnt == '0) begin                       // L + ELAT: engine out_v
                         if (!o_v) flt <= 1'b1;
                         res_val <= o_val;
                         res_id <= {14'd0, o_idx} - ((MUT == 1 || mode_q) ? 32'd0 : {29'd0, ab_q[2:0]});
@@ -185,15 +191,15 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
                 E_W0, E_W1: begin                               // W0 = L+ELAT+1, W1 = W0+1
                     wr_now <= 1'b1; cq_seq <= (st == E_W1) ? 2'd1 : 2'd0;
                     cq_v <= 1'b1;
-                    if (st == E_W1) begin cnt <= 6'(ACK); st <= E_END; end else st <= E_W1;
+                    if (st == E_W1) begin cnt <= CNTW'(ACK); st <= E_END; end else st <= E_W1;
                 end
-                E_END: if (cnt == 6'd0) begin                  // W1 + ACK + 1
+                E_END: if (cnt == '0) begin                  // W1 + ACK + 1
                     done <= !(flt || res_bad || ack_bad); fault <= flt || res_bad || ack_bad; busy_i <= 1'b0;
 `ifndef OT_ARGMAX_BUSY_EXPORT_MUT
                     busy_x <= 1'b0;
 `endif
                     st <= E_IDLE;
-                end else cnt <= cnt - 6'd1;
+                end else cnt <= cnt - 1'b1;
                 default: st <= E_IDLE;
             endcase
         end

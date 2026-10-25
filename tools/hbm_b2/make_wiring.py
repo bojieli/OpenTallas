@@ -67,6 +67,7 @@ def main():
     ap.add_argument('--die', required=True)
     ap.add_argument('--asbuilt', required=True)
     ap.add_argument('--rtl-items', action='append', default=[])
+    ap.add_argument('--delays', help='b2_delays.json (tools/hbm_b2/b2_delays.py): B2-derived transport-delay params')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     ab = json.loads(Path(a.asbuilt).read_text())
@@ -406,6 +407,70 @@ def main():
                            'The N0 peer (switch / neighbour) must run the vc2 lane format.',
                       plan='B2l/B2m: io_NW_io_u_host_N window removed; u_host_ep stays (smaller: no gearbox); '
                            'ep_N0<->host_ep 612+612+5 b frame faces inside NW_io; root keeps u_host_cp_ingress'))
+
+    # ---- R-IDX: IDX / ARGMAX root on two quadrants (RTL straps: codex/hbm-bind-idx-r2-1024@8d607ca2e = claude/hbm-bind-
+    # 1024r-idx@2353af4c8, gates rtl/test/hbm_idx_static/run_idx_b2_bind.sh).  The as-built root shared quadrant SW's VM
+    # read group 4 (vmb_SW*.rq4/rr4, operand reader op_SW behind the share).  B2: the root serves NE (SID 3): it shares
+    # vmb_NE*.rq4/rr4 with op_NE (now behind the share, like op_SW was); NW keeps its own share2 (hb_idx__nwsh, untouched).
+    # Score tree: xq_N (level 1 {NE, NW}) feeds the selector directly (NL 1, its 592 data bits = the as-built in_line
+    # list 1); xq_S / xqr (level 1 S, level 2 root) leave; tree_ev from xq_N's two list valids (NQ 2, list 0 = NW).
+    # TOPK / ARGMAX cq/cr stay on hb_vms_NW (R-VM, the NW2 ring master): SID 3 requests reach the NE sector over the ring.
+    dl = json.loads(Path(a.delays).read_text()).get('params', {}) if a.delays else {}
+    def prm(inst, base):
+        """param string: as-built params with the B2-derived delay params (b2_delays.json) substituted."""
+        p = die.insts[inst]['params']
+        for k, v in dl.get(inst, {}).items():
+            if re.search(r'\.' + k + r'\(', p):
+                p = re.sub(r'\.' + k + r'\(\d+\)', f'.{k}({v})', p)
+            else:
+                p = (p + ', ' if p else '') + f'.{k}({v})'
+        return (p + ', ' + base) if base else p
+    assert src_list(die, 'hb_idx__ctl', 'index_rq') == [['hb_idx__op_SW', 'vm_rq', 0, 135]]
+    assert src_list(die, 'hb_idx__op_SW', 'vm_rr')[0][:2] == ['hb_idx__ctl', 'index_rr']
+    xn = src_list(die, 'hb_idx__xqr', 'b')
+    assert xn == [['hb_idx__xq_N', 'y', 0, 593]], xn
+    assert src_list(die, 'hb_idx__xq_N', 'a')[0][0] == 'hb_idx__s_NW' and src_list(die, 'hb_idx__xq_N', 'b')[0][0] == 'hb_idx__s_NE'
+    il = src_list(die, 'hb_idx__selector', 'in_line')    # as built: xqr.y lists {SE,SW}=list 0, {NE,NW}=list 1, 1184'0
+    assert il[2:4] == [['hb_idx__xqr', 'y', 594, 889], ['hb_idx__xqr', 'y', 891, 1186]], il
+    remaster['hb_idx__ctl'] = dict(master='ot_hbm_idx_rootctl_static_am', params=prm('hb_idx__ctl', ".SID(2'd3), .NQ(2), .NL(1)"))
+    ne_rr = src_list(die, 'hb_idx__op_NE', 'vm_rr')        # vmb_NE0..7.rr4 (as op_NE read them)
+    assert [e[0] for e in ne_rr if e[1] == 'rr4'] and all(e[1] == 'rr4' for e in ne_rr), ne_rr
+    rebuild.setdefault('hb_idx__ctl', {}).update(
+        index_rq=[one('hb_idx__op_NE', 'vm_rq', 136)], vm_rr=ne_rr,
+        tree_ev=[one('hb_idx__xq_N', 'y', 1, 296), one('hb_idx__xq_N', 'y', 1, 593)],
+        qfault=[one('hb_idx__qctl_NW', 'fault'), one('hb_idx__qctl_NE', 'fault')],
+        selected_v=[one('hb_idx__selector', 'selected_v', 1)])
+    rebuild.setdefault('hb_idx__op_NE', {})['vm_rr'] = [one('hb_idx__ctl', 'index_rr', 2056)]
+    remaster['hb_idx__op_NE'] = dict(master=die.insts['hb_idx__op_NE']['master'], params=prm('hb_idx__op_NE', ''))
+    for b in range(8):
+        sw = src_list(die, f'vmb_SW{b}', 'rq4')
+        assert len(sw) == 1 and sw[0][:2] == ['hb_idx__ctl', 'vm_rq'], sw
+        assert src_list(die, f'vmb_NE{b}', 'rq4') == [['hb_idx__op_NE', 'vm_rq', sw[0][2], sw[0][3]]]
+        rebuild.setdefault(f'vmb_NE{b}', {})['rq4'] = sw          # the share's per-bank request slice, as for vmb_SW<b>
+    remaster['hb_idx__selector'] = dict(master='ot_hbm_idx_selector_static_sel', params='.NL(1)')
+    rebuild.setdefault('hb_idx__selector', {}).update(
+        in_line=[one('hb_idx__xq_N', 'y', 296, 0), one('hb_idx__xq_N', 'y', 296, 297)],
+        clk_q=[clk], clk_mem=[clk] * 3)
+    out_width['hb_idx__selector'] = dict(selected_v=1, selected_line=592)
+    remaster['hb_idx__link'] = dict(master='ot_hbm_idx_topk_link_static', params='.NL(1)')
+    rebuild.setdefault('hb_idx__link', {})['selected_line'] = [one('hb_idx__selector', 'selected_line', 592)]
+    remaster['hb_argmax'] = dict(master='ot_hbm_argmax_static_sw_vm_r2', params=prm('hb_argmax', ".SID(2'd3)"))
+    if 'hb_idx__nwsh' in dl:
+        remaster['hb_idx__nwsh'] = dict(master=die.insts['hb_idx__nwsh']['master'], params=prm('hb_idx__nwsh', ''))
+    if 'hb_idx__op_NW' in dl:
+        remaster['hb_idx__op_NW'] = dict(master=die.insts['hb_idx__op_NW']['master'], params=prm('hb_idx__op_NW', ''))
+    drop_inst += ['hb_idx__xq_S', 'hb_idx__xqr']
+    items.append(dict(id='R-IDX', kind='rtl+wiring', status='done (straps 8d607ca2e; delays from b2_delays.json)' if dl
+                      else 'done (straps 8d607ca2e); delay params as built (placeholders)',
+                      what="hb_idx__ctl SID 3 / NQ 2 / NL 1: shares vmb_NE*.rq4/rr4 (vm_rq / vm_rr) with op_NE (index_rq / "
+                           "index_rr; op_NE no longer drives the banks), tree_ev {xq_N.y[593] NE, xq_N.y[296] NW}, qfault "
+                           "{qctl_NE, qctl_NW}, selected_v 1 b; hb_idx__selector NL 1 in_line = xq_N.y without the two list "
+                           "valid bits ({NE 296, NW 296} = as-built list 1); hb_idx__link NL 1; hb_argmax SID 3; hb_idx__xq_S "
+                           "and hb_idx__xqr dropped; cq / cr via hb_vms_NW (R-VM) -> NE sector over the two-stop ring; "
+                           "hb_idx__nwsh / op_NW (NW share2) kept",
+                      plan='root<->NE_hub carries the root share (vm_rq 136 + index_rr 2056 b out, vm_rr 2056 + index_rq '
+                           '136 b in): see b2_delays.json lane capacity; score chain is one xq node (2 edges) shorter '
+                           '(compiler --score-chain); delay params from b2_delays.json'))
 
     # ---- RTL items from sub-agents
     for f in a.rtl_items:
