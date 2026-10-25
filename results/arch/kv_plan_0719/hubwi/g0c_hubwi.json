@@ -3,7 +3,7 @@
  "plan": "/srv/opentallas-scratch2/claude/wt/path-kv-hubwi-1025/physical/die_plan/qwen_kvsys/die_plan.json",
  "verdict": "FAIL",
  "mode": "G0C",
- "errors": 16,
+ "errors": 13,
  "warnings": 1367,
  "summary": {
   "die": "qwen_kvsys",
@@ -6389,18 +6389,6 @@
   {
    "level": "ERROR",
    "check": "faces",
-   "msg": "hub_Wi.E: 121 pins in the 10-um window at 12785.57 (12.10/um > 6)",
-   "part": "hub_Wi"
-  },
-  {
-   "level": "ERROR",
-   "check": "faces",
-   "msg": "hub_Wi.W: 111 pins in the 10-um window at 12437.59 (11.10/um > 6)",
-   "part": "hub_Wi"
-  },
-  {
-   "level": "ERROR",
-   "check": "faces",
    "msg": "hgi_WN_7.W: 132 pins in the 10-um window at 14751.14 (13.20/um > 6)",
    "part": "hgi_WN_7"
   },
@@ -6421,12 +6409,6 @@
    "check": "faces",
    "msg": "hgi_WN_7.S: 122 pins in the 10-um window at 3426.27 (12.20/um > 6)",
    "part": "hgi_WN_7"
-  },
-  {
-   "level": "ERROR",
-   "check": "faces",
-   "msg": "hub_Wi.N: 122 pins in the 10-um window at 3426.27 (12.20/um > 6)",
-   "part": "hub_Wi"
   },
   {
    "level": "ERROR",

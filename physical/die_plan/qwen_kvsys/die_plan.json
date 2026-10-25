@@ -594906,7 +594906,9 @@
      ],
      "pins_file": "cores/qkd_hr_host_qm_pins.json"
     }
-   ]
+   ],
+   "face_pins_per_um": 12.2,
+   "face_budget_g2": "results/arch/kv_plan_0719/hubwi/g2_hubwi.json:kv3_hub_Wi"
   },
   "kv3_hub_Wo": {
    "module": "kv3_hub_Wo_part",
