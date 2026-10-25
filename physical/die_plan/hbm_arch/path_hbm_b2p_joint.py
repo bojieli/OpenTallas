@@ -68,6 +68,24 @@ def selected_strap_abi(plan, out):
                 data_cycle_delta=0,removed_id_face_ff=192,
                 scope="exact strap_tile_tid[5:0] only; actual wrapper and six-bit-only SDC exception required before route")
 
+def repair_l126_boundary(plan):
+    """Rebalance the existing first b003 station; preserve control latency."""
+    t=plan['partition_types']['q_b003']
+    slot=next(s for s in t['ft_slots'] if s['name']=='L126x2')
+    before=copy.deepcopy(slot['regs_um'])
+    if before[0] != [4.32,1555.2] or slot.get('bit_sites_um'):
+        raise ValueError('unexpected L126x2 source or per-bit sites: replan explicitly')
+    slot['regs_um'][0]=[4.32,1296.0]
+    slot['note']=slot.get('note','')+' | joint R1: rebalance boundary hop without adding a pipeline stage'
+    P=S.Plan(plan)
+    result={}
+    for lid in ('L126','L126m'):
+        _,regs,_=C.lane_geometry(P,lid)
+        hops=[abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(regs,regs[1:])]
+        if max(hops)>405+1e-6:raise ValueError(f'{lid} still exceeds405um')
+        result[lid]={'max_hop_um':round(max(hops),3),'cycles':P.lane_latency(lid)['cycles']}
+    return dict(type='q_b003',slot='L126x2',before=before,after=slot['regs_um'],lanes=result,cycle_delta=0)
+
 def main():
     a=argparse.ArgumentParser();a.add_argument('--src',required=True);a.add_argument('--out',required=True)
     a.add_argument('--regen-clock',action='store_true');x=a.parse_args()
@@ -79,7 +97,7 @@ def main():
         if p.is_dir():shutil.copytree(p,out/p.name)
         else:shutil.copy2(p,out/p.name)
     plan=json.loads((src/'die_plan.json').read_text())
-    report={'root_e':reserve_root_e(plan)}
+    report={'root_e':reserve_root_e(plan),'l126':repair_l126_boundary(plan)}
     report["selected_strap_abi"]=selected_strap_abi(plan,out)
     rt=plan['partition_types']['root']
     tk=[c for c in rt['hard_cores'] if c['inst'].startswith('u_tkm_SW_')]
