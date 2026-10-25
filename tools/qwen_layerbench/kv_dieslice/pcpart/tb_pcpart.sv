@@ -68,6 +68,17 @@ module tb_pcpart;
     final $display("PCB PC%0d c_v %0d boot_columns %0d boot_win %b hgo %b fo %b f_raw %b obs %b ctl %b f_cmd %b f_early %b f_ecdc %b", i, n_cv``i, n_bc``i, \
         P.u_ctrl.u_sched.boot_win, P.u_ctrl.u_sched.hgo, P.u_ctrl.u_sched.fo, P.u_ctrl.u_sched.f_raw, P.u_ctrl.u_sched.native_observer_fault, \
         P.u_ctrl.u_sched.ctl_fault, P.u_ctrl.u_sched.f_cmd, P.u_ctrl.u_sched.f_early, P.u_ctrl.u_sched.f_ecdc);
+    // raw PHY return valid at the PHY model (pi<k>[0], hck) vs at each controller's pin flop (rv_q): a return must
+    // arrive exactly once per RD (the partition po/pi lanes are bound to the core clock clk -- see KV-TOK B report)
+`define PCB_RV(i, P, PI) \
+    integer n_pi``i = 0, n_rv``i = 0; \
+    always @(posedge hck) begin if (PI[0]) n_pi``i <= n_pi``i + 1; if (P.u_ctrl.u_sched.rv_q) begin n_rv``i <= n_rv``i + 1; \
+        $display("PCB cyc %0d PC%0d rv_q raw_out %0d raw_nom %b", cyc, i, P.u_ctrl.u_sched.raw_out, P.u_ctrl.u_sched.raw_nom); end end \
+    final $display("PCB PC%0d phy_pi_valid %0d controller_rv %0d", i, n_pi``i, n_rv``i);
+    `PCB_RV(0, dut.u_kvpc0.u_pc.u_pce.u_path, pi0)
+    `PCB_RV(1, dut.u_kvpc1.u_pc.u_pce.u_path, pi1)
+    `PCB_RV(2, dut.u_kvpc2.u_pc.u_pce.u_path, pi2)
+    `PCB_RV(3, dut.u_kvpc3.u_pc.u_pce.u_path, pi3)
     `PCB_PC(0, dut.u_kvpc0.u_pc.u_pce.u_path)
     `PCB_PC(1, dut.u_kvpc1.u_pc.u_pce.u_path)
     `PCB_PC(2, dut.u_kvpc2.u_pc.u_pce.u_path)
