@@ -1,12 +1,13 @@
 """Production coll_ftm clock correction: replace its two overloaded glue taps.
 
 Apply after the QC generator's type/FT placement is complete. Only clock topology
-changes; ports, data/reset RTL and all public lane latencies remain unchanged.
+changes. Data ports, core RTL and public lane latencies stay unchanged; canonical
+emitters recompute clock ports and local control-reset topology from this plan.
 """
 from copy import deepcopy
 
 PROFILE = dict(tap_mode="density", tap_max_sinks=1000, tap_target_sinks=800,
-               tap_radius_um=180.0, tap_min_sinks=0, tap_refine_iters=6)
+               tap_radius_um=180.0, tap_min_sinks=1)
 
 
 def apply(raw):
