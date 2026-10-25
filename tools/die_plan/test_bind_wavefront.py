@@ -22,6 +22,7 @@ def emitter(raw):
     """Smallest Binder vehicle: real raw emitters, reset-only physical partitions."""
     b = bind.Binder.__new__(bind.Binder)
     b.plan = raw
+    b.plan_dir = HERE / "examples"
     b.ab = {'top': 'reset_fixture', 'default_clock': 'core'}
     b.types = raw['partition_types']
     b.parts = {p['name']: p for p in raw['partitions']}
@@ -116,3 +117,20 @@ endmodule
 def test_raw_bound_reset_lockstep_and_mutant(tmp_path):
     assert simulate(tmp_path/'good') == 0
     assert simulate(tmp_path/'mutant', mutant=True) > 0
+
+
+def test_plan_relative_core_pin_table_without_lef_or_module_metadata(tmp_path):
+    # Real QC tables identify their "core", not "module"; logical binds may
+    # precede LEF generation. Only the declared plan directory is needed.
+    raw = plan()
+    table = tmp_path/'cores/a0_nk_pins.json'
+    table.parent.mkdir()
+    table.write_text(json.dumps({'core': 'actual_qc_core', 'pins': [
+        {'name': 'rst_n', 'layer': 'M4', 'x': 0, 'y': 150}]}))
+    raw['partition_types']['src']['hard_cores'] = [dict(inst='u_hc', module='actual_qc_core',
+        lef='absent.lef', origin_um=[50, 50], outline_um=[200, 300],
+        pins_file='cores/a0_nk_pins.json')]
+    P = schema.Plan(raw, tmp_path/'die_plan.json')
+    target, = RT.core_reset_targets(P, 'src')
+    assert target['inst'] == 'u_hc' and target['pin'] == 'rst_n'
+    assert target['pin_um'] == [50, 200]
