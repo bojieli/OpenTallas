@@ -833,6 +833,72 @@ def aig_outputs(path):
         return [int(f.readline().split()[0]) for _ in range(O)]
 
 
+def xor_sat(m, ids, log):
+    """Optional XOR-aware SAT for CRC/status cones ABC leaves undecided.
+
+    Keep the complete original AIG CNF for every cone. Native XOR equations
+    are redundant exact identities from the Boolean normaliser, never design
+    assumptions. If pycryptosat is absent the caller retains UNDECIDED.
+    """
+    try:
+        import pycryptosat
+    except ImportError:
+        return {}
+    need = set()
+    stack = [m.outs[i] >> 1 for i in ids]
+    while stack:
+        v = stack.pop()
+        if not v or v in need:
+            continue
+        need.add(v)
+        if v > m.ni:
+            k = v - m.ni - 1
+            stack.extend(t >> 1 for t in m.ands[2 * k:2 * k + 2])
+    solver = pycryptosat.Solver(threads=1)
+    if need:
+        # Also declare a cone consisting solely of an unconstrained input.
+        solver.add_clause([max(need), -max(need)])
+
+    def clause(lits):
+        if 1 not in lits:
+            solver.add_clause([-(x >> 1) if x & 1 else x >> 1 for x in lits if x > 1])
+
+    for k in range(len(m.ands) // 2):
+        n = 2 * (m.ni + k + 1)
+        if n >> 1 not in need:
+            continue
+        x, y = m.ands[2 * k:2 * k + 2]
+        clause([n ^ 1, x])
+        clause([n ^ 1, y])
+        clause([n, x ^ 1, y ^ 1])
+    nx = 0
+    for lit, (terms, const) in m.parity_expr.items():
+        if lit >> 1 not in need or any(t >> 1 not in need for t in terms):
+            continue
+        vs = collections.Counter([lit >> 1] + [t >> 1 for t in terms])
+        vs = [v for v, n in vs.items() if n & 1]
+        rhs = bool(const ^ (lit & 1))
+        if not vs:
+            if rhs:
+                raise LecError("inconsistent Boolean XOR identity")
+            continue
+        solver.add_xor_clause(vs, rhs)
+        nx += 1
+    statuses = {}
+    for i in ids:
+        lit = m.outs[i]
+        if lit <= 1:
+            statuses[m.onames[i]] = "differs" if lit else "proved"
+            continue
+        start = time.time()
+        sat, _ = solver.solve(assumptions=[-(lit >> 1) if lit & 1 else lit >> 1])
+        statuses[m.onames[i]] = "proved" if sat is False else "differs" if sat is True else "undecided"
+        log.append(f"XOR SAT {getattr(pycryptosat, '__version__', 'unknown')}: {m.onames[i]} "
+                   f"{statuses[m.onames[i]]}, {len(need)} cone variables, {nx} redundant XORs, "
+                   f"{time.time() - start:.3f}s")
+    return statuses
+
+
 def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
     """per-output status {name: 'proved' | 'differs' | 'undecided'} of the miter outputs of builder m.
     ABC: &fraig (simulation + SAT sweeping of the shared gold / gate structure; proved outputs collapse to 0), then
@@ -898,6 +964,9 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
                                    "differs" if (u, sat, undec) == (0, 1, 0) else "undecided")
                 for i, status in zip(ids, res):
                     st[m.onames[i]] = status
+    unknown = [i for i, n in enumerate(m.onames) if st[n] == "undecided"]
+    if unknown:
+        st.update(xor_sat(m, unknown, log))
     return st
 
 
