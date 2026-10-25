@@ -184,3 +184,4 @@ READY [S81 2026-10-24 23:39 PDT] claude/s81-kits-1024r-nodes@9a2a099a57, RTLC: 2
 - (c) xfin: re-pinned 905 pins, rst_n mid-S; e_* added and core_conns xf.e_* -> eg.i_*; hub-C placement fix (y-mirrored C types now carry cores at MX); face_guard 903/903.
 - (d) selt_c lockstep: seeds 1/2 PASS, mutant caught.
 - Plan G0/G0C 0 err. TOK-DS priced (coord 81cd190f8).
+READY [FP32 2026-10-25 00:00 PDT] claude/fp32-lat4-1024@3bdf3392e0: decision-16 FP32 LAT4 evidence only (tools/fp32_lat4 bench+STA flow, results/fp32_lat4_1024); new files only, 0 deletions, no RTL change; bench PASS 0 mismatches
