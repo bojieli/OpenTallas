@@ -1,0 +1,651 @@
+{
+ "schema": "opentallas.die_plan.g0.v1",
+ "plan": "/srv/opentallas-scratch/claude/wt/codex-cp1-0719/results/geom_review/cp1_wf_resume_0719/pair_plan.json",
+ "verdict": "PASS",
+ "mode": "G0",
+ "errors": 0,
+ "warnings": 7,
+ "summary": {
+  "die": "cp1_reach405W",
+  "partitions": 2,
+  "types": {
+   "types": 2,
+   "partitions": 2,
+   "singleton_types": 2,
+   "max_instances": 1,
+   "near_duplicate_groups": 0,
+   "near_duplicate_types": 0,
+   "mergeable_saving": 0
+  },
+  "ports": 19,
+  "lanes": 13,
+  "bits": 8331,
+  "taps_cores": {
+   "taps": 0,
+   "hard_cores": 0,
+   "core_pins": 0,
+   "core_pins_off_track": 0,
+   "types_no_cells": 2,
+   "over_cap_no_cores": 0,
+   "cell_sources": [],
+   "no_cells": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r1__t1"
+   ]
+  },
+  "core_faces": {
+   "groups": 0,
+   "groups_away": 0,
+   "pins": 0,
+   "pins_away": 0,
+   "types_away": 0,
+   "cores": 0,
+   "cores_unchecked": 0
+  },
+  "complete": {
+   "cells": 2,
+   "track_offset": 0,
+   "clock_method": 0,
+   "common_latency": 0,
+   "insertion_target": 0,
+   "reset_sync": 0,
+   "face_flop": 0,
+   "internal_station": 0
+  },
+  "g0c": {
+   "types": 2,
+   "clean": 0,
+   "die_level": {
+    "die_io_plan": 1
+   },
+   "g3_eligible": [],
+   "by_type": {
+    "col_h10_r0_p1__t1": {
+     "complete:cells": 1
+    },
+    "col_h10_r1__t1": {
+     "complete:cells": 1
+    }
+   }
+  },
+  "geometry": {
+   "partition_area_mm2": 3.5404812288000005,
+   "channel_area_mm2": 0.0,
+   "uncovered_mm2": 0.0,
+   "fill": 1.0,
+   "planned_channels": []
+  },
+  "worst_faces": [
+   {
+    "part": "fW0_p1_b1",
+    "face": "S",
+    "pins_per_um": 5.1
+   },
+   {
+    "part": "fW0_p1_b1",
+    "face": "N",
+    "pins_per_um": 4.9
+   },
+   {
+    "part": "fW0_p1_b0",
+    "face": "W",
+    "pins_per_um": 4.9
+   },
+   {
+    "part": "fW0_p1_b0",
+    "face": "S",
+    "pins_per_um": 4.9
+   },
+   {
+    "part": "fW0_p1_b0",
+    "face": "E",
+    "pins_per_um": 4.9
+   }
+  ],
+  "m89_signals": {
+   "total": 0,
+   "by": {}
+  },
+  "worst_hops": [
+   {
+    "lane": "x_W0_out__5",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "rt_W0_out_2__4",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "rt_W0_out_1__3",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "rt_W0_out_0__2",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "rt_W0_in_2__1",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "rt_W0_in_1__0",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "xo_W0_in_a__0",
+    "hop_um": 0.0,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "x_W0_in__5",
+    "hop_um": 0.0,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "rt_W0_in_0__0",
+    "hop_um": 0.0,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "fi_W0_p1_r2r1__0",
+    "hop_um": 0.0,
+    "reach_um": 405.0
+   }
+  ],
+  "cuts": {
+   "vertical": [
+    {
+     "at_um": 250,
+     "bits": 1454,
+     "tracks": 22365,
+     "ratio": 0.065,
+     "m89_only_ratio": 0.0474,
+     "worst_part": "fW0_p1_b0",
+     "worst_part_ratio": 0.13,
+     "worst_part_bits": 1454
+    },
+    {
+     "at_um": 500,
+     "bits": 1454,
+     "tracks": 22365,
+     "ratio": 0.065,
+     "m89_only_ratio": 0.0474,
+     "worst_part": "fW0_p1_b0",
+     "worst_part_ratio": 0.13,
+     "worst_part_bits": 1454
+    },
+    {
+     "at_um": 750,
+     "bits": 1454,
+     "tracks": 22365,
+     "ratio": 0.065,
+     "m89_only_ratio": 0.0474,
+     "worst_part": "fW0_p1_b0",
+     "worst_part_ratio": 0.13,
+     "worst_part_bits": 1454
+    },
+    {
+     "at_um": 1000,
+     "bits": 1454,
+     "tracks": 22365,
+     "ratio": 0.065,
+     "m89_only_ratio": 0.0474,
+     "worst_part": "fW0_p1_b0",
+     "worst_part_ratio": 0.13,
+     "worst_part_bits": 1454
+    },
+    {
+     "at_um": 1250,
+     "bits": 1454,
+     "tracks": 22365,
+     "ratio": 0.065,
+     "m89_only_ratio": 0.0474,
+     "worst_part": "fW0_p1_b0",
+     "worst_part_ratio": 0.13,
+     "worst_part_bits": 1454
+    }
+   ],
+   "horizontal": [
+    {
+     "at_um": 250,
+     "bits": 0,
+     "tracks": 13151,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 500,
+     "bits": 0,
+     "tracks": 13151,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 750,
+     "bits": 0,
+     "tracks": 13151,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1000,
+     "bits": 0,
+     "tracks": 13151,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1250,
+     "bits": 0,
+     "tracks": 13151,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1500,
+     "bits": 0,
+     "tracks": 13151,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1750,
+     "bits": 0,
+     "tracks": 13151,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 2000,
+     "bits": 0,
+     "tracks": 13151,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 2250,
+     "bits": 0,
+     "tracks": 13151,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    }
+   ],
+   "worst_full": {
+    "ratio": 0.065,
+    "at": "vertical@250"
+   },
+   "worst_partition_segment": {
+    "ratio": 0.13,
+    "at": "vertical@250:fW0_p1_b0"
+   },
+   "model": {
+    "partition_ft_layers": {
+     "H": [
+      "M4",
+      "M6"
+     ],
+     "V": [
+      "M5",
+      "M7"
+     ]
+    },
+    "ft_track_frac_default": 0.25,
+    "die_layers": [
+     "M8",
+     "M9"
+    ],
+    "cut_avail": {
+     "M8": 0.6,
+     "M9": 0.6
+    },
+    "step_um": 250
+   }
+  },
+  "latency": {
+   "fi_W0_p1_r0r1__0": 2,
+   "fi_W0_p1_r1r0__0": 2,
+   "fi_W0_p1_r1r2__0": 1,
+   "fi_W0_p1_r2r1__0": 1,
+   "x_W0_in__5": 1,
+   "xo_W0_in_a__0": 1,
+   "rt_W0_in_0__0": 1,
+   "rt_W0_in_1__0": 4,
+   "rt_W0_in_2__1": 4,
+   "x_W0_out__5": 4,
+   "rt_W0_out_0__2": 4,
+   "rt_W0_out_1__3": 4,
+   "rt_W0_out_2__4": 4
+  },
+  "r8": {
+   "checked": false
+  },
+  "reset": {
+   "release": "wavefront",
+   "sync_stages": 2,
+   "root": "fW0_p1_b0",
+   "hop_um": 405.0,
+   "relay_um": 405.0,
+   "max_release": 15,
+   "max_die_hop_um": 378.0,
+   "unreachable": []
+  },
+  "seams": {
+   "nets": {
+    "abutted": 1533,
+    "channel": 0
+   },
+   "pairs": {
+    "fW0_p1_b0|fW0_p1_b1": {
+     "abutted": 1533,
+     "channel": 0
+    }
+   }
+  },
+  "die_io": {
+   "windows": 0,
+   "ports": 17,
+   "plan": {
+    "windows": 0,
+    "iface_windows": 0,
+    "io_instances": 0,
+    "by_class": {},
+    "host": null,
+    "uncovered": 0,
+    "off_shore": 0,
+    "over_sites": 0
+   },
+   "pg_domains": {
+    "domains": 0,
+    "serdes_windows": 0,
+    "covered": 0
+   },
+   "source": null
+  },
+  "cut_lines": {
+   "vertical": [],
+   "horizontal": [
+    {
+     "at_um": 1226.88,
+     "bits": 1533,
+     "abutted_bits": 1533,
+     "route_bits": 0,
+     "tracks": 31563,
+     "ratio": 0.0486
+    }
+   ],
+   "top_vertical": [],
+   "top_horizontal": [
+    {
+     "at_um": 1226.88,
+     "bits": 1533,
+     "abutted_bits": 1533,
+     "route_bits": 0,
+     "tracks": 31563,
+     "ratio": 0.0486
+    }
+   ],
+   "worst": {
+    "ratio": 0.0486,
+    "at": "horizontal@1226.88"
+   },
+   "lines": 1,
+   "model": "face line: abutted port bits + ft/die routes strictly crossing; tracks = partition pin layers x pin_track_max (M4-M7; M8/M9 carry no signals, ruling 9.3)"
+  },
+  "reach": {
+   "margin": 0.9,
+   "table": {
+    "M4": 405.0,
+    "M5": 405.0,
+    "M6": 405.0,
+    "M7": 405.0,
+    "M8": 1001.2,
+    "M9": 1012.8
+   },
+   "source": "results/arch/die_reach_m89_1022.json",
+   "die_reach_um": 405.0,
+   "layers": [
+    "M4",
+    "M5",
+    "M6",
+    "M7"
+   ],
+   "over": 0,
+   "by_layers": {},
+   "over_if_partition_layers": {
+    "limit_um": 364.5,
+    "lanes": 0
+   },
+   "worst": [
+    {
+     "lane": "x_W0_out__5",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "rt_W0_out_2__4",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "rt_W0_out_1__3",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "rt_W0_out_0__2",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "rt_W0_in_2__1",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "rt_W0_in_1__0",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "xo_W0_in_a__0",
+     "hop_um": 0.0,
+     "reach_um": 405.0,
+     "frac": 0.0
+    },
+    {
+     "lane": "x_W0_in__5",
+     "hop_um": 0.0,
+     "reach_um": 405.0,
+     "frac": 0.0
+    },
+    {
+     "lane": "rt_W0_in_0__0",
+     "hop_um": 0.0,
+     "reach_um": 405.0,
+     "frac": 0.0
+    },
+    {
+     "lane": "fi_W0_p1_r2r1__0",
+     "hop_um": 0.0,
+     "reach_um": 405.0,
+     "frac": 0.0
+    }
+   ]
+  },
+  "face_tracks": {
+   "over": 0,
+   "worst": [
+    {
+     "part": "fW0_p1_b0",
+     "face": "E",
+     "ratio": 0.205,
+     "on": "M6",
+     "allowed": [
+      "M4",
+      "M6"
+     ]
+    },
+    {
+     "part": "fW0_p1_b0",
+     "face": "W",
+     "ratio": 0.205,
+     "on": "M6",
+     "allowed": [
+      "M4",
+      "M6"
+     ]
+    },
+    {
+     "part": "fW0_p1_b1",
+     "face": "S",
+     "ratio": 0.189,
+     "on": "M7",
+     "allowed": [
+      "M5",
+      "M7"
+     ]
+    },
+    {
+     "part": "fW0_p1_b0",
+     "face": "S",
+     "ratio": 0.181,
+     "on": "M7",
+     "allowed": [
+      "M5",
+      "M7"
+     ]
+    },
+    {
+     "part": "fW0_p1_b1",
+     "face": "N",
+     "ratio": 0.181,
+     "on": "M7",
+     "allowed": [
+      "M5",
+      "M7"
+     ]
+    }
+   ]
+  },
+  "ft_budget": {
+   "over": 0,
+   "worst": [
+    {
+     "type": "col_h10_r0_p1__t1",
+     "instances": 1,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 1454,
+      "reserved": 10117,
+      "ratio": 0.1437
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 0,
+      "reserved": 11690,
+      "ratio": 0.0
+     }
+    },
+    {
+     "type": "col_h10_r1__t1",
+     "instances": 1,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 0,
+      "reserved": 10117,
+      "ratio": 0.0
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 0,
+      "reserved": 11690,
+      "ratio": 0.0
+     }
+    }
+   ],
+   "total_types": 2
+  },
+  "xdie_counts": {
+   "hard_cores": 0,
+   "core_faces": 0,
+   "complete": 2,
+   "die_io_plan": 1,
+   "cut_lines": 0,
+   "reach": 0,
+   "face_tracks": 0,
+   "ft_budget": 0
+  },
+  "census": {
+   "declared": "none",
+   "reason": "CP1 proof pair cut from s81: census coverage is checked on the full plan"
+  }
+ },
+ "findings": [
+  {
+   "level": "WARN",
+   "check": "complete",
+   "msg": "[G0C] [cells] type col_h10_r0_p1__t1: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)",
+   "type": "col_h10_r0_p1__t1",
+   "field": "cells",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "complete",
+   "msg": "[G0C] [cells] type col_h10_r1__t1: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)",
+   "type": "col_h10_r1__t1",
+   "field": "cells",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "complete",
+   "msg": "missing-field counts: cells 2"
+  },
+  {
+   "level": "WARN",
+   "check": "r8",
+   "msg": "R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)"
+  },
+  {
+   "level": "WARN",
+   "check": "die_io",
+   "msg": "17 die IO ports (6800 b) and no die.io pad / bump windows: off-die pads (SerDes PMA, HBM PHY memory side, host) unplanned"
+  },
+  {
+   "level": "WARN",
+   "check": "die_io_plan",
+   "msg": "[G0C] no die IO planned (die.io empty): 0 IO-class instances (none) and the host link have no bump / pad window (generate: python3 tools/die_plan/die_io.py plan PLAN --inplace)",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census coverage not run: CP1 proof pair cut from s81: census coverage is checked on the full plan"
+  }
+ ]
+}

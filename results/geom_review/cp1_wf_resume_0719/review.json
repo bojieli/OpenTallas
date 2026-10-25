@@ -1,0 +1,16 @@
+{
+ "verdict": "PASS-COND",
+ "picture": "pair.png",
+ "prior": "GEOM-REVIEW-3 CLOCK-RESET/cp1-W 06:34",
+ "findings": [
+  "Same abutted Wpair geometry, wide seam buses aligned, uniform clock taps, planned feedthrough stations unchanged; no hard macros or walls.",
+  "Actual R output-face image viewed: shared leaf source spans face and explains historical slew; unique_fold already removed output merging in W source.",
+  "Route failed only on la_d Tcl namespace; copy main8234352a5 cts_post global sourcing and leaf-affinity shared-state declarations.",
+  "Pair metadata retained obsolete ft_reserved M8/M9 label and reach1500; corrected die_use clock/reset/PG and reach405, partition MAX_ROUTING_LAYER already M7. G0 now0errors."
+ ],
+ "conditions": [
+  "After GRT require bout D slew0 and source-to-pin-register p50/p90/max.",
+  "Check top-face density<=0.8; no-merge post-synth census already passed06:41.",
+  "Seam STA requires signed routed Wpair, no historical leaf or standalone inference counts."
+ ]
+}
