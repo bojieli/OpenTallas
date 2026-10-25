@@ -31,14 +31,18 @@ module ot_hgi_coll_tkm_static_p #(parameter integer KMAX=2048, MUT=0, TP=96, RAN
  //            between its last insertion and its first shift.
  //   clear2 = first+cells+5+XL: the whole pass-1 stream (late by XL) is in the buffer and every tile has finished its
  //            (deskewed) conv1 window before the broadcast clr.
- //   read2  = clear2+5+CB: the re-read entries (entry path has no CB) reach tile0 after clr2 (path +CB) by the PIPE margin.
+ //   read2  = clear2+5+CLRB: the re-read entries (entry path has no CB) reach tile0 after clr2 (path +CB) by the PIPE margin.
  //   capture tap / tk: 2*PIPE+XL.
- //   CB>0: the tick-1 clear cannot land before the first entry (entry +2, clr +2+CB; PIPE margin 9 edges), so the clear
+ //   CLRB>0: the tick-1 clear cannot land before the first entry (entry +2, clr +2+CB; PIPE margin 9 edges), so the clear
  //         moves to the END of the operation (emitted at tk==finish, after the last conv2 shift landed) plus one
  //         post-reset pulse, and done/busy-low is held CB edges so a next start (>= done+1) issues its first entry
  //         after that clear landed at every tile (same 9-edge margin as tick 1 -> tick 9 + entry path).
- // Cost: stat_cycles / done +2*(SETTLE-SETTLE0)+2*XL+2*CB edges (TP192 KMAX2048 HOP2 FRT4 CB14: 2*48+2*80+28 = 284).
- parameter integer HOP=0, FRT=0, CB=0)(
+ // Cost: stat_cycles / done +2*(SETTLE-SETTLE0)+2*XL+2*CLRB edges (TP192 KMAX2048 HOP2 FRT4 CB21 CLRB0: 2*41+2*87 = 256; CB14 CLRB14: 2*48+2*80+28 = 284).
+ //   CLRB (clr only, default = CB): stages the clr path adds at tile 0 beyond the faces.  CLRB 0 = clr travels SYSTOLIC
+ //         down the chain with the data (in-tile FT flop, <= the data's 3+HOP edges per hop: provably safe, since every
+ //         later tile sees clr no later relative to its entries / earlier relative to its finished conv than tile 0):
+ //         then the tick-1 clear, read2 and done are as in the PIPE module; only conv carries CB.
+ parameter integer HOP=0, FRT=0, CB=0, CLRB=CB)(
  input wire clk,rst_n,start,
  input wire[31:0]tile_clk,input wire buffer_clk,
  input wire[11:0]cfg_n,input wire[12:0]cfg_k,cfg_nout,
@@ -110,7 +114,7 @@ module ot_hgi_coll_tkm_static_p #(parameter integer KMAX=2048, MUT=0, TP=96, RAN
  wire[31:0]tk=tick-32'(2*PIPE+XL);   // the root's view of the conv stream (capture / finish)
  reg rst_clr;wire eop=busy&&tk==finish;
  always @(posedge clk or negedge rst_n)if(!rst_n)rst_clr<=1'b1;else rst_clr<=1'b0;   // CB>0 post-reset tile clear
- wire clr=(CB==0)?(busy&&(tick==1||tick==clear2)):((busy&&tick==clear2)||eop||rst_clr);
+ wire clr=(CLRB==0)?(busy&&(tick==1||tick==clear2)):((busy&&tick==clear2)||eop||rst_clr);
  // HBM-P4-SPLIT (PIPE 1): every root -> tile pin is launched by a root register (clr / conv / entry one edge later, all
  // tiles shift uniformly) and up[0] lands in a root pin register; the root consumes the tile chain 2 edges later.
  reg clr_q,conv_q;wire t_clr=(PIPE!=0)?clr_q:clr;wire t_conv=(PIPE!=0)?conv_q:(conv1||conv2);
@@ -220,12 +224,12 @@ module ot_hgi_coll_tkm_static_p #(parameter integer KMAX=2048, MUT=0, TP=96, RAN
     if(tk==finish)begin
      if(cap1!=32'(cells)||cap2!=32'(cells)||pending_r||pending_o||32'(nout)!=((32'(k)<valid_pairs)?32'(k):valid_pairs))fault<=1;
     end
-    if(tk==finish+32'(CB))begin busy<=0;done<=1;end
+    if(tk==finish+32'(CLRB))begin busy<=0;done<=1;end
    end
    if(start)begin:configure
     reg[31:0]i_,c_,a_,b_,r_,s_,f_;reg[31:0]fl_;
     fl_=32'(cfg_g)*32'(cfg_pf);i_=8+((fl_+3)/4)*8;c_=(32'(cfg_nout)+3)/4;
-    a_=i_+SETTLE;b_=a_+c_+5+XL;r_=b_+5+CB;s_=r_+c_+6+SETTLE;f_=s_+c_+8;
+    a_=i_+SETTLE;b_=a_+c_+5+XL;r_=b_+5+CLRB;s_=r_+c_+6+SETTLE;f_=s_+c_+8;
     if(busy)fault<=1;
     else begin
      fault<=cfg_g==0||cfg_g>TP||cfg_pf!=(16'(cfg_n)+7)/8||cfg_nout==0||cfg_nout>KMAX||cfg_k>KMAX||

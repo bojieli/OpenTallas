@@ -9,11 +9,11 @@
 // latency, conv through the parent deskew ot_hgi_coll_tkm_conv_skew (HOP edges per tile, deepest tile first).
 // Named plan_direct3: L74 2 cycles (LINK_STAGES 2), return L12 CTL = L13 DATA = 2 (coherent, no pad).
 module tb_hbm_tkm_l74_shell;
- parameter integer KMAX=2048,MUT=0,TP=192,TIE_W_MUT=0,PIPE=1,MUTP=0,LINK_STAGES=2,RETURN_CTL_STAGES=2,RETURN_DATA_STAGES=2,BEAT_WIDTH=2341,HOP=2,FRT=4,CTL_BCAST_STAGES=14;
- localparam integer NT=(KMAX+63)/64,CB=CTL_BCAST_STAGES,S0=3*NT+8,SN=(3+HOP)*(NT-1)+11-CB,XL=FRT+CB+HOP*(NT-1),ROOT_IO=2;
+ parameter integer KMAX=2048,MUT=0,TP=192,TIE_W_MUT=0,PIPE=1,MUTP=0,LINK_STAGES=2,RETURN_CTL_STAGES=2,RETURN_DATA_STAGES=2,BEAT_WIDTH=2341,HOP=2,FRT=4,CTL_BCAST_STAGES=14,CLR_SYSTOLIC=0,CLR_HOP=3;
+ localparam integer NT=(KMAX+63)/64,CB=CTL_BCAST_STAGES,CLRB=CLR_SYSTOLIC?0:CB,S0=3*NT+8,SN=(3+HOP)*(NT-1)+11-CB,XL=FRT+CB+HOP*(NT-1),ROOT_IO=2;
  // twin age vs the pinned PIPE-0 module: L74 forward + PIPE split + root face in/out (cfg/start/del in, w/done out) +
  // the face-path timeline growth (2 settles + 2 x conv-stream extra age XL, see ot_hgi_coll_tkm_static_p) + return
- localparam integer FORWARD_AGE=LINK_STAGES+3,RETURN_AGE=RETURN_CTL_STAGES,FACE_AGE=ROOT_IO+2*(SN-S0)+2*XL+2*CB,
+ localparam integer FORWARD_AGE=LINK_STAGES+3,RETURN_AGE=RETURN_CTL_STAGES,FACE_AGE=ROOT_IO+2*(SN-S0)+2*XL+2*CLRB,
   TOTAL_DELAY=FORWARD_AGE+2*PIPE+FACE_AGE+RETURN_AGE;
  reg clk=0,rst_n=0,start=0;always #0.4167 clk=~clk;
  reg[31:0]cfg[0:15],a[0:TP*2048-1],b[0:TP*2048-1],eo[0:2047],er[0:2047],ns[0:TP-1];
@@ -70,19 +70,24 @@ module tb_hbm_tkm_l74_shell;
  wire[343:0]down[0:32],up[0:32];wire[32:0]dv;
  assign down[0]=root_entry;assign dv[0]=root_ev;assign up[32]=344'd0;
  // conv deskew (parent relay, HOP flops per tile pitch, deepest tile first); MUT_SKEW = equal-latency broadcast (must FAIL)
- // clr / conv broadcast: CTL_BCAST_STAGES registered stages (equal depth to all 32 tiles; plan ~14, plug the final depth;
- // the root core is extracted for CB 14: a different depth needs a re-extracted root, checked below)
+ // clr / conv broadcast: CTL_BCAST_STAGES registered stages (equal depth to all 32 tiles; plan 21 (8.5 mm), plug the final depth;
+ // the root core is extracted for one depth: a different depth needs a re-extracted root, checked below)
  reg[1:0]bc[0:(CB>0?CB:1)-1];wire bc_clr,bc_conv;
  if(CB==0)begin:g_nobc assign {bc_clr,bc_conv}={root_clr,root_conv};end
  else begin:g_bc always@(posedge clk)begin bc[0]<={root_clr,root_conv};for(integer j=1;j<CB;j=j+1)bc[j]<=bc[j-1];end assign {bc_clr,bc_conv}=bc[CB-1];end
- initial if(CB!=14)$fatal(1,"CTL_BCAST_STAGES %0d != root core CB 14: re-extract the root (ot_hgi_coll_tkm_m_tp192_pf CB)",CB);
+ // the root core is extracted for one (CB, CLRB): pf (14,14) or pf21 (21, systolic clr); ROOT_CB/ROOT_CLRB name it
+ initial if(CB!=`ROOT_CB||CLRB!=`ROOT_CLRB)$fatal(1,"bench CB %0d CLRB %0d != root core %0d %0d: re-extract the root",CB,CLRB,`ROOT_CB,`ROOT_CLRB);
+ // clr: CLR_SYSTOLIC 1 = in-tile FT lane down the chain (tile t+1 = tile t + CLR_HOP: 1 FT flop + 2 faces), modelled as
+ // root clr delayed CLR_HOP*t; else the CB-deep equal broadcast
+ wire[31:0]clr_t;reg[31*CLR_HOP:0]clr_sh;always@(posedge clk)clr_sh<={clr_sh[31*CLR_HOP-1:0],root_clr};
+ for(genvar t=0;t<32;t=t+1)begin:g_clr assign clr_t[t]=CLR_SYSTOLIC?((t==0)?root_clr:clr_sh[CLR_HOP*t-1]):bc_clr;end
  wire[31:0]conv_sk;ot_hgi_coll_tkm_conv_skew #(.NT(32),.HOP(HOP)) u_conv_skew(.clk(clk),.conv_in(bc_conv),.conv_o(conv_sk));
  wire mut_skew=$test$plusargs("MUT_SKEW"),mut_tid=$test$plusargs("MUT_TID");
  integer tiderr=0;
  for(genvar t=0;t<32;t=t+1)begin:actual_tiles
  // tile_tid is the parent ID strap of the ONE common master, driven per instance (MUT_TID: tile 5 gets 6)
  wire[5:0]tid=(mut_tid&&t==5)?6'd6:6'(t);
- ot_hgi_coll_tkm_tp192_tile_core__idpin tile(.tile_clk(clk),.tile_clr(bc_clr),.tile_conv(mut_skew?bc_conv:conv_sk[t]),.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_in(up[t+1]),.tile_tid(tid),.tile_ovf_v(dv[t+1]),.tile_ovf_b(down[t+1]),.tile_up_out(up[t]));
+ ot_hgi_coll_tkm_tp192_tile_core__idpin tile(.tile_clk(clk),.tile_clr(clr_t[t]),.tile_conv(mut_skew?bc_conv:conv_sk[t]),.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_in(up[t+1]),.tile_tid(tid),.tile_ovf_v(dv[t+1]),.tile_ovf_b(down[t+1]),.tile_up_out(up[t]));
  // strap delivery: the shell's tid face flop must hold this instance's ID (tile_tid is functionally unread by the core:
  // face_shell.json unread_kept, so a wrong ID is caught here, at the face, not by the golden words)
  always @(negedge clk)if(rst_n&&tile.tile_tid__fq!==6'(t))begin tiderr=tiderr+1;if(tiderr<4)$display("TILE_TID MISMATCH tile%0d got%0d",t,tile.tile_tid__fq);end
@@ -2253,7 +2258,7 @@ module tb_hbm_tkm_l74_shell;
   $readmemh({dir,"/cfg.hex"},cfg);$readmemh({dir,"/a.hex"},a);$readmemh({dir,"/b.hex"},b);
   $readmemh({dir,"/o.hex"},eo);$readmemh({dir,"/r.hex"},er);$readmemh({dir,"/n.hex"},ns);
   G=cfg[0];N=cfg[1];K=cfg[2];HASR=cfg[4];NOUT=cfg[5];OB=cfg[9];RB=cfg[10];GB=G>=96?0:(int'(cfg[3])/G)*G;PF=(N+7)/8;
-  expected=8+((G*PF+3)/4)*8+2*SN+3*((NOUT+3)/4)+24+1+2*PIPE+2*XL+2*CB;
+  expected=8+((G*PF+3)/4)*8+2*SN+3*((NOUT+3)/4)+24+1+2*PIPE+2*XL+2*CLRB;
   repeat(10)@(negedge clk);rst_n=1;repeat(10)@(negedge clk);boot_start=1;@(negedge clk);boot_start=0;
   repeat(16)@(negedge clk);while(!slot0)@(negedge clk);
   send_start=1;@(negedge clk);send_start=0;start=1;@(negedge clk);start=0;
