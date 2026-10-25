@@ -70,7 +70,10 @@ Open: OWNER? CB16 alignment strategy (about 0.79M flops as pads); <150k needs pl
 ## PARKED 2026-10-24 19:04 PDT
 - Branches: claude/qc-tok-1024 @0deeb41c0d (clean, all merged to main: 7d75427c59, 4c571021f4). claude/qc-cap-1024 @72ece79138
   (= codex/qc-capacity-1024 tip, no own commits yet; worktree localhost:/srv/opentallas-scratch/claude/wt/qc-cap).
-- Live job (mine, localhost, not fleet): capacity plan regeneration (reproducibility check before any plan edit) =
+- [DONE 19:2x] regen check: die_plan.json reproduces byte-exact from 72ece79138 inputs (only census/png/g0_report differ;
+  reverted, nothing committed). With the committed r8/bus_groups.json (c56f) G0 = 66 R8 errors (digest + stale bus groups);
+  with the probe groups (5b3a) = 1 error (sle_ctl). No job of mine is running now.
+- (was) Live job (mine, localhost, not fleet): capacity plan regeneration (reproducibility check before any plan edit) =
   run.sh in wt/qc-cap, gen_plan.py pid 3184125, log /tmp/qct/capregen.log. It edits the plan files in the worktree in place:
   diff them against 72ece79138 (an empty diff means reproducible). No fleet jobs running.
 - Results: link tp8 3/3 + 9/9 mutants, xdie 9/9 + 13/13, ovl4u 2/2 + 8/8 PASS. xt1 bound_r8 + CB16 + lead 14: both 64/64 + 64/64.
