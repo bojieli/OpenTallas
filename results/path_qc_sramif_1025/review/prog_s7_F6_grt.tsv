@@ -1,0 +1,18 @@
+F6	sram	group	n	p50_um	max_um	n_gt20	depth
+F6	g_prog[0].u_hi	r_addr/r_ce	9	8.3	8.9	0	
+F6	g_prog[0].u_hi	rd_out	256	7.5	10.8	0	d1
+F6	g_prog[0].u_hi	w_addr/w_ce	9	8.5	9.9	0	
+F6	g_prog[0].u_hi	wd_in	201	7.6	11.6	0	
+F6	g_prog[0].u_lo	r_addr/r_ce	9	8.8	9.7	0	
+F6	g_prog[0].u_lo	rd_out	256	8.3	13.5	0	d1
+F6	g_prog[0].u_lo	w_addr/w_ce	9	8.4	13.0	0	
+F6	g_prog[0].u_lo	wd_in	256	7.5	14.8	0	
+F6	g_prog[1].u_hi	r_addr/r_ce	9	7.4	8.1	0	
+F6	g_prog[1].u_hi	rd_out	256	7.5	11.2	0	d1
+F6	g_prog[1].u_hi	w_addr/w_ce	9	7.2	8.3	0	
+F6	g_prog[1].u_hi	wd_in	201	7.5	10.2	0	
+F6	g_prog[1].u_lo	r_addr/r_ce	9	7.3	8.3	0	
+F6	g_prog[1].u_lo	rd_out	256	7.6	11.5	0	d1
+F6	g_prog[1].u_lo	w_addr/w_ce	9	7.5	8.6	0	
+F6	g_prog[1].u_lo	wd_in	256	7.5	10.7	0	
+F6_VERDICT PASS (every SRAM pin group: launch/capture register <= 20 um)
