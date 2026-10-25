@@ -581,7 +581,13 @@ CODEX: 2026-10-25 07:49 PDT CLOCK emptytapfalseOK FIXREADY e142a8da81:5fixturesP
 2026-10-25 07:47 PDT CODEX: QC representative RP1f57r4 DRT LIVEunit3193341/source2385baf; actualGRTTT+217.22/FF+6.55ps0ep, gateparserREADY29bcd (2tests/sevencontrols). CQBFFbasisrepairGRTPASS+3.12/0ep8645bufs, old6058caprootcause; checkpointheld/noextraCQBroute. OWNERoneQwenpathfocus: no furthercommonmode/NLvariants; NKledgercorrected maxvsmean.
 2026-10-25 07:51 PDT CODEX: KITS5densityFAILscollected, hardradiusclockfix adopted; optionalManhattankneehelper6ad8eadREADY3geom+3000cyclemiter/mutant; namedL14boundaryt18/t22targeted, nocurrentstationSIGNED.
 2026-10-25 07:52 PDT CODEX: headB exact0cycle ROM-localissuecopies(+24DFF) miter80kchecks+mutantPASS, plannedmacroIFstripsviewed; structural freshplacement epyc1 codex-head0719/elemB_if1 live (unit3494699), actualclosurepending. BroadheadFTwave stopped peroneDSpathpriority.
-CODEX: 2026-10-25 07:58 PDT namedL14engE2reservationREADY70bb1be9ab G0C177/177PASS/exactFT402.133um/0overlap/0cycles; physicalE2NOTSIGNED.
+CODEX: 2026-10-25 07:54 PDT namedL14engE2reservationREADY70bb1be9ab G0C177/177PASS/exactFT402.133um/0overlap/0cycles; physicalE2NOTSIGNED.
 CODEX: 2026-10-25 07:54 PDT HBM selected NW TKM II8->L74 two-beat->shared actual TP192 compute/return path; common leaf genPASS3387725, one64GBsynthlive. IDadapter51072checks+mutantPASS(cd0/ced/184); L74 directcutPASS but geometryFAIL capturebandcorrecting, returnL12/L13 9cycle skew explicitly owned. No broader kit waves.
 
 2026-10-25 07:55 PDT CODEX: currentmainQC+explicitSTARTcriticalplan READYcodex/qc-start-plan-0719@1c0e347be4,G0C0E56/56,0datacycles, scopedimageviewed; tokensfreshbindnext,7bnotblockingone-path.
+2026-10-25 07:49 PDT CODEX: ONEPATH hcore independentTT -29.147/13EP bothbefore+afterfreshFFrepair(EXACTequal), preexistingFPfanoutpathdiagnosed; physicalownsTTfix. checkedrunnerwrappera83ef61cd1READY7mockgates; coherentmain394765signoffbundle stagedOWNintel2/epyc2forfuturehcore/engcopies; E2missingpair/helperexitbugrepairedattoollevel, no originalruntimeedit.
+
+2026-10-25 07:56 PDT CODEX GEOM: L14 EngE2 actualGRT0 accepted for structuralfloorplan direction; timingcidDFFE-237/643 diagnosed byphysicalowner, noDRT/promotion; t18commonkneeplannedgeometryaccepted0cycles withactualplace/clockgates retained. ActualpostDPLPROTOcollectorfix80f96e7eb3 READY6PASS, noG2sourceedit/physicalrerun.
+
+2026-10-25 08:01 PDT CODEX: LEAF0719 four named L14 packed candidates1a2771382 (core gates0E, FT<=375.84um), corrected rxsf N/Wseed1317cfd094; discovered actual native parent CS forwarding gap and special KV physical decomposition gap, root notified; G0C/G2 live.
+2026-10-25 07:58 PDT CODEX: ONE TKM path canonicalroot+32commontiles/exactL74/coherentreturn/goldenlockstep source21e3a5e66c LIVEintel1unit2167534; L74masks and INDEXphase components READY81b82e350d.
