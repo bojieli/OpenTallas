@@ -1,0 +1,26 @@
+read_verilog -sv -DSYNTHESIS /w/ot_rst_relay.sv /w/ot_hdc_prefix.sv /w/ot_s81ph_native_sel_hist_bank.sv
+chparam -set W 16 -set CB 11 -set BANK 0 -set NB 32 -set HPIPE 1 ot_s81ph_native_sel_hist_bank
+hierarchy -top ot_s81ph_native_sel_hist_bank
+proc; flatten; opt_clean
+rename ot_s81ph_native_sel_hist_bank gold
+read_verilog /w/wrapg.v
+hierarchy -top wrapg
+flatten; opt_clean
+design -stash gold
+read_verilog -sv -DSYNTHESIS -DOT_HB_PINCOPY /w/ot_rst_relay.sv /w/ot_hdc_prefix.sv /w/ot_s81ph_native_sel_hist_bank.sv
+chparam -set W 16 -set CB 11 -set BANK 0 -set NB 32 -set HPIPE 1 ot_s81ph_native_sel_hist_bank
+hierarchy -top ot_s81ph_native_sel_hist_bank
+proc; flatten; opt_clean
+rename ot_s81ph_native_sel_hist_bank gate
+read_verilog /w/wrap.v
+hierarchy -top wrap
+flatten; opt_clean
+design -stash gatew
+design -copy-from gold -as gold wrapg
+design -copy-from gatew -as wrap wrap
+async2sync
+equiv_make gold wrap eq
+hierarchy -top eq
+equiv_simple -seq 2
+equiv_induct
+equiv_status -assert

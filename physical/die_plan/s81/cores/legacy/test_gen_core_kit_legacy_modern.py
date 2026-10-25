@@ -60,3 +60,20 @@ def test_modern_vs_legacy_kit(tmp_path):
     m2 = _gen(tmp_path / "m2")
     assert "repair_timing_helper -setup" in (m2 / "cts_post.tcl").read_text()
     assert "repair_timing_helper -setup" not in (leg / "cts_post.tcl").read_text()
+
+
+@pytest.mark.skipif(not (G.S81 / "die_plan.json").is_file(), reason="sparse checkout without the S81 plan")
+def test_hard_child_master_kit(tmp_path):
+    """KITS-SPARE-2/HB: the 16 hist_bank children of dsdv_bksel_q = one master kit (child_of + child view LEF)."""
+    r = subprocess.run([sys.executable, str(GEN), "--module", "ot_s81ph_native_sel_hist_bank", "--out", str(tmp_path)],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr[-2000:]
+    k = Path(json.loads(r.stdout.strip().splitlines()[-1])["kit"])
+    fz = json.loads((k / "freeze.json").read_text())
+    assert fz["child_of"] == "dsdv_bksel_q" and fz["child_count"] == 16 and fz["plan_type"] == "bk_sel__t2"
+    assert fz["pins"] == 359 + 16 + 60 and fz["pin_expand"] == {"clr": 17, "gsel": 64} and fz["outline_um"] == [64.8, 54.0] and fz["insertion_ff_ps"] == 202.5
+    assert "gold_hist256" not in (k / "config.mk").read_text()
+    # the parent itself stays refused until the child view is signed off
+    r = subprocess.run([sys.executable, str(GEN), "--module", "dsdv_bksel_q", "--out", str(tmp_path / "p")],
+                       capture_output=True, text=True)
+    assert r.returncode != 0 and "must be signed first" in r.stderr
