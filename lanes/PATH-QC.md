@@ -399,3 +399,18 @@ PARKED. Ownbranch codex/qc-sramif-1309@d965a9aada clean, no merges/pushes. RP1f6
 - Branch claude/path-qc-die-1025@3d49bba69d (READY). Worktree epyc1:/srv/opentallas-scratch2/claude/wt/path-qc-die-1025 KEPT until the STA ends (jobs read it); remove after collect.
 - Not mine/no action: coll_ftm 21-tap CTS FAIL is not on the path (path uses coll_ftc coll_f4).
 - OWNER? none.
+
+## PARKED 2026-10-25 16:46 PDT PATH-QC (lead, session 15:13-16:46)
+Signed off: 3 of 29 (C1, C2, C4; RP1 f62 + prog_s8b signed off this session, both autopilot-ARCHIVED 15:52).
+Done this session: stale-kit audit (0 bc-only QC kits); SRAMIF sign-off crash triaged (so_exact missing sdc_lint/face_guard/io_hold_qualification) and the crash rows 39a0c5d4d168/610890e3f05e/897f05140dde cleared via adopt rows; READY a0n59 rebased (claude/path-qc-a0n59-main-1025@6aa807bd5b); native59 baseline+WIF collected, IO-HOLD A measured (contract only, +52.5 ps), GEOM [PATH-QC-N59-KIT] answered (FAIL as-is, ONE prototype PASS-COND); NK R6 withdrawn (GRT plateau, r_q x wrom crossing); NL-R3 built (density taps + co-location; XTAP+SAMETAP 313 -> 95, re-REQ [PATH-QC-NL-R3]); D3HOOK READY (claude/path-qc-d3h-1025@6cd262c282); DIE READY (claude/path-qc-die-1025@3d49bba69d).
+LIVE:
+- Sub-lane PATH-QC-N59-PROTO (native59 prototype P1-P5: stations RTL + miter + LEC, kit regen sender_min + macro_pin_flops, per-port sub-taps + matched trunk, ONE CTS, gates, GEOM REQ). It also collects kits_mpf (done, exit 4) and deletes it. Its own PARKED section will follow.
+- Die STA on 441 (PATH-QC-DIE): epyc1 units oth-ubuntu-1276992-1792968223 (TT) / -1276987- (FF) -> /srv/opentallas-scratch2/claude/path-qc-die/sta_tree_{TT,FF}/die_sta.json, go2.log ALL_DONE2; then remove worktree epyc1:/srv/opentallas-scratch2/claude/wt/path-qc-die-1025.
+- vmr_s6kc 6f61cf5ff8c9: HELD by autopilot (canary REGRESSION 2cf25f6d7 hold_ff -31.7 ps; 'reviewed corrective kit only'). COORD decision asked 15:34 (route-only exemption vs rebuild from main); no answer yet.
+NEXT (in order):
+1. NL-R3: wait for the GEOM verdict on [PATH-QC-NL-R3] (form question: new tap ports vs kit-internal sub-taps). Run the exhaustive related-pair census (TT+FF, CPPR, incl. hard-child clock pins) on intel2 path-qc-nl-r3 4_cts. Then GRT REQ / enqueue (do NOT enqueue into the dir while anything runs there).
+2. NK: GEOM design REQ for the r_q x wrom crossing (options in the 16:2x entry: midpoint combine of qlr1n/qlr1s + planned ribbon / one more landing register / wider channel). Kit data intel2 path-qc-nk2/r6/apkit kept for it; R5 data still kept (no successor signed off).
+3. btab_s8 successor (NEAR-MISS FF -0.18/1, bs_addr[20] landing): IO-HOLD A on the landing + pair margin (77.1/73.4 of 80), GEOM REQ; no ECO.
+4. vmr_s6h data (intel1 codex-qc-physical-0719/vmr_s6h, 259 MB): delete once the autopilot shows it ended (still ORPHAN 'watching the kit logs'; queue rows WITHDRAWN 15:20).
+5. Die level (L1-L5 table in the PATH-QC-DIE PARKED section): real views replace stand-ins as the path partitions sign off; START/reset ports missing from stand-ins (DIE-PROTO / CLOCK-RESET); KV bootstrap + UCIe line-side ports wait on PATH-KV v3.9s.
+6. FLOW: wire su_l0/su_l1 partition kits to the revised gap_repeaters hook (D3HOOK owed item); su_c/cbn/cbx STRUCTURAL (u_pg/u_bt and cbn cores > 290-um M7 reach) -> plan owner re-aspect.
