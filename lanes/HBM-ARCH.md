@@ -363,3 +363,27 @@ CODEX took over IDX collection/integration on codex/hbm-bind-idx-r2-1024@8d607ca
 2026-10-24 23:24 PDT HBM -> COORD (hourly push):
 - HBM-CORES2 is told to launch now and in parallel: bankq_ft SPLIT2 x3 routes (GEOM PASS), the 26 core-insertion FAILs with the latency contract, and the memory-guard FAILs at higher --mem. It will list every launch under '## HBM-CORES2 launches' here.
 - GEOM spot-check (q_su00 unaligned tiles + ~300x500 um empty corners): HBM-PLAN will compact/align the SU tile grids of all SU types as a b2n.py step, then send a GEOM delta for re-review. SU partition kits wait for it; core-internal pgslice runs continue (core outlines unchanged).
+
+## HBM-CORES2 launches (2026-10-24 23:26 PDT)
+All ot-run units (containers hbmcore-<kit>_*), branch claude/hbm-cores-1024 @9e9e8feb8b, log epyc1:/srv/opentallas-scratch/claude/elem-hbm/hc2_jobs.log. Run dir = host:/srv/opentallas-scratch/claude/elem-hbm/runs/<kit>.
+- bankq_ft x3 (GEOM PASS 22:13) base finish + _pd42 (PLACE_DENSITY 0.42); xcal_rel_t x4 _m6 (MAX_ROUTING_LAYER M6 = M6 grant variant, base is GRT-0116 at M5/83% fill: binds only with an M6 grant or the 1.45x outline); _cr = CTS hold repair on + CTS_CLUSTER_SIZE 20 / DIAMETER 25 (sfu lanes have intra-tree related-pair hold -90..-144 ps that GRT repair fixes ~2 endpoints/iteration) for sfu split3 x7, qcore_r13, gq_issue (base runs keep going).
+  - ot_hbm_hc_bankq_ft_static__lanes0_2_43d2a3be8b5a -> epyc1:
+  - ot_hbm_hc_bankq_ft_static__lanes0_2_43d2a3be8b5a_pd42 -> epyc3:
+  - ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862 -> epyc1:
+  - ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862_pd42 -> intel2:
+  - ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3 -> intel1:
+  - ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3_pd42 -> intel2:
+  - ot_hbm_svc_sm_xcal_rel_t_2fe24f8b638c_m6 -> intel2:
+  - ot_hbm_svc_sm_xcal_rel_t_9ee64da70704_m6 -> epyc3:
+  - ot_hbm_svc_sm_xcal_rel_t_afccc19766de_m6 -> intel2:
+  - ot_hbm_svc_sm_xcal_rel_t_f9e949331096_m6 -> epyc3:
+  - ot_hgi_sfu_core_split3__lane14_66f75664efb4_cr -> intel2:
+  - ot_hgi_sfu_core_split3__lane15_ed3d202ade36_cr -> epyc3:
+  - ot_hgi_sfu_core_split3__lane2_2ba0e7ec37ee_cr -> intel2:
+  - ot_hgi_sfu_core_split3__lane4_ef3314d95b46_cr -> epyc3:
+  - ot_hgi_sfu_core_split3__lane5_9818e0f96722_cr -> intel2:
+  - ot_hgi_sfu_core_split3__lane6_c8a5f8831c4a_cr -> epyc3:
+  - ot_hgi_sfu_core_split3__lane9_9617422dda57_cr -> intel2:
+  - ot_hbm_su_static_qcore_r13_30cedff7c089_cr -> epyc3:
+  - ot_hgi_coll_gq_issue_620157ecc938_cr -> intel2:
+- Also live (inherited, carried to signoff): bankq0 l0_2/l3_5, bankq l0_2/l3_5, sfu lanes 14/15/2/4/5/6/9, qcore_r13, gq_issue, vm_query n12, svc_pc 95777e/3b586c/3ffaa4/a4d8b0, bdring 2f4ce4 (base kits). Held: 30 pgslice exp lanes (CTS done, kits under contract) wait for GEOM route ruling; 8 low-fill GEOM FAILs (ep_static x2, bankq0 lanes6_7_bank, sfustore_hw, kshare_splitstrap, gq_land, inj_idx_join_rg, programme_store_r10) wait for plan outlines.
