@@ -20,27 +20,75 @@ def _extent(points, xy):
     return np.maximum.reduce([abs(a-u.min()),abs(a-u.max()),abs(b-v.min()),abs(b-v.max())])
 
 
-def _path(free,first,last,budget,radius,min_stages):
+def l_route_clear(origin, ends, blocked):
+    """Either rectilinear L route must stay outside every blocked rectangle."""
+    origin=np.asarray(origin);ends=np.asarray(ends)
+    ax,ay=origin[...,0],origin[...,1];bx,by=ends[...,0],ends[...,1]
+    xlo,xhi=np.minimum(ax,bx),np.maximum(ax,bx)
+    ylo,yhi=np.minimum(ay,by),np.maximum(ay,by)
+    hv=np.ones(len(ends),bool);vh=hv.copy()
+    for x0,y0,x1,y1 in blocked:
+        horizontal=(xlo<x1)&(xhi>x0)
+        vertical=(ylo<y1)&(yhi>y0)
+        hv &= ~((horizontal&(ay>y0)&(ay<y1))|(vertical&(bx>x0)&(bx<x1)))
+        vh &= ~((vertical&(ax>x0)&(ax<x1))|(horizontal&(by>y0)&(by<y1)))
+    return hv|vh
+
+
+def _all_routes_clear(points,ends,blocked):
+    ok=np.ones(len(ends),bool)
+    for p in points:
+        ok &= l_route_clear(p,ends,blocked)
+    return ok
+
+
+def _path(free,first,last,budget,radius,min_stages,blocked=(),first_ok=None,last_ok=None):
     parent=np.full(len(free),-2,dtype=np.int64)
-    starts=np.flatnonzero(first+radius<=budget)
+    first_ok=np.ones(len(free),bool) if first_ok is None else first_ok
+    last_ok=np.ones(len(free),bool) if last_ok is None else last_ok
+    starts=np.flatnonzero((first+radius<=budget)&first_ok)
     queue=deque(map(int,starts));parent[starts]=-1;end=None
     while queue:
         current=queue.popleft()
-        if last[current]+radius<=budget:
+        if last[current]+radius<=budget and last_ok[current]:
             end=current;break
         distance=np.abs(free-free[current]).sum(axis=1)
         near=np.flatnonzero((distance<=budget-2*radius)&(parent==-2))
+        if blocked:
+            near=near[l_route_clear(free[current],free[near],blocked)]
         near=near[np.argsort(last[near])];parent[near]=current;queue.extend(map(int,near))
     if end is None:raise ValueError('no reach-bounded station-target chain')
     solution=[]
     while end>=0:
         solution.append(int(end));end=int(parent[end])
     solution.reverse()
-    if len(solution)+1<min_stages:raise ValueError('old excess stages need explicit preservation')
+    # A lane equalisation pass may have deliberately added more pipeline stages
+    # than reach alone needs. Preserve those cycles, spreading the existing
+    # stages along the legal target chain instead of silently shortening it.
+    while len(solution)+1<min_stages:
+        pairs=list(zip(solution,solution[1:]))
+        if not pairs:
+            current=solution[0]
+            distance=np.abs(free-free[current]).sum(axis=1)
+            ok=(distance<=budget-2*radius)&(last+radius<=budget)&last_ok
+            if blocked:ok &= l_route_clear(free[current],free,blocked)
+            ids=np.flatnonzero(ok)
+            if not len(ids):raise ValueError('cannot spread excess stages in legal channels')
+            solution.append(int(ids[np.argmax(distance[ids])]))
+            continue
+        a,b=max(pairs,key=lambda ab:float(np.abs(free[ab[0]]-free[ab[1]]).sum()))
+        mid=(free[a]+free[b])/2
+        legal=(np.abs(free-free[a]).sum(axis=1)<=budget-2*radius)&(np.abs(free-free[b]).sum(axis=1)<=budget-2*radius)
+        if blocked:
+            legal &= l_route_clear(free[a],free,blocked)&l_route_clear(free[b],free,blocked)
+        ids=np.flatnonzero(legal)
+        if not len(ids):raise ValueError('cannot preserve old station count within legal reach')
+        chosen=int(ids[np.argmin(np.abs(free[ids]-mid).sum(axis=1))])
+        solution.insert(solution.index(a)+1,chosen)
     return solution
 
 
-def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40.):
+def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40.,avoid_core_routes=False):
     model=S.Plan(raw);selected=set(types) if types else set(model.types);ledger=[];explicit={}
     for tn,ty in model.types.items():
         if tn not in selected or not ty.get('hard_cores') or not ty.get('ft_slots'):continue
@@ -60,22 +108,48 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
             a=np.array([pins[(name+'_i',i)] for i in range(width)])
             b=np.array([pins[(name+'_o',i)] for i in range(width)])
             budget=reach_um*margin-2.0 # reserve actual D/Q pin offsets from cell centres
+            direct=float(np.abs(b-a).sum(axis=1).max())
+            if slot['stations']==1 and direct<=budget and (not avoid_core_routes or l_route_clear(a,b,boxes).all()):
+                # Station0 is already the input-face register. Do not add a
+                # gratuitous internal pipeline stage to a short direct leg.
+                for key in ('regs_um','bit_sites_um','bit_site_cell_um'):
+                    slot.pop(key,None)
+                ledger.append(dict(type=tn,slot=name,stations=[1,1],worst_paired_bit_um=round(direct,4),
+                                   budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um))
+                continue
             blocked_targets=set();base_used=set(allocator.used);done=False
+            first_ok=_all_routes_clear(a,targets,boxes) if avoid_core_routes else None
+            last_ok=_all_routes_clear(b,targets,boxes) if avoid_core_routes else None
             for attempt in range(100):
                 allocator.used=set(base_used)
                 free=targets[[i not in blocked_targets for i in range(len(targets))]]
                 ids=np.array([i for i in range(len(targets)) if i not in blocked_targets])
-                path=_path(free,_extent(a,free),_extent(b,free),budget,max_radius_um,slot['stations'])
+                path=_path(free,_extent(a,free),_extent(b,free),budget,max_radius_um,slot['stations'],
+                           blocked=boxes if avoid_core_routes else (),
+                           first_ok=first_ok[ids] if first_ok is not None else None,
+                           last_ok=last_ok[ids] if last_ok is not None else None)
                 points=[];stats=[]
                 for index in path:
                     try:p,st=allocator.allocate(free[index],width,max_radius_um=max_radius_um)
                     except ValueError:blocked_targets.add(int(ids[index]));break
                     points.append(p);stats.append(st)
                 else:
+                    # A legal target-centre route can still cut a corner after
+                    # row allocation spreads the cells. Backtrack that target,
+                    # not the immutable failed verdict or the route constraint.
+                    chain=[a,*points,b]
+                    if avoid_core_routes:
+                        bad=[j for j,(p,q) in enumerate(zip(chain,chain[1:]))
+                             if not l_route_clear(p,q,boxes).all()]
+                        if bad:
+                            blocked_targets.add(int(ids[path[min(bad[0],len(path)-1)]]))
+                            continue
                     done=True;break
             if not done:raise ValueError(f'{tn}/{name}: no row-legal allocation after100 target alternatives')
             chain=[a,*points,b];hops=[float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(chain,chain[1:])]
             if max(hops)>budget+1e-6:raise ValueError(f'{tn}/{name}: actual paired-bit hop {max(hops)} >{budget}')
+            if avoid_core_routes and any(not l_route_clear(p,q,boxes).all() for p,q in zip(chain,chain[1:])):
+                raise ValueError(f'{tn}/{name}: allocated bit leg leaves the macro-free channels')
             old=slot['stations'];slot['stations']=len(points)+1
             slot['regs_um']=[a.mean(axis=0).round(4).tolist()]+[free[index].round(4).tolist() for index in path]
             slot['bit_site_cell_um']=[1.404,.27]
@@ -83,7 +157,8 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
             for stage,p in enumerate(points,1):
                 explicit[tn].append(dict(slot=name,stage=stage,sites_um=p.round(5).tolist(),stats=stats[stage-1]))
             ledger.append(dict(type=tn,slot=name,stations=[old,slot['stations']],worst_paired_bit_um=round(max(hops),4),
-                               budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um))
+                               budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um,
+                               core_free_routes=avoid_core_routes))
     return ledger,explicit
 
 
