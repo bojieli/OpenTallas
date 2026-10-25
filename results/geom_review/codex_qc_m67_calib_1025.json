@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS",
+  "scope": "standalone legal-signal-layer repeated-wire calibration only",
+  "picture": "results/die_trial_1025/qc_meth_calib_m67/calib_geometry.png",
+  "findings": [
+    "Sparse regular 3mm test field; DFF endpoints and BUFx12f repeaters <=250um, no macros/halo constraints.",
+    "M6 horizontal/M7 vertical separate test paths; crossed layers are expected and lightly loaded.",
+    "Ideal common clock: calibrates data paths only; does not establish any die or block sign-off.",
+    "STA833ps,TTsetup/FFhold,60/25ps uncertainty; SS not run."
+  ]
+}
