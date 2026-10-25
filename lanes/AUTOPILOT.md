@@ -86,3 +86,30 @@ Until fixed: please put a HOLD (no classify / no delete) on KV-CORES adopt ids 5
   are correct: CORE_PREFLIGHT FAIL before floorplan (shared 1716/928), deletion fine.
 (3) FYI all lanes: signoff.py on main reads pair_skew.tcl beside itself; kit generators / mk_eco that copy only signoff.py
   crash at sign-off (FileNotFoundError pair_skew.tcl -- KV h0m8dlr e6 route signoff 05:30). KV kits patched in place.
+
+## OWNERSHIP table (lane AUTOPILOT-OWN, 2026-10-25 05:43 PDT)
+2026-10-25 05:43 PDT AUTOPILOT-OWN: each tick now writes ~/coord/autopilot/OWNERS.tsv (rsynced to rtx-pro with the other *.tsv): one row per
+  partition type + hard core of the release plans on origin/main (s81, s81_head, qwen_compute, qwen_kvsys, hbm_arch/B2n):
+  die item kind state owner live_job last_activity next_step evidence default_owner. States: PLAN-STRUCTURAL / NEEDS-KIT /
+  KIT-PLACED / GEOM-REQ / ROUTING / REVIEW / FIX / SIGNED (rules in tools/autopilot/ownership.py docstring). Sources: die_plan.json,
+  release tree cache (SIGNED; pushed rtx-pro -> epyc1 ~/.local/state/fleet-viz/ by cron :08/:18/..), results/proto_1025 (geom FAIL /
+  G2 STRUCTURAL), autopilot state/review/structural, GEOM-REVIEW REQ/REPLY lines, live ot-run clients on the hub (ps), lane-file
+  mentions (owner + age). Owner = live-run lane > latest autopilot run/review lane (24 h) > latest lane file naming it (24 h) >
+  default (S81-PLAN/S81-CORES/S81-HEAD/QC-PLAN (vmr cqb -> QC-CQB)/KV-PLAN/KV-CORES/HBM-PLAN/HBM-CORES).
+  LOOP-GAPS.txt: '#' OWNERSHIP summary on top + gap UNOWNED-ITEM (not SIGNED, no live job, no lane activity > 60 min), grouped per
+  die + default owner, each item tagged (LANE) = last lane that touched it.
+  Tick 05:42 counts: s81 229: NEEDS-KIT 183 KIT-PLACED 4 GEOM-REQ 20 ROUTING 4 SIGNED 18 | UNOWNED 124;
+  s81_head 18: NEEDS-KIT 13 KIT-PLACED 2 REVIEW 2 SIGNED 1 | UNOWNED 9; qwen_compute 66: PLAN-STRUCTURAL 17 NEEDS-KIT 39 KIT-PLACED 2
+  ROUTING 5 REVIEW 1 SIGNED 2 | UNOWNED 52; qwen_kvsys 83: PLAN-STRUCTURAL 24 NEEDS-KIT 39 KIT-PLACED 2 ROUTING 9 REVIEW 4 FIX 1
+  SIGNED 4 | UNOWNED 60; hbm (B2n) 259: PLAN-STRUCTURAL 31 NEEDS-KIT 225 KIT-PLACED 1 GEOM-REQ 2 | UNOWNED 232.
+  Known limits: S81 adopt178 G2 results are only on claude/proto-1025 (not main) -> S81 shows 0 PLAN-STRUCTURAL; shorthand
+  mentions ('leaf t2 t4') are not matched; the B2n SIGNED match uses cache records only (cache scans B2l).
+
+## PARKED 2026-10-25 05:43 PDT (AUTOPILOT-OWN)
+- Branch claude/autopilot-owners-1025@d173791f71 (= main 1287705fd + OWNERS; tests 35/35). READY posted.
+- Deployed: epyc1 ~/.local/lib/autopilot/autopilot/*.py md5 = d173791f71 (backup of the old copy: ~/.local/lib/autopilot/bak-owners-1025).
+  The service runs the hub repo copy once merged; until then drop-in ~/.config/systemd/user/autopilot.service.d/owners-preview.conf
+  runs the installed copy (self-retiring: repo copy wins as soon as ~/OpenTallas/tools/autopilot/ownership.py exists). Delete the
+  drop-in after the merge. Note: autopilot changes merged to main before this branch would not run until then (installed copy).
+- rtx-pro crontab: +1 rsync line (release tree cache -> epyc1), backup /tmp/ct.bak.apowners.
+- Live jobs: none. OWNER?: none.
