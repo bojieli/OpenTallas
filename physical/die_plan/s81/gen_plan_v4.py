@@ -510,6 +510,53 @@ CORE_CONNS = {
            "u_c.u_eg": _cc(**{"i_v,i_c,i_hh,i_kk,i_dd": ["core:u_c.u_xf"]})} for k in ("C:xrt1", "C:xrt3")},
 }
 CORE_CONNS_OUT = {}
+# S81/PORTFIX 10-25: the hard-core types CORE_CONNS does not list (landed frames: qbank / node / ROM / view cores; gunit;
+# bk_sel) take their core connectivity from inputs/core_conns_derived.json (core_conns_derive.py: yosys, cores black
+# boxes, only DIRECT core-core / core-module-port nets).  A module port maps to a type bus through the contents bind
+# ("bus:<bus>") or, for unbound contents, PF_PORT_BUS (the binder's port -> lane map; the unit fault output reaches flt_o0
+# through the die-level ring stop, soft, so it is not listed).
+CORE_CONNS_DERIVED = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "core_conns_derived.json")
+PF_PORT_BUS = {
+    "dsdv_gunit": {"cw_a": "unit_i0", "cw_d": "unit_i0", "cw_v": "unit_i0", "vi_s": "xtier_i0", "vi_n": "xtier_i1",
+                   "vo_s": "xtier_o0", "vo_n": "xtier_o1"},
+    "dsdv_bk_sel_vmtx": {"ca": "ca_i0", "cb": "cb_i0", "vi_idx": "idx_i0", "vi_s": "xtier_i0", "vi_n": "xtier_i1",
+                         "vo_s": "xtier_o0", "vo_n": "xtier_o1", "tl_o": "tl_o0"},
+}
+
+
+def derived_core_conns(types):
+    """S81/PORTFIX: CORE_CONNS_OUT entries for every hard-core type with no hand-written CORE_CONNS key."""
+    if not os.path.exists(CORE_CONNS_DERIVED):
+        return
+    der = json.load(open(CORE_CONNS_DERIVED))
+    for tn, t in types.items():
+        if tn in CORE_CONNS_OUT or not t.get("hard_cores") or len(t.get("contents", [])) != 1:
+            continue
+        c = t["contents"][0]
+        d = der.get(c["module"])
+        if d is None:
+            continue
+        buses = {b["name"] for b in t.get("buses", [])}
+        pb = {k: v[4:] for k, v in (c.get("bind") or {}).items() if str(v).startswith("bus:")}
+        pb.update(PF_PORT_BUS.get(c["module"], {}))
+        hcs = {h["inst"] for h in t["hard_cores"]}
+        ent = {}
+        for ci, ports in d["cores"].items():
+            inst = c["inst"] + "." + ci
+            if inst not in hcs:
+                continue
+            for port, tgs in ports.items():
+                out = []
+                for tg in tgs:
+                    k, _, n = tg.partition(":")
+                    if k == "core" and c["inst"] + "." + n in hcs:
+                        out.append("core:" + c["inst"] + "." + n)
+                    elif k == "port" and pb.get(n) in buses:
+                        out.append("bus:" + pb[n])
+                if out:
+                    ent.setdefault(inst, {})[port] = sorted(set(out))
+        if ent:
+            CORE_CONNS_OUT[tn] = ent
 
 
 def nonframe_hc_key(p):
@@ -1296,7 +1343,11 @@ def build(ab):
                 else:
                     cont = []
                     ck = "slice_station"
-                p = add(Part("%s_%s" % (hn, role if role != "X" else "x%d%d" % (c - c0, r - r0)), "slice", c, r,
+                pname = "%s_%s" % (hn, role if role != "X" else "x%d%d" % (c - c0, r - r0))
+                if pname in PF_DROP_X:          # S81/PORTFIX: empty station cell (no lane), left free
+                    PF_FREE.append((c, r, pname))
+                    continue
+                p = add(Part(pname, "slice", c, r,
                              orient=orient, contents=cont, ckey=ck, group=hn))
                 p.role = role
                 segs[(c - c0, r - r0)] = p
@@ -1327,6 +1378,10 @@ def build(ab):
     chans.append(dict(rect_um=[X0 + 8 * PX, X0 + 19 * PY, X0 + 9 * PX, X0 + 20 * PY],
                       reason="free cell of the retired bk_col (S81/H4: no consumer in v4.8); top edge between lk_WN3 and "
                              "gunit, no lane routes here"))
+    for c, r, pname in PF_FREE:
+        chans.append(dict(rect_um=[X0 + c * PX, X0 + r * PY, X0 + (c + 1) * PX, X0 + (r + 1) * PY],
+                          reason="free cell (S81/PORTFIX 10-25): %s was an empty slice station (no lane passes it), top "
+                                 "edge; left free for die PG / decap" % pname))
     return parts, frames, serdes, slices, chans, svcg
 
 
@@ -1573,13 +1628,26 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
     order_s = [slices["s_%dS" % k]["C"].name for k in range(7, -1, -1)] + \
               [slices["s_%dN" % k]["C"].name for k in range(8)]
     ring = ["seqhost"] + order_s + ["seqhost"]
+    # S81/PORTFIX 10-25 (S81 DECISION 4): the rings carry ONE bit, the sticky fault OR (ot_s81_frs ring stops: fo <=
+    # fi | own sticky fault), into seqhost (sid_ri / vid_ri), which reports the die fault word to the host in-band.  The
+    # slice / svc ids stay declared position straps (partition parameters), so the 4-b id field is gone: sid 5 -> 1 b,
+    # vid 4 -> 1 b (v4.8 only; the v4.7 route replay keeps the old widths so no v4.7 lane moves).
     for a, b in zip(ring, ring[1:]):
         L("sid_%s__%s" % (a, b), a, "sid_o" if a != "seqhost" else "sidr_o", b, "sid_i" if b != "seqhost" else "sidr_i",
-          5, kind="ctl", cls="sid", role="sid")
+          5 if v47 else 1, kind="ctl", cls="sid", role="sid")
     svc_ring = ["seqhost"] + ["svc_%d" % n for n in list(range(0, 16, 2)) + list(range(15, 0, -2))] + ["seqhost"]
     for a, b in zip(svc_ring, svc_ring[1:]):
         L("vid_%s__%s" % (a, b), a, "vid_o" if a != "seqhost" else "vidr_o", b, "vid_i" if b != "seqhost" else "vidr_i",
-          4, kind="ctl", cls="vid", role="vid")
+          4 if v47 else 1, kind="ctl", cls="vid", role="vid")
+    # S81/PORTFIX 10-25 (DECISION 4): 1-b unit fault feeders into the nearest ring stop (a short unit chain): units with
+    # no ring stop of their own (iqf, eng, the HBM PHY macro k_oor, bk_sel, gunit) and each lep LP partition (MU
+    # lane-landing fault) -> the adjacent ring member.  bk_sel -> gunit -> s_3N_C is the top-edge unit chain.
+    if not v47:
+        feed = [("iqf", "svc_0"), ("eng", "svc_14"), ("phy_hbm", "svc_8"), ("bk_sel", "gunit"),
+                ("gunit", slices["s_3N"]["C"].name)] + \
+               [(slices[h]["LP"].name, slices[h]["C"].name) for h in ("s_0N", "s_0S", "s_7N", "s_7S")]
+        for a, b in feed:
+            L("flt__%s__%s" % (a, b), a, "flt_o", b, "flt_i", 1, kind="ctl", cls="flt", role="flt")
     fmap = dict(frames=fmap, inst_part={("u_" + k): v for k, v in svc_part.items()},
                 slice_part={("u_" + hn): dict(C=sl["C"].name, LP=sl["LP"].name if sl["LP"] is not None else None)
                             for hn, sl in slices.items()})
@@ -1907,16 +1975,24 @@ def route_v48(grid, lanes47, lanes):
             todo.append(lk)
     # S81-XDIE 10-24: the copy-A/B reserve pair lanes route LAST, on top of every v4.8 load, so no existing lane moves
     rsv = [l for l in todo if RESERVE_RE.search(l["id"])]
-    tree = [l for l in todo if l["role"] in ("tree", "idxnet")]     # S81/IDXNET 10-25: + the topk_final / Q lanes
-    res.update(route(grid, [l for l in todo if l not in rsv and l not in tree], {}))
+    tree = [l for l in todo if l["role"] in ("tree", "idxnet")]
+    late = [l for l in todo if l["role"] in ("sid", "vid", "flt")]
+    res.update(route(grid, [l for l in todo if l not in rsv and l not in tree and l not in late], {}))
     res.update(route(grid, rsv, {}))
     # S81/H4 10-24: the bk_sel tree lanes (fixed station path) are applied after every other lane: no lane moves
     res.update(route(grid, tree, {}))
+    # S81/PORTFIX 10-25: the 1-b fault ring / feeder lanes (resized sid / vid, new flt) route after every other lane
+    res.update(route(grid, late, {}))
     ROUTE_V48.update(kept=len(res) - len(todo), rerouted=sorted(l["id"] for l in todo))
     return res
 
 
 ROUTE_V48 = {}
+# S81/PORTFIX 10-25 (S81 DECISION 5): PORTBIND audit EMPTY_PARTITION s_1N_x06 / s_5N_x06.  s_1N_x06 is REUSED: the
+# S81/H4 bk_sel tree lanes tl / ca / cb cross it on row 18 (3 ft slots).  s_5N_x06 carries no lane: it is not a
+# partition; build() leaves it as a free cell (chans)
+PF_DROP_X = {"s_5N_x06"}
+PF_FREE = []
 TYPE_NAMES_OUT = {}
 RESERVE_RE = re.compile(r"lk_(WS[23]|EN[23])\b")
 
@@ -2525,6 +2601,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
     json.dump(TYPE_NAMES_OUT, open(out / "type_names.json", "w"), indent=0, sort_keys=True)
+    derived_core_conns(plan["partition_types"])
     if CORE_CONNS_OUT:
         json.dump(CORE_CONNS_OUT, open(out / "core_conns.json", "w"), indent=0, sort_keys=True)
     json.dump(dict(note="S81-P9-HC: non-frame types over %d cells: hard cores emitted / residual soft cells / gaps (children "
