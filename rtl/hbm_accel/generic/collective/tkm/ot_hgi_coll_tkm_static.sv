@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Fixed calendar successor. No ready, reservation, queue occupancy or survivor
 // predicate changes a production edge. Historical dynamic engines stay separate.
-module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_W=(TP<=1?1:$clog2(TP)))(
+module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, BUFFER_DELIVERED_RESET=0, TP=96, RANK_W=(TP<=1?1:$clog2(TP)))(
  input wire clk,rst_n,start,
  input wire[31:0]tile_clk,input wire buffer_clk,
  input wire[11:0]cfg_n,input wire[12:0]cfg_k,cfg_nout,
@@ -77,7 +77,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_
  reg[2:0]conv_pipe;
  reg[31:0]cap1,cap2;
  reg[4*EW-1:0]buf_wdata;reg buf_wv;reg[9:0]buf_wa;
- ot_hgi_coll_tkm_buffer #(.DW(4*EW)) u_buffer(.clk(buffer_clk),.rst_n(rst_n),
+ ot_hgi_coll_tkm_buffer #(.DW(4*EW),.DELIVERED_RESET(BUFFER_DELIVERED_RESET)) u_buffer(.clk(buffer_clk),.rst_n(rst_n),
   .w_v(buf_wv),.w_addr(buf_wa),.w_data(buf_wdata),
   .r_v(read_v),.r_addr(read_addr),.rd_v(buf_valid),.rd_data(buf_data));
  reg[4*EW-1:0]entry;reg entry_v;
