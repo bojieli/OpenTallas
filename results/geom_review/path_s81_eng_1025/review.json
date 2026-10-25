@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.geom_review_req.v1",
+ "lane": "PATH-S81/ENG",
+ "item": "S81 path item 8: dsdv_eng_rr_e (E2 core) successor E3/E3b",
+ "source": "claude/path-s81-eng-1025@0e227bc31f (main 3947653943 + retime a11cb0db4 + checked runner a83ef61cd1 + 3 strict-lint fixes)",
+ "kits": {
+  "E3": "epyc1:/srv/opentallas-scratch2/claude/path-s81-eng/dsdv_eng_rr_e_e3",
+  "E3b": "epyc1:/srv/opentallas-scratch2/claude/path-s81-eng/dsdv_eng_rr_e_e3b (E3 + physical/common_flow/macro_pin_flops.tcl)"
+ },
+ "interface": "outline 410.4x466.56, pins.json == 32288c0abd dsdv_eng_rr_e_e2.json (2690 pins, name/layer/xy identical), io.tcl and macro sites byte-identical to e2 (kit 812c3bee41bf6e02)",
+ "defines_added": ["OT_S81ENG_TMAP_CPRE"],
+ "gates": {
+  "rtl_lint": "PASS (tools/die_plan/rtl_lint.py with -defer)",
+  "sdc_lint": "PASS",
+  "synth": "rc 0; 629 CPRE capture flops present (544 bank_words + 85 tag)",
+  "face_guard": "PASS 2688/2688 netlist + ODB",
+  "lec_main_tool": "NOT EQUIVALENT: 29544 points, 28375 proved, 1135 differ, 34 undecided; 0 points in u_map/CID/capture; families = known tool-gap classes (u_xq.g_cur[] replica copies 411, FSM recode ek/ej/icnt/slot/acnt/fcnt, hq_atom pairing 30, CRC ga XOR 32 undecided, q_off 1). EQUIVALENT owed via TOK-LEC engine codex/lec-engine-0719; no waiver."
+ },
+ "e3_post_cts_tt": {
+  "rom_to_capture_worst_ps": 94.62,
+  "capture_to_consumer_worst_ps": 181.34,
+  "global_tt_setup_ps": -233.56, "global_tt_violating_ep": 184,
+  "worst_remaining_cone": "u_xq.g_ctl[*].u_c/fck -> u_xq.vo_b[*] (GEOM 08:08 cond 2b, not yet fixed)",
+  "clock": "OT_TAP_BALANCE ck=516 mean (434-634), 16599 sinks, single tree (GEOM cond 1 FAIL, CLOCK-RESET owner)",
+  "io_hold": "hx_res[712] input hold -381.68, rst_n removal -287.86 (vclk basis, cond 4)"
+ },
+ "f6_rom_capture_distance_um_E3": {"b0": [37.9, 85.6], "b1": [10.8, 21.6], "b2": [37.4, 85.8], "b3": [101.2, 145.0], "b4": [38.3, 80.0], "b5": [11.7, 18.6], "b6": [30.7, 74.3], "b7": [98.7, 138.5], "note": "[median, max] manhattan flop->own ROM bbox"},
+ "e3b_finding": "macro_pin_flops anchored 1365 flops (563 read captures, 802 write landings) = SRAM side only; 0 of 544 ROM bank_words: the CPRE capture is DFFE (if pending) -> ASAP7 DFF + enable feedback mux, and the hook only walks INV/BUF/HB hops. Fix proposal: hook accepts a single-fanout enable mux whose other data input is the flop's own Q.",
+ "renders": ["e3_place.png", "e3_romcid.png", "e3b_place.png", "e3b_romcid.png"]
+}
