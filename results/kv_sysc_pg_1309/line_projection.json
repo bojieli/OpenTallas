@@ -1,4 +1,10 @@
 {
+ "service_roles": {
+  "link_v": "tx_valid",
+  "link_flit": "tx_payload",
+  "far_v": "rx_valid",
+  "far_flit": "rx_payload"
+ },
  "cell": "ot_qkvd_ucie_x64_phy",
  "instance": "u_ucie_rom",
  "kind": "hard_macro",
@@ -38,7 +44,7 @@
   "tx_v"
  ],
  "source_sha256": "8151b067de9ad9d662d4514c67a42ac04610d48044d01c772a3901a0633e7096",
- "physical_sha256": "902c5ec60594ea352a07555613a010dd4f01ae186d70ab6bd4ac916f04e49adc",
+ "physical_sha256": "e0dadbf61026b05c2a7ace8200ab9c5f4dab6088398ef7ae6e8a07c408118230",
  "contract": {
   "functional_proxy_only": true,
   "physical_parallel_flit_bumps": false,

@@ -47,14 +47,18 @@ def project(text, *, instance='u_ucie_rom', prefix='bump_ucie_rom_', wrapper=Fal
     # Operate on original generated source, preserving all remaining expressions.
     out=text
     for p,n in names.items():
-        out,count=re.subn(rf'^\s*(?:input|output)\s+wire\s*(?:\[\d+:0\]\s*)?{re.escape(n)}\s*,?[^\n]*\n','',out,flags=re.M)
+        out,count=re.subn(rf'^\s*(?:input|output)\s+wire\s*(?:\[\d+:0\]\s*)?{re.escape(n)}[ \t]*,?[ \t]*(?://[^\n]*)?\n','',out,flags=re.M)
         if count!=1:raise ValueError(f'{n}: source declaration not recognized')
         pin=n if wrapper else p
-        out,count=re.subn(rf'^\s*\.{re.escape(pin)}\s*\(\s*{re.escape(n)}\s*\)\s*,?[^\n]*\n','',out,flags=re.M)
+        out,count=re.subn(rf'^\s*\.{re.escape(pin)}\s*\(\s*{re.escape(n)}\s*\)[ \t]*,?[ \t]*(?://[^\n]*)?\n','',out,flags=re.M)
         if count!=1:raise ValueError(f'{pin}: source connection not recognized')
     out=re.sub(r',([ \t]*(?://[^\n]*)?\n[ \t]*\);)',r'\1',out)
     if any(re.search(rf'\b{re.escape(n)}\b',clean(out)) for n in names.values()):raise ValueError('dangling functional proxy')
-    audit=dict(cell=CELL,instance=instance,kind='port_only_wrapper' if wrapper else 'hard_macro',removed=[dict(pin=p,port=names[p],dir=d,width=w) for p,(d,w) in PROXY.items()],physical_fdi_pins=sorted(FDI),source_sha256=hashlib.sha256(text.encode()).hexdigest(),physical_sha256=hashlib.sha256(out.encode()).hexdigest())
+    projected_blocks=list(re.finditer(pat,clean(out),re.S))
+    if len(projected_blocks)!=1:raise ValueError('physical target instance changed')
+    remaining=set(re.findall(r'\.([A-Za-z_]\w*)\s*\(',projected_blocks[0].group(1)))
+    if remaining!=pins-expected:raise ValueError('physical connections changed outside declared service roles')
+    audit=dict(service_roles={'link_v':'tx_valid','link_flit':'tx_payload','far_v':'rx_valid','far_flit':'rx_payload'},cell=CELL,instance=instance,kind='port_only_wrapper' if wrapper else 'hard_macro',removed=[dict(pin=p,port=names[p],dir=d,width=w) for p,(d,w) in PROXY.items()],physical_fdi_pins=sorted(FDI),source_sha256=hashlib.sha256(text.encode()).hexdigest(),physical_sha256=hashlib.sha256(out.encode()).hexdigest())
     return out,audit
 
 
