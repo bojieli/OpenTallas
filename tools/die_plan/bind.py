@@ -16,6 +16,14 @@ Inputs (die_plan.json, key `asbuilt`; README "As-built binding"):
   reducers      fault-OR trees: module regex -> OR of the inputs; removed and re-emitted per sink partition
   clocks        clock source pins (regex on "path.port") -> domain; a partition loads one die clock per domain
   resets        reset source pins replaced by the partition's own synchroniser (polarity low/high)
+  port_domains  clock domain of the ports of MULTI-clock leaves (TOK-QK/D 10-24): [{"module": regex, "ports": {port regex:
+                clock pin}, "default": clock pin, "sync": [port regex]}] (+ port_domains_file: tools/die_plan/port_domains.py
+                output, per-bit, derived from the leaf RTL).  A leaf with one clock pin needs none.  "sync": the port has
+                its own synchroniser inside the leaf (a genuine crossing may land there)
+  lane_clock    "endpoint" (default): every lane / ft station / landing pad / kept as-built stage is registered on the
+                clock domain of its endpoints (leaf ports), e.g. a kvpc <-> HBM PHY lane on the HBM clock in BOTH
+                partitions; a lane whose driver and sink domains differ is refused (LANE_CDC) unless the sink port is
+                declared "sync".  "partition" = the pre-10-24 behaviour (every lane on the partition's default clock)
   substitute_inst  per-INSTANCE plan variant of a leaf master ({"inst": path regex, "module": variant}; ports a subset)
   straps        constant leaf inputs that are declared position straps (-> partition parameters); others are TIED
   map           {"parts": {path prefix: partition | [partition, local name]}, "rules": [[regex, partition], ...]}: every leaf / glue cell of the
@@ -88,6 +96,21 @@ module ot_dp_rsync #(parameter integer W = 1, parameter integer S = 2) (
             if (!a[g]) r <= {S{1'b0}}; else r <= {r[S-2:0], 1'b1};
         assign q[g] = r[S-1];
     end endgenerate
+endmodule
+// ot_dp_lsync: S (>= 2) flop synchroniser of W single-bit LEVELS into this clock (a lane's epoch bit, registered in the
+// lane's own clock domain, read by the partition's default-domain epoch check).  Never used for data.
+module ot_dp_lsync #(parameter integer W = 1, parameter integer S = 2) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire [W-1:0] a,
+    output wire [W-1:0] q
+);
+    reg [W-1:0] r [0:S-1];
+    integer i;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) for (i = 0; i < S; i = i + 1) r[i] <= {W{1'b0}};
+        else begin r[0] <= a; for (i = 1; i < S; i = i + 1) r[i] <= r[i-1]; end
+    assign q = r[S-1];
 endmodule
 // ot_dp_or: N-input OR of a re-emitted fault tree (an as-built reducer chain, removed and rebuilt per sink partition).
 module ot_dp_or #(parameter integer N = 1) (
@@ -913,6 +936,176 @@ class Binder:
             return (s[0], tuple(sorted(subs, key=repr)))
         return self._src_desc(p, s, cnt, ci, pn, i)
 
+    # -- clock domains of leaf ports and lanes (TOK-QK/D 10-24)
+    def leaf_clocks(self, ci):
+        """{clock pin: die domain} of leaf ci (its inputs whose source is a clock)"""
+        if not hasattr(self, "_lclk"):
+            self._lclk = defaultdict(dict)
+            for (c, pn, i), d in self.sinks.items():
+                if d[0] == "clk":
+                    self._lclk[c][pn] = d[1]
+        return self._lclk.get(ci, {})
+
+    def _pd_rules(self):
+        if not hasattr(self, "_pdr"):
+            self._pdr = [(re.compile(r["module"]), [(re.compile(a), b) for a, b in r.get("ports", {}).items()],
+                          r.get("default"), [re.compile(x) for x in r.get("sync", [])]) for r in self.ab.get("port_domains", [])]
+            self._pdf = {}
+            f = self.ab.get("port_domains_file")
+            if f:
+                f = f if Path(f).is_absolute() else str(Path(self.base) / f)
+                self._pdf = json.loads(Path(f).read_text())
+            self.pd_undeclared = defaultdict(int)
+        return self._pdr
+
+    def port_sync(self, ci, pn):
+        """True when leaf port ci.pn is declared to carry its own synchroniser (asbuilt.port_domains "sync")"""
+        m = self.F.cells[ci].module
+        for rx, _ports, _d, sy in self._pd_rules():
+            if rx.fullmatch(m) and any(s.fullmatch(pn) for s in sy):
+                return True
+        return False
+
+    def port_dom(self, ci, pn, bit=0, depth=0):
+        """die clock domain of leaf port ci.pn[bit]: the leaf's only clock, else asbuilt.port_domains (rules, then the
+        derived per-bit file); a glue cell (no clock) takes its inputs' domain.  None = no clock (constant / unknown
+        glue), "?" = a multi-clock leaf port nobody declared (an error in endpoint mode)."""
+        if not hasattr(self, "_pdm"):
+            self._pdm = {}
+        key = (ci, pn, bit)
+        if key in self._pdm:
+            return self._pdm[key]
+        self._pdm[key] = None
+        G, c = self.G, self.F.cells[ci]
+        res = None
+        if G.kind[ci] == "glue":
+            ds = set()
+            if depth < 64:
+                for ip, bits in c.ports.items():
+                    if G.dirs[ci].get(ip) != "input":
+                        continue
+                    for b in bits:
+                        s = G.source(b) if not isinstance(b, str) else ("const",)
+                        if s[0] == "pin":
+                            d = self.port_dom(s[1], s[2], s[3], depth + 1)
+                            if d:
+                                ds.add(d)
+            res = ds.pop() if len(ds) == 1 else ("?" if ds else None)
+        else:
+            ck = self.leaf_clocks(ci)
+            doms = set(ck.values())
+            if len(doms) == 1:
+                res = next(iter(doms))
+            elif doms:
+                pin = None
+                for rx, ports, dflt, _sy in self._pd_rules():
+                    if rx.fullmatch(c.module):
+                        pin = next((b for a, b in ports if a.fullmatch(pn)), dflt)
+                        break
+                if pin is None and c.module in self._pdf:
+                    x = self._pdf[c.module]["ports"].get(pn)
+                    if x:
+                        cl = x["bits"][bit] if x.get("bits") and bit < len(x["bits"]) else list(x["clocks"])
+                        pins = {q for q in cl if q in ck}
+                        if len({ck[q] for q in pins}) == 1:
+                            pin = next(iter(pins))
+                res = ck.get(pin) if pin is not None else None
+                if res is None:
+                    res = "?"
+                    self.pd_undeclared[f"{c.module}.{pn}"] += 1
+        self._pdm[key] = res
+        return res
+
+    def lane_mode(self):
+        return self.ab.get("lane_clock", "endpoint")
+
+    def bit_dom(self, key):
+        """the domain a crossing bit (src cell, port, bit) is launched in (None = unknown -> source default domain)"""
+        if self.lane_mode() != "endpoint":
+            return None
+        if not hasattr(self, "_bdom"):
+            self._pd_rules()
+            self._bdom = {}
+        if key not in self._bdom:
+            d = self.port_dom(*key)
+            self._bdom[key] = d if d not in (None, "?") else None
+        return self._bdom[key]
+
+    def lane_domains(self):
+        """endpoint mode: every link's register domain = its bits' launch domain (packing kept lanes single-domain);
+        every sink checked: a sink in another domain is an unsynchronised crossing (LANE_CDC) unless declared "sync".
+        Adds each lane's domain to its partitions (src, dst, ft hops) so they get that clock port; kept as-built stages
+        take their source port's domain (intra_dom)."""
+        self.lane_dom_stats = dict(mode=self.lane_mode(), by_domain=defaultdict(int), cdc_bits=defaultdict(int),
+                                   sync_bits=defaultdict(int), undeclared={}, intra_cross=defaultdict(int))
+        self.intra_dom = {}
+        if self.lane_mode() != "endpoint":
+            return
+        F = self.F
+        self._pd_rules()
+        # one pass over the sinks: per link, the sink (leaf port bit) domains
+        sinks_of = defaultdict(list)
+        for (ci, pn, i), d in self.sinks.items():
+            for x in (d[1] if d[0] in ("or", "and") else [d]):
+                if x[0] == "x":
+                    L = self.bitpos[(x[1], x[6], x[2], x[3], x[4])][0]
+                    sinks_of[id(L)].append((ci, pn, i, x))
+        for L in self.links:
+            if L.get("plan"):
+                continue
+            if L.get("spine"):
+                # a reset spine lands on the sink's clock: its reset pins' domain
+                sd = {self.port_dom(ci, pn, i) or self.default_domain(L["dst"]) for ci, pn, i, _x in sinks_of[id(L)]} - {"?"}
+                L["dom"] = sd.pop() if len(sd) == 1 else self.default_domain(L["dst"])
+            else:
+                ds = set()
+                for it in L["items"]:
+                    if it[0] == "leaf":
+                        ds.add(self.bit_dom(it[1:4]) or self.default_domain(L["src"]))
+                    else:
+                        ds.add(it[1].get("dom") or it[1].get("pdom") or self.default_domain(it[1]["src"]))
+                if len(ds) > 1:
+                    self.errors.append(f"LANE_MIXED_DOMAIN {L.get('lane') or L['oname']} {L['src']}->{L['dst']}: {sorted(ds)}")
+                L["dom"] = sorted(ds)[0] if ds else self.default_domain(L["src"])
+            self.lane_dom_stats["by_domain"][L["dom"]] += L["width"]
+            for p in [L["src"], L["dst"]] + [h["part"] for h in L["ft"]]:
+                self.clk_dom[p].add(L["dom"])
+        # sinks: a crossing bit lands on a leaf input of its own domain, or on a declared synchroniser port
+        for L in self.links:
+            if L.get("plan") or L.get("spine"):
+                continue
+            for ci, pn, i, x in sinks_of[id(L)]:
+                sd = self.port_dom(ci, pn, i)
+                if sd in (None, "?") or sd == L["dom"]:
+                    continue
+                tag = f"{L.get('lane') or L['iname']} {x[1]}->{x[6]} {L['dom']}->{sd} " \
+                      f"{F.cells[x[2]].module}.{x[3]} -> {F.cells[ci].module}.{pn}"
+                if self.port_sync(ci, pn):
+                    self.lane_dom_stats["sync_bits"][tag] += 1
+                else:
+                    self.lane_dom_stats["cdc_bits"][tag] += 1
+        for tag, n in sorted(self.lane_dom_stats["cdc_bits"].items()):
+            self.errors.append(f"LANE_CDC {tag}: {n} bit(s) cross clock domains through plain lane registers "
+                               f"(needs ONE synchroniser: async FIFO / 2-flop level, or bind both ends in one domain)")
+        # kept as-built stages inside a partition: registered on their source port's domain
+        for p, s in self.intra_dly.items():
+            for (sci, spn, st) in s:
+                dd = {self.port_dom(sci, spn, b) for b in range(len(F.cells[sci].ports[spn]))} - {None}
+                if len(dd) == 1 and "?" not in dd:
+                    d = next(iter(dd))
+                    self.intra_dom[(p, sci, spn)] = d
+                    self.clk_dom[p].add(d)
+                elif dd:
+                    self.lane_dom_stats["intra_cross"][f"{p}:{F.cells[sci].module}.{spn} {sorted(dd)}"] += 1
+        self.lane_dom_stats["undeclared"] = dict(self.pd_undeclared)
+        for k, n in sorted(self.pd_undeclared.items()):
+            self.errors.append(f"PORT_DOMAIN_UNDECLARED {k}: {n} bit(s) of a multi-clock leaf port without a declared "
+                               f"domain (asbuilt.port_domains / port_domains_file)")
+
+    def ldom(self, L, p):
+        """the clock domain lane L's registers use (in partition p)"""
+        return L.get("dom") or self.default_domain(p)
+
     # -- buses
     def plan_lanes(self):
         """the plan's lanes: (src part, dst part) -> [lane]; a lane = its hop ports, the end buses (name, leaf), the ft
@@ -1000,10 +1193,22 @@ class Binder:
         recv = {}                            # (part, cell, port, bit) -> (bus, index, stages)
         holders = defaultdict(set)           # (cell, port, bit) -> partitions that receive it
 
+        endpoint = self.lane_mode() == "endpoint"
+
+        def kdom(key):
+            """launch domain of a crossing bit (endpoint mode): its source leaf port's domain, else the source default"""
+            return self.bit_dom(key) or self.default_domain(self.cpart[key[0]])
+
+        def dom_ok(L, key):
+            """TOK-QK/D 10-24: a lane carries bits of ONE clock domain (its registers run on that clock)"""
+            return not endpoint or L.get("pdom") in (None, kdom(key))
+
         def put(L, key, b):
             """bit (cell, port, bit) onto lane L (once); returns its lane index"""
             if key in L["carried"]:
                 return L["carried"][key]
+            if endpoint:
+                L.setdefault("pdom", kdom(key))
             if L["src"] == self.cpart[key[0]]:
                 L["items"].append(("leaf",) + key)
                 st = 0
@@ -1057,6 +1262,8 @@ class Binder:
                 for L in ranked:
                     if score(L) <= 0:
                         break
+                    if rest and not dom_ok(L, (sci, spn, rest[0])):
+                        continue
                     while rest and L["left"] > 0:
                         put(L, (sci, spn, rest.pop(0)), None)
                 if rest:
@@ -1069,7 +1276,8 @@ class Binder:
                 guard += 1
                 keys = [(sci, spn, b) for b in rest]
                 srcs = {sp} | {x for x in holders.get(keys[0], ()) if all(x in holders.get(k, ()) for k in keys)}
-                path = self._route(srcs, dp, keys, out_of, heapq, only)
+                path = self._route(srcs, dp, keys, out_of, heapq,
+                                   (lambda L, k0=keys[0]: (only is None or only(L)) and dom_ok(L, k0)) if endpoint else only)
                 if path is None:
                     break
                 nb = min(len(rest), min(L["left"] + sum(1 for k in keys if k in L["carried"]) for L in path))
@@ -1095,6 +1303,8 @@ class Binder:
         for sp, dp, sci, spn, rest, other in pend2:
             rest = [b for b in rest if (dp, sci, spn, b) not in recv]
             for L in (other if spine_of(sci, spn) is None else []):
+                if rest and not dom_ok(L, (sci, spn, rest[0])):
+                    continue
                 while rest and L["left"] > 0:
                     put(L, (sci, spn, rest.pop(0)), None)
             if rest:
@@ -1246,11 +1456,12 @@ class Binder:
                     d = self.sinks[(ci, pn, i)]
                     row.append(self._rel_desc(p, d, inst_vals, (r, pn, i)))
                 conns[(r, pn)] = tuple(row)
+        dk = lambda L: self.cport(p, L["dom"]) if L.get("dom") else "clk"          # lane clock port (TOK-QK/D)
         obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((self.rel_of(it[1]), it[2], it[3]) if it[0] == "leaf" else
-                                         ("fwd", it[1]["iname"], it[2]) for it in L["items"]))
+                                         ("fwd", it[1]["iname"], it[2]) for it in L["items"]), dk(L))
                       for L in self.out_bus[p])
-        ibus = sorted((L["iname"], L["width"], lane_pad(L)) for L in self.in_bus[p])     # the source is outside the module
-        ft = sorted((h["ibus"], h["obus"], L["width"], h["stations"]) for L, h in self.ft_bus[p])
+        ibus = sorted((L["iname"], L["width"], lane_pad(L), dk(L)) for L in self.in_bus[p])     # the source is outside the module
+        ft = sorted((h["ibus"], h["obus"], L["width"], h["stations"], dk(L)) for L, h in self.ft_bus[p])
         sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft,
                    clocks=tuple(sorted(self.cport(p, d) for d in self.clk_dom[p])))
         return sig, inst_vals
@@ -1938,6 +2149,23 @@ class Binder:
         body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
                     f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
         need_rst = False
+        rst_doms = {}                        # TOK-QK/D: non-default lane domain -> its synchronised reset
+
+        def CK(dom):
+            return self.cport(p, dom) if dom else "clk"
+
+        def RS(dom):
+            if not dom or dom == self.default_domain(p):
+                return "rst_n"
+            if dom not in rst_doms:
+                nm = f"rst_n_{sv_id(self.clk_role(p, dom))}"
+                rst_doms[dom] = nm
+                decl.append(f"    wire {nm};")
+                body.insert(1, f"    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
+                               f"u_rst_sync_{sv_id(self.clk_role(p, dom))} (.clk({CK(dom)}), .async_rst_n(arst_n), "
+                               f".sync_rst_n({nm}));  // lane domain {dom}")
+            return rst_doms[dom]
+        eq_sync = []                         # in-bus epochs of non-default-domain lanes, synchronised for the epoch check
         obus = sorted(self.out_bus[p], key=lambda L: L["oname"])
         ibus = sorted(self.in_bus[p], key=lambda L: L["iname"])
         for L in ibus:
@@ -1945,22 +2173,31 @@ class Binder:
             if L.get("spine"):
                 ports.append(f"    input  wire [{W - 1}:0] {n}   // reset spine: {_bus_note(L, 'in')}")
                 decl.append(f"    wire [{W - 1}:0] {n}_q;")
-                body.append(f"    ot_dp_rsync #(.W({W}), .S({L['cycles']})) u_rs_{n} (.clk(clk), .a({n}), .q({n}_q));")
+                body.append(f"    ot_dp_rsync #(.W({W}), .S({L['cycles']})) u_rs_{n} (.clk({CK(L.get('dom'))}), .a({n}), .q({n}_q));")
                 continue
             ports.append(f"    input  wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'in')}")
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
+            dm = L.get("dom")
+            ck, rs = CK(dm), RS(dm)
+            eqn = f"{n}_eq"
+            if dm and dm != self.default_domain(p):
+                # the lane runs on its endpoints' clock; its epoch bit reaches the default-domain epoch check through a
+                # 2-flop level synchroniser (data never crosses here)
+                eqn = f"{n}_eqd"
+                decl.append(f"    wire {eqn};  // epoch in lane domain {dm}")
+                eq_sync.append((n, eqn))
             pad = lane_pad(L)
             if pad > 0:
                 # the latency table's pad (R8 groups / replica depth): reset-less stages after the in-boundary flop,
                 # data and epoch together, so the lane lands at its table cycles
                 decl.append(f"    wire [{W - 1}:0] {n}_b;\n    wire {n}_eb;")
-                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
+                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk({ck}), .rst_n({rs}), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
                             f".q({n}_b), .eq({n}_eb));")
-                body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk(clk), .d({{{n}_eb, {n}_b}}), "
-                            f".q({{{n}_eq, {n}_q}}));  // lane pad: latency table {L['cycles']} cycles")
+                body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk({ck}), .d({{{n}_eb, {n}_b}}), "
+                            f".q({{{eqn}, {n}_q}}));  // lane pad: latency table {L['cycles']} cycles")
                 continue
-            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
-                        f".q({n}_q), .eq({n}_eq));")
+            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk({ck}), .rst_n({rs}), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
+                        f".q({n}_q), .eq({eqn}));")
         # driver wires: one per (cell, output port)
         drv_w = {}
         for ci in self.members[p]:
@@ -1994,7 +2231,8 @@ class Binder:
                 continue
             d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" if it[0] == "leaf" else f"{it[1]['iname']}_q[{it[2]}]"
                          for it in L["items"]])
-            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .ea(rst_n), "
+            ck, rs = CK(L.get("dom")), RS(L.get("dom"))
+            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk({ck}), .rst_n({rs}), .d({d}), .ea({rs}), "
                         f".q({n}[{W - 1}:0]), .eq({n}[{W}]));")
         # plan feedthrough slots: the lane's stations in this partition (reset-less data + epoch), no leaf touches them
         for L, h in sorted(self.ft_bus[p], key=lambda x: x[1]["ibus"]):
@@ -2005,11 +2243,12 @@ class Binder:
                 body.append(f"    assign {o} = {i};")
                 continue
             prev = i
+            ck, rs = CK(L.get("dom")), RS(L.get("dom"))
             for k in range(n):
                 nxt = o if k == n - 1 else f"{o}_s{k}"
                 if k < n - 1:
                     decl.append(f"    wire [{W}:0] {nxt};")
-                body.append(f"    ot_dp_st #(.W({W})) u_ft_{o}_{k} (.clk(clk), .rst_n(rst_n), .d({prev}[{W - 1}:0]), "
+                body.append(f"    ot_dp_st #(.W({W})) u_ft_{o}_{k} (.clk({ck}), .rst_n({rs}), .d({prev}[{W - 1}:0]), "
                             f".ea({prev}[{W}]), .q({nxt}[{W - 1}:0]), .eq({nxt}[{W}]));")
                 prev = nxt
         # intra-partition kept transport stages
@@ -2019,19 +2258,20 @@ class Binder:
             nm = short_id(f"d{st}_{self.rel_of(sci)}__{spn}", 90)
             dly_w[(sci, spn, st)] = nm
             decl.append(f"    wire [{W - 1}:0] {nm};")
-            body.append(f"    ot_dp_dly #(.W({W}), .D({st})) u_{nm} (.clk(clk), .d({drv_w[(sci, spn)]}), .q({nm}));")
+            ck = CK(getattr(self, "intra_dom", {}).get((p, sci, spn)))
+            body.append(f"    ot_dp_dly #(.W({W}), .D({st})) u_{nm} (.clk({ck}), .d({drv_w[(sci, spn)]}), .q({nm}));")
         orn = {}
         pads = {}
         PT = getattr(self, "ptree", None)
         taps = {}                            # (line src expr, name stem) -> {position: wire}
 
-        def tap(src, stem, x):
-            """position x (>= 0) of the tapped reset-less delay line on 1-bit `src` (PAD_TREE)"""
+        def tap(src, stem, x, ck="clk"):
+            """position x (>= 0) of the tapped reset-less delay line on 1-bit `src` (PAD_TREE), clocked by ck"""
             if x < 0:
                 raise BindError(f"PAD_TREE negative tap {x} on {src}")
             if x == 0:
                 return src
-            ln = taps.setdefault(src, {"stem": stem, "pos": {}})
+            ln = taps.setdefault(src, {"stem": stem, "pos": {}, "ck": ck})
             if x not in ln["pos"]:
                 ln["pos"][x] = short_id(f"pt{x}_{stem}", 100)
             return f"{ln['pos'][x]}[0]"
@@ -2042,7 +2282,7 @@ class Binder:
                 for x in sorted(ln["pos"]):
                     nm = ln["pos"][x]
                     decl.append(f"    wire [0:0] {nm};")
-                    body.append(f"    ot_dp_dly #(.W(1), .D({x - at})) u_{nm} (.clk(clk), .d({prev}), .q({nm}));  "
+                    body.append(f"    ot_dp_dly #(.W(1), .D({x - at})) u_{nm} (.clk({ln['ck']}), .d({prev}), .q({nm}));  "
                                 f"// pad tree: +{x} on {src}")
                     prev, at = f"{nm}[0]", x
 
@@ -2055,14 +2295,14 @@ class Binder:
             if k == "x":
                 L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
                 if len(d) > 7 and PT is not None:      # PAD_TREE: tap of the in-lane bit's line
-                    return tap(f"{L['iname']}_q[{j}]", f"{L['iname']}_{j}", d[7] - PT[(id(L), j)])
+                    return tap(f"{L['iname']}_q[{j}]", f"{L['iname']}_{j}", d[7] - PT[(id(L), j)], CK(L.get("dom")))
                 if len(d) > 7:          # landing pad (land_align): shared per (in-bus bit, pad)
                     key = (L["iname"], j, d[7])
                     if key not in pads:
                         nm = short_id(f"pd{d[7]}_{L['iname']}_{j}", 100)
                         pads[key] = nm
                         decl.append(f"    wire [0:0] {nm};")
-                        body.append(f"    ot_dp_dly #(.W(1), .D({d[7]})) u_{nm} (.clk(clk), .d({L['iname']}_q[{j}]), "
+                        body.append(f"    ot_dp_dly #(.W(1), .D({d[7]})) u_{nm} (.clk({CK(L.get('dom'))}), .d({L['iname']}_q[{j}]), "
                                     f".q({nm}));  // landing pad: as-built relative timing")
                     return f"{pads[key]}[0]"
                 return f"{L['iname']}_q[{j}]"
@@ -2129,18 +2369,24 @@ class Binder:
             for k, it in enumerate(L["items"]):
                 U0 = PT[(id(L), k)]
                 if it[0] == "leaf":
-                    src.append(tap(f"{drv_w[(it[1], it[2])]}[{it[3]}]", f"{self.rel_of(it[1])}__{it[2]}_{it[3]}", U0))
+                    src.append(tap(f"{drv_w[(it[1], it[2])]}[{it[3]}]", f"{self.rel_of(it[1])}__{it[2]}_{it[3]}", U0,
+                                   CK(L.get("dom"))))
                 else:
-                    src.append(tap(f"{it[1]['iname']}_q[{it[2]}]", f"{it[1]['iname']}_{it[2]}", U0 - PT[(id(it[1]), it[2])]))
-            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({_concat(src)}), .ea(rst_n), "
+                    src.append(tap(f"{it[1]['iname']}_q[{it[2]}]", f"{it[1]['iname']}_{it[2]}", U0 - PT[(id(it[1]), it[2])],
+                                   CK(L.get("dom"))))
+            ck, rs = CK(L.get("dom")), RS(L.get("dom"))
+            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk({ck}), .rst_n({rs}), .d({_concat(src)}), .ea({rs}), "
                         f".q({n}[{W - 1}:0]), .eq({n}[{W}]));")
         emit_taps()
+        for n, eqn in eq_sync:
+            body.append(f"    ot_dp_lsync #(.W(1), .S(2)) u_eqs_{n} (.clk(clk), .rst_n(rst_n), .a({eqn}), .q({n}_eq));  "
+                        f"// lane epoch -> default-domain epoch check")
         if need_rst:
             decl.append("    wire rst = ~rst_n;")
         head = (f"// GENERATED by tools/die_plan/bind.py from die_plan {self.plan['die']['name']} + the as-built die "
                 f"({self.ab['top']}), partition type {tn}.  Do not edit.\n"
                 f"// {len(self.by_type[tn])} instance(s); leaves = the as-built modules unchanged; intra-partition nets as built;\n"
-                "// every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.\n"
+                "// every crossing registered on both sides (ot_dp_st, data + epoch) on its endpoints' clock domain; one reset synchroniser per domain.\n"
                 "`timescale 1ns/1ps\n`default_nettype none\n")
         pblock = (" #(\n" + ",\n".join(pdecl) + "\n)") if pdecl else ""
         return head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
@@ -2267,6 +2513,16 @@ class Binder:
                               undriven=c.get("undriven", 0), multiply_bound=c.get("multi_driven", 0),
                               straps=c.get("strap", 0), plan_driven=c.get("plan_driven", 0)),
                    errors=self.errors[:2000], n_errors=len(self.errors), warnings=self.warns[:500])
+        st = getattr(self, "lane_dom_stats", None)
+        if st:
+            rep["lane_domains"] = dict(mode=st["mode"], bits_by_domain=dict(st["by_domain"]),
+                                       lanes_by_domain={d: sum(1 for L in self.links if L.get("dom") == d)
+                                                        for d in sorted({L.get("dom") for L in self.links if L.get("dom")})},
+                                       cdc_unsync_bits=sum(st["cdc_bits"].values()), cdc_unsync=dict(st["cdc_bits"]),
+                                       sync_port_bits=sum(st["sync_bits"].values()), sync_ports=dict(st["sync_bits"]),
+                                       undeclared=st["undeclared"], intra_mixed=dict(st["intra_cross"]),
+                                       intra_by_domain={d: sum(1 for v in getattr(self, "intra_dom", {}).values() if v == d)
+                                                        for d in sorted(set(getattr(self, "intra_dom", {}).values()))})
         return rep, lat
 
 
@@ -2421,6 +2677,7 @@ def cmd_bind(a):
     B.map_cells()
     B.analyse()
     B.build_buses()
+    B.lane_domains()
     B.align_landings()
     B.regen_params()
     B.check_types()

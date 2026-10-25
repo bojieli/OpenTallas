@@ -645,3 +645,123 @@ def test_r8_bus_join_unions_split_halves():
         if bj:
             mem, _ = R8.solve(bg, raw)
             assert sorted(x["pad"] for x in mem) == [0, 6]
+
+
+# ---------------------------------------------------------------- TOK-QK/D 10-24: lane clock = endpoint domain
+DIE_D = """// bind_tiny variant (TOK-QK/D 10-24): the KV kvpc <-> HBM PHY shape.  u_c (partition A) is a two-clock leaf whose
+// po / pi ports live in its HBM clock domain; u_p (partition P) is the HBM PHY on the HBM clock only; u_s (partition S)
+// takes u_c's core-domain output.  The as-built relays are removed by the binder.
+module tdie ();
+  wire ck; wire ckh; wire rs;
+  wire [7:0] po; wire [7:0] po_r1; wire [7:0] pi; wire [7:0] pi_r1; wire [7:0] y; wire [7:0] sq;
+  tclkrx clk_rx (.pll(1'b0), .ck(ck));
+  tclkh clk_h (.pll(1'b0), .ckh(ckh));
+  trstsync rst_s (.ck(ck), .q(rs));
+  lf_hc u_c (.ck(ck), .hck(ckh), .rst_n(rs), .pi(pi_r1), .po(po), .y(y));
+  trly_8 rly0 (.ck(ck), .a(po), .b(po_r1));
+  lf_hp u_p (.hck(ckh), .po(po_r1), .pi(pi));
+  trly_8 rly1 (.ck(ck), .a(pi), .b(pi_r1));
+  lf_cs u_s (.clk(ck), .d(y), .q(sq));
+endmodule
+"""
+LEAVES_D = """`timescale 1ns/1ps
+module lf_hc (input wire ck, input wire hck, input wire rst_n, input wire [7:0] pi, output reg [7:0] po, output reg [7:0] y);
+    reg [7:0] h, c;
+    always @(posedge hck) begin h <= pi + 8'd1; po <= h; end
+    always @(posedge ck or negedge rst_n) if (!rst_n) c <= 8'd0; else c <= c + 8'd1;
+    always @(posedge ck) y <= c;
+endmodule
+module lf_hp (input wire hck, input wire [7:0] po, output reg [7:0] pi);
+    always @(posedge hck) pi <= po ^ 8'h5a;
+endmodule
+module lf_cs (input wire clk, input wire [7:0] d, output reg [7:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+"""
+
+
+def _plan_d(tmp_path, edit=None, s_on_hbm=False):
+    src = tmp_path / "src"
+    if not src.exists():
+        src.mkdir()
+    die = DIE_D.replace("lf_cs u_s (.clk(ck)", "lf_cs u_s (.clk(ckh)") if s_on_hbm else DIE_D
+    (src / "die_d.v").write_text(die)
+    (src / "leaves_d.sv").write_text(LEAVES_D)
+    p = {"schema": "opentallas.die_plan.v1", "die": {"name": "bind_d"},
+         "partition_types": {"ta": {"module": "bd_ta", "reset": {"sync_stages": 2}},
+                             "tp": {"module": "bd_tp", "reset": {"sync_stages": 2}},
+                             "ts": {"module": "bd_ts", "reset": {"sync_stages": 2}}},
+         "partitions": [{"name": "A", "type": "ta"}, {"name": "P", "type": "tp"}, {"name": "S", "type": "ts"}],
+         "ports": [], "lanes": [],
+         "asbuilt": {"base": str(src), "netlist": ["die_d.v"], "top": "tdie", "rtl_roots": [], "files": ["leaves_d.sv"],
+                     "transport": [{"module": "trly_\\d+", "map": {"b": "a"}, "drop_in": ["ck"], "stages": 1}],
+                     "sources": [{"module": "tclkrx", "kind": "clock", "outputs": {"ck": "core"}, "drop_in": ["pll"]},
+                                 {"module": "tclkh", "kind": "clock", "outputs": {"ckh": "clk_hbm_EN"}, "drop_in": ["pll"]},
+                                 {"module": "trstsync", "kind": "reset", "outputs": {"q": "low"}, "drop_in": ["ck"]}],
+                     "default_clock": "core", "clock_roles": [["clk_hbm_(EN|ES|WN|WS)", "clk_hbm"]],
+                     "port_domains": [{"module": "lf_hc", "ports": {"pi|po": "hck"}, "default": "ck"}],
+                     "map": {"parts": {"u_c": "A", "u_p": "P", "u_s": "S"}}}}
+    if edit:
+        edit(p)
+    f = tmp_path / "die_plan_d.json"
+    f.write_text(json.dumps(p))
+    return f
+
+
+def _flops(sv, clk):
+    """names of the boundary flops (ot_dp_st) clocked by `clk` in a generated partition module"""
+    return set(re.findall(rf"ot_dp_st #\(\.W\(\d+\)\) (u_\w+) \(\.clk\({clk}\)", sv))
+
+
+def test_lane_clock_endpoint_domain(tmp_path):
+    """D: a lane whose driver and sink are both in the HBM domain (kvpc po/pi <-> PHY) is registered on the HBM clock in
+    BOTH partitions -- no crossing at all; the core-domain lane (y -> S) stays on the core clock; proof + lint PASS"""
+    out = tmp_path / "o"
+    assert run(_plan_d(tmp_path), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    assert r["n_errors"] == 0, r["errors"][:5]
+    ld = r["lane_domains"]
+    assert ld["mode"] == "endpoint" and ld["cdc_unsync_bits"] == 0 and not ld["undeclared"]
+    assert ld["bits_by_domain"] == {"clk_hbm_EN": 16, "core": 8}
+    a = (out / "rtl" / "bd_ta.sv").read_text()
+    p = (out / "rtl" / "bd_tp.sv").read_text()
+    hb = {x for x in _flops(a, "clk_clk_hbm")}
+    assert any("po" in x for x in hb) and any("pi" in x for x in hb), a
+    assert not {x for x in _flops(a, "clk") if "po" in x or "pi" in x}          # nothing of po / pi on the core clock
+    assert any("y" in x for x in _flops(a, "clk"))
+    assert "u_rst_sync_clk_hbm" in a and "ot_dp_lsync" in a                      # HBM-domain reset; epoch -> core check
+    assert len(_flops(p, "clk")) == 2 and "clk_core" not in p                   # P is all HBM (its default clock)
+    top = next((out / "rtl").glob("*_bound_top.sv")).read_text()
+    assert re.search(r"bd_ta A \(\s*\.clk\(clk_core\),\s*\.arst_n\(rst_n\),\s*\.clk_clk_hbm\(clk_clk_hbm_EN\)", top)
+    assert verify(out)["verdict"] == "PASS"
+
+
+def test_lane_clock_undeclared_and_legacy(tmp_path):
+    """a multi-clock leaf port with no declared domain is refused (never assumed); lane_clock "partition" reproduces the
+    pre-D binding (po / pi boundary flops of A on the core clock = the KV bug, kept as the mutant)"""
+    out = tmp_path / "o"
+    assert run(_plan_d(tmp_path, lambda p: p["asbuilt"].pop("port_domains")), out, "elab", "bind") == 0
+    r = report(out)
+    assert any(e.startswith("PORT_DOMAIN_UNDECLARED lf_hc.po") for e in r["errors"]), r["errors"][:5]
+    assert any(e.startswith("PORT_DOMAIN_UNDECLARED lf_hc.pi") for e in r["errors"])
+    out2 = tmp_path / "o2"
+    assert run(_plan_d(tmp_path, lambda p: p["asbuilt"].update(lane_clock="partition")), out2, "elab", "bind") == 0
+    a = (out2 / "rtl" / "bd_ta.sv").read_text()
+    assert {x for x in _flops(a, "clk") if "po" in x or "pi" in x} and not _flops(a, "clk_clk_hbm")
+
+
+def test_lane_clock_cdc_refused_or_synchronised(tmp_path):
+    """a genuine crossing (core-domain y into an HBM-clocked sink) through plain lane registers is refused (LANE_CDC);
+    declaring the sink port a synchroniser ("sync") accepts it and records it"""
+    out = tmp_path / "o"
+    assert run(_plan_d(tmp_path, s_on_hbm=True), out, "elab", "bind") == 0
+    r = report(out)
+    assert r["lane_domains"]["cdc_unsync_bits"] == 8
+    assert any(e.startswith("LANE_CDC ") and "core->clk_hbm_EN" in e and "lf_cs.d" in e for e in r["errors"]), r["errors"][:5]
+
+    def sync(p):
+        p["asbuilt"]["port_domains"].append({"module": "lf_cs", "ports": {}, "sync": ["d"]})
+    out2 = tmp_path / "o2"
+    assert run(_plan_d(tmp_path, sync, s_on_hbm=True), out2, "elab", "bind") == 0
+    r2 = report(out2)
+    assert r2["n_errors"] == 0 and r2["lane_domains"]["sync_port_bits"] == 8, r2["errors"][:5]
