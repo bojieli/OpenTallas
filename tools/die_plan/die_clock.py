@@ -398,7 +398,7 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 segs = plan_leg(pos[pk], npos[pk], npos[ck], n)
                 plan[ck if ck in live else ("dummy",) + ck] = segs if ck in live else segs[:1]
             worst = max(g for segs in plan.values() for _, _, g in segs)
-            if worst <= max(max_seg, Lmax / n + 1e-6) or n >= n0 + 4:
+            if worst <= max(max_seg, Lmax / n + 1e-6) or n >= n0 + 2:
                 break
             n += 1
         leg_len[lev] = (Lmax, n)
@@ -419,37 +419,6 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     Ly = max(abs(t[3] - pos[k][1]) for k in leaf_keys for t in by_leaf[k])
     kx = max(1, math.ceil(Lx / rep_um - 1e-9)) if Lx > 1e-6 else 0
     ky = max(1, math.ceil(Ly / rep_um - 1e-9)) if Ly > 1e-6 else 0
-
-    def chain_worst(kx_, ky_):
-        """longest legalised chain hop (x part, y part) over every tap for kx_ / ky_ stages."""
-        wx = wy = 0.0
-        for key in leaf_keys:
-            lx, ly = pos[key]
-            for (_, _, X, Y, _) in by_leaf[key]:
-                prev = (lx, ly)
-                for k in range(kx_ + ky_):
-                    if k < kx_:
-                        q, a_, b_ = (lx + (X - lx) * (k + 1) / kx_, ly), (lx, ly), (X, ly)
-                    else:
-                        q, a_, b_ = (X, ly + (Y - ly) * (k - kx_ + 1) / ky_), (X, ly), (X, Y)
-                    x, y, side = (q[0], q[1], 0.0) if k == kx_ + ky_ - 1 else _slide(q, a_, b_, K)
-                    g = abs(x - prev[0]) + abs(y - prev[1]) + side
-                    if k < kx_:
-                        wx = max(wx, g)
-                    else:
-                        wy = max(wy, g)
-                    prev = (x, y)
-        return wx, wy
-    for _ in range(6):                              # one stage count per axis: escalate while a hop is too long
-        wx, wy = chain_worst(kx, ky)
-        if max(wx, wy) <= max_seg:
-            break
-        if wx >= wy and kx:
-            kx += 1
-        elif ky:
-            ky += 1
-        else:
-            break
     chain_std = [Lx / kx] * kx + [Ly / ky] * ky if (kx or ky) else [0.0]
     chain_layer = ["M8"] * kx + ["M9"] * ky if (kx or ky) else ["M8"]
     # ------------------------------------------------------------------ netlist
