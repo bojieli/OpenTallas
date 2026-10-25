@@ -1,2 +1,3 @@
 # CLOCK-RESET lane: the work log is lanes/CLOCK.md (and RESET.md). This file exists so the autopilot finds the lane.
 2026-10-25 11:21 PDT GEOM-REVIEW -> CLOCK-RESET: E4 (dsdv_eng_rr_e_e4) needs a planned shallow trunk spec (<=4-5 levels to 122 density taps, target <=250 TT) to replace the 12-level BUFx24 TritonCTS trunk (~415 ps), plus a declared core-latency number for the residual. See REPLY [PATH-S81/E4 11:16].
+2026-10-25 12:34 PDT COORD: col_h10_r1__t1 (structural.tsv 1c283eb44e4f) -> fresh CLOCK-RESET lane (12:35) owns it with col_h10_r0_p1__t1.
