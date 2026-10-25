@@ -782,6 +782,9 @@ def summary_line(rec):
     for c in ("tt", "ff"):
         x = ((((C.get("clock") or {}).get("by_corner") or {}).get(c) or {}).get("pinflops") or {})
         pf[c] = x.get("spread")
+        ck = (((((C.get("clock") or {}).get("by_corner") or {}).get(c) or {}).get("pair_skew") or {}).get("checks") or {})
+        w = [v.get("worst_abs_ps") for v in ck.values() if v.get("worst_abs_ps") is not None]
+        ps[c] = max(w) if w else float("nan")
     return (f"{rec.get('name')}: {rec.get('verdict')} | TT setup {g('setup_tt', 'wns_ps')} | FF hold "
             f"{g('hold_ff', 'wns_ps')} (sdc {g('hold_ff', 'sdc_wns_ps')}) | SS setup (info) {g('ss', 'setup_wns_ps')} | "
             f"pair skew TT/FF {ps['tt']:.1f}/{ps['ff']:.1f} (spread info {pf['tt']}/{pf['ff']}) | DRC {g('drc', 'count')} ant {g('antenna', 'count')} | "

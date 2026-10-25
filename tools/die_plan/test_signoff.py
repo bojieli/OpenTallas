@@ -316,3 +316,11 @@ def test_corner_scoped_generic_lib_name(tmp_path):
     (tmp_path / "ff").mkdir(); (tmp_path / "ff/core.lib").write_text("library(c) {}")
     (tmp_path / "config.mk").write_text("export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/ff/core.lib\n")
     assert signoff.macro_libs(tmp_path, "ff") == ([str(tmp_path / "ff/core.lib")], [])
+
+
+def test_summary_line_shows_pair_skew_and_spread_info():
+    line = signoff.summary_line(signoff.evaluate(record(pair_setup=41.0, pair_hold=22.0)))
+    assert "pair skew TT/FF 41.0/41.0" in line and "spread info" in line
+    rec = record()
+    del rec["corners"]["tt"]["pair_skew"]
+    assert "pair skew TT/FF nan/30.0" in signoff.summary_line(signoff.evaluate(rec))
