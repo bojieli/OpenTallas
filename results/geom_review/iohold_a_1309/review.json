@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "type": "hd_turn_a",
+ "kit": "/srv/opentallas-scratch2/claude/codex-iohold-1309/headA_r1/hd_turn_a",
+ "image": "/srv/opentallas-scratch2/claude/wt/codex-iohold-1309/results/geom_review/iohold_a_1309/hd_turn_a.png",
+ "verdict": "PASS-COND",
+ "findings": [
+  "Viewed W to S 565 data plus epoch turn. Pin order monotonic on W and S faces; sampled three-stage routes max274.2um below405. No macros/walls/halo or channel obstruction. Signal pins1132, three clock taps; upper tap lies above main data band and must be checked for actual nonempty load. Uniform PDN geometry unchanged from DRC0 routed baseline1ae8.",
+  "Only IO-HOLD A per-port input-min and opt-in greedy416 GRT balancing change. This approves ONE controlled experiment, not default-on or physical signoff."
+ ],
+ "conditions": [
+  "Post-CTS/GRT actual clock-group max-min/maximum and TT/FF arrival residuals recorded",
+  "Internal to output-pin-register FF hold census before and after padding",
+  "No release SIGNED count without real parent TT/FF CPPR check"
+ ],
+ "baseline": "/srv/opentallas-scratch2/claude/flow-canary/ab/runs/s81_head_1ae8ebeb0_1025_114536_038973"
+}
