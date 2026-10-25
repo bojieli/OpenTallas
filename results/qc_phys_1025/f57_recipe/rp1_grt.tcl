@@ -11,14 +11,24 @@ estimate_parasitics -global_routing
 # the hold repair and the reported hold see routed-basis skew between taps (macros share their tap -> covered)
 if {[info exists ::env(OT_CTAP_CORR)] && $::env(OT_CTAP_CORR) ne ""} {
   source $::env(OT_CTAP_CORR)
-  puts "OT_CTAP_ASSIGN taps tc [ot_ctap_assign $ot_ctap_corr 0 tc max] bc [ot_ctap_assign $ot_ctap_corr 1 bc min]"
+  # route phase runs this step FF-only (main FLOW: grt CORNER=BC CORNERS=bc, vclk bound to FF): one corner, no -corner
+  set ot_cs [expr {[info exists ::env(CORNERS)] ? $::env(CORNERS) : "tc bc"}]
+  if {[llength $ot_cs] == 1} {
+    set ot_sp [list [list $ot_ctap_corr [expr {$ot_cs eq "bc"}] {} min]]
+  } else { set ot_sp [list [list $ot_ctap_corr 0 tc max] [list $ot_ctap_corr 1 bc min]] }
+  puts "OT_CTAP_ASSIGN corners '$ot_cs' arcs [ot_ctap_assign $ot_sp]"
 }
 global_route -start_incremental
 repair_design -slew_margin 40 -cap_margin 20 -max_wire_length [expr {[info exists ::env(OT_MAX_WIRE_UM)] ? $::env(OT_MAX_WIRE_UM) : 80}]
 if {[info exists ::env(OT_GRT_HOLD)] && $::env(OT_GRT_HOLD)} {
   if {$::env(HOLD_SLACK_MARGIN) > 5} { error "RP1 recipe: in-flow hold margin must be 0..5 ps" }
+  # QC-PHYS f57 (FLOW vclk_corner rule): one SDC cannot carry both corners' I; the hold repair is FF-driven, so vclk is
+  # switched to the bound FF I (OT_VCLK_FF) for the repair and back to the bound TT I after it
+  source /work/pinreg.tcl
+  ot_vclk_bind OT_VCLK_FF arrival_min_rise "RP1_GRT hold repair"
   puts "RP1_GRT repair_timing -hold -hold_margin $::env(HOLD_SLACK_MARGIN)"
   repair_timing -hold -hold_margin $::env(HOLD_SLACK_MARGIN) -max_buffer_percent 100
+  ot_vclk_bind OT_VCLK_TT arrival_max_rise "RP1_GRT after hold repair (TT bound)"
 }
 detailed_placement
 check_placement -verbose

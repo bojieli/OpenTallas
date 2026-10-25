@@ -18,7 +18,8 @@ set_propagated_clock [all_clocks]
 # QC-PHYS f57: measure-basis (fresh GRT) RCX correction of every tap cell (ctap_corr.tcl ot_ctap_corr_meas)
 if {[info exists ::env(OT_CTAP_CORR)] && $::env(OT_CTAP_CORR) ne ""} {
   source $::env(OT_CTAP_CORR)
-  puts "OT_CTAP_ASSIGN meas $C [ot_ctap_assign $ot_ctap_corr_meas [expr {$C eq "FF"}] {} max]"
+  puts "OT_CTAP_ASSIGN meas $C [ot_ctap_assign [list [list $ot_ctap_corr_meas [expr {$C eq "FF"}] {} max]]]"
+  source /work/pinreg.tcl; ot_vclk_bind OT_VCLK_$C arrival_max_rise "RP1_M $C"
 }
 puts [format "RP1_M %s setup_wns %.2f setup_ep %d hold_wns %.2f hold_ep %d" $C [expr {[sta::worst_slack_cmd max]*1e12}] [sta::endpoint_violation_count max] [expr {[sta::worst_slack_cmd min]*1e12}] [sta::endpoint_violation_count min]]
 report_checks -path_delay min -group_path_count 3 -format end

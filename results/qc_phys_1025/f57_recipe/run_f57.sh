@@ -13,7 +13,7 @@ TOP=$(sed -n 's/^export DESIGN_NAME = //p' "$K/config.mk")
 NICK=$(sed -n 's/^export DESIGN_NICKNAME = //p' "$K/config.mk")
 SKIP=$(cat "$K/face_guard_skip.txt")
 B=/work/run/results/asap7/$NICK/base
-MEAS="for c in TT FF; do OT_CTAP_CORR=/work/ctap_corr.tcl MC=\$c ODB=$B/5_1_grt.odb SDC=$B/5_1_grt.sdc OUT=/work/meas_${PH}_\$c /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/measure.tcl > /work/meas_${PH}_\$c.log 2>&1; grep -h '^RP1_' /work/meas_${PH}_\$c.log; done"
+MEAS="for c in TT FF; do OT_VCLK_FF=auto OT_CTAP_CORR=/work/ctap_corr.tcl MC=\$c ODB=$B/5_1_grt.odb SDC=$B/5_1_grt.sdc OUT=/work/meas_${PH}_\$c /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/measure.tcl > /work/meas_${PH}_\$c.log 2>&1; grep -h '^RP1_' /work/meas_${PH}_\$c.log; done"
 if [ "$PH" = proto ]; then
   STEPS="python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc = 0 ]; then \$M do-cts; rc=\$?; fi; \
@@ -22,7 +22,7 @@ if [ "$PH" = proto ]; then
 elif [ "$PH" = route ]; then
   STEPS="python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc = 0 ]; then python3 -I /work/set_vclk.py $B/4_cts.sdc /work/constraint.sdc; rc=\$?; fi; \
-  if [ \$rc = 0 ]; then \$M do-5_1_grt OT_GRT_HOLD=1; rc=\$?; fi; \
+  if [ \$rc = 0 ]; then OT_VCLK_FF=auto OT_VCLK_TT=320 \$M do-5_1_grt OT_GRT_HOLD=1 CORNER=BC CORNERS=bc; rc=\$?; fi; \
   if [ \$rc = 0 ]; then $MEAS; fi; \
   if [ \$rc = 0 ]; then bash /work/ff_gate.sh; rc=\$?; fi; \
   if [ \$rc = 0 ]; then \$M do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc; rc=\$?; fi; \

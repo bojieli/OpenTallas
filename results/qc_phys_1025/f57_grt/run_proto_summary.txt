@@ -1,0 +1,105 @@
+OT_FCAP: dont_touch lifted for CTS on 70 flops
+OT_MAXWIRE pre-CTS repair_design -max_wire_length: leaf instances 13627 -> 14468
+OT_CTAP tap W1 sinks 421 at 36.1 200.4
+OT_CTAP tap W0 sinks 1008 at 20.3 131.4
+OT_CTAP tap SW sinks 295 at 33.5 7.0
+OT_CTAP tap E1 sinks 120 at 224.3 187.9
+OT_CTAP tap E0 sinks 120 at 224.4 92.8
+OT_CTAP tap SE sinks 254 at 221.3 6.8
+OT_CTAP macro leaf g_crb\[1\].u_m region W1 (tap output, post-CTS) at 36.6 182.2
+OT_CTAP macro leaf g_crb\[0\].u_m region W0 (tap output, post-CTS) at 36.6 87.2
+OT_FCAP: dont_touch left lifted on 70 flops (hold repair)
+OT_CTAP_TAPOUT leaf ot_cleaf_g_crb__1___u_m -> ot_ctap_W1_n (tap fanout 3)
+OT_CTAP_TAPOUT leaf ot_cleaf_g_crb__0___u_m -> ot_ctap_W0_n (tap fanout 3)
+OT_CTAP_M it0 tap W1 n 421 mean 308.8 min 305.5 max 313.6
+OT_CTAP_M it0 tap W0 n 1008 mean 303.1 min 296.3 max 310.3
+OT_CTAP_M it0 tap SW n 295 mean 280.0 min 278.8 max 281.6
+OT_CTAP_M it0 tap E1 n 120 mean 298.9 min 297.4 max 299.9
+OT_CTAP_M it0 tap E0 n 120 mean 287.9 min 286.9 max 289.0
+OT_CTAP_M it0 tap SE n 254 mean 295.6 min 294.6 max 296.7
+OT_CTAP_SPREAD it0 taps 280.0..308.8 (28.8 ps, window 20.0) target 308.8
+OT_CTAP_FIX it0 tap:SW:28.8 -> 1 delay buffers
+OT_CTAP_FIX it0 tap:E0:20.9 -> 1 delay buffers
+OT_CTAP_FIX it0 tap:SE:13.2 -> 1 delay buffers
+OT_CTAP_M it1 tap W1 n 421 mean 308.8 min 305.5 max 313.6
+OT_CTAP_M it1 tap W0 n 1008 mean 302.3 min 295.6 max 309.5
+OT_CTAP_M it1 tap SW n 295 mean 303.5 min 302.3 max 305.0
+OT_CTAP_M it1 tap E1 n 120 mean 298.9 min 297.4 max 299.9
+OT_CTAP_M it1 tap E0 n 120 mean 311.0 min 310.0 max 312.1
+OT_CTAP_M it1 tap SE n 254 mean 317.9 min 316.9 max 319.0
+OT_CTAP_SPREAD it1 taps 298.9..317.9 (19.0 ps, window 20.0) target 308.8
+OT_CTAP_M itm0 macro g_crb\[0\].u_m clk 237.8 ifregs n 266 mean 303.0 min 295.6 max 312.1 (clk - mean -65.3)
+OT_CTAP_M itm0 macro g_crb\[1\].u_m clk 246.9 ifregs n 266 mean 305.1 min 297.4 max 311.6 (clk - mean -58.2)
+OT_CTAP_FIX m0 macro:g_crb\[0\].u_m:35.3 -> 2 delay buffers
+OT_CTAP_FIX m0 macro:g_crb\[1\].u_m:28.2 -> 1 delay buffers
+OT_CTAP_M itm1 macro g_crb\[0\].u_m clk 281.9 ifregs n 266 mean 303.0 min 295.4 max 312.1 (clk - mean -21.0)
+OT_CTAP_M itm1 macro g_crb\[1\].u_m clk 269.3 ifregs n 266 mean 305.0 min 297.4 max 311.4 (clk - mean -35.7)
+OT_CTAP_M itfinal tap W1 n 421 mean 308.6 min 305.3 max 313.4
+OT_CTAP_M itfinal tap W0 n 1008 mean 302.1 min 295.4 max 309.4
+OT_CTAP_M itfinal tap SW n 295 mean 303.5 min 302.3 max 305.0
+OT_CTAP_M itfinal tap E1 n 120 mean 298.9 min 297.4 max 299.9
+OT_CTAP_M itfinal tap E0 n 120 mean 311.0 min 310.0 max 312.1
+OT_CTAP_M itfinal tap SE n 254 mean 317.9 min 316.9 max 319.0
+OT_CTAP_M itfinal macro g_crb\[0\].u_m clk 281.9 ifregs n 266 mean 303.0 min 295.4 max 312.1 (clk - mean -21.0)
+OT_CTAP_M itfinal macro g_crb\[1\].u_m clk 269.3 ifregs n 266 mean 305.0 min 297.4 max 311.4 (clk - mean -35.7)
+OT_LEAF_AFF pairs 1617 groups 29 cross_leaf_before 1611 cross_leaf_after 1590 groups_moved 21 sinks_moved 21 same_leaf_already 2 skip_big 1 skip_far 5 skip_cap 0 skip_driver 0 leaf_cap 39 radius_um 30.0 report_only 0
+RP1_CTS_GATE internal hold_wns -3.59 (all groups incl. vclk boundary -103.16)
+RP1_CTS_GATE hold_wns -3.59 hold_endpoints 259 setup_wns 215.56
+RP1_CTS_GATE clock_drivers 148 in_macro 0
+OT_RC_CAL kR 0.8 kC 0.9
+OT_RC_CAL applied in PRE_GLOBAL_ROUTE (grt_pre.tcl)
+OT_CTAP_CORR /work/ctap_corr.tcl taps  SE {-27.6 -23.3} E0 {-19.8 -16.8} E1 {-25.0 -21.2} SW {-19.7 -16.7} W0 {-16.8 -14.2} W1 {4.1 3.3}  macros  g_crb*0*.u_m {-16.8 -14.2} g_crb*1*.u_m {4.1 3.3} 
+OT_CTAP_M it0 tap W1 n 421 mean 297.2 min 293.4 max 303.6 (RCX-corrected +4.1)
+OT_CTAP_M it0 tap W0 n 1008 mean 274.8 min 268.6 max 282.9 (RCX-corrected -16.8)
+OT_CTAP_M it0 tap SW n 295 mean 271.0 min 269.2 max 272.7 (RCX-corrected -19.7)
+OT_CTAP_M it0 tap E1 n 120 mean 259.4 min 257.7 max 260.6 (RCX-corrected -25.0)
+OT_CTAP_M it0 tap E0 n 120 mean 285.5 min 284.0 max 287.3 (RCX-corrected -19.8)
+OT_CTAP_M it0 tap SE n 254 mean 279.4 min 278.2 max 280.5 (RCX-corrected -27.6)
+OT_CTAP_SPREAD it0 taps 259.4..297.2 (37.8 ps, window 20.0) target 297.2
+OT_CTAP_FIX it0 tap:W0:22.3 -> 1 delay buffers
+OT_CTAP_FIX it0 tap:SW:26.2 -> 1 delay buffers
+OT_CTAP_FIX it0 tap:E1:37.8 -> 2 delay buffers
+OT_CTAP_FIX it0 tap:E0:11.6 -> 1 delay buffers
+OT_CTAP_FIX it0 tap:SE:17.8 -> 1 delay buffers
+OT_CTAP_M it1 tap W1 n 421 mean 297.2 min 293.4 max 303.6 (RCX-corrected +4.1)
+OT_CTAP_M it1 tap W0 n 1008 mean 298.4 min 292.2 max 306.5 (RCX-corrected -16.8)
+OT_CTAP_M it1 tap SW n 295 mean 291.8 min 290.0 max 293.5 (RCX-corrected -19.7)
+OT_CTAP_M it1 tap E1 n 120 mean 306.9 min 305.2 max 308.0 (RCX-corrected -25.0)
+OT_CTAP_M it1 tap E0 n 120 mean 307.7 min 306.3 max 309.5 (RCX-corrected -19.8)
+OT_CTAP_M it1 tap SE n 254 mean 302.0 min 300.9 max 303.2 (RCX-corrected -27.6)
+OT_CTAP_SPREAD it1 taps 291.8..307.7 (15.9 ps, window 20.0) target 297.2
+OT_CTAP_M itm0 macro g_crb\[0\].u_m clk 273.6 ifregs n 266 mean 300.0 min 309.0 max 329.3 (clk - mean -26.4)
+OT_CTAP_M itm0 macro g_crb\[1\].u_m clk 254.8 ifregs n 266 mean 302.0 min 290.9 max 333.0 (clk - mean -47.2)
+OT_CTAP_FIX m0 macro:g_crb\[1\].u_m:17.2 -> 1 delay buffers
+OT_CTAP_M itm1 macro g_crb\[0\].u_m clk 273.6 ifregs n 266 mean 300.0 min 309.0 max 329.3 (clk - mean -26.4)
+OT_CTAP_M itm1 macro g_crb\[1\].u_m clk 276.9 ifregs n 266 mean 302.0 min 290.8 max 333.0 (clk - mean -25.0)
+OT_CTAP_M itfinal tap W1 n 421 mean 297.1 min 293.3 max 303.5 (RCX-corrected +4.1)
+OT_CTAP_M itfinal tap W0 n 1008 mean 298.4 min 292.2 max 306.5 (RCX-corrected -16.8)
+OT_CTAP_M itfinal tap SW n 295 mean 291.8 min 290.0 max 293.5 (RCX-corrected -19.7)
+OT_CTAP_M itfinal tap E1 n 120 mean 306.9 min 305.2 max 308.0 (RCX-corrected -25.0)
+OT_CTAP_M itfinal tap E0 n 120 mean 307.7 min 306.3 max 309.5 (RCX-corrected -19.8)
+OT_CTAP_M itfinal tap SE n 254 mean 302.0 min 300.9 max 303.2 (RCX-corrected -27.6)
+OT_CTAP_M itfinal macro g_crb\[0\].u_m clk 273.6 ifregs n 266 mean 300.0 min 309.0 max 329.3 (clk - mean -26.4)
+OT_CTAP_M itfinal macro g_crb\[1\].u_m clk 276.9 ifregs n 266 mean 302.0 min 290.8 max 333.0 (clk - mean -25.0)
+OT_CTAP_ASSIGN SE tt corner tc arc 19.23 -> 1.00 ps
+OT_CTAP_ASSIGN E0 tt corner tc arc 19.05 -> 1.00 ps
+OT_CTAP_ASSIGN E1 tt corner tc arc 19.41 -> 1.00 ps
+OT_CTAP_ASSIGN SW tt corner tc arc 18.97 -> 1.00 ps
+OT_CTAP_ASSIGN W0 tt corner tc arc 21.12 -> 4.32 ps
+OT_CTAP_ASSIGN W1 tt corner tc arc 33.81 -> 37.91 ps
+OT_CTAP_ASSIGN SE ff corner bc arc 1.00 -> 1.00 ps
+OT_CTAP_ASSIGN E0 ff corner bc arc 1.00 -> 1.00 ps
+OT_CTAP_ASSIGN E1 ff corner bc arc 1.00 -> 1.00 ps
+OT_CTAP_ASSIGN SW ff corner bc arc 1.00 -> 1.00 ps
+OT_CTAP_ASSIGN W0 ff corner bc arc 4.32 -> 1.00 ps
+OT_CTAP_ASSIGN W1 ff corner bc arc 25.06 -> 28.36 ps
+OT_CTAP_ASSIGN taps tc 6 bc 6
+RP1_GRT hold_wns -109.69 hold_endpoints 258 setup_wns 221.15 slew_viol 0
+RP1_M TT setup_wns 217.40 setup_ep 0 hold_wns -20.01 hold_ep 272
+RP1_PAIR TT max n 10365 worst 70.16 bounded 0 signed -70.16 launch {u_twcd/q[488]$_DFF_P_} capture {g_crb[1].u_m} crpr 3.22 p99_raw 70.41 searched 115 nopath 0 verify 0.000 rows {{{u_twcd/q[488]$_DFF_P_} {g_crb[1].u_m} -70.16 3.22 73.38} {{u_twcd/q[483]$_DFF_P_} {g_crb[1].u_m} -70.16 3.22 73.38} {{u_twcd/q[486]$_DFF_P_} {g_crb[1].u_m} -70.16 3.22 73.38} {{u_twcd/q[494]$_DFF_P_} {g_crb[1].u_m} -70.
+RP1_PAIR TT min n 10365 worst 42.83 bounded 0 signed 42.83 launch {ccap[432]$_DFF_P_} capture {q[80]$_DFF_P_} crpr 4.27 p99_raw 44.96 searched 366 nopath 0 verify 0.000 rows {{{ccap[432]$_DFF_P_} {q[80]$_DFF_P_} 42.83 4.27 47.10} {{ccap[439]$_DFF_P_} {q[87]$_DFF_P_} 42.62 4.27 46.89} {{ccap[403]$_DFF_P_} {q[83]$_DFF_P_} 42.49 4.27 46.76} {{ccap[426]$_DFF_P_} {q[74]$_DFF_P_} 42.42 4.27 46.69} {{cca
+RP1_INS TT pinflops 998 mean 319.67 min 307.32 max 331.56 all 2220 mean_all 314.62
+RP1_M FF setup_wns 314.31 setup_ep 0 hold_wns -92.88 hold_ep 258
+RP1_PAIR FF max n 10365 worst 56.56 bounded 0 signed -56.56 launch {u_twcd/q[488]$_DFF_P_} capture {g_crb[1].u_m} crpr 2.73 p99_raw 56.17 searched 98 nopath 0 verify 0.000 rows {{{u_twcd/q[488]$_DFF_P_} {g_crb[1].u_m} -56.56 2.73 59.28} {{u_twcd/q[483]$_DFF_P_} {g_crb[1].u_m} -56.56 2.73 59.28} {{u_twcd/q[486]$_DFF_P_} {g_crb[1].u_m} -56.55 2.73 59.28} {{u_twcd/q[494]$_DFF_P_} {g_crb[1].u_m} -56.5
+RP1_PAIR FF min n 10365 worst 35.24 bounded 0 signed 35.24 launch {ccap[432]$_DFF_P_} capture {q[80]$_DFF_P_} crpr 3.63 p99_raw 36.82 searched 316 nopath 0 verify 0.000 rows {{{ccap[432]$_DFF_P_} {q[80]$_DFF_P_} 35.24 3.63 38.87} {{ccap[439]$_DFF_P_} {q[87]$_DFF_P_} 35.02 3.63 38.65} {{ccap[403]$_DFF_P_} {q[83]$_DFF_P_} 34.88 3.63 38.51} {{ccap[436]$_DFF_P_} {q[212]$_DFF_P_} 34.80 3.63 38.43} {{cc
+RP1_INS FF pinflops 998 mean 260.95 min 252.72 max 269.23 all 2220 mean_all 257.53
