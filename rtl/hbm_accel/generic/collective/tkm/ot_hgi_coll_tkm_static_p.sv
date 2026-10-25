@@ -10,7 +10,35 @@
 // order, 2 edges later).  PIPE 0 = the pinned module exactly.  Bench: run_tp192_static_p.sh (golden vectors + lock-step).
 module ot_hgi_coll_tkm_static_p #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_W=(TP<=1?1:$clog2(TP)),
  parameter integer PIPE=0,   // 1: root<->tile crossings registered (tile control/entry launch regs + up[0] pin reg): +2 edges
- parameter integer MUTP=0)(  // bench mutant: 1 = up[0] consumed one edge early under PIPE 1 (must FAIL)
+ parameter integer MUTP=0,   // bench mutant: 1 = up[0] consumed one edge early under PIPE 1 (must FAIL)
+ // PATH-HBM/TOK 2026-10-25 (face shells): the root and the 32 common tiles are hardened cores with a face-register shell
+ // (+1 edge on every signal input, +1 on every signal output).  The 32 tiles are EXTERNAL to the root core; this module
+ // is then only the root-extraction source (rest_extract.sh minus g_tiles), and the parent (die / bench) supplies
+ //   * every tile->tile hop, down (ovf->ins) and up (up_out->up_in): HOP extra edges (tile out face + tile in face = 2);
+ //   * root<->tile0: FRT extra round-trip edges (root out face + tile in face + tile out face + root in face = 4);
+ //     entry reaches tile0 with +2 (face to face, no station);
+ //   * clr and conv: one control broadcast each, CB extra registered stages (equal-depth tree to all 32 tiles, plan
+ //     ~14 for the ~5.6 mm farthest sink) on top of the +2 faces; clr reaches every tile at +2+CB;
+ //   * conv DESKEW: conv reaches tile t HOP*(NT-1-t) edges later than tile NT-1 (deepest tile first, NT-1 at +2+CB).  Reason: the
+ //     conv shift is a lock-step systolic move (X[60..63] <= up_in = the next tile's X[0..3] mirror).  With HOP edges
+ //     on the up hop, tile t must shift exactly HOP edges after tile t+1 (derivation: tile t+1's up_out after its k-th
+ //     shift is captured by tile t at edge s(t+1)+k+HOP, so s(t) = s(t+1)+HOP); equal-latency conv duplicates /
+ //     drops groups.  1-bit relay chain along the up direction (ot_hgi_coll_tkm_conv_skew), HOP flops per tile pitch.
+ // Root timeline (derived; HOP=FRT=0 gives the PIPE-only module exactly):
+ //   XL     = FRT + CB + HOP*(NT-1): extra age of the conv stream at the root (tile0 conv late by 2+CB+DSK0, up[0] by 2)
+ //   SETTLE = (3+HOP)*(NT-1)+11-CB: the down wave is 3+HOP edges per tile (entries +2 like the faces of conv), conv at
+ //            tile t is late by CB+HOP*(NT-1-t); the worst tile (NT-1) keeps the PIPE module's margin of 10 edges
+ //            between its last insertion and its first shift.
+ //   clear2 = first+cells+5+XL: the whole pass-1 stream (late by XL) is in the buffer and every tile has finished its
+ //            (deskewed) conv1 window before the broadcast clr.
+ //   read2  = clear2+5+CB: the re-read entries (entry path has no CB) reach tile0 after clr2 (path +CB) by the PIPE margin.
+ //   capture tap / tk: 2*PIPE+XL.
+ //   CB>0: the tick-1 clear cannot land before the first entry (entry +2, clr +2+CB; PIPE margin 9 edges), so the clear
+ //         moves to the END of the operation (emitted at tk==finish, after the last conv2 shift landed) plus one
+ //         post-reset pulse, and done/busy-low is held CB edges so a next start (>= done+1) issues its first entry
+ //         after that clear landed at every tile (same 9-edge margin as tick 1 -> tick 9 + entry path).
+ // Cost: stat_cycles / done +2*(SETTLE-SETTLE0)+2*XL+2*CB edges (TP192 KMAX2048 HOP2 FRT4 CB14: 2*48+2*80+28 = 284).
+ parameter integer HOP=0, FRT=0, CB=0)(
  input wire clk,rst_n,start,
  input wire[31:0]tile_clk,input wire buffer_clk,
  input wire[11:0]cfg_n,input wire[12:0]cfg_k,cfg_nout,
@@ -20,7 +48,7 @@ module ot_hgi_coll_tkm_static_p #(parameter integer KMAX=2048, MUT=0, TP=96, RAN
  output reg w_v,output reg[39:0]w_addr,output reg[15:0]w_mask,output reg[511:0]w_data,
  output reg busy,done,fault,output reg[31:0]stat_cycles
 );
- localparam integer EW=78+RANK_W,KW=EW-2,VB=EW-2,RB=EW-1,ID_LO=12+RANK_W,ID_HI=43+RANK_W,VAL_LO=44+RANK_W,VAL_HI=75+RANK_W,NT=(KMAX+63)/64,SETTLE=3*NT+8;
+ localparam integer EW=78+RANK_W,KW=EW-2,VB=EW-2,RB=EW-1,ID_LO=12+RANK_W,ID_HI=43+RANK_W,VAL_LO=44+RANK_W,VAL_HI=75+RANK_W,NT=(KMAX+63)/64,SETTLE=(3+HOP)*(NT-1)+11-CB,XL=FRT+CB+HOP*(NT-1),CPW=2+2*PIPE+XL;
     function automatic [31:0] okey(input [31:0] x);
         reg [31:0] c;
         begin
@@ -79,15 +107,17 @@ module ot_hgi_coll_tkm_static_p #(parameter integer KMAX=2048, MUT=0, TP=96, RAN
  end
  wire conv1=busy&&tick>=first&&tick<first+32'(cells);
  wire conv2=busy&&tick>=second&&tick<second+32'(cells);
- wire clr=busy&&(tick==1||tick==clear2);
+ wire[31:0]tk=tick-32'(2*PIPE+XL);   // the root's view of the conv stream (capture / finish)
+ reg rst_clr;wire eop=busy&&tk==finish;
+ always @(posedge clk or negedge rst_n)if(!rst_n)rst_clr<=1'b1;else rst_clr<=1'b0;   // CB>0 post-reset tile clear
+ wire clr=(CB==0)?(busy&&(tick==1||tick==clear2)):((busy&&tick==clear2)||eop||rst_clr);
  // HBM-P4-SPLIT (PIPE 1): every root -> tile pin is launched by a root register (clr / conv / entry one edge later, all
  // tiles shift uniformly) and up[0] lands in a root pin register; the root consumes the tile chain 2 edges later.
  reg clr_q,conv_q;wire t_clr=(PIPE!=0)?clr_q:clr;wire t_conv=(PIPE!=0)?conv_q:(conv1||conv2);
- wire[31:0]tk=tick-32'(2*PIPE);
  wire read_v=busy&&tick>=read2&&tick<read2+32'(cells);
  wire[9:0]read_addr=10'(tick-read2);
  wire[4*EW-1:0]buf_data;wire buf_valid;
- reg[4:0]conv_pipe;wire cp=conv_pipe[1+2*PIPE-((PIPE!=0&&MUTP!=0)?1:0)];
+ reg[CPW-1:0]conv_pipe;wire cp=conv_pipe[1+2*PIPE+XL-((PIPE!=0&&MUTP!=0)?1:0)];
  reg[31:0]cap1,cap2;
  reg[4*EW-1:0]buf_wdata;reg buf_wv;reg[9:0]buf_wa;
  ot_hgi_coll_tkm_buffer #(.DW(4*EW)) u_buffer(.clk(buffer_clk),.rst_n(rst_n),
@@ -146,7 +176,7 @@ module ot_hgi_coll_tkm_static_p #(parameter integer KMAX=2048, MUT=0, TP=96, RAN
    cap1<=0;cap2<=0;buf_wv<=0;w_v<=0;pending_r<=0;pending_o<=0;r_after_o<=0;end
   else begin
    done<=0;w_v<=0;buf_wv<=0;
-   conv_pipe<={conv_pipe[3:0],conv1||conv2};
+   conv_pipe<={conv_pipe[CPW-2:0],conv1||conv2};
    if(busy)begin
     tick<=tick+1;stat_cycles<=tick+1;
     if(del_valid!=expected||del_slot!=expected)fault<=1;
@@ -189,13 +219,13 @@ module ot_hgi_coll_tkm_static_p #(parameter integer KMAX=2048, MUT=0, TP=96, RAN
     end
     if(tk==finish)begin
      if(cap1!=32'(cells)||cap2!=32'(cells)||pending_r||pending_o||32'(nout)!=((32'(k)<valid_pairs)?32'(k):valid_pairs))fault<=1;
-     busy<=0;done<=1;
     end
+    if(tk==finish+32'(CB))begin busy<=0;done<=1;end
    end
    if(start)begin:configure
     reg[31:0]i_,c_,a_,b_,r_,s_,f_;reg[31:0]fl_;
     fl_=32'(cfg_g)*32'(cfg_pf);i_=8+((fl_+3)/4)*8;c_=(32'(cfg_nout)+3)/4;
-    a_=i_+SETTLE;b_=a_+c_+5;r_=b_+5;s_=r_+c_+6+SETTLE;f_=s_+c_+8;
+    a_=i_+SETTLE;b_=a_+c_+5+XL;r_=b_+5+CB;s_=r_+c_+6+SETTLE;f_=s_+c_+8;
     if(busy)fault<=1;
     else begin
      fault<=cfg_g==0||cfg_g>TP||cfg_pf!=(16'(cfg_n)+7)/8||cfg_nout==0||cfg_nout>KMAX||cfg_k>KMAX||
