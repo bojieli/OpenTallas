@@ -4,12 +4,10 @@
  "by": "HBM-ELEM",
  "rule": "sign-off TT setup / FF hold 60/25 ps (tools/die_plan/signoff.py, main @ merge 60311a3cd5); margins INFO; clock gate = related-pair skew with CPPR (decision 5), pin-flop spread INFO",
  "counts": {
-  "routed: NOT SIGNED": 13,
-  "FAIL core clock contract (hold, superseded)": 8,
-  "routed: timing/DRV/DRC clean, face_guard FAIL only": 1,
-  "FAIL hold repair non-convergent (stuck)": 57,
-  "FAIL GRT congestion": 8,
-  "running": 3,
+  "routed NOT SIGNED": 13,
+  "FAIL contract hold (superseded)": 8,
+  "FAIL hold repair non-convergent": 57,
+  "FAIL GRT congestion": 11,
   "placed FAIL core clock contract (not routed)": 26
  },
  "route_all": {
@@ -571,9 +569,10 @@
    "list": "route_all (CTS-probe mean <= 290)",
    "insertion_mean_ps": 272,
    "insertion_max_ps": 287,
-   "state": "RUNNING",
-   "verdict": "NOT RUN (in GRT)",
-   "evidence": "5_1_grt.tmp.log||"
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "evidence": "5_1_grt.log GRT-0116",
+   "cause": "GRT congestion"
   },
   "ot_hgi_sm_xload_cl2_bfqg_1b2fb119b618": {
    "view": "ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618",
@@ -581,9 +580,10 @@
    "list": "route_all (CTS-probe mean <= 290)",
    "insertion_mean_ps": 380,
    "insertion_max_ps": 444,
-   "state": "RUNNING",
-   "verdict": "NOT RUN (in GRT)",
-   "evidence": "5_1_grt.tmp.log||"
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "evidence": "5_1_grt.log GRT-0116 (finished after the 19:4x collection; bfqg total overflow 105117 / 76539 gcells)",
+   "cause": "GRT congestion"
   },
   "ot_hgi_sm_xload_cl2_bfqg_1d82ff40b7b2": {
    "view": "ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2",
@@ -602,9 +602,10 @@
    "list": "route_all (CTS-probe mean <= 290)",
    "insertion_mean_ps": 359,
    "insertion_max_ps": 444,
-   "state": "RUNNING",
-   "verdict": "NOT RUN (in GRT)",
-   "evidence": "5_1_grt.tmp.log||"
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "evidence": "5_1_grt.log GRT-0116 (finished after the 19:4x collection; bfqg total overflow 105117 / 76539 gcells)",
+   "cause": "GRT congestion"
   },
   "ot_hgi_sm_xload_cl2_bfqg_c13e769a54d7": {
    "view": "ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7",
@@ -2108,5 +2109,6 @@
    "insertion_mean_ps": 429,
    "insertion_max_ps": 516
   }
- }
+ },
+ "relaunched_under_contract": "25 kits (results/geom_review/*_placed2_* PASS-COND, GEOM-REVIEW REPLY 19:57 PASS-COND) + bdring 709af (same family, congestion fix)"
 }
