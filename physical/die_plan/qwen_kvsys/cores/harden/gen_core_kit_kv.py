@@ -266,6 +266,7 @@ def main():
     ap.add_argument("--recipes", default=str(HERE / "recipes_kv.json"))
     ap.add_argument("--kit-rtl", default=str(Path.home() / "scratch/kv-g3/kit_rtl/g3"))
     ap.add_argument("--tool", default=str(REPO / "tools/die_plan"))
+    ap.add_argument("--astk-face-ports", action="store_true", help="ASTK exclusive tc/qo copies + fault-b landing (+78FF measured WN,0 command cycles,+1 external-fault cycle)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
@@ -273,6 +274,8 @@ def main():
     plan = json.load(open(a.plan))
     plandir = Path(a.plan).resolve().parent
     mod = cj["module"]
+    if a.astk_face_ports and not mod.startswith("kv3_astk_"):
+        raise SystemExit("--astk-face-ports only applies to kv3_astk_* cores")
     hc = next(h for h in plan["partition_types"][cj["type"]]["hard_cores"] if h["inst"] == cj["inst"])
     w, h = hc["outline_um"]
     tid = f"{mod}__{w:g}x{h:g}"
@@ -287,21 +290,35 @@ def main():
         shutil.rmtree(kd)
     (kd / "rtl").mkdir(parents=True)
     srcs = []
-    for f in cj["files"]:
+    files = list(cj["files"])
+    if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
+        files.append(str(REPO / "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"))
+    for f in files:
+        if a.astk_face_ports and Path(f).name in {"qkd_astk_static_leaves.sv", "qkd_astk_phys.sv"}:
+            f = str(REPO / "rtl/qwen_sys/split_20261014" / Path(f).name)
+        if a.astk_face_ports and Path(f).name == "qkd_astk_ctl_s_p.sv":
+            f = str(REPO / "rtl/qwen_sys/kv_plan_leaves_1023/qkd_astk_ctl_s_p.sv")
         dst = kd / "rtl" / Path(f).name
         if dst.exists():
             if dst.read_bytes() != Path(f).read_bytes():
                 raise SystemExit(f"rtl name clash {dst.name}")
             continue
         shutil.copyfile(f, dst)
+        if a.astk_face_ports and dst.stem == mod:
+            from astk_face_ports import transform
+            dst.write_text(transform(dst.read_text()))
         preserve_head_relays(dst)
         # std-cell simulation models (asap7sc7p5t_*.v, for leaves that instantiate cells): yosys takes the cells
         # from the liberty, the models are not synthesisable input
         if not f.endswith((".svh", ".vh")) and not re.match(r"asap7sc7p5t_.*\.v$", dst.name):
             srcs.append(f"/work/rtl/{dst.name}")
+    if a.astk_face_ports:
+        (kd / "astk_face_delta.json").write_text(json.dumps(dict(
+            extra_flops_estimate=78, command_cycles=0, local_fault_cycles=0, external_fault_cycles=1,
+            nominal_token_cycles=0, note="include extra external-fault edge in collection AGE budget"), indent=1) + "\n")
     # memory macros (black boxes in kit_rtl.f) reached by the core's members
     kj = json.load(open(Path(a.kit_rtl) / cj["type"] / "kit_rtl.json"))
-    hier = reached_modules([kd / "rtl" / Path(f).name for f in cj["files"]], mod)
+    hier = reached_modules([kd / "rtl" / Path(f).name for f in files], mod)
     lefs, libs, macros = [], [], []
     for m, v in (kj.get("hard_macros") or {}).items():
         if re.search(rf"\b{re.escape(m)}\b", hier):
@@ -388,7 +405,7 @@ def main():
                     "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(tool / "face_flops_release.tcl", kd / "face_flops_release.tcl")
-    for f in ("pin_audit_core.py", "corners.tcl", "run_kit_kv.sh", "core_preflight.py"):
+    for f in ("pin_audit_core.py", "corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     m = CORE_MARGIN_UM
@@ -411,11 +428,11 @@ def main():
            f"export PLACE_DENSITY = {rec.get('util', a.util):g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl",
-           "export PRE_SYNTH_TCL = /work/face_keep.tcl",
-           "export POST_SYNTH_TCL = /work/face_keep_release.tcl",
+           "export PRE_SYNTH_TCL = /work/core_keep.tcl",
+           "export POST_SYNTH_TCL = /work/core_keep_release.tcl",
            "export SYNTH_REPEATABLE_BUILD = 1",
            "export LEC_CHECK = 0",
-           "export HOLD_SLACK_MARGIN = 15",
+           "export HOLD_SLACK_MARGIN = 5",
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
            "export TNS_END_PERCENT = 100",
