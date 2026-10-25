@@ -300,3 +300,50 @@ CODEX took over proto collection/re-sweep preparation. KV channel pilot owner /r
 
 ## CODEX PARKED 2026-10-25 03:35 PDT
 Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER? recorded under Handoff to Claude 2026-10-25 03:35 PDT — GEOM/PROTO/toolchain in CODEX-LOG.md. Prototype strict SU channel job live; point SU done/uncollected. No main merges by this agent.
+
+## PROTO-KITS 2026-10-25 04:25 PDT (fresh short agent; main bdd5f960a; branch claude/proto-1025@7b777a3ed9, WT epyc1:/srv/opentallas-scratch2/claude/wt/proto-1025)
+Method: (1) cheap per-type geometry audit = Codex corrected recipe (actual pin-bit reach <=405 um, station sites/explicit cell envelopes vs cores/overlaps/outline; tools/die_plan/proto_geom_scan.py); FAIL = STRUCTURAL-geom, no GRT spent. (2) G2 skeleton (proto_sweep.py, GRT+TT/FF STA, now also per-bit geometry) on every geometry-PASS type. Data epyc1:/srv/opentallas-scratch2/claude/proto1025/{geom,gen,res_*.json}; JSON on branch results/proto_1025/.
+Codex parked SU probes COLLECTED (not relaunched): QC sle_su_l0 point-only EXIT0 STRUCTURAL ov17470 (hot bbox 34%), TT+213.7/FF-1.45; strict-channel EXIT0 STRUCTURAL ov396950 (48.5%), TT+143.0. Channel variant is worse -> SU_l0 needs a re-plan, not another variant.
+Fix on branch (needs ROOT merge): a4d48c4f75 gen.py phys/rtl/assembly pass the plan path to Plan (same bug as check.run 56a9255b0: QC/KV kits failed 'cannot resolve cores/*_pins.json'); proto_sweep gen same fix.
+### s81_head: CLEAN 16
+CLEAN: hd_ctl hd_host hd_lep0N hd_mesh hd_serdes hd_spn hd_spn_end hd_st_k5 hd_st_m hd_st_n3 hd_st_n4 hd_st_str hd_st_turn hd_tile hd_turn_a hd_turn_b
+PENDING: 
+### qwen_compute: CLEAN 34, HOTSPOT 2, STRUCTURAL 2, STRUCTURAL-geom 15
+CLEAN: cbf_q00 cbf_q11 cbn_q11 cbx_q10 coll_core coll_ft coll_ftm coll_n coll_s coll_ucie glue native59 sle_ctl sle_fe_v1 sle_fe_v2 sle_fe_v3 sle_fw_v1 sle_fw_v2 sle_hc0 sle_hc1 sle_hc2 sle_hc3 sle_st_a slw_fe_v1 slw_fe_v2 slw_fw_v1 slw_fw_v2 slw_fw_v3 slw_hc0 slw_hc1 slw_hc2 slw_hc3 slw_st_a tt_ctlm
+HOTSPOT: sle_sc: GRT overflow 2 (2 gcells, hot bbox 0.2% of outline); skeleton FF hold WNS -2.3 ps (3 endpoints)
+HOTSPOT: sle_stm: GRT overflow 2 (2 gcells, hot bbox 0.0% of outline); skeleton FF hold WNS -2.3 ps (3 endpoints)
+STRUCTURAL: slw_sc: GRT overflow 92675 (10733 gcells, hot bbox 3.1% of outline); skeleton FF hold WNS -1.7 ps (3 endpoints)
+STRUCTURAL: slw_stm: GRT overflow 15992 (3092 gcells, hot bbox 2.4% of outline)
+PENDING: 
+### qwen_kvsys: CLEAN 20, PENDING 3, STRUCTURAL-geom 24
+CLEAN: kv3_hroot kv3_io_cor kv3_io_cor_v1 kv3_io_ft kv3_io_ft_v1 kv3_pc kv3_pc_v1 kv3_pc_v2 kv3_pc_v3 kv3_pv_v1 kv3_pv_v10 kv3_pv_v11 kv3_pv_v12 kv3_pv_v3 kv3_pv_v5 kv3_pv_v7 kv3_pv_v9 kv3_sys_SD kv3_sys_SD_v1 kv3_sys_c
+PENDING: kv3_hub_Ei kv3_hub_Eo kv3_hub_Wo
+### B2n: CLEAN 6, PENDING 3, STRUCTURAL 4, STRUCTURAL-geom 31
+CLEAN: NE_io NW_io q_mca q_spb0 q_su20 vsN0
+STRUCTURAL: q_spb1: GRT overflow 7 (7 gcells, hot bbox 97.2% of outline)
+STRUCTURAL: q_su00: GRT overflow 39865 (10000 gcells, hot bbox 2.6% of outline)
+STRUCTURAL: vsN1: GRT overflow 254136 (17653 gcells, hot bbox 46.2% of outline)
+STRUCTURAL: vsN2: GRT overflow 254136 (17653 gcells, hot bbox 46.2% of outline)
+PENDING: q_b111 q_hub q_su31
+### s81: CLEAN 83, STRUCTURAL 4, STRUCTURAL-geom 88
+CLEAN: bk_sel__t2 col_h10_r0_p4__t1 col_h10_r1__t1 col_h10_r2__t1 col_h9_r0_p4__t1 col_h9_r0_p5__t1 col_h9_r0_p6__t1 col_h9_r1__t1 col_h9_r2__t1 dsdv_slice_c1x_C__t1 dsdv_slice_c1x_C__t10 dsdv_slice_c1x_C__t4 dsdv_slice_c1x_C__t7 dsdv_slice_c3x_C__t1 dsdv_slice_lepe_mu_C__t1 dsdv_slice_lepe_mu_LP__t2 dsdv_slice_lepe_nh_mus_LP__t1 dsdv_slice_lepw_mu_C__t1 dsdv_slice_lepw_mu_LP__t2 dsdv_slice_lepw_mus_C__t1 dsdv_slice_lepw_mus_LP__t2 gunit__t1 iqf__t1 ot_s81sl_kv_leaf__t1 ot_s81sl_kv_leaf__t2 ot_s81sl_kv_leaf__t3 ot_s81sl_kv_leaf__t4 ot_s81sl_kv_leaf__t5 ot_s81sl_leaf__t54 seqhost__t1 serdes__t1 serdes__t12 serdes__t13 serdes__t14 serdes__t15 serdes__t16 serdes__t2 serdes__t3 serdes__t4 serdes__t5 serdes__t6 slice_station__t12 slice_station__t14 slice_station__t17 slice_station__t18 slice_station__t19 slice_station__t20 slice_station__t21 slice_station__t22 slice_station__t23 slice_station__t24 slice_station__t25 slice_station__t26 slice_station__t27 slice_station__t28 slice_station__t29 slice_station__t30 slice_station__t31 slice_station__t35 slice_station__t36 slice_station__t37 slice_station__t38 slice_station__t39 slice_station__t40 slice_station__t41 slice_station__t42 slice_station__t43 slice_station__t44 slice_station__t45 slice_station__t46 slice_station__t47 slice_station__t48 slice_station__t6 slice_station__t7 slice_station__t8 svc_hi_dsdv_svc_pvso_entry__t1 svc_hi_dsdv_svc_pvso_entry__t2 svc_hi_dsdv_svc_rs__t2 svc_lo_dsdv_svc_rs__t1 svc_lo_dsdv_svc_rs__t2 svc_lo_dsdv_svc_rs__t3 svc_lo_dsdv_svc_rs__t4 svc_lo_dsdv_svc_rs__t5
+STRUCTURAL: col_h10_r0_p1__t1: GRT overflow 30355 (10146 gcells, hot bbox 4.5% of outline)
+STRUCTURAL: col_h9_r0_p1__t1: GRT overflow 2815 (1582 gcells, hot bbox 0.1% of outline); skeleton FF hold WNS -2.5 ps (29 endpoints)
+STRUCTURAL: col_h9_r0_p2__t1: GRT overflow 2816 (1574 gcells, hot bbox 0.2% of outline); skeleton FF hold WNS -2.4 ps (35 endpoints)
+STRUCTURAL: col_h9_r0_p3__t1: GRT overflow 2955 (1713 gcells, hot bbox 4.8% of outline); skeleton FF hold WNS -2.5 ps (19 endpoints)
+PENDING: 
+### STRUCTURAL-geom per die (type: failing metric) -- for the die lanes to re-plan (PROTO does not fix)
+- QC (15): reach>405 cbf_q00_s2 423 / cbf_q01 416 / cbf_q01_s2 426 / cbn_q00 427 / cbn_q01 428 (rsf, rx_flit_serdes_rx); coll_ftc 484 (tl_st_wi); coll_ftn 406; sle_st_b/slw_st_b 424 (b_hw_ctl_hc0); sle_su_c/slw_su_c 422, sle_su_l1 422/slw_su_l1 422 (cws*); sle_su_l0/slw_su_l0 437 + 272 station sites in cores. Codex corrected 53-type candidate (906dca298 strict stations) is NOT on main -> adopt it. G2: slw_sc ov92675, slw_stm ov15992 STRUCTURAL (sle_* twins only HOTSPOT ov2) -> W-side channel.
+- KV (24): kv3_hg + 7 hg variants: 509 station sites in cores each; kv3_hgi/_v1..v5 reach 418-436; kv3_hgi_v6/7/8 reach 453 + 1491 in-core; kv3_hub_C 431, kv3_hub_Wi 509; kv3_pv/_v2/_v4/_v6/_v8 reach 457-501 (ft0). Codex KV channel candidate (47 types PASS 404.8) + packed PV6 (355 um) NOT on main -> adopt.
+- B2n (31): reach 411-620 um on every q_b0xx/q_b1xx (L4x*/L12x*: 541-620), q_mcb 559, q_spt0-2/q_spu0 555-557, q_su01/10/21/30 464-489, q_su11 413, q_spu1 411, q_spb2 468, root 543, vsN4-6 505. G2 STRUCTURAL: vsN1/vsN2 ov254136 (46% hot bbox), q_su00 ov39865, q_spb1 ov7 (bbox 97%). HBM B2n needs stations on the long L4/L8/L12 legs.
+- S81 176-type plan on main (88): ot_s81sl_leaf (72 of the leaf types) + svc_*_rs (8) + 8 slice types: station sites inside cores (up to 18k/type); dsdv_slice_c1x_C__t6 reach 415. G2: col_h10_r0_p1 ov30355, col_h9_r0_p1/p2/p3 ov~2.8-3.0k. SUPERSEDED BY adopt178 (claude/s81-adopt178-1025@aaaede5eda): geometry 177/177 PASS (0 FAIL) -> S81 G2 sweep of adopt178 LIVE (gen/s81_178, 177 types); results go here when collected.
+### Kits (corrected KIT-CENSUS recipe: gen.py phys, preflight sdc_lint/SELRANGE/port-bind/face_guard fail-closed before floorplan, hold margin 0 and 5 ps = 2 variants m0/m5, <=400k cells)
+- Kitted (generated-RTL types only; all others need bound kit RTL that is not on main: QC bind on codex/qc-boundaries-1025, KV 9 TYPE_SPLIT open, S81 plan changing to adopt178, B2n cores redesign): head hd_turn_a, hd_turn_b; QC coll_ft, coll_ftm; KV kv3_io_ft, kv3_io_ft_v1. Kits epyc1:/srv/opentallas-scratch2/claude/proto1025/{kits,kits_qwen_compute,kits_qwen_kvsys}/m{0,5}/<type>.
+- hd_turn_a/b m5: preflight PASS (face_guard 1132/1132), placed; renders results/proto_1025/kits/hd_turn_*.place.png; reg->reg max 395/346 um (0 >405), out-pin <- last station <=345 um (by ft design), clk pin 421 um (clock, not data). GEOM REQ posted. QC/KV m5 placement LIVE (ot-run 24 GB, epyc1).
+- NOT kitted on purpose: head serdes + its direct neighbours (hd_ctl/host/lep0N/mesh/st_*: S81.IR ruling 03:08 holds kits until the pg_domains split delta), hd_tile (S81-HEAD owns, waits for native element views), hd_spn/_end (Codex placed, review owed); kv3_io_cor/_v1 (hck->die clock rebind, KV-G3 dec 14/16 open).
+- NO route submitted: no GEOM PASS yet for any of the 6 new kits. Next: on PASS, route m0+m5 per kit: ot-run --mem 24 --dir K/T --stage K -- bash K/run_kit.sh K/T route 24 8.
+
+## PARKED 2026-10-25 04:25 PDT
+- Branch claude/proto-1025@7b777a3ed9 (proto tools on main + gen Plan-path fix a4d48c4f75 -> ROOT merge). Untracked physical/die_plan/s81/die_plan_adopt178.json in the WT = copy of adopt178 plan for the sweep (do not commit).
+- LIVE: G2 probes epyc1 gen/qwen_kvsys/part_kv3_hub_{Ei,Eo,Wo}, gen/B2n/part_{q_b111,q_hub,q_su31}; S81 adopt178 gen+launch (gen/s81_178, launcher runs after gen). Kit placements kits_qwen_compute/m5/{coll_ft,coll_ftm}, kits_qwen_kvsys/m5/{kv3_io_ft,kv3_io_ft_v1}. Collect: cd WT; python3 tools/die_plan/proto_sweep.py collect R/gen/<die> --json R/res_<die>.json; python3 R/summ.py (R=/srv/opentallas-scratch2/claude/proto1025).
+- OWNER?: none.
