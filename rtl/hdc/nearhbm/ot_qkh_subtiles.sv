@@ -156,7 +156,10 @@ module ot_qkh_ktree #(
     input  wire [15:0]   gf_in,
     output reg  [31:0]   sc_d,
     output reg           sc_f,
-    output reg           g_f
+    output reg           g_f,
+    // KVG3-CORES 10-24: the kpv_in face register (kv_r) for a parent that compares other lanes against the REGISTERED
+    // lane 0 (ot_qkh_ktree_lk PORT_REGS=1); unconnected elsewhere (no logic, timing or cycle change)
+    output wire          kv_q
 );
     // idle1012 textbook class 2: one reset copy per K-tree adder + one for the scale multiply / control (one copy drove 1,004)
     wire [16:0] rr;
@@ -169,6 +172,7 @@ module ot_qkh_ktree #(
     always @(posedge clk or negedge rc)
         if (!rc) begin kv_r <= 1'b0; gf_r <= 16'd0; end
         else begin kv_r <= kpv_in; gf_r <= gf_in; end
+    assign kv_q = kv_r;
     // node storage: level 4 nodes 0..7 at n[0..7], level 5 at n[8..11], level 6 at n[12..13], level 7 (root) at n[14]
     wire [15*32-1:0] n;
     wire [14:0]      nvo, nf;

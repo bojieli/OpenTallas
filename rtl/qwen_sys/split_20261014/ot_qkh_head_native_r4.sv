@@ -2,7 +2,12 @@
 // r4: four front quarters and one fault-merging score leaf; 86 separate entries.
 // Existing capture/packing/relay edges and FP32 consumer rounding remain unchanged.
 module ot_qkh_head_frontq_native #(
-    parameter integer Q_FP32=1, parameter integer MUT=0
+    parameter integer Q_FP32=1, parameter integer MUT=0,
+    // KVG3-CORES 10-24 (COORD ruling 2, face_guard not relaxed): PORT_REGS=1 gives every f_t<k> output bit its own launch
+    // flop in RTL (per-port copies of the NRS relay stage, same D, same edge) instead of one relay stage whose 41 shared
+    // bits ({cr 16, c0, e 16, qb 6, hid 2}) fan out to all four ports (left to the flow's pin_reg_split in partition
+    // kits).  0 cycles, identical outputs every edge (miter); +123 flops (4 x 233 vs 809).  PORT_REGS=0 = original.
+    parameter integer PORT_REGS=0
 )(input wire clk, rst_n,
   input wire [3:0] c_in, input wire [255:0] row_in,
   input wire [15:0] e_in, input wire [11:0] lt_in,
@@ -76,9 +81,13 @@ module ot_qkh_head_frontq_native #(
     // parent stays under 15k sinks on its clock root.  Latency + NRS on every input (HXK / HXN of the control tile).
     wire [3+LTW:0]  cs_o;                     // reset part: {c[3:1], lt, qv}
     wire [HD*8+16+6+512+2:0] ds_o;            // plain part: {c[0], row, e, qb, qd, hid}
-    (* keep_hierarchy *) ot_qkh_relay #(.W(4 + LTW), .D(NRS), .RST(1)) u_rsc (.clk(clk), .rst_n(rp), .d({c2[3:1], lt2, qv_send}), .q(cs_o));
-    (* keep_hierarchy *) ot_qkh_relay #(.W(1 + HD*8 + 16 + 6 + 512 + 2), .D(NRS)) u_rsd (.clk(clk), .rst_n(rp),
+    generate if (PORT_REGS == 0) begin : g_rs
+      (* keep_hierarchy *) ot_qkh_relay #(.W(4 + LTW), .D(NRS), .RST(1)) u_rsc (.clk(clk), .rst_n(rp), .d({c2[3:1], lt2, qv_send}), .q(cs_o));
+      (* keep_hierarchy *) ot_qkh_relay #(.W(1 + HD*8 + 16 + 6 + 512 + 2), .D(NRS)) u_rsd (.clk(clk), .rst_n(rp),
                                                                                     .d({c2[0], row2, e2, qb_send, qd_send, hid2}), .q(ds_o));
+    end else begin : g_rs0
+      assign cs_o = 'd0; assign ds_o = 'd0;     // unused (the per-port stages below drive the outputs)
+    end endgenerate
     wire [3:0]       c3   = {cs_o[3+LTW:1+LTW], ds_o[HD*8+16+6+512+2]};
     wire [LTW-1:0]   lt3  = cs_o[LTW:1];
     wire             qv3  = cs_o[0];
@@ -87,12 +96,30 @@ module ot_qkh_head_frontq_native #(
     wire [5:0]       qb3  = ds_o[512+2 +: 6];
     wire [511:0]     qd3  = ds_o[2 +: 512];
     wire [1:0]       hid3 = ds_o[1:0];
-  wire [15:0] f_cr=cs_o;
-  wire [792:0] f_dr=(MUT==1) ? {ds_o[792:2],~ds_o[1:0]} : ds_o;
   wire [232:0] f_t [0:3];
   genvar ft;
-  generate for(ft=0;ft<4;ft=ft+1) begin:g_ft
-    assign f_t[ft]={f_cr,f_dr[792],f_dr[536+64*ft +:64],f_dr[520 +:16],f_dr[514 +:6],f_dr[2+128*(ft%4) +:128],f_dr[1:0]};
+  generate if (PORT_REGS == 0) begin : g_shared
+    wire [15:0] f_cr=cs_o;
+    wire [792:0] f_dr=(MUT==1) ? {ds_o[792:2],~ds_o[1:0]} : ds_o;
+    for(ft=0;ft<4;ft=ft+1) begin:g_ft
+      assign f_t[ft]={f_cr,f_dr[792],f_dr[536+64*ft +:64],f_dr[520 +:16],f_dr[514 +:6],f_dr[2+128*(ft%4) +:128],f_dr[1:0]};
+    end
+  end else begin : g_port
+    // the same relay D words, sliced per port before the stage: port ft = {cr, c0, row[64ft+:64], e, qb, qd[128ft+:128], hid}
+    for(ft=0;ft<4;ft=ft+1) begin:g_ft
+      wire [15:0]  pc;
+      wire [216:0] pd;
+      (* keep_hierarchy *) ot_qkh_relay #(.W(4 + LTW), .D(NRS), .RST(1)) u_rsc (.clk(clk), .rst_n(rp),
+                                                                             .d({c2[3:1], lt2, qv_send}), .q(pc));
+      (* keep_hierarchy *) ot_qkh_relay #(.W(217), .D(NRS)) u_rsd (.clk(clk), .rst_n(rp),
+`ifdef KVG3_FRONTQ_PRMUT
+          // bench mutant (must FAIL): port ft takes the neighbouring port's Q slice
+          .d({c2[0], row2[64*ft +:64], e2, qb_send, qd_send[128*((ft+1)%4) +:128], hid2}), .q(pd));
+`else
+          .d({c2[0], row2[64*ft +:64], e2, qb_send, qd_send[128*ft +:128], hid2}), .q(pd));
+`endif
+      assign f_t[ft]={pc, pd[216:2], (MUT==1) ? ~pd[1:0] : pd[1:0]};
+    end
   end endgenerate
   assign f_t0=f_t[0];
   assign f_t1=f_t[1];
