@@ -38,6 +38,7 @@ def emitter(raw):
     b.in_bus, b.out_bus, b.ft_bus, b.intra_dly = [defaultdict(list) for _ in range(4)]
     b.pc = None
     b.links = []
+    b.io_used = {}
     return b
 
 
@@ -157,6 +158,7 @@ def test_real_qc_coordinate_spelling_maps_local_reset_and_rejects_ambiguity(tmp_
     assert f'.rst_n(rst_n_t{target["tap"]})' in text
     b.F.cells.append(c)
     b.G.dirs[1] = {'rst_n': 'input'}
+    b.sinks[(1, "rst_n", 0)] = ("rst", "low")
     b.members[part].append(1)
     with pytest.raises(bind.BindError, match='expected one bound leaf, found 2'):
         b.emit_type('src', part)
