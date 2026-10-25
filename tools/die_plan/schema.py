@@ -974,8 +974,12 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     without hard cores)."""
     w, h = t["outline_um"]
     boxes = []
-    for c in t.get("hard_cores", []) or []:
+    placed_macros = [c for c in t.get("contents", []) or []
+                     if c.get("lef") and "origin_um" in c and "outline_um" in c]
+    for c in list(t.get("hard_cores", []) or []) + placed_macros:
         (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
+        if c.get("orient") in ("R90", "R270", "MXR90", "MYR90"):
+            cw, ch = ch, cw
         boxes.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
 
     def free(px, py):
