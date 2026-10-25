@@ -215,6 +215,13 @@ SCHEMA = {
                                                      "exclude_um": {"type": "array", "items": _rect, "minItems": 1}}},
                             # S81-XDIE 10-24: the domain's VDDPHY rail-clamp ESD + decap sites (no bumps over them)
                             "esd_um": {"type": "array", "items": _rect, "minItems": 1},
+                            # S81.IR split (coordinator 10-25): the PHY macro footprint (die frame) on the die-edge side,
+                            # the core strip(s) of the partition outside the domain, the core C4 rule at the domain's
+                            # core-facing edges and the macro area target (die_io.check_pg_domains)
+                            "phy_macro_um": _rect,
+                            "core_strip_um": {"type": "array", "items": _rect},
+                            "core_edge_bumps": {"enum": ["relocate", "drop"]},
+                            "phy_area_target_mm2": _pos,
                             "note": {"type": "string"}}}}}},
             }},
         "partition_types": {
@@ -320,6 +327,9 @@ SCHEMA = {
                                        # hardened views (repo-relative): the partition kit places the core as a
                                        # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       # routing obstruction top layer of the core (its LEF OBS/PIN top; G2 probe
+                                       # obstructs M1..obs_max, default partition_signal_max when absent)
+                                       "obs_max": _layer,
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},

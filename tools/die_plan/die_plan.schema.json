@@ -502,6 +502,35 @@
           },
           "minItems": 1
          },
+         "phy_macro_um": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+         },
+         "core_strip_um": {
+          "type": "array",
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          }
+         },
+         "core_edge_bumps": {
+          "enum": [
+           "relocate",
+           "drop"
+          ]
+         },
+         "phy_area_target_mm2": {
+          "type": "number",
+          "exclusiveMinimum": 0
+         },
          "note": {
           "type": "string"
          }
