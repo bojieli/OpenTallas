@@ -6,8 +6,10 @@ The generator (gen_plan_v4.nonframe_hard_cores) ranks every leaf candidate by
    added cycles = ft stations over the no-core model at the 405-um kit reach + internal-station cycles per core pair).
 This tool searches one type's arrangement of the 25 leaf cores (16 hcpl lanes, 2 store SRAMs, vn, vq, vs, vsw, ve, rxsf,
 rxsb) and the pin VIEW of vn / vq / vs (R0 or the x-mirrored variant "xm", cores/leaf/xmirror.py) on exactly that key
-(G.core_faces_away, G.core_internal_stations, G.ft_stations_macro), plus shaping terms (bundle length per core pair,
-lane cohesion around vn's hq/hw ports) so the annealer has a gradient between station counts.
+(G.core_faces_away, G.core_internal_stations, G.ft_stations_macro), plus shaping terms (bundle length per core pair) so the annealer has a gradient between station
+counts.  S81/LEAFPLAN2 10-25: the key is (faces away, lanes behind (G.core_lanes_behind, hard: every hcpl lane box in
+front of the vn halves' lane face), bus reach excess over the 750-um ranking reach, cycles + station bits / 4096); the
+split vn / ve halves move and take their pin views independently (pair moves keep them together).
 
 Inputs: the per-type dump the generator writes with S81_HC_DUMP=<file> (outline, buses, ft slots before cores).
 Output: <out>.json = {"type", "place": {inst: [x, y]}, "views": {inst: "xm"}, "key", "detail"} in the DESIGN frame (bus
@@ -23,14 +25,15 @@ K = "leaf"
 XV = SPEC["xmirror_views"]
 CORES = {c["inst"]: c for c in SPEC["cores"]}
 CSIZE = {i: G._lef_size(c["lef"]) for i, c in CORES.items()}
-# placement blocks (spec "blocks": the split vn / ve pairs move as one block, children at fixed offsets)
+# placement blocks (spec "blocks": the split vn / ve pairs).  S81/LEAFPLAN2: the children move independently (their
+# own x-mirror views too) -- block moves keep the pair together, the face rule keeps the sibling faces facing
 BLOCKS = SPEC.get("blocks", {})
 CHILD = {ci: b for b, ch in BLOCKS.items() for ci, _, _ in ch}
-NAMES = list(dict.fromkeys(CHILD.get(i, i) for i in CORES))
-SIZE = {i: CSIZE[i] for i in CORES if i not in CHILD}
-for b_, ch_ in BLOCKS.items():
-    SIZE[b_] = [max(ox + CSIZE[ci][0] for ci, ox, _ in ch_), max(oy + CSIZE[ci][1] for ci, _, oy in ch_)]
-VIEWABLE = sorted({CHILD.get(i, i) for i in SPEC["views"][XV]})
+NAMES = list(CORES)
+SIZE = dict(CSIZE)
+BSIZE = {b_: [max(ox + CSIZE[ci][0] for ci, ox, _ in ch_), max(oy + CSIZE[ci][1] for ci, _, oy in ch_)]
+         for b_, ch_ in BLOCKS.items()}
+VIEWABLE = sorted(SPEC["views"][XV])
 LANES = [n for n in NAMES if ".g_ln[" in n]
 DX, DY = G.CORE_TRACK_OFFSET
 LAT = G.G
@@ -54,23 +57,15 @@ class Type:
         self.k0 = [G.ft_stations_macro(s, dummy, self.w, self.h, smax=SMAX) for s in self.ftsl]
         self.bw = G._bus_pts(self.buses, self.w, self.h)
 
-    def cores(self, P, V):
-        """hard_cores[] in the type frame (y mirror for S-bus types, as gen mirrored())."""
+    def cores(self, P, V, design=False):
+        """hard_cores[] in the type frame (y mirror for S-bus types, as gen mirrored()); design=True: bus-N frame."""
         o = []
         for i in CORES:
             cw, ch = CSIZE[i]
-            b = CHILD.get(i)
-            if b:
-                ox, oy = next((ox, oy) for ci, ox, oy in BLOCKS[b] if ci == i)
-                if V.get(b):
-                    # x-mirrored view of a block: the children swap sides inside the block box (their pins mirrored)
-                    ox = SIZE[b][0] - ox - cw
-                x, y = P[b][0] + ox, P[b][1] + oy
-            else:
-                x, y = P[i]
-            e = G._core_view(SPEC, CORES[i], V.get(b or i), origin_um=[x, y], outline_um=[cw, ch], orient="R0",
+            x, y = P[i]
+            e = G._core_view(SPEC, CORES[i], V.get(i), origin_um=[x, y], outline_um=[cw, ch], orient="R0",
                              track_offset_um=[DX, DY])
-            if self.my:
+            if self.my and not design:
                 e["origin_um"] = [x, round(math.floor(round((self.h - (y + DY + ch) - DY) / LAT, 6)) * LAT, 4)]
                 e["orient"] = "MX"
                 e["track_offset_um"] = [DX, round((0.036 - ch) % 0.048, 4)]
@@ -78,22 +73,44 @@ class Type:
         return o
 
 
+def expand(P, V):
+    """block keys (and block views) -> children at the spec offsets (a block on the xm view swaps its children)."""
+    P, V = {k: list(v) for k, v in P.items()}, dict(V)
+    for b_, ch_ in BLOCKS.items():
+        vb = V.pop(b_, None)
+        if b_ in P:
+            x, y = P.pop(b_)[:2]
+            for ci, ox, oy in ch_:
+                if vb:
+                    ox = BSIZE[b_][0] - ox - CSIZE[ci][0]
+                P[ci] = [round(x + ox, 4), round(y + oy, 4)]
+        if vb:
+            V.update({ci: vb for ci, _, _ in ch_})
+    return P, {k: v for k, v in V.items() if v}
+
+
 def legal(T, o):
     bx = [(c["origin_um"][0] + c["track_offset_um"][0], c["origin_um"][1] + c["track_offset_um"][1],
            c["origin_um"][0] + c["track_offset_um"][0] + c["outline_um"][0],
            c["origin_um"][1] + c["track_offset_um"][1] + c["outline_um"][1]) for c in o]
-    bad = 0
+    bad, depth = 0, 0.0
+    E_ = G.HC_EDGE_UM
     for i, a in enumerate(bx):
-        if a[0] < G.HC_EDGE_UM - 1e-6 or a[1] < G.HC_EDGE_UM - 1e-6 or a[2] > T.w - G.HC_EDGE_UM + 1e-6 or \
-                a[3] > T.h - G.HC_EDGE_UM + 1e-6:
+        out = max(0.0, E_ - a[0]) + max(0.0, E_ - a[1]) + max(0.0, a[2] - (T.w - E_)) + max(0.0, a[3] - (T.h - E_))
+        if out > 1e-6:
             bad += 1
+            depth += out
         for b in bx[i + 1:]:
-            if max(b[0] - a[2], a[0] - b[2], b[1] - a[3], a[1] - b[3]) < G.HC_GAP_UM - 1e-6:
+            sep = max(b[0] - a[2], a[0] - b[2], b[1] - a[3], a[1] - b[3])
+            if sep < G.HC_GAP_UM - 1e-6:
                 bad += 1
-    return bad
+                depth += G.HC_GAP_UM - sep
+    # LEAFPLAN2: (count, depth um) -- the annealer descends the overlap depth out of an illegal start
+    return (bad, depth) if bad else 0
 
 
 def reach_excess(T, o):
+    """bus window -> bus core box excess over the 750-um ranking reach (G.RANK_REACH_UM)"""
     ex = 0.0
     cb = {ci: {t[4:] for tg in pp.values() for t in tg if t.startswith("bus:")} for ci, pp in G.CORE_CONNS[K].items()}
     for c in o:
@@ -102,13 +119,13 @@ def reach_excess(T, o):
         for bn in cb.get(c["inst"], ()):
             a = T.bw.get(bn)
             if a:
-                ex += max(0.0, max(x0 - a[0], 0, a[0] - x1) + max(y0 - a[1], 0, a[1] - y1) - G.FT_STATION_MAX)
+                ex += max(0.0, max(x0 - a[0], 0, a[0] - x1) + max(y0 - a[1], 0, a[1] - y1) - G.RANK_REACH_UM)
     return round(ex, 1)
 
 
 def shaping(T, o, ents):
     """continuous terms: every core-pair / bus-core bundle length (pin centroid -> partner) over 0.6 x reach, weighted by
-    bits; hcpl lanes within the reach of vn's hq / hw centroid (the vp glue sits there)."""
+    bits."""
     pl = {c["inst"]: G._placed_groups(c) for c in o}
     s = 0.0
     bp = T.bw
@@ -129,36 +146,87 @@ def shaping(T, o, ents):
                     continue
                 L = abs(ga[0] - q[0]) + abs(ga[1] - q[1])
                 s += ga[2] * max(0.0, L - 0.6 * SMAX) * 0.05 + ga[2] * L * 0.002
-    # lanes behind vn's lane face (hq_d of vn_a / vn_b): the 256-b h buses wrap the core (GEOM review r6: lanes up to
-    # 1.1 mm on the far side of vn) -- 200 per um behind the face plane
-    NRM = dict(N=(0, 1), S=(0, -1), E=(1, 0), W=(-1, 0))
-    for vi in [i for i in pl if i.startswith("u_lf.u_vn")]:
-        g = pl[vi][1].get("hq_d")
-        if not g:
-            continue
-        f = max(g[3], key=lambda k: len(g[3][k]) if hasattr(g[3][k], "__len__") else g[3][k])
-        n = NRM[f]
-        for ln in LANES:
-            bx = pl[ln][0]
-            dx_, dy_ = (bx[0] + bx[2]) / 2 - g[0], (bx[1] + bx[3]) / 2 - g[1]
-            s += 200.0 * max(0.0, -(dx_ * n[0] + dy_ * n[1]))
     return s
+
+
+def lane_pack(T, P, V, step=2):
+    """LEAFPLAN2: the 16 hcpl lanes re-packed greedily onto lattice sites (step x 8.64) in front of the vn halves' lane
+    face, cheapest first: cost = station flop bits of the lane's vn bundles (every vn_a / vn_b port wired to the lanes,
+    pin-group centroid -> lane box, + the group's pin spread, at the 405-um reach), then total length; a site must keep
+    the gap / edge rules against every non-lane core and the lanes already taken.  Design frame (bus N)."""
+    import numpy as np
+    o = {c["inst"]: c for c in T.cores(P, V, design=True)}
+    lw, lh = CSIZE[LANES[0]]
+    E_, gp = G.HC_EDGE_UM, G.HC_GAP_UM
+    grp = []
+    face = None
+    for vi in ("u_lf.u_vn.u_a", "u_lf.u_vn.u_b"):
+        box, g = G._placed_groups(o[vi])
+        f = max(g["hq_d"][3], key=lambda f_: g["hq_d"][3][f_])
+        face = face or (f, box)
+        for p_, tg in G.CORE_CONNS[K][vi].items():
+            if p_ in g and tg and tg[0].startswith("core:u_lf.u_vp.g_ln["):
+                grp.append((g[p_][0], g[p_][1], g[p_][2], g[p_][4]))
+    f, vb = face
+    xs = np.arange(math.ceil(E_ / LAT) * LAT, T.w - E_ - lw + 1e-6, LAT * step)
+    ys = np.arange(math.ceil(E_ / LAT) * LAT, T.h - E_ - lh + 1e-6, LAT * step)
+    X, Y = np.meshgrid(xs, ys)
+    X, Y = X.ravel() + DX, Y.ravel() + DY
+    ok = dict(W=X + lw <= vb[0] + 1e-6, E=X >= vb[2] - 1e-6, S=Y + lh <= vb[1] + 1e-6, N=Y >= vb[3] - 1e-6)[f]
+    for i, c in o.items():
+        if i in LANES:
+            continue
+        b = G._placed_groups(c)[0]
+        sep = np.maximum.reduce([b[0] - (X + lw), X - b[2], b[1] - (Y + lh), Y - b[3]])
+        ok &= sep >= gp - 1e-6
+    X, Y = X[ok], Y[ok]
+    cost = np.zeros(len(X))
+    tl = np.zeros(len(X))
+    for cx, cy, bits, sp in grp:
+        L = np.maximum(0, np.maximum(X - cx, cx - X - lw)) + np.maximum(0, np.maximum(Y - cy, cy - Y - lh))
+        n = np.where(L + sp <= SMAX + 1e-6, 0, np.maximum(1, np.ceil(L / SMAX - 1e-9) - 1))
+        n = np.where((n > 0) & ((L + sp) / (n + 1) > SMAX), n + 1, n)
+        cost += n * bits
+        tl += L * bits
+    order = np.lexsort((tl, cost))
+    X, Y = X[order], Y[order]
+    alive = np.ones(len(X), bool)
+    k = 0
+    newP = {}
+    for j in range(len(X)):
+        if k == len(LANES):
+            break
+        if not alive[j]:
+            continue
+        x, y = X[j], Y[j]
+        newP[LANES[k]] = [round(float(x) - DX, 4), round(float(y) - DY, 4)]
+        k += 1
+        sep = np.maximum.reduce([x - (X + lw), X - (x + lw), y - (Y + lh), Y - (y + lh)])
+        alive &= sep >= gp - 1e-6
+    if k < len(LANES):
+        return False
+    P.update(newP)
+    return True
 
 
 def evaluate(T, P, V, full=True):
     o = T.cores(P, V)
     lg = legal(T, o)
     if lg:
-        return 1e9 + 1e7 * lg, None
+        return 1e9 + 1e7 * lg[0] + 1e5 * lg[1], None
     fa = G.core_faces_away(K, o, T.w, T.h, T.buses)
     rx = reach_excess(T, o)
     ents, icyc = G.core_internal_stations(K, o, T.w, T.h, T.buses)
     ft = sum(max(0, G.ft_stations_macro(s, o, T.w, T.h, smax=SMAX) - T.k0[i]) for i, s in enumerate(T.ftsl)) \
         if full else 0
     bits = sum(len(e["regs_um"]) * e["bits"] for e in ents)
-    key = (fa, rx, round(icyc + ft + bits / G.STATION_BITS_PER_CYCLE, 2))
-    c = 1e7 * fa + 1e4 * rx + 1e5 * (icyc + ft + bits / G.STATION_BITS_PER_CYCLE) + shaping(T, o, ents)
-    return c, dict(key=key, faces_away=fa, reach_excess=rx, int_cycles=icyc, ft_add=ft, station_bits=bits)
+    # S81/LEAFPLAN2: lane-side rule (hard): every lane box in front of the vn halves' lane face (G.core_lanes_behind)
+    lb, lbu = G.core_lanes_behind(K, o)
+    key = (fa, lb, rx, round(icyc + ft + bits / G.STATION_BITS_PER_CYCLE, 2))
+    c = 1e7 * fa + 1e7 * lb + 2e3 * lbu + 1e4 * rx + 1e5 * (icyc + ft + bits / G.STATION_BITS_PER_CYCLE) + \
+        shaping(T, o, ents)
+    return c, dict(key=key, faces_away=fa, lanes_behind=lb, reach_excess=rx, int_cycles=icyc, ft_add=ft,
+                   station_bits=bits)
 
 
 def xmirror(T, P, V):
@@ -174,23 +242,57 @@ def xmirror(T, P, V):
 def anneal(T, P, V, iters, T0=3e4):
     cur, det = evaluate(T, P, V)
     best = (cur, {k: list(v) for k, v in P.items()}, dict(V), det)
-    E_ = ["u_lf.u_vs", "u_lf.u_ve"]   # blocks: u_lf.u_ve = ve_s + ve_m, u_lf.u_vn = vn_a + vn_b
+    VE = ["u_lf.u_ve.u_s", "u_lf.u_ve.u_m"]
+    VNB = ["u_lf.u_vn.u_a", "u_lf.u_vn.u_b"]
+    E_ = ["u_lf.u_vs"] + VE
     EC = E_ + ["u_lf.u_vsw", "u_lf.u_rxsf", "u_lf.u_rxsb", "u_lf.u_vq"]
-    VN = ["u_lf.u_vn", "u_lf.u_vp.u_b0", "u_lf.u_vp.u_b1"]
-    groups = [LANES, EC, EC + VN, NAMES, E_, VN, VN + LANES, ["u_lf.u_rxsf", "u_lf.u_rxsb"]] + [[n] for n in NAMES]
+    VN = VNB + ["u_lf.u_vp.u_b0", "u_lf.u_vp.u_b1"]
+    groups = [LANES, EC, EC + VN, NAMES, E_, VN, VN + LANES, VNB + LANES, VE, VNB, ["u_lf.u_rxsf", "u_lf.u_rxsb"]] + \
+        [[n] for n in NAMES]
+    lanes_rows = [LANES[i:i + 4] for i in range(0, 16, 4)]
     for it in range(iters):
         Tt = T0 * (1 - it / iters) + 1
         oldP, oldV = None, dict(V)
         r = random.random()
-        if r < 0.08:
+        if r < 0.06:
+            # a non-lane group move (or none) + the greedy lane re-pack
+            oldP = {k: list(v) for k, v in P.items()}
+            if r < 0.05:
+                g = random.choice([EC, E_, VN, VNB, VE] + [[n] for n in NAMES if n not in LANES])
+                k_ = random.choice([1, 2, 5, 10, 20, 40])
+                dx, dy = LAT * k_ * random.choice([-1, 0, 1]), LAT * k_ * random.choice([-1, 0, 1])
+                for k in g:
+                    P[k] = [round(P[k][0] + dx, 4), round(P[k][1] + dy, 4)]
+            lane_pack(T, P, V)
+        elif r < 0.09:
+            # a block of lanes (4) moves together
+            g = random.choice(lanes_rows)
+            oldP = {k: list(P[k]) for k in g}
+            k_ = random.choice([1, 2, 5, 15, 30])
+            dx, dy = LAT * k_ * random.choice([-1, 0, 1]), LAT * k_ * random.choice([-1, 0, 1])
+            for k in g:
+                P[k] = [round(P[k][0] + dx, 4), round(P[k][1] + dy, 4)]
+        elif r < 0.12:
             a, b = random.sample(LANES, 2)
             oldP = {a: list(P[a]), b: list(P[b])}
             P[a], P[b] = P[b], P[a]
-        elif r < 0.13:
+        elif r < 0.145:
             i = random.choice(VIEWABLE)
             V[i] = None if V.get(i) else XV
             V = {k: v for k, v in V.items() if v}
-        elif r < 0.14:
+        elif r < 0.17:
+            # a split pair flipped in x inside its joint box (both pin views toggled), the lanes re-packed after vn
+            pr = random.choice([VNB, VE])
+            oldP = {k: list(v) for k, v in P.items()}
+            x0 = min(P[k][0] for k in pr)
+            x1 = max(P[k][0] + SIZE[k][0] for k in pr)
+            for k in pr:
+                P[k][0] = round(math.floor(round((x0 + x1 - P[k][0] - SIZE[k][0]) / LAT, 6)) * LAT, 4)
+                V[k] = None if V.get(k) else XV
+            V = {k: v for k, v in V.items() if v}
+            if pr is VNB:
+                lane_pack(T, P, V)
+        elif r < 0.18:
             oldP = {k: list(v) for k, v in P.items()}
             P2, V = xmirror(T, P, V)
             P.update(P2)
@@ -220,7 +322,7 @@ def tmpl(T, c, order="A"):
     hcpl lanes on a lattice grid nearest vn's hq / hw ports."""
     Y1 = T.h - G.HC_EDGE_UM
     gap = 2 * LAT
-    S = SIZE
+    S = dict(SIZE, **BSIZE)
     up = lambda v: math.ceil(round(v / LAT, 6)) * LAT
     dn = lambda v: math.floor(round(v / LAT, 6)) * LAT
     P = {}
@@ -256,17 +358,21 @@ def tmpl(T, c, order="A"):
     sh = max(0.0, up(G.HC_EDGE_UM - min(xs))) - max(0.0, up(max(xe) - (T.w - G.HC_EDGE_UM - 1)))
     for i in P:
         P[i][0] = round(P[i][0] + sh, 4)
-    # lanes: lattice grid sites nearest vn's W-face hq / hw pins, not overlapping anything placed
+    # lanes: lattice grid sites in front of vn's W (lane) face (LEAFPLAN2 lane-side rule), nearest the vn halves' hq / hw
+    # pin centroids (worst of the two halves first), not overlapping anything placed
     lw, lh = S[LANES[0]]
-    qx, qy = P["u_lf.u_vn"][0], P["u_lf.u_vn"][1] + S["u_lf.u_vn"][1] / 2
+    qx = P["u_lf.u_vn"][0]
+    hy = [P["u_lf.u_vn"][1] + 29.6, P["u_lf.u_vn"][1] + 268.4]
     pitch = up(lw + gap)
     sites = []
+    x_hi = dn(qx - gap - lw)
     for ix in range(int(T.w // pitch) + 1):
-        for iy in range(int(T.h // pitch) + 1):
-            x, y = G.HC_EDGE_UM + ix * pitch, G.HC_EDGE_UM + iy * pitch
-            if x + lw > T.w - G.HC_EDGE_UM or y + lh > T.h - G.HC_EDGE_UM:
+        for iy in range(int(T.h // LAT) + 1):
+            x, y = x_hi - ix * pitch, G.HC_EDGE_UM + iy * LAT
+            if x < G.HC_EDGE_UM or y + lh > T.h - G.HC_EDGE_UM:
                 continue
-            sites.append((abs(x + lw - qx) + abs(y + lh / 2 - qy), x, y))
+            d = max(abs(x + lw - qx) + max(0.0, y - q, q - y - lh) for q in hy)
+            sites.append((d, x, y))
     sites.sort()
     boxes = [(P[i][0], P[i][1], P[i][0] + S[i][0], P[i][1] + S[i][1]) for i in P]
     k = 0
@@ -278,7 +384,7 @@ def tmpl(T, c, order="A"):
             P[LANES[k]] = [round(x, 4), round(y, 4)]
             boxes.append(b)
             k += 1
-    return P
+    return expand(P, {})[0]
 
 
 def main():
@@ -286,8 +392,7 @@ def main():
     init = sys.argv[6] if len(sys.argv) > 6 else "-"
     random.seed(seed)
     T = Type(load(dump, tn))
-    P = {k: list(v[:2]) for k, v in SPEC["place"].items()}
-    V = {}
+    P, V = expand({k: list(v[:2]) for k, v in SPEC["place"].items()}, {})
     cw_ = sum(sum(b["window_um"]) / 2 for b in T.buses if b["name"] in ("leafup_o0", "leafdn_i0")) / 2
     if init.startswith("tmpl"):
         # tmplA / tmplC: structural seeds (see tmpl); tmplB / tmplD: the same x-mirrored (vn / vq / vs xm views)
@@ -300,10 +405,12 @@ def main():
     else:
         if init != "-":
             j = json.load(open(init))
-            P.update({k: list(v) for k, v in j["place"].items()})
-            V = dict(j.get("views", {}))
+            P2, V = expand(j["place"], j.get("views", {}))
+            P.update(P2)
             if j.get("mirror"):
                 P, V = xmirror(T, P, V)
+    if os.environ.get("LP2_PACK0", "1") == "1":
+        lane_pack(T, P, V)
     c0, d0 = evaluate(T, P, V)
     print("start", round(c0), d0, flush=True)
     b = anneal(T, P, V, iters)
