@@ -289,3 +289,13 @@ CODEX 14:10: GEOM independent PASS F6 geometry from /root/flow_geom/geom_queue (
 - Branch claude/path-s81-elemb-1025@4e1ebfdae7 (main 05f9f5c690 merged; kit overlay tools/s81_head/kits/elemB_if2e/). Worktree epyc1:/srv/opentallas-scratch2/claude/wt/path-s81-elemb (sparse). No live jobs.
 - Kits: epyc1:/srv/opentallas-scratch2/claude/path-s81-elemb/elemB_if2e (3_place base kept), elemB_if2e_b (cfg+gate only); diag/ (gate_all.sh, render_ck.py).
 - Next (one successor elemB_if2f, structural): (1) planned wire-balanced shallow trunk (physical/common_flow/shallow_clock, OT_DTSH_BALANCE=1, being qualified by PATH-S81 lead on E5, claude/path-s81-dtsh-ndr-1025) sized so core insertion ~370 TT (pin regs 250 with the -120 source latency), ~17 taps, keep ROM-on-IF-tap; (2) zero-logic chain pairs on ONE leaf: place each u_a.u_c{k}->u_c{k+1} bit chain as a compact group (placement grouping) and lift F4 limits (chain>16, 20 um, leaf +12) so all 14k Q->D pairs share a leaf; or RTL alternative (owner/COORD): retime the u_c delay lines to carry >=1 logic level / use a ROM-side alignment instead of 0-logic shift chains. (3) If (1) cannot reach the bound: vclk re-bind READY in the S81 head batched delta at the measured insertion (boundary-match). Then GRT-mode gate -> GEOM REQ -> autopilot --geom REQ.
+
+## PARKED 2026-10-25 14:53 PDT (PATH-S81/SPLITS)
+- Branch claude/path-s81-splits-1025@52388f1ddb (pushed; on main 05f9f5c690). READY posted in COORD-REVIEW-QUEUE. Worktree removed. No live jobs.
+- Before: main bind.py on Codex vp_cst asbuilt (= codex/s81-bind-1309 vp_emit, bind_emit_control.py == main bind.py) -> 7 splits. After (flags on): 0 splits, proof counts identical. Report epyc1:/srv/opentallas-scratch2/claude/path-s81-splits/bind_fix/bind_report.json; diagnostics .../path-s81-splits/w/.
+- Classification (all naming/packing artefacts, structural identity proven by full-signature equality under renaming):
+  | split | cause | fix |
+  | col_h9_r1__t1 (p3/p6 vs p1/p2/p4/p5) | r1 contents identical; in-bus frame_int_i1 same 914 bits, one 66-bit group (sink $5.A) packed first vs last because source band r0 (x) vs r0_nx names it differently and packing sorted by SOURCE | pack_by_sink |
+  | leaf t24/t25/t44/t53/t54, t40 s_5S_L4 | identical leaf; replace_const_cells$N and $procmux$N serials differ (13 ambiguous + 2 symmetric procmux) | type_canon (WL + tie-break, signature-confirmed) |
+  | leaf t40 s_4S_L3 vs s_4N_L4 | identical leaf content at index 3 vs 4; partition rooted at slice (glue_follows_sinks moved slice $buf $25/$28) so every name had u_lf3/u_lf4 | type_canon (common prefix strip) |
+- No plan type split and no RTL change needed. Next: ROOT merge in the S81 batched delta; TOKEN re-reads lane source_bits after merge.
