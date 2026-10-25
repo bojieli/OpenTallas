@@ -279,3 +279,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 22:35 PDT COORD: methodology-align (dec. 12 to all plans) turns G0C FAIL on all 6 plans (s81 131 err, head 1, qc 952, kvsys 1539, hbm 7684) -> one batched re-plan per die ordered; merge with re-plans; 0.9 margin dropped.
 2026-10-24 22:36 PDT ROOT-MERGE: batch 5 merged main 8f1b21f68 -> 6f905012a (csa31 fix, s81-head, clock/kit-taps/kit-clock gate change)
 2026-10-24 22:36 PDT ROOT-MERGE: batch 6 merged main 6f905012a -> 21dee5fb1 (s81 kits nodes RTL + 5 geom views, no csa31)
+2026-10-24 22:36 PDT COORD: OWNER approved batched re-plans (decision 17); lanes already ordered at 22:4x.
