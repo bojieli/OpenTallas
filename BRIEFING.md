@@ -107,7 +107,29 @@ amend or squash later).
    the same known cycle. Local flops use the delivered reset with normal timed recovery/removal (or as a sync reset).
    Reset assertion becomes synchronous (clock runs at boot). Price the added boot cycles in boot benches. No recovery
    waivers. (= KV-G3 option (b).)
-3. DIE-TIMING MARGINS: report only. Gate = TT setup / FF hold with 60/25 ps uncertainty, spread <= 80 ps. Margined
+3. DIE-TIMING MARGINS: report only. Gate = TT setup / FF hold with 60/25 ps uncertainty (clock check per decision 5 below). Margined
    slack (xtalk/IR/OCV) stays an INFO column.
 4. HBM B2l SPEED: ACCEPT B2l's ~22% DeepSeek-AR loss vs d4g (d4g was unroutable). Bind B2l natively now; speed recovery
    (more SMs, wider links) is a later follow-up, not a blocker.
+
+## OWNER DECISIONS 2026-10-24 ~19:50 PDT (coordinator moved back to rtx-pro; owner "go" on the COORD proposal)
+5. CLOCK = INDUSTRY MULTI-SOURCE CTS (owner 2026-10-23 ~23:30, re-confirmed). Gate = related launch/capture flop-pair
+   skew with CPPR credit <= 80 ps at TT and FF (intra-partition and seam pairs) as the CTS target; sign-off = propagated-
+   clock STA closing (TT setup / FF hold, 60/25). Max-min "pin-flop spread" is INFO only (no longer a gate). Flow:
+   (a) structured symmetric binary H-tree / spine on M8/M9 with NDR to the taps, balanced by construction;
+   (b) taps on a pruned grid sized by sink density (load cap ~1000-1500 sinks/tap, extra taps at dense clusters, none
+   over macros/hard cores/PHY); (c) sink->tap assignment by distance + load; (d) every local tree balanced to the common
+   latency with a <= 20 ps window on GRT/routed RC (not placement RC); (e) hard-core internal latency from its lib/ETM
+   compensated at the core clock pin (core-latency contract); (f) seam neighbours on the same spine branch.
+   This answers TRIAL-QK's "80 ps seam vs 40 ps kit hold window": FF hold STA with real trees decides; insertion_tol is guidance.
+6. S81 head seam skew 81.9 TT: re-measure with the pair-skew metric after the clock-spine rebuild before any fallback.
+7. IR over SerDes windows (S81, head, HBM): separate PHY supply + dedicated bump rows over the SerDes windows.
+8. S81 constant output pins (hcpl o[15:0], rxsb o_r[31]...): DROP them from the plan (no face_guard constant class).
+9. KV bind: bound_netlist.json lost -> re-bind from scratch with main bind.py + bind_post.py.
+10. Old nvme0n1 data (intel1/intel2/epyc2, mounted RO): recover only CLOSED results missing from the AGIdock archive,
+    then the disks may be freed.
+11. Claude<->Codex auto-switch: re-enable on rtx-pro; also watch lane-agent 429s; owner questions as plain text, never
+    a blocking dialog.
+Recorded earlier (10-23, COORD rulings now binding): R8 LANDED bundles (forwarded-clock ring, one K per bundle) are
+padded to one group depth, lane skew checked against the landing window margin; bundles over margin stay per-lane
+(collapse forbidden unless the window is widened in RTL).
