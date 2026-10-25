@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 `default_nettype none
-// Explicit build variant; old timed-ID baseline remains the default until the
-// actual new static-ID views pass their independent binding/equivalence gate.
-`ifdef TKM_STATIC_ID_VIEW
+// Selected static-ID views passed ID5/17 common and31 terminal exactness plus
+// actual wrong-binding rejection. Explicit legacy switch preserves old replay.
+`ifndef TKM_LEGACY_TIMED_ID_VIEW
 `define OT_HBM_TKM_LEAF ot_hgi_coll_tkm_tp192_tile_core__idpin__strap
 `define OT_HBM_TKM_TERMINAL ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap
 `define OT_HBM_TKM_ID_PORT strap_tile_tid

@@ -20,7 +20,7 @@ case "${ROOT_VARIANT:-cb21}" in
  ft21) rcore="$f/cb21/ot_hgi_coll_tkm_tp192_root_core.sv";defs=(+define+ROOT_CB=21 +define+ROOT_CLRB=0 +define+TILE_FT -GCTL_BCAST_STAGES=21 -GCLR_SYSTOLIC=1);;
  *) echo "bad ROOT_VARIANT";exit 2;;
 esac
-if [ "${STATIC_IDS:-0}" = 1 ];then defs+=(+define+TKM_STATIC_ID_VIEW);fi
+if [ "${STATIC_IDS:-1}" = 0 ];then defs+=(+define+TKM_LEGACY_TIMED_ID_VIEW);fi
 tsh=$f;[ "${ROOT_VARIANT:-cb21}" = ft21 ] && tsh=$f/ft
 src=("$c/tkm/tkm_tp192_e86_hier.vlt" tools/hbm_b2/tkm_l74/tb_hbm_tkm_bound_ft21.sv rtl/hbm_accel/die_glue/b2/ot_hbm_tkm_path_ft21.sv rtl/hbm_accel/die_glue/b2/ot_hbm_tkm_return.sv rtl/hbm_accel/generic/transport/ot_hbm_static_2beat.sv
  "$c/tkm/ot_hgi_coll_tkm_static.sv" "$c/tkm/ot_hgi_coll_tkm.sv" "$c/tkm/ot_hgi_coll_tkm_buffer.sv" "$c/tkm/ot_hgi_coll_tkm_conv_skew.sv"

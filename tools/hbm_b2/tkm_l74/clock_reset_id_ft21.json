@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.hbm.selected_tkm.clock_reset_id.v1",
   "module": "ot_hbm_tkm_path_ft21",
-  "adoption": "BLOCKED_LEGACY_BUFFER_SYNC_AND_TIMED_ID_VIEWS",
+  "adoption": "STATIC_ID_COMPONENT_GATED_NATIVE_LITERAL_CALLER_AND_DELIVERED_ROOT_ADOPTION_PENDING",
   "clock_domain": {
     "source": "parent_owned_core_clock",
     "period_ps": 833,
@@ -72,12 +72,13 @@
   "id_contract": {
     "parent_port": "strap_tile_ids[191:0]",
     "literal_per_instance": "6-bit IDs0..31",
-    "selected_child_api": "legacy tile_tid face FF (6 per tile), NOT current ownerB compatible",
-    "new_views": "v3 leaf7a2f916258f75f1c terminale1065c3944d31770; identical RTL to064/00d, metadata corrected; physical miter pending",
+    "selected_child_api": "strap_tile_tid direct noFF, v3 exact common/terminal views",
+    "new_views": "v3 leaf7a2f916258f75f1c terminale1065c3944d31770; source-byte identical to064/00d, corrected metadata",
     "target_api": "strap_tile_tid direct noFF plus typed straps.json and SDC falsepath",
     "strict_alias_required": true,
     "other_constants_allowed": false,
-    "build_variant": "TKM_STATIC_ID_VIEW define / runner STATIC_IDS=1; default legacy, no adoption yet"
+    "build_variant": "selected default directstrap; TKM_LEGACY_TIMED_ID_VIEW / runner STATIC_IDS=0 replays old registered API",
+    "gate": "common ID5/17 each161710/161710 equivalencePASS, terminal31 159960/159960 PASS afterone legacy warmup; wrongID17 exact1bindingpoint failure"
   },
   "path_fieldmap": "tools/hbm_b2/tkm_l74/model_ft21.json"
 }
