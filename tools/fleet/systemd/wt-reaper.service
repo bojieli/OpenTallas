@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenTallas worktree reaper (tools/fleet/wt-reaper.py: removes clean, pushed, idle >2 h, unreferenced, unprotected worktrees)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/.local/lib/wt-reaper/wt-reaper.py --apply
+TimeoutStartSec=3h
+Nice=10
+IOSchedulingClass=idle
