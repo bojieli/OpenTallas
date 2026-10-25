@@ -296,3 +296,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-25 00:08 PDT ROOT-MERGE: batch 10 merged main f33ebe7cb -> 79e366c16 (AGENTS.md clock rules)
 2026-10-25 00:19 PDT S81/DEC12: DEC12 batched re-plan READY claude/s81-dec12-1024r@d206dfb226 (s81 + s81_head G0/G0C 0E).
 2026-10-25 00:21 PDT COORD: OWNER re-affirmed admission = memory only (no CPU/load cap), so the fleet keeps working through agent usage limits.
+2026-10-25 00:23 PDT COORD hourly: SIGN flat this hour (s81 6/11, kvsys 0/3, qc 0/0, hbm 0/0) -- expected dip: routes held for the dec. 17 re-plan; PROTO sweep confirms pre-re-plan plans STRUCTURAL (HBM 34/44, KV/QC/S81 types with >405 hops). Batch (meth-align + s81-dec12 + kv-405 + hbm-b2n) cleared to merge now; QC re-plan follows after qc-cap. Fleet: intel1 606 GB / intel2 526 GB free -> core kits not changed by re-plans fill it. Disks OK (epyc1 root 57%).
