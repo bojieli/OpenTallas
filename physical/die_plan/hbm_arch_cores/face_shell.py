@@ -62,14 +62,16 @@ def sv_id(n):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# core analysis (yosys, coarse: proc / flatten / opt / wreduce / memory -nomap; semantics-preserving, so a bit with no
-# load after it is not read by any output or state of the core)
+# Conservative def-use analysis of elaborated processes. Do not run opt_dff / opt -full here:
+# they may replace an uninitialised enabled register with its constant D value, removing
+# the command that initializes it. Tying that command low in emitted RTL would leave the
+# original register uninitialised. Keep state and its enable cone while cleaning dead logic.
 def analyze(files, top, params=None, defines=(), incdir=None, libs=(), workdir=None, log=None):
     workdir = Path(workdir)
     workdir.mkdir(parents=True, exist_ok=True)
     js = workdir / "face_shell_core.json"
     # cache (views of one module share the RTL): key = yosys binary + every input file's bytes + top + params + libs
-    h = hashlib.sha256(f"v1 {YOSYS} {top} {sorted((params or {}).items())} {list(defines)}".encode())
+    h = hashlib.sha256(f"v2-init-safe {YOSYS} {top} {sorted((params or {}).items())} {list(defines)}".encode())
     for f in list(files) + list(libs):
         h.update(str(Path(f).name).encode() + b"\0" + Path(f).read_bytes())
     cache = Path(os.environ.get("FACE_SHELL_CACHE", Path.home() / ".cache" / "face_shell")) / (h.hexdigest()[:32] + ".json")
@@ -81,7 +83,7 @@ def analyze(files, top, params=None, defines=(), incdir=None, libs=(), workdir=N
     inc = f"-I{incdir}" if incdir else ""
     rl = "".join(f"read_liberty -lib -ignore_miss_func {l}; " for l in libs)
     script = (f"{rl}read_verilog -sv {d} {inc} " + " ".join(map(str, sv)) + f"; hierarchy -top {top} {ch}; "
-              "proc; flatten; opt_expr; opt_clean; opt -full; wreduce; opt_clean; memory -nomap; opt -full; "
+              "proc; flatten; opt_expr -keepdc; opt_clean; wreduce; opt_clean; memory -nomap; "
               f"opt_clean -purge; write_json {js}")
     r = subprocess.run([YOSYS, "-q", "-p", script], capture_output=True, text=True)
     if r.returncode and params:     # yosys 0.68 hierarchy -chparam can assert: chparam -set (as ORFS / the generator)
