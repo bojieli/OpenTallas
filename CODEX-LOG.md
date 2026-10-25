@@ -399,3 +399,7 @@ Branch codex/kit-taps-1024 @0a71cacba WIP committed; density-tap planned cluster
 
 ### 2026-10-24 21:11 PDT GEOM-HBM handoff
 PARKED clean codex/geom-hbm-1024@f12669bb8 (pushed), /home/ubuntu/wt/codex-geom-hbm-1024. B2m independent G1 delta PASS-COND; JSON + root_gap.png only; root point8.64um clear tile19, reserve cell/halo.8 last-mile legs>400(max468.9) need explicit repeaters.256 physical SM taps(128unique type sites), insertion placeholders250 remain. Reset counted/native bind and PHY IR62-75mVFAIL remain before G3. No jobs, no OWNER? added.
+
+Root handback final additions: unmerged gated base-latency repair codex/die-ci-refresh-1024@03032ef99 (4 generated files KV2416/B2l298 lanes, gate_latency PASS; no R8/token adoption). Shared clock/signoff WIP codex/kit-clock-1024@b88258680 includes overlay fix9fd7d7ec1 and CPPR helper;27 Python tests PASS, physical smoke NOT RUN, not merge-ready. GEOM vK CTS dump finished exit127 missing openroad PATH, no GEOM job live. All lane leaders ordered park; inherited progressing jobs preserved.
+
+Final park confirmations: S81 stopped only own wrapper2316012, checkout child2316357 continues; no MERGE_HEAD and no queued merge, c85a1e498b unchanged. HBM all children parked; unmerged pushed tok-hbm-r2@53e6ebba0 corrects pad-stage inventory (2 testsPASS), geom-hbm@f12669bb8 G1PASS-COND only. PART-CAP own checkout2033126 D-state may finish+commit review via wrapper2033122; no heavy job/new merge. All live jobs can be checked from host:path entries above.
