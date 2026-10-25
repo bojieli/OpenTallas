@@ -96,18 +96,82 @@ def main():
     # hold repair at this margin on GRT RC with no buffer cap.  Default off = unchanged kits.
     ap.add_argument("--post-grt-hold-ps", type=float, default=None)
     ap.add_argument("--post-grt-slew-pct", type=float, default=40.0)
+    # 10-25 structural review (results/geom_review/s81_head_elem_struct_1025): two causes behind every head-element
+    # FF-hold / slew miss.  (1) GRT RC is not the routed RC: per sink the GRT clock arrival is 21-59 ps (B c8) /
+    # 63-78 ps (A c11) LATER than OpenRCX at FF, almost all of it clock WIRE (buffer stages 1 ps each): setRC prices
+    # M4/M5 at 0.178/0.164 fF/um, the routed clock extracts at 0.09-0.11 (DEF/SPEF fit).  So hold repair on GRT RC
+    # sees launch flops 37/69 ps late and under-repairs every output path.  --hold-rc-cal LAYER:R:C,... runs the post-GRT
+    # hold repair on the RCX-fitted layer RC (as tools/orfs_hold_mm.tcl RC-CAL does for M6/M7), platform RC restored
+    # for everything else.  Measured on the routed c8/c11 DBs: GRT-est minus RCX per sink 69 -> 12 ps (A), 37 -> -6 (B),
+    # p1..p99 within 13 ps; the calibrated estimate sees A's RCX hold fails (-4.8 / 13 vs GRT +9.8 / 0).  (2) B only: the ROM rd bits of lanes 0-7 leave the ROM on its W edge and lanes 8-15 on the
+    # E edge (R0), while the parent assigned lanes 0-7 x[] pins to the E/S faces and lanes 8-15 to the W face: every
+    # lane is pulled across the ROM (t_r -> w_r median 89.5 um, 124/256 > 100 um, w_r[244] 139 um of M2 -> slew 351).
+    # --rom-orient MY mirrors both ROMs so each lane's word bits and x pins share a side (A's R0 already does: 15 um).
+    ap.add_argument("--hold-rc-cal", default=None, help='per layer LAYER:R(kohm/um):C(fF/um),...  10-25 fit: '
+                    '"M2:2.97127E-02:1.08E-01,M4:1.80365E-02:1.0E-01,M5:1.89935E-02:0.95E-01" (platform R, RCX clock C)')
+    ap.add_argument("--rom-orient", choices=["R0", "MY"], default="R0")
+    ap.add_argument("--max-wire-um", type=float, default=None, help="ORFS MAX_WIRE_LENGTH (repair_design)")
+    # s2 (HEAD-ELEM2 10-25, GEOM-REVIEW 04:49 PASS-COND): (2) the shared F2 basis = tools/die_plan/rc_fit.tcl fitted
+    # setRC file as the kit LAYER_PARASITICS_FILE (every stage: placement/CTS wire RC, GRT layer RC, all repairs), replacing the
+    # private --hold-rc-cal wrap; (3) decision 9.7/5e FF IO reference = vclk hold-analysis (-min) source latency =
+    # measured FF pin-register insertion in its separate FF timing mode; (4) post_cts_gate_s2.tcl route gate.
+    ap.add_argument("--set-rc-tcl", default=None, help="rc_fit.tcl setRC_r*_c*.tcl -> kit LAYER_PARASITICS_FILE")
+    ap.add_argument("--ff-vclk-ps", type=float, default=None, help="FF-scene virtual-clock source latency, ps (separate mode overlay)")
+    ap.add_argument("--route-gate", action="store_true", help="post_cts_gate_s2.tcl (SKIP_CTS_REPAIR_TIMING=1)")
+    # s3 (GEOM-REVIEW 05:17 [S81-HEAD/HEAD-ELEM2 s2] cond (c)): hold repair against FF ONLY.  One SDC for both corners made
+    # every all-corner hold repair (CTS repair_timing_helper, post-GRT repair_timing -hold) pad x[]/input pin registers to TT
+    # hold, which is not signed off.  OpenROAD 26Q3 repair_timing has no corner/scene option (it repairs every scene), so the
+    # kit runs main's FLOW-HOLD multi-mode session (tools/orfs_hold_mm.{py,tcl} from REV, patched into the disposable
+    # container's load.tcl/util.tcl): scene tc = mode ss (TT libs, kit SDC, setup; its hold false-pathed while a repair runs)
+    # and scene BC = mode ff (FF libs, the same kit SDC = vclk -min FF pin-reg I, setup false-pathed).  Hold margin unchanged.
+    ap.add_argument("--hold-ff-only", default=None, metavar="REV",
+                    help="git rev whose tools/orfs_hold_mm.{py,tcl} the kit uses (FF-only hold repair, TT setup)")
+    ap.add_argument("--signoff-rev", default=None, help="git rev whose tools/die_plan/{signoff.py,pair_skew.tcl} the "
+                    "kit uses (the infra signoff.py predates the decision-5 related-pair skew gate)")
+    ap.add_argument("--rom-local-issue", action="store_true", help="same-edge kept per-ROM address copies (zero cycles), requires macro IF placement review")
     a = ap.parse_args()
     globals().update(ELEMS[a.elem])
+    global ROMS
+    if a.rom_orient != "R0":
+        ROMS = ROMS.replace(" R0", " " + a.rom_orient)
     K, old = Path(a.out), Path(a.infra)
     K.mkdir(parents=True, exist_ok=False)
     for n in INFRA:
         shutil.copy2(old / n, K / n)
-    for n in ("face_keep.tcl", "face_keep_release.tcl"):     # CP1-R10 main 0ce45ab03c hooks
+    for n in ("face_keep.tcl", "face_keep_release.tcl", "pair_skew.tcl", "signoff.py"):     # CP1-R10 main 0ce45ab03c hooks
         shutil.copy2(R / "tools/die_plan" / n, K / n)
+    if a.ff_vclk_ps is not None:      # s2: the repo lint knows the vclk -min (hold) reference (infra copy does not)
+        shutil.copy2(R / "tools/die_plan/sdc_lint.py", K / "sdc_lint.py")
+    if a.set_rc_tcl:
+        shutil.copy2(a.set_rc_tcl, K / "setRC_fit.tcl")
+    if a.signoff_rev:
+        for n in ("signoff.py", "pair_skew.tcl"):
+            (K / n).write_bytes(subprocess.check_output(["git", "-C", str(R), "show", f"{a.signoff_rev}:tools/die_plan/{n}"]))
+    if a.route_gate:
+        shutil.copy2(R / "tools/s81_head/post_cts_gate_s2.tcl", K / "post_cts_gate.tcl")
+    if a.hold_ff_only:
+        for n in ("orfs_hold_mm.py", "orfs_hold_mm.tcl"):
+            (K / n).write_bytes(subprocess.check_output(["git", "-C", str(R), "show", f"{a.hold_ff_only}:tools/{n}"]))
+        # fail closed: patch the container's ORFS scripts (load.tcl/util.tcl) right after sdc_lint, before synth
+        rk = (K / "run_kit.sh").read_text()
+        anchor = "  if [ \\$rc = 0 ]; then \\$M synth; rc=\\$?; fi; \\\n"
+        assert rk.count(anchor) == 1, "run_kit.sh synth anchor"
+        mm = ("  if [ \\$rc = 0 ]; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl"
+              " > /work/orfs_hold_mm.log 2>&1; rc=\\$?; grep -q 'status.: .patched.' /work/orfs_hold_mm.log || rc=3; "
+              "tail -2 /work/orfs_hold_mm.log; fi; \\\n")
+        (K / "run_kit.sh").write_text(rk.replace(anchor, mm + anchor, 1))
     (K / "rtl").mkdir()
     (K / "macros").mkdir()
     for s in SRCS:
         (K / "rtl" / Path(s).name).write_bytes(subprocess.check_output(["git", "-C", str(R), "show", f"{SRC_REV}:{s}"]))
+    if a.rom_local_issue:
+        from rom_addr_local import transform
+        native = K / "rtl/ot_dsrom_head_elem.sv"
+        native.write_text(transform(native.read_text()))
+        shutil.copy2(R / "rtl/dsrom_sys/s81_head/ot_s81hd_rom_addr_copy.sv", K / "rtl/ot_s81hd_rom_addr_copy.sv")
+        shutil.copy2(R / "tools/s81_head/head_rom_if.tcl", K / "head_rom_if.tcl")
+        ff = K / "face_flops.tcl"
+        ff.write_text(ff.read_text()+"\nuplevel #0 [list source /work/head_rom_if.tcl]\n")
     for f in (WRAP, OREG):
         shutil.copy2(R / f, K / "rtl" / Path(f).name)
     md = R / "physical/asap7_memory_macros_v2" / ROM
@@ -157,6 +221,13 @@ set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in
 set_clock_latency -source -clock clk {-a.early_ps:.4f} [get_ports {{clk}}]
 """
     (K / "constraint.sdc").write_text(sdc)
+    if a.ff_vclk_ps is not None:
+        if not a.hold_ff_only:
+            raise ValueError("--ff-vclk-ps requires --hold-ff-only: FF needs its own timing mode")
+        # FLOW 9.7/5e: -min/-max are early/late, never corner selectors.  ot_mm_sync reads this overlay only in mode ff.
+        (K / "vclk_ff.sdc").write_text(
+            "# FF mode only; reapplied after each TT->FF mode refresh.\n"
+            f"set_clock_latency -source {a.ff_vclk_ps:.4f} [get_clocks vclk]\n")
     io_floor = {p: 166.6 for p in sorted(ins) + sorted(outs)}
     (K / "sdc_lint.json").write_text(json.dumps(dict(
         period_ps=833.0, insertion_ps=250.0, insertion_tol_ps=40.0, clock_ports=["clk"], inputs=sorted(ins),
@@ -191,7 +262,7 @@ export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl
 export CORNER = TC
 export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl
 export OT_KEEP_PIN_REGS = 1
-export CORNERS = tc bc
+export CORNERS = {'tc BC' if a.hold_ff_only else 'tc bc'}
 export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) /work/macros/{ROM}_tt.lib
 export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/macros/{ROM}_ff.lib
 export SLEW_MARGIN = 20
@@ -226,12 +297,42 @@ foreach {name x y orient} {%s} {
 }
 """ % ROMS)
     cfg += "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl\n"
+    if a.max_wire_um:
+        cfg += f"export MAX_WIRE_LENGTH = {a.max_wire_um:g}\n"
+    if a.set_rc_tcl:      # orfs:asap7lock load.tcl sources LAYER_PARASITICS_FILE instead of setRC.tcl when set (every
+        # stage that loads the design: place/resize/CTS/GRT/repairs).  SET_RC_TCL is NOT read by this image's scripts.
+        cfg += "export LAYER_PARASITICS_FILE = /work/setRC_fit.tcl\n"
+    if a.ff_vclk_ps is not None:
+        cfg += "export OT_MM_FF_SDC = /work/vclk_ff.sdc\n"
+        rk = (K / "run_kit.sh").read_text()
+        assert rk.count('--corners tt,ff') == 1, "head signoff corner anchor"
+        rk = rk.replace('--corners tt,ff', '--corners tt,ff --ff-vclk rebind --ff-vclk-contract "HEAD 9.7/5e per-corner measured pin-register reference; rebuild.json"', 1)
+        (K / "run_kit.sh").write_text(rk)
+    if a.hold_ff_only:     # FLOW-HOLD session: setup scene tc (TT libs), hold scene BC (FF libs); see --hold-ff-only
+        cfg += "export OT_HOLD_MM = 1\nexport OT_MM_SETUP_CORNER = tc\n"
+    if a.route_gate:
+        cfg += "export SKIP_CTS_REPAIR_TIMING = 1\nexport POST_CTS_TCL = /work/post_cts_gate.tcl\n"
+        cfg += f"export OT_GATE_TRW = {1 if a.elem == 'B' else 0}\n"
     if a.post_grt_hold_ps is not None:
+        hold = f"repair_timing -hold -hold_margin {a.post_grt_hold_ps:g} -max_buffer_percent 100\n"
+        if a.hold_ff_only:   # FF-only: hold checked in scene BC only while this repair runs (ot_mm_sync / ot_mm_unsync)
+            hold = ('if {![info exists ::ot_mm_active] || !$::ot_mm_active} { error "HD_ELEM: OT_HOLD_MM session missing (FF-only hold repair)" }\n'
+                    "ot_mm_sync\n" + hold + "ot_mm_unsync\n")
+        if a.hold_rc_cal:
+            spec = [t.split(":") for t in a.hold_rc_cal.split(",")]
+            for l, r, c in spec:
+                assert re.fullmatch(r"M\d", l), l
+                float(r), float(c)
+            hold = ("# hold repair on the RCX-fitted layer RC (--hold-rc-cal); platform setRC restored right after\n"
+                    + "".join(f"set_layer_rc -layer {l} -resistance {r} -capacitance {c}\n" for l, r, c in spec)
+                    + f'puts "HD_ELEM RC-CAL hold: {a.hold_rc_cal}"\n'
+                    "estimate_parasitics -global_routing\n" + hold +
+                    "source $::env(PLATFORM_DIR)/setRC.tcl\nestimate_parasitics -global_routing\n")
         (K / "post_grt_drv.tcl").write_text(
-            "# GENERATED by hd_elemA_rebuild.py --post-grt-hold-ps: post-GRT DRV + hold repair (GRT RC, all corners)\n"
+            f"# GENERATED by hd_elemA_rebuild.py --post-grt-hold-ps: post-GRT DRV + hold repair ({'FF scene only' if a.hold_ff_only else 'all corners'})\n"
             "global_route -start_incremental\n"
             f"repair_design -slew_margin {a.post_grt_slew_pct:g} -cap_margin 20\n"
-            f"repair_timing -hold -hold_margin {a.post_grt_hold_ps:g} -max_buffer_percent 100\n"
+            + hold +
             "detailed_placement\ncheck_placement -verbose\nglobal_route -end_incremental\n"
             "estimate_parasitics -global_routing\n")
         cfg += "export POST_GLOBAL_ROUTE_TCL = /work/post_grt_drv.tcl\n"
@@ -243,7 +344,7 @@ foreach {name x y orient} {%s} {
     (K / "rebuild.json").write_text(json.dumps(dict(
         schema="opentallas.s81_head.elem_rebuild.v1", closed_source_rev=SRC_REV, top=TOP, wrapper=[WRAP, OREG], sources=SRCS, params=PARAMS, rom="asap7_memory_macros_v2/" + ROM,
         pins=len(pins), elem=a.elem, old_clock_rect=OLD_CLK, new_clock_rect=list(CLK_RECT),
-        infra=str(old), early_core_tap_ps=a.early_ps, post_grt_hold_ps=a.post_grt_hold_ps, post_grt_slew_pct=(a.post_grt_slew_pct if a.post_grt_hold_ps is not None else None), scope="rebuild of the LOST closed elemA physical source; no RTL or cycle change"), indent=1) + "\n")
+        rom_local_issue=a.rom_local_issue, cycles_added=0, infra=str(old), early_core_tap_ps=a.early_ps, post_grt_hold_ps=a.post_grt_hold_ps, post_grt_slew_pct=(a.post_grt_slew_pct if a.post_grt_hold_ps is not None else None), hold_rc_cal=a.hold_rc_cal, rom_orient=a.rom_orient, max_wire_um=a.max_wire_um, set_rc_tcl=a.set_rc_tcl, ff_vclk_ps=a.ff_vclk_ps, route_gate=a.route_gate, signoff_rev=a.signoff_rev, hold_ff_only=a.hold_ff_only, scope="rebuild of the LOST closed elemA physical source; no RTL or cycle change"), indent=1) + "\n")
     print(K, len(pins), len(ins), len(outs))
 
 

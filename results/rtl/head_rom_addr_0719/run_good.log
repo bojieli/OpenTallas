@@ -1,0 +1,5 @@
+ADDR_COPY_PASS checks=80000 cycles_added=0
+- tb_s81hd_rom_addr_copy.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 0.015 s; speed 26.041 ms/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB
