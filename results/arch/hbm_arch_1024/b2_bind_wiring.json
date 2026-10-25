@@ -9,7 +9,9 @@
   "instances": [
    "tkm_SW"
   ],
-  "drop_instances": []
+  "drop_instances": [
+   "host_N"
+  ]
  },
  "strap_ports": [
   ".*\\.(tgt|qid|sid|bid|bank_id|pc_id|id_sm|id_stack|sm_hbm|sm_stream|stk|attn_column|attn_rowbase|xs_a1|xs_a2|xs_g1|xs_g2|first_ord|quad|lbase|slot|half|rl_cfg|wc_cfg|tile_id)"
@@ -78,6 +80,19 @@
    "kind": "param",
    "status": "done",
    "what": "vm_status4 NQ 2 {hb_vms_NE, hb_vms_NW} (bench rtl/hbm_accel/generic/vm/static/run_vms_status_nq.sh)"
+  },
+  {
+   "id": "W-FLT",
+   "kind": "param+wiring",
+   "status": "done",
+   "what": "fr_NW N 15 / fr_NE N 15 take every hb_coll retry lane (SYNC_MASK bits re-positioned); tkm_SW.stat_cycles observed by obs_C (N 125; as built by obs_SW)"
+  },
+  {
+   "id": "W-HOST",
+   "kind": "rtl+wiring",
+   "status": "rtl+bench (see b2_native_bind_rtl.json)",
+   "what": "host_N (ot_pdie_ucie_col) dropped; ep_N0 -> hfd_ep_static_vc2 (slot {vc,frame,v} 614 b, COLL VC0 calendar priority +1 TX edge, host VC1 4-deep elastic queue on free take slots, RX vc demux); host_ep -> hfd_ep_host_vc (pingpong + pin regs on the ep_N0 host face; host_cp_rxs unchanged). The N0 peer (switch / neighbour) must run the vc2 lane format.",
+   "plan": "B2l/B2m: io_NW_io_u_host_N window removed; u_host_ep stays (smaller: no gearbox); ep_N0<->host_ep 612+612+5 b frame faces inside NW_io; root keeps u_host_cp_ingress"
   }
  ],
  "remaster": {
@@ -95,7 +110,7 @@
   },
   "obs_C": {
    "master": "ot_hbm_obs_leaf",
-   "params": ".N(93), .LID(0), .SYNC_MASK(512'h0)"
+   "params": ".N(125), .LID(0), .SYNC_MASK(512'h0)"
   },
   "hb_coll_NW": {
    "master": "ot_hfd_coll_q3_hard_v8x",
@@ -116,6 +131,22 @@
   "vm_status4": {
    "master": "ot_vms_status4_static",
    "params": ".NQ(2)"
+  },
+  "fr_NW": {
+   "master": "ot_hbm_fault_leaf",
+   "params": ".N(15), .SYNC_MASK(64'h140)"
+  },
+  "fr_NE": {
+   "master": "ot_hbm_fault_leaf",
+   "params": ".N(15), .SYNC_MASK(64'ha0)"
+  },
+  "ep_N0": {
+   "master": "hfd_ep_static_vc2",
+   "params": ".IDLE_K(204), .HQ(4)"
+  },
+  "host_ep": {
+   "master": "hfd_ep_host_vc",
+   "params": ""
   }
  },
  "rebuild": {
@@ -1816,6 +1847,12 @@
      "a_cause",
      0,
      1
+    ],
+    [
+     "tkm_SW",
+     "stat_cycles",
+     0,
+     31
     ]
    ]
   },
@@ -2305,6 +2342,22 @@
      13,
      18
     ]
+   ],
+   "h_tx_v": [
+    [
+     "host_ep",
+     "vc_tx_v",
+     0,
+     0
+    ]
+   ],
+   "h_tx_frame": [
+    [
+     "host_ep",
+     "vc_tx_frame",
+     0,
+     611
+    ]
    ]
   },
   "ep_S0": {
@@ -2788,6 +2841,162 @@
      18
     ]
    ]
+  },
+  "fr_NW": {
+   "in": [
+    [
+     "hb_vms_NW",
+     "ring_fault",
+     0,
+     2
+    ],
+    [
+     "hb_coll_NW",
+     "retry_requested",
+     0,
+     2
+    ],
+    [
+     "subr_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_dbk_NW",
+     "mv_fault",
+     0,
+     0
+    ],
+    [
+     "sucore_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "fl_NW3",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "fs_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cij_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_vms_NW",
+     "vmstat",
+     16,
+     18
+    ]
+   ]
+  },
+  "fr_NE": {
+   "in": [
+    [
+     "hb_vms_NE",
+     "ring_fault",
+     0,
+     2
+    ],
+    [
+     "hb_coll_NE",
+     "retry_requested",
+     0,
+     1
+    ],
+    [
+     "subr_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_argmax",
+     "nan_flag",
+     0,
+     0
+    ],
+    [
+     "sucore_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "fl_NE3",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_dbk_NE",
+     "mv_fault",
+     0,
+     0
+    ],
+    [
+     "fs_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cij_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_vms_NE",
+     "vmstat",
+     16,
+     18
+    ]
+   ]
+  },
+  "host_ep": {
+   "vc_rx_v": [
+    [
+     "ep_N0",
+     "h_rx_v",
+     0,
+     0
+    ]
+   ],
+   "vc_rx_frame": [
+    [
+     "ep_N0",
+     "h_rx_frame",
+     0,
+     611
+    ]
+   ],
+   "vc_up": [
+    [
+     "ep_N0",
+     "h_up",
+     0,
+     0
+    ]
+   ],
+   "vc_cause": [
+    [
+     "ep_N0",
+     "h_cause",
+     0,
+     2
+    ]
+   ]
   }
  },
  "port_map": {},
@@ -2834,6 +3043,16 @@
   },
   "epcal_NE": {
    "payload": 38
+  },
+  "ep_N0": {
+   "h_rx_v": 1,
+   "h_rx_frame": 612,
+   "h_up": 1,
+   "h_cause": 3
+  },
+  "host_ep": {
+   "vc_tx_v": 1,
+   "vc_tx_frame": 612
   }
  },
  "add_ports": {
@@ -2860,7 +3079,29 @@
    "tkx_del_slot": "out",
    "tkx_del_valid": "out",
    "tkx_del_flit": "out"
+  },
+  "ep_N0": {
+   "h_tx_v": "in",
+   "h_tx_frame": "in",
+   "h_rx_v": "out",
+   "h_rx_frame": "out",
+   "h_up": "out",
+   "h_cause": "out"
+  },
+  "host_ep": {
+   "vc_tx_v": "out",
+   "vc_tx_frame": "out",
+   "vc_rx_v": "in",
+   "vc_rx_frame": "in",
+   "vc_up": "in",
+   "vc_cause": "in"
   }
  },
- "drop_ports": {}
+ "drop_ports": {
+  "host_ep": [
+   "sd_tx",
+   "sd_rx",
+   "sd_st"
+  ]
+ }
 }

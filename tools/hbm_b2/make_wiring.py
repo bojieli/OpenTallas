@@ -287,6 +287,57 @@ def main():
     items.append(dict(id='P-VMST', kind='param', status='done',
                       what='vm_status4 NQ 2 {hb_vms_NE, hb_vms_NW} (bench rtl/hbm_accel/generic/vm/static/run_vms_status_nq.sh)'))
 
+    # ---- W-FLT: region fault leaves observe every retry lane of the regrown COLL masters (fr_NW / fr_NE N, SYNC_MASK)
+    def regrow_leaf(leaf, src, sport, new_w, port='in'):
+        old = src_list(die, leaf, port)
+        par = die.insts[leaf]['params']
+        mm = re.search(r"\.SYNC_MASK\((\d+)'h([0-9a-fA-F]+)\)", par)
+        mw, mask = int(mm.group(1)), int(mm.group(2), 16)
+        new, nmask, pos, opos = [], 0, 0, 0
+        for e in old:
+            w = e[1] if e[0] == 'const' else e[3] - e[2] + 1
+            if e[0] == src and e[1] == sport:
+                new.append([src, sport, 0, new_w - 1]); opos += w; pos += new_w; continue
+            for b in range(w):
+                if (mask >> (opos + b)) & 1:
+                    nmask |= 1 << (pos + b)
+            new.append(e); opos += w; pos += w
+        rebuild.setdefault(leaf, {})[port] = new
+        par = re.sub(r'\.N\(\d+\)', f'.N({pos})', par)
+        par = re.sub(r"\.SYNC_MASK\(\d+'h[0-9a-fA-F]+\)", f".SYNC_MASK({mw}'h{nmask:x})", par)
+        remaster[leaf] = dict(master=die.insts[leaf]['master'], params=par)
+        return pos
+    nfw = regrow_leaf('fr_NW', 'hb_coll_NW', 'retry_requested', 3)
+    nfe = regrow_leaf('fr_NE', 'hb_coll_NE', 'retry_requested', 2)
+    # tkm_SW (root) statistics: as built read by obs_SW (dropped) -> appended to obs_C (die level)
+    ob = rebuild['obs_C']['obs'] + [['tkm_SW', 'stat_cycles', 0, 31]]
+    rebuild['obs_C']['obs'] = ob
+    nobw = sum(e[3] - e[2] + 1 if e[0] != 'const' else e[1] for e in ob)
+    remaster['obs_C']['params'] = re.sub(r'\.N\(\d+\)', f'.N({nobw})', remaster['obs_C']['params'])
+    items.append(dict(id='W-FLT', kind='param+wiring', status='done',
+                      what=f'fr_NW N {nfw} / fr_NE N {nfe} take every hb_coll retry lane (SYNC_MASK bits re-positioned); '
+                           f'tkm_SW.stat_cycles observed by obs_C (N {nobw}; as built by obs_SW)'))
+
+    # ---- W-HOST: in-band host on the N0 link (OWNER 10-24): host_N (UCIe) dropped, ep_N0 carries VC 1
+    drop_inst = ['host_N']
+    remaster['ep_N0'] = dict(master='hfd_ep_static_vc2', params='.IDLE_K(204), .HQ(4)')
+    add_ports['ep_N0'] = dict(h_tx_v='in', h_tx_frame='in', h_rx_v='out', h_rx_frame='out', h_up='out', h_cause='out')
+    out_width['ep_N0'] = dict(h_rx_v=1, h_rx_frame=612, h_up=1, h_cause=3)
+    rebuild.setdefault('ep_N0', {}).update(h_tx_v=[one('host_ep', 'vc_tx_v')], h_tx_frame=[one('host_ep', 'vc_tx_frame', 612)])
+    remaster['host_ep'] = dict(master='hfd_ep_host_vc', params='')
+    drop_ports['host_ep'] = ['sd_tx', 'sd_rx', 'sd_st']
+    add_ports['host_ep'] = dict(vc_tx_v='out', vc_tx_frame='out', vc_rx_v='in', vc_rx_frame='in', vc_up='in', vc_cause='in')
+    out_width['host_ep'] = dict(vc_tx_v=1, vc_tx_frame=612)
+    rebuild.setdefault('host_ep', {}).update(vc_rx_v=[one('ep_N0', 'h_rx_v')], vc_rx_frame=[one('ep_N0', 'h_rx_frame', 612)],
+                                             vc_up=[one('ep_N0', 'h_up')], vc_cause=[one('ep_N0', 'h_cause', 3)])
+    items.append(dict(id='W-HOST', kind='rtl+wiring', status='rtl+bench (see b2_native_bind_rtl.json)',
+                      what='host_N (ot_pdie_ucie_col) dropped; ep_N0 -> hfd_ep_static_vc2 (slot {vc,frame,v} 614 b, COLL VC0 '
+                           'calendar priority +1 TX edge, host VC1 4-deep elastic queue on free take slots, RX vc demux); '
+                           'host_ep -> hfd_ep_host_vc (pingpong + pin regs on the ep_N0 host face; host_cp_rxs unchanged). '
+                           'The N0 peer (switch / neighbour) must run the vc2 lane format.',
+                      plan='B2l/B2m: io_NW_io_u_host_N window removed; u_host_ep stays (smaller: no gearbox); '
+                           'ep_N0<->host_ep 612+612+5 b frame faces inside NW_io; root keeps u_host_cp_ingress'))
+
     # ---- RTL items from sub-agents
     for f in a.rtl_items:
         r = json.loads(Path(f).read_text())
@@ -302,7 +353,7 @@ def main():
     out = dict(schema='opentallas.hbm_b2.bind_wiring.v1',
                rule='HBM-BIND 10-24: machine-readable B2 (8-SM, NW+NE) native-bind delta over the r18h5 as-built die '
                     '(tools/hbm_b2/b2_top.py applies it; tools/hbm_b2/make_wiring.py writes it).',
-               keep=dict(quadrants=list(KEEPQ), instances=['tkm_SW'], drop_instances=[]),
+               keep=dict(quadrants=list(KEEPQ), instances=['tkm_SW'], drop_instances=drop_inst),
                strap_ports=[x.replace('.*\\.', '.*\\.') for x in ab.get('straps', [])],
                items=items, remaster=remaster, rebuild=rebuild, port_map=port_map, out_width=out_width,
                add_ports=add_ports, drop_ports=drop_ports)

@@ -1,34 +1,38 @@
 {
  "schema": "opentallas.hbm_b2.top_report.v1",
- "kept_leaves": 345,
- "dropped_leaves": 287,
+ "kept_leaves": 344,
+ "dropped_leaves": 288,
  "transport_collapsed": 83546,
  "bits": {
-  "kept": 472924,
+  "kept": 471866,
   "dropped": 8020,
-  "top": 3249,
+  "top": 2735,
   "const": 2975,
-  "reattach": 11718,
-  "out_unread": 40369
+  "reattach": 13010,
+  "out_unread": 40334
  },
  "counts": {
   "CUT_UNRESOLVED": 85,
   "CONST_INPUT": 65,
-  "OUTPUT_UNREAD": 112
+  "OUTPUT_UNREAD": 109
  },
  "remastered": [
+  "ep_N0",
   "epcal_NE",
   "epcal_NW",
+  "fr_NE",
+  "fr_NW",
   "hb_coll_NE",
   "hb_coll_NW",
   "hleaf_NE",
   "hleaf_NW",
+  "host_ep",
   "host_status",
   "obs_C",
   "vm_status4"
  ],
- "top_in": 15,
- "top_out": 13,
+ "top_in": 13,
+ "top_out": 11,
  "detail": {
   "CUT_UNRESOLVED": [
    "hb_vms_NW.ccw_in <- hb_vms_SW__ccw_out[2223:0] (2224 b)",
@@ -190,8 +194,6 @@
    "calendar_NW.ordinal 32/32 b",
    "calendar_NE.ordinal 32/32 b",
    "vm_status4.vmstat 19/19 b",
-   "hb_coll_NW.retry_requested 2/3 b",
-   "hb_coll_NE.retry_requested 1/2 b",
    "hb_argmax.cq 338/338 b",
    "svg_NW0.expected_request 43/43 b",
    "svg_NW0.lt0 1082/1082 b",
@@ -287,7 +289,6 @@
    "sfup_NE.io_ordinal 32/32 b",
    "vmfc_NW.ordinal 32/32 b",
    "vmfc_NE.ordinal 32/32 b",
-   "tkm_SW.stat_cycles 32/32 b",
    "xl_NE_aqlo.y 512/512 b",
    "xl_NE_aqhi.y 512/512 b",
    "str_C.dn0_o 164/164 b",
