@@ -1,8 +1,8 @@
 {
 "module": "ot_s81sl_vs",
 "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vs_lfp.lef",
-"source": "S81-CORES 10-24 re-pin (cores/leaf/repin.py) of physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef: same ports, 172.8x172.8, faces {'N': 28, 'W': 15, 'E': 7, 'S': 7}",
-"pinhash": "8653c9a1c81b",
+"source": "S81-CORES 10-24 re-pin (cores/leaf/repin.py) of physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef: same ports, 172.8x172.8, faces {'N': 28, 'W': 15, 'E': 7, 'S': 7}; OWNER DECISION 8 10-24: 1 constant pins dropped (inputs/const_pins_dropped.json)",
+"pinhash": "33dd7e474002",
 "pins": [
 {
 "name": "clk",
@@ -969,12 +969,6 @@
 "layer": "M3",
 "x": 162.513,
 "y": 0.019
-},
-{
-"name": "ra_ri[31]",
-"layer": "M5",
-"x": 164.94,
-"y": 0.042
 },
 {
 "name": "ra_ri[3]",

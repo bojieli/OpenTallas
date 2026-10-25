@@ -6,7 +6,7 @@ module tb_hcpost_lane_pr #(parameter integer MUTANT = 0, parameter integer CYC =
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst_n = 0, v = 0;
     reg [31:0] r0, r1, r2, r3, y, c0, c1, c2, c3, p;
-    wire vo_a, fa_a, vo_b, fa_b; wire [31:0] o_a, o_b;
+    wire vo_a, fa_a, vo_b, fa_b; wire [31:0] o_a; wire [31:16] o_b;   // dut o[15:0] is not a pin (OWNER DECISION 8)
     ot_dsrom_su_hcpost_lane #(.ML(7), .AL(6)) ref_l (.clk(clk), .rst_n(rst_n), .v(v), .r0(r0), .r1(r1), .r2(r2), .r3(r3),
         .y(y), .c0(c0), .c1(c1), .c2(c2), .c3(c3), .p(p), .vo(vo_a), .o(o_a), .fault(fa_a));
     ot_dsrom_su_hcpost_lane_pr #(.ML(7), .AL(6), .MUTANT(MUTANT)) dut (.clk(clk), .rst_n(rst_n), .v(v), .r0(r0), .r1(r1),
@@ -43,7 +43,8 @@ module tb_hcpost_lane_pr #(parameter integer MUTANT = 0, parameter integer CYC =
     always @(posedge clk) begin
         vo_d <= vo_a; fa_d <= fa_a; o_d <= o_a;
         if (rst_n && cyc > 2) begin
-            if (vo_b !== vo_d || fa_b !== fa_d || (vo_d && o_b !== o_d)) begin
+            // the dropped o[15:0] must be constant 0 on every valid ref output (that is why it is not a pin)
+            if (vo_b !== vo_d || fa_b !== fa_d || (vo_d && (o_b !== o_d[31:16] || o_d[15:0] !== 16'd0))) begin
                 bad = bad + 1;
                 if (bad < 4) $display("MISMATCH cyc=%0d ref(vo=%b o=%h f=%b) dut(vo=%b o=%h f=%b)", cyc, vo_d, o_d, fa_d, vo_b, o_b, fa_b);
             end

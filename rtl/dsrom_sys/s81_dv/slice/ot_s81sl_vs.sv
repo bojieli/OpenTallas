@@ -98,7 +98,7 @@ module ot_s81sl_vs #(
     output reg           ra_v,
     output reg  [31:0]   ra_x,
     input  wire          ra_vi,
-    input  wire [31:0]   ra_ri,
+    input  wire [30:0]   ra_ri,       // RA lane result: sqrt >= 0, its sign bit is not a pin (OWNER DECISION 8)
     input  wire          ra_fi,
     // ve sub-leaf (Engram mix of this beat): reduce quads / add beats out, beat partials / results / fault back
     output reg           ve_rv,
@@ -164,7 +164,7 @@ module ot_s81sl_vs #(
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin sv_c <= 1'b0; xqv_c <= 1'b0; rav_c <= 1'b0; raf_c <= 1'b0; swv_c <= 1'b0; swf_c <= 1'b0; end
         else begin sv_c <= s_v; xqv_c <= x_qv; rav_c <= ra_vi; raf_c <= ra_fi; swv_c <= sw_vi; swf_c <= sw_fi; end
-    always @(posedge clk) begin sd_c <= s_d; xq_c <= x_qd; rar_c <= ra_ri; swr_c <= sw_ri; end
+    always @(posedge clk) begin sd_c <= s_d; xq_c <= x_qd; rar_c <= {1'b0, ra_ri}; swr_c <= sw_ri; end
     `S81_VS_CONTROL_KEEP reg vpv_c, vov_c, vef_c, gv_c; reg [1:0] vpc_c, voc_c, gc_c; reg [95:0] vpd_c; reg [255:0] voy_c; reg [31:0] gd_c;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin vpv_c <= 1'b0; vov_c <= 1'b0; vef_c <= 1'b0; gv_c <= 1'b0; end
