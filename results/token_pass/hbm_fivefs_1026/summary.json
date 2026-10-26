@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.hbm.five_fs.programme.v1",
+  "status": "PASS_COLD_AND_LOADED_RELAUNCH_AND_CONTROLS",
+  "source_commit": "7df280b686",
+  "actual_body_source_branch": "codex/hbm-q3-body-1026@64f01c6a2",
+  "clock_period_ps": 833,
+  "vm_rt": 81,
+  "vm_face_rt": 2,
+  "vm_asm_face_rt": 2,
+  "source_added_control_flops": 600,
+  "physical_fs_cores": [
+    "body",
+    "edge",
+    "vm",
+    "reduce",
+    "ring_ag"
+  ],
+  "physical_fs_stages_per_core": {
+    "input": 1,
+    "output": 1
+  },
+  "runs": 2,
+  "each_run": {
+    "errors": 0,
+    "fault": 0,
+    "payload_hex": "14",
+    "vm_words": 1
+  },
+  "observed_events_after_mission": {
+    "producer_start": 101,
+    "producer_flit": 111,
+    "raw_writer": 619,
+    "vm_bank_commit": 624,
+    "root_done": 626,
+    "q_done": 637
+  },
+  "named_baseline": {
+    "source": "results/token_pass/path_hbm_1713/q3stageb/gate_833_2145/nominal/sim.log",
+    "events_after_mission": {
+      "producer_start": 95,
+      "producer_flit": 105,
+      "raw_writer": 613,
+      "vm_bank_commit": 616,
+      "root_done": 620,
+      "q_done": 631
+    }
+  },
+  "added_event_cycles_vs_baseline": {
+    "producer_start": 6,
+    "producer_flit": 6,
+    "raw_writer": 6,
+    "vm_bank_commit": 8,
+    "root_done": 6,
+    "q_done": 6
+  },
+  "actual_mission_completion_cycles": 637,
+  "added_mission_completion_cycles": 6,
+  "added_vm_bank_commit_cycles": 8,
+  "root_reported_engine_cycles": 510,
+  "negative_controls": {
+    "no_start": "CAUGHT: both runs start0/root_done0/word0/fault1",
+    "wrong_slot": "CAUGHT: both runs words0/root_done0/error1/fault1"
+  },
+  "scope": "actual five physical FS programme to native VM bank; hub52 ABI absent; no global token price, G5 or physical timing qualification",
+  "price_scope": "nonzero measured +6 mission and +8 VM-bank completion vs named native baseline; global model adoption requires same selected source/leg binding"
+}
