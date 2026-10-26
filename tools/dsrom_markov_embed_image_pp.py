@@ -2,6 +2,7 @@
 """Copy released BF16 bytes into 256-bit ROM payload beats; never requantize."""
 import argparse,hashlib,json,struct
 from pathlib import Path
+from mem_compiler.rom_content import read_sparse_hex,write_viamap
 KEY='mtp.2.markov_head.embed.weight'
 REV='dba1be0a40aa45a94ad051997016db3960a90277'
 DEFAULT=Path('/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots')/REV
@@ -40,15 +41,8 @@ def generate(snapshot,out,tokens=None):
         for macro in range(506):
             image=out/f'macro{macro:03}.hex'
             if not image.exists():image.write_text('@0\n'+'0'*64+'\n')
-    spread=[sum(((b>>k)&1)<<(8*k) for k in range(8)) for b in range(256)]
     for image in sorted(out.glob('macro*.hex')):
-        physical=[0]*512;address=0
-        for line in image.read_text().splitlines():
-            if line.startswith('@'):address=int(line[1:],16);continue
-            word=int(line,16)
-            expanded=sum(spread[(word>>(8*j))&255]<<(64*j) for j in range(32))
-            physical[address//8]|=expanded<<(address%8);address+=1
-        image.with_suffix('.viamap.hex').write_text('\n'.join(f'{row:0548x}' for row in physical)+'\n')
+        write_viamap(image.with_suffix('.viamap.hex'),read_sparse_hex(image),'ot_rom_4096x274_m8')
     meta.update(mapping='bank=globalword//8192; macro=2*bank+globalword%2; addr=(globalword%8192)//2',capture_edges_after_read=2,payload_sha256=payload.hexdigest(),tokens=tokens if tokens is not None else 'all',selected_rows=selection if tokens else {},bank_count=253,macros=506,bank_pair_rows=8192,macro_rows=4096,ROM_ECC=False)
     meta['image_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.glob('macro*.hex'))}
     (out/'manifest.json').write_text(json.dumps(meta,indent=2)+'\n');return meta
