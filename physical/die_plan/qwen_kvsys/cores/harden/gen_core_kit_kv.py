@@ -945,12 +945,22 @@ def main():
         text = (tool / name).read_text()
         text = text.replace("u_(bin|bout|ft)_[^/]*[/.]", "(u_(bin|bout|ft)_[^/]*[/.]|u_ric[/.])")
         (kd / name).write_text(text)
-    # OpenDB presents vector clock/reset pins as ck[0], while clks/rsts intentionally name buses.
+    # Core headers commonly use one-bit vectors, so ODB calls the control pin
+    # ck[0]/rst_n[0] even though the contract names its bus ck/rst_n.  Without
+    # the suffix, face_flops treats CLK/reset loads as data and steals a real
+    # data flop's anchor before its own port is visited.
     skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + r")(\[[0-9]+\])?$"
     ff = (tool / "face_flops.tcl").read_text()
     ff, replacements = re.subn(r"^set ff_skip_re \{[^}\n]*\}",
                                lambda _: "set ff_skip_re {" + skip + "}", ff, flags=re.M)
     assert replacements == 1, "face_flops.tcl must declare exactly one skip regex"
+    # Planned edge pins may extend beyond the standard-cell core margin.  A
+    # south/north pin at x2.136 in a core starting at x4.32 otherwise selects
+    # column -2; all three candidate columns stay negative and no anchor is
+    # emitted (ECTLK rsp_epoch[0]).  Snap its search to the legal core band.
+    old_col = "set col [expr {($px - $ff_x0) / $ff_cpitch}]"
+    assert ff.count(old_col) == 1, "face_flops.tcl column search changed"
+    ff = ff.replace(old_col, "set col [expr {max(0, ($px - $ff_x0) / $ff_cpitch)}]")
     ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
                     "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
                     "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
