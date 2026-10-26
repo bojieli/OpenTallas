@@ -81,9 +81,10 @@ def _fill_ft_windows(raw,path):
             name=name+suffix,face=face,window_um=vals[0],width=slot["width"])
 
 
-def _storage_band(t,bus,width,used):
+def _storage_band(t,bus,width,used,*,has_epoch=True):
     b=_bus_geom(t,bus);w,h=t["outline_um"];lo,hi=b["window_um"]
-    length=max(hi-lo,8.64);rw=64*((width+64)//64)
+    length=max(hi-lo,8.64);rw=64*math.ceil((width+int(has_epoch))/64)
+    spanlo=(lo+hi-length)/2;spanhi=spanlo+length
     # Conservative physical reserve includes padded ring slots/readout, control,
     # selectors and local clock buffering, at40% fill and actualASAP7 FF area.
     area=(5*rw*.2916 + 4*rw*.0729 + 160*.2916)/.40
@@ -103,9 +104,9 @@ def _storage_band(t,bus,width,used):
     candidates=[];px,py=_bus_xy(t,bus)
     for inset in [margin+2.16*k for k in range(88)]:
         f=b["face"]
-        box=([inset,lo,inset+depth,hi] if f=="W" else
-             [w-inset-depth,lo,w-inset,hi] if f=="E" else
-             [lo,inset,hi,inset+depth] if f=="S" else [lo,h-inset-depth,hi,h-inset])
+        box=([inset,spanlo,inset+depth,spanhi] if f=="W" else
+             [w-inset-depth,spanlo,w-inset,spanhi] if f=="E" else
+             [spanlo,inset,spanhi,inset+depth] if f=="S" else [spanlo,h-inset-depth,spanhi,h-inset])
         if box[0]<margin or box[1]<margin or box[2]>w-margin or box[3]>h-margin:continue
         if max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))>405-2.16:continue
         if any(min(box[2],o[2])>max(box[0],o[0])+1e-6 and min(box[3],o[3])>max(box[1],o[1])+1e-6 for o in obstacles):continue
@@ -129,8 +130,10 @@ def _storage_band(t,bus,width,used):
                 candidates.append(box)
     if candidates:
         box=min(candidates,key=lambda b:max(abs(x-px)+abs(y-py) for x in(b[0],b[2]) for y in(b[1],b[3])))
+        if (box[2]-box[0])*(box[3]-box[1])+1e-6<area:
+            raise ValueError(f"clock landing band area undersized for {bus}")
         return dict(rect_um=[round(x,6) for x in box],width=width,ring_width=rw,
-                    live_data_storage_flops=5*(width+1),padded_data_storage_flops=5*rw,
+                    live_data_storage_flops=5*(width+int(has_epoch)),padded_data_storage_flops=5*rw,
                     clock_roles=dict(forwarded_write_flops=4*rw,local_read_flops=rw),
                     max_pin_to_band_hop_um=round(max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3])),3),
                     area_reserve_um2=round(area,3),placement="PROPOSED legal macro-free band; mapped anchoring pending")
@@ -272,7 +275,7 @@ def compose(plan,table,plan_path=None,observer_part="glue"):
                         note="reverse monitor forwarded clock; 2bit landed ring, boot-only cost"))
                 if c["seam"]:
                     monbus=f"cland_dn_ready_{i}"
-                    try:band=_storage_band(t,monbus,2,used);used.append(band["rect_um"])
+                    try:band=_storage_band(t,monbus,2,used,has_epoch=False);used.append(band["rect_um"])
                     except ValueError as e:
                         placement_failures.append(dict(type=tn,bus=monbus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
                     band["instance"]=f"u_cland_monitor_{i}"
