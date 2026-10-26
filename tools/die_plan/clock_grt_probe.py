@@ -85,7 +85,7 @@ def build(kit, clock, out, plan=None, width_corrected_rc=False):
     for name,c in cells.items():
         lines.append(f'place_inst -name ck_{name} -location {{{c["x"]} {c["y"]}}} -orient {c.get("orient","R0")} -status FIRM')
     lines += ['create_clock -name dck -period 833.000 [get_ports root]',
-        'set_routing_layers -signal M4-M7 -clock M8-M9']
+        'set_routing_layers -signal M4-M9 -clock M8-M9']
     for n in [4,5,6,7]: lines.append(f'set_global_routing_layer_adjustment M{n} 0.75')
     for n in [8,9]: lines.append(f'set_global_routing_layer_adjustment M{n} 0.4')
     lines += ['create_ndr -name ot_die4w -width {M8 0.16 M9 0.16} -spacing {M8 0.08 M9 0.08}',
