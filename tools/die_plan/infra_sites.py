@@ -382,6 +382,7 @@ def run(P, mesh_dir=None, tracks_file=None, pg_file=None, m89=False, bays=None, 
             if lo == 0 and hi == len(cpts):
                 return bp, best
     mesh_meta = None
+    island_rects_die = {}     # filled after the island sizing (also without --mesh: no H-tree snap then)
     if mesh_dir:
         md = Path(mesh_dir)
         M = json.loads((md / "mesh.json").read_text())
@@ -451,7 +452,6 @@ def run(P, mesh_dir=None, tracks_file=None, pg_file=None, m89=False, bays=None, 
                 parent_of[(lv, e["tag"])] = pa
         # clock cells landing per island: nodes (one per tree node <= island_level, deeper levels are the in-island
         # distribution) + leg repeaters (ceil(leg / clock_reach) - 1 after the snap, sited at islands on the leg)
-        island_rects_die = {}
         for (lv, tag), (p, c, d) in snapped.items():
             if lv <= island_level:
                 demand[p]["nodes"] += 1

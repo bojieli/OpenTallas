@@ -77,6 +77,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import schema as S  # noqa: E402
 import infra_sites as IS  # noqa: E402
+import master_rulings as MR  # noqa: E402
 
 G = 10.8
 ROW = 0.27
@@ -409,6 +410,8 @@ def island_lattice(M, island_centres, core_rects, B=400.0):
 DRV_CELLS = [("BUFx4_ASAP7_75t_R", 2.40, 1.2), ("BUFx8_ASAP7_75t_R", 1.20, 1.7), ("BUFx12f_ASAP7_75t_R", 0.80, 2.0),
              ("BUFx16f_ASAP7_75t_R", 0.60, 2.3), ("BUFx24_ASAP7_75t_R", 0.40, 2.35)]
 WIRE_FF_PER_UM = 0.20
+CLOCK_REP_UM = 450.0                 # 12.1e repeaters <= 450 um (H-tree leg repeaters, COORD 06:53)
+CLOCK_REP_CELL = "BUFx24_ASAP7_75t_R"   # die_clock_mesh leg repeater master
 RC_BUDGET_PS = 36.0
 
 
@@ -998,7 +1001,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         top = lnum(P.type_top_layer(P.parts[part]["type"]))
         cands = [L for L in decl if L in DIRS[d] and lnum(L) <= 7]
         cands += [L for L in DIRS[d] if lnum(L) <= min(7, top) and L not in cands and lnum(L) >= 4]
-        cands += [L for L in DIRS[d] if lnum(L) >= 8]
+        if ":istn" not in pid:           # 12.1a: partition-internal paths route <= M7; only die-top nets use M8/M9
+            cands += [L for L in DIRS[d] if lnum(L) >= 8]
         best = None
         for L in cands:
             add = grid.load(L, sl, horiz, bits)
@@ -1015,7 +1019,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         L, u, add = best
         grid.commit(L, sl, add)
         roads.append(dict(path=pid, part=part, layer=L, bits=bits, a=[r3(v) for v in a], b=[r3(v) for v in b],
-                          band_um=r3(band)))
+                          band_um=r3(band), leg=li))
         if lnum(L) >= 8:
             m89_segs.append(roads[-1])
     use, worst_cells = grid.use_report(track_max)
@@ -1077,15 +1081,37 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     for k, b in enumerate(bays):
         b["_k"] = k
         near[b["path"]].append(b)
+    pmap = {p["id"]: p for p in paths}
+
+    def _same(u, v):
+        return abs(u[0] - v[0]) + abs(u[1] - v[1]) < 1e-3
+    n_bound = 0
+    drops = defaultdict(int)             # (part, path) -> drop counter: entry pin names stay unique per partition
     for sgm in m89_segs:
-        for end in (sgm["a"], sgm["b"]):
+        lg = (pmap[sgm["path"]]["legs"][sgm["leg"]] if sgm.get("leg") is not None and sgm["path"] in pmap
+              and pmap[sgm["path"]]["kind"] != "internal" else None)
+        for end, other in ((sgm["a"], sgm["b"]), (sgm["b"], sgm["a"])):
             cand = [b for b in near[sgm["path"]] if b["part"] == sgm["part"]]
             if not cand:
                 continue
             bb = min(cand, key=lambda b: abs(b["xy_um"][0] - end[0]) + abs(b["xy_um"][1] - end[1]))
+            # pin pairs per bit: even = down (die M8/M9 -> M7 -> partition, dir in), odd = up (dir out).  A segment
+            # whose OTHER end is its leg's face-in point carries the slot input port: its down pins here ARE the
+            # <slot>_i bits (the port moves from the face to this on-ramp); face-out -> the up pins are <slot>_o.
+            bind = None
+            if lg and lg.get("slot"):
+                if _same(other, lg["pts"][0]):
+                    bind = (lg["slot"] + "_i", 0)
+                elif _same(other, lg["pts"][-1]):
+                    bind = (lg["slot"] + "_o", 1)
+            dk = drops[(sgm["part"], sgm["path"])]
+            drops[(sgm["part"], sgm["path"])] += 1
             for i, xy in enumerate(place_pins(occ, bb["rect_um"], 2 * sgm["bits"], lim, P)):
+                pin = f"{bind[0]}[{i // 2}]" if bind and i % 2 == bind[1] else None
+                n_bound += pin is not None
                 pins.append(dict(part=sgm["part"], path=sgm["path"], bit=i, layer="M7", xy_um=list(xy),
-                                 die_layer=sgm["layer"], bay=bb["_k"]))
+                                 die_layer=sgm["layer"], bay=bb["_k"], dir="in" if i % 2 == 0 else "out",
+                                 pair=i // 2, pin=pin, bay_kind=bb["kind"], drop=dk))
     for b in bays:
         b.pop("_k", None)
     per_cell = defaultdict(int)
@@ -1232,6 +1258,26 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         isl_lat = island_lattice(M, cen, core_only)
     else:
         isl_lat = dict(verdict="NOT RUN", note="no --mesh")
+    # ---- COORD 10-26 rulings as static gates (master_rulings.py): leg repeaters at plan-fixed bay sites,
+    # tap-region containment (regions = partition unions), footless stubs, no open island ft inputs
+    Mx = M if mesh_dir else None
+    parts_die, cores_die = MR.die_geometry(P, core_to_type, IS.rect_pts)
+    rep_gate, rep_by_type = MR.clock_rep_sites(Mx, P, parts_die, cores_die, reach=CLOCK_REP_UM)
+    isl_inst = []
+    for part in P.parts:
+        tn = P.parts[part]["type"]
+        if islands.get(tn):
+            isl_inst.append(dict(kind="partition", part=part, inst=part, role="die_node",
+                                 rect_um=IS.rect_pts(P, part, islands[tn]["rect_um"])))
+        for h in P.types[tn].get("hard_cores", []):
+            e = entry[h["module"]]
+            isl_inst.append(dict(kind="core", part=part, inst=f"{part}/{h['inst']}", role="clock_entry",
+                                 rect_um=IS.rect_pts(P, part, core_to_type(h, e["island"]))))
+            for q in (e.get("in_core_islands") or {}).get("islands", []):
+                isl_inst.append(dict(kind="core", part=part, inst=f"{part}/{h['inst']}", role="tree_leaf",
+                                     rect_um=IS.rect_pts(P, part, core_to_type(h, q["rect_um"]))))
+    rulings = dict(clock_rep_sites=rep_gate, tap_region_containment=MR.tap_region_containment(Mx, P),
+                   footless_stubs=MR.footless_stubs(Mx), island_ft_inputs=MR.island_ft_inputs(Mx, isl_inst))
     tap_in_phy = sorted(tn for tn, v in phy.items() if v.get("plan_tap_inside_phy"))
     sites["plan_taps_inside_phy"] = tap_in_phy
     if tap_in_phy:
@@ -1288,6 +1334,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         clock_sites=sites,
         island_lattice=isl_lat,
         infra_sites=sites_gate,
+        **rulings,
     )
     verdict = "PASS" if all(g["verdict"] == "PASS" for g in gates.values()) else "FAIL"
 
@@ -1307,7 +1354,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     body = json.dumps(mp, sort_keys=True).encode()
     mp_sha = hashlib.sha256(body).hexdigest()
     mp["master_plan_sha256"] = mp_sha
-    write_slices.extra = dict(phy=phy, die_tree=tree_comm)
+    write_slices.extra = dict(phy=phy, die_tree=tree_comm, clock_reps=rep_by_type, reach=reach)
     write_slices(P, out / "slices", bays, pins, roads, islands, entry, core_types, in_core, gates, common,
                  plan_sha, mp_sha)
     (out / "master_plan.json").write_text(json.dumps(dict(mp, paths=[{k: v for k, v in p.items() if k != "legs"}
@@ -1342,13 +1389,15 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
     for tn, ps in by_type.items():
         t = P.types[tn]
         seen = {}
-        for b in bays:
+        bay_name = {}                    # die bay index -> slice bay name (entry pins reference the slice name)
+        for bi, b in enumerate(bays):
             if b["type"] != tn:
                 continue
             rt = tr(b["part"], b["rect_um"])
             key = (b["kind"], tuple(round(v, 1) for v in rt))
             s = seen.setdefault(key, dict(name=f"bay{len(seen)}", rect_um=rt, owner=tn, kind=b["kind"], bits=0,
                                           cell_area_um2=0.0, fill=0.0, layer="M7", paths=[]))
+            bay_name[bi] = s["name"]
             if b["bits"] > s["bits"]:
                 s["bits"], s["cell_area_um2"], s["fill"] = b["bits"], b["cell_area_um2"], b["fill"]
             if len(s["paths"]) < 8:
@@ -1375,8 +1424,9 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
         for p in pins:
             if p["part"] == ps[0]:
                 x, y = P.to_type(p["part"], p["xy_um"])
-                ep.append(dict(name=f"ep_{p['path']}_{p['bit']}", pin=None, layer="M7", xy_um=[r3(x), r3(y)],
-                               bay=f"bay{p['bay']}", path=p["path"], bit=p["bit"]))
+                ep.append(dict(name=f"ep_{p['path']}_{p.get('drop', 0)}_{p['bit']}", pin=p.get("pin"), layer="M7",
+                               xy_um=[r3(x), r3(y)], bay=bay_name.get(p["bay"]), path=p["path"], bit=p["bit"],
+                               dir=p.get("dir"), pair=p.get("pair"), bay_kind=p.get("bay_kind"), drop=p.get("drop")))
         cor = []
         for rd in roads:
             if rd["part"] == ps[0]:
@@ -1396,6 +1446,26 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
                   bays=list(seen.values()), entry_pins=ep, hard_cores=hcs, latency=lat, corridors=cor, gates=gv)
         if pe:
             sl["phy_clock_entry"] = pe
+        # 12.2a1 + COORD 06:53: the partition's infra island and the H-tree leg repeaters on it are PUSHDOWN cells of
+        # the partition netlist (fixed, dont_touch, dedicated ft ports); the island blockage is dropped by the kit
+        pdi = []
+        if isl:
+            c = isl.get("tap_um") or [(isl["rect_um"][0] + isl["rect_um"][2]) / 2,
+                                      (isl["rect_um"][1] + isl["rect_um"][3]) / 2]
+            pdi.append(pushdown_island(0, isl["rect_um"], c, "die_node", ex.get("reach") or 405.0, 0))
+        reps = (ex.get("clock_reps") or {}).get(tn, [])
+        if pdi or reps:
+            sl["pushdown"] = dict(
+                rule="12.2a1 / COORD 06:53: die clock drivers + leg repeaters are partition-netlist cells at these fixed "
+                     "coordinates, identical for every instance (union of instance sites; unused ones fed from the "
+                     "local strap, COORD 06:41); the die connects only through the mp_* ft ports",
+                islands=pdi,
+                clock_repeaters=[dict(name=f"crep{i}", xy_um=[r3(x), r3(y)], cell=CLOCK_REP_CELL,
+                                      rect_um=[r3(x - 2.16), r3(y - 2.16), r3(x + 2.16), r3(y + 2.16)],
+                                      ft_ports=[dict(name=f"mp_crep{i}_i", dir="in", layer="M5", xy_um=[r3(x), r3(y)]),
+                                                dict(name=f"mp_crep{i}_o", dir="out", layer="M5",
+                                                     xy_um=[r3(x + 2.16), r3(y)])])
+                                 for i, (x, y) in enumerate(reps)])
         if hcs and ex.get("die_tree"):
             sl["die_tree"] = dict(rule=ex["die_tree"]["rule"], core_lattice=ex["die_tree"]["core_lattice"],
                                   verdict=ex["die_tree"]["verdict"])
