@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Explicit gate LUT for the immutable SFU exp coefficient case, zero cycles.
+"""Explicit gate decoder for the immutable SFU exp coefficient case, zero cycles.
 
-A packed literal select is combinational logic, so Yosys proc_rom does not
-invent a 256x61 memory requiring an unrelated SRAM macro. Simulation keeps
+An explicit balanced AND/OR decoder has no mux/part-select memory idiom;
+Yosys memory_bmux2rom cannot turn it back into a 256x61 inferred memory. Simulation keeps
 exact original case/X semantics; the synthesis branch is exhaustively checked
 on all256 binary indices before adoption. Original source files stay untouched.
 """
@@ -28,14 +28,18 @@ def rewrite(text, function='ln2_nk'):
     rest=row.sub('',clean)
     rest=re.sub(r'case\s*\('+re.escape(arg)+r'\)|endcase|default:\s*'+re.escape(function)+r"\s*=\s*64'd0\s*;",'',rest)
     if rest.strip() or len(seen)!=254:raise ValueError('coefficient function is not the exact254-row/default0 contract')
-    packed=''.join(f'{x:016x}' for x in reversed(values))
+    terms=[f"({{64{{{arg} == 8'd{n}}}}} & 64'h{value:016x})" for n,value in enumerate(values) if value]
+    def balanced(xs):
+        if len(xs)==1:return xs[0]
+        mid=len(xs)//2
+        return '('+balanced(xs[:mid])+' | '+balanced(xs[mid:])+')'
+    decoder=balanced(terms)
     new=(f'    function automatic [63:0] {function}(input [7:0] {arg});\n'
          '`ifdef SYNTHESIS\n'
-         f"        localparam [16383:0] CASE_GATE_TABLE = 16384'h{packed};\n"
-         f'        {function} = CASE_GATE_TABLE[64*{arg} +: 64];\n'
+         f'        {function} = {decoder};\n'
          '`else\n'+body+'`endif\n    endfunction')
     result=text[:m.start()]+new+text[m.end():]
-    return result,dict(function=function,binary_indices=256,explicit_rows=254,default_zero_rows=sorted(set(range(256))-seen),
+    return result,dict(function=function,implementation='balanced_onehot_and_or',binary_indices=256,explicit_rows=254,default_zero_rows=sorted(set(range(256))-seen),
                        table_sha256=hashlib.sha256(b''.join(x.to_bytes(8,'little') for x in values)).hexdigest(),added_cycles=0,
                        source_sha256=hashlib.sha256(text.encode()).hexdigest(),result_sha256=hashlib.sha256(result.encode()).hexdigest())
 
