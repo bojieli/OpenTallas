@@ -1,0 +1,237 @@
+{
+ "verdict": "FAIL",
+ "errors": 29,
+ "warnings": 1381,
+ "summary_core_faces": {
+  "groups": 1982,
+  "groups_away": 122,
+  "pins": 193169,
+  "pins_away": 13189,
+  "types_away": 2,
+  "cores": 5319,
+  "cores_unchecked": 5204,
+  "groups_side": 61
+ },
+ "error_findings": [
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type bk_sel__t2_phy1026_bk_sel core u_bk_sel.u_sel.g_q[0].u_q port t_o: 354 pins on face W face away from its partner(s) u_bk_sel.u_sel.u_c: mean cos -0.78, 354 pins on the far side (re-pin to face E)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type bk_sel__t2_phy1026_bk_sel core u_bk_sel.u_tx port vo: 276 pins on face N face away from its partner(s) face S (xtier_o0), u_bk_sel.u_sel.u_g: mean cos -0.21, 276 pins on the far side (re-pin to face S)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type bk_sel__t2_phy1026_bk_sel core u_bk_sel.u_sel.u_c port f_o_n: 708 pins on face N face away from its partner(s) u_bk_sel.u_sel.g_q[2].u_q, u_bk_sel.u_sel.g_q[3].u_q: mean cos -0.28, 708 pins on the far side (re-pin to face E)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type bk_sel__t2_phy1026_bk_sel core u_bk_sel.u_sel.u_c port f_s_n: 1730 pins on face N face away from its partner(s) u_bk_sel.u_sel.g_q[2].u_q, u_bk_sel.u_sel.g_q[3].u_q: mean cos -0.28, 1730 pins on the far side (re-pin to face E)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type bk_sel__t2_phy1026_bk_sel core u_bk_sel.u_sel.u_c port t_c_n: 132 pins on face N face away from its partner(s) u_bk_sel.u_sel.g_q[2].u_q, u_bk_sel.u_sel.g_q[3].u_q: mean cos -0.28, 132 pins on the far side (re-pin to face E)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type bk_sel__t2_phy1026_bk_sel: 8 core ports face away from their partners (3 more not listed)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type gunit__t1_phy1026_gunit core u_gunit.u_l5 port ct_b: 170 pins on face N face away from its partner(s) u_gunit.u_l4: mean cos -1.00, 170 pins on the far side (re-pin to face S)",
+   "type": "gunit__t1_phy1026_gunit",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type gunit__t1_phy1026_gunit core u_gunit.u_l5 port ct_v: 1 pins on face N face away from its partner(s) u_gunit.u_l4: mean cos -1.00, 1 pins on the far side (re-pin to face S)",
+   "type": "gunit__t1_phy1026_gunit",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type gunit__t1_phy1026_gunit core u_gunit.u_l5 port cw_a: 8 pins on face N face away from its partner(s) u_gunit.u_l4: mean cos -1.00, 8 pins on the far side (re-pin to face S)",
+   "type": "gunit__t1_phy1026_gunit",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type gunit__t1_phy1026_gunit core u_gunit.u_l5 port cw_d: 256 pins on face N face away from its partner(s) u_gunit.u_l4: mean cos -1.00, 256 pins on the far side (re-pin to face S)",
+   "type": "gunit__t1_phy1026_gunit",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type gunit__t1_phy1026_gunit core u_gunit.u_l5 port cw_v: 1 pins on face N face away from its partner(s) u_gunit.u_l4: mean cos -1.00, 1 pins on the far side (re-pin to face S)",
+   "type": "gunit__t1_phy1026_gunit",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type gunit__t1_phy1026_gunit: 114 core ports face away from their partners (109 more not listed)",
+   "type": "gunit__t1_phy1026_gunit",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.g_q[0].u_q.lane -> core:u_bk_sel.u_sel.u_g >= 415 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.g_q[3].u_q.f_c -> core:u_bk_sel.u_sel.u_c >= 942 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.g_q[3].u_q.f_cr -> core:u_bk_sel.u_sel.u_c >= 942 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.g_q[3].u_q.lane -> core:u_bk_sel.u_sel.u_g >= 708 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.g_q[3].u_q.t_o -> core:u_bk_sel.u_sel.u_c >= 942 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.g_q[3].u_q.t_s -> core:u_bk_sel.u_sel.u_c >= 942 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.u_c.f_o_n -> core:u_bk_sel.u_sel.g_q[3].u_q >= 942 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.u_c.f_s_n -> core:u_bk_sel.u_sel.g_q[3].u_q >= 942 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.u_c.t_c_n -> core:u_bk_sel.u_sel.g_q[3].u_q >= 942 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.u_c.t_cr_n -> core:u_bk_sel.u_sel.g_q[3].u_q >= 942 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.u_g.ln0 -> core:u_bk_sel.u_sel.g_q[0].u_q >= 415 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.u_g.ln3 -> core:u_bk_sel.u_sel.g_q[3].u_q >= 708 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.u_g.vo_s -> bus:xtier_o0 >= 1567 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_sel.u_g.vo_s -> core:u_bk_sel.u_tx >= 428 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_tx.lo -> bus:tl_o0 >= 638 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_tx.vo -> bus:xtier_o0 >= 665 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "complete",
+   "msg": "[internal_station] type bk_sel__t2_phy1026_bk_sel: internal core bundle u_bk_sel.u_tx.vo -> core:u_bk_sel.u_sel.u_g >= 428 um > 405 um with no internal_stations[] entry (R3-INTERNAL: FIRM plan stations)",
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "field": "internal_station",
+   "g0c": true
+  }
+ ]
+}
