@@ -457,6 +457,27 @@ band["with_prog_residual_TT"] = round(band["TT_mean"] - 16.6, 2)
 rep["band"] = band
 rep["verdict"] = "PASS" if all(v["verdict"] == "PASS" for v in rep["gates"].values()) else "FAIL"
 Path(outp + ".json").write_text(json.dumps(rep, indent=1))
+with open(outp + ".tcl", "w") as fo:       # mscts_h spec (uf_asbuilt format): every plan cell incl. waypoint repeaters, FIRM
+    fo.write("# QC-SU-F4-2 mscts_h spec, G4-strict plan %s (k=%d, policies %s), plan-computed (12.8 d1), no measured input.\n" % (name, k, POL))
+    fo.write("# command: %s\n" % " ".join(ARGV0))
+    fo.write("set ot_ms_port ck\nset ot_ms_root {%.3f %.3f}\nset ot_h_entry_n 0\n" % xy(ent))
+    fo.write("set ot_h_fixed {\n {ot_ms_root %s %.3f %.3f}\n}\n" % ((BIG,) + xy(ent)))
+    fo.write("set ot_ms_tree {\n")
+    for n in order:
+        if n == "root" or n in leafg:
+            continue
+        pp, cc, cl = nodes[n]
+        fo.write(" {%s %s %.3f %.3f %s}\n" % ((n, pp) + xy(cc) + (cl,)))
+    fo.write("}\nset ot_ms_leaves {\n")
+    for nm, lg in leafg.items():
+        pp, cc, cl = nodes[nm]
+        regs = " ".join("{{%s} {%s}}" % (sk[2], sk[3]) for sk in lg)
+        fo.write(" {%s %s {%.3f %.3f} {%s} %s}\n" % ((nm, pp) + xy(cc) + (regs, cl)))
+    fo.write("}\nset ot_ms_macros {\n")
+    for nm, sp in leaf_sram.items():
+        for p_ in sp:
+            fo.write(" {{%s} %s {%.3f %.3f}}\n" % (p_["inst"], nm, p_["xy"][0], p_["xy"][1]))
+    fo.write("}\n")
 print(name, "VERDICT", rep["verdict"], {kk: v["verdict"] for kk, v in rep["gates"].items()},
       "G4", {kk: rep["gates"]["G4_strict"][kk] for kk in ("n_edges", "n_detours", "n_cells")}, "K", LEVK)
 print(" T", rep["levels"]["T_um"], "trunk", rep.get("entry_trunk", {}).get("cell"), rep.get("entry_trunk", {}).get("stages"),
