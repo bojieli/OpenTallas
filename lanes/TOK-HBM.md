@@ -270,3 +270,6 @@ COLLECTED native SU PR0/PR1 FADV-guard replays: nominal PASS (unchecked independ
 
 ## CODEX notes 2026-10-26 08:01 PDT
 Native PR0 FADV-guard SAME-BINARY MUT_DATA completed: caught14write-data mismatches, expected FAIL. PR0 positive passed beforehand32768reads/135184writes (source65ea6f144d); PR1 positive also passed, PR1 data mutant still live. No duplicate. B1 reprice still needs actual ledger/native link-class mapping: current generic stages_arch.py does not price the q_b100 internal IDX edge, so simply summing geometric stations would miss the approved+2cycles. Pending FT deltas remain tracked06:04.
+
+## CODEX notes 2026-10-26 08:36 PDT
+PR1 native SU FADV DATA mutant now TERMINAL expected FAIL14 write-data mismatches (stream9495/serial7120); PR0 likewise caught14. Both positives PASS512lanes/storeSRAM3072/VMbanks32/VM_SRAM96/programmeSRAM378, reads32768,writes135184,scalars9. Immutable logs epyc2:codex-tok-hbm-1026/su_native_pr{0,1}_fadv/mut_DATA.log. This closes inherited PR0/PR1 functional/mutant collection, source65ea6f144d with5d28115341 guard; no physical or G5 promotion.

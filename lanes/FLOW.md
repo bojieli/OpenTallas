@@ -154,3 +154,6 @@ READY HBM placement runner fix codex/flow-token-0733@3420de582: GOAL=place/floor
 
 ## CODEX notes 2026-10-26 08:15 PDT — KV per-die flow release
 Inherited manual hold step on exact e68117ea1 core canary completed08:07:29: SIGNED TT+12.02/FF+2.93,0negative endpoints; regression NO-REGRESSION. KV type canary also NO-REGRESSION. Authorized per-die tag flow-20261025-b-kv CUT+PUSHED at e68117ea12eb58bb99679b2685c716b754fd5f48 under epyc1merge.lock. Old prehold failed verdict retained as predecessor backup. HBM still running, no HBM tag. Main source unchanged by tag.
+
+## CODEX notes 2026-10-26 08:36 PDT
+Normal autopilot deployed main88cfaadcad17a353f8b1263a493e94b9f67b37c2 into epyc1 installed autopilot/flow_canary tools, no deletes and no runner restart; DEPLOYED_SOURCE recorded. Existing inactive service started normally once, exited success08:18, timer retained. Changed-flow KV kits still HOLD matching-canary contract (no reuse of unadjusted canary). Exact e681 manual posthold remains the released intended contract above. HBM canary active FFhold2330iterations/12182buffers/-106.185ps/-44200.85ps TNS at08:35, no tag until terminal NO-REGRESSION.
