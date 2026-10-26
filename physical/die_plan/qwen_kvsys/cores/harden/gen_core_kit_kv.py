@@ -793,6 +793,21 @@ def main():
         (kd / "astk_face_delta.json").write_text(json.dumps(dict(
             extra_flops_estimate=78, command_cycles=0, local_fault_cycles=0, external_fault_cycles=1,
             nominal_token_cycles=0, note="include extra external-fault edge in collection AGE budget"), indent=1) + "\n")
+    # Explicit zero-cycle arithmetic constant-table implementation. Preserve the
+    # canonical math file; normalize only the kit copy named by this recipe.
+    if rec.get("constant_case_luts"):
+        import sys
+        sys.path.insert(0, str(a.tool))
+        import constant_case_lut
+        lut_records = []
+        for item in rec["constant_case_luts"]:
+            path = kd / "rtl" / item["file"]
+            if path.name != item["file"] or not path.is_file():
+                raise SystemExit("constant LUT recipe must name an existing kit source basename")
+            text, record = constant_case_lut.rewrite(path.read_text(), item["function"])
+            path.write_text(text)
+            lut_records.append(dict(file=path.name, **record))
+        (kd / "constant_case_luts.json").write_text(json.dumps(lut_records, indent=1) + "\n")
     # memory macros (black boxes in kit_rtl.f) reached by the core's members
     kj = json.load(open(Path(a.kit_rtl) / cj["type"] / "kit_rtl.json"))
     hier = reached_modules([kd / "rtl" / Path(f).name for f in files], mod)
