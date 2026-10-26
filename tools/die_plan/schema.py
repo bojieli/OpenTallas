@@ -264,6 +264,18 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    "dead_inputs": {"type": "array", "items": {
+                        "type": "object", "additionalProperties": False,
+                        "required": ["module", "parameters", "ports", "proof", "source", "module_sha256"],
+                        "properties": {
+                            "module": _name,
+                            "parameters": {"type": "object", "additionalProperties": {"type": "string"}},
+                            "ports": {"type": "object", "minProperties": 1, "additionalProperties": {
+                                "type": "array", "minItems": 1, "items": {
+                                    "type": "array", "minItems": 2, "maxItems": 2,
+                                    "items": {"type": "integer", "minimum": 0}}}},
+                            "proof": {"type": "string"}, "source": {"type": "string"},
+                            "module_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}},
                     "outline_um": _wh,
                     # estimated std cells of one instance (synth / census); COORD 10-23 CORE-KS: a type over
                     # CORE_CELLS_MAX (400k) must list hard_cores[] (G0 ERROR).  Else the sum of contents[].cells.
