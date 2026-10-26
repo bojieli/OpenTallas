@@ -1,0 +1,172 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "die": "qwen_compute",
+ "kind": "core",
+ "type": "qfd_dv_s8x_btab",
+ "module": "qfd_dv_s8x_btab",
+ "instances": [
+  "sle_su_c/u_suvm_u_vm8q_u_bt",
+  "slw_su_c/u_suvm_u_vm8q_u_bt"
+ ],
+ "plan": "physical/die_plan/qwen_compute/die_plan.json",
+ "plan_sha256": "54a1aeb5065d061a14e15a838e491b5f24975530a655e1c3eafb99f22ace4e9f",
+ "master_plan_sha256": "35ff80a2866fc16f39a603674b06d8f11697bfcfeb2d5228f58a1bc848ea1055",
+ "frozen": false,
+ "outline_um": [
+  354.24,
+  259.2
+ ],
+ "keepouts": [
+  {
+   "name": "clock_entry_island",
+   "rect_um": [
+    172.8,
+    133.92,
+    181.44,
+    142.56
+   ],
+   "kind": "island",
+   "use": [
+    "placement"
+   ]
+  }
+ ],
+ "islands": [
+  {
+   "name": "clock_entry",
+   "rect_um": [
+    172.8,
+    133.92,
+    181.44,
+    142.56
+   ],
+   "centre_um": [
+    177.12,
+    135.0
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M5"
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     177.12,
+     135.0
+    ]
+   },
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  },
+  {
+   "name": "tree_leaf0",
+   "rect_um": [
+    82.08,
+    60.48,
+    90.72,
+    69.12
+   ],
+   "centre_um": [
+    86.4,
+    64.8
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M5"
+   ],
+   "clock_pin": null,
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  },
+  {
+   "name": "tree_leaf1",
+   "rect_um": [
+    82.08,
+    190.08,
+    90.72,
+    198.72
+   ],
+   "centre_um": [
+    86.4,
+    194.4
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M5"
+   ],
+   "clock_pin": null,
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  },
+  {
+   "name": "tree_leaf2",
+   "rect_um": [
+    263.52,
+    60.48,
+    272.16,
+    69.12
+   ],
+   "centre_um": [
+    267.84,
+    64.8
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M5"
+   ],
+   "clock_pin": null,
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  },
+  {
+   "name": "tree_leaf3",
+   "rect_um": [
+    263.52,
+    190.08,
+    272.16,
+    198.72
+   ],
+   "centre_um": [
+    267.84,
+    194.4
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M5"
+   ],
+   "clock_pin": null,
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  }
+ ],
+ "bays": [],
+ "entry_pins": [],
+ "hard_cores": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250.0,
+   "FF": 202.5
+  },
+  "tol_ps": 40,
+  "early_taps": false
+ },
+ "corridors": [],
+ "gates": {
+  "reach_gap": "PASS",
+  "bay_fill": "FAIL",
+  "corridor_tracks": "FAIL",
+  "entry_pins": "PASS",
+  "clock_shield": "FAIL",
+  "static_ir": "FAIL",
+  "lot_fit": "PASS",
+  "clock_entry": "FAIL",
+  "core_reach": "FAIL",
+  "early_taps": "FAIL",
+  "tree_balance": "FAIL",
+  "core_insertion_model": "FAIL",
+  "die_pair_skew_model": "FAIL",
+  "tree_commensurate": "FAIL",
+  "clock_sites": "FAIL",
+  "infra_sites": "FAIL"
+ }
+}
