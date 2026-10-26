@@ -429,17 +429,164 @@ def combo_tcl(wires, nd, shield):
     return L
 
 
-def shield_record(wires, shield, straps, jogs):
+def shield_stripes(segs, nd):
+    """the drawn VSS shield stripes of clock segments [(layer, x0, y0, x1, y1)] (centre lines): one stripe on each
+    side, one NDR space away, spanning the clock metal (same geometry as combo_tcl / cmd_combo's psw).  Returns
+    [(layer, x0, y0, x1, y1)] stripe centre lines (horizontal M8: y0 == y1; vertical M9: x0 == x1)."""
+    hw = nd["width"] / 2
+    off = hw + nd["space"] + nd["width"] / 2
+    out = []
+    for lay, x0, y0, x1, y1 in segs:
+        for s in (-1, 1):
+            if lay == "M8":
+                out.append(("M8", x0 - hw, y0 + s * off, x1 + hw, y0 + s * off))
+            else:
+                out.append(("M9", x0 + s * off, y0 - hw, x0 + s * off, y1 + hw))
+    return out
+
+
+def pg_grid(P):
+    """the die PG stripe rules (die.pg.grid + each PHY domain's grid limited to its rect_um), die_infra.pg_rects form."""
+    pg = P.die.get("pg") or {}
+    grid = [dict(g) for g in pg.get("grid") or []]
+    for dm in pg.get("domains") or []:
+        for g in dm.get("grid") or []:
+            grid.append(dict(g, rect_um=list(dm["rect_um"])))
+    return grid
+
+
+def shield_ties(stripes, pg_rects, w_shield, net="VSS", tile_um=50.0):
+    """12.7a electrical tie of the clock shields to the die VSS grid (COORD 07:04: no freeze evidence before it).
+
+    stripes: shield centre lines from shield_stripes(); pg_rects: die_infra.pg_rects tuples (net, layer, x0, y0, x1, y1).
+      * grid via: a VIA89 wherever a shield stripe crosses a perpendicular `net` stripe of the die grid (M8 shield x
+        M9 VSS, M9 shield x M8 VSS), at the crossing centre;
+      * shield-shield via: a VIA89 wherever an M8 shield crosses an M9 shield (both `net`), so a short stripe that
+        crosses no grid stripe (a drop, a jog) is tied through the shield it meets;
+      * a stripe is TIED when its connected shield component holds at least one grid via;
+      * a SHORT is a shield stripe footprint overlapping a same-layer PG stripe of another net (VDD, VDDPHY).
+    Returns dict(grid_vias=[(x, y)], shield_vias=[(x, y)], untied=[stripe idx], shorts=[(idx, net)], counts...)."""
+    import bisect
+    hw = w_shield / 2
+    perp = {"M8": "M9", "M9": "M8"}
+    # perpendicular grid stripes of `net`, as sorted centre coordinates with their extent along the other axis
+    lines = {}
+    for L in ("M8", "M9"):
+        rows = []
+        for r in pg_rects:
+            if r[0] != net or r[1] != L:
+                continue
+            if L == "M9":       # vertical: centre x, extent y
+                rows.append(((r[2] + r[4]) / 2, r[3], r[5]))
+            else:
+                rows.append(((r[3] + r[5]) / 2, r[2], r[4]))
+        rows.sort()
+        lines[L] = ([q[0] for q in rows], rows)
+    same = {}
+    for L in ("M8", "M9"):
+        rows = []
+        for r in pg_rects:
+            if r[0] == net or r[1] != L:
+                continue
+            rows.append(((r[2], r[4]) if L == "M9" else (r[3], r[5])) + ((r[3], r[5]) if L == "M9" else (r[2], r[4]))
+                        + (r[0],))
+        rows.sort()
+        same[L] = ([q[0] for q in rows], rows, max([q[1] - q[0] for q in rows] or [0.0]))
+    parent = list(range(len(stripes)))
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    grid_vias, shorts, has_grid, used = [], [], set(), set()
+    for k, (L, x0, y0, x1, y1) in enumerate(stripes):
+        c, a, b = (y0, min(x0, x1), max(x0, x1)) if L == "M8" else (x0, min(y0, y1), max(y0, y1))
+        cs, rows = lines[perp[L]]
+        for q in rows[bisect.bisect_left(cs, a):bisect.bisect_right(cs, b)]:
+            if q[1] - 1e-6 <= c <= q[2] + 1e-6:
+                grid_vias.append((q[0], c) if L == "M8" else (c, q[0]))
+                used.add((perp[L], round(q[0], 4)))
+                has_grid.add(k)
+        lo_s, srows, wmax = same[L]
+        for q in srows[bisect.bisect_left(lo_s, c - hw - wmax):bisect.bisect_right(lo_s, c + hw)]:
+            if q[0] < c + hw - 1e-6 and q[1] > c - hw + 1e-6 and q[2] < b - 1e-6 and q[3] > a + 1e-6:
+                shorts.append((k, q[4]))
+    # shield x shield crossings (M8 x M9), bucketed on a tile grid
+    buck = defaultdict(list)
+    for k, (L, x0, y0, x1, y1) in enumerate(stripes):
+        if L != "M9":
+            continue
+        for t in range(int(min(y0, y1) // tile_um), int(max(y0, y1) // tile_um) + 1):
+            buck[(int(x0 // tile_um), t)].append(k)
+    shield_vias = set()
+    for k, (L, x0, y0, x1, y1) in enumerate(stripes):
+        if L != "M8":
+            continue
+        ty = int(y0 // tile_um)
+        for tx in range(int(min(x0, x1) // tile_um), int(max(x0, x1) // tile_um) + 1):
+            for v in buck.get((tx, ty), ()):
+                _, vx, vy0, _, vy1 = stripes[v]
+                if min(x0, x1) - 1e-6 <= vx <= max(x0, x1) + 1e-6 and min(vy0, vy1) - 1e-6 <= y0 <= max(vy0, vy1) + 1e-6:
+                    shield_vias.add((round(vx, 4), round(y0, 4)))
+                    parent[find(k)] = find(v)
+    tied_roots = {find(k) for k in has_grid}
+    untied = [k for k in range(len(stripes)) if find(k) not in tied_roots]
+    gv = sorted({(round(x, 4), round(y, 4)) for x, y in grid_vias})
+    return dict(grid_vias=gv, shield_vias=sorted(shield_vias), untied=untied, shorts=shorts, used_grid=used,
+                stripes=len(stripes), stripes_with_grid_via=len(has_grid), net=net)
+
+
+def tie_tcl(ties, swire_var):
+    """tcl: the VIA89 tie cuts of shield_ties() on the shield special wire `swire_var` (tech via VIA89)."""
+    L = ["set v89 [$tech findVia VIA89]", "if {$v89 == \"NULL\"} { error \"tech via VIA89 missing\" }"]
+    for x, y in ties["grid_vias"] + ties["shield_vias"]:
+        L.append(f"odb::dbSBox_create {swire_var} $v89 [um {x:.4f}] [um {y:.4f}] STRIPE")
+    L.append(f"puts \"OT_SHIELD_TIES grid {len(ties['grid_vias'])} shield {len(ties['shield_vias'])} "
+             f"untied {len(ties['untied'])} shorts {len(ties['shorts'])}\"")
+    return L
+
+
+def grid_tcl(pg_rects, swire_var, net="VSS", used=None):
+    """tcl: the die `net` grid stripes the ties land on, as special wires of the shield net (the die PG grid that the
+    kit models as routing obstructions); `used` = set of (layer, centre) to emit, None = all."""
+    L = []
+    for r in pg_rects:
+        if r[0] != net or r[1] not in ("M8", "M9"):
+            continue
+        c = round((r[2] + r[4]) / 2 if r[1] == "M9" else (r[3] + r[5]) / 2, 4)
+        if used is not None and (r[1], c) not in used:
+            continue
+        L.append(f"odb::dbSBox_create {swire_var} $l{r[1][1]} [um {r[2]:.4f}] [um {r[3]:.4f}] [um {r[4]:.4f}] "
+                 f"[um {r[5]:.4f}] STRIPE")
+    return L
+
+
+def tie_record(ties):
+    ok = bool(ties["stripes"]) and not ties["untied"] and not ties["shorts"]
+    return dict(vss_tied=ok, tie_net=ties["net"], shield_stripes=ties["stripes"],
+                stripes_with_grid_via=ties["stripes_with_grid_via"], grid_vias=len(ties["grid_vias"]),
+                shield_shield_vias=len(ties["shield_vias"]), untied_stripes=len(ties["untied"]),
+                pg_shorts=len(ties["shorts"]), pg_short_nets=sorted({n for _, n in ties["shorts"]}),
+                tie_method="VIA89 at every shield x die-VSS-stripe crossing + every M8 x M9 shield crossing; "
+                           "tied = shield component holds >= 1 grid via (die_clock_128.shield_ties)")
+
+
+def shield_record(wires, shield, straps, jogs, ties=None):
     mm = sum(w["wire_um"] for w in wires) / 1e3
-    return dict(net=shield, straps_shielded=straps, jogs_shielded=jogs, fixed_tree_nets=len(wires),
-                fixed_tree_mm=round(mm, 1), fixed_tree_segs=sum(len(w["segs"]) for w in wires),
-                grt_routed_tree_nets=0, grt_routed_tree_mm=0.0, complete=bool(shield),
-                # COORD-REVIEW-20 (2): the shield stripes are on the VSS net but carry no via to the VSS grid yet; the
-                # geometry (spacing + blocked parallel tracks) is complete, the electrical tie is not.  No freeze evidence
-                # may rely on shield return-path coupling until vss_tied is True (full-shield work, INFRA-FIRST).
-                vss_tied=False, freeze_evidence_ok=False,
-                method="12.7a: H-tree legs, split tails, stubs and root net pre-routed as fixed special M8/M9 NDR "
-                       "wires, VSS stripe both sides, obstruction over the shield spacing (die_clock_128.combo_tcl)")
+    r = dict(net=shield, straps_shielded=straps, jogs_shielded=jogs, fixed_tree_nets=len(wires),
+             fixed_tree_mm=round(mm, 1), fixed_tree_segs=sum(len(w["segs"]) for w in wires),
+             grt_routed_tree_nets=0, grt_routed_tree_mm=0.0, complete=bool(shield),
+             # COORD-REVIEW-20 (2) / COORD 07:04: no freeze evidence may rely on the shields until every shield stripe is
+             # via-tied to the die VSS grid (vss_tied).  build records False (geometry only); combo computes the ties
+             # (shield_ties) and rewrites this record with the real counts.
+             vss_tied=False, freeze_evidence_ok=False,
+             method="12.7a: H-tree legs, split tails, stubs and root net pre-routed as fixed special M8/M9 NDR "
+                    "wires, VSS stripe both sides, obstruction over the shield spacing (die_clock_128.combo_tcl)")
+    if ties is not None:
+        r.update(tie_record(ties))
+        r["freeze_evidence_ok"] = r["vss_tied"] and bool(shield)
+    return r
 
 
 # ------------------------------------------------------------------------------------------------ balance audit

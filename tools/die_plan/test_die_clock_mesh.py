@@ -497,6 +497,42 @@ class Rule128Export(unittest.TestCase):
             CM.main(["build", "plan.json", "--out", "o", "--legacy-pre-12-8"])
             self.assertFalse(seen["r"])
 
+    def test_shield_vss_ties(self):
+        """12.7a / COORD 07:04: every shield stripe is VIA89-tied to the die VSS grid, directly (crossing a
+        perpendicular VSS stripe) or through the shield it meets; a VDD overlap is a short; short isolated
+        stripes stay untied and keep vss_tied False."""
+        C = CM.C128
+        nd = CM.NDR["4w"]
+        # die grid: M9 VDD at x=4.32+8.64k, VSS at x=8.64k; M8 likewise in y (die_infra.pg_rects form)
+        pg = []
+        for k in range(1, 12):
+            for net, c in (("VDD", 8.64 * k - 4.32), ("VSS", 8.64 * k)):
+                pg.append((net, "M9", c - .24, 0.0, c + .24, 100.0))
+                pg.append((net, "M8", 0.0, c - .24, 100.0, c + .24))
+        # M8 clock strap y=6.48 x 2..60 (crosses VSS M9 x=8.64..51.84), M9 drop x=32.0 y 6.48..7.5 (short)
+        segs = [("M8", 2.0, 6.48, 60.0, 6.48), ("M9", 32.0, 6.48, 32.0, 7.5)]
+        st = C.shield_stripes(segs, nd)
+        self.assertEqual(len(st), 4)
+        t = C.shield_ties(st, pg, nd["width"])
+        self.assertEqual(t["untied"], [])                 # the drop shields are tied through the strap shields
+        self.assertEqual(t["shorts"], [])
+        self.assertEqual(t["stripes_with_grid_via"], 2)   # both M8 shields cross 6 M9 VSS stripes each
+        self.assertEqual(len(t["grid_vias"]), 12)
+        self.assertGreaterEqual(len(t["shield_vias"]), 2)
+        self.assertEqual(t["used_grid"], {("M9", round(8.64 * k, 4)) for k in range(1, 7)})
+        r = C.shield_record([dict(wire_um=58.0, segs=segs)], "VSS", 1, 0, ties=t)
+        self.assertTrue(r["vss_tied"] and r["freeze_evidence_ok"])
+        tcl = C.tie_tcl(t, "$tsw")
+        self.assertEqual(sum("$v89" in x and "dbSBox_create" in x for x in tcl), 12 + len(t["shield_vias"]))
+        # an isolated short stripe that crosses nothing stays untied; a strap on a VDD stripe is a short
+        t2 = C.shield_ties(C.shield_stripes([("M9", 90.0, 1.0, 90.0, 3.0), ("M8", 2.0, 4.32, 60.0, 4.32)], nd),
+                           pg, nd["width"])
+        self.assertEqual(len(t2["untied"]), 2)
+        rec = C.tie_record(t2)
+        self.assertFalse(rec["vss_tied"])
+        t3 = C.shield_ties([("M8", 2.0, 4.32 + 0.2, 60.0, 4.32 + 0.2)], pg, nd["width"])
+        self.assertEqual({n for _, n in t3["shorts"]}, {"VDD"})
+        self.assertFalse(C.tie_record(t3)["vss_tied"])
 
 if __name__ == "__main__":
     unittest.main()
