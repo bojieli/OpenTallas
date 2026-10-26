@@ -48,7 +48,8 @@ _LAYERS = {L["name"]: L for L in _S.ASAP7_LAYERS}
 G = 8.64                             # die lattice: PLAN-TOOL G0 needs a multiple of every M2-M9 pitch (2.16 is not a multiple of 0.064)
 G8 = 8.64
 REACH = 1000.0
-ST_LEN = 750.0                       # one station per <= 750 um of slot route (GEOM-REVIEW4 10-23: a 1-station slot
+ST_LEN = float(__import__('os').environ.get('QC_FT_REACH', 405.0))  # OWNER DECISION 12 (10-24): ft on <= M7, stations every <= 405 um
+ST_LEN_OLD = 750.0                       # one station per <= 750 um of slot route (GEOM-REVIEW4 10-23: a 1-station slot
                                      # hop must stay within the measured M5-M7 repeated reach 600-750 um)
 DENS = 4.2                           # pins / um per port window (budget 6 incl. track rounding)
 GAP = 0.96
@@ -1545,6 +1546,8 @@ def materialize(P):
             ka = (P.parts[part]["type"], role)
             ca, cb = port_pt(P, pa), port_pt(P, pb)
             L = abs(ca[0] - cb[0]) + abs(ca[1] - cb[1])
+            # OWNER 12: route / stations <= ST_LEN (check.py R3 convention); ft_regs then checks the ROUTED hops around
+            # hard cores and adds stations where a detour exceeds it
             k = max(1, math.ceil(L / ST_LEN))
             slot_req[ka]["stations"] = max(slot_req[ka].get("stations", 1), k)
     # pins on the TYPE: every out bus / slot out window in its type frame (from ANY instance, inverse transform);
@@ -2352,7 +2355,7 @@ def main():
                 "tech": "asap7", "outline_um": [round(W, 4), round(H, 4)], "period_ps": 833, "reach_um": REACH,
                 "rep_um": 450.0, "grid_um": G,
                 "layer_budget": {"partition_signal_max": "M7", "die_layers": ["M8", "M9"],
-                                 "die_use": ["clock_spine", "pg", "ft_reserved", "reset"],
+                                 "die_use": ["clock_spine", "pg", "reset"],
                                  "cut_avail": {"M8": 0.6, "M9": 0.6}},
                 "channels": chans,
                 "pg": {"partition_pg_max": "M7", "grid": [
@@ -2370,7 +2373,7 @@ def main():
         "reset": {"source": {"part": "glue", "bus": "rstseq_rom"}, "sync_stages": 2, "data_reset": False,
                   "epoch_bit": True, "release": "counted"},
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
-                    "cut_ratio_max": 0.6, "cut_step_um": 250},
+                    "cut_ratio_max": 0.6, "cut_step_um": 250, "ft_station_max_um": ST_LEN},
     }
     # QC-P6-A0 10-23: A0 v6 core clock drops per CB quad (inputs/a0_core_taps.json; no file -> no change)
     a0_taps = __import__("a0_core_taps").declare(P, Path(__file__).parent / "inputs" / "a0_core_taps.json", plan["clock"])
