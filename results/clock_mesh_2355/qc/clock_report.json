@@ -1,0 +1,200 @@
+{
+ "meta": {
+  "nx": 64,
+  "ny": 64,
+  "m": 2,
+  "rep_um": 450.0,
+  "ndr": "4w",
+  "W": 31216.32,
+  "H": 26265.6,
+  "pitch_um": [
+   487.755,
+   410.4
+  ],
+  "root_um": [
+   15608.16,
+   13132.8
+  ],
+  "trunk_um": 0.0,
+  "split_reps": 1432,
+  "cells": 25764,
+  "drivers": 4096,
+  "bufx24_drivers": 8192,
+  "nodes": 4095,
+  "reps": 3042,
+  "stubs": 7121,
+  "taps_early_nonzero": 72,
+  "unplaced": 0,
+  "driver_moves": 2199,
+  "driver_move_max_um": 231.12,
+  "rep_slide_max_um": 414.72,
+  "node_move_max_um": 390.96,
+  "stub_max_um": 281.01,
+  "htree_wire_mm": 2638.05,
+  "mesh_wire_mm": 3621.36,
+  "stub_wire_mm": 620.15,
+  "plan": "physical/die_plan/qwen_compute/die_plan.json",
+  "plan_sha256": "2dd204af1806511cf46ef1179fc3199017cebba6ed843ec299403b490ddf6a20",
+  "build_s": 19.7,
+  "balance": {
+   "src": "/srv/opentallas-scratch2/claude/clock-mesh-2355/qc/m64fb2",
+   "corner": "TT",
+   "pad_ps": 37.26,
+   "pads": 154,
+   "total_pad_ns": 5.74,
+   "hist": {
+    "0": 151
+   }
+  }
+ },
+ "corners": {
+  "TT": {
+   "insertion_ps": [
+    7381.48,
+    7548.75
+   ],
+   "tap_skew_ps": 167.27,
+   "seam_pairs": 3391,
+   "seam_max_ps": 118.46,
+   "seam_p99_ps": 101.93,
+   "intra_pairs": 13878,
+   "intra_max_ps": 146.08,
+   "pairs_over_80": 518,
+   "related_pair_max_ps": 146.08,
+   "gate_ps": 80.0,
+   "verdict": "FAIL",
+   "tap_slew_max_ps": 68.94,
+   "mesh_stub_in_slew_max_ps": 206.33,
+   "tree_slew_max_ps": 75.98,
+   "mesh_cap_pF": 483.83,
+   "worst": [
+    [
+     146.08,
+     "t_c_W0_tn_11__clk_t24",
+     "t_c_W0_tn_11__clk_t25"
+    ],
+    [
+     141.33,
+     "t_c_W0_bf_10__clk_t4",
+     "t_c_W0_bf_10__clk_t5"
+    ],
+    [
+     141.01,
+     "t_c_W0_bf_10__clk_t8",
+     "t_c_W0_bf_10__clk_t9"
+    ],
+    [
+     135.71,
+     "t_c_W0_tf_10__clk_t16",
+     "t_c_W0_tf_10__clk_t17"
+    ],
+    [
+     135.01,
+     "t_c_W5_bf_11__clk_t22",
+     "t_c_W5_bf_11__clk_t23"
+    ],
+    [
+     133.46,
+     "t_c_W0_bf_10__clk_t16",
+     "t_c_W0_bf_10__clk_t17"
+    ],
+    [
+     132.47,
+     "t_c_W5_tf_11__clk_t22",
+     "t_c_W5_tf_11__clk_t23"
+    ],
+    [
+     132.18,
+     "t_c_W0_bn_11__clk_t24",
+     "t_c_W0_bn_11__clk_t25"
+    ],
+    [
+     131.73,
+     "t_c_W0_tf_10__clk_t4",
+     "t_c_W0_tf_10__clk_t5"
+    ],
+    [
+     130.74,
+     "t_c_W0_tn_10__clk_t4",
+     "t_c_W0_tn_10__clk_t5"
+    ]
+   ],
+   "clock_switched_cap_pF": 982.5,
+   "clock_wire_power_W": 0.578
+  },
+  "FF": {
+   "insertion_ps": [
+    6141.11,
+    6299.82
+   ],
+   "tap_skew_ps": 158.71,
+   "seam_pairs": 3391,
+   "seam_max_ps": 105.67,
+   "seam_p99_ps": 87.13,
+   "intra_pairs": 13878,
+   "intra_max_ps": 131.98,
+   "pairs_over_80": 304,
+   "related_pair_max_ps": 131.98,
+   "gate_ps": 80.0,
+   "verdict": "FAIL",
+   "tap_slew_max_ps": 64.45,
+   "mesh_stub_in_slew_max_ps": 177.6,
+   "tree_slew_max_ps": 54.74,
+   "mesh_cap_pF": 485.66,
+   "worst": [
+    [
+     131.98,
+     "t_c_W0_bf_10__clk_t8",
+     "t_c_W0_bf_10__clk_t9"
+    ],
+    [
+     131.86,
+     "t_c_W0_bf_10__clk_t4",
+     "t_c_W0_bf_10__clk_t5"
+    ],
+    [
+     127.71,
+     "t_c_W0_tn_11__clk_t24",
+     "t_c_W0_tn_11__clk_t25"
+    ],
+    [
+     125.9,
+     "t_c_W0_tf_10__clk_t16",
+     "t_c_W0_tf_10__clk_t17"
+    ],
+    [
+     125.03,
+     "t_c_W0_bf_10__clk_t16",
+     "t_c_W0_bf_10__clk_t17"
+    ],
+    [
+     121.45,
+     "t_c_E1_tn_01__clk_t17",
+     "t_c_E1_tn_01__clk_t22"
+    ],
+    [
+     120.92,
+     "t_c_W0_tf_10__clk_t4",
+     "t_c_W0_tf_10__clk_t5"
+    ],
+    [
+     120.16,
+     "t_c_W0_tf_10__clk_t8",
+     "t_c_W0_tf_10__clk_t9"
+    ],
+    [
+     120.1,
+     "t_c_W0_tn_10__clk_t4",
+     "t_c_W0_tn_10__clk_t5"
+    ],
+    [
+     119.69,
+     "t_c_W5_bf_11__clk_t22",
+     "t_c_W5_bf_11__clk_t23"
+    ]
+   ],
+   "clock_switched_cap_pF": 984.4,
+   "clock_wire_power_W": 0.701
+  }
+ }
+}
