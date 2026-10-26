@@ -284,6 +284,14 @@ def test_composed_ahub_uses_endpoint_ports(tmp_path):
         groups.append(dict(sink='ahub', src_part='outer', sink_part='hub_C', members=[dict(
             source=f'native_composite_hub_outer_astk_{st}.u_strip_u_strip_u_ctl__ap', sink_port=f'ap{k}',
             asbuilt_stages=old, bound_stages=new, landed_stages=new, lane=f'L{k}', sink_bits=[[0, 0]])]))
+    for side, lag in (("w", 10), ("e", 7)):
+        groups.append(dict(sink=f"seq__g_fan_{side}", src_part="hub_C", sink_part="hub_C", members=[dict(
+            source=f"seq__u_core.f_aqm_{side}", sink_port="aqm", asbuilt_stages=0,
+            bound_stages=lag, landed_stages=lag, lane="Lfan", sink_bits=[[0, 0]])]))
+    for k, st in enumerate(("WS", "WN", "ES", "EN")):
+        groups.append(dict(sink=f"native_composite_astk_{st}", src_part="hub_C", sink_part="outer", members=[dict(
+            source=f"ahub.am{k}", sink_port="am", asbuilt_stages=2,
+            bound_stages=7, landed_stages=7, lane=f"Lam{k}", sink_bits=[[0, 0]])]))
     (d / 'bus_groups.json').write_text(json.dumps(dict(landing=groups)))
     (d / 'param_regen.json').write_text(json.dumps(dict(changed=[dict(inst='ahub', param='AP_OFS',
         asbuilt="64'hffddffdeffdcffdc", bound="64'hffd7ffd6ffd9ffd9")], record={})))
@@ -294,6 +302,7 @@ def test_composed_ahub_uses_endpoint_ports(tmp_path):
     RC.kv_ahub(o)
     assert o.c['AP_OFS']['value'] == [-39, -39, -42, -41]
     assert o.c['FR_OFS']['value'] == -7
+    assert o.c['AM_LAG_DELTA']['value'] == dict(WS=-5, WN=-5, ES=-2, EN=-2)
     # A real extra stage on one AP port changes exactly that stack's required offset.
     groups[2]['members'][0]['landed_stages'] += 1
     (d / 'bus_groups.json').write_text(json.dumps(dict(landing=groups)))
