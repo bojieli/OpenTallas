@@ -1,0 +1,15 @@
+{
+ "source_table": "physical/die_plan/qwen_kvsys/bind/kvland_r4/qwen_kvsys_r8_landing.json",
+ "selector": "existing stack_id/group_id only",
+ "instances": 28,
+ "kept_ff_before": 52,
+ "kept_ff_after": 118,
+ "additional_ff": 1848,
+ "max_tok_depth": 3,
+ "max_epoch_depth": 4,
+ "additional_mission_cycles_beyond_landing": 0,
+ "additional_reserved_cell_envelope_um2": 700.5398399999999,
+ "additional_lot_um2_at_60pct": 1167.5664,
+ "physical_qualified": false,
+ "token_qualified": false
+}
