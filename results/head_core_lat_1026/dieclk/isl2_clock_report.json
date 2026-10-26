@@ -1,0 +1,290 @@
+{
+ "meta": {
+  "nx": 32,
+  "ny": 32,
+  "m": 2,
+  "rep_um": 450.0,
+  "ndr": "4w",
+  "sites": "any",
+  "W": 17521.92,
+  "H": 17556.48,
+  "pitch_um": [
+   547.56,
+   548.64
+  ],
+  "root_um": [
+   8760.96,
+   8778.24
+  ],
+  "trunk_um": 0.0,
+  "split_reps": 360,
+  "reserve_cell_sites": true,
+  "cells": 8030,
+  "drivers": 1024,
+  "bufx24_drivers": 2048,
+  "nodes": 1023,
+  "reps": 1018,
+  "stubs": 3941,
+  "taps_early_nonzero": 0,
+  "unplaced": 0,
+  "clock_cell_overlap_pairs": 0,
+  "clock_hard_keepout_violations": 0,
+  "driver_moves": 158,
+  "driver_move_max_um": 45.36,
+  "rep_slide_max_um": 159.84,
+  "node_move_max_um": 159.84,
+  "stub_max_um": 1141.05,
+  "htree_wire_mm": 740.93,
+  "mesh_wire_mm": 1015.16,
+  "stub_wire_mm": 503.9,
+  "island_spec": "/srv/opentallas-scratch2/claude/wt/head-core-lat-dieclk-1026/results/head_core_lat_1026/island_spec.json",
+  "island_lattice": {
+   "xs_on_hole_lines": 22,
+   "ys_on_hole_lines": 26,
+   "hole_x_lines": 88,
+   "hole_y_lines": 36,
+   "strip_s_um": 1223.7400000000002,
+   "strip_n_um": 16332.740000000002,
+   "xs": [
+    453.6,
+    925.92,
+    1516.32,
+    2043.36,
+    2579.04,
+    3051.36,
+    3641.76,
+    4168.8,
+    4704.48,
+    5294.88,
+    5767.2,
+    6302.88,
+    6829.92,
+    7420.32,
+    7892.64,
+    8524.145454545454,
+    8997.774545454546,
+    9629.28,
+    10101.6,
+    10692.0,
+    11219.04,
+    11754.72,
+    12227.039999999999,
+    12817.44,
+    13353.12,
+    13880.16,
+    14470.56,
+    14942.88,
+    15478.56,
+    16005.6,
+    16596.0,
+    17068.32
+   ],
+   "ys": [
+    1223.7400000000002,
+    1801.4400000000003,
+    2440.8,
+    2760.48,
+    3382.56,
+    3797.28,
+    4419.36,
+    4834.08,
+    5136.48,
+    5870.88,
+    6173.28,
+    6492.96,
+    7210.08,
+    7529.76,
+    7944.48,
+    8566.56,
+    8981.28,
+    9603.36,
+    10018.08,
+    10320.48,
+    11054.88,
+    11357.28,
+    11676.96,
+    12394.08,
+    12713.76,
+    13128.48,
+    13750.56,
+    14165.28,
+    14787.36,
+    15107.04,
+    15746.400000000001,
+    16332.740000000002
+   ],
+   "strap_x_snap_max_um": 179.82
+  },
+  "common_core_T_ps": {
+   "TT": 405.0,
+   "FF": 325.0
+  },
+  "core_tap_move_max_um": 364.58,
+  "core_taps_moved": 1320,
+  "model_assumption": "core infra-island holes treated as legal top-level sites (kit abstracts not yet cut)",
+  "plan": "/srv/opentallas-scratch2/claude/wt/head-core-lat-dieclk-1026/physical/die_plan/s81_head/die_plan.json",
+  "plan_sha256": "d7b8d1eb935cf641061b2ec18389d57919ee804e9344f519aa00431dc002473e",
+  "build_s": 96.0,
+  "model_assumption_2": "serdes PHY-interior taps left as direct unsplit tails for measurement only (STRUCTURAL)"
+ },
+ "corners": {
+  "TT": {
+   "insertion_ps": [
+    3642.95,
+    4096.61
+   ],
+   "tap_skew_ps": 453.67,
+   "compensated_sink_insertion_ps": [
+    3642.95,
+    4096.61
+   ],
+   "core_offset_taps": 0,
+   "seam_pairs": 767,
+   "seam_max_ps": 141.16,
+   "seam_p99_ps": 126.56,
+   "intra_pairs": 12448,
+   "intra_max_ps": 189.49,
+   "pairs_over_80": 2254,
+   "related_pair_max_ps": 189.49,
+   "gate_ps": 80.0,
+   "verdict": "FAIL",
+   "tap_slew_max_ps": 413.13,
+   "mesh_stub_in_slew_max_ps": 325.38,
+   "tree_slew_max_ps": 71.36,
+   "mesh_cap_pF": 139.82,
+   "worst": [
+    [
+     189.49,
+     "t_lk_WN2__clk_t16",
+     "t_lk_WN2__clk_t24"
+    ],
+    [
+     189.3,
+     "t_lk_ES1__clk_t16",
+     "t_lk_ES1__clk_t24"
+    ],
+    [
+     188.77,
+     "t_tE4b8__clk",
+     "t_tE4b8__clk_c3"
+    ],
+    [
+     187.68,
+     "t_lk_WS1__clk_t16",
+     "t_lk_WS1__clk_t24"
+    ],
+    [
+     185.36,
+     "t_lk_EN1__clk_t16",
+     "t_lk_EN1__clk_t24"
+    ],
+    [
+     183.97,
+     "t_tW4b9__clk",
+     "t_tW4b9__clk_t4"
+    ],
+    [
+     183.08,
+     "t_tW3b4__clk_c1",
+     "t_tW3b4__clk_c3"
+    ],
+    [
+     176.7,
+     "t_tE3b4__clk_c1",
+     "t_tE3b4__clk_c3"
+    ],
+    [
+     173.16,
+     "t_lk_WN2__clk_t24",
+     "t_lk_WN2__clk_t25"
+    ],
+    [
+     171.67,
+     "t_tE4b7__clk_t3",
+     "t_tE4b7__clk_c0"
+    ]
+   ],
+   "clock_switched_cap_pF": 329.8,
+   "clock_wire_power_W": 0.194
+  },
+  "FF": {
+   "insertion_ps": [
+    3015.05,
+    3412.89
+   ],
+   "tap_skew_ps": 397.84,
+   "compensated_sink_insertion_ps": [
+    3015.05,
+    3412.89
+   ],
+   "core_offset_taps": 0,
+   "seam_pairs": 767,
+   "seam_max_ps": 124.99,
+   "seam_p99_ps": 114.46,
+   "intra_pairs": 12448,
+   "intra_max_ps": 164.31,
+   "pairs_over_80": 1428,
+   "related_pair_max_ps": 164.31,
+   "gate_ps": 80.0,
+   "verdict": "FAIL",
+   "tap_slew_max_ps": 406.37,
+   "mesh_stub_in_slew_max_ps": 272.57,
+   "tree_slew_max_ps": 50.99,
+   "mesh_cap_pF": 140.84,
+   "worst": [
+    [
+     164.31,
+     "t_lk_WN2__clk_t16",
+     "t_lk_WN2__clk_t24"
+    ],
+    [
+     163.87,
+     "t_lk_ES1__clk_t16",
+     "t_lk_ES1__clk_t24"
+    ],
+    [
+     163.69,
+     "t_lk_WS1__clk_t16",
+     "t_lk_WS1__clk_t24"
+    ],
+    [
+     162.46,
+     "t_tW4b9__clk",
+     "t_tW4b9__clk_t4"
+    ],
+    [
+     159.8,
+     "t_tE4b8__clk",
+     "t_tE4b8__clk_c3"
+    ],
+    [
+     159.64,
+     "t_lk_EN1__clk_t16",
+     "t_lk_EN1__clk_t24"
+    ],
+    [
+     158.92,
+     "t_tW3b4__clk_c1",
+     "t_tW3b4__clk_c3"
+    ],
+    [
+     157.54,
+     "t_tE3b4__clk_c1",
+     "t_tE3b4__clk_c3"
+    ],
+    [
+     149.9,
+     "t_tE4b7__clk_t3",
+     "t_tE4b7__clk_c0"
+    ],
+    [
+     148.24,
+     "t_tW4b9__clk_t2",
+     "t_tW4b9__clk_c1"
+    ]
+   ],
+   "clock_switched_cap_pF": 330.8,
+   "clock_wire_power_W": 0.235
+  }
+ }
+}
