@@ -53,7 +53,7 @@ def guard(text,top,kd,fz,skip):
     models=macro_models(kd,fz['macros']);mods=FG.parse(text)
     for master in models:mods.pop(master,None) # retain opaque timed memory leaves
     T=mods[top];F=FG.Flat(mods,top);roots={b:F.find(b) for p in T.ports for b in FG._bits_of(T,p)}
-    clock_roots={roots[b] for b in roots if re.match(skip,b.split('[')[0]) and b.split('[')[0] not in {x.split('[')[0] for x in fz['resets']}}
+    clock_roots={roots[b] for b in roots if b in fz['clocks'] or b.split('[')[0] in fz['clocks']}
     loads=defaultdict(list);drivers=defaultdict(list);endpoints=[];edges=[defaultdict(set),defaultdict(set)];ends=[defaultdict(set),defaultdict(set)];bad=[defaultdict(set),defaultdict(set)]
     for master,path,pins in F.cells:
         if master in models:
@@ -94,6 +94,7 @@ def guard(text,top,kd,fz,skip):
         if root in visiting[sense]:return frozenset(),frozenset({'COMBINATIONAL_LOOP '+root})
         if root.startswith('CONST_'):return frozenset(),frozenset()
         visiting[sense].add(root);found=set(ends[sense][root]);fail=set(bad[sense][root])
+        if len(drivers[root])>1:fail.add('MULTIPLE_DRIVERS '+root)
         for nxt in edges[sense][root]:
             a,b=walk(nxt,sense);found.update(a);fail.update(b)
         if not found and not edges[sense][root] and not fail:fail.add('UNTERMINATED '+root)
