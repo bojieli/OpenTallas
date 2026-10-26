@@ -1,0 +1,892 @@
+{
+  "hrow_types": [
+    {
+      "sids": [
+        0
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_0110",
+      "sx": "dsdv_svc_sx_fv_0110",
+      "masks": {
+        "GI": 0,
+        "GO": 1,
+        "SI": 1,
+        "SO": 0
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "go_n",
+          "direction": "output",
+          "width": 270,
+          "face": "n"
+        },
+        {
+          "name": "si_n",
+          "direction": "input",
+          "width": 138,
+          "face": "n"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        2,
+        14
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_1111",
+      "sx": "dsdv_svc_sx_fv_1111",
+      "masks": {
+        "GI": 1,
+        "GO": 1,
+        "SI": 1,
+        "SO": 1
+      },
+      "hrow_instances": 16,
+      "face_ports": [
+        {
+          "name": "gi_n",
+          "direction": "input",
+          "width": 270,
+          "face": "n"
+        },
+        {
+          "name": "go_n",
+          "direction": "output",
+          "width": 270,
+          "face": "n"
+        },
+        {
+          "name": "si_n",
+          "direction": "input",
+          "width": 138,
+          "face": "n"
+        },
+        {
+          "name": "so_n",
+          "direction": "output",
+          "width": 138,
+          "face": "n"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        8
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_1221",
+      "sx": "dsdv_svc_sx_fv_1221",
+      "masks": {
+        "GI": 1,
+        "GO": 2,
+        "SI": 2,
+        "SO": 1
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "gi_n",
+          "direction": "input",
+          "width": 270,
+          "face": "n"
+        },
+        {
+          "name": "go_e",
+          "direction": "output",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "si_e",
+          "direction": "input",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "so_n",
+          "direction": "output",
+          "width": 138,
+          "face": "n"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        4
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_3333",
+      "sx": "dsdv_svc_sx_fv_3333",
+      "masks": {
+        "GI": 3,
+        "GO": 3,
+        "SI": 3,
+        "SO": 3
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "gi_n",
+          "direction": "input",
+          "width": 270,
+          "face": "n"
+        },
+        {
+          "name": "gi_e",
+          "direction": "input",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "go_n",
+          "direction": "output",
+          "width": 270,
+          "face": "n"
+        },
+        {
+          "name": "go_e",
+          "direction": "output",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "si_n",
+          "direction": "input",
+          "width": 138,
+          "face": "n"
+        },
+        {
+          "name": "si_e",
+          "direction": "input",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "so_n",
+          "direction": "output",
+          "width": 138,
+          "face": "n"
+        },
+        {
+          "name": "so_e",
+          "direction": "output",
+          "width": 138,
+          "face": "e"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        1
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_4224",
+      "sx": "dsdv_svc_sx_fv_4224",
+      "masks": {
+        "GI": 4,
+        "GO": 2,
+        "SI": 2,
+        "SO": 4
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "gi_s",
+          "direction": "input",
+          "width": 270,
+          "face": "s"
+        },
+        {
+          "name": "go_e",
+          "direction": "output",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "si_e",
+          "direction": "input",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "so_s",
+          "direction": "output",
+          "width": 138,
+          "face": "s"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        11
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_6aa6",
+      "sx": "dsdv_svc_sx_fv_6aa6",
+      "masks": {
+        "GI": 6,
+        "GO": 10,
+        "SI": 10,
+        "SO": 6
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "gi_e",
+          "direction": "input",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "gi_s",
+          "direction": "input",
+          "width": 270,
+          "face": "s"
+        },
+        {
+          "name": "go_e",
+          "direction": "output",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "go_w",
+          "direction": "output",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "si_e",
+          "direction": "input",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "si_w",
+          "direction": "input",
+          "width": 138,
+          "face": "w"
+        },
+        {
+          "name": "so_e",
+          "direction": "output",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "so_s",
+          "direction": "output",
+          "width": 138,
+          "face": "s"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        12
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_8888",
+      "sx": "dsdv_svc_sx_fv_8888",
+      "masks": {
+        "GI": 8,
+        "GO": 8,
+        "SI": 8,
+        "SO": 8
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "gi_w",
+          "direction": "input",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "go_w",
+          "direction": "output",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "si_w",
+          "direction": "input",
+          "width": 138,
+          "face": "w"
+        },
+        {
+          "name": "so_w",
+          "direction": "output",
+          "width": 138,
+          "face": "w"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        6
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_9999",
+      "sx": "dsdv_svc_sx_fv_9999",
+      "masks": {
+        "GI": 9,
+        "GO": 9,
+        "SI": 9,
+        "SO": 9
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "gi_n",
+          "direction": "input",
+          "width": 270,
+          "face": "n"
+        },
+        {
+          "name": "gi_w",
+          "direction": "input",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "go_n",
+          "direction": "output",
+          "width": 270,
+          "face": "n"
+        },
+        {
+          "name": "go_w",
+          "direction": "output",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "si_n",
+          "direction": "input",
+          "width": 138,
+          "face": "n"
+        },
+        {
+          "name": "si_w",
+          "direction": "input",
+          "width": 138,
+          "face": "w"
+        },
+        {
+          "name": "so_n",
+          "direction": "output",
+          "width": 138,
+          "face": "n"
+        },
+        {
+          "name": "so_w",
+          "direction": "output",
+          "width": 138,
+          "face": "w"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        10
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_a33a",
+      "sx": "dsdv_svc_sx_fv_a33a",
+      "masks": {
+        "GI": 10,
+        "GO": 3,
+        "SI": 3,
+        "SO": 10
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "gi_e",
+          "direction": "input",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "gi_w",
+          "direction": "input",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "go_n",
+          "direction": "output",
+          "width": 270,
+          "face": "n"
+        },
+        {
+          "name": "go_e",
+          "direction": "output",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "si_n",
+          "direction": "input",
+          "width": 138,
+          "face": "n"
+        },
+        {
+          "name": "si_e",
+          "direction": "input",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "so_e",
+          "direction": "output",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "so_w",
+          "direction": "output",
+          "width": 138,
+          "face": "w"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        9
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_a44a",
+      "sx": "dsdv_svc_sx_fv_a44a",
+      "masks": {
+        "GI": 10,
+        "GO": 4,
+        "SI": 4,
+        "SO": 10
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "gi_e",
+          "direction": "input",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "gi_w",
+          "direction": "input",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "go_s",
+          "direction": "output",
+          "width": 270,
+          "face": "s"
+        },
+        {
+          "name": "si_s",
+          "direction": "input",
+          "width": 138,
+          "face": "s"
+        },
+        {
+          "name": "so_e",
+          "direction": "output",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "so_w",
+          "direction": "output",
+          "width": 138,
+          "face": "w"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        13
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_aaaa",
+      "sx": "dsdv_svc_sx_fv_aaaa",
+      "masks": {
+        "GI": 10,
+        "GO": 10,
+        "SI": 10,
+        "SO": 10
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "gi_e",
+          "direction": "input",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "gi_w",
+          "direction": "input",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "go_e",
+          "direction": "output",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "go_w",
+          "direction": "output",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "si_e",
+          "direction": "input",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "si_w",
+          "direction": "input",
+          "width": 138,
+          "face": "w"
+        },
+        {
+          "name": "so_e",
+          "direction": "output",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "so_w",
+          "direction": "output",
+          "width": 138,
+          "face": "w"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        3,
+        5,
+        7
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_c66c",
+      "sx": "dsdv_svc_sx_fv_c66c",
+      "masks": {
+        "GI": 12,
+        "GO": 6,
+        "SI": 6,
+        "SO": 12
+      },
+      "hrow_instances": 24,
+      "face_ports": [
+        {
+          "name": "gi_s",
+          "direction": "input",
+          "width": 270,
+          "face": "s"
+        },
+        {
+          "name": "gi_w",
+          "direction": "input",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "go_e",
+          "direction": "output",
+          "width": 270,
+          "face": "e"
+        },
+        {
+          "name": "go_s",
+          "direction": "output",
+          "width": 270,
+          "face": "s"
+        },
+        {
+          "name": "si_e",
+          "direction": "input",
+          "width": 138,
+          "face": "e"
+        },
+        {
+          "name": "si_s",
+          "direction": "input",
+          "width": 138,
+          "face": "s"
+        },
+        {
+          "name": "so_s",
+          "direction": "output",
+          "width": 138,
+          "face": "s"
+        },
+        {
+          "name": "so_w",
+          "direction": "output",
+          "width": 138,
+          "face": "w"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    },
+    {
+      "sids": [
+        15
+      ],
+      "hrow": "dsdv_svc_sx_hrow_fv_cccc",
+      "sx": "dsdv_svc_sx_fv_cccc",
+      "masks": {
+        "GI": 12,
+        "GO": 12,
+        "SI": 12,
+        "SO": 12
+      },
+      "hrow_instances": 8,
+      "face_ports": [
+        {
+          "name": "gi_s",
+          "direction": "input",
+          "width": 270,
+          "face": "s"
+        },
+        {
+          "name": "gi_w",
+          "direction": "input",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "go_s",
+          "direction": "output",
+          "width": 270,
+          "face": "s"
+        },
+        {
+          "name": "go_w",
+          "direction": "output",
+          "width": 270,
+          "face": "w"
+        },
+        {
+          "name": "si_s",
+          "direction": "input",
+          "width": 138,
+          "face": "s"
+        },
+        {
+          "name": "si_w",
+          "direction": "input",
+          "width": 138,
+          "face": "w"
+        },
+        {
+          "name": "so_s",
+          "direction": "output",
+          "width": 138,
+          "face": "s"
+        },
+        {
+          "name": "so_w",
+          "direction": "output",
+          "width": 138,
+          "face": "w"
+        }
+      ],
+      "physical_view": "NEEDS_REHARDEN",
+      "data_cycles_added": 0,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2
+    }
+  ],
+  "up_types": [
+    {
+      "name": "dsdv_svc_rs_up_fv_01",
+      "sids": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14
+      ]
+    },
+    {
+      "name": "dsdv_svc_rs_up_fv_42",
+      "sids": [
+        1,
+        9
+      ]
+    },
+    {
+      "name": "dsdv_svc_rs_up_fv_48",
+      "sids": [
+        7,
+        15
+      ]
+    },
+    {
+      "name": "dsdv_svc_rs_up_fv_68",
+      "sids": [
+        13
+      ]
+    },
+    {
+      "name": "dsdv_svc_rs_up_fv_c2",
+      "sids": [
+        3
+      ]
+    },
+    {
+      "name": "dsdv_svc_rs_up_fv_e0",
+      "sids": [
+        5,
+        11
+      ]
+    }
+  ],
+  "relays": [
+    {
+      "name": "dsdv_svc_rly270_NS",
+      "width": 270,
+      "valid_bits": [
+        269
+      ],
+      "data_latency": 1,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2,
+      "physical_view": "NEEDS_REHARDEN"
+    },
+    {
+      "name": "dsdv_svc_rly270_EW",
+      "width": 270,
+      "valid_bits": [
+        269
+      ],
+      "data_latency": 1,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2,
+      "physical_view": "NEEDS_REHARDEN"
+    },
+    {
+      "name": "dsdv_svc_rly270_SN",
+      "width": 270,
+      "valid_bits": [
+        269
+      ],
+      "data_latency": 1,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2,
+      "physical_view": "NEEDS_REHARDEN"
+    },
+    {
+      "name": "dsdv_svc_rly270_WE",
+      "width": 270,
+      "valid_bits": [
+        269
+      ],
+      "data_latency": 1,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2,
+      "physical_view": "NEEDS_REHARDEN"
+    },
+    {
+      "name": "dsdv_svc_rly276_NS",
+      "width": 276,
+      "valid_bits": [
+        137,
+        275
+      ],
+      "data_latency": 1,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2,
+      "physical_view": "NEEDS_REHARDEN"
+    },
+    {
+      "name": "dsdv_svc_rly276_EW",
+      "width": 276,
+      "valid_bits": [
+        137,
+        275
+      ],
+      "data_latency": 1,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2,
+      "physical_view": "NEEDS_REHARDEN"
+    },
+    {
+      "name": "dsdv_svc_rly276_SN",
+      "width": 276,
+      "valid_bits": [
+        137,
+        275
+      ],
+      "data_latency": 1,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2,
+      "physical_view": "NEEDS_REHARDEN"
+    },
+    {
+      "name": "dsdv_svc_rly276_WE",
+      "width": 276,
+      "valid_bits": [
+        137,
+        275
+      ],
+      "data_latency": 1,
+      "private_reset_assertion": 2,
+      "private_reset_release": 2,
+      "physical_view": "NEEDS_REHARDEN"
+    }
+  ],
+  "hrow_instances": 128,
+  "data_cycles_added": 0,
+  "physical_view_adoption": false
+}

@@ -122,7 +122,12 @@ module dsdv_svc_rs_c #(
     localparam logic [3:0] FM_DI = FM[3:0], FM_DO = FM[7:4], FM_UI = FM[11:8], FM_UO = FM[15:12], FM_RI = FM[19:16],
                            FM_RO = FM[23:20], FM_GI = FM[27:24], FM_GO = FM[31:28], FM_SI = FM[35:32], FM_SO = FM[39:36];
     reg [1:0] rs;
+`ifdef OT_SVC_ROLE_MASTERS
+    // Delivered synchronous reset; private assertion/release both two edges.
+    always @(posedge ck) rs <= {rs[0], rst};
+`else
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+`endif
     wire rn = rs[1];
 `ifdef OT_SVC_ALLQ
     wire [1:0] a_st;                                  // stack position (dsdv_svc_att: CFG [31:30] or the parameter ST)
@@ -176,8 +181,13 @@ module dsdv_svc_rs_c #(
             else begin qp[0] <= q[0]; hp[0] <= hw[0]; end
         always @(posedge ck) begin qp[514:1] <= q[514:1]; hp[291:1] <= hw[291:1]; end
         wire [514:0] cq;
+`ifdef OT_SVC_ROLE_MASTERS
+        ot_s81_svc_job_entry #(.MUT(0)) u_job (.ck(ck),.rs_n(rn),.j_cmd(j),.j_dn(jdc),.q(qp[512:0]),.core_q(cq[512:0]),.ad(rad[512:0]));
+        assign cq[514:513]=2'd0;
+`else
         ot_s81_svc_job #(.MUT(0)) u_job (.ck(ck), .rs_n(rn), .j_cmd(j), .j_dn(jdc), .q(qp), .core_q(cq),
             .ad({513'd0, rad[512:0]}), .xd({512'd0, 1'b0, 1'b1}), .od({512'd0, 1'b0, 1'b1}));
+`endif
         // S81/H23 (10-24, COORD H3): the on-die SEL_IDS producer's entry leg.  Class-3 host-write words (the seqhost SEL
         // relay, dsdv_sh_selr) never go down the hw stream; dsdv_svc_selq turns each pair into one SEL_IDS q frame
         // (header + 1 payload word) injected on the q part in the compiled window (a q word from the job gate in the
@@ -244,9 +254,13 @@ module dsdv_svc_rs_c #(
     // ------------------------------------------------------------------ score exchange
     wire rt_v, t_v, x_f; wire [2131:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;
     reg pl_v; reg [2131:0] pl_d;                     // P beat (registered), muxed onto the engine's score-beat port
+`ifdef OT_SVC_ROLE_MASTERS
+`include "dsdv_svc_sx_role_dispatch.svh"
+`else
     dsdv_svc_sx #(.MUT(0), .FM_GI(FM_GI), .FM_GO(FM_GO), .FM_SI(FM_SI), .FM_SO(FM_SO)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v || pl_v), .l_d(pl_v ? pl_d : l_d),
         .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d),
         .rt_v(rt_v), .rt_d(rt_d), .t_v(t_v), .t_tag(t_tag), .t_y(t_y), .t_f(t_f), .fault(x_f));
+`endif
 
     // ------------------------------------------------------------------ SE row assembler (tap -> 16-score SE rows)
     reg [511:0] se_acc, se_d; reg se_v, se_flag;
@@ -477,8 +491,12 @@ module dsdv_svc_rs_c #(
     // ------------------------------------------------------------------ up tree: {rg fault, rg live, done, fault, cr 6, ack 6}
     // (dsdv_svc_rs_up below; RTL-BUILD-S81 10-18: + the region status {fault, live} of the half's ctrl_rg2 controllers)
     wire [UW-1:0] uc;
+`ifdef OT_SVC_ROLE_MASTERS
+`include "dsdv_svc_up_role_dispatch.svh"
+`else
     dsdv_svc_rs_up #(.UW(UW), .FM_UI(FM_UI), .FM_UO(FM_UO)) u_up (.ck(ck), .rn(rn), .chm(chm), .par(par), .done(done && !so_pend), .fl(hs_f), .hcr(hcr), .hack(hack),
         .hs_s(hs1), .up_i(up_i), .up_o(up_o), .uc(uc));
+`endif
 
     // ------------------------------------------------------------------ entry: job done (END), host credits / acks, fault
     generate if (ENTRY) begin : g_rt
