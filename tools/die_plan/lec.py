@@ -1908,6 +1908,60 @@ def json_alias_keys(L, log, work=None):
     return len(pairs)
 
 
+def slang_flat_word_keys(members, gate_families):
+    """Exact multi-dimensional logical driver indices -> read_verilog flat words.
+
+    Only a complete zero-based Cartesian driver grid with uniform packed width
+    qualifies. Gate words must cover that grid's product, with the same bit
+    extent (individual bits may have merged away). There is one row-major
+    logical flattening; no reversal or simulation score chooses a layout.
+    Return gate key -> gold key only when exactly one named family qualifies.
+    These are correspondence proposals, never assumptions or waived compares.
+    """
+    logical = {}
+    for gold, (_outer, suffix) in members.items():
+        ix = tuple(map(int, re.findall(r"\d+", suffix)))
+        if len(ix) < 3 or ix in logical:
+            return {}, ()
+        logical[ix] = gold
+    if not logical or len({len(ix) for ix in logical}) != 1:
+        return {}, ()
+    rank = len(next(iter(logical)))
+    shape = tuple(max(ix[j] for ix in logical) + 1 for j in range(rank))
+    total = 1
+    for j, n in enumerate(shape):
+        if min(ix[j] for ix in logical) != 0:
+            return {}, ()
+        total *= n
+    if total != len(logical):                         # holes / partial drivers: no shape inference
+        return {}, ()
+    width = shape[-1]
+    words = total // width
+    candidates = []
+    for family in gate_families:
+        indexed = {}
+        for suffix, gate in family.items():
+            ix = tuple(map(int, re.findall(r"\d+", suffix)))
+            if len(ix) != 2 or ix in indexed:
+                break
+            indexed[ix] = gate
+        else:
+            if not indexed or {ix[0] for ix in indexed} != set(range(words)) \
+                    or min(ix[1] for ix in indexed) != 0 or max(ix[1] for ix in indexed) + 1 != width:
+                continue
+            mapping = {}
+            for (word, bit), gate in indexed.items():
+                dims, rest = [], word
+                for n in reversed(shape[:-1]):
+                    rest, i = divmod(rest, n)
+                    dims.append(i)
+                mapping[gate] = logical[tuple(reversed(dims)) + (bit,)]
+            if len(mapping) != len(indexed):
+                continue
+            candidates.append(mapping)
+    return (candidates[0], shape) if len(candidates) == 1 else ({}, ())
+
+
 def slang_element_keys(L, log, work=None):
     """gold-only flops of a slang-flattened array, paired by NAME with the gate flops of the same element, from slang's
     per-element driver cells (slang_elements): gold 'ff:S.X[f]' is element '[i]..[b]'.
@@ -1924,7 +1978,7 @@ def slang_element_keys(L, log, work=None):
         return 0
     held = {k for (_sd, k) in L.hyp}
     tonly = set(L.tonly)
-    gonly = [k for k in L.gonly if k in elem and k not in held]
+    gonly = {k for k in L.gonly if k in elem and k not in held}
     if not gonly:
         return 0
     arr = collections.defaultdict(dict)              # gold array base -> {gold key: (outer index, element suffix)}
@@ -1940,21 +1994,30 @@ def slang_element_keys(L, log, work=None):
             tbase[b.rsplit(".", 1)[0]].setdefault(b, {})[m.group(2)] = k
     mp = {}                                          # gate key -> gold key
     for gb, members in arr.items():
+        scope = gb.rsplit(".", 1)[0]
+        families = [tbase.get(scope, {}).get(b, {}) for b in (gb, gb + "#t")]
+        flat, shape = slang_flat_word_keys(members, families)
+        flat = {tk: gk for tk, gk in flat.items() if gk in gonly and tk not in mp}
+        if flat:
+            mp.update(flat)
+            log.append(f"slang mixed-radix keys: {gb} logical driver grid {shape} -> "
+                       f"flat gate words ({len(flat)} bits)")
+        proposed = set(mp.values())
         top = max(i for i, _ in members.values())
         last = {}
         for gk, (i, e) in members.items():
-            if gk not in gonly:
+            if gk not in gonly or gk in proposed:
                 continue
             for tk in (gb + e, gb + "#t" + e):
                 if tk in tonly and tk not in mp:
                     mp[tk] = gk
+                    proposed.add(gk)
                     break
             else:
                 if i == top:
                     last[e[len(f"[{i}]"):]] = gk     # bit suffix '[b]' -> gold key
         if not last:
             continue
-        scope = gb.rsplit(".", 1)[0]
         cands = [b for b, bits in tbase.get(scope, {}).items()
                  if b != gb and not b.endswith("#t") and set(bits) == set(last) and not any(k in L.gp for k in bits.values())]
         if len(cands) == 1:
