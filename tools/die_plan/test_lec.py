@@ -487,6 +487,37 @@ def _seq(tmp_path, name, inputs, latches, nxt_fn):
     return lec.read_aig(f), mp
 
 
+@pytest.mark.parametrize("offset", [0, 4])
+@pytest.mark.parametrize("mutant", [None, "short_output", "inverted_data"])
+def test_wire_array_reversal_with_aliased_and_constant_endpoints(tmp_path, offset, mutant):
+    """HBM H0 cf[0:4]: endpoints are a constant/output alias, only three middle bits retain array names.
+    Exhaust every current-state/input combination after correspondence; an early output or wrong D still fails.
+    """
+    a, b, c = [f"cf[{offset + i}]" for i in (1, 2, 3)]
+    g, gm = _seq(tmp_path, "wire_gold", ["d"], [a, b, c, "out"],
+                 lambda m, x: {a: x[b], b: x[c], c: x["d"], "out": x[a]})
+    t, tm = _seq(tmp_path, "wire_gate", ["d"], [a, b, c, "out"],
+                 lambda m, x: {a: x["d"] ^ (mutant == "inverted_data"), b: x[a], c: x[b],
+                               "out": x[b] if mutant == "short_output" else x[c]})
+    before = lec.Lec(g, gm, t, tm)
+    lec.relayout(before, [])  # The matched indices alone do not describe the whole array.
+    m, _ = before.build(with_compare=True, with_hyp=False)
+    assert "differs" in _sim_prove(m).values()
+    (tmp_path / "gold.aliases.json").write_text(json.dumps({"modules": {lec.WRAP: {"netnames": {
+        "u_dut.cf": {"hide_name": 0, "offset": offset, "bits": [11, 12, 13, 14, "0"]}}}}}))
+    L = lec.Lec(g, gm, t, tm)
+    lec.relayout(L, [], work=tmp_path)
+    m, _ = L.build(with_compare=True, with_hyp=False)
+    bad = set()
+    for state in range(1 << m.ni):
+        vals = [0] + [(state >> i) & 1 for i in range(m.ni)]
+        for i in range(0, len(m.ands), 2):
+            x, y = m.ands[i:i + 2]
+            vals.append((vals[x >> 1] ^ (x & 1)) & (vals[y >> 1] ^ (y & 1)))
+        bad.update(n for n, o in zip(m.onames, m.outs) if vals[o >> 1] ^ (o & 1))
+    assert bool(bad) == (mutant is not None)
+
+
 def test_merged_self_holding_copy_is_paired_on_its_care_set(tmp_path, monkeypatch):
     """PATH-KV-PC3 10-25 (ot_qfd_emb_pcport `if (r_v) begin kv_d <= r_d; c1 <= r_d; end`): synthesis merged the
     load-enable twin kv_d into c1.  D(kv_d) holds kv_d, which c1 does not share, so no plain / cofactor signature

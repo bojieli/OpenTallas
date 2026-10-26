@@ -1119,13 +1119,34 @@ def array_maps(gkeys, tkeys):
     return out
 
 
-def relayout(L, log, words=4, trials=64):
+def relayout(L, log, words=4, trials=64, work=None):
     """unpacked arrays: the two frontends may number the elements of `reg x [0:N-1]` in opposite order under the
     same names (read_verilog: element i = x[i]; slang: the flattened vector, element 0 at the MSB).  Greedy: for every
     array base whose matched compare points disagree in simulation, reverse the outer index on the gate side and keep
     it when clearly fewer matched compare points disagree (by 8, twice the array's bits and 1 % of the total) or the
     array's own compare points all agree after it.  A wrong choice can only produce a difference, never hide one (the
     mapping is a bijection of key points; everything is still proved)."""
+    # Wire arrays can lose both endpoint names: cf[0] is constant and cf[4]
+    # aliases cf_out, leaving only cf[1:3] matched. Inferring the reversal from
+    # max(matched)=3 then rejects the valid permutation 1<->3. Read the full
+    # one-dimensional public wire extent from the same elaborated gold instead.
+    extents, ambiguous = {}, set()
+    if work is not None:
+        try:
+            aliases = json.loads((Path(work) / "gold.aliases.json").read_text())
+        except (OSError, ValueError):
+            aliases = {}
+        for mod in aliases.get("modules", {}).values():
+            for nn, net in mod.get("netnames", {}).items():
+                if net.get("hide_name") or not net.get("bits"):
+                    continue
+                name = "ff:" + GENBLK.sub("", nn.replace("\\", "").replace(" ", "").replace("/", "."))
+                low = int(net.get("offset", 0))
+                extent = (low, low + len(net["bits"]) - 1)
+                if name in extents and extents[name] != extent:
+                    ambiguous.add(name)
+                extents[name] = extent
+
     def mismatches():
         m, kind = L.build(with_compare=False, with_hyp=False)
         val, mask = m.simulate(words, seed=4242)
@@ -1143,6 +1164,10 @@ def relayout(L, log, words=4, trials=64):
             return False
         idx = {k: tuple(int(x) for x in re.findall(r"\d+", IDX.match(k).group(2))) for k in keys}
         hi0 = max(v[0] for v in idx.values())
+        if base in extents and base not in ambiguous and all(len(v) == 1 for v in idx.values()):
+            low, high = extents[base]
+            if all(low <= v[0] <= high for v in idx.values()):
+                hi0 = low + high
         rev = {k: base + "".join(f"[{x}]" for x in (hi0 - v[0],) + v[1:]) for k, v in idx.items()}
         if set(rev.values()) != set(keys) or all(rev[k] == k for k in keys):
             return False
@@ -2040,7 +2065,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     refined and needs adding rounds after them; 10 left it free -> false NOT EQUIVALENT (gunit_l4 895 points,
     EQUIVALENT at 24 rounds, 738 s)."""
     alias_arrays(L, log, work=work)
-    relayout(L, log)
+    relayout(L, log, work=work)
     renamed(L, log)
     replica_proposals(L, log)
     merged_proposals(L, log)
