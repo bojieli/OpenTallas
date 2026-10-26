@@ -1,0 +1,2896 @@
+{
+ "schema": "opentallas.s81.core_lat_census.v1",
+ "rev": "adb6c7adcc",
+ "plan": "physical/die_plan/s81/die_plan.json",
+ "die_clock": {
+  "insertion_ps": 250,
+  "common_latency_ps": 250,
+  "insertion_tol_ps": 40
+ },
+ "cores": [
+  {
+   "module": "ot_rom_4096x72_m8",
+   "replicas": 7644,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    38.04,
+    62.952
+   ],
+   "obs_max": "M4",
+   "plan_lib": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+   "early_taps": [],
+   "memory_macro": true,
+   "lib_tt": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "replicas": 1200,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    114.48,
+    114.48
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr_tt.lib",
+   "lib_insertion_tt": {
+    "max": 264.07495,
+    "min": 232.86406
+   },
+   "lib_insertion_ff": {
+    "max": 204.23428,
+    "min": 177.88925
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 253.24,
+    "ff": 199.42
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     243.41,
+     264.07
+    ],
+    "ff": [
+     190.02,
+     209.06
+    ]
+   }
+  },
+  {
+   "module": "ot_s81c_attn_hcore",
+   "replicas": 1024,
+   "parent_types": [
+    "svc_hi_dsdv_svc_pvso_entry__t1",
+    "svc_hi_dsdv_svc_pvso_entry__t2",
+    "svc_hi_dsdv_svc_rs__t1",
+    "svc_hi_dsdv_svc_rs__t2",
+    "svc_hi_dsdv_svc_rs__t3",
+    "svc_hi_dsdv_svc_rs__t4",
+    "svc_hi_dsdv_svc_rs__t5",
+    "svc_hi_dsdv_svc_rs__t6",
+    "svc_lo_dsdv_svc_rs__t1",
+    "svc_lo_dsdv_svc_rs__t2",
+    "svc_lo_dsdv_svc_rs__t3",
+    "svc_lo_dsdv_svc_rs__t4",
+    "svc_lo_dsdv_svc_rs__t5",
+    "svc_lo_dsdv_svc_rs__t6",
+    "svc_lo_dsdv_svc_rs__t7",
+    "svc_lo_dsdv_svc_rs_w__t1"
+   ],
+   "outline_um": [
+    157.68,
+    259.2
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": null,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsfd_qbank_N",
+   "replicas": 864,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    60.48,
+    8.64
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N/dsfd_qbank_N_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N/dsfd_qbank_N_tt.lib",
+   "lib_insertion_tt": {
+    "max": 78.14114,
+    "min": 70.7233
+   },
+   "lib_insertion_ff": {
+    "max": 62.57573,
+    "min": 55.97308
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsfd_qbank_S",
+   "replicas": 864,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    60.48,
+    25.92
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S_tt.lib",
+   "lib_insertion_tt": {
+    "max": 98.23283,
+    "min": 79.35539
+   },
+   "lib_insertion_ff": {
+    "max": 79.9539,
+    "min": 62.4773
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_v41_rom_elem_q_qxpq_w10",
+   "replicas": 864,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    510.84,
+    221.4
+   ],
+   "obs_max": "M7",
+   "plan_lib": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+   "early_taps": [
+    {
+     "type": "col_h10_r0_p1__t1",
+     "inst": "u_r0.u_e0",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r0_p1__t1",
+     "inst": "u_r0.u_e2",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r0_p1__t1",
+     "inst": "u_r0.u_e3",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r0_p1__t1",
+     "inst": "u_r0.u_e4",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r1__t1",
+     "inst": "u_r1.u_e6",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r1__t1",
+     "inst": "u_r1.u_e7",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r1__t1",
+     "inst": "u_r1.u_e8",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r1__t1",
+     "inst": "u_r1.u_e9",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r2__t1",
+     "inst": "u_r2.u_e11",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r2__t1",
+     "inst": "u_r2.u_e12",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r2__t1",
+     "inst": "u_r2.u_e13",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r2__t1",
+     "inst": "u_r2.u_e14",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p2__t1",
+     "inst": "u_r0.u_e0",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p2__t1",
+     "inst": "u_r0.u_e1",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p2__t1",
+     "inst": "u_r0.u_e2",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p2__t1",
+     "inst": "u_r0.u_e3",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r1__t1",
+     "inst": "u_r1.u_e5",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r1__t1",
+     "inst": "u_r1.u_e6",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r1__t1",
+     "inst": "u_r1.u_e7",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r1__t1",
+     "inst": "u_r1.u_e9",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r2__t1",
+     "inst": "u_r2.u_e10",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r2__t1",
+     "inst": "u_r2.u_e11",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r2__t1",
+     "inst": "u_r2.u_e12",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r2__t1",
+     "inst": "u_r2.u_e14",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p3__t1",
+     "inst": "u_r0.u_e0",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p3__t1",
+     "inst": "u_r0.u_e1",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p3__t1",
+     "inst": "u_r0.u_e2",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p3__t1",
+     "inst": "u_r0.u_e3",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r0_p4__t1",
+     "inst": "u_r0.u_e0",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r0_p4__t1",
+     "inst": "u_r0.u_e2",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r0_p4__t1",
+     "inst": "u_r0.u_e3",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r0_p4__t1",
+     "inst": "u_r0.u_e4",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p5__t1",
+     "inst": "u_r0.u_e0",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p5__t1",
+     "inst": "u_r0.u_e1",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p5__t1",
+     "inst": "u_r0.u_e2",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p5__t1",
+     "inst": "u_r0.u_e3",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p6__t1",
+     "inst": "u_r0.u_e0",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p6__t1",
+     "inst": "u_r0.u_e1",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p6__t1",
+     "inst": "u_r0.u_e2",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p6__t1",
+     "inst": "u_r0.u_e3",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p1__t1",
+     "inst": "u_r0.u_e0",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p1__t1",
+     "inst": "u_r0.u_e1",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p1__t1",
+     "inst": "u_r0.u_e2",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p1__t1",
+     "inst": "u_r0.u_e3",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p4__t1",
+     "inst": "u_r0.u_e0",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p4__t1",
+     "inst": "u_r0.u_e1",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p4__t1",
+     "inst": "u_r0.u_e2",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p4__t1",
+     "inst": "u_r0.u_e3",
+     "insertion_ps": 552.30737,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    }
+   ],
+   "memory_macro": false,
+   "lib_tt": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+   "lib_insertion_tt": {
+    "max": 552.30737,
+    "min": 437.5235
+   },
+   "lib_insertion_ff": {
+    "max": 434.3559,
+    "min": 344.91623
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81_cfg7_seq",
+   "replicas": 864,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    17.28,
+    51.84
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/ot_s81_cfg7_seq_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/ot_s81_cfg7_seq_tt.lib",
+   "lib_insertion_tt": {
+    "max": 93.77752,
+    "min": 75.39694
+   },
+   "lib_insertion_ff": {
+    "max": 74.97504,
+    "min": 59.19283
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 249.34,
+    "ff": 189.76
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     240.8,
+     258.33
+    ],
+    "ff": [
+     180.59,
+     198.75
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_sstn_base566",
+   "replicas": 660,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    84.24,
+    30.24
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566_tt.lib",
+   "lib_insertion_tt": {
+    "max": 98.53783,
+    "min": 78.17512
+   },
+   "lib_insertion_ff": {
+    "max": 80.86909,
+    "min": 61.9237
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81_sstn_payload536",
+   "replicas": 660,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    86.4,
+    25.92
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536/ot_s81_sstn_payload536_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536/ot_s81_sstn_payload536_tt.lib",
+   "lib_insertion_tt": {
+    "max": 91.42699,
+    "min": 77.24667
+   },
+   "lib_insertion_ff": {
+    "max": 74.26108,
+    "min": 61.14544
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsfd_node_LLfu",
+   "replicas": 516,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu_tt.lib",
+   "lib_insertion_tt": {
+    "max": 117.1375,
+    "min": 88.73264
+   },
+   "lib_insertion_ff": {
+    "max": 97.3701,
+    "min": 70.67866
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 248.72,
+    "ff": 191.34
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     239.54,
+     255.92
+    ],
+    "ff": [
+     181.94,
+     198.78
+    ]
+   }
+  },
+  {
+   "module": "dsfd_node_NNfd",
+   "replicas": 516,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd_tt.lib",
+   "lib_insertion_tt": {
+    "max": 117.21299,
+    "min": 86.74113
+   },
+   "lib_insertion_ff": {
+    "max": 97.30123,
+    "min": 68.48822
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 253.28,
+    "ff": 196.1
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     233.92,
+     264.09
+    ],
+    "ff": [
+     177.28,
+     206.66
+    ]
+   }
+  },
+  {
+   "module": "dsfd_node_NNfu",
+   "replicas": 504,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu_tt.lib",
+   "lib_insertion_tt": {
+    "max": 122.11168,
+    "min": 86.80167
+   },
+   "lib_insertion_ff": {
+    "max": 101.65302,
+    "min": 68.94405
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 252.1,
+    "ff": 195.25
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     235.9,
+     262.07
+    ],
+    "ff": [
+     179.33,
+     205.37
+    ]
+   }
+  },
+  {
+   "module": "dsfd_node_LLfd",
+   "replicas": 504,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/dsfd_node_LLfd_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/dsfd_node_LLfd_tt.lib",
+   "lib_insertion_tt": {
+    "max": 113.9127,
+    "min": 89.55394
+   },
+   "lib_insertion_ff": {
+    "max": 93.48103,
+    "min": 70.68227
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 246.44,
+    "ff": 190.02
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     234.23,
+     255.23
+    ],
+    "ff": [
+     177.55,
+     198.91
+    ]
+   }
+  },
+  {
+   "module": "ot_v41_bf_col",
+   "replicas": 456,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    450.168,
+    198.72
+   ],
+   "obs_max": "M7",
+   "plan_lib": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+   "early_taps": [
+    {
+     "type": "col_h10_r0_p1__t1",
+     "inst": "u_r0.u_e1e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r0_p1__t1",
+     "inst": "u_r0.u_e1w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r1__t1",
+     "inst": "u_r1.u_e10e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r1__t1",
+     "inst": "u_r1.u_e10w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r1__t1",
+     "inst": "u_r1.u_e5e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r1__t1",
+     "inst": "u_r1.u_e5w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r2__t1",
+     "inst": "u_r2.u_e15e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r2__t1",
+     "inst": "u_r2.u_e15w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p2__t1",
+     "inst": "u_r0.u_e4e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p2__t1",
+     "inst": "u_r0.u_e4w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r1__t1",
+     "inst": "u_r1.u_e8e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r1__t1",
+     "inst": "u_r1.u_e8w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r2__t1",
+     "inst": "u_r2.u_e13e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r2__t1",
+     "inst": "u_r2.u_e13w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p3__t1",
+     "inst": "u_r0.u_e4e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p3__t1",
+     "inst": "u_r0.u_e4w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r0_p4__t1",
+     "inst": "u_r0.u_e1e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h10_r0_p4__t1",
+     "inst": "u_r0.u_e1w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p5__t1",
+     "inst": "u_r0.u_e4e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p5__t1",
+     "inst": "u_r0.u_e4w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p6__t1",
+     "inst": "u_r0.u_e4e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p6__t1",
+     "inst": "u_r0.u_e4w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p1__t1",
+     "inst": "u_r0.u_e4e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p1__t1",
+     "inst": "u_r0.u_e4w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p4__t1",
+     "inst": "u_r0.u_e4e.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    },
+    {
+     "type": "col_h9_r0_p4__t1",
+     "inst": "u_r0.u_e4w.u_view",
+     "insertion_ps": 644.89056,
+     "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+    }
+   ],
+   "memory_macro": false,
+   "lib_tt": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+   "lib_insertion_tt": {
+    "max": 644.89056,
+    "min": 473.28232
+   },
+   "lib_insertion_ff": {
+    "max": 519.71045,
+    "min": 375.18033
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsfd_bf_front_roots",
+   "replicas": 228,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    116.64,
+    198.72
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/dsfd_bf_front_roots_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/dsfd_bf_front_roots_tt.lib",
+   "lib_insertion_tt": {
+    "max": 231.19284,
+    "min": 195.21701
+   },
+   "lib_insertion_ff": {
+    "max": 190.72153,
+    "min": 158.08061
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81_cfg7_seq_bfp",
+   "replicas": 228,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    30.24,
+    60.48
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp/ot_s81_cfg7_seq_bfp_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp/ot_s81_cfg7_seq_bfp_tt.lib",
+   "lib_insertion_tt": {
+    "max": 98.21368,
+    "min": 77.01402
+   },
+   "lib_insertion_ff": {
+    "max": 79.28922,
+    "min": 60.64494
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsfd_rstg",
+   "replicas": 216,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1"
+   ],
+   "outline_um": [
+    38.88,
+    34.56
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81net_rstg/views/dsfd_rstg/dsfd_rstg_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81net_rstg/views/dsfd_rstg/dsfd_rstg_tt.lib",
+   "lib_insertion_tt": {
+    "max": 54.8358,
+    "min": 50.42186
+   },
+   "lib_insertion_ff": {
+    "max": 42.17035,
+    "min": 38.6632
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_sram_1r1w_512x128_m4_r0c0",
+   "replicas": 150,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    169.368,
+    29.16
+   ],
+   "obs_max": "M4",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_svc_sx_hrow",
+   "replicas": 128,
+   "parent_types": [
+    "svc_hi_dsdv_svc_pvso_entry__t1",
+    "svc_hi_dsdv_svc_pvso_entry__t2",
+    "svc_hi_dsdv_svc_rs__t1",
+    "svc_hi_dsdv_svc_rs__t2",
+    "svc_hi_dsdv_svc_rs__t3",
+    "svc_hi_dsdv_svc_rs__t4",
+    "svc_hi_dsdv_svc_rs__t5",
+    "svc_hi_dsdv_svc_rs__t6",
+    "svc_lo_dsdv_svc_rs__t1",
+    "svc_lo_dsdv_svc_rs__t2",
+    "svc_lo_dsdv_svc_rs__t3",
+    "svc_lo_dsdv_svc_rs__t4",
+    "svc_lo_dsdv_svc_rs__t5",
+    "svc_lo_dsdv_svc_rs__t6",
+    "svc_lo_dsdv_svc_rs__t7",
+    "svc_lo_dsdv_svc_rs_w__t1"
+   ],
+   "outline_um": [
+    138.24,
+    164.16
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib",
+   "lib_insertion_tt": {
+    "max": 296.62994,
+    "min": 229.32762
+   },
+   "lib_insertion_ff": {
+    "max": 241.60785,
+    "min": 179.41072
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 268.94,
+    "ff": 215.76
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     239.88,
+     296.63
+    ],
+    "ff": [
+     187.22,
+     241.61
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_ve_m",
+   "replicas": 75,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    172.8,
+    345.6
+   ],
+   "obs_max": "M7",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": null,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81sl_ve_s",
+   "replicas": 75,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    164.16,
+    345.6
+   ],
+   "obs_max": "M7",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": null,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81sl_vsw",
+   "replicas": 75,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    224.64,
+    224.64
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw_tt.lib",
+   "lib_insertion_tt": {
+    "max": 323.47568,
+    "min": 267.72681
+   },
+   "lib_insertion_ff": {
+    "max": 268.31491,
+    "min": 216.13266
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81sl_vn_b",
+   "replicas": 75,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    356.4,
+    172.8
+   ],
+   "obs_max": "M7",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": null,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81sl_vs",
+   "replicas": 75,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ],
+   "obs_max": "M7",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs_tt.lib",
+   "lib_insertion_tt": {
+    "max": 262.39078,
+    "min": 213.91415
+   },
+   "lib_insertion_ff": {
+    "max": 218.59801,
+    "min": 173.65564
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81sl_vn_a",
+   "replicas": 75,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    356.4,
+    164.16
+   ],
+   "obs_max": "M7",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": null,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsfd_su_t_rxsb",
+   "replicas": 75,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    140.4,
+    140.4
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb_tt.lib",
+   "lib_insertion_tt": {
+    "max": 268.55948,
+    "min": 234.92281
+   },
+   "lib_insertion_ff": {
+    "max": 210.84151,
+    "min": 181.22372
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 257.85,
+    "ff": 205.22
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     247.04,
+     268.56
+    ],
+    "ff": [
+     194.78,
+     216.34
+    ]
+   }
+  },
+  {
+   "module": "dsfd_su_t_rxsf",
+   "replicas": 75,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    140.4,
+    140.4
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf_tt.lib",
+   "lib_insertion_tt": {
+    "max": 210.46109,
+    "min": 163.55742
+   },
+   "lib_insertion_ff": {
+    "max": 176.76752,
+    "min": 133.3118
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81sl_vq",
+   "replicas": 75,
+   "parent_types": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "outline_um": [
+    172.8,
+    129.6
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/die_plan/s81/cores/views/ot_s81sl_vq/ot_s81sl_vq_tt.lib",
+   "lib_insertion_tt": {
+    "max": 279.40579,
+    "min": 203.37563
+   },
+   "lib_insertion_ff": {
+    "max": 232.14925,
+    "min": 161.65503
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 256.13,
+    "ff": 210.2
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     208.37,
+     279.41
+    ],
+    "ff": [
+     166.17,
+     232.15
+    ]
+   }
+  },
+  {
+   "module": "dsfd_cfifo_crs4",
+   "replicas": 72,
+   "parent_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1"
+   ],
+   "outline_um": [
+    280.8,
+    69.12
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/dsfd_cfifo_crs4_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/dsfd_cfifo_crs4_tt.lib",
+   "lib_insertion_tt": {
+    "max": 214.1178,
+    "min": 144.32361
+   },
+   "lib_insertion_ff": {
+    "max": 181.17931,
+    "min": 114.34958
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsfd_node_LLd",
+   "replicas": 72,
+   "parent_types": [
+    "col_h10_r2__t1",
+    "col_h9_r2__t1"
+   ],
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "obs_max": "M5",
+   "plan_lib": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd_tt.lib",
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd_tt.lib",
+   "lib_insertion_tt": {
+    "max": 110.32134,
+    "min": 88.84732
+   },
+   "lib_insertion_ff": {
+    "max": 89.88971,
+    "min": 70.26496
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 246.07,
+    "ff": 189.24
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     234.96,
+     254.82
+    ],
+    "ff": [
+     178.02,
+     198.38
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_capc5r",
+   "replicas": 16,
+   "parent_types": [
+    "dsdv_slice_c1x_C__t1",
+    "dsdv_slice_c1x_C__t10",
+    "dsdv_slice_c1x_C__t3",
+    "dsdv_slice_c1x_C__t4",
+    "dsdv_slice_c1x_C__t5",
+    "dsdv_slice_c1x_C__t6",
+    "dsdv_slice_c1x_C__t7",
+    "dsdv_slice_c1x_C__t8",
+    "dsdv_slice_c1x_C__t9",
+    "dsdv_slice_c3x_C__t1",
+    "dsdv_slice_iq_C__t1",
+    "dsdv_slice_kv512_C__t1",
+    "dsdv_slice_lepe_mu_C__t1",
+    "dsdv_slice_lepe_nh_mus_C__t1",
+    "dsdv_slice_lepw_mu_C__t1",
+    "dsdv_slice_lepw_mus_C__t1"
+   ],
+   "outline_um": [
+    336.96,
+    414.72
+   ],
+   "obs_max": "M7",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib",
+   "lib_insertion_tt": {
+    "max": 85.25973,
+    "min": 154.96245
+   },
+   "lib_insertion_ff": {
+    "max": 72.69569,
+    "min": 125.78483
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81sl_eg",
+   "replicas": 16,
+   "parent_types": [
+    "dsdv_slice_c1x_C__t1",
+    "dsdv_slice_c1x_C__t10",
+    "dsdv_slice_c1x_C__t3",
+    "dsdv_slice_c1x_C__t4",
+    "dsdv_slice_c1x_C__t5",
+    "dsdv_slice_c1x_C__t6",
+    "dsdv_slice_c1x_C__t7",
+    "dsdv_slice_c1x_C__t8",
+    "dsdv_slice_c1x_C__t9",
+    "dsdv_slice_c3x_C__t1",
+    "dsdv_slice_iq_C__t1",
+    "dsdv_slice_kv512_C__t1",
+    "dsdv_slice_lepe_mu_C__t1",
+    "dsdv_slice_lepe_nh_mus_C__t1",
+    "dsdv_slice_lepw_mu_C__t1",
+    "dsdv_slice_lepw_mus_C__t1"
+   ],
+   "outline_um": [
+    259.2,
+    259.2
+   ],
+   "obs_max": "M7",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib",
+   "lib_insertion_tt": {
+    "max": 364.44653,
+    "min": 320.53131
+   },
+   "lib_insertion_ff": {
+    "max": 303.02069,
+    "min": 263.05939
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81dv_xfin",
+   "replicas": 16,
+   "parent_types": [
+    "dsdv_slice_c1x_C__t1",
+    "dsdv_slice_c1x_C__t10",
+    "dsdv_slice_c1x_C__t3",
+    "dsdv_slice_c1x_C__t4",
+    "dsdv_slice_c1x_C__t5",
+    "dsdv_slice_c1x_C__t6",
+    "dsdv_slice_c1x_C__t7",
+    "dsdv_slice_c1x_C__t8",
+    "dsdv_slice_c1x_C__t9",
+    "dsdv_slice_c3x_C__t1",
+    "dsdv_slice_iq_C__t1",
+    "dsdv_slice_kv512_C__t1",
+    "dsdv_slice_lepe_mu_C__t1",
+    "dsdv_slice_lepe_nh_mus_C__t1",
+    "dsdv_slice_lepw_mu_C__t1",
+    "dsdv_slice_lepw_mus_C__t1"
+   ],
+   "outline_um": [
+    362.88,
+    362.88
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin_tt.lib",
+   "lib_insertion_tt": {
+    "max": 308.26154,
+    "min": 222.01741
+   },
+   "lib_insertion_ff": {
+    "max": 261.46188,
+    "min": 179.27629
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81sl_xrt1",
+   "replicas": 14,
+   "parent_types": [
+    "dsdv_slice_c1x_C__t1",
+    "dsdv_slice_c1x_C__t10",
+    "dsdv_slice_c1x_C__t3",
+    "dsdv_slice_c1x_C__t4",
+    "dsdv_slice_c1x_C__t5",
+    "dsdv_slice_c1x_C__t6",
+    "dsdv_slice_c1x_C__t7",
+    "dsdv_slice_c1x_C__t8",
+    "dsdv_slice_c1x_C__t9",
+    "dsdv_slice_kv512_C__t1",
+    "dsdv_slice_lepe_mu_C__t1",
+    "dsdv_slice_lepe_nh_mus_C__t1",
+    "dsdv_slice_lepw_mu_C__t1",
+    "dsdv_slice_lepw_mus_C__t1"
+   ],
+   "outline_um": [
+    311.04,
+    395.28
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1_tt.lib",
+   "lib_insertion_tt": {
+    "max": 473.05081,
+    "min": 380.94388
+   },
+   "lib_insertion_ff": {
+    "max": 394.02768,
+    "min": 310.97879
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_bksel_q",
+   "replicas": 4,
+   "parent_types": [
+    "bk_sel__t2"
+   ],
+   "outline_um": [
+    648.0,
+    648.0
+   ],
+   "obs_max": "M7",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q_tt.lib",
+   "lib_insertion_tt": {
+    "max": 603.67224,
+    "min": 559.40479
+   },
+   "lib_insertion_ff": {
+    "max": 489.51486,
+    "min": 453.4201
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "ot_s81sl_xrt3",
+   "replicas": 2,
+   "parent_types": [
+    "dsdv_slice_c3x_C__t1",
+    "dsdv_slice_iq_C__t1"
+   ],
+   "outline_um": [
+    207.36,
+    164.16
+   ],
+   "obs_max": "M6",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/ot_s81sl_xrt3_tt.lib",
+   "lib_insertion_tt": {
+    "max": 651.02209,
+    "min": 555.82404
+   },
+   "lib_insertion_ff": {
+    "max": 534.87317,
+    "min": 457.81662
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_gunit_l5",
+   "replicas": 1,
+   "parent_types": [
+    "gunit__t1"
+   ],
+   "outline_um": [
+    345.6,
+    302.4
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [
+    {
+     "type": "gunit__t1",
+     "inst": "u_gunit.u_l5",
+     "insertion_ps": 520.0,
+     "note": "COORD 10:23 ruling 2: published core latency, parent tap advanced; BUDGET KITS-SPARE/L5 rtA 496/518/576 rtB 505/524/583 (placement RC; FF ~430); SIGNED TT pin-reg mean replaces it"
+    }
+   ],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/dsdv_gunit_l5_tt.lib",
+   "lib_insertion_tt": {
+    "max": 512.25568,
+    "min": 370.54269
+   },
+   "lib_insertion_ff": {
+    "max": 430.37888,
+    "min": 304.50452
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_gunit_l1",
+   "replicas": 1,
+   "parent_types": [
+    "gunit__t1"
+   ],
+   "outline_um": [
+    345.6,
+    216.0
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/dsdv_gunit_l1_tt.lib",
+   "lib_insertion_tt": {
+    "max": 350.00586,
+    "min": 261.67303
+   },
+   "lib_insertion_ff": {
+    "max": 296.35745,
+    "min": 212.48373
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_gunit_l1c",
+   "replicas": 1,
+   "parent_types": [
+    "gunit__t1"
+   ],
+   "outline_um": [
+    86.4,
+    216.0
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/dsdv_gunit_l1c/views/dsdv_gunit_l1c/dsdv_gunit_l1c_tt.lib",
+   "lib_insertion_tt": {
+    "max": 237.80722,
+    "min": 177.23906
+   },
+   "lib_insertion_ff": {
+    "max": 201.53757,
+    "min": 145.25734
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_gunit_l0",
+   "replicas": 1,
+   "parent_types": [
+    "gunit__t1"
+   ],
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/dsdv_gunit_l0_tt.lib",
+   "lib_insertion_tt": {
+    "max": 320.12833,
+    "min": 250.74129
+   },
+   "lib_insertion_ff": {
+    "max": 267.96899,
+    "min": 203.0208
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_gunit_l2",
+   "replicas": 1,
+   "parent_types": [
+    "gunit__t1"
+   ],
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2_tt.lib",
+   "lib_insertion_tt": {
+    "max": 304.56857,
+    "min": 244.80742
+   },
+   "lib_insertion_ff": {
+    "max": 253.64865,
+    "min": 197.21242
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_gunit_l3",
+   "replicas": 1,
+   "parent_types": [
+    "gunit__t1"
+   ],
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/dsdv_gunit_l3_tt.lib",
+   "lib_insertion_tt": {
+    "max": 293.32172,
+    "min": 217.88559
+   },
+   "lib_insertion_ff": {
+    "max": 247.70711,
+    "min": 176.75401
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_gunit_l0r",
+   "replicas": 1,
+   "parent_types": [
+    "gunit__t1"
+   ],
+   "outline_um": [
+    267.84,
+    267.84
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r_tt.lib",
+   "lib_insertion_tt": {
+    "max": 244.41205,
+    "min": 213.78786
+   },
+   "lib_insertion_ff": {
+    "max": 200.96223,
+    "min": 172.60754
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_gunit_l5f",
+   "replicas": 1,
+   "parent_types": [
+    "gunit__t1"
+   ],
+   "outline_um": [
+    151.2,
+    151.2
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/die_plan/s81/cores/views/dsdv_gunit_l5f/dsdv_gunit_l5f_tt.lib",
+   "lib_insertion_tt": {
+    "max": 253.63315,
+    "min": 221.77484
+   },
+   "lib_insertion_ff": {
+    "max": 203.60571,
+    "min": 174.27914
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 244.19,
+    "ff": 194.04
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     231.95,
+     253.63
+    ],
+    "ff": [
+     182.47,
+     203.61
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l4r",
+   "replicas": 1,
+   "parent_types": [
+    "gunit__t1"
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/die_plan/s81/cores/views/dsdv_gunit_l4r/dsdv_gunit_l4r_tt.lib",
+   "lib_insertion_tt": {
+    "max": 269.90607,
+    "min": 228.49925
+   },
+   "lib_insertion_ff": {
+    "max": 212.21124,
+    "min": 175.54651
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 251.62,
+    "ff": 199.72
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     239.9,
+     269.91
+    ],
+    "ff": [
+     187.59,
+     218.14
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l4",
+   "replicas": 1,
+   "parent_types": [
+    "gunit__t1"
+   ],
+   "outline_um": [
+    345.6,
+    64.8
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4_tt.lib",
+   "lib_insertion_tt": {
+    "max": 329.06592,
+    "min": 253.06265
+   },
+   "lib_insertion_ff": {
+    "max": 278.37833,
+    "min": 206.56465
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_idx_tx_n32",
+   "replicas": 1,
+   "parent_types": [
+    "bk_sel__t2"
+   ],
+   "outline_um": [
+    626.4,
+    561.6
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/s81_die_views/closed_import/dsdv_idx_tx_n32/dsdv_idx_tx_n32_tt.lib",
+   "lib_insertion_tt": {
+    "max": 857.66388,
+    "min": 727.58923
+   },
+   "lib_insertion_ff": {
+    "max": 703.86664,
+    "min": 582.1734
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_bksel_c",
+   "replicas": 1,
+   "parent_types": [
+    "bk_sel__t2"
+   ],
+   "outline_um": [
+    388.8,
+    172.8
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [
+    {
+     "type": "bk_sel__t2",
+     "inst": "u_bk_sel.u_sel.u_c",
+     "insertion_ps": 430.0,
+     "note": "COORD 10:23 ruling 2: published core latency, parent tap advanced; BUDGET KITS-SPARE rt42s CTS TT 401/426/446 (placement RC; FF ~350); SIGNED TT pin-reg mean replaces it"
+    }
+   ],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81dvbk_selc2/views/dsdv_bksel_c/dsdv_bksel_c_tt.lib",
+   "lib_insertion_tt": {
+    "max": 399.26196,
+    "min": 329.54874
+   },
+   "lib_insertion_ff": {
+    "max": 332.73706,
+    "min": 269.07681
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_bk_g",
+   "replicas": 1,
+   "parent_types": [
+    "bk_sel__t2"
+   ],
+   "outline_um": [
+    216.0,
+    172.8
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g_tt.lib",
+   "lib_insertion_tt": {
+    "max": 366.897,
+    "min": 287.58185
+   },
+   "lib_insertion_ff": {
+    "max": 302.48663,
+    "min": 233.01927
+   },
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_eng_rr_e",
+   "replicas": 1,
+   "parent_types": [
+    "eng__t1"
+   ],
+   "outline_um": [
+    410.4,
+    466.56
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": null,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_eng_rr_h0",
+   "replicas": 1,
+   "parent_types": [
+    "eng__t1"
+   ],
+   "outline_um": [
+    164.16,
+    267.84
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": null,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "declared_target_ps": null
+  },
+  {
+   "module": "dsdv_eng_rr_h1",
+   "replicas": 1,
+   "parent_types": [
+    "eng__t1"
+   ],
+   "outline_um": [
+    164.16,
+    267.84
+   ],
+   "obs_max": "M5",
+   "plan_lib": null,
+   "early_taps": [],
+   "memory_macro": false,
+   "lib_tt": "physical/ref_tile/dsdv_eng_rr_h1/views/dsdv_eng_rr_h1/dsdv_eng_rr_h1_tt.lib",
+   "lib_insertion_tt": {
+    "max": 265.49384,
+    "min": 211.7775
+   },
+   "lib_insertion_ff": {
+    "max": 214.2892,
+    "min": 167.31731
+   },
+   "declared_target_ps": 250.0,
+   "signoff_pinflop_mean": {
+    "tt": 263.18,
+    "ff": 211.69
+   },
+   "signoff_all_minmax": {
+    "tt": [
+     222.82,
+     276.79
+    ],
+    "ff": [
+     180.42,
+     223.84
+    ]
+   }
+  }
+ ]
+}
