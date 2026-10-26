@@ -1,0 +1,29 @@
+{
+  "verdict": "PASS-COND",
+  "picture": "/srv/opentallas-scratch/claude/shared-core-0733/rp1_candidate_2w/review.png",
+  "scope": "ONE TT+FF GRT diagnostic only; 833ps/60+25; no DRT, SIGNED view or master freeze",
+  "findings": [
+    "Viewed two SRAMs and 4.32um halos: frozen buffers use surrounding legal channels, no buffer placed over macros",
+    "Single common entry BUFx4 selected from geometry+joint TT/FF NLDM before build; separate pure BUF clock/reset feedthroughs inside reserved island; no data cycles/pins/outline change",
+    "2W2S M4/M5 halves intended clock track footprint from failed 4W candidate; actual capacity remains an unproven GRT gate",
+    "Model TT mean256.87/window12.92, FF189.67/window17.74 passes20ps mean/window planning bounds; model is UNCHECKED, actual waveform/STA required",
+    "Any GRT-0273 NDR fallback must retain partial artifacts and fail before qualified arrival extraction; preserve old failed 4W diagnostic"
+  ],
+  "added_data_cycles": 0,
+  "added_reset_cycles": 0,
+  "result": {
+    "verdict": "FAIL",
+    "qualification": "UNCHECKED native GRT diagnostic; no signoff",
+    "TT_mean_ps": 245.33,
+    "FF_mean_ps": 180.51,
+    "TT_leaf_window_ps": 25.97,
+    "FF_leaf_window_ps": 24.83,
+    "layer_width_fidelity": "PARTIAL:64FFleafnetsusedsignalM2/M3ratherthanmodeledM4/M5; NDRfallback0 doesnotproveleafwidth",
+    "diagnosis": [
+      "GRT distinguishes nonleaf clock routing range from leaf signal routing range",
+      "Original40ps input-slew model contradicted inherited ideal0ps SDC; actual corner pin caps also differ",
+      "Rooted shared-wire/layer model is being repaired before another physical trial"
+    ],
+    "successor": "VMR model-only legal candidate; no new physical authorization"
+  }
+}

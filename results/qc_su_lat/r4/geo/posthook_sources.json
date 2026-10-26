@@ -1,0 +1,20 @@
+{
+  "scope": "Read-only post-mandatory-data-hook snapshots; no routing/STA rerun",
+  "prog": {
+    "source": "epyc2:/srv/opentallas-scratch2/claude/codex-qc-su-0733/kits/prog_r4b/run/results/asap7/kq_qfd_dv_s8x_prog_aspect1713a1/base/4_cts.odb",
+    "sinks": 5291,
+    "moved_vs_old": 71,
+    "max_move_um": 2.97
+  },
+  "btab": {
+    "source": "epyc2:/srv/opentallas-scratch2/claude/codex-qc-su-0733/kits/btab_r4b/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/4_cts.odb",
+    "sinks": 5644,
+    "moved_vs_old": 43,
+    "max_move_um": 5.454
+  },
+  "vmr": {
+    "source": "intel1:/srv/opentallas-scratch2/claude/qc-su-lat/vmr_R3/run/results/asap7/kq_qfd_dv_s8x_vmr_rw60/base/4_cts.odb",
+    "geometry": "vmr_aligned.txt",
+    "sinks": 4308
+  }
+}
