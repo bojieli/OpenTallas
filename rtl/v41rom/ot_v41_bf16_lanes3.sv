@@ -30,7 +30,11 @@ module ot_v41_bf16_lanes3 #(
     // x slice, tag} before the lane tiles, a pipelined delivery of the capture word and the shared x slice to the 16
     // lanes (the placer spreads the stages along the wire as relays).  Every input is delayed by the same XST cycles:
     // values, per-lane order and the tree are unchanged, only the lanes' latency grows by XST (transaction level).
-    parameter integer XST = 0
+    parameter integer XST = 0,
+    // TNODE (S81-CORE-LAT-R2/BF 2026-10-26, see ot_v41_bf_col RCG): 1 = every pairwise-tree adder node (its fadd and
+    // error pipe) on its own tile u_tn (local enable copy + ICG on fclk; ~840 sinks) instead of the tree tile u_tt
+    // (14,219 sinks with the 15 nodes).  Same edges by construction.  0 = the original network.
+    parameter integer TNODE = 0
 ) (
     input  wire              fclk,     // free-running element clock
     input  wire              rst_pin,  // element reset pin
@@ -144,10 +148,17 @@ module ot_v41_bf16_lanes3 #(
         for (k = 0; k < NN; k = k + 1) begin : g_n
             wire [1:0] e;
             wire vo;
-            ot_v41_fadd #(.CUT(CUTT)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(lvvld[lv]), .a(lvv[lv][2*k]),
+            wire nclk;
+            if (TNODE != 0) begin : g_tn
+                wire nrst_unused;
+                ot_v41_tile_clk u_tn (.fclk(fclk), .rst_pin(rst_pin), .ze_d(ze_d), .gclk(nclk), .rst_n(nrst_unused));
+            end else begin : g_ntn
+                assign nclk = clk;
+            end
+            ot_v41_fadd #(.CUT(CUTT)) u_a (.clk(nclk), .rst_n(rst_n), .valid_in(lvvld[lv]), .a(lvv[lv][2*k]),
                                           .b(lvv[lv][2*k+1]), .y(lvv[lv+1][k]), .err(e), .valid_out(vo));
             reg [LATT-1:0] ep;
-            always @(posedge clk) ep <= {ep[LATT-2:0], lve[lv][2*k] | lve[lv][2*k+1]};
+            always @(posedge nclk) ep <= {ep[LATT-2:0], lve[lv][2*k] | lve[lv][2*k+1]};
             assign lve[lv+1][k] = ep[LATT-1] | (e != 2'd0);
         end
         for (k = NN; k < 16; k = k + 1) begin : g_z
