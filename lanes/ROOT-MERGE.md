@@ -93,3 +93,11 @@ gate = tools/die_plan pytest + plain G0 on s81, s81_head, qwen_compute, qwen_kvs
 - FLOW TAG flow-20261025-b NOT CUT (KV core canary REGRESSION, 32.84 ps below kept golden).
 - Gate baseline on 1d335f9d99: G0 QC 0 / s81_head 0 / B2n 0 / KV 0 / S81 1; tools/die_plan + autopilot + flow_canary + rom gate PASS. Scripts epyc1:/srv/opentallas-scratch2/claude/root-merge13-out/gates.sh (arg1 worktree, arg2 out); csa --check needs results/ in the sparse set.
 - No live jobs; worktrees removed. Lesson: hub ~/coord can hold another agent's uncommitted append-only lines that block coord-commit's merge; commit them as "hub tender-ray" (done 23:3x for CODEX-LOG 23:23-23:24 handoffs).
+
+## PARKED ROOT-MERGE-14 2026-10-26 00:24 PDT
+- main = 15e404c45e (hub ~/OpenTallas ff'd). Chain on 1d335f9d99: 5c8f85ccd5 ds-bind-ties b085d8f3e (resolved) -> 72b49f5a3d CP1 0fc7d74101 remainder (resolved; dropped an auto-merged DUPLICATE pre-pad root_async_reset in gen_phys.py) -> fdf43bca71 hbm-stageb 0d5e8ca1e8 (add/add RTL, branch = main + default-off params) -> 6d53ef02b6 hbm-rootpipe-source 47a537213 -> 04371caad3 URGENT-LEC lec-refine-env 39895f675f -> 15e404c45e ROOT test fix (test_g2 pops pair extract() proof_clock key).
+- Gates on 15e404c45e: tools/die_plan + autopilot/flow_canary + rom gate PASS; G0 QC 0 / s81_head 0 / B2n 0 / KV 0 / S81 1 (baseline). Script epyc1:/srv/opentallas-scratch2/claude/root-merge14-out/gates.sh (arg1 wt, arg2 out).
+- Closed: type-reduce2-kv ffc63645f already on main. HOLD: type-reduce2-hbm 623e81076 + tok-hbm-strap 22f37073b2 (HBM kit LEC not clear; sfu refine3h reruns live; strap branch also conflicts, rebase); QC batch 2 (needs CLOCK-MESH routed related-pair PASS); KV delta a795ac1cb6 (= kv-bind-r8 rebased; waits PATH-KV-FTRES hook + KV it5 GRT + bind b26). READY-AT-FLOW-TAG: rom-gate-flow 0b6be8e6d, hbm-prects-estimate 55d2a1b36 (branch tip moved to d5df8db711, owner reposts).
+- FLOW TAG flow-20261025-b NOT CUT: no KV core canary NO-REGRESSION yet (FLOW-FANOUT attribution run e live).
+- Watch: path-hbm-reset-2335 carries an old canaries.json watch list; keep main's lists when it merges.
+- No live jobs. Worktree epyc1:/srv/opentallas-scratch2/claude/wt/root-merge14 removed at park.
