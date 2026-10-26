@@ -12,7 +12,7 @@ import heapq
 from pathlib import Path
 
 G, X0, PX, PY = 8.64, 103.68, 1442.88, 1226.88
-SHORE, DEPTH, GUARD = 3318.0, 1011.0, 63.64
+SHORE, DEPTH, GUARD = 3318.0, 1013.0, 63.64
 SLOT = math.ceil((SHORE + 2*GUARD)/G)*G
 
 
@@ -30,7 +30,7 @@ def candidate(raw):
     x=X0
     for n in ('lk_WS2','lk_WS1','lk_WS0'):
         put(n,x,X0,SLOT,PY);x+=SLOT
-    for n,w in (('iqf',PX),('phy_hbm',6*PX),('eng',PX),('s_7S_x10',PX)):
+    for n,w in (('iqf',1200.96),('phy_hbm',6*PX),('eng',PX),('s_7S_x10',PX)):
         put(n,x,X0,w,PY);x+=w
     for n in ('lk_ES0','lk_ES1'):
         put(n,x,X0,SLOT,PY);x+=SLOT
@@ -40,7 +40,7 @@ def candidate(raw):
     put('bk_sel',X0+11*PX,X0+18*PY,2*PX,PY)
     # The second cell of the old tall WS3 partition becomes the compact gunit.
     put('gunit',X0+6*PX,X0+PY,PX,PY)
-    changed={n:dict(before=old[n],after=r) for n,r in rects.items() if r!=old[n]}
+    changed={n:dict(before=old[n],after=r) for n,r in rects.items() if any(abs(a-b)>1e-4 for a,b in zip(r,old[n]))}
     conflicts=[]
     names=list(rects)
     for i,a in enumerate(names):
@@ -110,8 +110,9 @@ def candidate(raw):
             if n==dst:break
             for nxt,span,step in adj[n]:
                 if (nxt.startswith('lk_') or nxt=='phy_hbm') and nxt!=dst:continue
+                if nxt.startswith(('fW','fE')) and nxt!=dst and not(rects[nxt][1]<=X0+PY+.01 or rects[nxt][3]>=X0+19*PY-.01):continue
                 if width>3.6*(span-12):continue
-                nc=cost+step
+                nc=cost+step*(4 if n.startswith(('fW','fE')) or nxt.startswith(('fW','fE')) else 1)
                 if nc<dist.get(nxt,float('inf')):dist[nxt]=nc;prev[nxt]=(n,span);heapq.heappush(heap,(nc,nxt))
         if dst not in dist:unreachable.append(b['lane']);continue
         path=[dst]
@@ -119,13 +120,34 @@ def candidate(raw):
             n=path[-1];par,span=prev[n];key=tuple(sorted((n,par)))
             v=demand.setdefault(key,dict(parts=list(key),face_span_um=round(span,4),affected_bits=0))
             v['affected_bits']+=width;path.append(par)
-        path.reverse();skeleton.append(dict(lane=b['lane'],parts=path,centerline_um=round(dist[dst],3),min_registered_hops=math.ceil(dist[dst]/405)))
+        path.reverse();length=sum(abs(ctr(rects[a])[0]-ctr(rects[b])[0])+abs(ctr(rects[a])[1]-ctr(rects[b])[1]) for a,b in zip(path,path[1:]))
+        skeleton.append(dict(lane=b['lane'],parts=path,centerline_um=round(length,3),route_cost=round(dist[dst],3),min_registered_hops=math.ceil(length/405)))
     cuts=[]
     for v in demand.values():
         v['affected_util_at_60pct_pin_budget']=round(v['affected_bits']/(3.6*(v['face_span_um']-12)),3);cuts.append(v)
     cuts.sort(key=lambda v:v['affected_util_at_60pct_pin_budget'],reverse=True)
+    affected_ids={b['lane'] for b in bounds}
+    affected_ports={pid for lane in raw['lanes'] if lane['id'] in affected_ids for pid in lane['ports']}
+    background={};edge_layers={}
+    for p in raw['ports']:
+        if p['id'] in affected_ports:continue
+        a,b=p['src']['part'],p['dst']['part']
+        if a not in rects or b not in rects:continue
+        key=tuple(sorted((a,b)));background[key]=background.get(key,0)+p['width']+1
+        edge_layers.setdefault(key,set()).update(p['layers'])
+    full=[]
+    edge_spans={tuple(sorted((a,b))):span for a,neighbours in adj.items() for b,span,cost in neighbours}
+    for key in set(background)|set(demand):
+        span=edge_spans.get(key)
+        if span is None:continue
+        add=demand.get(key,{}).get('affected_bits',0);base=background.get(key,0)
+        layers=max(2,len(edge_layers.get(key,set())))
+        capacity=6*(span-12)*layers/2
+        full.append(dict(parts=list(key),span_um=round(span,3),background_bits=base,affected_bits=add,
+            total_bits=base+add,layers=layers,full_pin_ratio=round((base+add)/capacity,4)))
+    full.sort(key=lambda v:v['full_pin_ratio'],reverse=True)
     return dict(spatial_graph=dict(unreachable_affected_lanes=unreachable,reachable=len(skeleton),routes=skeleton,
-        cut_scope='affected lanes only, not a full die channel gate',cuts=cuts),status='GEOMETRY CANDIDATE; NOT A CONNECTED PLAN; NO ROUTE AUTHORIZED',die_outline_um=[W,H],
+        cut_scope='aggregate face-demand planning bounds; local10um pin windows and actualM4-M7 route capacity still require G0C/GRT',cuts=cuts,full_background_pin_cuts=full),status='GEOMETRY CANDIDATE; NOT A CONNECTED PLAN; NO ROUTE AUTHORIZED',die_outline_um=[W,H],
         unchanged_area=True,serdes_count=len(macros),serdes_power_w=round(14*4.37,2),slot_width_um=SLOT,
         changes=changed,rects=rects,overlaps=conflicts,outside=outside,macros=macros,packing=packing,
         affected_lane_center_lower_bounds=bounds,
@@ -155,7 +177,7 @@ def render(rep,out):
         for c in rep['packing'][n]['hard_cores']:
             x,y=c['origin_um'];w,h=c['outline_um'];ax.add_patch(Rectangle((r[0]+x,r[1]+y),w,h,facecolor='#6f9962',edgecolor='black',linewidth=.3))
     ax.set_xlim(0,W);ax.set_ylim(0,H);ax.set_aspect('equal');ax.set_xlabel('um');ax.set_ylabel('um')
-    ax.set_title('S81 same-area PHY candidate: 9 north + 5 south, 14 x 3318x1011um macros\nGeometry only: TX rebuild and all changed registered routes/latency gates remain')
+    ax.set_title('S81 same-area PHY candidate: 9 north + 5 south, 14 x 3318x1013um macros\nGeometry only: TX rebuild and all changed registered routes/latency gates remain')
     fig.savefig(out,dpi=160,bbox_inches='tight')
 
 

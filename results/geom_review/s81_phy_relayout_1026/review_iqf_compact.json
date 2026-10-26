@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Same-area box geometry only, no route authorization",
+  "picture": "physical/die_plan/s81/phy_relayout_1026/candidate.png",
+  "findings": [
+    "All14 PHY macros3318x1013um (3.361134mm2) fitdieedges; no rectangle overlap/outside.",
+    "IQF softpartition shrink1442.88\u21921200.96um uses sparewidth beyond allfunctionalwindows(max992.412), preservingHBM,ENG ands_7S_x10 absolutepositions. No IQF hardcores aremoved.",
+    "Gunit andcompactBK coreboxesfit; actualTX phys816portparentadapter andplacementqualifyseparately.",
+    "53affectedlogical lanes spatiallyreachable, with limitedouterframeWRAPPER FT. Hardfield/ROMchildren preserved.",
+    "Fullbackground aggregatepinbounds peak0.9202; actualwindowallocator reroutes around fullfaces. Localdensity, perbitstationreach, macroclearance, clock/PG andlatency remain toqualify."
+  ],
+  "conditions": [
+    "No die P&R/STA until connectedcandidate has realFTsiteallocation, G0C and pricedcycles.",
+    "Everychangedtiletype needsactualplacement+fullr2r review underinfra-first."
+  ]
+}
