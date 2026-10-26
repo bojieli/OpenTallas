@@ -25,3 +25,5 @@ repair_timing_helper
 detailed_placement
 check_placement -verbose
 estimate_parasitics -placement
+# This hook creates delay/repair cells after the floorplan's initial PG pass.
+global_connect
