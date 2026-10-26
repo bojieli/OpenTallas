@@ -63,6 +63,7 @@ case "${2:-finish}" in
 esac
 ''')
     (kit / 'shift_timing_guard.py').write_text('''import re, sys
+if len(sys.argv) != 3: raise SystemExit('requires native TT and FF logs')
 for path, corner in zip(sys.argv[1:], ('TT', 'FF')):
     s = open(path).read()
     m = re.search(r'HCPL_SHIFT TIMING (TT|FF) setup ([-\\d.]+) nsetup (\\d+) hold ([-\\d.]+) nhold (\\d+)', s)
