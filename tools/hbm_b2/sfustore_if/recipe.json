@@ -1,0 +1,12 @@
+{
+ "top": "ot_hbm_su_static_sfustore_hw_if",
+ "files": [
+  "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore_hw_if.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_sfustore_hw_bank_if.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "defines": [],
+ "params": {},
+ "macros": ["ot_sram_1r1w_128x256_m1_r2c2"],
+ "source": "Opt-in F6 structural successor; bank timing exact, zero added data cycles; actual kit review pending"
+}
