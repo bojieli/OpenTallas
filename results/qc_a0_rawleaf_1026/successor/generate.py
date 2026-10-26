@@ -64,6 +64,12 @@ def main():
     old = REPO / 'results/qc_a0_2157/rawfault_cut/leaf_kit'
     src = gzip.decompress((old / 'rawleaf_keep.v.gz').read_bytes()).decode()
     new, counts = expand(src)
+    # The archived mapped cut predates the diagnosed synth_odb FF pruning fix.
+    # Keep DNT through synth_odb, then release only in the reviewed PG/anchor hook.
+    # This changes attributes only; no state, pin or connection changes.
+    new, retained = re.subn(r'\(\* keep = 1 \*\)(\s+DFF\w+_ASAP7_)',
+                           r'(* keep = 1, dont_touch = 1 *)\1', new)
+    assert retained == 12030, retained
     # Source has 2300 HAs; the failed resynthesis pruned 122 to 2178.
     assert counts == {'HAxp5_ASAP7_75t_R': 2300, 'FAx1_ASAP7_75t_R': 334}, counts
     (kd / 'rawleaf_keep.v').write_text(new)
