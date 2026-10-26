@@ -1,0 +1,24 @@
+{
+  "candidate": "MIF1 ROW_WRITE_RELAY1 WR_HALF_CYCLE1 RD_HALF_CYCLE1",
+  "default": "OFF",
+  "added_read_data_boot_write_cycles": 0,
+  "added_falling_flops_vs_writehalf": {
+    "btab": 32,
+    "prog": 36
+  },
+  "total_added_flops_vs_originalMIF1": {
+    "btab": {
+      "rising_control": 24,
+      "falling_macro_input": 1088
+    },
+    "prog": {
+      "rising_control": 27,
+      "falling_macro_input": 986
+    }
+  },
+  "clock": "same833ps coreclock,nativeDFFL",
+  "timing_obligations": "both416.5pshalfcyclesTTsetup60/FFhold25,noexceptions",
+  "exactness": "20000cycles0output/fault/consumedREADandWRITEWE/RA/WA/DATA differences,randomresetbursts,directedread/writecollisions",
+  "mutant": "RDfallinglandingchangedtorising:consumedreadenablemismatchcycle13",
+  "physical": "NOTRUNforRDextension; oldWRonlyPROGv1FAIL18readctrl+935inputhold+20.6clockwindowretained"
+}
