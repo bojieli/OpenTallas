@@ -166,6 +166,12 @@ def compile_slice(sl):
             for group, cc in counts.items():
                 if max(cc) - min(cc) > 1:
                     raise InfraError(f"core tree {group} leaf sink counts are unequal: {min(cc)}..{max(cc)}")
+        elif tree.get("load_balance") != "joint_nldm_plan":
+            raise InfraError("unequal-count leaves require explicit joint_nldm_plan electrical balancing")
+        owner = {sink: leaf["node"] for leaf in leaves for sink in leaf["sinks"]}
+        for pair in tree.get("same_leaf_pairs", []):
+            if len(pair) != 2 or any(s not in owner for s in pair) or owner[pair[0]] != owner[pair[1]]:
+                raise InfraError(f"zero-logic related pair does not share its planned leaf: {pair}")
         tree["depth"] = next(iter(levels))
     for b in sl.get("bays", []):
         assignments = b.get("cells", [])
@@ -173,7 +179,7 @@ def compile_slice(sl):
             raise InfraError(f"bay {b['name']}: bits require explicit cell assignments; metadata alone is not a built bay")
         for c in assignments:
             xy(c.get("xy_um"), f"bay {b['name']}/{c.get('name')}", outline)
-            bays.append(dict(c, bay=b["name"], rect_um=b["rect_um"]))
+            bays.append(dict(c, bay=b["name"], rect_um=b["rect_um"], regions_um=b.get("regions_um", [])))
     entry = next((i["clock_pin"] for i in sl.get("islands", []) if i.get("clock_pin")), None)
     clock_port = sl.get("core_clock_port") or ((tree or {}).get("clock_port"))
     if entry and not clock_port:
@@ -202,10 +208,10 @@ def compile_slice(sl):
             c["orient"] = p["orient"]
     return dict(module=sl["module"], outline_um=outline, cells=cells, ports=ports, arcs=arcs,
                 core_tree=tree, core_clock_port=clock_port, clock_entry=entry,
-                bays=bays, entry_pins=sl.get("entry_pins", []))
+                bays=bays, entry_pins=sl.get("entry_pins", []), clock_ndr=sl.get("clock_ndr"))
 
 
-def named_tree_report(report, clock_port, macro_pins=None):
+def named_tree_report(report, clock_port, macro_pins=None, load_balance="equal_counts"):
     """Normalize a pre-build named-sink H-tree report, including same-stage macro
     branches. Used by the shared core helper, not a per-die physical recipe.
     Sink identities must come from the actual placement after mandatory data
@@ -235,13 +241,25 @@ def named_tree_report(report, clock_port, macro_pins=None):
         name = f"mp_core_macro{k}"
         nodes.append(dict(name=name, master=leaf["cell"], xy_um=point, parent=names[leaf["parent"]]))
         leaves.append(dict(node=name, sinks=[inst + "/" + macro_pins[inst]], load_class="macro"))
-    return dict(clock_port=clock_port, nodes=nodes, leaves=leaves, equal_load=True,
+    if load_balance not in ("equal_counts", "joint_nldm_plan"):
+        raise InfraError("unsupported named-tree load balance model")
+    return dict(clock_port=clock_port, nodes=nodes, leaves=leaves, equal_load=load_balance == "equal_counts",
+                load_balance=load_balance,
                 source_geometry=report.get("source_geometry"),
                 load_basis="equal register counts per leaf; macro leaves separately classified and timed")
 
 
 def emit_tcl(sl):
     plan = compile_slice(sl)
+    tree = plan.get("core_tree")
+    if tree and not tree.get("equal_load", True):
+        q = tree.get("model_qualification", {})
+        if q.get("measured_timing_used") is not False:
+            raise InfraError("unequal-count tree refuses build until joint NLDM plan model qualifies both corners")
+        for corner, low, high in (("TT", 230., 270.), ("FF", 182.5, 222.5)):
+            result = q.get("corners", {}).get(corner, {})
+            if not result or result["leaf_window"] > 20 or result["leaf_min"] < low or result["leaf_max"] > high or result["slew_max"] > 80:
+                raise InfraError(f"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build")
     lines = ["# Shared core infrastructure: plan-defined identities only; no measured adjustments.",
              "source /work/native_pg_binding.tcl", "source /work/core_infra_impl.tcl", "ot_ci_begin"]
     if plan["clock_entry"]:
@@ -271,7 +289,8 @@ def emit_tcl(sl):
     for b in plan["bays"]:
         x, y = b["xy_um"]
         r = " ".join(f"{v:g}" for v in b["rect_um"])
-        lines.append(f"ot_ci_bay_cell {word(b['name'])} {x:g} {y:g} {{{r}}}")
+        regions = " ".join("{" + " ".join(f"{v:g}" for v in q) + "}" for q in b.get("regions_um", []))
+        lines.append(f"ot_ci_bay_cell {word(b['name'])} {x:g} {y:g} {{{r}}} {{{regions}}}")
     for p in plan["entry_pins"]:
         if not p.get("pin"):
             raise InfraError(f"entry {p.get('name')}: an actual core pin binding is required")
@@ -279,6 +298,14 @@ def emit_tcl(sl):
             raise InfraError(f"entry {p['name']}: die signal on-ramp must be M7")
         x, y = p["xy_um"]
         lines.append(f"ot_ci_entry {word(p['pin'])} {x:g} {y:g}")
+    if plan.get("clock_ndr"):
+        ndr = plan["clock_ndr"]
+        if not plan["core_tree"] or ndr.get("layers") != ["M4", "M5"]:
+            raise InfraError("core clock NDR requires a planned tree on M4/M5")
+        wm, sm = ndr["width_multiplier"], ndr["spacing_multiplier"]
+        if not all(isinstance(v, (int, float)) and 1 <= v <= 8 for v in (wm, sm)):
+            raise InfraError("core clock width/spacing multiplier must lie in [1, 8]")
+        lines.append(f"ot_ci_clock_ndr {word(ndr['name'])} {wm:g} {sm:g}")
     lines += ["ot_ci_finish", ""]
     return "\n".join(lines)
 

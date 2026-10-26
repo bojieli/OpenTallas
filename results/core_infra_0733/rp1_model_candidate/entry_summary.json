@@ -1,0 +1,167 @@
+[
+ {
+  "entry_count": 0,
+  "entry_cell": "BUFx2_ASAP7_75t_R",
+  "violation_ps": 52.866098095838595,
+  "result": {
+   "TT": {
+    "mean": 261.718335408456,
+    "leaf_min": 248.28210591851604,
+    "leaf_max": 278.11550887259875,
+    "leaf_window": 29.833402954082715,
+    "all_min": 248.25895610411195,
+    "all_max": 296.3585106211363,
+    "all_window": 48.09955451702436,
+    "slew_max": 97.14997275150623
+   },
+   "FF": {
+    "mean": 194.99272368854866,
+    "leaf_min": 179.68624334296763,
+    "leaf_max": 227.1448364775462,
+    "leaf_window": 47.458593134578564,
+    "all_min": 179.66309352856354,
+    "all_max": 239.6288803862935,
+    "all_window": 59.96578685772997,
+    "slew_max": 76.95900776273966
+   }
+  },
+  "profile": "w1_c1_s100",
+  "width_multiplier": 1,
+  "spacing_multiplier": 1,
+  "capacitance_factor": 1,
+  "slew_limit_ps": 100,
+  "qualification": "PLAN MODEL ONLY; capacitance scaling is assumed sensitivity except standard1W; no CTS/STA measurement read"
+ },
+ {
+  "entry_count": 0,
+  "entry_cell": "BUFx2_ASAP7_75t_R",
+  "violation_ps": 63.047863911409934,
+  "result": {
+   "TT": {
+    "mean": 275.7584943908428,
+    "leaf_min": 257.9316329033076,
+    "leaf_max": 287.41979002594854,
+    "leaf_window": 29.488157122640928,
+    "all_min": 257.90848308890355,
+    "all_max": 314.18247643920347,
+    "all_window": 56.27399335029992,
+    "slew_max": 118.90519342107423
+   },
+   "FF": {
+    "mean": 202.18631370947654,
+    "leaf_min": 185.53829541005996,
+    "leaf_max": 232.0891060864402,
+    "leaf_window": 46.55081067638025,
+    "all_min": 185.37376131601357,
+    "all_max": 250.72990560319926,
+    "all_window": 65.35614428718569,
+    "slew_max": 86.71548074102495
+   }
+  },
+  "profile": "w1_c1_s120",
+  "width_multiplier": 1,
+  "spacing_multiplier": 1,
+  "capacitance_factor": 1,
+  "slew_limit_ps": 120,
+  "qualification": "PLAN MODEL ONLY; capacitance scaling is assumed sensitivity except standard1W; no CTS/STA measurement read"
+ },
+ {
+  "entry_count": 1,
+  "entry_cell": "BUFx4_ASAP7_75t_R",
+  "violation_ps": 0,
+  "result": {
+   "TT": {
+    "mean": 260.62026297106786,
+    "leaf_min": 254.54627191898436,
+    "leaf_max": 267.5017364310897,
+    "leaf_window": 12.955464512105323,
+    "all_min": 254.53441475735033,
+    "all_max": 283.15342190697913,
+    "all_window": 28.6190071496288,
+    "slew_max": 79.5892912435966
+   },
+   "FF": {
+    "mean": 191.72740804405413,
+    "leaf_min": 185.47858842846617,
+    "leaf_max": 202.9726233034848,
+    "leaf_window": 17.494034875018627,
+    "all_min": 185.46673126683214,
+    "all_max": 218.2161824961727,
+    "all_window": 32.749451229340565,
+    "slew_max": 58.95991820250864
+   }
+  },
+  "profile": "w2_c1.1_s80",
+  "width_multiplier": 2,
+  "spacing_multiplier": 2,
+  "capacitance_factor": 1.1,
+  "slew_limit_ps": 80,
+  "qualification": "PLAN MODEL ONLY; capacitance scaling is assumed sensitivity except standard1W; no CTS/STA measurement read"
+ },
+ {
+  "entry_count": 2,
+  "entry_cell": "BUFx10_ASAP7_75t_R",
+  "violation_ps": 0,
+  "result": {
+   "TT": {
+    "mean": 259.67447077344946,
+    "leaf_min": 255.06852264714462,
+    "leaf_max": 266.20274352479163,
+    "leaf_window": 11.13422087764701,
+    "all_min": 255.0623118118956,
+    "all_max": 268.7532825053414,
+    "all_window": 13.69097069344582,
+    "slew_max": 79.90520887946917
+   },
+   "FF": {
+    "mean": 189.72449549445224,
+    "leaf_min": 184.77560337392052,
+    "leaf_max": 197.1573653975271,
+    "leaf_window": 12.38176202360657,
+    "all_min": 184.7693925386715,
+    "all_max": 203.94503227296437,
+    "all_window": 19.175639734292872,
+    "slew_max": 54.88133681793275
+   }
+  },
+  "profile": "w4_c1.3_s80",
+  "width_multiplier": 4,
+  "spacing_multiplier": 4,
+  "capacitance_factor": 1.3,
+  "slew_limit_ps": 80,
+  "qualification": "PLAN MODEL ONLY; capacitance scaling is assumed sensitivity except standard1W; no CTS/STA measurement read"
+ },
+ {
+  "entry_count": 2,
+  "entry_cell": "BUFx8_ASAP7_75t_R",
+  "violation_ps": 0,
+  "result": {
+   "TT": {
+    "mean": 259.5303155552575,
+    "leaf_min": 252.73423847487607,
+    "leaf_max": 264.1526711727645,
+    "leaf_window": 11.41843269788842,
+    "all_min": 252.73423847487607,
+    "all_max": 269.0862920853521,
+    "all_window": 16.352053610476048,
+    "slew_max": 79.99685291361992
+   },
+   "FF": {
+    "mean": 188.22876586547827,
+    "leaf_min": 183.67542312248568,
+    "leaf_max": 193.35932736174496,
+    "leaf_window": 9.683904239259277,
+    "all_min": 183.67542312248568,
+    "all_max": 198.97077033513145,
+    "all_window": 15.295347212645765,
+    "slew_max": 54.95609776266257
+   }
+  },
+  "profile": "w8_c1.6_s80",
+  "width_multiplier": 8,
+  "spacing_multiplier": 8,
+  "capacitance_factor": 1.6,
+  "slew_limit_ps": 80,
+  "qualification": "PLAN MODEL ONLY; capacitance scaling is assumed sensitivity except standard1W; no CTS/STA measurement read"
+ }
+]

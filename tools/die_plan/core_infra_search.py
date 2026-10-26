@@ -1,0 +1,130 @@
+#!/usr/bin/env python3
+"""Model-first core clock driver/width design. Reads only plan/geometry/NLDM.
+No measured CTS/GRT/STA timing, pad insertion or post-build sizing is accepted.
+Candidate output is a NEW PLAN; it still needs legalization, review and build.
+"""
+import argparse
+import copy
+import json
+import math
+from collections import defaultdict
+from pathlib import Path
+
+import core_infra as CI
+import core_infra_plan as CP
+import die_clock_128 as C128
+
+
+class Model:
+    def __init__(self, sl, libraries, points, caps, r, c):
+        plan=CI.compile_slice(sl);tree=plan['core_tree'];self.plan=plan
+        self.nodes=tree['nodes'];self.n=len(self.nodes);index={n['name']:i for i,n in enumerate(self.nodes)}
+        cells={n['name']:n for n in plan['cells']};self.libraries=libraries;self.r=r;self.c=c
+        self.parent=[index.get(n['parent'],-1) for n in self.nodes]
+        self.xy=[cells[n['name']]['xy_um'] for n in self.nodes]
+        self.children=[[] for _ in self.nodes];self.leaves=[[] for _ in self.nodes]
+        for i,p in enumerate(self.parent):
+            if p>=0:self.children[p].append(i)
+        for leaf in tree['leaves']:
+            self.leaves[index[leaf['node']]]+=leaf['sinks']
+        self.dist=[];self.wire=[];self.sinkcap=[];self.sinkel=[];self.count=[]
+        for i in range(self.n):
+            x,y=self.xy[i];tg=[self.xy[j] for j in self.children[i]]+[points[q] for q in self.leaves[i]]
+            self.wire.append(CP._mst_length([[x,y]]+tg))
+            self.dist.append([abs(x-self.xy[j][0])+abs(y-self.xy[j][1]) for j in self.children[i]])
+            self.sinkcap.append(sum(caps[q] for q in self.leaves[i]));self.count.append(len(self.leaves[i]))
+            el=[]
+            for q in self.leaves[i]:
+                dx=abs(x-points[q][0])+abs(y-points[q][1]);el.append(dx*r*(dx*c/2+caps[q]))
+            self.sinkel.append((min(el),sum(el)/len(el),max(el)) if el else None)
+
+    def evaluate(self, choices):
+        results={}
+        for corner,libs in self.libraries.items():
+            ar=[0.]*self.n;sr=[40.]*self.n;mins=[];means=[];maxs=[];weighted=0.;nreg=0;peak=0.
+            for i in range(self.n):
+                lib=libs[choices[i]]
+                load=self.sinkcap[i]+sum(libs[choices[j]]['cap'] for j in self.children[i])
+                d=C128._bilin(lib['delay'],sr[i],load+self.wire[i]*self.c)
+                s=C128._bilin(lib['trans'],sr[i],load+self.wire[i]*self.c)
+                peak=max(peak,s)
+                for j,dist in zip(self.children[i],self.dist[i]):
+                    el=dist*self.r*(dist*self.c/2+libs[choices[j]]['cap'])
+                    ar[j]=ar[i]+d+el;sr[j]=math.hypot(s,2.2*el);peak=max(peak,sr[j])
+                if self.sinkel[i]:
+                    lo,mean,hi=self.sinkel[i];mins.append(ar[i]+d+lo);means.append(ar[i]+d+mean);maxs.append(ar[i]+d+hi)
+                    weighted+=(ar[i]+d+mean)*self.count[i];nreg+=self.count[i];peak=max(peak,math.hypot(s,2.2*hi))
+            results[corner]=dict(mean=weighted/nreg,leaf_min=min(means),leaf_max=max(means),
+                leaf_window=max(means)-min(means),all_min=min(mins),all_max=max(maxs),all_window=max(maxs)-min(mins),slew_max=peak)
+        return results
+
+
+def score(res,slew_limit,window=18):
+    # Primary: legal slew and local-window structure. Overall insertion can be
+    # raised by one designed common entry trunk only after these are satisfied.
+    cost=0.
+    for corner,r in res.items():
+        cost+=30*max(0,r['slew_max']-slew_limit)**2+10*max(0,r['leaf_window']-window)**2
+        cost+=2*max(0,r['leaf_max']-({'TT':270,'FF':222.5}[corner]))**2
+        cost+=.01*r['leaf_window']**2
+    return cost
+
+
+def design(sl, libraries, points, caps, r, c, slew_limit=80., passes=10):
+    model=Model(sl,libraries,points,caps,r,c)
+    choices=[n['master'] for n in model.nodes]
+    options=list(libraries['TT'])
+    baseline=model.evaluate(choices);best=baseline;bestscore=score(best,slew_limit)
+    steps=[]
+    # Deterministic coordinate minimization from the all-strongest structured
+    # tree. Every candidate is computed from geometry and NLDM BEFORE build.
+    for turn in range(passes):
+        changed=0
+        for i in reversed(range(model.n)):
+            old=choices[i];pick=old;pickres=best;pickscore=bestscore
+            for cell in options:
+                if cell==old:continue
+                choices[i]=cell;v=model.evaluate(choices);sc=score(v,slew_limit)
+                if (sc,options.index(cell)) < (pickscore,options.index(pick)):
+                    pick,pickres,pickscore=cell,v,sc
+            choices[i]=pick
+            if pick!=old:changed+=1;best,bestscore=pickres,pickscore
+        steps.append(dict(pass_number=turn+1,changed=changed,score=bestscore,result=best))
+        if not changed:break
+    out=copy.deepcopy(sl)
+    frozen={x['name']:x for x in CI.compile_slice(sl)['cells']}
+    out.pop('cell_placements',None)
+    for i,n in enumerate(out['core_tree']['nodes']):n['master']=choices[i];n['xy_um']=frozen[n['name']]['xy_um']
+    return out,dict(baseline=baseline,result=best,score=bestscore,steps=steps,
+                   driver_counts={n:choices.count(n) for n in options if choices.count(n)},slew_limit_ps=slew_limit)
+
+
+def add_entry_chain(sl,n,cell):
+    out=copy.deepcopy(sl);out.pop('cell_placements',None)
+    tree=out['core_tree'];root=tree['nodes'][0];entry=out['islands'][0]['clock_pin']['xy_um'];rect=out['islands'][0]['rect_um'];nodes=[]
+    parent='port:'+tree['clock_port']
+    for i in range(n):
+        name=f'mp_core_entry{i}'
+        nodes.append(dict(name=name,master=cell,xy_um=entry,island_rect_um=rect,parent=parent));parent=name
+    root['parent']=parent;tree['nodes']=nodes+tree['nodes']
+    return out
+
+
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('input');ap.add_argument('--out',required=True);a=ap.parse_args()
+    data=json.loads(Path(a.input).read_text());sl=data['slice'];libs=data['libraries'];points=data['points'];caps=data['caps']
+    out=Path(a.out);out.mkdir(parents=True,exist_ok=True);results=[]
+    for width,cf in data.get('profiles',[[1,1.],[2,1.1],[4,1.3],[8,1.6]]):
+        r=data['wire_r_kohm_um']/width;c=data['wire_c_ff_um']*cf
+        for slew in data.get('slew_limits',[80.]):
+            candidate,rep=design(sl,libs,points,caps,r,c,slew)
+            rep.update(width_multiplier=width,spacing_multiplier=width,capacitance_factor=cf,
+                       rc_basis='R/width from fixed sheet resistance; C scaling stated sensitivity, NOT extracted NDR RC')
+            label=f'w{width}_c{cf:g}_s{slew:g}'
+            (out/(label+'.json')).write_text(json.dumps(rep,indent=1));(out/(label+'_slice.json')).write_text(json.dumps(candidate,indent=1))
+            results.append(dict(profile=label,**{k:rep[k] for k in ('result','driver_counts','score')}))
+            print(json.dumps(results[-1]),flush=True)
+    (out/'summary.json').write_text(json.dumps(results,indent=1))
+
+
+if __name__=='__main__':main()
