@@ -35,6 +35,10 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
     integer openrow [0:3][0:31];
     longint unsigned edge_n = 0, n_rd = 0, n_wr = 0, n_rd_unwritten = 0;
     reg [288:0] due [0:3][0:63];          // RL ring (RL < 64)
+    // TOK-KVE 10-26: +HBM_RL=<n> = the compiled controller read latency in this PHY clock (the 833 common profile runs the
+    // PHY slices on the die clock: PC_HBM_RL 29 = regen_constants pc833); default = the RL parameter (23, legacy hck).
+    integer rl = RL;
+    initial begin void'($value$plusargs("HBM_RL=%d", rl)); if (rl < 1 || rl > 63) $fatal(1, "HBM_RL %0d out of range", rl); end
     task automatic preload(input integer pc, input integer bank, input integer row, input integer col, input [287:0] w);
         mem[{2'(pc), 5'(bank), 19'(row), 5'(col)}] = w;
     endtask
@@ -90,8 +94,8 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
                 if (po[k][29]) begin mem[key] = po[k][327:40]; n_wr++; end
                 else begin
                     n_rd++;
-                    if (!mem.exists(key)) begin n_rd_unwritten++; due[k][(edge_n + RL) % 64] = {encode(256'd0), 1'b1}; end
-                    else due[k][(edge_n + RL) % 64] = {mem[key], 1'b1};
+                    if (!mem.exists(key)) begin n_rd_unwritten++; due[k][(edge_n + rl) % 64] = {encode(256'd0), 1'b1}; end
+                    else due[k][(edge_n + rl) % 64] = {mem[key], 1'b1};
                 end
             end
         end
