@@ -120,6 +120,14 @@ def region_boxes(nx, ny, depth, W=None, H=None):
     return out
 
 
+def strap_bounds(g, xs, ys, axis):
+    """Metal ends may extend beyond the last crossing to legal driver islands, but never meet a neighbour mesh."""
+    if g.get("strap_box_um") is not None:
+        b = g["strap_box_um"]
+        return b[axis], b[axis + 2]
+    return (xs[g["i0"]], xs[g["i1"] - 1]) if axis == 0 else (ys[g["j0"]], ys[g["j1"] - 1])
+
+
 # ------------------------------------------------------------------------------------------------------------ build
 FOOT_M = 2.0     # keep-out test margin around a site point: two side-by-side BUFx24 (2.7 um) + one-site halo
 
@@ -205,7 +213,7 @@ def leg_sites(K, a, b, seg, out, tag, step=STEP_UM, s_init=0.0):
     return pts
 
 
-def stub_foot(K, xs, ys, x, y, limit, box=None):
+def stub_foot(K, xs, ys, x, y, limit, box=None, extent=None):
     """stub input site for a tap at (x, y): over the two nearest M8 (horizontal) and two nearest M9 (vertical) straps,
     the perpendicular foot slid along the strap to the nearest free site; the one with the shortest stub wins.
     box = (i0, i1, j0, j1): only that clock region's straps, foot inside the region's strap extent.
@@ -214,17 +222,19 @@ def stub_foot(K, xs, ys, x, y, limit, box=None):
     i0, i1, j0, j1 = box or (0, len(xs), 0, len(ys))
     xs_, ys_ = xs[i0:i1], ys[j0:j1]
     bx, by = ((xs_[0], xs_[-1]), (ys_[0], ys_[-1])) if box else (None, None)
+    if extent is not None:
+        bx, by = (extent[0], extent[2]), (extent[1], extent[3])
     best = None
     ci = i0 + bisect.bisect_left(xs_, x)
     cj = j0 + bisect.bisect_left(ys_, y)
     for j in {max(cj - 1, j0), min(cj, j1 - 1)}:
-        q, d = free_along(K, (min(max(x, xs_[0]), xs_[-1]), ys[j]), 0, limit, bounds=bx)
+        q, d = free_along(K, (min(max(x, bx[0] if bx else xs_[0]), bx[1] if bx else xs_[-1]), ys[j]), 0, limit, bounds=bx)
         if q is not None:
             L = abs(q[0] - x) + abs(q[1] - y)
             if best is None or L < best[0]:
                 best = (L, q, d, 0, int(min(range(len(xs)), key=lambda k: abs(xs[k] - q[0]))), j)
     for i in {max(ci - 1, i0), min(ci, i1 - 1)}:
-        q, d = free_along(K, (xs[i], min(max(y, ys_[0]), ys_[-1])), 1, limit, bounds=by)
+        q, d = free_along(K, (xs[i], min(max(y, by[0] if by else ys_[0]), by[1] if by else ys_[-1])), 1, limit, bounds=by)
         if q is not None:
             L = abs(q[0] - x) + abs(q[1] - y)
             if best is None or L < best[0]:
@@ -287,7 +297,7 @@ def part_regions(P, R):
 
 
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
-          regions=0, delta_id=None):
+          regions=0, delta_id=None, region_edge_straps=False):
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
@@ -302,6 +312,16 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     if delta_id:
         out["meta"]["delta_id"] = delta_id
     R = region_boxes(nx, ny, regions, W, H)
+    if region_edge_straps:
+        if not regions:
+            raise ValueError("--region-edge-straps requires --regions")
+        # Leave a real NDR gap at every region boundary: both metal and its spacing footprint stay in the region.
+        margin = NDR[ndr]["width"] / 2 + NDR[ndr]["space"] + SITE_X
+        for g in R:
+            b = g["box_um"]
+            g["strap_box_um"] = [round(b[0] + margin, 4), round(b[1] + margin, 4),
+                                  round(b[2] - margin, 4), round(b[3] - margin, 4)]
+        out["meta"]["region_edge_straps"] = True
     reg_ij = {}
     for g in R:
         for i in range(g["i0"], g["i1"]):
@@ -322,7 +342,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             g = R[reg_ij[(i, j)]]
             rk = dict(region=g["k"]) if regions else {}
             for axis in (0, 1):
-                bnd = (xs[g["i0"]], xs[g["i1"] - 1]) if axis == 0 else (ys[g["j0"]], ys[g["j1"] - 1])
+                bnd = strap_bounds(g, xs, ys, axis)
                 q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
                 if q is not None and (best is None or d < best[1]):
                     best = (q, d, axis)
@@ -443,7 +463,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         g = R[out["part_region"][part]] if regions else R[0]
         rk = dict(region=g["k"]) if regions else {}
         fq, fd, axis, i, j = stub_foot(K, xs, ys, x, y, 4 * max_move,
-                                       box=(g["i0"], g["i1"], g["j0"], g["j1"]) if regions else None)
+                                       box=(g["i0"], g["i1"], g["j0"], g["j1"]) if regions else None,
+                                       extent=g.get("strap_box_um"))
         if fq is None:
             fq, fd = (x, y), -1.0
             out["unplaced"].append([tp, "stub"])
@@ -467,8 +488,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                        node_move_max_um=max([h.get("node_move_um", 0) for h in out["htree"]] or [0]),
                        stub_max_um=max(t["stub_um"] for t in tap_rows),
                        htree_wire_mm=round(sum(h["len_um"] for h in out["htree"]) / 1e3 + trunk / 1e3, 2),
-                       mesh_wire_mm=round(sum((g["j1"] - g["j0"]) * (xs[g["i1"] - 1] - xs[g["i0"]]) +
-                                              (g["i1"] - g["i0"]) * (ys[g["j1"] - 1] - ys[g["j0"]]) for g in R) / 1e3, 2),
+                       mesh_wire_mm=round(sum((g["j1"] - g["j0"]) * (strap_bounds(g, xs, ys, 0)[1] - strap_bounds(g, xs, ys, 0)[0]) +
+                                              (g["i1"] - g["i0"]) * (strap_bounds(g, xs, ys, 1)[1] - strap_bounds(g, xs, ys, 1)[0]) for g in R) / 1e3, 2),
                        stub_wire_mm=round(sum(t["stub_um"] for t in tap_rows) / 1e3, 2))
     return cells, nets, ports, out
 
@@ -515,7 +536,7 @@ def cmd_build(a):
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
-                                  a.regions, a.delta_id)
+                                  a.regions, a.delta_id, a.region_edge_straps)
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
@@ -676,20 +697,22 @@ def cmd_combo(a):
     regs = M["meta"].get("regions") or [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))]
     for g in regs:      # one special net per clock region (the whole strap grid without --regions)
         rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
+        xlo, xhi = strap_bounds(g, xs, ys, 0)
+        ylo, yhi = strap_bounds(g, xs, ys, 1)
         L += [f"set mn [$blk findNet {mesh_net(g['k'])}]", "$mn setSpecial", "$mn setSigType CLOCK",
               "$mn setWildConnected", "foreach it [$mn getITerms] { $it setSpecial }", "set sw [odb::dbSWire_create $mn ROUTED]"]
         for y in ry:
-            L.append(f"odb::dbObstruction_create $blk $l8 [um {rx[0] - hs:.4f}] [um {y - hs:.4f}] [um {rx[-1] + hs:.4f}] "
+            L.append(f"odb::dbObstruction_create $blk $l8 [um {xlo - hs:.4f}] [um {y - hs:.4f}] [um {xhi + hs:.4f}] "
                      f"[um {y + hs:.4f}]")
         for x in rx:
-            L.append(f"odb::dbObstruction_create $blk $l9 [um {x - hs:.4f}] [um {ry[0] - hs:.4f}] [um {x + hs:.4f}] "
-                     f"[um {ry[-1] + hs:.4f}]")
+            L.append(f"odb::dbObstruction_create $blk $l9 [um {x - hs:.4f}] [um {ylo - hs:.4f}] [um {x + hs:.4f}] "
+                     f"[um {yhi + hs:.4f}]")
         for y in ry:
-            L.append(f"odb::dbSBox_create $sw $l8 [um {rx[0] - hw:.4f}] [um {y - hw:.4f}] [um {rx[-1] + hw:.4f}] "
+            L.append(f"odb::dbSBox_create $sw $l8 [um {xlo - hw:.4f}] [um {y - hw:.4f}] [um {xhi + hw:.4f}] "
                      f"[um {y + hw:.4f}] STRIPE")
         for x in rx:
-            L.append(f"odb::dbSBox_create $sw $l9 [um {x - hw:.4f}] [um {ry[0] - hw:.4f}] [um {x + hw:.4f}] "
-                     f"[um {ry[-1] + hw:.4f}] STRIPE")
+            L.append(f"odb::dbSBox_create $sw $l9 [um {x - hw:.4f}] [um {ylo - hw:.4f}] [um {x + hw:.4f}] "
+                     f"[um {yhi + hw:.4f}] STRIPE")
     clock_nets = [n["name"] for n in data["nets"]]
     L += [f"puts \"OT_MESH regions {len(regs)} straps {sum((g['i1'] - g['i0']) + (g['j1'] - g['j0']) for g in regs)}\"",
           "create_clock -name dck -period 833.000 [get_ports root]",
@@ -799,15 +822,17 @@ def cmd_mesh(a):
     for g in regs:
         for j in range(g["j0"], g["j1"]):
             hpts[(j, g["k"])] |= {round(x, 3) for x in xs[g["i0"]:g["i1"]]}
+            hpts[(j, g["k"])] |= {round(x, 3) for x in strap_bounds(g, xs, ys, 0)}
         for i in range(g["i0"], g["i1"]):
             vpts[(i, g["k"])] |= {round(y, 3) for y in ys[g["j0"]:g["j1"]]}
+            vpts[(i, g["k"])] |= {round(y, 3) for y in strap_bounds(g, xs, ys, 1)}
     ext = {g["k"]: g for g in regs}
 
     def on_strap(k, axis, v):   # the point lies on its region's strap segment (checked with --regions)
         if k is None:
             return
         g = ext[k]
-        lo, hi = (xs[g["i0"]], xs[g["i1"] - 1]) if axis == 0 else (ys[g["j0"]], ys[g["j1"] - 1])
+        lo, hi = strap_bounds(g, xs, ys, axis)
         if not lo - 1e-3 <= v <= hi + 1e-3:
             raise SystemExit(f"die_clock_mesh mesh: point {v} off region {k} strap extent [{lo}, {hi}]")
     xi = {round(x, 3): i for i, x in enumerate(xs)}
@@ -1190,9 +1215,9 @@ def cmd_render(a):
     for g in M["meta"].get("regions") or [dict(i0=0, i1=len(xs), j0=0, j1=len(ys))]:
         rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
         for y in ry:
-            ax.plot([rx[0], rx[-1]], [y, y], color="tab:blue", lw=0.25)
+            ax.plot(strap_bounds(g, xs, ys, 0), [y, y], color="tab:blue", lw=0.25)
         for x in rx:
-            ax.plot([x, x], [ry[0], ry[-1]], color="tab:blue", lw=0.25)
+            ax.plot([x, x], strap_bounds(g, xs, ys, 1), color="tab:blue", lw=0.25)
         if "box_um" in g:
             b = g["box_um"]
             ax.add_patch(Rectangle((b[0], b[1]), b[2] - b[0], b[3] - b[1], fill=False, lw=1.2, ec="tab:purple", ls="--"))
@@ -1240,6 +1265,8 @@ def main(argv=None):
     b.add_argument("--hop-max", type=float, default=480.0, help="split any driver->load branch longer than this")
     b.add_argument("--regions", type=int, default=0,
                    help="D > 0: 2^D clock regions (H-tree subtrees below level D), one mesh each, LANDED seams")
+    b.add_argument("--region-edge-straps", action="store_true",
+                   help="extend regional metal to its geometric box with an NDR gap, opening legal edge driver islands")
     b.add_argument("--delta-id", help="plan delta tag recorded in mesh.json meta (e.g. D-QC-CLKMESH)")
     bl = sub.add_parser("balance")
     bl.add_argument("dir")

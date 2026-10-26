@@ -75,6 +75,19 @@ class T(unittest.TestCase):
         self.assertEqual(CM.mesh_net(None), "ck_mesh")         # default (no --regions) unchanged
         self.assertEqual(CM.mesh_net(3), "ck_mesh_r3")
 
+    def test_region_edge_strap_reaches_legal_driver_without_crossing_boundary(self):
+        xs, ys = [100., 300., 500., 700.], [100., 300., 500., 700.]
+        g = dict(i0=0, i1=2, j0=0, j1=4, strap_box_um=[.214, .214, 399.786, 799.786])
+        obstacle = Box((200, -20, 340, 820))
+        q, _ = CM.free_along(obstacle, (300, 100), 0, 60, bounds=(100, 300))
+        self.assertIsNone(q)
+        q, _ = CM.free_along(obstacle, (300, 100), 0, 60, bounds=CM.strap_bounds(g, xs, ys, 0))
+        self.assertGreater(q[0], 340.)
+        self.assertLess(q[0], 400.)
+        foot, *_ = CM.stub_foot(obstacle, xs, ys, 350, 110, 60, box=(0, 2, 0, 4), extent=g["strap_box_um"])
+        self.assertGreater(foot[0], 340.)
+        self.assertLess(foot[0], 400.)
+
     def test_core_offsets_compare_sinks_at_each_corner(self):
         M = {"taps": [dict(part="p", tap="core", port="tc", early_ps=100),
                       dict(part="p", tap="ordinary", port="to", early_ps=0)]}

@@ -1,0 +1,21 @@
+{
+  "picture": "results/geom_review/qc_regional_edge_straps_1026.png",
+  "verdict": "PASS-COND",
+  "scope": "clock regional edge-driver structural fix, trial only",
+  "plan_sha256": "2dd204af1806511cf46ef1179fc3199017cebba6ed843ec299403b490ddf6a20",
+  "findings": [
+    "Viewed full-die image: regular H-tree/dataflow retained; eight independent meshes end inside their boxes and preserve NDR metal/spacing gaps.",
+    "Extending only regional strap ends opens legal driver islands previously outside the last-intersection bounds: unplaced56->0, all4096 driver sites now present; driver moves<=231.12um.",
+    "Tree and clock islands avoid hard-core keepouts by existing legalization; no tile-outline or signal-cycle change.",
+    "Maximum stub length780.04->629.41um is split by existing clock repeaters; TT/FF routed RC, skew and slew must be measured before adoption.",
+    "Regional seam adapter RTL/bind and exact cycle pricing remain required; a regional-clock-only PASS does not freeze a die."
+  ],
+  "numbers": {
+    "drivers": 4096,
+    "unplaced": 0,
+    "driver_move_max_um": 231.12,
+    "stub_max_um": 629.41,
+    "mesh_wire_mm": 3678.68,
+    "stub_wire_mm": 675.39
+  }
+}
