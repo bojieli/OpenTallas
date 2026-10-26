@@ -468,6 +468,7 @@ def main():
                          "(old b -> b-1 above the dropped bit) in memory until the KV-PLAN3 delta lands (am_g_drop.py)")
     ap.add_argument("--kvspc-face-ports", action="store_true", help="kvs_pc / kvs_pc_h_head_p boundary recut: one clock (hck + HBM data clocks := ck), dead-pin drop (land_er[258:1]; head ki[30:21]/[14:1]) as an in-memory plan delta until KV-PLAN3 lands it, ki/ko split (+1 hclk per kc station), fi landing (+1 fault edge), po / land_es private port flops (0 cycles); miter results/kvspc_face_1025")
     ap.add_argument("--kvspc-private-ports", action="store_true", help="with --kvspc-face-ports: private output ports (kvspc_private_ports.py, PATH-KV-PC 10-25): return actual_* port flops with internal hold copy + actual_valid kept (0 cycles), o_grp[296:289] status pin flops (+1 fault/drain observation edge; o_grp[294] no longer a pc__fo feedthrough), o_prev private launch (+1 edge per o_prev hop, non-head), pi[0] single capture, pc/cfg_stack single landing (chain station reads the landed copy), head upo kept pin flops (0 cycles)")
+    ap.add_argument("--kvspc-core-clock", action="store_true", help="explicit common833ps controller profile at actual PC u_pc, including physical-minimum timing/counter widths and current canonical RTL; requires --kvspc-face-ports")
     ap.add_argument("--kvspc-static-refresh", action="store_true",
                     help="with --kvspc-face-ports: PC controller u_ctrl (qkd_static_kv_pc_path_nc) instantiated with "
                          "STATIC_REFRESH=1: REFpb bank = round-robin refresh_rr (compiler-known) instead of the run-time "
@@ -496,6 +497,8 @@ def main():
         if cj["module"].startswith("kv3_astk_") and not a.astk_face_ports:
             raise SystemExit("--am-g-drop on ASTK needs --astk-face-ports (repo qkd_astk_static_leaves.sv carries AM_G_PIN)")
         am_g_drop.core_json(cj)
+    if a.kvspc_core_clock and not a.kvspc_face_ports:
+        raise SystemExit("--kvspc-core-clock requires --kvspc-face-ports")
     if a.kvspc_face_ports:
         if cj["module"] not in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
             raise SystemExit("--kvspc-face-ports only applies to qkd_kvs_pc / qkd_kvs_pc_h_head_p")
@@ -544,6 +547,9 @@ def main():
     if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
         files.append(str(REPO / "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"))
     for f in files:
+        if a.kvspc_core_clock:
+            import kvspc_core_clock
+            f = str(kvspc_core_clock.source(REPO, f))
         if a.astk_face_ports and Path(f).name in {"qkd_astk_static_leaves.sv", "qkd_astk_phys.sv"}:
             f = str(REPO / "rtl/qwen_sys/split_20261014" / Path(f).name)
         if a.astk_face_ports and Path(f).name == "qkd_astk_ctl_s_p.sv":
@@ -576,6 +582,9 @@ def main():
         # from the liberty, the models are not synthesisable input
         if not f.endswith((".svh", ".vh")) and not re.match(r"asap7sc7p5t_.*\.v$", dst.name):
             srcs.append(f"/work/rtl/{dst.name}")
+    if a.kvspc_core_clock:
+        import kvspc_core_clock
+        kvspc_core_clock.apply_kit(kd)
     if a.astk_timing_regs:
         if not mod.startswith("kv3_astk_"):
             raise SystemExit("--astk-timing-regs only applies to kv3_astk_* cores")
