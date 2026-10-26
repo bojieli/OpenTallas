@@ -491,7 +491,7 @@ endmodule
 // (u_twp* becomes the shared relay stage in front of the per-SRAM landings) so that MIF=1 is exactly MIF=0 delayed by one
 // cycle on bs_q (bs_q(t+1) = bs_q_MIF0(t); write/read ordering unchanged); fault is unchanged (0 cycles).
 // PRICE vs MIF=0: BTAB read +1, table write +1.  The parent must schedule the +1 (static schedule).
-module qfd_dv_s8x_btab #(parameter integer MIF = 0, parameter integer ROW_WRITE_RELAY = 0, parameter integer WR_HALF_CYCLE = 0, parameter integer RD_HALF_CYCLE = 0) (
+module qfd_dv_s8x_btab #(parameter integer MIF = 0, parameter integer ROW_WRITE_RELAY = 0, parameter integer WR_HALF_CYCLE = 0, parameter integer RD_HALF_CYCLE = 0, parameter integer MIF0_LOCAL_HALF = 0) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire            bs_re,
@@ -530,7 +530,23 @@ module qfd_dv_s8x_btab #(parameter integer MIF = 0, parameter integer ROW_WRITE_
     end endgenerate
     generate for (bk = 0; bk < 4; bk = bk + 1) begin : g_btb
         wire m_rce, m_we; wire [8:2] m_ra, m_wa; wire [255:0] m_wd;
-        if (MIF == 0) begin : g_d
+        if (MIF == 0 && MIF0_LOCAL_HALF != 0) begin : g_local_half
+            // Decode commutes before the ORIGINAL pbs capture edge. Each macro
+            // gets private rising read controls, then a falling landing before
+            // the SAME original SRAM rising consumption edge. No whole cycle.
+            wire pre_rce, pre_we; wire [6:0] pre_ra, pre_wa;
+            qfd_dv_s8x_kff #(.W(1), .ID(9000 + 32*bk)) u_rce_r (.ck(ck), .d(bs_re && bs_addr[1:0] == bk[1:0]), .q(pre_rce));
+            qfd_dv_s8x_kff #(.W(7), .ID(9001 + 32*bk)) u_ra_r (.ck(ck), .d(bs_addr[8:2]), .q(pre_ra));
+            // These clones capture at the original u_twpw/u_twpa edge, not
+            // after that stage. Existing twp_d bits already belong to one row.
+            qfd_dv_s8x_kff #(.W(1), .ID(9002 + 32*bk)) u_we_r (.ck(ck), .d(ptw_w), .q(pre_we));
+            qfd_dv_s8x_kff #(.W(7), .ID(9003 + 32*bk)) u_wa_r (.ck(ck), .d(ptw_addr), .q(pre_wa));
+            qfd_dv_s8x_kffn #(.W(1), .ID(9004 + 32*bk)) u_rce_f (.ck(ck), .d(pre_rce), .q(m_rce));
+            qfd_dv_s8x_kffn #(.W(7), .ID(9005 + 32*bk)) u_ra_f (.ck(ck), .d(pre_ra), .q(m_ra));
+            qfd_dv_s8x_kffn #(.W(1), .ID(9006 + 32*bk)) u_we_f (.ck(ck), .d(pre_we), .q(m_we));
+            qfd_dv_s8x_kffn #(.W(7), .ID(9007 + 32*bk)) u_wa_f (.ck(ck), .d(pre_wa), .q(m_wa));
+            qfd_dv_s8x_kffn #(.W(256), .ID(9008 + 32*bk)) u_wd_f (.ck(ck), .d(twp_d[256*bk +: 256]), .q(m_wd));
+        end else if (MIF == 0) begin : g_d
             assign m_rce = pbs_re && bs_word[1:0] == bk[1:0]; assign m_ra = bs_word[8:2];
             assign m_we = twp_w; assign m_wa = twp_a; assign m_wd = twp_d[256*bk +: 256];
         end else begin : g_r
@@ -595,7 +611,7 @@ endmodule
 // MIF (PATH-QC-SRAMIF 2026-10-25, GEOM-REVIEW F6 on prog_s6): as qfd_dv_s8x_btab.  MIF=1 = per-SRAM read-address /
 // read-enable / write-address / write-enable / write-data landing registers with the bank decode in front; MIF=1 is
 // exactly MIF=0 delayed by one cycle on p_q (read +1, table write +1, write/read ordering unchanged).
-module qfd_dv_s8x_prog #(parameter integer MIF = 0, parameter integer ROW_WRITE_RELAY = 0, parameter integer WR_HALF_CYCLE = 0, parameter integer RD_HALF_CYCLE = 0) (
+module qfd_dv_s8x_prog #(parameter integer MIF = 0, parameter integer ROW_WRITE_RELAY = 0, parameter integer WR_HALF_CYCLE = 0, parameter integer RD_HALF_CYCLE = 0, parameter integer MIF0_LOCAL_HALF = 0) (
     input  wire            ck,
     input  wire            p_re,
     input  wire [8:0]      p_idx,
@@ -628,7 +644,33 @@ module qfd_dv_s8x_prog #(parameter integer MIF = 0, parameter integer ROW_WRITE_
     end endgenerate
     generate for (bk = 0; bk < 2; bk = bk + 1) begin : g_prog
         wire lo_rce, hi_rce, lo_we, hi_we; wire [7:0] lo_ra, hi_ra, lo_wa, hi_wa; wire [255:0] lo_wd; wire [200:0] hi_wd;
-        if (MIF == 0) begin : g_d
+        if (MIF == 0 && MIF0_LOCAL_HALF != 0) begin : g_local_half
+            // Independent low/high SRAM input cohorts. Read bank decode uses
+            // raw p_re/p_idx at the original pp capture edge; cap_bank below
+            // remains the original registered bank bit, with no extra stage.
+            wire pre_lrce, pre_hrce, pre_lwe, pre_hwe;
+            wire [7:0] pre_lra, pre_hra, pre_lwa, pre_hwa;
+            qfd_dv_s8x_kff #(.W(1), .ID(9300 + 32*bk)) u_lrce_r (.ck(ck), .d(p_re && p_idx[0] == bk[0]), .q(pre_lrce));
+            qfd_dv_s8x_kff #(.W(1), .ID(9301 + 32*bk)) u_hrce_r (.ck(ck), .d(p_re && p_idx[0] == bk[0]), .q(pre_hrce));
+            qfd_dv_s8x_kff #(.W(8), .ID(9302 + 32*bk)) u_lra_r (.ck(ck), .d(p_idx[8:1]), .q(pre_lra));
+            qfd_dv_s8x_kff #(.W(8), .ID(9303 + 32*bk)) u_hra_r (.ck(ck), .d(p_idx[8:1]), .q(pre_hra));
+            qfd_dv_s8x_kff #(.W(1), .ID(9304 + 32*bk)) u_lwe_r (.ck(ck), .d(ptw_w), .q(pre_lwe));
+            qfd_dv_s8x_kff #(.W(1), .ID(9305 + 32*bk)) u_hwe_r (.ck(ck), .d(ptw_w), .q(pre_hwe));
+            qfd_dv_s8x_kff #(.W(8), .ID(9306 + 32*bk)) u_lwa_r (.ck(ck), .d(ptw_addr), .q(pre_lwa));
+            qfd_dv_s8x_kff #(.W(8), .ID(9307 + 32*bk)) u_hwa_r (.ck(ck), .d(ptw_addr), .q(pre_hwa));
+            qfd_dv_s8x_kffn #(.W(1), .ID(9308 + 32*bk)) u_lrce_f (.ck(ck), .d(pre_lrce), .q(lo_rce));
+            qfd_dv_s8x_kffn #(.W(1), .ID(9309 + 32*bk)) u_hrce_f (.ck(ck), .d(pre_hrce), .q(hi_rce));
+            qfd_dv_s8x_kffn #(.W(8), .ID(9310 + 32*bk)) u_lra_f (.ck(ck), .d(pre_lra), .q(lo_ra));
+            qfd_dv_s8x_kffn #(.W(8), .ID(9311 + 32*bk)) u_hra_f (.ck(ck), .d(pre_hra), .q(hi_ra));
+            qfd_dv_s8x_kffn #(.W(1), .ID(9312 + 32*bk)) u_lwe_f (.ck(ck), .d(pre_lwe), .q(lo_we));
+            qfd_dv_s8x_kffn #(.W(1), .ID(9313 + 32*bk)) u_hwe_f (.ck(ck), .d(pre_hwe), .q(hi_we));
+            qfd_dv_s8x_kffn #(.W(8), .ID(9314 + 32*bk)) u_lwa_f (.ck(ck), .d(pre_lwa), .q(lo_wa));
+            qfd_dv_s8x_kffn #(.W(8), .ID(9315 + 32*bk)) u_hwa_f (.ck(ck), .d(pre_hwa), .q(hi_wa));
+            // Original rising data stage, disjoint bits per macro; only the
+            // falling sample is new, and SRAM write consumption is unchanged.
+            qfd_dv_s8x_kffn #(.W(256), .ID(9316 + 32*bk)) u_lwd_f (.ck(ck), .d(twd[bk][255:0]), .q(lo_wd));
+            qfd_dv_s8x_kffn #(.W(201), .ID(9317 + 32*bk)) u_hwd_f (.ck(ck), .d(twd[bk][456:256]), .q(hi_wd));
+        end else if (MIF == 0) begin : g_d
             assign lo_rce = pp_re && pp_idx[0] == bk[0]; assign hi_rce = lo_rce;
             assign lo_ra = pp_idx[8:1]; assign hi_ra = pp_idx[8:1];
             assign lo_we = twp_w; assign hi_we = twp_w; assign lo_wa = twp_a; assign hi_wa = twp_a;

@@ -1,0 +1,48 @@
+{
+  "status": "DEFAULT-OFF CANDIDATE, BEFORE RTL BUILD",
+  "basis": "MIF0: commute bank decode before same-edge local read registers; clone write control at originaltwp edge; keep disjoint originaltwp data. Optional falling landings preserve next-rising SRAM consumption.",
+  "clock_ps": 833,
+  "halfcycle_ps": 416.5,
+  "setup_corner": "TT",
+  "hold_corner": "FF",
+  "uncertainty_ps": [
+    60,
+    25
+  ],
+  "cycles_added": {
+    "read": 0,
+    "write": 0,
+    "boot": 0,
+    "fault": 0,
+    "production_token": 0
+  },
+  "btab": {
+    "macros": 4,
+    "macro_shape": "128x256 1R1W",
+    "reads_per_cycle": 1,
+    "logical_read_bits_per_cycle": 256,
+    "logical_broadcast_write_bits_per_cycle": 1024,
+    "new_local_rising_control_bits": 64,
+    "estimated_retired_old_rising_bits": 15,
+    "estimated_net_rising_bits": 49,
+    "falling_macro_input_bits": 1088
+  },
+  "prog": {
+    "macros": 4,
+    "macro_shape": "2 banks x(low256+high201 in256x256 macros),1R1W",
+    "reads_per_cycle": 1,
+    "logical_read_bits_per_cycle": 457,
+    "physical_read_bits_per_cycle": 512,
+    "logical_broadcast_write_bits_per_cycle": 914,
+    "physical_broadcast_write_bits_per_cycle": 1024,
+    "new_local_rising_control_bits": 72,
+    "estimated_retired_old_rising_bits": 18,
+    "estimated_net_rising_bits": 54,
+    "falling_macro_input_bits": 986
+  },
+  "MACs_per_cycle_delta": 0,
+  "replica_count_delta": 0,
+  "memory_port_count_delta": 0,
+  "physical": "No placement/route qualification. Need every nonconstant SRAMinput directly from localfallingFF, native halfcycle setup+hold at bothphases, pin landing/port reach/capacity/clock/PG review. Oldpp/pbs unusedfield pruning and FFretention must be measured; estimates include that pruning.",
+  "exactness": "Required20kcycle memory lockstep against pinned originalMIF0, consumedread/write edge/enable/address/data checks, outputs/fault/resetbursts/collisions; wrong-edge and wrong-row mutants"
+}
