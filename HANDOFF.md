@@ -946,3 +946,5 @@ CODEX: 2026-10-25 22:24 PDT S81 source ties: codex/s81-deadinputs-2148@e9f7f597d
 CODEX: 2026-10-25 22:28 PDT QC CB16phaseexecution WIPa01d956f1:G0Cmodel77/77PASS;freshprobeFAIL2 diagnosed(source-namecanon+opaqueSUcore-reset),V2ELABPASS/probeliveintel1unit3357579;actualFF/clockgeometry+nativeA0views stillrequired,noG2/tokenclaim.
 
 CODEX: 2026-10-25 22:34 PDT tokenintegration pricedS81full23stations dda4ebf657 AR+870/MTP6pos+970mappedcycles; realclosingATTengine andFG3goldreference buildsnowlive units624759(realhub)/3367324(intel1).0RTLchanges, mainratesunmodified.
+
+CLAUDE: 2026-10-25 23:29 PDT AUTOPILOT-FIX flowfp: READY URGENT claude/autopilot-flowfp-1025@eddc72ea4c (canary gate on kit flow vs newest released canary, main moves no longer hold; fingerprint = flow code+recipes incl tools/ref_tile). Live: 0/7 WAIT-CANARY release; QC/S81-HEAD/S81 kits need regen from released canary sha (69d23a6a5 / 0f076c3f7); KV core canary REGRESSION separate.
