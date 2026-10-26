@@ -667,6 +667,13 @@ SCHEMA = {
 
 
 # ------------------------------------------------------------------------------- structural validator (subset)
+# Regional landing pins use the existing clock/reset infrastructure model,
+# not functional R8 bus ports. Exact scalar endpoints and <=405um registered
+# status hops are checked by landing_contract.py; default plans are unchanged.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
+SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+
+
 def _check(v, s, path, errs):
     """Minimal draft-2020-12 subset (type, const, enum, required, properties, additionalProperties, items, min/max*,
     pattern, minLength, minProperties).  No external dependency, so it runs on every fleet host."""

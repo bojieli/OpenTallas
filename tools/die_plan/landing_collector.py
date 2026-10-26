@@ -17,15 +17,24 @@ def raw(n):
     return re.sub(r"^rst_n_t(\d+)$", r"rr_t\1", n)
 
 
-def build_local(tree, sources, body, *, reach_um=405):
-    root = "rst_root_n"
+def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
+    reset_root="rst_root_n";root=root_node
     relays = {r["q"]: r for r in tree["relays"]}
-    xy = {root: tree["root"], **{q: r["xy"] for q, r in relays.items()}}
-    parent = {q: r["d"] for q, r in relays.items()}
+    xy = {reset_root: tree["root"], **{q: r["xy"] for q, r in relays.items()}}
+    reset_parent = {q: r["d"] for q, r in relays.items()}
+    if root not in xy:raise ValueError(f"collector root {root} is not a real reset relay site")
+    adj=defaultdict(list)
+    for q,d in reset_parent.items():adj[q].append(d);adj[d].append(q)
+    parent={root:None};queue=[root]
+    while queue:
+        n=queue.pop()
+        for other in adj[n]:
+            if other in parent:continue
+            parent[other]=n;queue.append(other)
     at, active = defaultdict(list), set()
     max_source_hop = 0
     for src in sources:
-        node = f"rst_n_t{src['tap']}"
+        node = src.get("node",f"rst_n_t{src.get('tap',0)}")
         if node not in xy:
             raise ValueError(f"collector source {src['name']}: reset tap {node} absent")
         point = src.get("xy_um", xy[node])
@@ -76,15 +85,15 @@ def build_local(tree, sources, body, *, reach_um=405):
         reset = raw(node)
         # A raw copy of a terminal mission tap is not always needed by the old
         # reset tree. Materialize that existing parent->tap edge locally.
-        if node != root and not re.search(r"\bwire\b[^;]*\b"+re.escape(reset)+r"\b", body):
+        if node != reset_root and not re.search(r"\bwire\b[^;]*\b"+re.escape(reset)+r"\b", body):
             # A bootstrap tap already carries raw reset under its original name.
             boot = re.search(r"ot_dp_rrelay\s+\w+\s*\([^;]*\.q\("+re.escape(node)+r"\)\);", body)
             if boot:
                 reset = node
             else:
                 reset = "cland_reset_" + safe(node)
-                rp = raw(parent[node])
-                if parent[node] != root and not re.search(r"\bwire\b[^;]*\b"+re.escape(rp)+r"\b", body):
+                rp = raw(reset_parent[node])
+                if reset_parent[node] != reset_root and not re.search(r"\bwire\b[^;]*\b"+re.escape(rp)+r"\b", body):
                     raise ValueError(f"collector {node}: raw reset parent {rp} absent")
                 lines += [f"    wire {reset};",
                           f"    ot_dp_rrelay u_{reset} (.clk(clk), .d({rp}), .q({reset}));"]

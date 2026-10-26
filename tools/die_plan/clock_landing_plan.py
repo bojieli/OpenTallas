@@ -32,6 +32,7 @@ def _scalar(t, name, direction, xy, kind, *, shift=0):
 
 
 def _bus_geom(t, bus):
+    if bus in t.get("_cland_geom",{}):return t["_cland_geom"][bus]
     for b in t.get("buses",[]):
         if b["name"] == bus:
             return b
@@ -71,7 +72,13 @@ def _fill_ft_windows(raw,path):
     for (tn,name,wk),vals in inferred.items():
         if any(max(abs(a-b) for a,b in zip(vals[0],v))>1e-4 for v in vals[1:]):
             raise ValueError(f"nonuniform inferred seam geometry {tn}.{name}.{wk}: {vals}")
-        next(s for s in raw["partition_types"][tn]["ft_slots"] if s["name"]==name)[wk]=vals[0]
+        slot=next(s for s in raw["partition_types"][tn]["ft_slots"] if s["name"]==name)
+        suffix="_i" if wk=="in_window_um" else "_o";face=slot["in_face" if suffix=="_i" else "out_face"]
+        # Keep inferred information in the helper only. Adding an input window
+        # to the canonical slot would also assert its internal output layer /
+        # order at the seam, changing448 existing valid port contracts.
+        raw["partition_types"][tn].setdefault("_cland_geom",{})[name+suffix]=dict(
+            name=name+suffix,face=face,window_um=vals[0],width=slot["width"])
 
 
 def _storage_band(t,bus,width,used):
@@ -93,13 +100,14 @@ def _storage_band(t,bus,width,used):
                                   max(p[0] for p in stage)+cell[0]/2,max(p[1] for p in stage)+cell[1]/2])
         if not slot.get("bit_sites_um"):
             obstacles += [[x-2.16,y-2.16,x+2.16,y+2.16] for x,y in slot.get("regs_um",[])]
-    candidates=[]
+    candidates=[];px,py=_bus_xy(t,bus)
     for inset in [margin+2.16*k for k in range(88)]:
         f=b["face"]
         box=([inset,lo,inset+depth,hi] if f=="W" else
              [w-inset-depth,lo,w-inset,hi] if f=="E" else
              [lo,inset,hi,inset+depth] if f=="S" else [lo,h-inset-depth,hi,h-inset])
         if box[0]<margin or box[1]<margin or box[2]>w-margin or box[3]>h-margin:continue
+        if max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))>405-2.16:continue
         if any(min(box[2],o[2])>max(box[0],o[0])+1e-6 and min(box[3],o[3])>max(box[1],o[1])+1e-6 for o in obstacles):continue
         candidates.append(box)
     # A dense face may have no full-height strip beside a macro. A compact
@@ -107,7 +115,7 @@ def _storage_band(t,bus,width,used):
     # stays within405um of the original bus pin. Consider both bank aspects;
     # do not move the pin or add an unpriced relay stage.
     px,py=_bus_xy(t,bus)
-    for bw,bh in ((depth,length),(length,depth)):
+    for bw,bh in (() if candidates else ((depth,length),(length,depth))):
         xs={margin,w-bw-margin,max(margin,min(w-bw-margin,px-bw/2))}
         ys={margin,h-bh-margin,max(margin,min(h-bh-margin,py-bh/2))}
         for o in obstacles:
@@ -129,7 +137,37 @@ def _storage_band(t,bus,width,used):
     raise ValueError(f"no macro-free clock landing storage band for{bus}, required depth{depth:.2f}um")
 
 
-def compose(plan,table,plan_path=None):
+def _collector_graph(P,W,root):
+    """Orient only the MONITOR on the undirected reset edges. Reset is unchanged."""
+    if root not in P.parts:raise ValueError(f"monitor observer partition {root} missing")
+    graph=defaultdict(list)
+    for pn,r in W["parts"].items():
+        if r["parent"] is not None:graph[pn].append(r["parent"]);graph[r["parent"]].append(pn)
+    parent={root:None};todo=[root]
+    while todo:
+        pn=todo.pop()
+        for other in graph[pn]:
+            if other not in parent:parent[other]=pn;todo.append(other)
+    if set(parent)!=set(P.parts):raise ValueError("monitor reset-neighbor graph disconnected")
+    return parent
+
+
+def _monitor_endpoints(P,W,src,dst):
+    """Local terminal nodes on an unchanged physical reset-neighbor edge."""
+    if W["parts"][src]["parent"]==dst:
+        k=int(W["parts"][src]["source"].rsplit("_",1)[1])
+        st,dt=RT.for_type(P,P.parts[src]["type"]),RT.for_type(P,P.parts[dst]["type"])
+        return dict(src_node="rst_root_n",src_xy=W["types"][P.parts[src]["type"]]["in_um"],
+                    dst_node=f"rst_n_t{dt['n_clock_taps']+k}",dst_xy=W["types"][P.parts[dst]["type"]]["outs"][k][1:])
+    if W["parts"][dst]["parent"]==src:
+        k=int(W["parts"][dst]["source"].rsplit("_",1)[1])
+        st=RT.for_type(P,P.parts[src]["type"])
+        return dict(src_node=f"rst_n_t{st['n_clock_taps']+k}",src_xy=W["types"][P.parts[src]["type"]]["outs"][k][1:],
+                    dst_node="rst_root_n",dst_xy=W["types"][P.parts[dst]["type"]]["in_um"])
+    raise ValueError(f"monitor edge {src}->{dst} is not an existing reset-neighbor edge")
+
+
+def compose(plan,table,plan_path=None,observer_part="glue"):
     original=copy.deepcopy(plan);raw=copy.deepcopy(plan)
     _fill_ft_windows(raw,plan_path)
     base_type={p["name"]:p["type"] for p in raw["partitions"]}
@@ -153,22 +191,25 @@ def compose(plan,table,plan_path=None):
     raw.setdefault("reset",{}).setdefault("in_sites",{}).update({tn:t["in_um"] for tn,t in W["types"].items()})
     for _ in range(len(raw["partitions"])+1):
         P=S.Plan(raw,plan_path);W=RT.wf_plan(P)
+        monitor_parent=_collector_graph(P,W,observer_part)
         active={pn for pn, bs in ins.items() if bs}
         for pn in list(active):
             q=pn
-            while W["parts"][q]["parent"] is not None:
-                q=W["parts"][q]["parent"];active.add(q)
+            while monitor_parent[q] is not None:
+                q=monitor_parent[q];active.add(q)
         children=defaultdict(list)
         for pn in sorted(active):
-            row=W["parts"][pn];par=row["parent"]
+            par=monitor_parent[pn]
             if par is not None:
-                k=int(row["source"].rsplit("_",1)[1]);xy=W["types"][P.parts[par]["type"]]["outs"][k][1:]
-                children[par].append(dict(part=pn,reset_out=k,xy_um=xy,seam=region[pn]!=region[par]))
+                end=_monitor_endpoints(P,W,pn,par)
+                children[par].append(dict(part=pn,node=end["dst_node"],xy_um=end["dst_xy"],seam=region[pn]!=region[par]))
         signatures={}
         for pn,p in P.parts.items():
             ch=sorted(children[pn],key=lambda c:(c["xy_um"],c["seam"],c["part"]))
-            signatures[pn]=dict(inputs=sorted(ins[pn]),outputs=sorted(outs[pn]),active=pn in active,
-                up_seam=pn in active and W["parts"][pn]["parent"] is not None and region[pn]!=region[W["parts"][pn]["parent"]],
+            up=_monitor_endpoints(P,W,pn,monitor_parent[pn]) if pn in active and monitor_parent[pn] is not None else None
+            signatures[pn]=dict(inputs=sorted(ins[pn]),outputs=sorted(outs[pn]),active=pn in active,observer=pn==observer_part,
+                up_xy=up["src_xy"] if up else None,
+                up_seam=pn in active and monitor_parent[pn] is not None and region[pn]!=region[monitor_parent[pn]],
                 children=[dict(xy_um=c["xy_um"],seam=c["seam"]) for c in ch])
         groups=defaultdict(lambda:defaultdict(list))
         for pn,p in P.parts.items():groups[p["type"]][json.dumps(signatures[pn],sort_keys=True)].append(pn)
@@ -192,8 +233,8 @@ def compose(plan,table,plan_path=None):
     for tn,t in raw["partition_types"].items():
         pn=next(pn for pn,p in P.parts.items() if p["type"]==tn)
         sig=signatures[pn];tree=RT.for_type(P,tn) if pn in active else None
-        info=dict(base_type=base_type[pn],mask=sig,tree=tree,local_sources=[],children=[],up_parent=W["parts"][pn]["parent"] if pn in active else None,
-                  reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={})
+        info=dict(base_type=base_type[pn],mask=sig,tree=tree,local_sources=[],children=[],up_parent=monitor_parent[pn] if pn in active else None,
+                  reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={},bus_geometry=copy.deepcopy(t.get("_cland_geom",{})))
         used=[]
         for bus,r in sorted(ins[pn].items()):
             point=_bus_xy(t,bus)
@@ -210,13 +251,18 @@ def compose(plan,table,plan_path=None):
                 note="source-forwarded ring write clock; actual source-export/window STA required"))
         for bus in sorted(outs[pn]):t["buses"].append(_scalar(t,"fclk_out_"+bus,"out",_bus_xy(t,bus),"clock"))
         if pn in active:
-            point=W["types"][tn]["in_um"]
-            for j,kind in enumerate(("ready","fault")):
-                t["buses"].append(_scalar(t,"cland_up_"+kind,"out",point,"ctl",shift=2.16*(j+2)))
-            if sig["up_seam"]:t["buses"].append(_scalar(t,"fclk_out_cland_up","out",point,"clock",shift=2.16))
+            if monitor_parent[pn] is None:
+                tap=RT.leaf_tap(P,tn);node=f"rst_n_t{tap}"
+                point=next(r["xy"] for r in tree["relays"] if r["q"]==node)
+            else:
+                end=_monitor_endpoints(P,W,pn,monitor_parent[pn]);node=end["src_node"];point=end["src_xy"]
+                for j,kind in enumerate(("ready","fault")):
+                    t["buses"].append(_scalar(t,"cland_up_"+kind,"out",point,"ctl",shift=2.16*(j+2)))
+                if sig["up_seam"]:t["buses"].append(_scalar(t,"fclk_out_cland_up","out",point,"clock",shift=2.16))
+            info.update(collector_root_node=node,collector_root_xy=point)
             ch=sorted(children[pn],key=lambda c:(c["xy_um"],c["seam"],c["part"]))
             for i,c in enumerate(ch):
-                row=dict(c,index=i,tap=tree["n_clock_taps"]+c["reset_out"],ready=f"cland_dn_ready_{i}",fault=f"cland_dn_fault_{i}")
+                row=dict(c,index=i,ready=f"cland_dn_ready_{i}",fault=f"cland_dn_fault_{i}")
                 for j,kind in enumerate(("ready","fault")):
                     t["buses"].append(_scalar(t,f"cland_dn_{kind}_{i}","in",c["xy_um"],"ctl",shift=2.16*(j+2)))
                 if c["seam"]:
@@ -231,7 +277,7 @@ def compose(plan,table,plan_path=None):
         raw["ports"].append(dict(id="cland_clk__"+r["port"],src=dict(part=r["src"],bus="fclk_out_"+pr["src"]["bus"]),
             dst=dict(part=r["dst"],bus="fclk_in_"+pr["dst"]["bus"]),width=1,kind="clock",epoch=False))
     for pn in sorted(active):
-        par=W["parts"][pn]["parent"]
+        par=monitor_parent[pn]
         if par is None:continue
         ch=sorted(children[par],key=lambda c:(c["xy_um"],c["seam"],c["part"]))
         i=next(i for i,c in enumerate(ch) if c["part"]==pn)
@@ -241,16 +287,78 @@ def compose(plan,table,plan_path=None):
         seam=region[pn]!=region[par]
         if seam:raw["ports"].append(dict(id="cland_mon_clk__"+pn,src=dict(part=pn,bus="fclk_out_cland_up"),
             dst=dict(part=par,bus=f"fclk_in_cland_dn_{i}"),width=1,kind="clock",epoch=False))
-        monitor_edges.append(dict(src=pn,dst=par,dst_index=i,seam=seam,hop_um=W["parts"][pn]["hop_um"],
+        end=_monitor_endpoints(P,W,pn,par);a=P.to_die(pn,end["src_xy"]);b=P.to_die(par,end["dst_xy"])
+        monitor_edges.append(dict(src=pn,dst=par,dst_index=i,seam=seam,hop_um=abs(a[0]-b[0])+abs(a[1]-b[1]),
             data_cycles_added=0,boot_transport_extra_cycles=3 if seam else 0))
-    root=W["root"]
-    for kind in ("ready","fault"):
-        raw["ports"].append(dict(id="cland_root_"+kind,src=dict(part=root,bus="cland_up_"+kind),
-            dst=dict(part=S.DIE_PART,bus="clock_landing_"+kind),width=1,kind="ctl",epoch=False))
+    root=observer_part
     side=copy.deepcopy(table);side["added_cycles_per_crossing"]=3
-    side["collector"]=dict(root=root,parts={pn:dict(type=P.parts[pn]["type"],parent=W["parts"][pn]["parent"],active=pn in active)
+    side["collector"]=dict(root=root,observer=dict(part=root,module="qfd_sys_face_lctx3_wrapped",instance_suffix="u_sys_face",
+        fault_port="obs_fault",ready_port="seq_cfg_image_ready"),
+        parts={pn:dict(type=P.parts[pn]["type"],parent=monitor_parent[pn],active=pn in active)
         for pn in P.parts},types=bytype,edges=monitor_edges,base_type_by_part=base_type,
         reset_max_release=W["max_release"],max_die_hop_um=max([e["hop_um"] for e in monitor_edges]or[0]),
         placement_failures=placement_failures,physical_qualified=False,
         start_contract="START waits for registered root ready; root fault is observed; raw-reset ring training beforeSTART")
+    # Conservative deterministic boot budget from the actual rerooted graph.
+    # All local rings train in parallel; charging another full training budget
+    # at each region seam also covers a late upstream ready transition.
+    deadlines={};local_depths={}
+    for pn in sorted(active):
+        inf=bytype[P.parts[pn]["type"]];tree=inf["tree"];rootnode=inf["collector_root_node"]
+        adj=defaultdict(list)
+        for r in tree["relays"]:adj[r["q"]].append(r["d"]);adj[r["d"]].append(r["q"])
+        distances={rootnode:0};todo=[rootnode]
+        while todo:
+            n=todo.pop()
+            for q in adj[n]:
+                if q not in distances:distances[q]=distances[n]+1;todo.append(q)
+        nodes=[f"rst_n_t{s['tap']}" for s in inf["local_sources"]]+[c["node"] for c in inf["children"]]
+        local_depths[pn]=max([distances[n]+1 for n in nodes]or[0])
+    def deadline(pn):
+        if pn in deadlines:return deadlines[pn]
+        child=[deadline(c["part"])+(21 if c["seam"] else 0) for c in children[pn]]
+        deadlines[pn]=max([W["max_release"]+21]+child)+local_depths[pn]
+        return deadlines[pn]
+    side["collector"]["boot_budget"]=dict(raw_reset_release_max_cycles=W["max_release"],
+        ring_train_max_cycles=21,local_registered_depths=local_depths,
+        ready_at_glue_max_cycles=deadline(root),observer_input_capture_cycles=1,
+        contract="Cycles after external reset release, clocks running continuously; START is also gated by actual registered ready, never this budget alone.",
+        physical_clock_phase_qualified=False,data_cycles_added=0)
+    # These are clock/reset-adjacent infrastructure pins, like existing tap
+    # and wavefront pins. They are NOT ordinary aligned functional bus ports
+    # and do not create fictitious R8 lanes. Keep exact physical endpoint and
+    # registered-hop contracts in the infrastructure model instead.
+    import gen_phys as GP
+    for tn,t in raw["partition_types"].items():
+        special=[b for b in t["buses"] if b["name"].startswith(("fclk_","cland_"))]
+        pins=[];w,h=t["outline_um"]
+        for b in special:
+            at=sum(b["window_um"])/2;f=b["face"]
+            point=([2.16 if f=="W" else w-2.16,at] if f in "EW" else [at,2.16 if f=="S" else h-2.16])
+            point=list(GP._snap_tap(P,*point))
+            pin=dict(name=b["name"],dir=b["dir"],kind=b["kind"],layer=P.layer_budget["partition_signal_max"],
+                     xy_um=point,epoch=False)
+            if pin["kind"]=="clock" and pin["dir"]=="in":
+                ec=next(e for e in t["clock"]["edge_clocks"] if e["port"]==b["name"])
+                ec["tap_um"]=point
+            if pin["kind"]=="clock" and pin["dir"]=="out":
+                roots=GP.clock_pins(P,tn)
+                if not roots:raise ValueError(f"{tn}: no normal clock tap to forward")
+                pin["source_clock_port"]=min(roots,key=lambda r:abs(r[1]-point[0])+abs(r[2]-point[1]))[0]
+            pins.append(pin)
+        if pins:
+            t["clock"]["landing_contract"]=dict(pins=pins,bands=bytype[tn]["bands"],
+                base_type=bytype[tn]["base_type"],registered_monitor=bytype[tn]["mask"]["active"],
+                physical_qualified=False,collector_tree=bytype[tn]["tree"])
+        t["buses"]=[b for b in t["buses"] if b not in special]
+    infra_edges=[]
+    for pr in raw["ports"]:
+        if pr["id"] in pports:continue
+        if S.DIE_PART in (pr["src"]["part"],pr["dst"]["part"]):continue
+        infra_edges.append(dict(id=pr["id"],src=pr["src"],dst=pr["dst"],kind=pr["kind"],width=1,
+            epoch=False,max_hop_um=405,source_registered=pr["kind"]=="ctl",capture_registered=pr["kind"]=="ctl"))
+    raw["ports"]=[pr for pr in raw["ports"] if pr["id"] in pports]
+    raw["clock"]["landing_network"]=dict(edges=infra_edges,root_observer=side["collector"]["observer"],
+        data_cycles_per_crossing=3,physical_qualified=False)
+    for t in raw["partition_types"].values():t.pop("_cland_geom",None)
     return raw,side
