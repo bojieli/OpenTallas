@@ -18,7 +18,7 @@ def init(self,*args):
 C.StripSites.__init__=init
 pick=C.ChanJogs.pick
 def pick2(self,axis,lo,hi,n,shift):
- v={1045:285.0,553:1285.0,1057:925.0}.get(n)
+ v={1045:285.0,553:1285.0,1057:605.0}.get(n)
  if v is None:return pick(self,axis,lo,hi,n,shift)
  assert any(a<v<b for a,b in self.iv[axis]),(axis,v,self.iv)
  return v,min(C.F.STAGGER_UM,80/max(1,n)),"explicit"
