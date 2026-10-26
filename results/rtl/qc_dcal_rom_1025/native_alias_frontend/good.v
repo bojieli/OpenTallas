@@ -1,0 +1,1 @@
+module top(input ck,rst_n,reload,epoch_go,halt); qfd_d2d_cal_seq_ovl_rope #(.IMAGE_VIAMAP("profile.viamap.hex")) u(.ck(ck),.rst_n(rst_n),.reload(reload),.epoch_go(epoch_go),.halt(halt)); endmodule

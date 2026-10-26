@@ -1,0 +1,1 @@
+module top(input ck,rst_n,reload,epoch_go,halt); qkd_d2d_cal_seq_pin_bc4 #(.UNKNOWN_METADATA("profile.viamap.hex"),.INSTANCE("kv_dcal"),.EP_SKEW(3),.GO_OFS(0),.MUT(0)) u(.ck(ck),.rst_n(rst_n),.reload(reload),.epoch_go(epoch_go),.halt(halt)); endmodule

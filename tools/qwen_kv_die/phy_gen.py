@@ -52,13 +52,16 @@ SPEC = dict(
         "boundary_timing": "registered FDI pins: ASAP7 flop clk->q / setup + 3 FO4"})
 
 
-def generate(out: Path) -> dict:
+def generate(out: Path, pg_access_layer: str = "M4") -> dict:
     cal = asap7.calibration()
     plist = G.pins(FW)
     w = asap7.snap_up(SPEC["width_um"], asap7.METAL["width_snap_um"])
     h = asap7.snap_up(SPEC["height_um"], asap7.METAL["height_snap_um"])
-    lef, pin_info = G.write_lef(NAME, w, h, plist, 0.192)
+    lef, pin_info = G.write_lef(NAME, w, h, plist, 0.192, pg_access_layer=pg_access_layer)
     lef = lef.replace("tools/qwen_missing/link_phy_gen.py", "tools/qwen_kv_die/phy_gen.py")
+    assumed = dict(SPEC["assumed"])
+    if pg_access_layer == "M6":
+        assumed["power_access"] = "M6 external power terminals above M5 OBS, generated-model interface only; licensed internal PG/GDS not qualified"
     per = {}
     for c in asap7.CORNERS:
         k = cal["corners"][c]
@@ -86,7 +89,7 @@ def generate(out: Path) -> dict:
                  name=NAME, footprint=dict(width_um=w, height_um=h, area_mm2=round(w * h / 1e6, 4), edge_um=w),
                  fdi=dict(clock_ghz=FDI_GHZ, flit_bits=FW, latency_fdi_cycles_one_way=LAT),
                  published=[dict(source=a, figure=b) for a, b in SPEC["published"]], derived=SPEC["derived"],
-                 assumed=SPEC["assumed"], pins=pin_info, timing={c: asdict(t) for c, t in per.items()},
+                 assumed=assumed, pins=pin_info, timing={c: asdict(t) for c, t in per.items()},
                  claim_boundary="a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no "
                                 "SI or bump-map analysis; footprint and boundary timing ASSUMED as stated")
     files = sorted(p.name for p in d.iterdir() if p.name != f"{NAME}.json")
@@ -98,8 +101,9 @@ def generate(out: Path) -> dict:
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--pg-access-layer", choices=("M4", "M6"), default="M4", help="M6 exposes a modeled legal power interface above M5 OBS; default preserves historical M4 view")
     a = ap.parse_args()
-    s = generate(a.out)
+    s = generate(a.out, pg_access_layer=a.pg_access_layer)
     print(json.dumps(dict(s["footprint"], **s["fdi"])))
 
 

@@ -3,6 +3,7 @@
 import argparse,hashlib,json,subprocess,sys
 from pathlib import Path
 import numpy as np
+from mem_compiler.rom_content import write_viamap
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
 import hdc_golden_v41 as G
@@ -10,12 +11,8 @@ from uarch_model_dsrom_markov_head_binding import model
 
 def write_words(path,words):path.write_text(''.join(f'{int(w):064x}\n' for w in words))
 def viamap(path,words):
-    spread=[sum(((b>>k)&1)<<(8*k) for k in range(8)) for b in range(256)]
-    physical=[0]*512
-    for a,word in words.items():
-        word=int(word);expanded=sum(spread[(word>>(8*j))&255]<<(64*j) for j in range(32))
-        physical[a//8]|=expanded<<(a%8)
-    path.write_text(''.join(f'{r:0548x}\n' for r in physical))
+    write_viamap(path,words,'ot_rom_4096x274_m8')
+
 def packed(row):return sum(int(x)<<(16*l) for l,x in enumerate(row))
 def main(out,pinreg=1,cache_pinreg=0,metrics_only=False):
     out.mkdir(parents=True,exist_ok=False);images=out/'images';images.mkdir()

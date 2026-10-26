@@ -1,0 +1,10 @@
+{
+  "verdict": "PASS",
+  "frontend": "actual classic Yosys read_verilog -sv, hierarchy -check",
+  "positive": "VIAMAP/INSTANCE named overrides accepted",
+  "negative": "UNDECLARED_PARAMETER rejected with exit1",
+  "bb_sha256": "bc04bd8bf385f146ec39bc201fc4dbfc597a842ec65f8c4106be196c1f6383e0",
+  "functional_model_LEF_Liberty": "unchanged",
+  "macro_json": "only BB view SHA refreshed",
+  "runner": "ot-run 2GB/1thread, unit oth-ubuntu-560365-1792992353"
+}

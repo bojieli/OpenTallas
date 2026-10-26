@@ -63,7 +63,7 @@ def _inset(x, y, face, w, h):
             "S": (x, y + FACE_INSET_UM)}.get(face, (x, y))
 
 
-def planned_sinks(P, tn):
+def planned_sinks(P, tn, bit_sites=False):
     """[(x, y, kind)] type-frame sites of the type's FIRM-planned clock sinks: one face register per bus pin (in and
     out ports register at the face, R2), ft slot station 0 at each in pin and stations j = 1..k-1 at L*j/k along the
     slot route (or at regs_um), as face_flops.tcl places them.  ft out pins carry no sink (the neighbour's station 0)."""
@@ -86,6 +86,13 @@ def planned_sinks(P, tn):
             if k < 2 or o is None:
                 continue
             regs = s.get("regs_um", [])
+            if bit_sites and s.get("bit_sites_um"):
+                # explicit per-bit station sites (lower-left corners; check.py / die_hop_scan.py cell-centre rule)
+                cw, ch = s["bit_site_cell_um"]
+                for j in range(1, k):
+                    bx, by = s["bit_sites_um"][j - 1][bit]
+                    out.append((bx + cw / 2, by + ch / 2, f"ft_s{j}"))
+                continue
             pts = _zroute((x, y), (o[0], o[1]), s["in_face"], s["out_face"])
             L = sum(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(pts, pts[1:]))
             for j in range(1, k):
@@ -351,6 +358,82 @@ def density_taps(P, tn):
     res = [("clk" if i == 0 else f"clk_t{i}", x, y, n, r) for i, (x, y, n, r) in enumerate(out)]
     _CACHE[key] = res
     return res
+
+
+def recentre_sinks(P, tn):
+    """[(x, y, weight)] sinks for clock.tap_recentre: the FIRM planned sinks with explicit per-bit ft station sites
+    (planned_sinks(bit_sites=True)) plus clock.sink_sites_um rows (e.g. macro clock pins)."""
+    ck = P.types[tn].get("clock", {})
+    out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn, bit_sites=True)]
+    out += [(float(r[0]), float(r[1]), float(r[2]) if len(r) > 2 else 1.0) for r in ck.get("sink_sites_um", [])]
+    return [p for p in out if p[2] > 0]
+
+
+def recentre_displaced(P, tn, grid, moved, iters=12):
+    """PATH-KV-SYSC2 10-25 (GEOM F2, clock.tap_recentre "sinks"): the R4 grid taps `moved` (indices into grid
+    [(port, x, y)]) were pushed off a macro / clock keepout by schema.tap_clear.  Re-centre each on the weighted L1
+    median of the sinks the kit's nearest-tap rule gives it (Lloyd iterations, all grid taps competing), legalised by
+    tap_clear(strict) against the keepouts and the other taps.  Fixed grid taps never move.  `moved` = [(index, grid
+    cell rect)].  A moved tap that wins no sink AND whose grid cell has no free std-cell area (the cell lies wholly
+    under macros / clock keepouts, e.g. a PHY) is a dead spine drop + unloaded reset synchroniser: it is dropped and
+    the taps are renumbered clk, clk_t1.. in grid order.  Deterministic."""
+    key = ("recentre", id(P), tn)
+    if key in _CACHE:
+        return _CACHE[key]
+    import schema
+    t = P.types[tn]
+    pts = recentre_sinks(P, tn)
+    cells = dict(moved)
+    moved = [k for k, _ in moved]
+    xy = [(x, y) for _, x, y in grid]
+    for _ in range(iters):
+        grp = [[] for _ in xy]
+        for p in pts:
+            j = min(range(len(xy)), key=lambda i: (abs(p[0] - xy[i][0]) + abs(p[1] - xy[i][1]), i))
+            grp[j].append(p)
+        nxt = list(xy)
+        for k in moved:
+            if not grp[k]:
+                continue
+            others = [q for i, q in enumerate(nxt) if i != k]
+            x, y = schema.tap_clear(t, _wmedian(grp[k], 0), _wmedian(grp[k], 1), others, strict=True)
+            nxt[k] = (round(x, 4), round(y, 4))
+        if nxt == xy:
+            break
+        xy = nxt
+    grp = [0] * len(xy)
+    for p in pts:
+        grp[min(range(len(xy)), key=lambda i: (abs(p[0] - xy[i][0]) + abs(p[1] - xy[i][1]), i))] += 1
+    w, h = t["outline_um"]
+    boxes = list(schema.placed_macro_boxes(t).values()) + [tuple(b) for b in t.get("clock", {}).get("keepouts_um", [])]
+
+    def dead(k):
+        x0, y0, x1, y1 = cells[k]
+        step = schema.TAP_STEP_UM * 4
+        for a in range(int((x1 - x0) / step) + 1):
+            for b in range(int((y1 - y0) / step) + 1):
+                px, py = x0 + a * step, y0 + b * step
+                if not (schema.TAP_CLEAR_UM <= px <= w - schema.TAP_CLEAR_UM and
+                        schema.TAP_CLEAR_UM <= py <= h - schema.TAP_CLEAR_UM):
+                    continue          # the outline margin (face bands) is not std-cell area for a tap's sinks
+                if not any(q0 < px < q1 and r0 < py < r1 for q0, r0, q1, r1 in boxes):
+                    return False
+        return True
+    keep = [i for i in range(len(xy)) if not (i in moved and grp[i] == 0 and dead(i))]
+    res = [("clk" if m == 0 else f"clk_t{m}",) + xy[i] for m, i in enumerate(keep)]
+    _CACHE[key] = res
+    return res
+
+
+def tap_loads(taps_xy, sinks):
+    """[(planned sink weight, max L1 distance um)] per tap under the kit's nearest-tap rule (no cap)."""
+    load = [0.0] * len(taps_xy)
+    far = [0.0] * len(taps_xy)
+    for p in sinks:
+        j = min(range(len(taps_xy)), key=lambda i: (abs(p[0] - taps_xy[i][0]) + abs(p[1] - taps_xy[i][1]), i))
+        load[j] += p[2]
+        far[j] = max(far[j], abs(p[0] - taps_xy[j][0]) + abs(p[1] - taps_xy[j][1]))
+    return list(zip(load, far))
 
 
 def assign(taps, sinks, cap, max_extra_um, max_distance_um=None):

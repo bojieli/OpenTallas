@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.phy-pg-regeneration-check.v1",
+  "default_LEF_bytes_unchanged": true,
+  "default_pin_info_unchanged": true,
+  "M6_LEF_matches_declared_package": true,
+  "M6_pin_info": {
+    "signal_pins": 1171,
+    "pin_pitch_um": 0.192,
+    "pin_layer": "M5",
+    "pin_edge": "top (core-facing)",
+    "pg_access_layer": "M6",
+    "pg_claim": "generated-model external PG interface; no licensed macro internal GDS claim",
+    "pin_block_x_um": [
+      276.384,
+      501.216
+    ]
+  },
+  "physical_only_assets_source": "02e6431e5c",
+  "behavioral_model_imported": false,
+  "P_and_R": "NOT RUN",
+  "STA": "NOT RUN"
+}
