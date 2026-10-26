@@ -43,6 +43,7 @@ module ot_v41_rom_elem_q_qxpq_w10 #(
     parameter integer QM = 0,
     parameter integer QS = 0,          // SAFE knobs (owner fail-fast 2026-10-06): 1 = bterm5 S1b decode stage (+1 lane cycle)
     parameter integer RSTP = 0,        // 1 = synchronous reset relay flop at the rst_n pin (+1 reset edge, 0 data cycles)
+    parameter integer CGR = 0,         // 8 = one clock-gate copy per in-core region (S81-CORE-LAT 2026-10-26; 0 cycles, see qx_pq)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -86,7 +87,7 @@ module ot_v41_rom_elem_q_qxpq_w10 #(
     end else begin : g_nrstp
         assign rst_n_e = rst_n;
     end
-    ot_v41_rom_elem_qx_pq_w10 #(.PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .QX(QX), .QY(QY), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .INSTANCE(INSTANCE)) u_e (
+    ot_v41_rom_elem_qx_pq_w10 #(.PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .QX(QX), .QY(QY), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .CGR(CGR), .BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .INSTANCE(INSTANCE)) u_e (
         .clk(clk), .rst_n_pin(rst_n_e), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d), .go_pin(go), .go_bf_pin(1'b0), .go_tag_pin(go_tag), .walking(walking), .bank_free(bank_free), .sh_free(sh_free),
         .xs_v_pin(xs_v), .xs_p_pin(xs_p), .xs_b_pin(xs_b), .xs_sv_pin(xs_sv), .xs_q0_pin(xs_q0), .xs_e0_pin(xs_e0), .xs_q1_pin(xs_q1),
         .xs_e1_pin(xs_e1), .xs_pos_pin(xs_pos), .xb_pos_pin(3'd0), .ppos(ppos), .xb_v_pin(1'b0), .xb_b_pin(3'd0), .xb_sv_pin(4'd0),
