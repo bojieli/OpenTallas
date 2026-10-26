@@ -100,6 +100,9 @@ def test_registered_monitor_replaces_long_die_status_vectors():
     assert "output wire [0:0] clock_landing_ready;" not in out
     assert ".cland_dn_ready_0(cland_ready_b)" in out
     assert ".cland_up_ready(clock_landing_ready)" in out
+    renamed=top.replace("a_mod a (","a_mod__A a (").replace("b_mod b (","b_mod__B b (")
+    assert ".cland_dn_ready_0(cland_ready_b)" in c.top_rtl(renamed,{"A":"a_mod__A","B":"b_mod__B"})
+    with pytest.raises(LandingError):c.top_rtl(renamed,{"A":"a_mod__A"})
 
 
 def test_actual_observer_port_transform():
