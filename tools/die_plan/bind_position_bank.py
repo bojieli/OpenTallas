@@ -24,6 +24,8 @@ def spec(b, ci, port):
     c = b.F.cells[ci]
     part = b.cpart.get(ci)
     tn = b.parts[part]['type'] if part in b.parts else None
+    # clock-landing cohorts (clock_landing_plan.compose) keep their base plan type's physical template
+    tn = b.plan['partition_types'].get(tn, {}).get('landing_base_type', tn) if tn else tn
     if tn not in WRAPPERS:
         return None
     if c.module != WRAPPERS[tn]:

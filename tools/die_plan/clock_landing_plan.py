@@ -367,8 +367,15 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None):
                 placement_failures.append(dict(type=tn,bus=bus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
             band["instance"]="u_cland_"+bus
             info["bands"][bus]=band
+            status=None
+            if not hard and band.get("rect_um") and abs(tapxy[tap][0]-point[0])+abs(tapxy[tap][1]-point[1])>405:
+                # The ring's ready/fault flops sit in its band, not at the pin.
+                # Only when the pin is beyond reach of every tap (QC never is)
+                # the collector tap is chosen from the band centre instead.
+                x0,y0,x1,y1=band["rect_um"];status=[round((x0+x1)/2,3),round((y0+y1)/2,3)]
+                tap=min(range(tree["n_clock_taps"]),key=lambda i:abs(tapxy[i][0]-status[0])+abs(tapxy[i][1]-status[1]))
             info["local_sources"].append(dict(name=bus,ready="landing_ready_"+bus,fault="landing_fault_"+bus,tap=tap,
-                xy_um=point,band=band,**(dict(node=tree["leaf_node"],reset="delivered") if hard else {})))
+                xy_um=status or point,pin_xy_um=point,band=band,**(dict(node=tree["leaf_node"],reset="delivered") if hard else {})))
             b=_scalar(t,"fclk_in_"+bus,"in",point,"clock");t["buses"].append(b)
             t.setdefault("clock",{}).setdefault("edge_clocks",[]).append(dict(port=b["name"],tap_um=point,period_mult=1,
                 note="source-forwarded ring write clock; actual source-export/window STA required"))
