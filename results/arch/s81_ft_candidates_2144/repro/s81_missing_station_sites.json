@@ -1,0 +1,3007 @@
+{
+  "plan_sha256": "d8d3dd75ef4188060508115a1abab364a03324d3e8a0499e6d2bf3f82a95169d",
+  "slot_count": 369,
+  "type_count": 46,
+  "types": [
+    "dsdv_slice_lepe_mu_LP__t2",
+    "dsdv_slice_lepe_nh_mus_LP__t1",
+    "dsdv_slice_lepw_mus_LP__t2",
+    "iqf__t1",
+    "ot_s81sl_kv_leaf__t1",
+    "ot_s81sl_kv_leaf__t2",
+    "ot_s81sl_kv_leaf__t5",
+    "seqhost__t1",
+    "serdes__t1",
+    "serdes__t12",
+    "serdes__t13",
+    "serdes__t15",
+    "serdes__t16",
+    "serdes__t3",
+    "serdes__t4",
+    "slice_station__t12",
+    "slice_station__t14",
+    "slice_station__t17",
+    "slice_station__t18",
+    "slice_station__t20",
+    "slice_station__t21",
+    "slice_station__t22",
+    "slice_station__t24",
+    "slice_station__t25",
+    "slice_station__t26",
+    "slice_station__t27",
+    "slice_station__t28",
+    "slice_station__t29",
+    "slice_station__t30",
+    "slice_station__t31",
+    "slice_station__t36",
+    "slice_station__t37",
+    "slice_station__t38",
+    "slice_station__t40",
+    "slice_station__t42",
+    "slice_station__t43",
+    "slice_station__t44",
+    "slice_station__t45",
+    "slice_station__t47",
+    "slice_station__t48",
+    "slice_station__t49",
+    "slice_station__t50",
+    "slice_station__t52",
+    "slice_station__t6",
+    "slice_station__t7",
+    "slice_station__t8"
+  ],
+  "slots": [
+    {
+      "type": "serdes__t15",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t15",
+      "slot": "ft1",
+      "width": 512,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t15",
+      "slot": "ft2",
+      "width": 514,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t15",
+      "slot": "ft3",
+      "width": 514,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t16",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t16",
+      "slot": "ft1",
+      "width": 514,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t3",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t3",
+      "slot": "ft1",
+      "width": 512,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t3",
+      "slot": "ft2",
+      "width": 514,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t3",
+      "slot": "ft3",
+      "width": 514,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t1",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t1",
+      "slot": "ft1",
+      "width": 514,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t4",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t4",
+      "slot": "ft1",
+      "width": 512,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t4",
+      "slot": "ft2",
+      "width": 512,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t4",
+      "slot": "ft3",
+      "width": 514,
+      "stations": 2,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t4",
+      "slot": "ft4",
+      "width": 514,
+      "stations": 2,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t4",
+      "slot": "ft5",
+      "width": 514,
+      "stations": 2,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t12",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t12",
+      "slot": "ft1",
+      "width": 512,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t12",
+      "slot": "ft2",
+      "width": 512,
+      "stations": 8,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t12",
+      "slot": "ft3",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t12",
+      "slot": "ft4",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t12",
+      "slot": "ft5",
+      "width": 514,
+      "stations": 7,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t13",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 2,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t13",
+      "slot": "ft1",
+      "width": 512,
+      "stations": 2,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t13",
+      "slot": "ft2",
+      "width": 512,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "serdes__t13",
+      "slot": "ft5",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "iqf__t1",
+      "slot": "ft0",
+      "width": 1120,
+      "stations": 6,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "iqf__t1",
+      "slot": "ft1",
+      "width": 1368,
+      "stations": 7,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "seqhost__t1",
+      "slot": "ft0",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "seqhost__t1",
+      "slot": "ft1",
+      "width": 513,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "seqhost__t1",
+      "slot": "ft2",
+      "width": 562,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t49",
+      "slot": "ft0",
+      "width": 258,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t49",
+      "slot": "ft1",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t49",
+      "slot": "ft2",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t49",
+      "slot": "ft3",
+      "width": 513,
+      "stations": 6,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t49",
+      "slot": "ft4",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t49",
+      "slot": "ft5",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t49",
+      "slot": "ft6",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t49",
+      "slot": "ft7",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t49",
+      "slot": "ft8",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t49",
+      "slot": "ft9",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft0",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft1",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft2",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft3",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft4",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft5",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft6",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft7",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft8",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft9",
+      "width": 258,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft10",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft11",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft12",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft13",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft14",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft15",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft16",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t36",
+      "slot": "ft17",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t50",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t50",
+      "slot": "ft1",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t50",
+      "slot": "ft2",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t50",
+      "slot": "ft3",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t50",
+      "slot": "ft4",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t50",
+      "slot": "ft5",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t50",
+      "slot": "ft6",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t50",
+      "slot": "ft7",
+      "width": 258,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t50",
+      "slot": "ft8",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t50",
+      "slot": "ft9",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft0",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft1",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft2",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft3",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft4",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft5",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft6",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft7",
+      "width": 32,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft8",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft9",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft10",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft11",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft12",
+      "width": 258,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft13",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft14",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft15",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft16",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft17",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft18",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft19",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t37",
+      "slot": "ft20",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft1",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft2",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft3",
+      "width": 32,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft4",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft5",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft6",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft7",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft8",
+      "width": 258,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft9",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft10",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft11",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t38",
+      "slot": "ft12",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "dsdv_slice_lepw_mus_LP__t2",
+      "slot": "ft0",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "dsdv_slice_lepw_mus_LP__t2",
+      "slot": "ft1",
+      "width": 32,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "dsdv_slice_lepw_mus_LP__t2",
+      "slot": "ft2",
+      "width": 258,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "dsdv_slice_lepw_mus_LP__t2",
+      "slot": "ft3",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft0",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft1",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft2",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft3",
+      "width": 32,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft4",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft5",
+      "width": 258,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft6",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft7",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft8",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft9",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft10",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft11",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t6",
+      "slot": "ft12",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t7",
+      "slot": "ft0",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t7",
+      "slot": "ft1",
+      "width": 32,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t7",
+      "slot": "ft2",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t7",
+      "slot": "ft3",
+      "width": 258,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t7",
+      "slot": "ft4",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft0",
+      "width": 513,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft1",
+      "width": 1,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft2",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft3",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft4",
+      "width": 571,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft5",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft6",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft7",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft8",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft9",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft10",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t8",
+      "slot": "ft11",
+      "width": 1,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft0",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft1",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft2",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft3",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft4",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft5",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft6",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft7",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft8",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft9",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t42",
+      "slot": "ft10",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft0",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft1",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft2",
+      "width": 276,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft3",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft4",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft5",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft6",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft7",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft8",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft9",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft10",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft11",
+      "width": 276,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft12",
+      "width": 276,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft13",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft14",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft15",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft16",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft17",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t43",
+      "slot": "ft18",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft1",
+      "width": 1104,
+      "stations": 2,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft2",
+      "width": 1104,
+      "stations": 2,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft3",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft4",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft5",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft6",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft7",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft8",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft9",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t44",
+      "slot": "ft10",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t12",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t12",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t12",
+      "slot": "ft2",
+      "width": 132,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t45",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t45",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t45",
+      "slot": "ft2",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t14",
+      "slot": "ft0",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t14",
+      "slot": "ft1",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t14",
+      "slot": "ft2",
+      "width": 325,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t14",
+      "slot": "ft3",
+      "width": 1,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t14",
+      "slot": "ft4",
+      "width": 132,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t14",
+      "slot": "ft5",
+      "width": 562,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t14",
+      "slot": "ft6",
+      "width": 13,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t14",
+      "slot": "ft7",
+      "width": 571,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t14",
+      "slot": "ft8",
+      "width": 1,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "slot": "ft2",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "slot": "ft3",
+      "width": 267,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "slot": "ft4",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "slot": "ft5",
+      "width": 70,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "slot": "ft6",
+      "width": 70,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "slot": "ft7",
+      "width": 70,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t2",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t2",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t2",
+      "slot": "ft2",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t2",
+      "slot": "ft3",
+      "width": 597,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t2",
+      "slot": "ft4",
+      "width": 267,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t2",
+      "slot": "ft5",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t2",
+      "slot": "ft6",
+      "width": 668,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t2",
+      "slot": "ft7",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t2",
+      "slot": "ft8",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t2",
+      "slot": "ft9",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t5",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t5",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t5",
+      "slot": "ft2",
+      "width": 1,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t5",
+      "slot": "ft3",
+      "width": 267,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t5",
+      "slot": "ft4",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t47",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t47",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t47",
+      "slot": "ft2",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t47",
+      "slot": "ft3",
+      "width": 1,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t47",
+      "slot": "ft4",
+      "width": 267,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t47",
+      "slot": "ft5",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t47",
+      "slot": "ft6",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t47",
+      "slot": "ft7",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t17",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t17",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t48",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 6,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t48",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t48",
+      "slot": "ft2",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t48",
+      "slot": "ft3",
+      "width": 276,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t48",
+      "slot": "ft4",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t18",
+      "slot": "ft0",
+      "width": 53,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t18",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t18",
+      "slot": "ft2",
+      "width": 325,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t18",
+      "slot": "ft3",
+      "width": 176,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t18",
+      "slot": "ft4",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t18",
+      "slot": "ft5",
+      "width": 513,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t18",
+      "slot": "ft6",
+      "width": 562,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t18",
+      "slot": "ft7",
+      "width": 13,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t18",
+      "slot": "ft8",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t18",
+      "slot": "ft9",
+      "width": 604,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t20",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t20",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t20",
+      "slot": "ft2",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t20",
+      "slot": "ft3",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t21",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t21",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t21",
+      "slot": "ft2",
+      "width": 276,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t21",
+      "slot": "ft3",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t21",
+      "slot": "ft4",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t21",
+      "slot": "ft5",
+      "width": 276,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft0",
+      "width": 53,
+      "stations": 3,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft1",
+      "width": 176,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft2",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft3",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft4",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft5",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft6",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft7",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft8",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft9",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft10",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft11",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t22",
+      "slot": "ft12",
+      "width": 604,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t24",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t24",
+      "slot": "ft1",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t24",
+      "slot": "ft2",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t24",
+      "slot": "ft3",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft0",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft1",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft2",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft3",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft4",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft5",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft6",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft7",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft8",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft9",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft10",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t25",
+      "slot": "ft11",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t26",
+      "slot": "ft0",
+      "width": 176,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t26",
+      "slot": "ft1",
+      "width": 45,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t26",
+      "slot": "ft2",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t26",
+      "slot": "ft3",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t26",
+      "slot": "ft4",
+      "width": 604,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t26",
+      "slot": "ft5",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t26",
+      "slot": "ft6",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft0",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft1",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft2",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft3",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft4",
+      "width": 604,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft5",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft6",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft7",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft8",
+      "width": 176,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft9",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft10",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft11",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft12",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft13",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t27",
+      "slot": "ft14",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t28",
+      "slot": "ft0",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t28",
+      "slot": "ft1",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t28",
+      "slot": "ft2",
+      "width": 604,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t28",
+      "slot": "ft3",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t28",
+      "slot": "ft4",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t28",
+      "slot": "ft5",
+      "width": 45,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t28",
+      "slot": "ft6",
+      "width": 176,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+      "slot": "ft0",
+      "width": 604,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+      "slot": "ft1",
+      "width": 176,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft0",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft1",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft2",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft3",
+      "width": 604,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft4",
+      "width": 176,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft5",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft6",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft7",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft8",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft9",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t29",
+      "slot": "ft10",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t30",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t30",
+      "slot": "ft1",
+      "width": 604,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t30",
+      "slot": "ft2",
+      "width": 176,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft1",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft2",
+      "width": 1104,
+      "stations": 2,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft3",
+      "width": 1104,
+      "stations": 2,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft4",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft5",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft6",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft7",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft8",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft9",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t31",
+      "slot": "ft10",
+      "width": 70,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "dsdv_slice_lepe_mu_LP__t2",
+      "slot": "ft0",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft0",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft1",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft2",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft3",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft4",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft5",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft6",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft7",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft8",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft9",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t40",
+      "slot": "ft10",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft0",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft1",
+      "width": 1104,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft2",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft3",
+      "width": 276,
+      "stations": 5,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft4",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft5",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft6",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft7",
+      "width": 514,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft8",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft9",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft10",
+      "width": 276,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft11",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft12",
+      "width": 512,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft13",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft14",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft15",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft16",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft17",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    },
+    {
+      "type": "slice_station__t52",
+      "slot": "ft18",
+      "width": 70,
+      "stations": 4,
+      "regs_um": null,
+      "has_sites_um": false
+    }
+  ]
+}
