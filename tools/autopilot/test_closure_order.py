@@ -277,6 +277,25 @@ class TestProvenanceGit(unittest.TestCase):
         p = self.ap.resolve_provenance(f"claude/x@{self.design[:10]}", "", "qwen_kvsys")
         self.assertEqual(p["flow_tag"], "flow-20261025-a")
 
+    def test_other_die_plan_files_not_this_die_flow(self):
+        """a flow change confined to another die's plan tree keeps this die's tag (canaries.json die_plans)"""
+        (self.repo / "physical/die_plan/qwen_kvsys/cores/harden").mkdir(parents=True)
+        (self.repo / "physical/die_plan/qwen_kvsys/cores/harden/gen.py").write_text("k2\n")
+        self.g("add", "."); self.g("commit", "-qm", "kv-only flow change")
+        kv_only = self.g("rev-parse", "HEAD")
+        self.g("tag", "-a", "flow-20261026-b-qc", self.flow2, "-m", "qc")
+        self.ap.CLOSURE.clear()
+        self.ap.flow_watch = lambda: ["tools/die_plan/signoff.py", "physical/die_plan/qwen_kvsys/cores/harden/*"]
+        _fp = self.ap.flow_plans
+        self.ap.flow_plans = lambda: {"qwen_compute": ["qwen_compute"], "qwen_kvsys": ["qwen_kvsys"]}
+        try:
+            p = self.ap.resolve_provenance(f"claude/x@{kv_only[:10]}", "", "qwen_compute")
+            self.assertEqual((p["flow_tag"], p.get("error")), ("flow-20261026-b-qc", None))
+            p = self.ap.resolve_provenance(f"claude/x@{kv_only[:10]}", "", "kv")
+            self.assertEqual(p["flow_tag"], "")
+        finally:
+            self.ap.flow_plans = _fp
+
     def test_per_die_first_tag_legacy(self):
         """GRANDFATHER is per die: a die-only tag starts the tag requirement for that die only"""
         self.g("tag", "-d", "flow-20261025-a")
