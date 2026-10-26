@@ -76,6 +76,14 @@ def run(a):
         table.append((ch,ds))
     off = lambda t,c: early.get((t['part'],t['tap']),{}).get(c,t.get('early_ps',0.0))
     targets = {c:max(arr[c][t['port']][0]+off(t,c) for t in mesh['taps']) + a.reserve_ps*(1 if c=='TT' else .8) for c in ('TT','FF')}
+    # A shared physical delay chain has its library TT/FF ratio. Choose the
+    # global FF target from that ratio, rather than independently maximising
+    # each corner (which can demand an impossible added-delay ratio).
+    import statistics
+    probe=[M.BUF]*4
+    ratio=chain_delay(libs['FF'],probe,40.0,libs['FF'][M.BUF][1],wire_ff=.05)[0]/chain_delay(libs['TT'],probe,40.0,libs['TT'][M.BUF][1],wire_ff=.05)[0]
+    offsets=[arr['FF'][t['port']][0]+off(t,'FF')-ratio*(arr['TT'][t['port']][0]+off(t,'TT')) for t in mesh['taps']]
+    targets['FF']=ratio*targets['TT']+statistics.median(offsets)
     keeps = M.DC.KeepIndex(M.DC.keepouts(plan),die=(float(plan.W),float(plan.H)))
     # Reserve conservative BUFx24 footprints for all existing and new cells.
     occupied = {}
@@ -129,5 +137,5 @@ def run(a):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('dir');p.add_argument('--out',required=True);p.add_argument('--plan',required=True)
-    p.add_argument('--libdir',required=True);p.add_argument('--reserve-ps',type=float,default=65.0);p.add_argument('--max-cells',type=int,default=10)
+    p.add_argument('--libdir',required=True);p.add_argument('--reserve-ps',type=float,default=65.0);p.add_argument('--max-cells',type=int,default=14)
     run(p.parse_args())
