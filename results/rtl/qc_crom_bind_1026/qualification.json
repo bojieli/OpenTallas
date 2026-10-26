@@ -1,0 +1,31 @@
+{
+ "source_revision": "5832e672235d955164c31991b09f3cee96ee4de2",
+ "manifest_change": "d58e17858a",
+ "head_file": "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+ "head_sha256": "7de44164069ad03b6435afd89a10c4720de11d3b803f4bb33de65616be6bb159",
+ "head_byteidentical_to_manifest_branch": true,
+ "positive": {
+  "checked_cycles": 2272,
+  "output_words": 288,
+  "mismatches": 0,
+  "verdict": "PASS"
+ },
+ "mutant": {
+  "control": "missing required VM response alignment",
+  "checked_cycles": 2272,
+  "output_words": 288,
+  "mismatches": 256,
+  "verdict": "CAUGHT"
+ },
+ "cycles": {
+  "per_su_operation": 3,
+  "already_priced": true,
+  "new_additional_charge": 0
+ },
+ "execution": {
+  "host": "localhost",
+  "unit": "oth-ubuntu-2561396-1793006589",
+  "ot_run_exit": 0
+ },
+ "scope": "Current-source smallest-head exact gate only. Fresh canonical ELAB/bind and matching physical SU lane views still required."
+}
