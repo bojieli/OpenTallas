@@ -23,7 +23,7 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
 ## DIE s81_head · S81 head die · rev FROZEN d7b8d1eb · est. after HEAD8 batch
 - [ ] HEAD.GRT Die GRT0 · DIE-PROTO · FROZEN · ovf 0 on d7b8d1eb; re-run needed if the HEAD8 batch is adopted → HEAD.B8
 - [ ] HEAD.B8 HEAD8 clock-tap + global START batch · CODEX / COORD · RUNNING · 187b63494b G0C+visual running; +8 slot cycles; needs ROOT approval
-- [ ] HEAD.CLK Die clock route + related-pair CPPR <=80 · CLOCK-MESH · FAIL · routes ovf 0, but pair 268/254 ps TT/FF (seams 246/230), 588 taps >320 slew; freeze was signal-GRT only → HEAD.B8
+- [ ] HEAD.CLK Die clock route + related-pair CPPR <=80 · CLOCK-MESH-B · OWNER? · channel-only mesh impossible (0 interior channel area, 5235/6887 cells unplaceable); in-tile islands need all 16 types and still FAIL 229/193 (serdes bands undriven) → owner
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX · WAITS · source d0eb3d3d01 ready; host/mesh/rank-row contract open (owner question in WAITS)
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
   - [ ] HEAD.TILES Head tile sign-offs · S81-HEAD · RUNNING · 16 hd_* WAIT-GEOM FAIL rows need successor/withdraw → FLOW.TAG
