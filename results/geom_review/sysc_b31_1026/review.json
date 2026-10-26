@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS-COND:onefullshape placementtrial only",
+ "picture": "review.png",
+ "actual_pad_flops": 8868,
+ "max_source_pad_hop_um": 320.004,
+ "keepouts": "all74acceptedmeshdriverislands + actualB31resetbank targets + existingFTsites + macro/PHYPGhalos",
+ "added_cycles": 0,
+ "consumer_reach": "NOT RUN; fullreg/async/outputpostplacecensusmandatory",
+ "trial": "GLOBAL_PLACEMENT_ARGS -bin_grid_count256; full2160x1036.8umshape/833ps/Tap/PGrules unchanged; olddefault chose8.4MFFTbins for675kvirtualfillers"
+}

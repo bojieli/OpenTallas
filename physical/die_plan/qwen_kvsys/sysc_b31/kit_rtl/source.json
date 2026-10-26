@@ -1,0 +1,32 @@
+{
+ "source_bind_commit": "a8c24031c77b7ec882369673e7563d7bda8b3d7a",
+ "source": "B31 strict bind + full verify2553368matched/0lint",
+ "physical_projection": "Remove only4offshore UCIe bump ports;7fabricFDI connections retained; actual native7portphysicalBB",
+ "TXDP": "0x03030471",
+ "pads_ff": 8868,
+ "spare": 0,
+ "narrow": 0,
+ "unbound": 0,
+ "native_macro_instances": 6,
+ "source_files": {
+  "physical/die_plan/qwen_kvsys/sysc_b31/kit_rtl/kv3_sys_c_part.sv": "4f13a938c4952a53aa28ce3974e1080a3a7b7023c5a923aa15f3ea82a9cdded0",
+  "physical/die_plan/qwen_kvsys/sysc_b31/kit_rtl/kv3_sys_c_part_bound.sv": "0201cf7b29c268a787fdfa7bf493dbd2bf7ef83b608c13fbae9f4072d85777b6",
+  "physical/die_plan/qwen_kvsys/sysc_b31/kit_rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+  "rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+  "physical/die_plan/qwen_kvsys/bind/inputs/kv_bound_rtl6/kv_hard_models.sv": "871d85a23104c45639dca344dd7a1a3de6530b71bfa2492aea661d4ff51e969c",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv": "cabd2585331f943c494c3abdf9135fc87f06c5fd09207c72cdd227fbdb81d0e7",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv": "5f195b4304470722e41f5af44337f74fc31b70990bc74bce5a680f6df2b41607",
+  "rtl/lib/ot_rst_pipe.sv": "35998778c5c4a7f0d260c0b64e7c227a100ab8bb87d63c2b770d3785266e747f",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe_fo.sv": "1dd96671d8b118f0eaf8ce07bf15fcafbb0680f16dd73c97ddf09ce764368410",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+  "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_bb.v": "1c73f0dd60671fec51283900ff52663936188d1e32385ea6ce3e61faaff9b308",
+  "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_bb.v": "69027506af25d592c73ae83903fddb65d101fda7247a5be2148e99fe27c43a41",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "c74e71552631c487426980953cd4b803e6455b8eb671c538f1ba3c578f3f63d0",
+  "physical/die_plan/qwen_kvsys/dcal_rom/bind/position2144b19/qkd_d2d_cal_seq_bc4_rom64.sv": "0f45c0c45a969c84de64292b0d20ad256ce63bed75c9a32c24dc7dd9290fba62",
+  "physical/asap7_memory_macros_v2/ot_rom_64x32_m2/ot_rom_64x32_m2_bb.v": "bc04bd8bf385f146ec39bc201fc4dbfc597a842ec65f8c4106be196c1f6383e0",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_rom64_core.sv": "fd70f25cab5e3821bdc0e1daff17fac856c9ddb175a06a46d7a2c2f16a092db5",
+  "physical/die_plan/qwen_kvsys/cores/sys_c_views_m6/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v": "c9699325c5e7134940f41f21b9c8c5d2a65f396f4201ca2d148b1b4d9204c7be"
+ },
+ "status": "PLACEMENT TRIAL ONLY; no route/signoff claim"
+}
