@@ -1161,3 +1161,43 @@ def test_renamed_narrowed_vector_kept_gate_bit_named_after_a_constant_bit(tmp_pa
     lec.correspond(L2, tmp_path, 100, [])
     m, kind = L2.build(with_compare=True, with_hyp=True)
     assert set(_sim_prove(m).values()) == {"proved"}
+
+
+def _renamed_po_design(tmp_path, gate_q1_next, gate_po_next):
+    """gold: q[1]' = 0, q[2]' = d, output o = q[2] (captured as lec_po_o); gate: one kept flop q[1] (the narrowed
+    vector's new index) with next-state `gate_q1_next`, output o' = `gate_po_next` (AIGER literals: d = 2, q[1] = 4)."""
+    g = tmp_path / "g.aig"
+    g.write_bytes(b"aig 4 1 3 0 0\n0\n2\n6\n")
+    gm = {"input": {0: [("d", 0)]}, "latch": {0: [("u_dut.q[1]$_DFF_P_.lecq", 0)],
+                                               1: [("u_dut.q[2]$_DFF_P_.lecq", 0)],
+                                               2: [("lec_po_o$_DFF_P_.lecq", 0)]}, "output": {}}
+    t = tmp_path / "t.aig"
+    t.write_bytes(f"aig 3 1 2 0 0\n{gate_q1_next}\n{gate_po_next}\n".encode())
+    tm = {"input": {0: [("d", 0)]}, "latch": {0: [("u_dut.q[1]$_DFF_P_.lecq", 0)],
+                                               1: [("lec_po_o$_DFF_P_.lecq", 0)]}, "output": {}}
+    return g, gm, t, tm
+
+
+@pytest.mark.parametrize("q1_next,po_next,want", [
+    (2, 4, "equivalent"),        # the real q3 case: kept flop = gold q[2], output identical
+    (3, 4, "differs"),           # MUTANT: kept flop inverted (~d) -> output o differs
+    (2, 5, "differs"),           # MUTANT: output inverted
+    (0, 4, "differs"),           # MUTANT: kept flop stuck at 0 (renamed() must not fire on a constant bit)
+])
+def test_renamed_still_catches_real_differences(tmp_path, monkeypatch, q1_next, po_next, want):
+    """mutant proof for renamed() (COORD 10-26 07:12): the re-key only PROPOSES a pairing; a real logic difference on
+    the narrowed vector or its fan-out must still end in a differing compare point after correspondence."""
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    g, gm, t, tm = _renamed_po_design(tmp_path, q1_next, po_next)
+    L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+    log = []
+    lec.correspond(L, tmp_path, 100, log)                  # runs renamed() among the proposal passes
+    m, kind = L.build(with_compare=True, with_hyp=True)
+    res = _sim_prove(m)
+    got = "differs" if "differs" in res.values() else "equivalent"
+    assert got == want, (res, log)
+    if q1_next == 2:                                       # the re-key fired on the narrowed vector
+        assert any(x.startswith("renamed: ff:u_dut.q") for x in log), log
+    if want == "differs":
+        assert any(res.get(k) == "differs" for k in ("po:o", "ff:u_dut.q[1]")) or \
+            any(v == "differs" for k, v in res.items() if k.startswith("hyp:")), res
