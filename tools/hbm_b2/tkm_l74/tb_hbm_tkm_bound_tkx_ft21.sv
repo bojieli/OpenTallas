@@ -13,14 +13,19 @@ module tb_hbm_tkm_bound_tkx_ft21;
  localparam integer NT=(KMAX+63)/64,CB=CTL_BCAST_STAGES,CLRB=CLR_SYSTOLIC?0:CB,S0=3*NT+8,SN=(3+HOP)*(NT-1)+11-CB,XL=FRT+CB+HOP*(NT-1),ROOT_IO=2;
  // twin age vs the pinned PIPE-0 module: L74 forward + PIPE split + root face in/out (cfg/start/del in, w/done out) +
  // the face-path timeline growth (2 settles + 2 x conv-stream extra age XL, see ot_hgi_coll_tkm_static_p) + return
- localparam integer FORWARD_AGE=LINK_STAGES+3,RETURN_AGE=RETURN_CTL_STAGES,FACE_AGE=ROOT_IO+2*(SN-S0)+2*XL+2*CLRB,
+`ifdef TKM_PR_ENDPOINTS
+ localparam integer PR_EDGES=4; // strict pin-reg TX in/out + RX in/out faces (2097952d2f)
+`else
+ localparam integer PR_EDGES=0;
+`endif
+ localparam integer FORWARD_AGE=LINK_STAGES+3+PR_EDGES,RETURN_AGE=RETURN_CTL_STAGES,FACE_AGE=ROOT_IO+2*(SN-S0)+2*XL+2*CLRB,
   TOTAL_DELAY=FORWARD_AGE+2*PIPE+FACE_AGE+RETURN_AGE;
  reg clk=0,rst_n=0,start=0;always #0.4167 clk=~clk;
  reg[31:0]cfg[0:15],a[0:TP*2048-1],b[0:TP*2048-1],eo[0:2047],er[0:2047],ns[0:TP-1];
  reg[3:0]slots=0,valids=0;reg[2179:0]flits=0;
  wire wv,busy,done,fault;wire[39:0]wa;wire[15:0]wm;wire[511:0]wd;wire[31:0]cycles;
  integer G,N,K,PF,NOUT,HASR,OB,RB,GB,errs=0,words=0,elapsed=0,expected,slotmut=0,rotate=0;
- bit seeno[0:2047],seenr[0:2047];string dir;
+ bit seeno[0:2047],seenr[0:2047];string dir;bit mut_flit_en=0;
  wire rv,rbusy,rdone,rfault;wire[39:0]ra;wire[15:0]rm;wire[511:0]rd;wire[31:0]rcycles;
  ot_hgi_coll_tkm_static #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.RANK_W(TIE_W_MUT?7:$clog2(TP)))ref_u(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
  .cfg_n(12'(N)),.cfg_k(13'(K)),.cfg_nout(13'(NOUT)),.cfg_g(8'(G)),.cfg_gbase(8'(GB)),.cfg_pf(16'(PF)),
@@ -42,6 +47,8 @@ module tb_hbm_tkm_bound_tkx_ft21;
  reg[2340:0]tx_tkx;wire[2340:0]rx_tkx;
  wire[BEAT_WIDTH-1:0]beat;wire[32:0]side_beat;
  wire[BEAT_WIDTH-1:0]channel_beat;wire[32:0]channel_side;
+ reg mutflit_done=0;wire mutflit_arm=mut_flit_en&&!mutflit_done&&slots[0];
+ always @(posedge clk)if(mutflit_arm)mutflit_done<=1;
  always @*begin tx_tkx=0;
   tx_tkx[0+:1]=1'b0;
   tx_tkx[1+:8]=8'(G);
@@ -54,6 +61,8 @@ module tb_hbm_tkm_bound_tkx_ft21;
   tx_tkx[96+:16]=16'(PF);
   tx_tkx[112+:40]=40'(RB);
   tx_tkx[152+:2180]=flits;
+  // MUT_FLIT (TOK-HBM 10-25): corrupt lane-0 flit valid of the FIRST ingress beat on the path only (pinned ref keeps it)
+  if(mutflit_arm)tx_tkx[152+544]=~flits[544];
   tx_tkx[2332+:4]=slots;
   tx_tkx[2336+:4]=valids;
   tx_tkx[2340+:1]=send_start;
@@ -68,12 +77,14 @@ module tb_hbm_tkm_bound_tkx_ft21;
  .tx_tkx(tx_tkx),.rx_tkx(rx_tkx),.beat(observed_beat),.tx_fault(tf),.rx_fault(rf),.slot0(slot0),
  .wv(wv),.busy(busy),.done(done),.fault(fault),.wa(wa),.wm(wm),.wd(wd),.cycles(cycles));
  integer tiderr=0;
+`ifndef TKM_NOID_VIEW
  for(genvar t=0;t<32;t=t+1)begin:g_id_check
   wire[5:0]captured_id;
   if(t<31)assign captured_id=bound.actual_tiles[t].regular.tile.u_fcore.u_core.tile_tid;
   else assign captured_id=bound.actual_tiles[t].terminal.tile.u_fcore.u_core.tile_tid;
   always@(negedge clk)if(rst_n&&captured_id!==6'(t))$fatal(1,"TILE_TID mismatch tile%0d got%0d",t,captured_id);
  end
+`endif
  always@(posedge clk)if(rst_n&&(tf||rf))$fatal(1,"L74_TKM_TRANSPORT fault tf=%0d rf=%0d",tf,rf);
 
  function automatic[544:0]make_flit(input integer rank_,f);
@@ -110,6 +121,7 @@ module tb_hbm_tkm_bound_tkx_ft21;
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"missing DIR");
   if($value$plusargs("SLOT_MUT=%d",slotmut))begin end
   if($value$plusargs("ROTATE=%d",rotate))begin end
+  mut_flit_en=$test$plusargs("MUT_FLIT");
   $readmemh({dir,"/cfg.hex"},cfg);$readmemh({dir,"/a.hex"},a);$readmemh({dir,"/b.hex"},b);
   $readmemh({dir,"/o.hex"},eo);$readmemh({dir,"/r.hex"},er);$readmemh({dir,"/n.hex"},ns);
   G=cfg[0];N=cfg[1];K=cfg[2];HASR=cfg[4];NOUT=cfg[5];OB=cfg[9];RB=cfg[10];GB=G>=96?0:(int'(cfg[3])/G)*G;PF=(N+7)/8;

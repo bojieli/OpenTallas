@@ -8,14 +8,19 @@
 `default_nettype none
 // Selected static-ID views passed ID5/17 common and31 terminal exactness plus
 // actual wrong-binding rejection. Explicit legacy switch preserves old replay.
-`ifndef TKM_LEGACY_TIMED_ID_VIEW
+// TKM_NOID_VIEW (TOK-HBM 10-25 18:30): current physical no-ID kits (physical 4f800e1ed9,
+// common_noid_v2/terminal_noid_v2): same master names, NO ID port (dead tau-only ID removed).
+`ifdef TKM_NOID_VIEW
 `define OT_HBM_TKM_LEAF ot_hgi_coll_tkm_tp192_tile_core__idpin__strap
 `define OT_HBM_TKM_TERMINAL ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap
-`define OT_HBM_TKM_ID_PORT strap_tile_tid
-`else
+`elsif TKM_LEGACY_TIMED_ID_VIEW
 `define OT_HBM_TKM_LEAF ot_hgi_coll_tkm_tp192_tile_core__idpin
 `define OT_HBM_TKM_TERMINAL ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin
 `define OT_HBM_TKM_ID_PORT tile_tid
+`else
+`define OT_HBM_TKM_LEAF ot_hgi_coll_tkm_tp192_tile_core__idpin__strap
+`define OT_HBM_TKM_TERMINAL ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap
+`define OT_HBM_TKM_ID_PORT strap_tile_tid
 `endif
 // Selected NW->shared-SW TKM path. Explicit native bit envelope and real ft21
 // root/leaf shells. One parent-owned core clock domain; tile/buffer clocks are
@@ -54,11 +59,20 @@ module ot_hbm_tkm_path_tkx_ft21 #(
   if(BEAT_WIDTH!=1171)$fatal(1,"selected TKM-only profile is2341raw/1171beat");
   if(RETURN_CTL_STAGES<RETURN_DATA_STAGES||RETURN_DATA_STAGES<1)$fatal(1,"incoherent return");
  end
- ot_hbm_tkx_2beat_tx tx(.clk(nw_clk),.rst_n(nw_rst_n),.boot_start(tx_boot_start),.raw(tx_tkx),.beat(beat),.fault(tx_fault),.slot0(slot0));
+`ifdef TKM_PR_ENDPOINTS
+ // strict partition-pin endpoints (2097952d2f): TX +2, RX +2 edges, II unchanged
+ ot_hbm_tkx_2beat_tx_pr tx(
+`else
+ ot_hbm_tkx_2beat_tx tx(
+`endif.clk(nw_clk),.rst_n(nw_rst_n),.boot_start(tx_boot_start),.raw(tx_tkx),.beat(beat),.fault(tx_fault),.slot0(slot0));
  if(LINK_STAGES==0)begin assign channel_beat=beat;end else begin
  reg[BEAT_WIDTH-1:0]p[0:LINK_STAGES-1];always@(posedge clk)begin p[0]<=beat;for(integer j=1;j<LINK_STAGES;j=j+1)p[j]<=p[j-1];end
  assign channel_beat=p[LINK_STAGES-1];end
- ot_hbm_tkx_2beat_rx #(.LINK_STAGES(LINK_STAGES)) rx(.clk(clk),.rst_n(root_rst_n),.boot_start(rx_boot_start),.beat(channel_beat),.raw(rx_tkx),.fault(rx_fault));
+`ifdef TKM_PR_ENDPOINTS
+ ot_hbm_tkx_2beat_rx_pr #(.LINK_STAGES(LINK_STAGES)) rx(
+`else
+ ot_hbm_tkx_2beat_rx #(.LINK_STAGES(LINK_STAGES)) rx(
+`endif.clk(clk),.rst_n(root_rst_n),.boot_start(rx_boot_start),.beat(channel_beat),.raw(rx_tkx),.fault(rx_fault));
  reg runtime_start_q;always@(posedge clk)if(!root_rst_n)runtime_start_q<=0;else runtime_start_q<=rx_tkx[2340+:1];
  wire root_start=runtime_start_q;
  wire n_wv,n_done,n_fault,n_busy;wire[39:0]n_wa;wire[15:0]n_wm;wire[511:0]n_wd;
@@ -89,13 +103,15 @@ module ot_hbm_tkm_path_tkx_ft21 #(
  if(t<31)begin:regular
  `OT_HBM_TKM_LEAF tile(.tile_clk(tile_clk[t]),.tile_clr((t==0)?root_clr:clr_lane[t-1]),.tile_clr_o(clr_lane[t]),
   .tile_conv((t==31)?bc_conv:conv_lane[t+1]),.tile_conv_o(conv_lane[t]),
-.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_in(up[t+1]),.`OT_HBM_TKM_ID_PORT(tid),.tile_ovf_v(dv[t+1]),.tile_ovf_b(down[t+1]),.tile_up_out(up[t]));
+.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_in(up[t+1]),`ifndef TKM_NOID_VIEW .`OT_HBM_TKM_ID_PORT(tid), `endif
+.tile_ovf_v(dv[t+1]),.tile_ovf_b(down[t+1]),.tile_up_out(up[t]));
  // Static IDs pass directly to the actual canonical core. The bench checks
  // that binding; the golden numerical outputs do not consume the ID.
  end else begin:terminal
  `OT_HBM_TKM_TERMINAL tile(.tile_clk(tile_clk[t]),.tile_clr((t==0)?root_clr:clr_lane[t-1]),.tile_clr_o(clr_lane[t]),
   .tile_conv((t==31)?bc_conv:conv_lane[t+1]),.tile_conv_o(conv_lane[t]),
-.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.`OT_HBM_TKM_ID_PORT(tid),.tile_up_out(up[t]));
+.tile_ins_v(dv[t]),.tile_ins_b(down[t]),`ifndef TKM_NOID_VIEW .`OT_HBM_TKM_ID_PORT(tid), `endif
+.tile_up_out(up[t]));
  // Static IDs pass directly to the actual canonical core. The bench checks
  // that binding; the golden numerical outputs do not consume the ID.
  end
