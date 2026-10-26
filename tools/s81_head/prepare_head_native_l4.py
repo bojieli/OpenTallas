@@ -34,7 +34,7 @@ def main():
     shutil.copy2(args.seed / "rtl/ot_rom_4096x274_m8_bb.v", out / "rtl/ot_rom_4096x274_m8_bb.v")
     for name in ("face_keep.tcl", "face_keep_release.tcl", "face_guard.py", "face_guard_core.py",
                  "sdc_lint.py", "signoff.py", "pair_skew.tcl", "io_hold_qualification.py",
-                 "pin_audit.py"):
+                 "pin_audit.py", "adder_map_dontuse.py", "postcts_gate.tcl", "pinreg_measure.tcl"):
         if name == "face_guard_core.py":
             (out/name).write_bytes(subprocess.check_output(["git","-C",str(repo),"show","HEAD:physical/die_plan/hbm_arch_cores/face_guard_core.py"]))
         else: shutil.copy2(repo / "tools/die_plan" / name, out / name)
@@ -100,6 +100,7 @@ export SYNTH_HIERARCHICAL = 0
 export SYNTH_REPEATABLE_BUILD = 1
 export SYNTH_HDL_FRONTEND = slang
 export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl
+export ADDER_MAP_FILE = /work/adder_map_dontuse.v
 export OT_KEEP_PIN_REGS = 1
 export PRE_SYNTH_TCL = /work/face_keep.tcl
 export POST_SYNTH_TCL = /work/face_keep_release.tcl
@@ -126,6 +127,11 @@ export OT_VCLK_TT = 250
 export OT_VCLK_FF = 170
 """
     (out / "config.mk").write_text(cfg)
+    # The ASAP7 platform's default adder map can instantiate unresizable
+    # DONT_USE HAxp5 cells; generate the same legal map as the released kits.
+    # This runner only synthesizes. Geometry and physical adoption remain gated.
+    (out / "run_synth.sh").write_text('#!/bin/bash\nset -euo pipefail\nK=$(cd "$1" && pwd)\nMEM=${2:-32}; CPUS=${3:-16}\ndocker run --rm --name head-native-synth-$$ --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work openroad/orfs:asap7lock bash -lc \'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; cd /OpenROAD-flow-scripts/flow; python3 -I /work/adder_map_dontuse.py gen --platform-dir platforms/asap7 --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base synth && python3 -I /work/adder_map_dontuse.py check --platform-dir platforms/asap7 --netlist /work/run/results/asap7/hd_elemB_l4_native/base/1_2_yosys.v --report /work/dont_use_check.json\'\n')
+
     profile = dict(kind="S81_HEAD_B_L4_TIMED_NATIVE", physical_view_adoption=False,
         top="ot_s81hd_elemB_l4_native", reset_input_timed=True,
         reset_delivery_cycles=1, synchronous_reset_consumption=True,
