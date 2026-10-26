@@ -1868,7 +1868,10 @@ def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, trac
                 tp = f"t_reg_{ct}"
                 ports.append(("output", tp))
                 # region-entry port one island pitch (8.64 um) beside the leaf island (straight M8 stub)
-                pxy = (kp[0] + 8.64, kp[1])
+                # pin centre on the die M8 routing track (COORD 13:xx: plan tap pins on the die track grid)
+                tk = (track_profile or DEFAULT_TRACKS)["M8"]
+                py_ = tk["offset_um"] + round((kp[1] - tk["offset_um"]) / tk["pitch_um"]) * tk["pitch_um"]
+                pxy = (kp[0] + 8.64, round(py_, 4))
                 nets.append(dict(name=f"ckm_w_{nb}", drv=nb, loads=["port:" + tp], level=99))
                 tap_rows.append(dict(part=cn.get("host"), tap="region_entry", port=tp, xy=[round(pxy[0], 4), pxy[1]],
                                      layer="M8", pin_size_um=[0.32, 0.16], region_leaf=ct, early_ps=0.0, stub=nb, foot=list(kp),
