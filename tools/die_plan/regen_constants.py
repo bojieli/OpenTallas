@@ -601,12 +601,19 @@ def kv_ahub_composed(o):
     o.add("FR_OFS", fr, "rtl", "FR_OFS_asb + Delta(pvfst) - Delta(PV_LEAD) - Delta(ahfr) - Delta(ks_ahs)",
           dict(asbuilt=_int(fr0), pvfst=dpf, pvlead=dlead, ahfr=daf, hs=dhs),
           inst=r"^ahub$", group="ahub")
-    am = {}
+    am, lag = {}, {}
+    for side in ("w", "e"):
+        ms = B.members(source=rf"seq__u_core\.f_aqm_{side}$")
+        ds = {m["landed"] - m["asb"] for m in ms}
+        if len(ds) > 1:
+            raise RuleError(f"AHUB f_aqm_{side}: nonuniform command delta {sorted(ds)}")
+        lag[side] = next(iter(ds)) if ds else None
     for k, st in enumerate(KV_STACKS):
         ms = B.members(source=rf"^ahub\.am{k}$", sink=rf".*astk_{st}.*")
-        am[st] = (ms[0]["landed"] - ms[0]["asb"]) if ms else None
-    o.add("AM_LAG_DELTA", am, "compiler", "Delta(am) on the composed ASTK boundary; intra-partition absent",
-          group="ahub")
+        dl = lag["w" if st[0] == "W" else "e"]
+        am[st] = (ms[0]["landed"] - ms[0]["asb"] - dl) if ms and dl is not None else None
+    o.add("AM_LAG_DELTA", am, "compiler", "Delta(am) - Delta(seq f_aqm) on the composed ASTK boundary",
+          dict(command_lag=lag), group="ahub")
 
 
 def kv_pv_trunk(o):
