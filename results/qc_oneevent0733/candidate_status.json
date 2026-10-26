@@ -1,0 +1,17 @@
+{
+ "status": "UNADOPTED PLAN EVENT CANDIDATE; no route/freeze",
+ "input": "physical/die_plan/qwen_compute/candidate_oneqc0733.json",
+ "source": "claude/qc-oneqc-fold-1026@2e4b87cdb plus shared master tooling",
+ "initial_g0c": {
+  "verdict": "FAIL",
+  "errors": 34,
+  "missing_landing_clone_cells": 31,
+  "missing_sparse_phy_libs": 3,
+  "record": "g0c_original_34.json"
+ },
+ "next": [
+  "carry landing-cohort cell lineage and added ring/monitor cell estimates",
+  "run master-plan static roads/bays/coreclock/power gates on the one-event plan",
+  "common master slice core builds only after plan gates"
+ ]
+}
