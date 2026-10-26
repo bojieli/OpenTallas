@@ -18,5 +18,5 @@ def test_ambiguous_source_declarations_do_not_strip(tmp_path):
 
 def test_comments_and_other_modules_do_not_declare_genvars(tmp_path):
     p = tmp_path / 'a.sv'
-    p.write_text('module hard; /* genvar gf; */ // genvar gz;\n parameter W=8; endmodule\nmodule other; genvar gf; endmodule')
+    p.write_text('module hard; /* genvar gf; */ // genvar gz;\n parameter W=8; initial $display("localparam W=99; genvar W;"); endmodule\nmodule other; genvar gf; endmodule' )
     assert lec.blackbox_local_constant_cleanup(dict(VERILOG_FILES=str(p), SYNTH_BLACKBOXES='hard'), tmp_path) == []

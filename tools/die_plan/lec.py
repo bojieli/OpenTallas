@@ -207,7 +207,7 @@ def blackbox_local_constant_cleanup(env, kit):
     for master in env.get("SYNTH_BLACKBOXES", "").split():
         declarations = []
         for path in files:
-            text = re.sub(r"/\*.*?\*/|//[^\n]*", " ", path.read_text(), flags=re.S)
+            text = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*', " ", path.read_text(), flags=re.S)
             match = re.search(r"\bmodule\s+" + re.escape(master) + r"\b(.*?)\bendmodule\b", text, re.S)
             if match:
                 names = set()
