@@ -1,0 +1,11 @@
+DIFF row=0 old=3caf3798 new=3cdedf5c
+DIFF row=1 old=3cff04e8 new=3cda4f6c
+DIFF row=2 old=3d004d80 new=3d0f7072
+DIFF row=3 old=3ca36798 new=3cb4f310
+DIFF row=4 old=3d02a974 new=3cc5876c
+DIFF row=5 old=3cfe0b00 new=3d0e2ef2
+DIFF row=6 old=3caf3798 new=3cc49e10
+DIFF row=7 old=3cff04e8 new=3cda4f6c
+[90050000] %Fatal: tb_s81hd_l4_retime.sv:56: Assertion failed in tb_s81hd_l4_retime: FAIL rows=128 mismatches=128 old=128 new=128
+%Error: rtl/tb_s81hd_l4_retime.sv:56: Verilog $stop
+Aborting...

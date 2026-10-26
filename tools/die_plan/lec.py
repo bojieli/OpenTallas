@@ -252,6 +252,7 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out):
           # strided selects expand to 31M cells (77 GB) in techmap; with them 263k cells, 1.2 GB
           "opt_expr -keepdc", "opt_clean", "wreduce -keepdc", "peepopt", "opt_clean", "wreduce -keepdc", "opt_clean",
           "flatten -noscopeinfo", "opt_clean", f"select -write {out}.keep w:* a:lec_keep %i",
+          "select -clear", f"write_json {out}.aliases.json",
           # -nordff: memory_dff would merge an address / data register into a synchronous read port, and memory_map
           # then re-creates it as an anonymous '$...$rdreg' flop that no key point names (kv3_astk zn sd[k]: the
           # zq[5:2] address register became 4 unnamed gold latches, so every oa bit was UNPROVEN); the reference keeps
@@ -1518,6 +1519,85 @@ def drop_failed(L, bad):
         L.hyp.pop(("both" if sd == "bothg" else sd, k), None)
 
 
+
+
+def proved_state_constant(L, side, key, seen=None):
+    """Resolve only accepted induction equalities ending in a constant."""
+    seen = set() if seen is None else seen
+    node = (side,key)
+    if node in seen:
+        return None
+    seen.add(node)
+    h=L.hyp.get(node)
+    both=h is None
+    if both:
+        h=L.hyp.get(("both",key))
+    if not h:
+        return None
+    if h[0]=="const":
+        return int(h[1])
+    if h[0]=="eq":
+        c=proved_state_constant(L,side if both else h[1],h[2],seen)
+        return None if c is None else c ^ int(h[3])
+    return None
+
+
+def kept_wire_alias_copies(L, declared, aliases_file):
+    """Recognize RTL Q-wire aliases while requiring one distinct gate FF per kept bit.
+
+    The JSON is captured before register mapping from the same golden assembly.
+    An alias is wiring identity, not merely an equal-value replica hypothesis.
+    """
+    p = Path(aliases_file)
+    if not p.is_file():
+        return set()
+    nets = json.loads(p.read_text())["modules"][WRAP]["netnames"]
+    bit_names, wire_bits = collections.defaultdict(set), {}
+    for name, net in nets.items():
+        name = GENBLK.sub("", name.replace("\\", "").replace(" ", ""))
+        bits, offset = net["bits"], int(net.get("offset", 0))
+        for i, bit in enumerate(bits):
+            if not isinstance(bit, int):
+                continue
+            ix = offset + (len(bits)-1-i if net.get("upto", 0) else i)
+            names = {"ff:" + name + "[" + str(ix) + "]"}
+            if len(bits) == 1 and offset == 0:
+                names.add("ff:" + name)
+            for n in names:
+                wire_bits[n] = bit
+            bit_names[bit].update(names)
+    old_names = {v:k for k,v in (a.split("->",1) for a in L.aliased)}
+    gate, renamed = set(L.tp), collections.defaultdict(set)
+    for (side,c),h in L.hyp.items():
+        if side == "gate" and h[0] == "eq" and h[1] == "gold":
+            renamed[h[2]].add(c)
+    candidates = {}
+    for k in declared:
+        if proved_state_constant(L,"gold",k) is not None:
+            continue
+        old = old_names.get(k,k)
+        choices = set(bit_names.get(wire_bits.get(old), ())) & gate
+        if k in gate:
+            choices.add(k)
+        choices.update(renamed[k])
+        candidates[k] = choices
+    assigned = {}
+    def assign(k, seen):
+        for c in sorted(candidates[k]):
+            if c in seen:
+                continue
+            seen.add(c)
+            if c not in assigned or assign(assigned[c], seen):
+                assigned[c] = k
+                return True
+        return False
+    # All kept demands participate, including the already name-matched ones.
+    # This prevents an alias from reusing a gate flop already counted elsewhere.
+    if all(assign(k,set()) for k in sorted(candidates, key=lambda k:len(candidates[k]))):
+        return set(candidates)
+    return set()
+
+
 def kept_registers(L, keep_file):
     """Kept-register check (fail-closed, PATH-KV-PC3 10-25): every RTL register bit the design declares kept --
     a (* keep *) register or a flop inside a keep_hierarchy cell (pin flops, placement replicas) -- must be a flop of
@@ -1551,28 +1631,19 @@ def kept_registers(L, keep_file):
         if m and m.group(1) in relaid:
             gold_rel[m.group(1)] += 1
     renamed = {h[2] for (sd, c), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[2] in L.gp}
-    # Copies with identical D (per-port relay copies g_ft[k].u_rsc) land in ONE correspondence class, so a flop that
-    # synthesis only renamed inside its own kept instance (r[i] -> q[i]) is never paired 1:1 by name.  Count per kept
-    # instance instead: the instance keeps its copies when the gate has at least as many flops under exactly that
-    # instance path as the gold declares there.  A copy merged into its twin leaves its instance with no flops: FAIL.
-    inst = lambda k: k.rsplit(".", 1)[0] if "." in k[3:] else None
-    gate_inst = collections.Counter(inst(k) for k in L.tp if k.startswith("ff:") and inst(k))
-    gold_inst = collections.Counter(inst(k) for k in declared if inst(k))
+    alias_copies = kept_wire_alias_copies(L, declared, Path(keep_file).with_suffix(".aliases.json"))
     missing, const = [], []
     for k in sorted(declared):
         if k in gate or k in renamed:
             continue
-        i = inst(k)
-        if i and i != "ff:u_dut" and gate_inst[i] >= gold_inst[i]:
-            continue                 # renamed inside its own kept instance (counted per instance)
         m = IDX.match(k)
         if m and m.group(1) in relaid and relaid[m.group(1)] >= gold_rel[m.group(1)]:
             continue                 # an array the two frontends lay out differently: counted per array
-        h = L.hyp.get(("gold", k))
-        if h and h[0] == "const":
+        if proved_state_constant(L,"gold",k) is not None:
             const.append(k)
             continue
-        missing.append(k)
+        if k not in alias_copies:
+            missing.append(k)
     return sorted(declared), missing, const
 
 
@@ -1677,19 +1748,38 @@ def structural_twin_closure(L, log):
         L.build(with_compare=False, with_hyp=False)
         new = []
         for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
+            paired_roots = {h[2] for (sd,k),h in L.hyp.items()
+                            if h[0] == "eq" and h[1] == side and sd != side}
             twins = {}
-            for c in L.matched:
+            for c in sorted(set(L.matched) | paired_roots):
                 d = L.dlit.get((side, c), 0)
                 if c.startswith("ff:") and d > 1 and (side, c) not in L.hyp:
                     twins.setdefault(d >> 1, []).append((c, d))
             for k in keys:
                 d = L.dlit.get((side, k), 0)
-                if not k.startswith("ff:") or (side, k) in L.hyp or d <= 1:
+                if not k.startswith("ff:") or (side, k) in L.hyp or k in paired_roots or d <= 1:
                     continue
                 choices = twins.get(d >> 1, [])
                 if choices:
                     c, dc = min(choices)
                     new.append(((side, k), ("eq", side, c, (d ^ dc) & 1)))
+        # The frontends also expose different wire aliases for one flop.
+        # Compare exact functions across sides, including rare enable bits
+        # whose random signatures look constant (XS3 wce_n / wce3).
+        gold = {}
+        for k in L.gonly:
+            d = L.dlit.get(("gold", k), 0)
+            if k.startswith("ff:") and d > 1 and ("gold", k) not in L.hyp:
+                gold.setdefault(d >> 1, []).append((k, d))
+        for k in L.tonly:
+            d = L.dlit.get(("gate", k), 0)
+            if not k.startswith("ff:") or ("gate", k) in L.hyp or d <= 1:
+                continue
+            choices = gold.get(d >> 1, [])
+            if choices:
+                c = closest(k, [q for q, _ in choices])[0]
+                dc = dict(choices)[c]
+                new.append((("gate", k), ("eq", "gold", c, (d ^ dc) & 1)))
         if not new:
             break
         L.hyp.update(new)
@@ -1697,6 +1787,7 @@ def structural_twin_closure(L, log):
     if total:
         log.append(f"structural twin closure: {total} relations proposed")
     return total
+
 
 
 def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
@@ -1978,7 +2069,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             val, mask = m.simulate(words, seed=999)
             reps = {h[2] for (sd, k), h in L.hyp.items() if sd == "both" and h[0] == "eq"}
             for k in L.matched:
-                if not k.startswith("ff:") or ("both", k) in L.hyp or k in reps or tried[("both", k, "c")] >= 2:
+                if not k.startswith("ff:") or ("both", k) in L.hyp or tried[("both", k, "c")] >= 2:
                     continue
                 a, b = lit_val(val, mask, L.dlit[("gold", k)]), lit_val(val, mask, L.dlit[("gate", k)])
                 if a == b and a in (0, mask):
@@ -1989,7 +2080,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # own Q is in its next-state cone.  Candidate only; induction decides.
             var_of = {kk: v for v, (t, kk) in kind.items() if t == "matched"}
             gdl = dict(L.dlit)
-            cands = {k for k in L.matched if k.startswith("ff:") and ("both", k) not in L.hyp and k not in reps
+            cands = {k for k in L.matched if k.startswith("ff:") and ("both", k) not in L.hyp
                      and tried[("both", k, "c")] < 2}
             selfc = []
             for c in (0, 1):

@@ -1524,6 +1524,7 @@ class Binder:
         for k, d in list(self.sinks.items()):
             nd = fix(k[0], k[1], d)
             if nd != d:
+                self.__dict__.setdefault('_inner_original', {}).setdefault(k, d)
                 self.sinks[k] = nd
         miss = [w[1]["id"] for k, w in want.items() if k not in hit]
         for i in miss[:30]:
@@ -1813,6 +1814,11 @@ class Binder:
             out[i] = (self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)) if d[0] == "x" else 0
         return out
 
+    def timing_depths(self, path, port):
+        """Structured original/landed depths including explicit INNER changes; depth() keeps its old API."""
+        import bind_timing
+        return bind_timing.timing_depths(self, path, port)
+
     def cell_index(self):
         if not hasattr(self, "_cidx"):
             self._cidx = {c.path: i for i, c in enumerate(self.F.cells)}
@@ -1910,13 +1916,19 @@ class Binder:
             replicas.append(dict(source=f"{path}.{spn}", source_bits=ranges(b for b, _ in bl), asbuilt_stages=st,
                                  sink_parts=list(ps), bound_depths=depth,
                                  equal=len({x for v in depth.values() for x in v}) == 1))
-        return dict(schema="opentallas.die_plan.bus_groups.v1", die=self.plan["die"]["name"],
+        out = dict(schema="opentallas.die_plan.bus_groups.v1", die=self.plan["die"]["name"],
                     note=self.bus_groups.__doc__.split("\n\n")[0],
                     summary=dict(landing_groups=len(groups),
                                  landing_misaligned_by_lanes=sum(1 for g in groups if not g["aligned_by_lanes"]),
                                  landing_misaligned_after_pads=sum(1 for g in groups if not g["aligned_landed"]),
                                  replica_sets=len(replicas), replica_unequal=sum(1 for r in replicas if not r["equal"])),
                     landing=groups, replica=replicas)
+        import bind_timing
+        internal = bind_timing.changed_inner_groups(self)
+        if internal:
+            out['internal'] = internal
+            out['summary']['internal_changed_edges'] = len(internal)
+        return out
 
     def _rel_desc(self, p, d, inst_vals, where, nm=None):
         k = d[0]
@@ -2947,7 +2959,7 @@ class Binder:
             bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0))
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
-                            leaves=_seg_summary(L, F), forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
+                            leaves=_seg_summary(L, F), source_bits=_source_bits(L, F), source_bit_order="lsb_first", forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
                             asbuilt_stages=[min(st), max(st)], bound_stages=bound,
                             plan_cycles=L.get("cycles", 2), delta=bound - max(st)))
             if L["src"] in rh or L["dst"] in rh:
@@ -3001,6 +3013,12 @@ def _strip_comment_comma(ports):
         else:
             out.append(ln + ("" if last else ","))
     return out
+
+
+def _source_bits(L, F):
+    """Exact payload order used by emit_type's LSB-first concatenation, not run counts."""
+    return [["leaf", F.cells[it[1]].path, it[2], it[3]] if it[0] == "leaf"
+            else ["forward", it[1].get("lane"), it[2]] for it in L["items"]]
 
 
 def _seg_summary(L, F):
@@ -3073,7 +3091,7 @@ def _glue(c, conns, r):
         return f"    assign {conns['Y']} = {_GLUE_UN[t]}{op(conns['A'], sg('A_SIGNED'))};{src}"
     if t == "$mux":
         return f"    assign {conns['Y']} = {conns['S']} ? {conns['B']} : {conns['A']};{src}"
-    if t in ("$dff", "$adff", "$sdff", "$dffe", "$adffe", "$sdffe", "$sdffce"):
+    if t in ("$dff", "$adff", "$sdff", "$dffe", "$adffe", "$sdffe", "$sdffce", "$aldff", "$aldffe"):
         clkpol = "posedge" if P.get("CLK_POLARITY", "1").endswith("1") else "negedge"
         lines = []
         q = conns["Q"]
@@ -3082,7 +3100,14 @@ def _glue(c, conns, r):
         en = ""
         if "EN" in conns:
             en = f"if ({'' if P.get('EN_POLARITY', '1').endswith('1') else '!'}{conns['EN']}) "
-        if t.startswith("$adff"):
+        if t.startswith("$aldff"):
+            # Slang uses asynchronous-load FFs even for some constant-reset RTL.
+            # Preserve the actual load data and event polarity; never turn this
+            # into a synchronous reset or treat dynamic AD as a reset constant.
+            apol = P.get("ALOAD_POLARITY", "1").endswith("1")
+            lines.append(f"    always @({clkpol} {conns['CLK']} or {'posedge' if apol else 'negedge'} {conns['ALOAD']})\n"
+                         f"        if ({'' if apol else '!'}{conns['ALOAD']}) {nm}_q <= {conns['AD']}; else {en}{nm}_q <= {conns['D']};{src}")
+        elif t.startswith("$adff"):
             apol = P.get("ARST_POLARITY", "1").endswith("1")
             av = P.get("ARST_VALUE", "0")
             lines.append(f"    always @({clkpol} {conns['CLK']} or {'posedge' if apol else 'negedge'} {conns['ARST']})\n"

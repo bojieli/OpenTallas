@@ -14,6 +14,7 @@ import argparse, json, os, re, sys, collections
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import split_conn as sc                                           # noqa: E402
+import tkm_chain_profile
 import netcut, gen_core_ports as g                                # noqa: E402
 
 REPO = os.path.abspath(os.path.join(HERE, '..', '..', '..', '..', '..'))
@@ -105,6 +106,7 @@ PIECES = {
         master='ot_hgi_coll_tkm_m_tp192', top='ot_hgi_coll_tkm_tp192_tile_core', pieces=tkm_tile,
         rtl={'u_tile': ('ot_hgi_coll_tkm_tile_e86', '')},
         straps=[('u_tile', 'tid')],
+        dead_straps=[('u_tile','tid')], chain_profile=True, added_outputs=['tile_clr_o','tile_conv_o'],
         src='rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by '
             'PIPE 1; clk_r0..3 = tile_clk)'),
     'score_tail': dict(
@@ -352,7 +354,7 @@ def recipes(a):
             okmap = all(cov[nm] <= pw[nm][2] for nm in cov) and set(cov) <= set(pw) - st
             gin = sum(pw[nm][2] - cov[nm] for nm in pw if pw[nm][1] == 'input' and nm not in st)
             gout = sum(pw[nm][2] - cov[nm] for nm in pw if pw[nm][1] == 'output')
-            ok = (okmap and sub['ok'] and gin == sub['tied_in_bits'] and gout == sub['open_out_bits']
+            ok = (okmap and sub['ok'] and gin == sub['tied_in_bits'] and gout == sub['open_out_bits'] + sum(pw[nm][2] for nm in v.get('added_outputs',[]))
                   and ei == ci + strap_bits + gin and eo == co + gout)
             checks.append(ok)
             for t in cen:
@@ -459,7 +461,7 @@ def main():
             else:
                 _, _, bmap = sc.emit_wrapper(P, cfg['top'], cfg['rtl'], straps)
             strap_v = {f'{r}_{p}'.removeprefix('u_'): ''.join(cl[1] for cl in reversed(P.pins[(r, p)][1]))
-                       for r, p in straps}
+                       for r, p in straps if (r,p) not in set(map(tuple,cfg.get('dead_straps',[])))}
             rec[cut_mod] = dict(cut_bits=P.cut_bits, same_structure=same, cut_to_canonical=bmap, straps=strap_v)
             if sub is not None:
                 rec[cut_mod]['subset_of_reference'] = sub
@@ -476,12 +478,15 @@ def main():
                f'// Source wiring: {cfg["src"]}\n'
                f'// Wired bit-exactly as the as-built master netlist (split_conn.py); straps = replica constants tied at the parent.\n')
         txt, ports, _ = sc.emit_wrapper(P0, cfg['top'], cfg['rtl'], straps, hdr)
+        if cfg.get('chain_profile'):
+            txt, ports = tkm_chain_profile.apply(txt, ports)
         d = os.path.join(REPO, 'rtl', 'hbm_accel', 'cores_split', cfg.get('dir') or re.sub(r'__pv\d+$', '', m))
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, cfg['top'] + '.sv'), 'w').write(txt)
         res[key] = dict(master=m, top=cfg['top'], file=os.path.relpath(os.path.join(d, cfg['top'] + '.sv'), REPO),
                         ports=ports, pieces=rec, src=cfg['src'],
-                        rtl={r: list(v) for r, v in cfg['rtl'].items()})
+                        rtl={r: list(v) for r, v in cfg['rtl'].items()},
+                        added_outputs=cfg.get('added_outputs', []))
         json.dump(res, open(a.out, 'w'), indent=1)
 
 

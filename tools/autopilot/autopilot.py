@@ -41,6 +41,7 @@ is skipped when the id is already in the file, ot-run clients run in their own t
 import argparse
 import datetime
 import fcntl
+import fnmatch
 import hashlib
 import json
 import math
@@ -83,9 +84,19 @@ MAX_NOTRUN = 3                                          # 'NOT RUN' (never admit
 KIT_RE = re.compile(r"^([A-Za-z0-9_.-]+):(/srv/opentallas-scratch2?/claude/[A-Za-z0-9_./+=-]+)$")
 SRC_RE = re.compile(r"^[A-Za-z0-9_./-]+@[0-9a-f]{7,40}$")
 GEOM_OK = ("PASS", "PASS-COND")
-QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode", "canary_fix"]
+QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode", "canary_fix",
+         "flow"]
+FLOW_TAG_RE = re.compile(r"^flow-\d{8}-[a-z]$")
+FLOW_TAGS_CHECKED = 30                                   # newest release tags compared with a src commit
+# queue/job states that are re-judged every tick (never submitted yet)
+WAITS = (None, "WAIT-GEOM", "WAIT-CANARY", "WAIT-PATH-GATE", "WAIT-PLAN-DELTA", "REJECTED", "WITHDRAWN")
+# closure order (owner 2026-10-25 18:45): release-tree die key -> path name in lanes/PATH-FREEZE.md
+DIE_PATH = {"s81": "S81", "s81_head": "S81", "cp1": "S81", "qwen_compute": "QC", "qwen_kvsys": "KV", "hbm": "HBM"}
+GATE_ITEMS = ("GRT0", "CLOCK-ROUTE", "PATH-STA")
 TSV_HEAD = {
-    "signed.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\tmirror\ttt_wns_ps\tff_wns_ps\tlane",
+    "signed.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\tmirror\ttt_wns_ps\tff_wns_ps\tlane\tsrc_commit\tflow_tag",
+    "unversioned.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\ttt_wns_ps\tff_wns_ps\twhy\tlane",
+    "trial.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\ttt_wns_ps\tff_wns_ps\tgate\tlane",
     "review.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tpng\tpaths\tlane",
     "structural.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tlane",
     "provisional.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tlocal_verdict\treasons\tlane",
@@ -180,7 +191,7 @@ def geom_groups(rows):
     btab_s7 + prog_s7 share PATH-QC-SRAMIF-S7 and @90bf56dfa)"""
     out = {}
     for r in rows.values():
-        if r["error"] or not r["geom_ref"]:
+        if r["error"] or r.get("mode") == "withdraw" or not r["geom_ref"]:
             continue
         tag = geom_tag(r["geom_ref"])
         if tag:
@@ -199,7 +210,7 @@ def resolve_geom(rows, geom_text):
     that is already submitted: it records a geom_alerts.tsv row + a LOOP-GAPS line for the coordinator instead."""
     groups = geom_groups(rows)
     for r in rows.values():
-        if r["error"] or not r["geom_ref"]:
+        if r["error"] or r.get("mode") == "withdraw" or not r["geom_ref"]:
             continue
         tag = geom_tag(r["geom_ref"])
         if not tag:
@@ -271,8 +282,12 @@ def validate_row(r):
         return "threads not an integer"
     if r["runner"] and not r["runner"].startswith("/"):
         return "runner must be an absolute path"
-    if r["mode"] not in ("", "submit", "adopt"):
-        return "mode must be submit|adopt"
+    if r["mode"] not in ("", "submit", "adopt", "withdraw", "trial"):
+        return "mode must be submit|adopt|withdraw|trial"
+    if r["flow"] and not FLOW_TAG_RE.match(r["flow"]):
+        return "flow must be a flow release tag flow-YYYYMMDD-a|b (or empty: derived from src)"
+    if r["mode"] == "withdraw" and not r["geom_ref"].strip():
+        return "withdraw requires an explicit reason/evidence in geom_ref"
     return ""
 
 
@@ -310,10 +325,23 @@ def tsv_append(name, jid, fields):
     if p.exists() and any(l.split("\t")[1:2] == [jid] for l in p.read_text().splitlines()):
         return
     new = not p.exists()
+    if not new:
+        upgrade_header(p, TSV_HEAD[name])
     with open(p, "a") as f:
         if new:
             f.write(TSV_HEAD[name] + "\n")
         f.write("\t".join([now_s(), jid] + [str(x).replace("\t", " ").replace("\n", " ") for x in fields]) + "\n")
+
+
+def upgrade_header(p, head):
+    """a TSV whose header is a prefix of the current one (columns appended, e.g. signed.tsv src_commit/flow_tag
+    2026-10-25) gets the new header line in place; rows are never rewritten"""
+    lines = p.read_text().splitlines(keepends=True)
+    if not lines or lines[0].rstrip("\n") == head or not head.startswith(lines[0].rstrip("\n") + "\t"):
+        return
+    tmp = p.with_name(f".{p.name}.{os.getpid()}")
+    tmp.write_text(head + "\n" + "".join(lines[1:]))
+    os.replace(tmp, p)
 
 
 # ------------------------------------------------------------------------------------------------ host probes
@@ -419,6 +447,9 @@ out["cells"] = cells
 g = rd(next(iter(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "5_1_grt.log"))), ""))
 tot = re.findall(r"^Total\s+.*?(\d+)\s*$", g, re.M)
 out["grt_overflow"] = int(tot[-1]) if tot else None
+out["goal"] = goal
+cts = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "4_cts.odb")) if os.path.getmtime(p) >= since]
+if cts: out["cts_odb"] = max(cts, key=os.path.getmtime)
 done()
 '''
 
@@ -550,6 +581,9 @@ def classify(c, client):
         return "CRASH", "infra-lost", client.get("msg", "ot-run NOT COMPLETED")
     if c.get("oom") or client.get("exit") in (137, 143):
         return "CRASH", "infra-oom", c.get("oom") or f"exit {client.get('exit')}"
+    if client.get("exit") == 0 and c.get("goal") == "cts" and c.get("cts_odb"):
+        return "CTS-DONE", "cts-only", (f"CTS-only diagnostic finished: {c['cts_odb']} -- no sign-off scope; collect "
+                                        "placement / clock / reset images and review before the next scope")
     if client.get("exit") == 0:
         return "CRASH", "no-signoff", "flow exit 0 but no signoff.json"
     return "CRASH", "flow-error", c.get("orfs_error") or (c.get("runlog_tail") or "")[-300:] or f"exit {client.get('exit')}"
@@ -661,10 +695,17 @@ def poll_adopted(st, j):
     if hub_procs(j["path"]):
         return
     c = probe_job(j)
-    if c is None:
-        return
     p = rpy(j.get("probe") or j["host"], PROBE_KIT,
             {"kit": j["path"], "runner": j.get("runner", "")}, timeout=120)
+    if p.get("exists") is False:
+        if j.get("status") != "ORPHAN" or j.get("orphan_kind") != "kit-missing":
+            why = f"adopted kit missing on {j['host']}:{j['path']}; no physical verdict or restart inferred"
+            log(f"ORPHAN {j['id']}: {why}")
+            j["orphan_kind"] = "kit-missing"
+            set_status(st, j, "ORPHAN", why)
+        return
+    if c is None:
+        return
     la = p.get("log_age_s")
     if p.get("error") or p.get("busy") is not False or (la is not None and la < 900):
         return
@@ -735,6 +776,267 @@ def geom_fail_after_submit(st, j, r):
     save_state(st)
 
 
+# ------------------------------------------------------------------------------------------------ closure order
+# OWNER 2026-10-25 18:45 (lanes/_LANE_PREAMBLE.md "Closure order"):
+#  rule 1: until a path's die gate (lanes/PATH-FREEZE.md: GRT0 + CLOCK-ROUTE + PATH-STA PASS, or a FROZEN line) passes,
+#          its parts get trial builds only -- the autopilot never submits a sign-off run of a path part (WAIT-PATH-GATE;
+#          a row with mode 'trial' runs, and its result is recorded in trial.tsv, never as a sign-off);
+#  rule 3: a sign-off counts only when it names its source commit + the flow release tag it used (signed.tsv
+#          src_commit / flow_tag, AUTOPILOT.json + PROVENANCE.json in the archive); otherwise SIGNED-UNVERSIONED;
+#  rule 4: no kit run for a part a pending lanes/PLAN-DELTA.md delta touches (WAIT-PLAN-DELTA).
+CLOSURE = {}                                           # per tick: parsed PATH-FREEZE / PLAN-DELTA + flow tags
+
+
+def parse_path_freeze(text):
+    """-> ({PATH: {"pass": bool, "why": str, "items": {item: state}}}, {PATH: set(types)})
+    lines 'PATH | GRT0 / CLOCK-ROUTE / PATH-STA | PASS|FAIL|RUNNING|NOT RUN ... | evidence | date' (latest line per
+    item wins), 'FROZEN <PATH> plan@sha' (gate PASS until a later FAIL line of that path), and
+    'PATH-PARTS <PATH> type[,type ...]' (path-part types beyond the PATH-* lane / GEOM tag rows).  Fail closed: a path
+    with no lines is not PASS."""
+    gates, parts = {}, {}
+    for raw in (text or "").splitlines():
+        line = raw.strip()
+        m = re.match(r"^FROZEN\s+([A-Za-z0-9_-]+)\s+\S*@[0-9a-f]{7,40}", line)
+        if m:
+            g = gates.setdefault(m.group(1).upper(), {"items": {}, "frozen": False})
+            g["frozen"], g["frozen_line"] = True, line[:160]
+            continue
+        m = re.match(r"^PATH-PARTS\s+([A-Za-z0-9_-]+)\s+(.+)$", line)
+        if m:
+            parts.setdefault(m.group(1).upper(), set()).update(t for t in re.split(r"[\s,]+", m.group(2)) if t)
+            continue
+        f = [x.strip() for x in line.split("|")]
+        if len(f) < 3 or not re.match(r"^[A-Z0-9_-]+$", f[0]):
+            continue
+        state = (f[2].split() or [""])[0].upper()
+        items = [x.strip().upper() for x in re.split(r"\s*/\s*", f[1])]
+        g = gates.setdefault(f[0].upper(), {"items": {}, "frozen": False})
+        for it in items:
+            if it in GATE_ITEMS:
+                g["items"][it] = state
+        if state == "FAIL" and any(it in GATE_ITEMS for it in items):
+            g["frozen"] = False
+    for name, g in gates.items():
+        ok = g["frozen"] or all(g["items"].get(it) == "PASS" for it in GATE_ITEMS)
+        g["pass"] = ok
+        g["why"] = (g.get("frozen_line") if g["frozen"] else
+                    " ".join(f"{it} {g['items'].get(it, 'NOT RECORDED')}" for it in GATE_ITEMS))
+    return gates, parts
+
+
+def parse_plan_delta(text):
+    """-> {(die, type): delta id} of PENDING deltas: lines 'PENDING-DELTA <id> <die> type[,type ...]', closed by
+    'CLOSED-DELTA <id>' / 'MERGED-DELTA <id>' / 'DROPPED-DELTA <id>' (later lines win)"""
+    pend = {}
+    for raw in (text or "").splitlines():
+        line = raw.strip()
+        m = re.match(r"^PENDING-DELTA\s+(\S+)\s+(\S+)\s+(\S+)", line)
+        if m:
+            pend[m.group(1)] = (m.group(2), {t for t in m.group(3).split(",") if t})
+            continue
+        m = re.match(r"^(?:CLOSED|MERGED|DROPPED)-DELTA\s+(\S+)", line)
+        if m:
+            pend.pop(m.group(1), None)
+    out = {}
+    for did, (die, types) in pend.items():
+        for t in types:
+            out[(die, t)] = did
+    return out
+
+
+def load_closure():
+    CLOSURE.clear()
+    CLOSURE["gates"], CLOSURE["parts"] = parse_path_freeze(read_coord("lanes/PATH-FREEZE.md"))
+    CLOSURE["delta"] = parse_plan_delta(read_coord("lanes/PLAN-DELTA.md"))
+
+
+def _base_type(t):
+    return (t or "").split("__")[0]
+
+
+def path_of(r):
+    """the path name of a queue row / job when it is a path part, else None"""
+    path = DIE_PATH.get(r.get("die") or "")
+    if not path:
+        return None
+    lane = (r.get("lane") or "").upper()
+    tag = (geom_tag(r.get("geom_ref") or "") or "").upper()
+    listed = CLOSURE.get("parts", {}).get(path, set())
+    if lane.startswith("PATH-") or tag.startswith("PATH-") or r.get("type") in listed or _base_type(r.get("type")) in listed:
+        return path
+    return None
+
+
+def path_gate_hold(r):
+    """'' when the path part may route to sign-off, else why it is limited to trial builds"""
+    path = path_of(r)
+    if not path:
+        return ""
+    g = CLOSURE.get("gates", {}).get(path)
+    if g and g["pass"]:
+        return ""
+    return (f"path {path} die gate not PASS in lanes/PATH-FREEZE.md ({(g or {}).get('why', 'no gate line')[:160]}); "
+            f"path parts get trial builds only (closure order rule 1): enqueue --mode trial")
+
+
+def plan_delta_hold(r):
+    did = CLOSURE.get("delta", {}).get((r.get("die"), r.get("type"))) or \
+        CLOSURE.get("delta", {}).get((r.get("die"), _base_type(r.get("type"))))
+    return (f"pending plan delta {did} in lanes/PLAN-DELTA.md touches {r.get('die')}/{r.get('type')} "
+            f"(closure order rule 4: no kit run until the delta is CLOSED/MERGED/DROPPED)") if did else ""
+
+
+def closure_hold(r):
+    """(status, why) that keeps a row from being submitted, or (None, '')"""
+    if r.get("mode") in ("trial", "adopt", "withdraw"):
+        return None, ""
+    why = "" if r.get("goal") == "cts" else path_gate_hold(r)   # a CTS-only diagnostic is a trial build
+    if why:
+        return "WAIT-PATH-GATE", why
+    why = plan_delta_hold(r)
+    if why:
+        return "WAIT-PLAN-DELTA", why
+    return None, ""
+
+
+def flow_watch():
+    try:
+        return json.loads(read_repo("tools/flow_canary/canaries.json"))["watch"]
+    except Exception:                                  # unreadable -> no provenance (fail closed)
+        return None
+
+
+def flow_tags():
+    """newest-first flow release tags on origin (ROOT-MERGE tags flow-YYYYMMDD-a/b), fetched once per tick"""
+    if "tags" not in CLOSURE:
+        sh(["git", "-C", str(REPO), "fetch", "-q", "origin", "+refs/tags/flow-*:refs/tags/flow-*"], timeout=120)
+        rc, out, _ = sh(["git", "-C", str(REPO), "for-each-ref", "--sort=-creatordate", "--format=%(refname:short)",
+                         "refs/tags/flow-*"], timeout=60)
+        CLOSURE["tags"] = [t for t in out.split() if FLOW_TAG_RE.match(t)][:FLOW_TAGS_CHECKED] if rc == 0 else []
+    return CLOSURE["tags"]
+
+
+LEGACY_TAG = "SIGNED-LEGACY"   # GRANDFATHER (COORD ruling 2026-10-25 19:13): flow_tag value of a pre-first-tag sign-off
+
+
+def first_flow_tag_ts():
+    """unix time of the oldest flow-* release tag on origin (None: no flow release yet), once per tick"""
+    if "first_ts" not in CLOSURE:
+        flow_tags()
+        rc, out, _ = sh(["git", "-C", str(REPO), "for-each-ref", "--format=%(creatordate:unix)", "refs/tags/flow-*"],
+                        timeout=60)
+        ts = [int(x) for x in out.split() if x.isdigit()] if rc == 0 else []
+        CLOSURE["first_ts"] = min(ts) if ts else None
+    return CLOSURE["first_ts"]
+
+
+def apply_legacy(j):
+    """GRANDFATHER: a run STARTED before the first flow tag (or while none exists) that names its source commit (or
+    its archive run dir) and has no flow tag counts as SIGNED-LEGACY; runs started after the first tag need a real
+    flow tag.  Sets j['flow_tag'] = LEGACY_TAG and returns True when it applies."""
+    if j.get("flow_tag") or not (j.get("src_commit") or j.get("archive")):
+        return False
+    first = first_flow_tag_ts()
+    started = float(j.get("started") or 0)
+    if first is not None and not (0 < started < first):
+        return False
+    j.update(flow_tag=LEGACY_TAG, legacy=True)
+    return True
+
+
+def resolve_provenance(src, flow=""):
+    """-> {src_commit, flow_tag} or {..., error}: the full source commit of branch@sha (fetched on the hub repo when
+    missing) and the flow release tag whose watched flow files (tools/flow_canary/canaries.json 'watch') are identical
+    to the commit's -- the named --flow tag, else the newest matching one.  Never guessed: no match -> error."""
+    branch, sha = src.rsplit("@", 1)
+    rev = lambda: sh(["git", "-C", str(REPO), "rev-parse", "-q", "--verify", sha + "^{commit}"], timeout=60)
+    rc, out, _ = rev()
+    if rc or not out.strip():
+        sh(["git", "-C", str(REPO), "fetch", "-q", "origin", branch], timeout=300)
+        rc, out, _ = rev()
+    if rc or not out.strip():
+        return {"src_commit": "", "flow_tag": "", "error": f"src commit {sha} not found on origin ({branch}): push it"}
+    full = out.strip().split()[0]
+    watch = flow_watch()
+    if not watch:
+        return {"src_commit": full, "flow_tag": "", "error": "flow watch list tools/flow_canary/canaries.json unreadable"}
+    tags = flow_tags()
+    if flow and flow not in tags:
+        return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} not found on origin"}
+    for t in ([flow] if flow else tags):
+        rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--name-only", t, full], timeout=120)
+        if rc:
+            continue
+        changed = [p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)]
+        if not changed:
+            return {"src_commit": full, "flow_tag": t}
+        if flow:
+            return {"src_commit": full, "flow_tag": "",
+                    "error": f"src flow differs from {flow} in {len(changed)} watched files (e.g. {changed[0]})"}
+    return {"src_commit": full, "flow_tag": "",
+            "error": "no flow release tag carries this commit's flow" + ("" if tags else " (no flow-* tag on origin yet)")}
+
+
+PROBE_PROVENANCE = r'''
+import json, os, sys
+a = json.loads(sys.argv[1]); out = {}
+def done(): print("AP_JSON " + json.dumps(out)); sys.exit(0)
+try:
+    p = os.path.join(a["dest"], "PROVENANCE.json"); t = p + ".tmp"
+    with open(t, "w") as f: json.dump(a["prov"], f, indent=1)
+    os.replace(t, p); out["ok"] = True
+except Exception as e:
+    out["error"] = str(e)
+done()
+'''
+
+
+def write_provenance(host, dest, j):
+    prov = {k: j.get(k) for k in ("id", "die", "type", "src", "src_commit", "flow_tag", "lane")}
+    prov.update(schema="opentallas.provenance.v1", verdict="SIGNED" if j.get("flow_tag") and j.get("src_commit")
+                else "SIGNED-UNVERSIONED", why=j.get("prov_error", ""), written=now_s())
+    return rpy(host, PROBE_PROVENANCE, {"dest": dest, "prov": prov}, timeout=120)
+
+
+def record_signed(st, j, host, so):
+    """signed.tsv only with src_commit + flow_tag (rule 3); else unversioned.tsv + SIGNED-UNVERSIONED"""
+    if j.get("src_commit") and j.get("flow_tag"):
+        tsv_append("signed.tsv", j["id"], [j["die"], j["type"], j["src"], host, j["kit"], j["archive"], j["mirror"],
+                                           so.get("tt_wns"), so.get("ff_wns"), j.get("lane", ""), j["src_commit"],
+                                           j["flow_tag"]])
+        set_status(st, j, "ARCHIVED", f"{j['archive']} src {j['src_commit'][:12]} flow {j['flow_tag']}")
+        return True
+    tsv_append("unversioned.tsv", j["id"], [j["die"], j["type"], j["src"], host, j["kit"], j["archive"],
+                                            so.get("tt_wns"), so.get("ff_wns"), j.get("prov_error", ""), j.get("lane", "")])
+    set_status(st, j, "SIGNED-UNVERSIONED", f"{j['archive']}: not counted as signed off: {j.get('prov_error', '')}"[:300])
+    return False
+
+
+def retry_unversioned(st):
+    """an archived SIGNED-UNVERSIONED run is promoted once a flow release tag carries exactly its flow"""
+    for j in st["jobs"].values():
+        if j.get("status") != "SIGNED-UNVERSIONED" or not j.get("archive"):
+            continue
+        prov = resolve_provenance(j["src"], j.get("flow", ""))
+        if prov.get("error"):
+            j["prov_error"] = prov["error"]
+            if not apply_legacy(j):
+                continue
+            prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": LEGACY_TAG}
+        j.update(src_commit=prov["src_commit"], flow_tag=prov["flow_tag"], prov_error="")
+        host, dest = j["archive"].split(":", 1)
+        if DRY:
+            log(f"would PROMOTE {j['id']} {j['die']}/{j['type']}: flow {j['flow_tag']}")
+            continue
+        w = write_provenance(host, dest, j)
+        if w.get("error"):
+            log(f"PROVENANCE write failed {j['id']}: {w['error'][:200]}; retry next tick")
+            continue
+        record_signed(st, j, host, j.get("signoff") or {})
+        log(f"PROMOTE {j['id']} {j['die']}/{j['type']}: SIGNED-UNVERSIONED -> signed.tsv (src {j['src_commit'][:12]}, "
+            f"flow {j['flow_tag']})")
+
+
 def canary_wave_gate(row):
     import canary_gate
     return canary_gate.assess(row, os.environ.get("AP_CANARY_ROOT", "/srv/opentallas-scratch2/claude/flow-canary/runs"),
@@ -749,7 +1051,7 @@ def withdraw_unqueued(st, rows):
     if not rows:
         return
     for jid, j in st["jobs"].items():
-        if j.get("status") in ("WAIT-GEOM", "WAIT-CANARY") and jid not in rows:
+        if j.get("status") in ("WAIT-GEOM", "WAIT-CANARY", "WAIT-PATH-GATE", "WAIT-PLAN-DELTA") and jid not in rows:
             log(f"WITHDRAWN {jid} {j.get('die')}/{j.get('type')}: queue row gone (commented out or removed); was "
                 f"{j.get('status')}")
             set_status(st, j, "WITHDRAWN", f"queue row gone (was {j.get('status')} at line {j.get('queue_line') or j.get('line')})")
@@ -760,7 +1062,22 @@ def admit_new(st, rows):
     withdraw_unqueued(st, rows)
     for rid, r in sorted(rows.items(), key=lambda kv: kv[1]["line"]):
         j = st["jobs"].get(rid)
-        if j and j.get("status") not in (None, "WAIT-GEOM", "WAIT-CANARY", "REJECTED", "WITHDRAWN"):
+        if not r["error"] and r.get("mode") == "withdraw":
+            # Append-only withdrawal is queue control, never a cancellation or a
+            # replacement of an existing physical verdict.
+            j = st["jobs"].setdefault(rid, dict(r))
+            why = r["geom_ref"]
+            if j.get("status") in WAITS:
+                if j.get("status") != "WITHDRAWN" or j.get("withdraw_requested") != why:
+                    j.update({k: v for k, v in r.items() if k != "error"})
+                    j.update(queue_line=r["line"], withdraw_requested=why)
+                    log(f"WITHDRAWN {rid}: {why}; no job launched or evidence removed")
+                    set_status(st, j, "WITHDRAWN", why)
+            elif j.get("withdraw_requested") != why:
+                j["withdraw_requested"] = why
+                log(f"WITHDRAW-REQUESTED {rid}: {why}; {j.get('status')} state and job preserved")
+            continue
+        if j and j.get("status") not in WAITS:
             geom_fail_after_submit(st, j, r)
             continue                                   # already handled; the queue never restarts a job
         if j and j.get("status") == "REJECTED" and j.get("queue_line") == r["line"]:
@@ -792,6 +1109,15 @@ def admit_new(st, rows):
             continue
         if r.get("geom_auto") and (not j or j.get("geom_auto") != r["geom_auto"]):
             log(f"GEOM {rid} {r['die']}/{r['type']}: verdict from lanes/GEOM-REVIEW.md -> {r['geom_auto']}")
+        hold, hold_why = closure_hold(r)
+        if hold:
+            j = st["jobs"].setdefault(rid, dict(r))
+            j.update(r)
+            if j.get("status") != hold or j.get("hold_why") != hold_why:
+                log(f"HOLD {rid} {r['die']}/{r['type']}: {hold_why}")
+                j["hold_why"] = hold_why
+                set_status(st, j, hold, hold_why)
+            continue
         allowed, canary_why = canary_wave_gate(r)
         if not allowed:
             j = st["jobs"].setdefault(rid, dict(r))
@@ -830,6 +1156,11 @@ def admit_new(st, rows):
             set_status(st, j, "REJECTED", why)
             continue
         j["runner"] = p["runner"]
+        j.pop("hold_why", None)
+        trial_why = ("mode trial" if r["mode"] == "trial" else "goal cts (diagnostic)" if r.get("goal") == "cts"
+                     else path_gate_hold(r))
+        if trial_why:
+            j["trial"] = trial_why                        # rule 1: never recorded as a sign-off
         if j.get("goal") in ("", "auto", None):
             j["goal"] = default_goal(p["runner"])
         if j.get("mode") == "adopt":
@@ -926,7 +1257,23 @@ def finish(st, j, c, client):
 
 def after_class(st, j):
     cls = j["status"]
+    if cls == "CTS-DONE":
+        j["delete_pending"] = False
+        tsv_append("trial.tsv", j["id"], [j["die"], j["type"], j["src"], ssh_host(j.get("probe") or j["host"]), j["kit"],
+                                          "CTS-DONE", "", "", j.get("reasons", "")[:300], j.get("lane", "")])
+        log(f"CTS-DONE {j['id']} {j['die']}/{j['type']}: {j.get('reasons', '')[:200]}; checkpoint kept, trial.tsv")
+        return
     if cls == "SIGNED":
+        trial = j.get("trial") or path_gate_hold(j)
+        if trial:
+            so = j.get("signoff") or {}
+            j["delete_pending"] = False
+            tsv_append("trial.tsv", j["id"], [j["die"], j["type"], j["src"], ssh_host(j.get("probe") or j["host"]),
+                                              j["kit"], "SIGNED", so.get("tt_wns"), so.get("ff_wns"), trial, j.get("lane", "")])
+            set_status(st, j, "TRIAL-SIGNED", f"trial build, not a sign-off (closure order rule 1): {trial}"[:300])
+            log(f"TRIAL {j['id']} {j['die']}/{j['type']}: local SIGNED kept as a trial result (trial.tsv), not archived "
+                f"as a sign-off -- {trial[:200]}")
+            return
         archive(st, j)
     elif cls == "WAIT-PARENT":
         j["delete_pending"] = False
@@ -946,7 +1293,10 @@ def archive(st, j):
     so = j["signoff"]
     sha = j["src"].split("@")[1][:10]
     dest = f"{ARCHIVE_ROOT}/{j['die']}/{j['type']}__{sha}"
-    rec = {k: j.get(k) for k in ("id", "die", "type", "kit", "src", "geom", "geom_ref", "lane", "goal", "mem_gb")}
+    prov = resolve_provenance(j["src"], j.get("flow", ""))
+    j.update(src_commit=prov.get("src_commit", ""), flow_tag=prov.get("flow_tag", ""), prov_error=prov.get("error", ""))
+    rec = {k: j.get(k) for k in ("id", "die", "type", "kit", "src", "geom", "geom_ref", "lane", "goal", "mem_gb",
+                                 "src_commit", "flow_tag", "prov_error")}
     rec.update(signoff=so, archived=now_s(), host=host)
     if DRY:
         log(f"would archive {j['id']} {host}:{j['path']} -> {dest} + mirror")
@@ -967,10 +1317,14 @@ def archive(st, j):
     mirror = f"{mhost}:{dest}" if m.get("ok") else f"MIRROR-FAILED({(m.get('bad') or m.get('error'))})"
     j["archive"] = f"{host}:{dest}"
     j["mirror"] = mirror
-    tsv_append("signed.tsv", j["id"], [j["die"], j["type"], j["src"], host, j["kit"], j["archive"], mirror,
-                                       so.get("tt_wns"), so.get("ff_wns"), j.get("lane", "")])
-    log(f"ARCHIVED {j['id']} {j['die']}/{j['type']} -> {j['archive']} ({r.get('files')} files, MD5SUMS) mirror {mirror}")
-    set_status(st, j, "ARCHIVED", j["archive"])
+    apply_legacy(j)
+    w = write_provenance(host, dest, j)
+    if w.get("error"):
+        log(f"PROVENANCE write failed {j['id']}: {w['error'][:200]} (AUTOPILOT.json carries the same fields)")
+    versioned = record_signed(st, j, host, so)
+    log(f"ARCHIVED {j['id']} {j['die']}/{j['type']} -> {j['archive']} ({r.get('files')} files, MD5SUMS) mirror {mirror}"
+        + (f" src {j['src_commit'][:12]} flow {j['flow_tag']}" if versioned else
+           f" -- SIGNED-UNVERSIONED, not counted as signed off: {j['prov_error'][:200]}"))
 
 
 def render_mem_gb(odb_bytes):
@@ -1074,7 +1428,7 @@ def retry_pending(st):
     released = failure_resolutions()
     for j in list(st["jobs"].values()):
         if j.get("status") == "SIGNED" and not DRY:
-            archive(st, j)
+            after_class(st, j)                         # trial check (rule 1) before an archive retry
         elif j.get("status") == "WAIT-PARENT":
             if hub_procs(j["path"]):
                 continue
@@ -1110,9 +1464,11 @@ def tick(args):
     rows = parse_queue(read_queue_text())
     geom_text = read_coord("lanes/GEOM-REVIEW.md")
     resolve_geom(rows, geom_text)
+    load_closure()
     poll_running(st)
     poll_reviews(st)
     retry_pending(st)
+    retry_unversioned(st)
     admit_new(st, rows)
     save_state(st)
     try:

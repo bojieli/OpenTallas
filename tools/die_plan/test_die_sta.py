@@ -122,6 +122,8 @@ def test_verdict_tt_ff():
     res = dict(mode="ilm", corners={"TT": dict(exit=0, seams=seams, ffspread={"u0": dict(spread=140.0)}, pairskew=ps),
                                     "FF": dict(exit=0, seams=seams, ffspread={"u0": dict(spread=30.0)}, pairskew=ps),
                                     "SS": dict(exit=0, seams={"a": {"max": dict(worst=-100.0, neg=3)}})})
+    for corner in ("TT", "FF"):
+        res["corners"][corner]["clock_endpoint_coverage"] = dict(verdict="PASS", status="NO_UNEXPANDED_CHILD_ETM")
     v = D.verdict(res)
     assert v["status"] == "PASS"                          # SS never gates; spread > 80 is INFO only
     assert v["ffspread_TT_info"] == 140.0 and "ffspread_TT" not in v

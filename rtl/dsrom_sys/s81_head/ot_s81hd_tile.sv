@@ -32,6 +32,7 @@ module ot_s81hd_tile #(
     parameter integer IOREG = 1,             // ot_s81hd_elem pin-registered inputs
     parameter [8:0] CUT = 9'b1_1111_1111,      // 10-24: closed element views (was 0x17b)
     parameter integer SPLIT9 = 1,              // 10-24: closed element views (was 0)
+    parameter integer FADD_L4 = 0,             // opt-in: SK4 ROM+xskew and newnativeviews required
     parameter integer CV = 0,                  // 10-24: 1 = elements are the closed-view macros (ot_s81hd_bundle CV)
     // 10-24 hd_tile preview review (S81-HEAD): opt-in pipelining, every added cycle priced in the die model.
     //   A_INPUT_STAGES: per-A-core copies of {go, bv, row, xsa, bd} (bundle; the x skew-line tail -> A x pins hop)
@@ -91,7 +92,7 @@ module ot_s81hd_tile #(
     wire [3:0]   nc_hv;
     wire [127:0] nc_hd;
     wire [67:0]  nc_hr;
-    ot_s81hd_bundle #(.INSTANCE(INSTANCE), .IOREG(IOREG), .SAFE(1), .CUT(CUT), .SPLIT9(SPLIT9), .CV(CV),
+    ot_s81hd_bundle #(.INSTANCE(INSTANCE), .IOREG(IOREG), .SAFE(1), .CUT(CUT), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4), .CV(CV),
                      .A_INPUT_STAGES(A_INPUT_STAGES), .MERGE_HOP(MERGE_HOP)) u_b (
         .clk(ck), .rst_n(rst_n),
 `ifdef OT_S81HD_MUT_TEN_IGNORED

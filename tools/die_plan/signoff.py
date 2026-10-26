@@ -57,11 +57,13 @@ import argparse
 import concurrent.futures as cf
 import datetime
 import gzip
+import hashlib
 import json
 import os
 import math
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -206,6 +208,166 @@ def macro_libs(kit, corner):
     return list(dict.fromkeys(libs)), missing
 
 
+SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl")
+
+
+def signoff_bundle_sources(source=HERE):
+    source = Path(source)
+    paths = {name: source / name for name in SIGNOFF_BUNDLE}
+    if not paths["clock_family.tcl"].is_file():
+        paths["clock_family.tcl"] = source.parents[1] / "physical/common_flow/clock_family.tcl"
+    missing = [name for name, path in paths.items() if not path.is_file()]
+    if missing:
+        raise ValueError("signoff: incomplete tool bundle: " + ", ".join(missing))
+    return paths
+
+
+def require_signoff_bundle():
+    return signoff_bundle_sources()
+
+
+def copy_signoff_bundle(destination, source=HERE):
+    paths = signoff_bundle_sources(source)
+    destination = Path(destination)
+    destination.mkdir(parents=True, exist_ok=True)
+    for name, path in paths.items():
+        target = destination / name
+        if path.resolve() != target.resolve():
+            shutil.copyfile(path, target)
+    return list(paths)
+
+
+def copy_core_tap_overlay(golden, destination):
+    golden, destination = Path(golden), Path(destination)
+    text = golden.read_text()
+    lines = [line.strip() for line in text.splitlines() if line.startswith("# OT_CORE_TAP_CORNER_FILE")]
+    if not lines:
+        return False
+    if lines != ["# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc"]:
+        raise ValueError("signoff: malformed or ambiguous core-tap FF overlay marker")
+    overlay = golden.with_name("core_taps_ff.sdc")
+    if not overlay.is_file():
+        raise ValueError("signoff: missing marked core_taps_ff.sdc")
+    destination.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(overlay, destination / overlay.name)
+    return True
+
+
+def _lib_groups(text, keyword):
+    """Yield named Liberty groups while respecting quoted strings and escapes."""
+    pattern = re.compile(r'\b' + re.escape(keyword) + r'\s*\(([^)]*)\)\s*\{')
+    position = 0
+    while (match := pattern.search(text, position)):
+        depth, quoted, escaped = 1, False, False
+        index = match.end()
+        while index < len(text) and depth:
+            char = text[index]
+            if escaped:
+                escaped = False
+            elif char == '\\':
+                escaped = True
+            elif char == '"':
+                quoted = not quoted
+            elif not quoted:
+                depth += (char == '{') - (char == '}')
+            index += 1
+        if depth:
+            raise ValueError('unterminated Liberty group')
+        yield match.group(1).strip().strip('"'), text[match.end():index - 1]
+        position = index
+
+
+def clock_model_coverage(library_files, instantiated_masters, expected_sha256=None):
+    """Pure, fail-closed composed-child endpoint detector, reusable by die STA.
+
+    Inputs are the actual selected libraries and exact sequential endpoint
+    master names. Clock-to-Q alone is not a composed-child marker: an ordinary
+    SRAM has that arc too. Nonzero clock_tree_path + is_macro_cell is the
+    capability marker here. No latency correction or expansion is performed.
+    """
+    result = dict(schema='opentallas.clock_endpoint_coverage.v1',
+                  raw_pair_basis='visible_clock_pins', models=[])
+    try:
+        if instantiated_masters is None:
+            raise ValueError('actual instantiated clock endpoint masters unavailable')
+        masters = set(instantiated_masters)
+        result['instantiated_masters'] = sorted(masters)
+        for filename in library_files:
+            path = Path(filename)
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            if expected_sha256 is not None and expected_sha256.get(str(path)) != digest:
+                raise ValueError(f'consumed Liberty hash mismatch: {path}')
+            text = gzip.open(path, 'rt').read() if path.suffix == '.gz' else path.read_text()
+            text = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*',
+                          lambda match: match.group(0) if match.group(0).startswith('"') else ' ', text, flags=re.S)
+            unit = re.search(r'\btime_unit\s*:\s*"([^"]+)"', text)
+            if not re.search(r'\b(?:min|max)_clock_tree_path\b', text):
+                continue
+            for master, body in _lib_groups(text, 'cell'):
+                if master not in masters or not re.search(r'\bis_macro_cell\s*:\s*true\s*;', body):
+                    continue
+                tree_paths = {}
+                for _, timing in _lib_groups(body, 'timing'):
+                    marker = re.search(r'\btiming_type\s*:\s*((?:min|max)_clock_tree_path)\s*;', timing)
+                    if not marker:
+                        continue
+                    values = []
+                    for table in re.findall(r'\bvalues\s*\(\s*"([^"]*)"\s*\)', timing, re.S):
+                        values.extend(float(word) for word in re.split(r'[,\s]+', table.replace('\\\n', ' ')) if word)
+                    if not values or not all(math.isfinite(value) for value in values):
+                        raise ValueError(f'invalid clock_tree_path values: {path}:{master}')
+                    tree_paths.setdefault(marker.group(1), []).extend(values)
+                if not any(value != 0 for values in tree_paths.values() for value in values):
+                    continue
+                model = dict(master=master, liberty=str(path), liberty_sha256=digest,
+                             marker='is_macro_cell + nonzero clock_tree_path', clock_tree_path_values=tree_paths,
+                             liberty_time_unit=unit.group(1) if unit else None)
+                corner = re.search(r'_(tt|ff|ss)\.lib(?:\.gz)?$', path.name)
+                export = path.parent / ('export_' + corner.group(1) + '.tcl') if corner else None
+                if export and export.is_file():
+                    producer = export.read_text()
+                    model['export_provenance'] = dict(path=str(export),
+                        sha256=hashlib.sha256(export.read_bytes()).hexdigest(),
+                        write_timing_model='write_timing_model' in producer,
+                        read_spef='read_spef' in producer, propagated_clock='set_propagated_clock' in producer)
+                result['models'].append(model)
+        unexpanded = bool(result['models'])
+        result.update(status='UNEXPANDED_CHILD_ETM' if unexpanded else 'NO_UNEXPANDED_CHILD_ETM',
+                      verdict='NOT RUN' if unexpanded else 'PASS',
+                      expanded_child_flop_pairs='NOT RUN' if unexpanded else 'NO_LUMPED_CHILD_CLOCKS')
+    except (OSError, ValueError, TypeError) as error:
+        result.update(status='UNAVAILABLE', verdict='NOT RUN', expanded_child_flop_pairs='NOT RUN', reason=str(error))
+    return result
+
+
+def consumed_clock_model_coverage(receipt_path, disc, masters, mapping_errors=0):
+    """Map exact container-library receipt paths to their immutable host inputs."""
+    try:
+        if mapping_errors != 0:
+            raise ValueError('clock endpoint master inventory incomplete')
+        receipt = json.loads(Path(receipt_path).read_text())
+        if receipt.get('status') != 'LOADED' or not isinstance(receipt.get('libraries'), list):
+            raise ValueError('exact loaded-library receipt unavailable')
+        root = Path(disc['kit']) if disc.get('kit') else Path(disc['library_config']).parent
+        files, expected, consumed = [], {}, {}
+        for row in receipt['libraries']:
+            source = row['path']
+            # These are the exact native PDK groups, not composed child models.
+            if re.fullmatch(r'/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_(AO|INVBUF|OA|SEQ|SIMPLE)_(RVT|LVT|SLVT)_(TT|FF|SS)_nldm_[^/]+\.lib(?:\.gz)?', source):
+                continue
+            if not source.startswith('/work/') or '..' in Path(source).parts:
+                raise ValueError(f'consumed non-PDK Liberty host mapping unavailable: {source}')
+            host = root / source[len('/work/'):]
+            files.append(host); expected[str(host)] = row['sha256']; consumed[str(host)] = source
+        result = clock_model_coverage(files, masters, expected)
+        for model in result['models']:
+            model['consumed_liberty'] = consumed[model['liberty']]
+        result['library_receipt'] = str(receipt_path)
+        return result
+    except (OSError, ValueError, TypeError, KeyError) as error:
+        return dict(schema='opentallas.clock_endpoint_coverage.v1', status='UNAVAILABLE', verdict='NOT RUN',
+                    raw_pair_basis='visible_clock_pins', expanded_child_flop_pairs='NOT RUN', models=[], reason=str(error))
+
 # ---- the OpenSTA session (one corner) -----------------------------------------------------------------------------
 def _clock_family_tcl():
     for p in (REPO / "physical/common_flow/clock_family.tcl", HERE / "clock_family.tcl"):   # repo, or a kit copy
@@ -285,20 +447,96 @@ if {[llength $so_vclk] == 1} {
 }
 """
 
+EXACT_TIMING_LIBRARIES_TCL = r"""# Resolve the exact libraries selected by this kit's ORFS make configuration.
+# No directory glob or installed-version fallback is permitted.
+proc ot_lib_json_string {value} {
+  return "\"[string map [list \\ \\\\ \" \\\" \n \\n \r \\r \t \\t] $value]\""
+}
+proc ot_lib_validate {corner files} {
+  if {$corner ni {TT FF SS}} {error "OT_TIMING_LIBS: unsupported corner $corner"}
+  if {![llength $files]} {error "OT_TIMING_LIBS: empty exact library list"}
+  set seen {}; set groups {}; set present {}
+  foreach f $files {
+    if {[file pathtype $f] ne "absolute"} {error "OT_TIMING_LIBS: relative library $f"}
+    if {[regexp {[*?\[\]$]} $f] || ![file isfile $f]} {error "OT_TIMING_LIBS: missing or unresolved library $f"}
+    set path [file normalize $f]
+    if {[dict exists $seen $path]} {error "OT_TIMING_LIBS: duplicate library $f"}
+    dict set seen $path 1
+    if {[regexp {^asap7sc7p5t_([^_]+)_(RVT|LVT|SLVT)_(TT|FF|SS)_nldm_} [file tail $f] -> group vt actual]} {
+      if {$actual ne $corner} {error "OT_TIMING_LIBS: wrong corner $f"}
+      set key $group/$vt
+      if {[dict exists $groups $key]} {error "OT_TIMING_LIBS: ambiguous installed versions for $key"}
+      dict set groups $key $path
+      dict set present $group 1
+    } elseif {[regexp -nocase {_(tt|ff|ss|typ)\.lib(?:\.gz)?$} [file tail $f] -> actual]} {
+      set actual [string toupper $actual]
+      if {$actual eq "TYP"} {set actual TT}
+      if {$actual ne $corner} {error "OT_TIMING_LIBS: wrong macro corner $f"}
+    }
+  }
+  foreach group {AO INVBUF OA SEQ SIMPLE} {
+    if {![dict exists $present $group]} {error "OT_TIMING_LIBS: missing standard-cell group $group"}
+  }
+  return $files
+}
+proc ot_lib_resolve {corner {config /work/config.mk}} {
+  if {![file isfile $config]} {error "OT_TIMING_LIBS: missing exact ORFS config $config"}
+  set field [dict get {TT TC_LIB_FILES FF BC_LIB_FILES SS WC_LIB_FILES} $corner]
+  set output [exec bash -c {source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1 || exit; exec make --no-print-directory -s -C /OpenROAD-flow-scripts/flow "DESIGN_CONFIG=$1" "print-$2"} otlibs $config $field]
+  set records {}
+  foreach line [split $output \n] {
+    if {[regexp "^${field}\\s*\[:=\]\\s*(.*)$" $line -> value]} {lappend records $value}
+  }
+  if {[llength $records] != 1} {error "OT_TIMING_LIBS: missing or ambiguous make $field result"}
+  set files [regexp -all -inline {\S+} [lindex $records 0]]
+  return [ot_lib_validate $corner $files]
+}
+proc ot_lib_load {corner receipt {config /work/config.mk}} {
+  if {[file exists $receipt]} {file rename $receipt ${receipt}.previous.[clock clicks]}
+  set files [ot_lib_resolve $corner $config]
+  set rows {}
+  foreach f $files {
+    set digest [lindex [exec sha256sum -- $f] 0]
+    lappend rows "{\"path\":[ot_lib_json_string $f],\"sha256\":[ot_lib_json_string $digest]}"
+  }
+  set digest [lindex [exec sha256sum -- $config] 0]
+  foreach f $files {read_liberty $f}
+  set fp [open $receipt w]
+  puts $fp "{\"status\":\"LOADED\",\"corner\":[ot_lib_json_string $corner],\"source\":\"ORFS make print corner LIB_FILES\",\"config\":[ot_lib_json_string $config],\"config_sha256\":[ot_lib_json_string $digest],\"libraries\":\[[join $rows ,]\]}"
+  close $fp
+  puts "OT_TIMING_LIBS $corner exact_count [llength $files] receipt $receipt"
+  return $files
+}
+"""
+
 SESSION_TCL = r"""
 proc so {k args} { puts "SO $k [join $args { }]" }
 proc so_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }; return [format %.2f [sta::time_sta_ui $t]] }
-foreach l [glob @PLAT@/lib/NLDM/*_RVT_@C@_*] { read_liberty $l }
-foreach l [glob -nocomplain @PLAT@/lib/NLDM/*_LVT_@C@_* @PLAT@/lib/NLDM/*_SLVT_@C@_*] { if {![string match *FAKE* $l]} { read_liberty $l } }
-@MACRO_LIBS@
+@TIMING_LIBRARIES@
+ot_lib_load @C@ /out/libraries.json
 read_db /base/@ODB@
 @PARASITICS@
 read_sdc /sdc/golden.sdc
+@CORE_TAPS_FF@
 set_propagated_clock [all_clocks]
 so CORNER @C@
 so PARASITICS @PARSRC@
 so DESIGN [current_design]
 so CELLS [llength [get_cells *]]
+# Inventory actual sequential endpoint masters; a Liberty loaded but unused is
+# not evidence of an unexpanded child. Keep the raw pair census unchanged.
+set so_endpoint_masters {}; set so_endpoint_mapping_errors 0
+foreach p [all_registers -clock_pins] {
+  if {[catch {
+    set owners [get_cells -quiet -of_objects [list $p]]
+    if {[llength $owners] != 1} {error "nonunique clock endpoint owner"}
+    set master [get_property [lindex $owners 0] ref_name]
+    if {$master eq ""} {error "empty clock endpoint master"}
+  }]} {incr so_endpoint_mapping_errors; continue}
+  dict set so_endpoint_masters $master 1
+}
+so CLOCK_ENDPOINT_MASTERS {*}[lsort [dict keys $so_endpoint_masters]]
+so CLOCK_ENDPOINT_MAPPING_ERRORS $so_endpoint_mapping_errors
 # ---- ports (for sdc_lint context) and IO virtual clock ----
 set so_ck_ports {}
 foreach c [all_clocks] { foreach s [get_property $c sources] { if {[llength [get_ports -quiet [get_full_name $s]]]} { lappend so_ck_ports [get_full_name $s] } } }
@@ -432,7 +670,7 @@ exit
 
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
-                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None):
+                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False):
     """hold_in_min / hold_out_min: the kit's seam hold contract (sdc_lint.json hold_in_min_ps / hold_out_min_ps,
     CLOCK-RESET IO-HOLD 10-25); None = legacy overlay (min input -ins_tol, min output 0).  hold_in_min_ports
     {input port: ps}: IO-HOLD option A per-port min input delays (sdc_lint.json hold_in_min_ports_ps) applied after
@@ -458,7 +696,8 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
     else:
         t = SESSION_TCL.replace("@FF_VCLK@", FF_VCLK_TCL if on else "")
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
-                 ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
+                 ("@TIMING_LIBRARIES@", EXACT_TIMING_LIBRARIES_TCL),
+                 ("@CORE_TAPS_FF@", "read_sdc /sdc/core_taps_ff.sdc" if corner == "ff" and core_taps_ff else ""),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@IN_MIN@", f"[expr {{-{ins_tol:g}}}]" if hold_in_min is None else f"{hin:g}"),
                  ("@IN_MIN_LOG@", f"{hin:g}"), ("@OUT_MIN@", f"{hout:g}"),
                  ("@IN_MIN_PORTS@\n", "".join(
@@ -577,6 +816,8 @@ def corner_result(parsed):
     out["insertion_all"] = stats(allck)
     out["insertion_pinflops"] = stats(bnd)
     out["pair_skew"] = pair_skew_result(kv)
+    out["clock_endpoint_masters"] = kv["CLOCK_ENDPOINT_MASTERS"].split() if "CLOCK_ENDPOINT_MASTERS" in kv else None
+    out["clock_endpoint_mapping_errors"] = _f(kv.get("CLOCK_ENDPOINT_MAPPING_ERRORS"))
     out["ocv5_wns_max"] = _f(kv.get("OCV5_WNS_MAX"))
     out["ocv5_wns_min"] = _f(kv.get("OCV5_WNS_MIN"))
     return out
@@ -616,16 +857,19 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     mounts = [("base", disc["base"]), ("sdc", str(od / "sdcdir")), ("out", str(od))]
     (od / "sdcdir").mkdir(exist_ok=True)
     (od / "sdcdir" / "golden.sdc").write_text(Path(disc["sdc"]).read_text())
+    libconfig = Path(disc["library_config"]) if disc.get("library_config") else (Path(disc["kit"]) / "config.mk" if disc.get("kit") else None)
+    if libconfig is None or not libconfig.is_file():
+        raise ValueError("signoff: exact corner libraries require --kit/config.mk or explicit --library-config")
+    mounts.append(("work", disc.get("kit") or str(libconfig.parent)))
+    mounts.append(("work/config.mk", str(libconfig)))
+    core_overlay = copy_core_tap_overlay(Path(disc["sdc"]), od / "sdcdir")
     ml_ctr = []
-    for i, lp in enumerate(mlibs):
-        mounts.append((f"ml{i}", str(Path(lp).parent)))
-        ml_ctr.append(f"/ml{i}/{Path(lp).name}")
     lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text()) if disc.get("sdc_lint_ctx") else {}
     (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name, ff_vclk=ff_vclk,
                                                 ff_bound_ps=disc.get("ff_bound_ps"),
                                                 hold_in_min=lctx.get("hold_in_min_ps"),
                                                 hold_out_min=lctx.get("hold_out_min_ps"),
-                                                hold_in_min_ports=lctx.get("hold_in_min_ports_ps")))
+                                                hold_in_min_ports=lctx.get("hold_in_min_ports_ps"), core_taps_ff=core_overlay))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -638,6 +882,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     res = corner_result(parse_session(text))
     res.update(corner=corner, rc=rc, macro_libs=mlibs, macro_missing=mmiss,
                errors=re.findall(r"\[ERROR[^\n]*", text)[:5])
+    res["clock_endpoint_coverage"] = consumed_clock_model_coverage(od / "libraries.json", disc,
+        res.get("clock_endpoint_masters"), res.get("clock_endpoint_mapping_errors"))
     (od / "corner.json").write_text(json.dumps(res, indent=1) + "\n")
     return res
 
@@ -921,7 +1167,15 @@ def evaluate(rec, insertion_target=None):
             if abs(pf["mean"] - float(bound[c])) > tol:
                 why.append(f"{c.upper()} pin-flop insertion {pf['mean']:.1f} ps not within bound {float(bound[c]):g} +- "
                            f"{tol:g}")
-        put("clock", "FAIL" if why else "PASS", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
+        raw_clock_verdict = "FAIL" if why else "PASS"
+        coverage = {c: C[c]["clock_endpoint_coverage"] for c in SPREAD_CORNERS if C[c].get("clock_endpoint_coverage")}
+        unqualified = {c: value for c, value in coverage.items() if value.get("verdict") != "PASS"}
+        if unqualified:
+            why.extend(f"{c.upper()}: expanded child-flop pair coverage NOT RUN ({value.get('status')})"
+                       for c, value in unqualified.items())
+        put("clock", "NOT RUN" if unqualified else ("FAIL" if why else "PASS"),
+            endpoint_model_coverage=coverage, raw_clock_verdict=raw_clock_verdict,
+            raw_pair_basis="visible_clock_pins", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
             by_corner=sp, problems=why,
             insertion_target_ps=insertion_target, insertion_bound=bound or None)
     else:
@@ -1004,6 +1258,8 @@ def cmd_run(a):
     disc = discover(base, kit=a.kit, sdc=a.sdc, record=a.record)
     if not disc["sdc"]:
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
+    require_signoff_bundle()
+    disc["library_config"] = str(Path(a.library_config).resolve()) if getattr(a, "library_config", None) else None
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
     bound = None
@@ -1050,7 +1306,7 @@ def cmd_run(a):
                            derate="none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); "
                                   "ocv5_* = flat late 1.05 / early 0.95, information only",
                            engine=f"OpenSTA in OpenROAD ({a.image}), one process per corner",
-                           libs="ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+                           libs="Exact routed-kit ORFS make TC/BC_LIB_FILES including macro views; hashed receipt",
                            corner_rule="setup TT / hold FF / 60-25 ps / related pair skew CPPR <= 80 TT+FF; spread INFO; SS information only "
                                        "(owner 2026-10-24, AGENTS.md c7ce2ed69a)"),
                tool_commit=_git_head())
@@ -1102,6 +1358,7 @@ def main(argv=None):
     g.add_argument("--run-dir")
     g.add_argument("--base")
     r.add_argument("--kit")
+    r.add_argument("--library-config", help="Explicit exact ORFS library config for no-kit runs; macro paths resolve under its directory")
     r.add_argument("--sdc")
     r.add_argument("--record")
     r.add_argument("--name")
@@ -1121,7 +1378,12 @@ def main(argv=None):
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)
+    b = sub.add_parser("bundle", help="Copy the complete standalone signoff tool bundle")
+    b.add_argument("out")
     a = ap.parse_args(argv)
+    if a.cmd == "bundle":
+        print("SIGNOFF_BUNDLE " + " ".join(copy_signoff_bundle(a.out)))
+        return 0
     if a.cmd == "run" and a.ff_bound_ps is not None and a.ff_vclk != "bound-ff":
         ap.error("--ff-bound-ps requires --ff-vclk bound-ff")
     if a.cmd == "run" and a.ff_bound_ps is not None and not (a.ff_vclk_contract or "").strip():

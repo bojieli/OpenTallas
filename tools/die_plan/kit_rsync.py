@@ -44,6 +44,9 @@ TREE = re.compile(r"^\s*(?://\s*OWNER RESET RULE 10-24 (?:\+ DECISION 13c )?\(to
 # reset wavefront outs (OWNER DECISION 13): port declarations / wrapper connections of an earlier conversion
 ROUT = re.compile(r"^\s*(?:output\s+wire\s+(?:rst|start)_o_\d+\s*,.*|\.(?:rst|start)_o_\d+\((?:rst|start)_o_\d+\)\s*,.*|"
                   r"input\s+wire\s+start_i\s*,.*|\.start_i\(start_i\)\s*,.*)$")
+# bind.py emits one-bit bound-only START as [0:0], often as the last
+# declaration/connection. Strip it before inserting the canonical wavefront pin.
+START_ENTRY = re.compile(r"^\s*(?:input\s+wire\s+(?:\[\s*0\s*:\s*0\s*\]\s*)?start_i\s*,?\s*(?://.*)?|\.start_i\s*\(\s*start_i\s*\)\s*,?\s*(?://.*)?)$")
 ARST_DECL = re.compile(r"^(\s*)input\s+wire\s+arst_n\s*,")
 ARST_CONN = re.compile(r"^(\s*)\.arst_n\(arst_n\)\s*,")
 
@@ -53,6 +56,11 @@ def add_reset_outs(lines, outs, conn=False, start=False):
     .rst_o_k(rst_o_k) connections after `.arst_n(arst_n),`); earlier ones are dropped first (idempotent)."""
     out, nd, nc = [], 0, 0
     for ln in lines:
+        if START_ENTRY.match(ln):
+            # Dropping a last old pin also removes its predecessor's comma.
+            if not ln.split("//", 1)[0].rstrip().endswith(",") and out:
+                out[-1] = re.sub(r",(\s*(?://[^\n]*)?\n?)$", r"\1", out[-1])
+            continue
         if ROUT.match(ln):
             continue
         out.append(ln)
