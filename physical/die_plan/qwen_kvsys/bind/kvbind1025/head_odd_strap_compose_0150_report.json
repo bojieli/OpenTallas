@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.kv.head_odd_strap_compose.v1",
+ "cores": 512,
+ "by_master": {
+  "kv3_head_eighth_e1": 256,
+  "kv3_head_eighth_e5": 256
+ },
+ "json_sha256": "40d77345408aeafbb2bd9ccc94e7f367ec00d60e3e5f9befe2cc0761bd2d5b7b",
+ "first": [
+  {
+   "inst": "native_composite_hg_EN_0_head0_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "bsel": "00",
+   "ports_renamed": 0
+  },
+  {
+   "inst": "native_composite_hg_EN_0_head0_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "bsel": "01",
+   "ports_renamed": 15
+  },
+  {
+   "inst": "native_composite_hg_EN_0_head0_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "bsel": "10",
+   "ports_renamed": 0
+  },
+  {
+   "inst": "native_composite_hg_EN_0_head0_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "bsel": "11",
+   "ports_renamed": 15
+  },
+  {
+   "inst": "native_composite_hg_EN_0_head1_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "bsel": "00",
+   "ports_renamed": 0
+  },
+  {
+   "inst": "native_composite_hg_EN_0_head1_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "bsel": "01",
+   "ports_renamed": 15
+  },
+  {
+   "inst": "native_composite_hg_EN_0_head1_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "bsel": "10",
+   "ports_renamed": 0
+  },
+  {
+   "inst": "native_composite_hg_EN_0_head1_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "bsel": "11",
+   "ports_renamed": 15
+  }
+ ]
+}
