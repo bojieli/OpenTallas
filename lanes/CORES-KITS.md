@@ -43,3 +43,5 @@ Host_qm source929a037e3 canonicalkitb9c922f7b66d0af0 actualPLACEPASS; imageviewe
 
 ## CODEX notes 2026-10-26 02:42 PDT — host pacer independent review
 Root independently viewed canonical host_qm placement and approved PASS-COND for one trial CTS/route. Row 001d839021ce updated with the exact GEOM tag/type; normal canary and plan holds remain. Actual clock skew, TT/FF timing and PG connectivity are still NOT RUN. Runner inspection found fixed TT250/FF202.5 virtual-clock basis and no explicit local common-latency balancing hook (POST_CTS is leaf_affinity only); measure real clock insertion before diagnosing any hold miss, do not change budgets or clocks blindly.
+
+2026-10-26 02:49 PDT CODEX: diagnosed host row 001d839021ce "cannot compare source" as missing source git objects on epyc1; fixed with minimal bundle imported through own sparse WT codex-vqvs-1026-ep1, without central checkout edits. Now legitimate WAIT-FLOW: newest completed KV canary e0d486853 differs from host929 source in gen_core_kit_kv.py and new hr_face_ports.py/.sh + hr_prep.py. Root/FLOW informed; proposed tiny reviewed host_qm as KVHR family canary (no bypass performed).
