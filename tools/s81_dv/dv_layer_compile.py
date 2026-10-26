@@ -1274,6 +1274,8 @@ def main(argv=None):
                          'xfin NX flit as checked output words (needs --fixtures; layer_prog/norm_nx.py); "all" = every '
                          'slice\'s norm + entry state + the 16-flit snake words')
     a = ap.parse_args(argv)
+    if a.retime_native_entry and not a.native_entry_program:
+        ap.error('--retime-native-entry requires the actual native entry command record')
     if a.bound_control_only:
         if not all((a.bound,a.bound_inventory,a.bound_local_timing,a.bound_source_root,a.bound_asbuilt_manifest)):
             ap.error('--bound-control-only requires bound, inventory, local timing, source root and source manifest')
