@@ -41,7 +41,7 @@ module tb_svc_lower;
     parameter integer ST = 0;
     parameter integer MAXCYC = 20000;
 `include "dsdv_svc_rs_roles.svh"
-    localparam integer H = 16, D = 512, NHBM = 8192, QMAX = 4096;
+    localparam integer H = 16, D = 512, NHBM = 8192, QMAX = 8192;   // TOK-DS-CMP: T640 L14 job = 4.7k q words (ROWS)
     reg ck = 0; always #0.5 ck = ~ck;
     reg rst = 0;
     reg [31:0] meta [0:31];
