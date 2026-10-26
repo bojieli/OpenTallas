@@ -1,0 +1,29 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Fresh exact-released-flow VQ actual placement ready for one TRIAL CTS/route, pending independentGEOM+TR2-S81",
+  "source": "codex/vqvs-1026@330101a02 (all flow/RTL877cfdeb2815)",
+  "kit_hash": "3da2783116e6fa67",
+  "picture": "/srv/opentallas-scratch/claude/wt/codex-vqvs-1026/results/geom_review/codex_vqvs_1026/vq_placed.png",
+  "results": {
+    "place_exit": 0,
+    "lec_compare_points": 13045,
+    "proved": 13045,
+    "differs": 0,
+    "undecided": 0,
+    "full_r2r_arcs": 109826,
+    "max_reach_um": 278,
+    "arcs_over405": 0,
+    "placed_cells": 43962,
+    "flops": 10313,
+    "max5umbin": 0.68,
+    "bins_over0p8": 0
+  },
+  "findings": [
+    "Single south SRAM; all other regions form a connected logic domain, no macro wall or narrow trapped channel",
+    "Boundary data flops at matching W/E/N pin bands; F6 memory-interface register band follows macro north interface",
+    "Cells fill north/left regions at max68% density with clear margins around macro, no density spikes",
+    "Full reach census includes every sequential-to-sequential/port connectivity arc through combinational logic; all under278um",
+    "Clock north-center entry; real CTS pair skew/TTsetup/FFhold and PG connectivity remain route checks"
+  ],
+  "added_cycles": 0
+}
