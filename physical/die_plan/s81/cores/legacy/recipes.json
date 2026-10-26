@@ -1,5 +1,5 @@
 {
- "_doc": "ELEM-S81 canonical legacy core recipes for gen_core_kit_legacy.py. Key = plan hard-core module (or plan_module). ref_tile from results/signoff_1024/inventory.json (bksel_q: the hk2l kit whose views closed; l5: the n32 kit at 1766568f01 = main's binding). Defaults: util = spec route.pd, CTS args of VQ r12, hold margin 15, fanout 24. 10-25 (S81-CORES/LEGACY): qbank_N/S + sstn_base566 ft1_pairs dropped: main RTL (dc23a738f / e7390b932) lands every station input in its own pin register (2 flops per bit, +1 cycle), so no one-station pair exists and canonical face_guard needs none. dsfd_rstg / ot_s81_sstn_payload536: relay2 (0c1b14693) 2-flop stations, suffix r2, no ft1_pairs.",
+ "_doc": "ELEM-S81 canonical legacy core recipes for gen_core_kit_legacy.py. Key = plan hard-core module (or plan_module). ref_tile from results/signoff_1024/inventory.json (bksel_q: the hk2l kit whose views closed; l5: the n32 kit at 1766568f01 = main's binding). Defaults: util = spec route.pd, CTS args of VQ r12, hold margin 15, fanout 24. 10-25 (S81-CORES/LEGACY): qbank_N/S + sstn_base566 ft1_pairs dropped: main RTL (dc23a738f / e7390b932) lands every station input in its own pin register (2 flops per bit, +1 cycle), so no one-station pair exists and canonical face_guard needs none. dsfd_rstg / ot_s81_sstn_payload536: relay2 (0c1b14693) 2-flop stations, suffix r2, no ft1_pairs. 10-26 (CORES-KITS/S81 HOLD): recipe io_hold sender_min = IO-HOLD option A (COORD 10-25 10:23) on vector input buses; qbank_S / cfg7_seq_bfp k26 GRT hold repairs hit RSZ-0060 on 100%/98% input-port -> landing-register endpoints under the flat -40 contract. qbank_S tap_target_ps 215: GRT-RC probe (4_cts.odb, FF, vclk 202.5) with sender_min alone still 498 EP (-9.7 worst, tree FF 197..216); clk -16.5 ps leaves only the 2 scalar/reset EP; outputs +38.5 at GRT RC.",
  "dsdv_gunit_l0": {
   "ref_tile": "physical/ref_tile/dsdv_gunit_l0"
  },
@@ -86,14 +86,17 @@
  },
  "dsfd_qbank_S": {
   "ref_tile": "physical/ref_tile/s81fill2_qbank_s",
-  "core_margin": 1.08
+  "core_margin": 1.08,
+  "io_hold": "sender_min",
+  "tap_target_ps": 215
  },
  "ot_s81_cfg7_seq": {
   "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_pr",
   "core_margin": 1.08
  },
  "ot_s81_cfg7_seq_bfp": {
-  "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr"
+  "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr",
+  "io_hold": "sender_min"
  },
  "ot_s81_sstn_base566": {
   "ref_tile": "physical/ref_tile/s81_sstn_base566"
