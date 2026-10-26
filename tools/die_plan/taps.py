@@ -276,6 +276,41 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
         leaves = [q for k, q in enumerate(leaves) if k not in (i, j)] + [m]
 
 
+
+def explicit_taps(P, tn):
+    """Fixed planned local clock endpoints, with full actual sink-budget checks.
+
+    Materializing a density-derived table breaks control-relay/tap coordinate
+    feedback. No endpoint is moved, added, dropped or silently re-legalized.
+    The normal density CTS/load/balance recipe still applies to these ports.
+    """
+    import schema
+    ck=P.types[tn].get("clock",{})
+    table=[p for p in ck.get("taps",[]) if p.get("kind")!="core"]
+    if not table:
+        raise ValueError(f"{tn}: explicit tap table is empty")
+    names=[p["name"] for p in table]
+    expected=["clk"]+[f"clk_t{i}" for i in range(1,len(table))]
+    if names!=expected:
+        raise ValueError(f"{tn}: explicit local tap names/order must be {expected}")
+    out=[];taken=[(x,y) for _,x,y,_ in schema.core_taps(P,tn)]
+    for p in table:
+        x,y=map(float,p["xy"])
+        legal=schema.tap_clear(P.types[tn],x,y,taken,strict=True)
+        if abs(legal[0]-x)+abs(legal[1]-y)>1e-6:
+            raise ValueError("{}: explicit tap {} violates outline/halo/tap spacing".format(tn,p["name"]))
+        out.append((p["name"],x,y));taken.append((x,y))
+    sinks=sink_sites(P,tn)
+    cap=int(ck.get("tap_max_sinks",1500));radius=float(ck.get("tap_radius_um",200.))
+    if cap<=0 or radius<=0:
+        raise ValueError(f"{tn}: explicit tap radius/capacity must be positive")
+    load,far,_=assign(out,sinks,cap,radius,max_distance_um=radius)
+    for i,(n,r) in enumerate(zip(load,far)):
+        if n>cap or r>radius+1e-6 or n==0:
+            raise ValueError(f"{tn}: explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, empty={n==0}")
+    return [(name,x,y,n,r) for (name,x,y),n,r in zip(out,load,far)]
+
+
 def density_taps(P, tn):
     """OWNER decision 5 (10-24, industry multi-source CTS): partition clock taps placed by SINK DENSITY.
 
@@ -426,6 +461,8 @@ def bins_from_dump(dump, bin_um=10.8, origin=(0.0, 0.0)):
 
 def sink_taps(P, tn):
     """[(port, x, y, n_sinks, radius_um)] sink-anchored taps of type tn (cached per plan object and type)."""
+    if P.types[tn].get("clock", {}).get("tap_mode") == "explicit":
+        return explicit_taps(P, tn)
     if P.types[tn].get("clock", {}).get("tap_mode") == "density":
         return density_taps(P, tn)
     key = (id(P), tn)

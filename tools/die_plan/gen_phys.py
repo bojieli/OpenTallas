@@ -512,7 +512,7 @@ HOLD_OUT_MIN_PS = 0.0   # min output delay of every partition output vs vclk (sd
 
 def _density(t):
     """clock.tap_mode "density" (OWNER decision 5, 10-24): taps placed by sink density (taps.density_taps), no grid."""
-    return t.get("clock", {}).get("tap_mode") == "density"
+    return t.get("clock", {}).get("tap_mode") in ("density", "explicit")
 
 
 def _tap_cap(t):
