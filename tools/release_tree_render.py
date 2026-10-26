@@ -18,10 +18,10 @@ import release_tree_plan as RTP   # current-plan element layer (INFRA 10-24): G0
 
 BASE = pathlib.Path('/home/ubuntu/coord')
 CACHE = pathlib.Path.home() / '.local/state/fleet-viz/release_tree_elements_cache.json'
-STATUSES = ['RUNNING', 'WAITS', 'TODO', 'NEW', 'COORD', 'OWNER', 'FAIL', 'PASS', 'DONE', 'BLOCKED', 'NOT RUN']
-CHIP = dict(DONE='ok', PASS='ok', RUNNING='run', WAITS='wait', TODO='wait', BLOCKED='wait', NEW='new', COORD='me', OWNER='me', FAIL='me', **{'NOT RUN': 'wait'})
+STATUSES = ['RUNNING', 'WAITS', 'TODO', 'NEW', 'COORD', 'OWNER', 'FAIL', 'PASS', 'FROZEN', 'DONE', 'BLOCKED', 'NOT RUN']
+CHIP = dict(DONE='ok', PASS='ok', FROZEN='ok', RUNNING='run', WAITS='wait', TODO='wait', BLOCKED='wait', NEW='new', COORD='me', OWNER='me', FAIL='me', **{'NOT RUN': 'wait'})
 GATES = [('BIND', 'Strict bind'), ('GRT', 'Die GRT overflow 0'), ('STA', 'Die STA TT/FF, real views'), ('CLK', 'Die clock check TT+FF')]
-DIE_ORDER = ['s81', 'qwen_compute', 'qwen_kvsys', 'hbm']
+DIE_ORDER = ['s81', 's81_head', 'qwen_compute', 'qwen_kvsys', 'hbm']   # five dies: head is its own die (own plan, own freeze)
 
 # ------------------------------------------------------------------ markdown tree
 ITEM = re.compile(r'^(\s*)- \[( |x|X)\] (\S+)\s+(.*)$')
@@ -425,6 +425,30 @@ def task_banner():
                     ' open' if any(x['cls'] == 'DEAD' for x in rows) else '', len(rows), items) if rows else ''))
 
 
+DEP_RX = re.compile(r'→ ([A-Z][A-Z0-9]*(?:\.[A-Z0-9]+)+)')
+
+
+def deps_of(secs):
+    """waits-on edges written as '→ ID' in each open item's note (RELEASE_TREE.md is the only source)"""
+    items = {i['id']: i for s in secs for i in walk(s['items'])}
+    edges = [(i, DEP_RX.findall(i['note'])) for s in secs for i in walk(s['items']) if not i['checked']]
+    return items, [(i, d) for i, d in edges if d]
+
+
+def deps_html(secs):
+    items, edges = deps_of(secs)
+    if not edges: return ''
+    rows = []
+    for i, ds in edges:
+        tg = ' '.join(('<a href="#t-%s">%s</a> %s' % (E(d), E(d), chip(items[d]['status']))) if d in items else
+                      '<span class="chip me">MISSING %s</span>' % E(d) for d in ds)
+        rows.append('<tr><td><a href="#t-%s">%s</a> %s</td><td>waits on</td><td>%s</td></tr>' % (E(i['id']), E(i['id']), chip(i['status']), tg))
+    bad = sorted({d for _, ds in edges for d in ds if d not in items})
+    return ('<section><h2>Waits-on edges</h2><p class="lede" style="margin:0">Every "→ ID" written in RELEASE_TREE.md, one row per waiting item (%d edges%s).</p>'
+            '<div class="panel tablebox"><table style="min-width:520px"><tbody>%s</tbody></table></div></section>'
+            % (sum(len(d) for _, d in edges), ('; dangling: ' + E(', '.join(bad))) if bad else '', ''.join(rows)))
+
+
 def render(md_path, el, el_err, now, plan=None):
     pre, secs = parse_md(md_path.read_text())
     arch = load_done(md_path)
@@ -485,7 +509,7 @@ def render(md_path, el, el_err, now, plan=None):
         if not s: continue
         its = list(walk(s['items'])); nopen = sum(1 for i in its if not i['checked'])
         gates = [gate_of(s, g) for g, _ in GATES]
-        first = next((g for g in gates if g and g['status'] not in ('PASS', 'DONE')), None)
+        first = next((g for g in gates if g and g['status'] not in ('PASS', 'DONE', 'FROZEN')), None)
         head = chip('DONE', 'DIE GATES PASS') if not first else chip(first['status'], '%s %s' % (first['id'].split('.')[-1], first['status']))
         prow = RTP.die_counts(plan, key); pc = plan_cnt(prow); ehtml = plan_html(prow, plan)
         ecnt = ('G0C-clean types %d/%d · SIGNED types %d/%d · SIGNED hard cores %d/%d' % (pc['clean'], pc['types'], pc['signed_types'], pc['types'], pc['signed_cores'], pc['cores'])) if pc else 'plan layer missing'
@@ -499,6 +523,7 @@ def render(md_path, el, el_err, now, plan=None):
                 ' open' if s['kind'] == 'TOKEN' else '', E(s['kind'].lower()), E(s['title']), s.get('archived', 0) + len(its) - nopen, s.get('archived', 0) + len(its), E(' · '.join(s.get('extra') or [])),
                 ''.join(li(i, gate=(s['kind'] == 'TOKEN' and i['id'] == 'TOK.REC')) for i in s['items'])))
     H.append('</section>')
+    H.append(deps_html(secs))
     w = next((s for s in secs if s['kind'] == 'WAITS'), None)
     if w:
         H.append('<section><h2>Who is waiting on whom</h2><div class="cols">%s</div></section>' % ''.join(
@@ -525,7 +550,7 @@ def summary_text(secs, dies, ecount, el, now):
     tok = next((s for s in secs if s['kind'] == 'TOKEN'), None)
     if tok:
         its = list(walk(tok['items']))
-        L.append('TOKEN %s ; tasks %d/%d done' % (' | '.join('%s %s' % (i['id'][4:], i['status']) for i in tok['items'][0]['kids'] if i['id'] in ('TOK.DS', 'TOK.QW', 'TOK.HDS', 'TOK.HQ')) if tok['items'] else '',
+        L.append('TOKEN %s ; tasks %d/%d done' % (' | '.join('%s %s' % (i['id'][4:], i['status']) for i in walk(tok['items']) if i['id'] in ('TOK.DS', 'TOK.QW', 'TOK.HDS', 'TOK.HQ')),
                                                   tok.get('archived', 0) + sum(1 for i in its if i['checked']), tok.get('archived', 0) + len(its)))
     allits = [i for s in secs for i in walk(s['items'])]
     co = [i['id'] for i in allits if i['status'] == 'COORD' and not i['checked']]

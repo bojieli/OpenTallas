@@ -1,75 +1,85 @@
-# OpenTallas release tree (refreshed 2026-10-25 03:27 PDT by CODEX)
+# OpenTallas release tree (pending only; refreshed 2026-10-25 23:33 PDT by CLAUDE RELEASE-TREE lane)
 
-Snapshot: 2026-10-25 03:27 PDT. Published main = a8512b6d2; integration candidate = codex/integrate-1025@d2630948f (not yet main). Lane results and correction candidates below are ahead of main. No target has a complete G4 + G5 release pass. QC has two distinct signed cores (SU8 and CRH), KV four known signed cores; legacy /api/elements CLOSED counts are not current SIGNED evidence.
-
-Gates: G0 plan, G1 geometry review, G2 prototype, G3 signed physical partitions/cores, G4 assembled die timing, G5 token pass. Current signoff is TT setup / FF hold, 60/25 ps uncertainty, 833 ps; related-pair CPPR skew <=80 ps. Plans that pass G0 still need actual per-bit station geometry, routed timing and the bound reset/start contract.
+Snapshot: 2026-10-25 23:33 PDT · main 877cfdeb28 (hub epyc1) · FROZEN: QC plan@54a1aeb5 (441d1401 + batch 1), S81-HEAD plan@d7b8d1eb · no die has die STA on real views · flow tag flow-20261025-b not cut.
 
 ## EDIT · rules
-- Tick a line only with committed evidence (sha). Failed verdicts stay, struck through only when superseded.
-- Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS DONE BLOCKED.
+- PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
+- Line form: `- [ ] ID task · OWNER · STATUS · current fact → DEP.ID` ; "→ X" means this item waits on X (each → is a link).
+- Gate ids per die are PFX.BIND / PFX.GRT / PFX.CLK / PFX.STA (die gate = GRT0 incl. clock -> FROZEN; release gate = die STA on real views).
+- Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS FROZEN BLOCKED NOT RUN.
 
-## DIE seam · Clock, reset and seam method (all dies)
-- [ ] SEAM.CLOCK Industry MSCTS spine + pair-skew/CPPR die STA (owner dec. 5) · CLOCK · RUNNING · Signed-source measurement bug fixed b0613e9d9; elemB TT63.68/62.02 and FF59.39/57.26 ps pair damage. Real die hold closure still open; HBM PHY/PG clock corridors being repaired
-  - [ ] SEAM.CLOCK.STA2 Die STA and clock reruns on current plans · CLOCK · RUNNING · Retain old failures; use corrected pair metric, actual signed views and native per-corner clock contracts
-  - [ ] SEAM.CLOCK.HEAD S81 head seam with corrected related-pair metric · CLOCK · WAITS · Older 81.9 ps spread-era figure is historical; real assembled seam gate remains open → SEAM.CLOCK
-- [ ] SEAM.REPLAN Batched M7 / reach405 / wavefront re-plan · S81 / QC / KV / HBM · RUNNING · Candidate batch747fa737a not main; exact pin-bit audits found failures hidden by bundle centres; corrective per-bit plans in progress
-  - [ ] SEAM.PROTO2 Fresh prototypes only after actual-bit geometry clears · COORD · RUNNING · QC baseline su_l0 overflow131719, CBN168, FTC0 but all fail reach; corrected QC candidate53/53 geometry PASS; CBN/FTC prototypes CLEAN, SU_l0 GRT still live → batch merge
-- [ ] SEAM.RESET Wavefront reset tools and synchronous-input RTL · RESET · RUNNING · SYNC_INPUT opt-in dacd148ba ready; QC preflight377 parts/max core release129 clocks. Bound reset fanout/start adoption still required on all dies
-  - [ ] SEAM.RESET.ADOPT All die/tile binds adopt wavefront control-only reset + explicit start · S81 / QC / KV / HBM · RUNNING · QC token bind still directly fans rst_n to377 partitions; no whole-die token release qualification until actual wavefront/start is bound → SEAM.RESET
-- [ ] SEAM.CP1 CP1 seam method and wavefront proof kits · RESET · RUNNING · Earlier seam TT+434.5/FF+104.9 remains component evidence; new wavefront pair placed probes, owned warm repairs; full current pair signoff pending
+## DIE s81 · S81 (DeepSeek ROM layer die) · rev main 9101a4f1 · est. after FT re-lay
+- [ ] S81.GRT Die GRT0 · PATH-S81 / DIE-PROTO · FAIL · main 4.37M (L1 leaf FT); a8 re-lay die GRT 1,802,971 (21:12, unposted) → S81.FT
+  - [ ] S81.FT FT window/station re-lay to a legal chain on every seam · PATH-S81 · RUNNING · a8 G0C PASS but GRT FAIL; coupons t53/t29 PASS, t24/t44 FAIL 26571/47247
+  - [ ] S81.SST Knee bit-sites + tap_mode for t31/t43/t44/t49/t52 (one plan delta) · PATH-S81 · TODO · GEOM-8 STRUCTURAL FAIL → S81.FT
+  - [ ] S81.PRICE Price FT stations (a8: 21 lanes +1..+8, 16,400 bit-cyc) · TOK-DS · WAITS · → S81.FT
+- [ ] S81.CLK Die clock route + related-pair CPPR <=80 · CLOCK · NOT RUN · → S81.GRT, → SEAM.CLK
+- [ ] S81.BIND Strict bind, 0 ties, on current main · TOK-DS · TODO · fresh bind on main877 not launched; PHY reset hop 788 um fix 0adb2ea659 unmerged → INFRA.MERGE
+  - [ ] S81.TIES Svc dead-input proofs, relay pads, cfifo strap, no-repair SRAM view · TOK-DS · RUNNING · COORD 21:21 rulings; ABI fix 162f0033d
+- [ ] S81.STA Die STA TT/FF on real views · DIE-PROTO · WAITS · → S81.GRT, → S81.CLK, → S81.TILES
+  - [ ] S81.TILES Tile sign-offs (path parts trial-only until die gate) · PATH-S81 · WAITS · HCPL 1 DRT trial WAIT-CANARY; HCORE cap24 FF -5.34 → S81.GRT, → FLOW.TAG
+- [ ] S81.XDIE PHY footprint, power and bump contract · OWNER · OWNER · research data still missing; diagnostics only
 
-## DIE s81 · S81 (DeepSeek-V4.1 ROM layer die) + 4 head dies
-- [ ] S81.G3 S81 frame partitions · S81 · WAITS · Core/FT geometry correction precedes re-kits; earlier frame FAILs remain. New reset/clock pins must avoid PG before route → SEAM.CLOCK, SEAM.RESET
-  - [ ] S81.G3.CORES S81 hard cores and explicit FT cell packing · S81 · RUNNING · Known vq/hrow/LLd/l5f/cfg7 closures retained; split ve_m/ve_s/vn_a/vn_b reviewed. Independent corrected core+FT geometry94/94 types PASS, zero explicit cell/core/overlap violations; parent prototypes and full signoff still owed
-  - [ ] S81.G3.ST405 Station405 kits and reset-pin access · S81 · RUNNING · Known signed station views retained; t30 reset-pin/PG DRC diagnosed, source181eaa1e0 ready; regenerate and review moved pin coordinates before new route
-- [ ] S81.HEAD Head die elements and tile transport · S81 · RUNNING · Warm element repairs active; FF-reference correction gives elemB c9 -8.13ps/53 residual hold endpoints, TT2 slew violations. Tile transport/fences and final signoff remain open
-- [ ] S81.XDIE Pair-B endpoints + PHY/ESD/bump composition · S81 · RUNNING · DEC12R model PHY geometry PASS-COND only; actual PHY footprint, WS3 bump escape and ES0/ES1 offshore physical disposition remain open
-- [ ] S81.IR PHY/core supply split and IR · S81 · RUNNING · Split-supply tool ready; selected PHY power and actual bump contract still needed for final IR, explicit stand-in diagnostics only
-- [ ] S81.G4 Abutted die · S81 · WAITS · → S81.G3, SEAM.CLOCK
-- [ ] S81.G5 DeepSeek token pass · TOK-DS · RUNNING · Entry/control components pass; L14 Engram reconstruction exact + mutant caught. Norm/quant schedule and full bound data exactness remain open → TOK.DS.COMP
-  - [ ] S81.HW Exactness hardware and bound data paths · S81 / TOK-DS · RUNNING · IDX/runtime row-read/end-slice paths and norm partial deskew must be integrated with real compiler schedules
-  - [ ] S81.MTP Measured composed MTP schedule · TOK-DS · RUNNING · Owner six-position pipeline law is rate-of-record; measured overlap and recoveries toward3000 tok/s remain open, no final rate claim
+## DIE s81_head · S81 head die · rev FROZEN d7b8d1eb · est. after HEAD8 batch
+- [ ] HEAD.GRT Die GRT0 · DIE-PROTO · FROZEN · ovf 0 on d7b8d1eb; re-run needed if the HEAD8 batch is adopted → HEAD.B8
+- [ ] HEAD.B8 HEAD8 clock-tap + global START batch · CODEX / COORD · RUNNING · 187b63494b G0C+visual running; +8 slot cycles; needs ROOT approval
+- [ ] HEAD.CLK Die clock route + related-pair CPPR <=80 · CLOCK · NOT RUN · → HEAD.B8
+- [ ] HEAD.BIND Whole-head as-built bind · CODEX · WAITS · source d0eb3d3d01 ready; host/mesh/rank-row contract open (owner question in WAITS)
+- [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
+  - [ ] HEAD.TILES Head tile sign-offs · S81-HEAD · RUNNING · 16 hd_* WAIT-GEOM FAIL rows need successor/withdraw → FLOW.TAG
 
-## DIE qwen_compute · Qwen compute
-- [ ] QC.CAP Accepted capacity plan and current re-plan · QC · RUNNING · Capacity plan on main; current meth2/per-bit candidate ahead of main,18 changed types/251 lanes with +1..3 cycles; geometry and token rebind owed
-- [ ] QC.SU Bound SU program alignment · QC · RUNNING · Fix af1bbef0c adopted in branch bind (+3 start edges), fixed-SU bind0 errors; reaches release through meth2, not a completed die gate
-- [ ] QC.G3.A0 A0/core clock closure · QC · RUNNING · Two distinct signed QC cores SU8/CRH; rp1 clock and SU-lane cores in progress. Selected NK probe retained; rejected variants stay failed
-- [ ] QC.G3.FTC coll_ftc actual-bit stations · QC · RUNNING · Baseline GRT0 but actual tl_st_wi hop483.7um violates405; corrected candidate now prototype CLEAN: overflow0, TT+108.93/FF-2.07ps (minor station hold only); full logic kit/signoff remains open
-- [ ] QC.G3.TYPES Current-plan soft-type re-kits · QC · WAITS · Independent actual-bit audit/GRT and full waveform reset/start must clear before new kits → QC.CAP
-- [ ] QC.G4 Abutted die · QC · WAITS · → QC.G3.A0, SEAM.CLOCK
-- [ ] QC.G5 Qwen compute bound token pass · TOK-QK · RUNNING · Meth bind xt1 near64/64+far64/64 and tp8/xdie/ovl4u PASS with mutants caught; AR+1296 cycles. Wavefront reset/start missing, so whole-die G5 remains open → QC.CAP
+## DIE qwen_compute · Qwen compute · rev FROZEN 54a1aeb5 · est. after die clock fix
+- [ ] QC.GRT Die GRT0 signals + clock · DIE-PROTO · FROZEN · 54a1aeb5 ovf 0; batch 1+2 re-freeze pending → QC.B2
+  - [ ] QC.B2 Batch 2: STM ROMs (24) + SRAM d4ae52687 + DEAD-FAULT 773a8e2ad · ROOT-MERGE · COORD · approved 23:26; merge, then combined GRT0+clock → INFRA.MERGE
+- [ ] QC.CLK Die clock related-pair <=80 · CLOCK / DIE-PROTO · FAIL · native mixed-NDR 574/506 ps TT/FF (seams 260/235); 57/50 estimate withdrawn
+  - [ ] QC.CLKFIX Structural clock geometry (contour search, no hidden pads) · DIE-PROTO · RUNNING · contour8 epyc1; render+review before STA
+- [ ] QC.BIND Bound wavefront reset/START + CB16 phase classes · PATH-QC · RUNNING · CB16 13f33606a 79/79 G0C; capacity/clock/G2 open
+- [ ] QC.STA Die STA on real views · DIE-PROTO · FAIL · stand-in 441d TT +555 / FF -73, pair 119/110; 0 real views → QC.CLK, → QC.TILES
+  - [ ] QC.TILES Path tile sign-offs · PATH-QC · RUNNING · A0 requalify (PASS-COND withdrawn); N59 LEC KEEP fix; SRAMIF PROG/BTAB input hold 935/1061 → FLOW.TAG
 
-## DIE qwen_kvsys · Qwen KV
-- [ ] KV.BIND Native KV45 rebind · KV · RUNNING · B/C/D integration plus833ps single-clock controller candidate ready; native bind/reset/start and final boot integration remain open
-- [ ] KV.G3.HUB hub_Ei and current wavefront kit · KV · RUNNING · Earlier vK GRT0/pair68.0/62.2 evidence retained; new per-bit geometry and bound reset/start must be adopted before final closure
-- [ ] KV.G3.CORES KV hard-core closure · KV · RUNNING · Four known signed cores retained; even-head boundary fix98c25c4a8 exact + mutant caught and face_guard1344/1344. ectlk/astk/ahub/PV physical failures still being repaired
-- [ ] KV.XING Channel/station correction and crossing cost · KV · RUNNING · Candidate all47 soft types clears planned geometry: max404.808um, zero in-core station centres; physical per-bit packing/GRT and per-lane cycle adoption still owed
-- [ ] KV.DFI 833ps synchronous controller/PHY contract · KV · RUNNING · Native833ps controller/compiler opt-in6b0ac47a0 component PASS with independent physical JEDEC and timing mutants; adoption into KV45/boot still owed
-- [ ] KV.G4 Abutted die · KV · WAITS · → KV.G3.HUB, SEAM.CLOCK
-- [ ] KV.G5 KV boot + token · TOK-QK · RUNNING · Compiler pacing and native controller fixes ready; prior boot528/7161 failure retained. Final integrated wavefront/start boot/token pass not achieved
+## DIE qwen_kvsys · Qwen KV · rev main 36164be0 (e055) · est. after it5
+- [ ] KV.GRT Die GRT0 it5, strict core OBS + die clock (ruling a) · DIE-PROTO · RUNNING · 816,190 at 25% share; it5 on canonical plan not run yet → KV.SHARE
+  - [ ] KV.SHARE Kits hg/hgi/io_W* reserve 0.5 M2-M7 FT in die-model tracks · DIE-PROTO · TODO · if it5 != 0, fallback (b) io_W3 row-0 seam (owner question in WAITS)
+- [ ] KV.CLK Die clock route + related-pair CPPR · CLOCK · NOT RUN · → KV.GRT
+- [ ] KV.BIND Strict repo-relative bind of record · PATH-KV · RUNNING · b15 intel1; b21 pad_por_n ERROR; seam bus skew
+  - [ ] KV.PC833 PC833 LEC · PATH-KV · FAIL · NOT EQUIVALENT 528 pts each; calendar lowering being isolated
+- [ ] KV.STA Die STA on real views · DIE-PROTO · WAITS · → KV.CLK, → KV.TILES
+  - [ ] KV.TILES Tile sign-offs · PATH-KV · RUNNING · ASTK native TT -85.91 / FF -13.22, AS6 cea44fd4c4 next; SYS_C ff3c8ad8fe not ready → FLOW.TAG
 
-## DIE hbm · HBM B2n/B2o successor (DeepSeek + Qwen)
-- [ ] HBM.B2M B2o physical successor and clock/PHY corridors · HBM · RUNNING · B2n actual-bit scan31/44 types fail (worst620.144um); B2o NPC2/pin/packing/clock/PG/reset integration and FT repair in progress, not main
-- [ ] HBM.NATIVE Native B2 one-clock bind · HBM · RUNNING · Logical cut/width/newFAIL0 smoke and967 clockports PASS; historical strict-bind straps/PHY models, reset/start, per-cut SU mapping and W128 HC physical views remain blocked
-- [ ] HBM.G3.CORES HBM boundary/core physical closure · HBM · RUNNING · 266/268 generated face-guard views PASS plus exact shell benches; no complete HBM physical signoff set. gq_land corner-reference repair and W128 HC sizing active; generation failures individually diagnosed
-- [ ] HBM.G4 Abutted die · HBM · WAITS · → HBM.B2M, SEAM.CLOCK
-- [ ] HBM.G5 HBM token integration · TOK-HBM · RUNNING · Native one-clock SU ALAT4 lane1984 outputs/3968 checks PASS + mutants; full native token still open on HC transport/L74 beats/FACE latency. Model-only rates exclude pending deltas
+## DIE hbm · HBM B2n successor (next release) · rev main B2n f710e18c · est. next release
+- [ ] HBM.GRT Die GRT0 · PATH-HBM / DIE-PROTO · FAIL · edge+band 998,223 (M7 wrong-way FT over cores); corridor plan 82e095df4 → HBM.CORR
+  - [ ] HBM.CORR M7 bank-wall corridors + composite plan · PATH-HBM · RUNNING · 113 FT slots geometry PASS; SFU corridor repaired; compose + G0 next
+- [ ] HBM.CLK Die clock route · CLOCK · NOT RUN · → HBM.GRT
+- [ ] HBM.BIND Native one-clock bind · PATH-HBM · WAITS · q3 API ebeccf1c4 + oneclk 847a25a065 unmerged; 6 TR3 proofs live → INFRA.MERGE
+- [ ] HBM.STA Die STA on real views · DIE-PROTO · FAIL · TKM root WNS -1180; rootpipe 47a537213 ready, unmerged → INFRA.MERGE, → HBM.CLK
 
-## TOKEN · token-pass gate per design
-- [ ] TOK.DS DeepSeek token · TOK-DS · RUNNING
-  - [ ] TOK.DS.COMP DeepSeek norm/quant/compiler integration · TOK-DS · RUNNING · Norm partial deskew/compiler data cuts and quant finisher collision-free release calendar remain active; L14 true-checkpoint H reconstruction PASS
-- [ ] TOK.QW Qwen component and bound token evidence · TOK-QK · RUNNING · Stage527/527 and meth-bound xt1/link components PASS; real reset/start wavefront + KV boot integration owed before whole-design G5
-- [ ] TOK.FREEZE Final evidence run at RTL freeze · COORD · WAITS · → S81.G5, QC.G5, KV.G5, HBM.G5
+## TOKEN · Token-pass gate per design
+- [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS · WAITS · real hcore config (no FG3) → S81.BIND, → HEAD.BIND
+  - [ ] TOK.DS.LAYER Per-layer bound runs · TOK-DS · RUNNING · attention 14bc4dedd4 exact; SVCv2 closing job live
+  - [ ] TOK.DS.XDIE Head/array inter-die traffic co-sim · TOK-DS · WAITS · → HEAD.BIND
+- [ ] TOK.QW Qwen ROM token pass (compute + KV) · TOK-QK · WAITS · → QC.BIND, → KV.BIND
+  - [ ] TOK.QW.LAYER QC bound layer run on plan of record · TOK-QK · WAITS · fresh CB16 schedule, no +0 claim → QC.BIND
+  - [ ] TOK.QW.KV KV boot + MU image (F=2) from strict bind · TOK-QK · WAITS · b15 MU833 image compiled-not-qualified → KV.BIND
+  - [ ] TOK.QW.XDIE QC<->KV traffic co-sim · TOK-QK · WAITS · → TOK.QW.LAYER, → TOK.QW.KV
+- [ ] TOK.HDS HBM-DeepSeek token (next release) · TOK-HBM · RUNNING · stage-B 0d5e8ca1e8 component PASS, unmerged; pricing job live → HBM.BIND
+- [ ] TOK.HQ HBM-Qwen token (next release) · TOK-HBM · WAITS · → HBM.BIND
+- [ ] TOK.FREEZE Final evidence run at RTL freeze · COORD · WAITS · → TOK.DS, → TOK.QW
 - [ ] MU.CURVE Latency-throughput curve vs A100 80GB · COORD · WAITS · → TOK.FREEZE
 
-## INFRA · fleet and coordination
-- [ ] INFRA.SIGNOFF Current-plan signoff coverage · S81 / QC / KV / HBM · RUNNING · 138 lost-DB historical closures are not SIGNED; track only matching current signoff records. Source-local SELRANGE waivers and fail-closed common runner integrated in candidate batch
-- [ ] INFRA.DISK Fleet admission and scratch headroom · COORD · RUNNING · 05:25 rtx-pro root 91%, epyc2 scratch2 94%, epyc1 92% -> INFRA-DISK lane pruning (target root <=85%, scratch >=15% free)
+## FLOW · Flow release (2x/day tag, commit-tied evidence)
+- [ ] FLOW.TAG Cut flow-20261025-b · ROOT-MERGE · BLOCKED · KV core canary TT +3.77 vs golden +36.61 (cap64 c) → FLOW.FANOUT
+  - [ ] FLOW.FANOUT KV core TT repair without losing setup (LT_COPY/fence kit) · FLOW-FANOUT · RUNNING · cap64 held; MCMM 20b6 rejected
+  - [ ] FLOW.CANARY Current-main canary set PASS (s81, head, QC, KV core, HBM SRAM) · FLOW-CANARY · RUNNING · main877 canaries submitted 23:22
+- [ ] FLOW.ROMGATE Wire rom_infer_gate (0b6be8e6d) · ROOT-MERGE · WAITS · → FLOW.TAG
+
+## INFRA · Merge and coordination
+- [ ] INFRA.MERGE Merge READY sources: dieproto 77b2eec49, rootpipe 47a537213, q3 ebeccf1c4, stage-B 0d5e8ca1e8, lint 66b5af5ed, S81 PHY reset 0adb2ea659, QC batch 2 · ROOT-MERGE · COORD · all unmerged on main877
+- [ ] SEAM.CLK Industry MSCTS local trees: remove ~190 ps local insertion gap (E5) · CLOCK · RUNNING · E5 CTS04b trunk slew + macro CK early still FAIL
 
 ## WAITS · who
 ### Waiting on the owner
-- Actual S81 PHY dimensions, PHY power and final signal/PG bump contract remain OWNER? in CODEX-LOG.md. Technical reset/start and station corrections continue without waiting.
-
-## HISTORY · retained failed evidence
-- Earlier trial die FF hold failures (-46..-417ps), old head81.9ps seam figure, prior KV boot528/7161 and rejected HBM/leaf floorplans remain historical failed records. Corrected tool measurements do not erase them or sign off the successor.
-- Geometry audit baseline b58fc0f16: QC15/53 soft types fail, KV24/47, S8188/175, head0/16, HBM31/44. Correction candidates are tracked separately; planned geometry PASS does not establish G3/G4/G5.
+- KV: does the G2 half-share + real joint-kit route meet the 21:16 reservation condition, or is an explicit reservation hook needed? (Codex OWNER?)
+- HEAD: current host 553/276 and mesh 81/64 framing, ch_b source, ctl role, rank-row mapping.
+- S81 PHY dimensions, PHY power and final signal/PG bump contract.
+### Waiting on COORD / ROOT-MERGE
+- QC batch 2 merge + re-freeze run; HEAD8 batch approval; INFRA.MERGE list.

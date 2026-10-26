@@ -28,10 +28,10 @@ import argparse, json, os, pathlib, re, shutil, subprocess, sys, tempfile, time,
 REPO = pathlib.Path('/home/ubuntu/OpenTallas')
 CACHE = pathlib.Path.home() / '.local/state/fleet-viz/release_tree_plan_cache.json'
 REFRESH_S = 50 * 60
-# release-tree die key -> plan dirs under physical/die_plan (s81 section also carries the head dies)
-PLANS = [('s81', 's81'), ('s81', 's81_head'), ('qwen_compute', 'qwen_compute'), ('qwen_kvsys', 'qwen_kvsys'),
-         ('hbm', 'hbm_arch/B2l')]
-HOSTS = ['local', 'epyc1', 'epyc2', 'epyc3', 'intel1', 'intel2']
+# release-tree die key -> plan dir under physical/die_plan (five dies; HBM = current B2n lineage on main; epyc3 retired 10-25)
+PLANS = [('s81', 's81'), ('s81_head', 's81_head'), ('qwen_compute', 'qwen_compute'), ('qwen_kvsys', 'qwen_kvsys'),
+         ('hbm', 'hbm_arch/B2n')]
+HOSTS = ['local', 'epyc1', 'epyc2', 'intel1', 'intel2']
 SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2'
 PROV_PY = r'''
 def prov(p, d, load):
@@ -292,7 +292,7 @@ if __name__ == '__main__':
     c, err = load(a.force, log=lambda *x: print(*x, file=sys.stderr))
     if err: print('WARN', err, file=sys.stderr)
     if a.print:
-        for key in ('s81', 'qwen_compute', 'qwen_kvsys', 'hbm'):
+        for key in ('s81', 's81_head', 'qwen_compute', 'qwen_kvsys', 'hbm'):
             for r in die_counts(c, key):
                 print('%-13s %-14s G0C %s/%s clean (%s) ; SIGNED types %d/%s ; SIGNED hard cores %d/%d %s' % (
                     key, r['plan'], r['clean'], r['types'], r['verdict'], r['signed_types'], r['types'], r['signed_cores'], r['cores'], r['signed_list'][:8]))
