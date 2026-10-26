@@ -1,0 +1,13 @@
+{
+  "reviewer": "Codex",
+  "image": "results/qc_sramif_halfcycle_2200/prog_half_actual.png",
+  "verdict": "PASS-COND ONE CTS+GRT prototype, no detailed route",
+  "findings": [
+    "Actual four MY SRAMs regular and halo-clear; wide W/E outer channels remain, no new macro wall or pin relocation.",
+    "All950write landings map native DFFLQN; purple falling columns sit immediately outside SRAM pin faces. Rising staging and row relay columns sit nearby; all950stage and914data+36control relay anchors matched.",
+    "Actual area30722um2,35%util; max10um-bin cell area0.448. Local hot spots remain below placement saturation and no new dense face strip appears.",
+    "F6 every SRAM group PASS <=20um, observedmax9.9um.",
+    "Existing planned clock branches feed same row regions; added falling sinks must be counted. Before GRT enforce owner block-clock routing rangeM4-M5. No phase exception or newclock.",
+    "Prototype reports must include rise->fall max/min and fall->macro max/min TT/FF, all related-pair CPPR, macro/read families, local clock insertion/windows, PDN continuity and GRT overflow. No hold-repair flood or detailed-routepermission."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "reviewer": "Codex",
+  "image": "results/qc_sramif_halfcycle_2200/btab_half_actual.png",
+  "verdict": "FAIL placement, revise beforeCTS",
+  "findings": [
+    "All1056nativeDFFLlandings are face-local(F6max10.7um),21%util/maxbin0.445.",
+    "Inheritedb3bPRE_DETAILhook handledonlyoldtopdatarelay; newhalfstage/control rowanchors were notcalled. RisingIF flops spill acrossnarrow interrowchannels, producing unnecessary W/E crossings and cross-region clocks.",
+    "ReviseownsuccessorPRE_DETAILhook: anchor950/1056risingstaging tofalllandings first, thenlocalcontrolrelay anddatarelay, thenreleaseallforDPL. Reuseactual3_4checkpoint andsameRTL; no newcycles/clockvariant.",
+    "NoCTS/route onthislayout."
+  ],
+  "next": "btab_half_band2 DPL-only successor"
+}

@@ -1,0 +1,30 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+done 3272
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+done
+F6	sram	group	n	p50_um	max_um	n_gt20	depth
+F6	g_btb[0].u_m	r_addr/r_ce	8	5.8	7.9	0	
+F6	g_btb[0].u_m	rd_out	256	6.1	9.2	0	d1
+F6	g_btb[0].u_m	w_addr/w_ce	8	7.6	8.9	0	
+F6	g_btb[0].u_m	wd_in	256	7.3	11.8	0	
+F6	g_btb[1].u_m	r_addr/r_ce	8	5.9	7.8	0	
+F6	g_btb[1].u_m	rd_out	256	6.2	10.4	0	d1
+F6	g_btb[1].u_m	w_addr/w_ce	8	6.8	9.1	0	
+F6	g_btb[1].u_m	wd_in	256	6.9	10.7	0	
+F6	g_btb[2].u_m	r_addr/r_ce	8	6.7	9.0	0	
+F6	g_btb[2].u_m	rd_out	256	6.2	8.9	0	d1
+F6	g_btb[2].u_m	w_addr/w_ce	8	8.0	9.6	0	
+F6	g_btb[2].u_m	wd_in	256	7.2	10.7	0	
+F6	g_btb[3].u_m	r_addr/r_ce	8	6.1	8.2	0	
+F6	g_btb[3].u_m	rd_out	256	6.3	8.9	0	d1
+F6	g_btb[3].u_m	w_addr/w_ce	8	6.6	8.5	0	
+F6	g_btb[3].u_m	wd_in	256	7.2	10.7	0	
+F6_VERDICT PASS (every SRAM pin group: launch/capture register <= 20 um)

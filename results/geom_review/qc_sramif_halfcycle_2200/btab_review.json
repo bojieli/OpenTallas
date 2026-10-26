@@ -1,0 +1,11 @@
+{
+  "reviewer": "Codex",
+  "image": "results/qc_sramif_halfcycle_2200/btab_half_plan.png",
+  "verdict": "PASS-COND placement-only",
+  "findings": [
+    "Same four 94.824x41.064 MY SRAM rows; unchanged macro positions, face pins, clock roots and PDN template.",
+    "Three neighboring relay/stage/landing columns fit in existing macro-free W/E channels; +1056 falling write FF measured model, +24 local control FF.",
+    "New negative-edge landing directly drives SRAM write pins; normal rising stage sits8..14um behind it, no extra consumed-write cycle.",
+    "Check actual local density and F6, native DFFL mapping and 1056 additional clock sinks before CTS; actual halfcycleTT/FF required, noexceptions, no route permission."
+  ]
+}

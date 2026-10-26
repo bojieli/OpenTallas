@@ -1,0 +1,12 @@
+{
+  "reviewer": "Codex",
+  "image": "results/qc_sramif_halfcycle_2200/prog_half_plan.png",
+  "verdict": "PASS-COND placement-only",
+  "findings": [
+    "Unchanged four MY SRAM rows with open horizontal channels and intact halo geometry.",
+    "One additional falling-edge FF per real SRAM write bit/control; rise staging and row relay columns stay outside macro halos.",
+    "Nearest staging->fall landing targets8..14um; all three columns fit in existing W/E row channels; actual density must be measured.",
+    "Same833ps clock root and tap plan; native ASAP7 DFFLQN !CLK cells exist, so root-inverter concern is conditional on actual mapper, not established blocker.",
+    "Before CTS: confirm native falling map and all additional sinks are included. Before route: real halfcycleTT/FF timing, pair-skew and macroIF checks must pass without exceptions. No route authorized."
+  ]
+}

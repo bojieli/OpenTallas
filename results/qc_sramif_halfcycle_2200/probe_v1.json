@@ -1,0 +1,40 @@
+{
+  "verdict": "FAIL partialphysical,notSIGNED",
+  "prog": {
+    "native_falling_ff": 950,
+    "GRT_overflow": 0,
+    "TT_setup_ps": 180.831909,
+    "FF_write_to_SRAM_hold_ps": 413.638367,
+    "TT_rise_to_fall_setup_ps": 296.745972,
+    "FF_rise_to_fall_hold_ps": 392.517792,
+    "clock_window_ps": {
+      "TT": 20.6,
+      "FF": 20.1
+    },
+    "clock_window_verdict": "FAIL,limit20unchanged",
+    "internal_hold_failures": 18,
+    "internal_hold_family": "SRAMreadaddr/CE,-13.307..-6.003ps",
+    "input_hold_failures": 935,
+    "input_hold_min_ps": -60.751931506178,
+    "actual_IO_mean_ps": {
+      "TT": 513.3151635411765,
+      "FF": 388.8668796096256
+    },
+    "declared_config_IO_mean_ps": {
+      "TT": 500.44,
+      "FF": 381.22
+    },
+    "physical_area_um2": 30722,
+    "utilization_percent": 35,
+    "F6_max_um": 9.9
+  },
+  "btab": {
+    "native_falling_ff": 1056,
+    "physical_area_um2": 17995,
+    "utilization_percent": 21,
+    "F6_max_um": 10.7,
+    "actual_geometry_verdict": "FAIL,unanchorednewrisingstages ininterrowchannels",
+    "next": "band2DPL-onlysuccessor anchor1056staging+1024data+32control,0unmatched"
+  },
+  "scope": "native833TTsetupFFhold60/25,noexceptions,noDRT"
+}

@@ -6,3 +6,5 @@ Reads/fault/reset semantics unchanged. tb_half.sv checks outputs/fault plus SRAM
 20000 cycles with reset bursts and directed write/read collisions:0 mismatches; rising-edge-instead-of-falling mutant caught consumed-enable atcycle17.
 Current physical blocker: existing mscts_band root-net discovery rejects clockinverters; negative-edge mapped flops need explicit regional clock inversion after each tap and phase-aware timing reports.
 No phase physical adoption or closure claim, no CTS/route started. Standard833 TTsetup/FFhold60/25 remains; both416.5ps halfcycles must close without exceptions.
+
+Correction after actual library inspection: RVT TT has native DFFLQNx1/2/3 with clocked_on !CLK. Root inverter is not inevitable; confirm actual mapping before modifying clock flow.

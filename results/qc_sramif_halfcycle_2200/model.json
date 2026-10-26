@@ -26,6 +26,6 @@
   "same_core_clock": true,
   "ports_and_bits_per_cycle": "unchanged",
   "memory_ordering": "all consumed SRAM writes checked at each original risingedge",
-  "physical_status": "NOT RUN: mapped-clock inversion must be regionalized after taps; direct-clock-only existing MSCTS hook rejects root inverter",
+  "physical_status": "NOT RUN: native ASAP7 DFFLQN falling-edge cells confirmed available; actual mapping+placement next",
   "constraints_policy": "no generated domain, no exceptions, no multicycle or uncertainty changes; both halfcycle paths timed TT/FF"
 }
