@@ -114,7 +114,10 @@ def compile_inputs(die, fixtures, entry_engram_inputs=None):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--tree', type=Path, required=True)
+    source = ap.add_mutually_exclusive_group(required=True)
+    source.add_argument('--tree', type=Path)
+    source.add_argument('--bound', type=Path, help='Current strict bound out/; no legacy geometry is read')
+    ap.add_argument('--bound-inventory', type=Path, help='Logical source inventory for --bound')
     ap.add_argument('--fixtures', type=Path, required=True)
     ap.add_argument('--entry-engram-inputs', type=Path,
                     help='Checkpoint-derived Engram inputs: reconstruct attention-entry H before native row packing')
@@ -122,7 +125,16 @@ def main():
     a = ap.parse_args()
     if a.out.exists():
         raise ValueError('preserve existing entry artifact; select a fresh --out')
-    data = compile_inputs(D.Die(a.tree), a.fixtures, a.entry_engram_inputs)
+    if a.bound:
+        if not a.bound_inventory:
+            ap.error('--bound requires --bound-inventory')
+        from bound_die import BoundDie
+        die = BoundDie(a.bound, a.bound_inventory)
+    else:
+        if a.bound_inventory:
+            ap.error('--bound-inventory requires --bound')
+        die = D.Die(a.tree)
+    data = compile_inputs(die, a.fixtures, a.entry_engram_inputs)
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(data, indent=1)+'\n')
     print('ENTRY_INPUT_ROWS', data['row_count'], 'PARTIAL: native programme landing/adoption and collective calendar remain unbound')
