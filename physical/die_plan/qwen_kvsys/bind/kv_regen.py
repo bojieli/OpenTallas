@@ -22,6 +22,7 @@ from collections import defaultdict
 
 STACKS = ["WS", "WN", "ES", "EN"]
 QK_WRITE_BEFORE_READ = 11
+QK_CONSUME_FLOOR = 34   # attention calendar QK_CONSUME floor (KV owner choice KV-P6 18:09; regen_constants max(34, RL + 11))
 LANDING_SEG = 8
 
 
@@ -97,9 +98,9 @@ def regen(ctx):
                              f"RESPONSE_LAT): equalise krq/krs in the plan or the r8 table")
         rt = vals.pop()
         for p in rts:
-            params[p] = dict(RESPONSE_LAT=rt, QK_ISSUE_AGE=rt + QK_WRITE_BEFORE_READ)
-        rec["ectl"] = dict(rule="RESPONSE_LAT = 8 + krq + krs; QK_ISSUE_AGE = RESPONSE_LAT + 11", frames=len(rts),
-                           RESPONSE_LAT=rt, QK_ISSUE_AGE=rt + QK_WRITE_BEFORE_READ,
+            params[p] = dict(RESPONSE_LAT=rt, QK_ISSUE_AGE=max(QK_CONSUME_FLOOR, rt + QK_WRITE_BEFORE_READ))
+        rec["ectl"] = dict(rule="RESPONSE_LAT = 8 + krq + krs; QK_ISSUE_AGE = max(34, RESPONSE_LAT + 11)", frames=len(rts),
+                           RESPONSE_LAT=rt, QK_ISSUE_AGE=max(QK_CONSUME_FLOOR, rt + QK_WRITE_BEFORE_READ),
                            krq=sorted({v["krq"] for v in rts.values()}), krs=sorted({v["krs"] for v in rts.values()}))
     # ---- AHUB offsets (delta form)
     for ci, c in enumerate(F.cells):

@@ -11,6 +11,10 @@ with the as-built ECTL RESPONSE_LAT / QK_ISSUE_AGE and AHUB AP_OFS / FR_OFS):
     D2D_TXDP_K); regen_constants' bound-RTL check re-derives it from the bind and FAILS on any difference, so a stale
     record cannot pass the gate.
 
+  4 KVN_A0 of the seq core (qkd_seq_core_static_s*, inst seq__u_core): KVN_A0 = as-built + dD(d2d_kv.kvn_word_valid ->
+    seq__u_core) - dD(d2d_kv.att_rx_v -> kvs_attn.d2d__srx), dD = landed - as-built stages (the regen_constants
+    KV-P6 18:09 rule; COORD 10-26 01:13 (2): the committed producer is the source of truth, never hand-set).
+
 A rule that finds nothing to change on this die is an error (fail closed), never a silent skip.
 """
 import importlib.util
@@ -48,8 +52,27 @@ def txdp(ctx):
             and (c.path.endswith("d2d_kv") or "u_d2d" in c.path)]
     if len(hits) != 1:
         raise ValueError(f"TXDP: expected one KV d2d leaf ({D2D_MODULE_PREFIX}*), found {[c.path for c in hits]}")
-    return {hits[0].path: {"TXDP": word}}, dict(inst=hits[0].path, TXDP=k, word=f"32'h{word:08x}",
+    # the SV literal, so the bound top and regen_constants' bound-RTL check read the same text (decimal 50529393 was a
+    # false MISMATCH against 32'h03030471)
+    return {hits[0].path: {"TXDP": f"32'h{word:08x}"}}, dict(inst=hits[0].path, TXDP=k, word=f"32'h{word:08x}",
                                                 source=rec.get("source"), commit=rec.get("commit"))
+
+
+def kvn_a0(ctx):
+    import re
+    kr = _load("kv_regen_legs", HERE.parent / "kv_regen.py")
+    F = ctx.F
+    legs = kr._legs(ctx)
+    seq = [i for i, c in enumerate(F.cells) if c.module.startswith("qkd_seq_core_static_s") and c.path.endswith("seq__u_core")]
+    att = [i for i, c in enumerate(F.cells) if re.fullmatch(r"(.*\.)?kvs_attn", c.path)]
+    if len(seq) != 1 or len(att) != 1:
+        raise ValueError(f"KVN_A0: expected one seq core and one kvs_attn, got {[F.cells[i].path for i in seq + att]}")
+    c = F.cells[seq[0]]
+    a0 = int(str(c.params["KVN_A0"]).strip('"'))
+    d_kvn = kr._one(kr._delta(legs, seq[0], [r"kvn_word_valid"], r"(.*\.)?d2d_kv\.kvn_word_valid"), "KVN_A0 kvn")
+    d_rx = kr._one(kr._delta(legs, att[0], [r"d2d__srx"], r"(.*\.)?d2d_kv\.att_rx_v"), "KVN_A0 att_rx")
+    v = a0 + d_kvn - d_rx
+    return {c.path: {"KVN_A0": v}}, dict(inst=c.path, asbuilt=a0, dD_kvn=d_kvn, dD_att_rx=d_rx, KVN_A0=v)
 
 
 def regen(ctx):
@@ -62,5 +85,7 @@ def regen(ctx):
     record["agebounds"] = r2.get("record", {})
     p3, record["txdp"] = txdp(ctx)
     _merge(params, p3, "txdp")
+    p4, record["kvn_a0"] = kvn_a0(ctx)
+    _merge(params, p4, "kvn_a0")
     record["hook"] = "physical/die_plan/qwen_kvsys/bind/kvbind1025/regen_kv_2350.py"
     return {"params": params, "record": record}
