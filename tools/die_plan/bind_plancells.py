@@ -201,6 +201,12 @@ class PlanCells:
                     B.counts["tied"] = B.counts.get("tied", 0) - 1
                     B.tied_by_port[f"{B.F.cells[ci].module}.{port} <- literal"] -= 1
                     drop.add(f"TIED {B.F.cells[ci].path}.{port}[{j}] ")
+                    # the uncapped TIED_TOTAL list must drop it too (a plan-driven pin is not tied)
+                    tk = (B.F.cells[ci].path, port, B.F.cells[ci].module)
+                    if tk in getattr(B, "tied_pins", {}):
+                        B.tied_pins[tk] = [x for x in B.tied_pins[tk] if x[0] != j]
+                        if not B.tied_pins[tk]:
+                            del B.tied_pins[tk]
                 elif old[0] == "strap":
                     B.counts["strap"] = B.counts.get("strap", 0) - 1
                 elif (inst, port) not in rw:

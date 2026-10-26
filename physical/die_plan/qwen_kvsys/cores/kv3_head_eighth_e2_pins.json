@@ -2,7 +2,7 @@
  "schema": "opentallas.die_plan.core_pins.v1",
  "core": "kv3_head_eighth_e2",
  "frame": "core R0, origin (0,0), outline 216 x 216",
- "source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | v3.8x KVG3-CORES: re-spread onto 216 x 216 (core_pins_resize_v38x.py: same faces / order / spreading rule; was 285.12 x 285.12) | even head strap master, exact f26 ID pin coordinates",
+ "source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | v3.8x KVG3-CORES: re-spread onto 216 x 216 (core_pins_resize_v38x.py: same faces / order / spreading rule; was 285.12 x 285.12) | even head strap master, exact f26 ID pin coordinates | PATH-KV-BIND 10-25 head_clk_merge.py: one clock pin per core (kit clocks every flop from it); dropped unloaded per-member clock pins ['g_t_4_u_l8__clk', 'g_t_4_u_stin__clk', 'g_t_4_u_stk__clk', 'g_t_5_u_l8__clk', 'g_t_5_u_stin__clk', 'g_t_5_u_stk__clk']",
  "faces": {
   "N": {
    "pins": 269,
@@ -1579,27 +1579,9 @@
    "y": 215.904
   },
   {
-   "name": "g_t_4_u_l8__clk[0]",
-   "layer": "M5",
-   "x": 206.376,
-   "y": 215.904
-  },
-  {
-   "name": "g_t_4_u_stin__clk[0]",
-   "layer": "M5",
-   "x": 207.144,
-   "y": 215.904
-  },
-  {
    "name": "g_t_4_u_stin__rst_n[0]",
    "layer": "M5",
    "x": 207.96,
-   "y": 215.904
-  },
-  {
-   "name": "g_t_4_u_stk__clk[0]",
-   "layer": "M5",
-   "x": 208.728,
    "y": 215.904
   },
   {
@@ -1609,27 +1591,9 @@
    "y": 215.904
   },
   {
-   "name": "g_t_5_u_l8__clk[0]",
-   "layer": "M5",
-   "x": 210.312,
-   "y": 215.904
-  },
-  {
-   "name": "g_t_5_u_stin__clk[0]",
-   "layer": "M5",
-   "x": 211.08,
-   "y": 215.904
-  },
-  {
    "name": "g_t_5_u_stin__rst_n[0]",
    "layer": "M5",
    "x": 211.896,
-   "y": 215.904
-  },
-  {
-   "name": "g_t_5_u_stk__clk[0]",
-   "layer": "M5",
-   "x": 212.664,
    "y": 215.904
   },
   {

@@ -1549,6 +1549,101 @@ class Binder:
         st["inner"] = dict(members=len(inner), self_noop=noop, matched=len(hit), changed_bits=changed[0], stale=len(miss),
                            dly_sets_before=before, dly_sets_after=sum(len(v) for v in self.intra_dly.values()))
 
+    def uniform_inner(self):
+        """asbuilt.inner_uniform = [plan type, ...] (PATH-KV-BIND 10-25): every instance of one plan type is one hardened
+        kit, so an intra-partition edge (sink leaf.port[bit] <- source leaf.port[bit], both inside the partition) must
+        have ONE kept depth per type.  The as-built die netlist was generated on an older floorplan, so the same edge can
+        carry different relay depths per instance (KV kv3_pc*: slg <-> kvpc_k o_grp/i_grp 1..8 stages).  Each such edge
+        is landed at the type's largest as-built depth (an instance never gets fewer stages than it was built with, so
+        no path gets shorter than its as-built timing); every changed bit is recorded in _inner_original, so
+        bus_groups.internal / bind_timing.changed_inner_groups hand the exact added cycles to the compiler (priced, not
+        hidden).  Only the listed types are touched; an edge whose sink or source is not present in every instance
+        is an error (no partial equalisation)."""
+        types = list(self.ab.get("inner_uniform") or [])
+        if not types:
+            return
+        unknown = [t for t in types if t not in self.types]
+        if unknown:
+            raise BindError(f"inner_uniform: unknown plan types {unknown}")
+        st = dict(types=len(types), edges=0, changed_bits=0, added_stage_bits=0, max_added=0)
+        for tn in types:
+            parts = sorted(p for p, ps in self.parts.items() if ps["type"] == tn)
+            groups = defaultdict(dict)        # (sink rel, port, bit, path in OR tree) -> {part: (src rel, port, bit, depth)}
+
+            def walk(p, ci, pn, i, d, path):
+                if not isinstance(d, tuple) or not d:
+                    return
+                if d[0] == "int":
+                    groups[(self.rel_of(ci), pn, i, path, self.rel_of(d[1]), d[2], d[3])][p] = d[4]
+                elif d[0] in ("or", "and"):
+                    for j, u in enumerate(d[1]):
+                        walk(p, ci, pn, i, u, path + (j,))
+            for p in parts:
+                for ci in self.members[p]:
+                    for pn, bits in self.F.cells[ci].ports.items():
+                        if self.G.dirs[ci].get(pn) != "input":
+                            continue
+                        for i in range(len(bits)):
+                            d = self.sinks.get((ci, pn, i))
+                            if d is not None:
+                                walk(p, ci, pn, i, d, ())
+            want = {}
+            for k, per in groups.items():
+                if len(per) != len(parts):
+                    continue          # an edge some instances do not have is a contents difference (check_types reports it)
+                top = max(per.values())
+                if all(v == top for v in per.values()):
+                    continue
+                st["edges"] += 1
+                for p, v in per.items():
+                    if v != top:
+                        want[(p,) + k] = top
+            if not want:
+                continue
+
+            def fix(p, ci, pn, i, d, path):
+                if not isinstance(d, tuple) or not d:
+                    return d
+                if d[0] == "int":
+                    top = want.get((p, self.rel_of(ci), pn, i, path, self.rel_of(d[1]), d[2], d[3]))
+                    if top is None or top == d[4]:
+                        return d
+                    st["changed_bits"] += 1
+                    st["added_stage_bits"] += top - d[4]
+                    st["max_added"] = max(st["max_added"], top - d[4])
+                    return ("int", d[1], d[2], d[3], top)
+                if d[0] in ("or", "and"):
+                    return (d[0], tuple(fix(p, ci, pn, i, u, path + (j,)) for j, u in enumerate(d[1])))
+                return d
+            for p in parts:
+                for ci in self.members[p]:
+                    for pn, bits in self.F.cells[ci].ports.items():
+                        if self.G.dirs[ci].get(pn) != "input":
+                            continue
+                        for i in range(len(bits)):
+                            d = self.sinks.get((ci, pn, i))
+                            if d is None:
+                                continue
+                            nd = fix(p, ci, pn, i, d, ())
+                            if nd != d:
+                                self.__dict__.setdefault("_inner_original", {}).setdefault((ci, pn, i), d)
+                                self.sinks[(ci, pn, i)] = nd
+            used = {p: set() for p in parts}     # kept-stage sets rebuilt from what the sinks now use
+
+            def use(p, d):
+                if d and d[0] == "int" and d[4]:
+                    used[p].add((d[1], d[2], d[4]))
+                elif d and d[0] in ("or", "and"):
+                    for u in d[1]:
+                        use(p, u)
+            for (cj, pn, i), d in self.sinks.items():
+                p = self.cpart.get(cj)
+                if p in used:
+                    use(p, d)
+            for p in parts:
+                self.intra_dly[p] = used[p]
+        self.inner_uniform_stats = st
+
     def align_r8(self):
         """asbuilt.land_align = "r8" (COORD 10-23 16:58 R8 SOURCE OF TRUTH): the landing pads are NOT computed here but
         read from PLAN-TOOL3's r8 landing table (tools/die_plan/r8.py; asbuilt.land_r8, default
@@ -3167,6 +3262,7 @@ def cmd_bind(a):
     B.analyse()
     B.build_buses()
     B.align_landings()
+    B.uniform_inner()
     B.regen_params()
     B.check_types()
     if B.ab.get("land_pad_tree"):
@@ -3201,6 +3297,8 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    if getattr(B, "inner_uniform_stats", None):
+        rep["inner_uniform"] = B.inner_uniform_stats
     rep["type_canon_merged"] = getattr(B, "type_canon_merged", [])
     if B.param_regen:
         rep["param_regen"] = B.param_regen
