@@ -1069,15 +1069,6 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
         cfg += ["export OT_TAP_GRT_PRE = 1", "export OT_PINREG_PAD = 1"]
-    if t["module"] == "qfd_qc_native59_part" and any(Path(f).name == "qfd_native59_qbank.sv" for f in srcs):
-        # N59 physical publications need distinct driver cells, not just kept
-        # wire aliases.  Convert processes and copy keep onto their drivers
-        # before synth's first opt_merge can collapse the replicas.
-        cfg += ["export SYNTH_CANONICALIZE_TCL = /work/n59_keep_replicas.tcl",
-                "export PRE_SYNTH_TCL = /work/n59_keep_odb.tcl",
-                "export POST_SYNTH_TCL = /work/n59_keep_odb_release.tcl"]
-        for helper in ("n59_keep_replicas.tcl", "n59_keep_odb.tcl", "n59_keep_odb_release.tcl"):
-            shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
