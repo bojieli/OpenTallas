@@ -62,6 +62,23 @@ def target_last(source,consumers,budget,al,depth):
  if not candidates:raise ValueError('no macro-free projected common consumer diamond')
  return min(candidates,key=lambda p:(max([md(p,source)/depth]+[md(p,q) for q in consumers]),md(p,source)))
 
+def stage_road_diagnostic(points,boxes):
+ """Necessary HV/VH obstruction check only; native hard-pin access stays separate."""
+ def clear(a,b):
+  x0,x1=sorted([a[0],b[0]]);y0,y1=sorted([a[1],b[1]])
+  for l,bot,r,top in boxes:
+   if x0==x1:
+    if l<x0<r and max(y0,bot)<min(y1,top):return False
+   elif y0==y1:
+    if bot<y0<top and max(x0,l)<min(x1,r):return False
+   else:raise ValueError('non-Manhattan road segment')
+  return True
+ blocked=[]
+ for i,(a,b) in enumerate(zip(points,points[1:])):
+  hv=(b[0],a[1]);vh=(a[0],b[1])
+  if not ((clear(a,hv) and clear(hv,b)) or (clear(a,vh) and clear(vh,b))):blocked.append(i)
+ return dict(verdict='FAIL' if blocked else 'NOT_RUN',hv_vh_blocked_stage_hops=blocked,scope='necessary source/stage HV/VH obstruction diagnostic only; routedlength, capacity, native HCpinaccess and833ps NOT_RUN')
+
 def expand_clusters(manifest,proposal,raw):
  """Model-only exact consumer replication: preserve every original bank depth."""
  m=copy.deepcopy(manifest);area={};extra=0
@@ -131,7 +148,8 @@ def allocate(raw,manifest,names,plan_path,explicit_map):
      except ValueError as ex:failure=str(ex)
     else:raise ValueError(failure)
     row.update(status='ALLOCATED_CANDIDATE',source_xy_um=source,consumer_xy_um=ends,consumer_mapping=mapping,
-      sites_ll_um=[[round(x-cell[0]/2,6),round(y-cell[1]/2,6)] for x,y in points],cell_envelope_um=list(cell),max_hop_um=max(hops))
+      sites_ll_um=[[round(x-cell[0]/2,6),round(y-cell[1]/2,6)] for x,y in points],cell_envelope_um=list(cell),max_hop_um=max(hops),
+      road_gate=stage_road_diagnostic([source]+points,list(S.placed_macro_boxes(t).values())))
    except (ValueError,KeyError,FileNotFoundError) as ex:
     al.used=before;row.update(status='UNRESOLVED',reason=str(ex))
    result.append(row)
