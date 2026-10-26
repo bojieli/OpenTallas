@@ -31,3 +31,23 @@ You are a lane agent of the OpenTallas coordinator, which now runs on rtx-pro (t
   superseded data, don't add bulk files to epyc1 root.
 - On fleet hosts create worktrees under /srv/opentallas-scratch2/claude/wt/, never ~/wt on root (epyc1 /srv/opentallas-scratch is on root too).
 - Terminology (owner 10-25): 'signed off' / 'sign-off rate' / 'sign-offs per day', not 'signing'/'signatures'.
+
+## Closure order (OWNER APPROVED 2026-10-25 18:45 PDT) -- binding for every lane
+1. PROVE THE PATH PLAN AT DIE LEVEL FIRST. For each design's one path, the gate is:
+   - die GRT overflow 0 on the path region;
+   - a clean clock route from the die root, with no GRT crash and slew inside the rule;
+   - real-view STA on the path (TT setup / FF hold >= 0) with abstracts elsewhere.
+
+   Until the path passes, path parts get GEOM review and trial builds only, never sign-off waves. Die-level failures (FT, G2 probes, E5, macro walls) come first. DIE-FT + the PATH lead record the gate state in lanes/PATH-FREEZE.md.
+2. FREEZE A PATH'S INTERFACES AUTOMATICALLY WHEN ITS DIE GATE PASSES.
+   - Freeze means: pins/faces, outlines, latency budgets and clock/reset entry of every part on that path, at the passing plan sha. Record the sha in lanes/PATH-FREEZE.md.
+   - After the freeze, any change to a frozen interface goes on ONE batched change list per day (lanes/PLAN-DELTA.md), approved by COORD.
+   - No whole-plan freeze, and no freeze by date.
+3. FLOW IS VERSIONED; EVIDENCE IS TIED TO COMMITS.
+   - ROOT-MERGE tags a flow release twice a day (flow-YYYYMMDD-a/b) after the canary passes.
+   - Kits and routes record the source commit + flow tag they used.
+   - Flow-tool merges between releases are allowed only for URGENT fixes (a bug that invalidates results).
+   - A sign-off, bind or LEC result is evidence only if it names its commit and reads repo-relative paths at that commit. Absolute or out-of-repo paths FAIL the gate.
+4. SPARE CAPACITY GOES ONLY TO PARTS NO PENDING PLAN DELTA TOUCHES. This is the existing kit rule, now applied to all lanes.
+
+Near misses (OWNER revised 10-25): small ECOs are allowed when the root cause is understood, local and non-recurring, and the miss is small. Record the root cause next to the ECO. A structural, large or recurring cause gets a structural fix + GEOM PASS + rebuild. Diagnose first; never reach for an ECO instead of finding the cause.
