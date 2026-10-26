@@ -5,28 +5,36 @@
 // #(PIPE,MUTP) -- checks the golden O/R words + timeline as before, and writes every write/done/fault event with its
 // edge index after start to +TRACE.  tkm_trace_lockstep.py then requires twin event e == pinned event e at +2*PIPE.
 module tb_hgi_coll_tkm_static_pdt;
- parameter integer KMAX=2048,MUT=0,TP=96,TIE_W_MUT=0,PIPE=1,MUTP=0,PINNED=0;
+ parameter integer KMAX=2048,MUT=0,TP=96,TIE_W_MUT=0,PIPE=1,MUTP=0,PINNED=0,HOP=0,FRT=0,CB=0,CLRB=CB;
+ // PINNED 0: twin static_pd; 1: pinned static; 2: static_p #(PIPE,HOP,FRT,CB,CLRB) (cb21 root reference: zero-edge lock-step at shift 0)
  reg clk=0,rst_n=0,start=0;always #0.4167 clk=~clk;
  reg[31:0]cfg[0:15],a[0:TP*2048-1],b[0:TP*2048-1],eo[0:2047],er[0:2047],ns[0:TP-1];
  reg[3:0]slots=0,valids=0;reg[2179:0]flits=0;
  wire wv,busy,done,fault;wire[39:0]wa;wire[15:0]wm;wire[511:0]wd;wire[31:0]cycles;
- integer G,N,K,PF,NOUT,HASR,OB,RB,GB,errs=0,words=0,elapsed=0,expected,slotmut=0,rotate=0;
+ integer G,N,K,PF,NOUT,HASR,OB,RB,GB,errs=0,words=0,elapsed=0,expected,slotmut=0,rotate=0,no_tl=0;
  bit seeno[0:2047],seenr[0:2047];string dir,tfile;
  wire[31:0]dtick,dingress_end;
- if(PINNED!=0)begin:g_pin
+ if(PINNED==1)begin:g_pin
   ot_hgi_coll_tkm_static #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.RANK_W(TIE_W_MUT?7:$clog2(TP)))dut(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
   .cfg_n(12'(N)),.cfg_k(13'(K)),.cfg_nout(13'(NOUT)),.cfg_g(8'(G)),.cfg_gbase(8'(GB)),.cfg_pf(16'(PF)),
   .cfg_obase(40'(OB)),.cfg_rbase(40'(RB)),.cfg_has_r(1'(HASR)),.del_slot(slots),.del_valid(valids),.del_flit(flits),
   .w_v(wv),.w_addr(wa),.w_mask(wm),.w_data(wd),.busy(busy),.done(done),.fault(fault),.stat_cycles(cycles));
   assign dtick=dut.tick;assign dingress_end=dut.ingress_end;
+ end else if(PINNED==2)begin:g_ref_p
+  ot_hgi_coll_tkm_static_p #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.RANK_W(TIE_W_MUT?7:$clog2(TP)),.PIPE(PIPE),.MUTP(MUTP),.HOP(HOP),.FRT(FRT),.CB(CB),.CLRB(CLRB))dut(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
+  .cfg_n(12'(N)),.cfg_k(13'(K)),.cfg_nout(13'(NOUT)),.cfg_g(8'(G)),.cfg_gbase(8'(GB)),.cfg_pf(16'(PF)),
+  .cfg_obase(40'(OB)),.cfg_rbase(40'(RB)),.cfg_has_r(1'(HASR)),.del_slot(slots),.del_valid(valids),.del_flit(flits),
+  .w_v(wv),.w_addr(wa),.w_mask(wm),.w_data(wd),.busy(busy),.done(done),.fault(fault),.stat_cycles(cycles));
+  assign dtick=dut.tick;assign dingress_end=dut.ingress_end;
+
  end else begin:g_twin
-  ot_hgi_coll_tkm_static_pd #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.RANK_W(TIE_W_MUT?7:$clog2(TP)),.PIPE(PIPE),.MUTP(MUTP))dut(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
+  ot_hgi_coll_tkm_static_pd #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.RANK_W(TIE_W_MUT?7:$clog2(TP)),.PIPE(PIPE),.MUTP(MUTP),.HOP(HOP),.FRT(FRT),.CB(CB),.CLRB(CLRB))dut(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
   .cfg_n(12'(N)),.cfg_k(13'(K)),.cfg_nout(13'(NOUT)),.cfg_g(8'(G)),.cfg_gbase(8'(GB)),.cfg_pf(16'(PF)),
   .cfg_obase(40'(OB)),.cfg_rbase(40'(RB)),.cfg_has_r(1'(HASR)),.del_slot(slots),.del_valid(valids),.del_flit(flits),
   .w_v(wv),.w_addr(wa),.w_mask(wm),.w_data(wd),.busy(busy),.done(done),.fault(fault),.stat_cycles(cycles));
   assign dtick=dut.tick;assign dingress_end=dut.ingress_end;
  end
- localparam integer EP=(PINNED!=0)?0:PIPE;
+ localparam integer EP=(PINNED==1)?0:PIPE;
  // event trace: edge index counted from the start edge; one line per write / done / fault change
  integer fd=0,tedge=-1;reg started=0,fault_d=0;
  always @(negedge clk)if(rst_n)begin
@@ -69,13 +77,14 @@ module tb_hgi_coll_tkm_static_pdt;
   if($value$plusargs("TRACE=%s",tfile))begin fd=$fopen(tfile,"w");if(fd==0)$fatal(1,"cannot open TRACE");end
   if($value$plusargs("SLOT_MUT=%d",slotmut))begin end
   if($value$plusargs("ROTATE=%d",rotate))begin end
+  if($value$plusargs("NO_TL=%d",no_tl))begin end   // HOP/FRT/CB timeline: checked by the offline lock-step vs static_p, not the PIPE formula
   $readmemh({dir,"/cfg.hex"},cfg);$readmemh({dir,"/a.hex"},a);$readmemh({dir,"/b.hex"},b);
   $readmemh({dir,"/o.hex"},eo);$readmemh({dir,"/r.hex"},er);$readmemh({dir,"/n.hex"},ns);
   G=cfg[0];N=cfg[1];K=cfg[2];HASR=cfg[4];NOUT=cfg[5];OB=cfg[9];RB=cfg[10];GB=G>=96?0:(int'(cfg[3])/G)*G;PF=(N+7)/8;
   expected=8+((G*PF+3)/4)*8+2*(3*((KMAX+63)/64)+8)+3*((NOUT+3)/4)+24+1+2*EP;
   repeat(10)@(negedge clk);rst_n=1;repeat(10)@(negedge clk);start=1;@(negedge clk);start=0;
-  while(!done&&elapsed<expected+20)begin @(negedge clk);elapsed=elapsed+1;end
-  if(!done||cycles!=32'(expected))begin errs=errs+1;$display("TIMELINE got%0d expected%0d done%0d",cycles,expected,done);end
+  while(!done&&elapsed<expected+20+(no_tl?4096:0))begin @(negedge clk);elapsed=elapsed+1;end
+  if(!done||(no_tl==0&&cycles!=32'(expected)))begin errs=errs+1;$display("TIMELINE got%0d expected%0d done%0d",cycles,expected,done);end
   if(fault!=(cfg[6]!=0||slotmut!=0))begin errs=errs+1;$display("FAULT got%0d",fault);end
   if(cfg[6]==0&&slotmut==0)for(integer i=0;i<NOUT;i=i+1)if(!seeno[i]||(HASR&&!seenr[i]))errs=errs+1;
   repeat(4)@(negedge clk);

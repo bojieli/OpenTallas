@@ -12,13 +12,23 @@ src=("$C/tkm/tkm_tp192_e86_hier.vlt" "$C/tkm/tb_hgi_coll_tkm_static_pdt.sv" "$C/
 vec(){ [ -f "$OUT/vec/cases.json" ] || OPENBLAS_NUM_THREADS=1 python3 tools/hgi_coll_tkm_tp192_vectors.py --out "$OUT/vec" > "$OUT/vectors.log"; }
 build(){ # name PINNED PIPE MUTP
  # e86 wrapper = hier block (tkm_tp192_e86_hier.vlt); two make steps (TKM-3 10-18: _hier.mk's two-target rule races under -j)
- { "$V" --cc --exe --main --timing --hierarchical -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm_static_pdt -Mdir "$OUT/obj_$1" -GTP=192 -GKMAX=2048 -GPINNED=$2 -GPIPE=$3 -GMUTP=$4 "${src[@]}" &&
+ { "$V" --cc --exe --main --timing --hierarchical -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm_static_pdt -Mdir "$OUT/obj_$1" -GTP=192 -GKMAX=2048 -GPINNED=$2 -GPIPE=$3 -GMUTP=$4 ${XG:-} "${src[@]}" &&
    make -C "$OUT/obj_$1" -f Vtb_hgi_coll_tkm_static_pdt_hier.mk -j1 hier_verilation &&
    make -C "$OUT/obj_$1" -f Vtb_hgi_coll_tkm_static_pdt_hier.mk -j${JOBS:-8} hier_build; } > "$OUT/build_$1.log" 2>&1
  echo "BUILT $1"; }
 case "$STEP" in
  vec) vec;sha256sum "${src[@]}" "$C/tkm/tkm_trace_lockstep.py" "$C/tkm/run_tp192_static_pdt.sh" tools/hgi_coll_tkm_tp192_vectors.py tools/hgi_coll_tkm_vectors.py > "$OUT/sources.sha256";;
- build_pin) build pin 1 0 0;; build_p1) build p1 0 1 0;; build_mut) build mut 0 1 1;;
+ build_pin) build pin 1 0 0;;
+ # cb21 = the delivered root timeline (ot_hgi_coll_tkm_m_tp192_pf21: PIPE 1 HOP 2 FRT 4 CB 21 CLRB 0): static_p reference vs static_pd
+ build_ref21) XG="-GHOP=2 -GFRT=4 -GCB=21 -GCLRB=0" build ref21 2 1 0;; build_pd21) XG="-GHOP=2 -GFRT=4 -GCB=21 -GCLRB=0" build pd21 0 1 0;;
+ sim21)
+  vec;L=$C/tkm/tkm_trace_lockstep.py
+  for tc in syn_sel syn_cand rank128_zeros;do
+   for m in ref21 pd21;do "$OUT/obj_$m/Vtb_hgi_coll_tkm_static_pdt" +DIR="$OUT/vec/$tc" +ROTATE=128 +NO_TL=1 +TRACE="$OUT/tr_${m}_$tc.txt" > "$OUT/${m}_$tc.log" 2>&1 & done;wait
+   grep TKM_STATIC_PDT PASS "$OUT/ref21_$tc.log";grep TKM_STATIC_PDT PASS "$OUT/pd21_$tc.log"
+   python3 $L "$OUT/tr_ref21_$tc.txt" "$OUT/tr_pd21_$tc.txt" 0 | tee "$OUT/lockstep_pd21_$tc.log"
+  done
+  echo "TKM_TP192_STATIC_PDT_CB21_GATE_PASS (static_pd == static_p at PIPE1 HOP2 FRT4 CB21 CLRB0, shift 0, golden words)";; build_p1) build p1 0 1 0;; build_mut) build mut 0 1 1;;
  sim)
   vec;L=$C/tkm/tkm_trace_lockstep.py
   for tc in syn_sel syn_cand rank128_zeros;do
@@ -32,5 +42,5 @@ case "$STEP" in
   set -e
   [ "$rc" != 0 ] && grep -q 'TKM_STATIC_PDT FAIL' "$OUT/mut_syn_sel.log" && [ "$lrc" != 0 ] && echo "MUTANT MUTP1 FAILS as required: $(grep -m1 'TKM_STATIC_PDT FAIL' "$OUT/mut_syn_sel.log") | $(head -1 "$OUT/lockstep_mut_syn_sel.log")"
   echo "TKM_TP192_STATIC_PDT_GATE_PASS (ROOTPIPE static_pd lock-step = pinned +2 edges, zero edge change)";;
- *) echo "STEP vec|build_pin|build_p1|build_mut|sim";exit 2;;
+ *) echo "STEP vec|build_pin|build_p1|build_mut|sim|build_ref21|build_pd21|sim21";exit 2;;
 esac
