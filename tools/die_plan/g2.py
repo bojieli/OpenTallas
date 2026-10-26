@@ -245,7 +245,9 @@ def probe_blockages(t, top="M7"):
         sub = [h for h in cores if h["inst"] == c["inst"] or h["inst"].startswith(c["inst"] + "_")]
         if sub:
             covered.update(h["inst"] for h in sub)
-            out += [dict(h, obs_max=c.get("obs_max", h.get("obs_max", "M5"))) for h in sub]
+            out += [dict(h, obs_max=max(
+                [L for L in (c.get("obs_max"), h.get("obs_max")) if L] or ["M5"],
+                key=lambda L: int(L[1:]))) for h in sub]
         else:
             out.append(c)
     # KV-PLAN 10-25: a planned hard core that no content leaf names (e.g. KV head_eighth cores built from several

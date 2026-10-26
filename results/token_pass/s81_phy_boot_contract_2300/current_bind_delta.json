@@ -1,0 +1,17 @@
+{
+ "plan": {
+  "reset_boot_contract": {
+   "file": "results/token_pass/s81_phy_boot_contract_2300/contract.json",
+   "sha256": "b77f1861e4c596f8ccdc6a206edecef4d642622314fc5d6f0fb45e1a617cb0fb"
+  }
+ },
+ "asbuilt": {
+  "reset_boot_contract": {
+   "file": "results/token_pass/s81_phy_boot_contract_2300/contract.json",
+   "sha256": "b77f1861e4c596f8ccdc6a206edecef4d642622314fc5d6f0fb45e1a617cb0fb"
+  }
+ },
+ "manifest_base_sha256": "b8e064a5a0369485608eae4d127a1d25ba83f08a58e9a9078c65ae7eba8dfdcc",
+ "physical_candidate": "75227234e3be1986db1f682f4ac2bb462d7cb0b1cf10fa563fa35ba2650ac08d",
+ "readiness": "CURRENT_MANIFEST_SELECTION_CHECK_PASS; no ELAB run; source/START remain incomplete"
+}

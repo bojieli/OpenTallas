@@ -142,6 +142,13 @@ def tap_points(P, tn):
     cks = [(x, y) for _, x, y in S.tap_grid(P, tn)] + [(x, y) for _, x, y, _ in S.core_taps(P, tn)]
     ck = list(cks[0])
     rs = list(t.get("reset", {}).get("tap_um", ck))
+    if (t.get("hard") and t.get("reset", {}).get("tap_um") is not None
+            and t.get("clock", {}).get("tap_um") is not None
+            and any(c.get("lef") and c.get("origin_um") is not None for c in t.get("contents", []))):
+        # These are native hard-macro terminal coordinates, not movable buffer
+        # sites. Distinct legal LEF pins can be192nm apart; the soft1um collision
+        # heuristic and partition-layer snapping must not move either terminal.
+        return [tuple(map(float, ck)), tuple(map(float, rs))]
     if any(abs(rs[0] - a) < 1.0 and abs(rs[1] - b) < 1.0 for a, b in cks):
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
         if t.get("hard_cores"):     # S81-P8 10-23: the reset tap also sits in a channel, off the clock taps
@@ -392,6 +399,13 @@ def input_hold_min(P, tn):
                 break
             for pid, pr in prs:
                 s = pr["src"]["part"]
+                dv = (P.clock.get("io_hold_driver_views") or {}).get(pid)
+                if s == DIE_PART and dv:
+                    # CP1 proof harness: explicit registered upstream driver view of the full plan (COORD 23:26 (3));
+                    # the seam itself is checked on the real parent (io_hold_parent.py)
+                    vals.append((float(dv["out_hold_guarantee_ps"]), f"driver view {dv['type']} ({dv['basis']})",
+                                 dv["type"]))
+                    continue
                 if s == DIE_PART or s not in P.parts:
                     why = f"{pid} from the die edge"
                 elif P.channel_of(pid) is not None:
@@ -462,6 +476,10 @@ def root_async_reset(P, tn):
     """
     import reset_tree as RT
     if not RT.wavefront(P) or P.types[tn].get("hard"):
+        return False
+    if RT.pad_false_path_pins(P, tn):
+        # a declared die reset pad plan (PATH-KV-POR) already emits the ONE root CDC exception (raw pad ->
+        # u_rst_root async + PLL analog); a second one would double the waiver (test_por_gate)
         return False
     if RT.wf_solve(P)["root_type"] != tn:
         return False
