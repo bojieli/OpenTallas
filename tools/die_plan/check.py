@@ -1049,6 +1049,8 @@ def load_core_conns(plan_dir=None, path=None):
     "face:<N|S|E|W>", ...]}}} (default PLANDIR/core_conns.json): core connectivity the plan JSON does not carry
     (cores nested inside a content leaf, e.g. S81 frame qbanks; KV head cores), written by the binder / plan owner."""
     f = Path(path) if path else Path(plan_dir or ".") / "core_conns.json"
+    if path is not None and not f.is_file():
+        raise FileNotFoundError(f"explicit --core-conns file does not exist: {f}")
     return json.loads(f.read_text()) if f.is_file() else {}
 
 
