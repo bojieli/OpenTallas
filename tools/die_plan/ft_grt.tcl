@@ -15,8 +15,9 @@
 # two passes; incremental calls (repair_design / repair_timing DPL reroutes) go to the stock command unchanged.
 # Limitation: incremental reroutes after the merge use the pass-OWN grid (FT stripes blocked), so an FT net that the
 # GRT repair buffers is re-routed off the stripes; the post-GRT audit (ot_ftres_audit) counts such nets.
-set ot_ftres_dir [file dirname [file normalize [info script]]]
-if {![info exists ot_ftres_slots]} { source [file join $ot_ftres_dir ft_reserve.tcl] }
+# ORFS sources step hooks inside a proc (source_step_tcl): the data goes to the global scope explicitly.
+set ::ot_ftres_dir [file dirname [file normalize [info script]]]
+if {![info exists ::ot_ftres_slots]} { uplevel #0 [list source [file join $::ot_ftres_dir ft_reserve.tcl]] }
 
 proc ot_ftres_is_bufinv {inst} {
   set m [[$inst getMaster] getName]
