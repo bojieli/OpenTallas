@@ -42,11 +42,11 @@ def _bilin(t, slew, load):
     sl, ld, rows = t
     return interp(sl, [interp(ld, r, load) for r in rows], slew)
 
-def chain_delay(L, chain, slew, final_load, wire_ff=1.0):
+def chain_delay(L, chain, slew, final_load, wire_ff=4.0):
     d = 0.0
     for k, c in enumerate(chain):
         load = (L[chain[k + 1]][1] if k + 1 < len(chain) else final_load) + wire_ff
-        d += _bilin(L[c][0]["cell_rise"], slew, load)
+        d += _bilin(L[c][0]["cell_rise"], slew, load) + 2.0
         slew = _bilin(L[c][0]["rise_transition"], slew, load)
     return d, slew
 
@@ -72,7 +72,7 @@ def run(a):
     # exactly its mesh capacitance, and the final new cell drives the original.
     table = []
     for ch in chains:
-        ds = {c: chain_delay(libs[c],ch,40.0,libs[c][M.BUF][1],wire_ff=0.05)[0] for c in ('TT','FF')}
+        ds = {c: chain_delay(libs[c],ch,40.0,libs[c][M.BUF][1],wire_ff=4.0)[0] for c in ('TT','FF')}
         table.append((ch,ds))
     off = lambda t,c: early.get((t['part'],t['tap']),{}).get(c,t.get('early_ps',0.0))
     targets = {c:max(arr[c][t['port']][0]+off(t,c) for t in mesh['taps']) + a.reserve_ps*(1 if c=='TT' else .8) for c in ('TT','FF')}
@@ -81,7 +81,7 @@ def run(a):
     # each corner (which can demand an impossible added-delay ratio).
     import statistics
     probe=[M.BUF]*4
-    ratio=chain_delay(libs['FF'],probe,40.0,libs['FF'][M.BUF][1],wire_ff=.05)[0]/chain_delay(libs['TT'],probe,40.0,libs['TT'][M.BUF][1],wire_ff=.05)[0]
+    ratio=chain_delay(libs['FF'],probe,40.0,libs['FF'][M.BUF][1],wire_ff=4.0)[0]/chain_delay(libs['TT'],probe,40.0,libs['TT'][M.BUF][1],wire_ff=4.0)[0]
     offsets=[arr['FF'][t['port']][0]+off(t,'FF')-ratio*(arr['TT'][t['port']][0]+off(t,'TT')) for t in mesh['taps']]
     targets['FF']=ratio*targets['TT']+statistics.median(offsets)
     keeps = M.DC.KeepIndex(M.DC.keepouts(plan),die=(float(plan.W),float(plan.H)))
@@ -103,7 +103,7 @@ def run(a):
         shortlist=sorted(table,key=lambda x:max(abs(x[1][c]-need[c]) for c in ('TT','FF')))[:24]
         actual=[]
         for ch,_ in shortlist:
-            ds={c:chain_delay(libs[c],ch,arr[c][t['port']][2],3.0,wire_ff=1.0)[0] for c in ('TT','FF')}
+            ds={c:chain_delay(libs[c],ch,arr[c][t['port']][2],3.0,wire_ff=4.0)[0] for c in ('TT','FF')}
             actual.append((max(abs(ds[c]-need[c]) for c in ('TT','FF')),len(ch),ch,ds))
         err,_,ch,ds=min(actual)
         base={'x':t['xy'][0]-M.BUF_W/2,'y':t['xy'][1]-M.ROW_Y/2}; names=[]
