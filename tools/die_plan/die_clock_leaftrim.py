@@ -66,6 +66,22 @@ def run(a):
     arr = {c: taps(src/f'taps_{c}.txt') for c in ('TT','FF')}
     libs = {c: lib_cells(c, a.libdir) for c in ('TT','FF')}
     mesh_rc = {c: json.loads((src/f'mesh_{c}.json').read_text()) for c in ('TT','FF')}
+    calibration = {c:{} for c in ('TT','FF')}
+    if a.calibration:
+        caldir=Path(a.calibration)
+        previous=json.loads((caldir/'mesh.json').read_text())
+        declared=previous.get('meta',{}).get('leaftrim',{}).get('source')
+        if declared is None or Path(declared).resolve()!=src.resolve():
+            raise ValueError('calibration candidate must name this exact source baseline')
+        predicted={t['port']:t['leaftrim'] for t in previous['taps']}
+        if set(predicted)!={t['port'] for t in mesh['taps']}:
+            raise ValueError('calibration and source tap inventories differ')
+        for c in ('TT','FF'):
+            measured=taps(caldir/f'taps_{c}.txt')
+            for t in mesh['taps']:
+                port=t['port']
+                calibration[c][port]=measured[port][0]-arr[c][port][0]-predicted[port][f'{c}_added_ps']
+
     options = [M.BUF, 'BUFx12f_ASAP7_75t_R', 'BUFx4f_ASAP7_75t_R', 'BUFx2_ASAP7_75t_R']
     chains = [[M.BUF]+list(comb)+[M.BUF] for n in range(a.max_cells-1) for comb in itertools.combinations_with_replacement(options,n)]
     # Preserve the original stub and its routed load. The new first cell replaces
@@ -98,7 +114,7 @@ def run(a):
         return all(abs(x-xx)>=M.BUF_W+M.SITE_X or abs(y-yy)>=M.ROW_Y for bx in range(ix-1,ix+2) for by in range(iy-1,iy+2) for xx,yy in occupied.get((bx,by),[]))
     residuals=[]
     for ti,t in enumerate(mesh['taps']):
-        old=t['stub']; need={c:targets[c]-arr[c][t['port']][0]-off(t,c) for c in ('TT','FF')}
+        old=t['stub']; need={c:targets[c]-arr[c][t['port']][0]-off(t,c)-calibration[c].get(t['port'],0.0) for c in ('TT','FF')}
         # Small candidate set, then evaluate each at the actual mesh input slew.
         shortlist=sorted(table,key=lambda x:max(abs(x[1][c]-need[c]) for c in ('TT','FF')))[:24]
         actual=[]
@@ -124,10 +140,10 @@ def run(a):
         original['loads']=[names[0] if x=='port:'+t['port'] else x for x in original['loads']]
         for u,v in zip(names,names[1:]+['port:'+t['port']]):
             data['nets'].append({'name':f'ckm_w_leaftrim_{ti}_{u}','drv':u,'loads':[v],'level':99})
-        t['leaftrim']={'cells':names,'TT_added_ps':round(ds['TT'],3),'FF_added_ps':round(ds['FF'],3),'fit_error_ps':round(err,3)}
+        t['leaftrim']={'cells':names,'TT_added_ps':round(ds['TT'],3),'FF_added_ps':round(ds['FF'],3),'fit_error_ps':round(err,3),'calibration_ps':{c:round(calibration[c].get(t['port'],0.0),3) for c in ('TT','FF')}}
         residuals.append(err)
     mesh['meta']['cells']=len(cells)
-    mesh['meta']['leaftrim']={'source':str(src),'target_ps':targets,'max_prediction_error_ps':round(max(residuals),3),'added_cells':sum(len(t['leaftrim']['cells']) for t in mesh['taps']),'qualification':'NOT RUN: requires reviewed physical reroute and TT/FF skew gate'}
+    mesh['meta']['leaftrim']={'source':str(src),'target_ps':targets,'max_prediction_error_ps':round(max(residuals),3),'added_cells':sum(len(t['leaftrim']['cells']) for t in mesh['taps']),'calibration':a.calibration,'qualification':'NOT RUN: requires reviewed physical reroute and TT/FF skew gate'}
     out.mkdir(parents=True)
     ren=M.write_verilog(cells,data['nets'],data['ports'],out/'ctree.v')
     for n in data['nets']:n['name']=ren.get(n['name'],n['name'])
@@ -138,5 +154,5 @@ def run(a):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('dir');p.add_argument('--out',required=True);p.add_argument('--plan',required=True)
-    p.add_argument('--libdir',required=True);p.add_argument('--reserve-ps',type=float,default=65.0);p.add_argument('--max-cells',type=int,default=14)
+    p.add_argument('--calibration',help='prior routed endpoint-trim candidate from the same baseline');p.add_argument('--libdir',required=True);p.add_argument('--reserve-ps',type=float,default=65.0);p.add_argument('--max-cells',type=int,default=14)
     run(p.parse_args())
