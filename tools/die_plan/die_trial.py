@@ -425,6 +425,226 @@ def route_netlist(P, type_bits):
     return "\n".join(v) + "\n", nft
 
 
+# ------------------------------------------------------------------------------ die_ft_bands GRT capacity model
+# (DIE-FT-HBM 10-25 band stripes, DIE-FT 10-25 20:40 transition-layer fix; read against OpenROAD GlobalRouter.cpp
+# 26Q3: applyObstructionAdjustment / extendObstructions / adjustTransitionLayers)
+GCELL_UM = 10.8          # OpenROAD die gcell here (15 x M3 pitch 0.72; congestion.rpt bboxes, origin 0; floor(W/g) tiles)
+OBS_EXT_UM = 0.072       # macro OBS extension = largest SPACINGTABLE value of M4-M6 (asap7 1x tech LEF; findLayerExtensions)
+# OpenROAD halves ("fat via" transition, adjustTransitionLayers) the capacity of these layers in every gcell above a
+# macro OBS on the layer below, from the capacity BEFORE the die obstructions: measured 10-25 on a 216x216 test die
+# (block with OBS M4-M5: M6 -10.7 % of the die, layer adjustment 0.75 keeps 0.5 x 0.25 there).
+TRANSITION_LAYERS = ("M5", "M6")
+TRANSITION_KEEP = 0.5
+
+
+def ft_band_rects(P):
+    """die-frame rects of every type's die_ft_bands (DIE-FT-HBM 10-25): [(layer, x0, y0, x1, y1, die_share)].
+    A band is a type-frame span (EW: y, NS: x) over the full type width/height where the listed layers belong to the
+    die (die_share of their tracks, default 1.0) instead of the ft_track_frac share."""
+    out = []
+    for n, p in sorted(P.parts.items()):
+        t = P.types[p["type"]]
+        bands = t.get("die_ft_bands") or []
+        if not bands:
+            continue
+        o = p.get("orient", "R0")
+        if o not in ("R0", "MX", "MY", "R180"):
+            raise ValueError(f"die_ft_bands on {n}: orient {o} not supported")
+        w, h = t["outline_um"]
+        ox, oy = p["origin_um"]
+        for b in bands:
+            lo, hi = b["span_um"]
+            if b["dir"] == "EW":
+                if o in ("MX", "R180"):
+                    lo, hi = h - hi, h - lo
+                r = (ox, oy + lo, ox + w, oy + hi)
+            else:
+                if o in ("MY", "R180"):
+                    lo, hi = w - hi, w - lo
+                r = (ox + lo, oy, ox + hi, oy + h)
+            for L in b["layers"]:
+                out.append((L, *r, float(b.get("die_share", 1.0))))
+    return out
+
+
+def die_core_rects(P, L, grow=0.0):
+    """die-frame rects (grown by `grow` um) of every planned hard core whose abstract OBS covers layer L
+    (abstract_lef: OBS on M4 .. min(core top, partition_signal_max))."""
+    li = int(L[1:])
+    top = int(P.layer_budget["partition_signal_max"][1:])
+    out = []
+    for n, p in P.parts.items():
+        t = P.types[p["type"]]
+        w, h = t["outline_um"]
+        ox, oy = p["origin_um"]
+        o = p.get("orient", "R0")
+        for x0, y0, x1, y1, tl, _, _ in core_obs(t):
+            if li < 4 or li > min(int(tl[1:]), top):
+                continue
+            if o in ("MY", "R180"):
+                x0, x1 = w - x1, w - x0
+            if o in ("MX", "R180"):
+                y0, y1 = h - y1, h - y0
+            out.append((ox + x0 - grow, oy + y0 - grow, ox + x1 + grow, oy + y1 + grow))
+    return out
+
+
+def _uncovered(W, H, rects):
+    """rectangles covering [0,W]x[0,H] minus the union of rects (slab sweep, vertically merged)."""
+    ys = sorted({0.0, H} | {min(max(r[1], 0.0), H) for r in rects} | {min(max(r[3], 0.0), H) for r in rects})
+    open_ = {}
+    out = []
+    for ya, yb in zip(ys, ys[1:]):
+        if yb - ya < 1e-6:
+            continue
+        cov = sorted((max(r[0], 0.0), min(r[2], W)) for r in rects if r[1] <= ya + 1e-6 and r[3] >= yb - 1e-6)
+        free, x = [], 0.0
+        for a, b in cov + [(W, W)]:
+            if a > x + 1e-6:
+                free.append((round(x, 3), round(a, 3)))
+            x = max(x, b)
+        nxt = {}
+        for iv in free:
+            nxt[iv] = open_.pop(iv, ya)
+        for (a, b), y0 in open_.items():
+            out.append((a, y0, b, ya))
+        open_ = nxt
+    for (a, b), y0 in open_.items():
+        out.append((a, y0, b, H))
+    return out
+
+
+def _ngrid(L, g=GCELL_UM):
+    """OpenROAD tile count along a die side: integer DBU floor (float 216 // 10.8 is 19.0, OpenROAD has 20)."""
+    return max(1, int(round(L * 1000)) // int(round(g * 1000)))
+
+
+def _gstrips(rects, vertical, W, H, g=GCELL_UM, eps=0.01):
+    """region rects -> strips one gcell thick across the layer direction (rows for an H layer, columns for a V layer),
+    snapped to the gcell grid with upper edges pulled in by eps, so every gcell has exactly one owner.  H strips stop
+    before the last tile column and V strips before the last tile row (capacity 0 there, no routing edge).
+    -> [(x0, y0, x1, y1, *extra)]"""
+    nx, ny = _ngrid(W, g), _ngrid(H, g)
+    imax = nx - (0 if vertical else 1)
+    jmax = ny - (1 if vertical else 0)
+    out = []
+    for r in rects:
+        i0, j0, i1, j1 = (int(round(v / g)) for v in r[:4])
+        i1, j1 = min(i1, imax), min(j1, jmax)
+        if i1 <= i0 or j1 <= j0:
+            continue
+        if vertical:
+            out += [(round(i * g, 3), round(j0 * g, 3), round((i + 1) * g - eps, 3), round(j1 * g - eps, 3))
+                    + tuple(r[4:]) for i in range(i0, i1)]
+        else:
+            out += [(round(i0 * g, 3), round(j * g, 3), round(i1 * g - eps, 3), round((j + 1) * g - eps, 3))
+                    + tuple(r[4:]) for j in range(j0, j1)]
+    return out
+
+
+def band_region_adjust(P, share_adj):
+    """the die_ft_bands share model as one-gcell strips: band layers get global layer adjustment 0; every die area
+    outside a band of that layer keeps 1 - share_adj of its tracks (share_adj = the usual 1 - ft_track_frac) and a
+    band with die_share < 1 keeps die_share.  Strips also cover planned hard cores: on the OBS layers of a core the
+    capacity is 0 anyway (obstruction strips over macro OBS do not underflow, measured 10-25), and above it the share
+    applies as everywhere else.  The 12-um core halo of cebbd80b8 is gone: it existed only for region adjustments
+    (GRT-0114 underflow) and gave the die 100 % of M4/M5 in a ring around every core (HBM edge+band M4 +31 %).
+    -> (band layers, [(layer, x0, y0, x1, y1, kept fraction)])"""
+    rects = ft_band_rects(P)
+    by = defaultdict(list)
+    for L, x0, y0, x1, y1, ds in rects:
+        by[L].append((x0, y0, x1, y1, ds))
+    regs = []
+    for L, rs in sorted(by.items()):
+        vert = P.layers[L]["dir"] == "V"
+        for x0, y0, x1, y1 in _gstrips(_uncovered(P.W, P.H, [r[:4] for r in rs]), vert, P.W, P.H):
+            regs.append((L, x0, y0, x1, y1, round(1 - share_adj, 3)))
+        for x0, y0, x1, y1, ds in rs:
+            if ds < 1.0:
+                for a in _gstrips([(x0, y0, x1, y1)], vert, P.W, P.H):
+                    regs.append((L, *a, round(ds, 3)))
+    return sorted(by), regs
+
+
+def transition_intervals(P, L, g=GCELL_UM, ext=OBS_EXT_UM):
+    """{strip index: [(lo, hi)]} gcell intervals where OpenROAD halves transition layer L (adjustTransitionLayers):
+    every gcell from the first to the last-but-one tile of each macro OBS rect on the layer below (extended by the
+    spacing in that layer's cross direction).  Strip index = gcell row for an H layer, column for a V layer; the
+    interval runs along the layer direction.  Empty for non-transition layers."""
+    if L not in TRANSITION_LAYERS:
+        return {}
+    below = f"M{int(L[1:]) - 1}"
+    vb = P.layers[below]["dir"] == "V"
+    nx, ny = _ngrid(P.W, g), _ngrid(P.H, g)
+    by = defaultdict(list)
+    for x0, y0, x1, y1 in die_core_rects(P, below, 0.0):
+        if vb:
+            x0, x1 = x0 - ext, x1 + ext
+        else:
+            y0, y1 = y0 - ext, y1 + ext
+        fx, fy = int(max(x0, 0.0) // g), int(max(y0, 0.0) // g)
+        lx, ly = min(int(x1 // g), nx - 1), min(int(y1 // g), ny - 1)
+        if (fx, fy) == (lx, ly):
+            continue
+        if P.layers[L]["dir"] == "V":
+            for i in range(fx, lx):
+                by[i].append((fy, ly))
+        else:
+            for j in range(fy, ly):
+                by[j].append((fx, lx))
+    out = {}
+    for k, ivs in by.items():
+        m = []
+        for lo, hi in sorted(ivs):
+            if hi <= lo:
+                continue
+            if m and lo <= m[-1][1]:
+                m[-1][1] = max(m[-1][1], hi)
+            else:
+                m.append([lo, hi])
+        out[k] = [tuple(v) for v in m]
+    return out
+
+
+def band_share_obs(P, regs, g=GCELL_UM):
+    """die_ft_bands share as OBSTRUCTION stripes: in every one-gcell strip from band_region_adjust (kept fraction a)
+    obstruct the top f of each gcell row (H layer) or the right f of each gcell column (V layer), f = 1 - a.
+
+    Transition layers (TRANSITION_LAYERS) over a macro OBS on the layer below: OpenROAD halves those gcells from the
+    capacity before obstructions, so the two reductions ADD (strip 0.75 + halving 0.5 -> 0 tracks: the 10-25 HBM
+    edge+band root interior, 8,806 zero-capacity gcells, 21 tracks in the layer-adjustment run of the same LEF).
+    There f = (1 - TRANSITION_KEEP) * (1 - a), which keeps TRANSITION_KEEP * a: the same capacity a global layer
+    adjustment gives (measured 10-25 on a 216x216 test die: M6 14,110 strips vs 14,259 layer adjustment 0.75; the
+    uncompensated strips 12,490), so band and non-band kits share one capacity model.  -> [(layer, x0, y0, x1, y1)]"""
+    trans = {L: transition_intervals(P, L, g) for L in sorted({r[0] for r in regs})}
+    out = []
+    for L, x0, y0, x1, y1, a in regs:
+        if a >= 1.0:
+            continue
+        vert = P.layers[L]["dir"] == "V"
+        k = int(round((x0 if vert else y0) / g))
+        lo, hi = (int(round(v / g)) for v in ((y0, y1 + 0.01) if vert else (x0, x1 + 0.01)))
+        f, fh = 1.0 - a, (1.0 - TRANSITION_KEEP) * (1.0 - a)
+        segs, pos = [], lo
+        for a0, a1 in trans[L].get(k, []):
+            a0, a1 = max(a0, lo), min(a1, hi)
+            if a1 <= a0:
+                continue
+            if a0 > pos:
+                segs.append((pos, a0, f))
+            segs.append((a0, a1, fh))
+            pos = a1
+        if pos < hi:
+            segs.append((pos, hi, f))
+        for s0, s1, ff in segs:
+            c0, c1 = round((k + 1) * g - ff * g, 3), round((k + 1) * g, 3)
+            if vert:
+                out.append((L, c0, round(s0 * g, 3), c1, round(s1 * g, 3)))
+            else:
+                out.append((L, round(s0 * g, 3), c0, round(s1 * g, 3), c1))
+    return out
+
+
 PLACE_PROC = ("proc ot_place {n x y o} { set b [ord::get_db_block]; set i [$b findInst $n]; $i setOrient $o; "
               "set d [[$b getTech] getDbUnitsPerMicron]; set X [expr {round($x*$d)}]; set Y [expr {round($y*$d)}]; "
               "$i setLocation $X $Y; set bb [$i getBBox]; "
@@ -453,8 +673,9 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     t.append("source /work/grt/obs.tcl")
     t.append("puts \"OT_T obs [expr {[clock seconds]-$t0}]\"")
     t.append("set_routing_layers -signal M4-M7")          # ruling 9.3: signals <= M7; M8/M9 = clock/reset/PG
+    band_layers, band_regs = band_region_adjust(P, dict(adjust).get("M4", 0.75))
     for L, a in adjust:
-        t.append(f"set_global_routing_layer_adjustment {L} {a:g}")
+        t.append(f"set_global_routing_layer_adjustment {L} {0 if L in band_layers else a:g}")
     t += ["global_route -congestion_iterations 50 -allow_congestion -verbose "
           "-congestion_report_file /work/grt/congestion.rpt",
           "puts \"OT_T grt [expr {[clock seconds]-$t0}]\"",
@@ -466,6 +687,8 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     for L, a, b, c, d in pg_stripes(P):
         obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
     for L, a, b, c, d in reserve:
+        obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
+    for L, a, b, c, d in band_share_obs(P, band_regs):   # die_ft_bands share stripes (band_share_obs)
         obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
     (Path(out) / "obs.tcl").write_text("\n".join(obs) + "\n")
     return "\n".join(t) + "\n"
@@ -810,6 +1033,10 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["grt"] = dict(ft_bits=nft, ft_slot_instances=len(ft_nets(P)), reset_taps=len(P.parts),
                        adjust=dict(adjust), coarse_m123_um=coarse, clock_reserve_rects=len(reserve),
                        pg_stripes=len(pg_stripes(P)))
+    bl, br = band_region_adjust(P, dict(adjust).get("M4", 0.75))
+    meta["grt"]["die_ft_bands"] = dict(layers=bl, band_rects=len(ft_band_rects(P)), share_strips=len(br),
+                                       share_obstructions=len(band_share_obs(P, br)),
+                                       transition_layers=list(TRANSITION_LAYERS), transition_keep=TRANSITION_KEEP)
     seam_bits = 0
     chan = 0
     for pid, pr in P.ports.items():
