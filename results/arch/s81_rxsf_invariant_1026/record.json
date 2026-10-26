@@ -1,0 +1,11 @@
+{
+  "original": "dsfd_su_t_rxsf_k26@33830dd5d700e84d",
+  "original_fail": "NOT EQUIVALENT 27/13040",
+  "cause": "matched-register relation s3_pf[26]==s3_neg is absent; impossible cut state neg0/pf26=1",
+  "source_identity": "s3_pf <= s2_sign ? ~pf : pf, pf[27:26]=0",
+  "test": "actual original AIG, 27 failing Horner outputs plus both proposed D obligations",
+  "positive": 29,
+  "negative_inverse_fails": 29,
+  "scope": "diagnostic only; canonical current-helper full proof running separately",
+  "rtl_cycles_added": 0
+}
