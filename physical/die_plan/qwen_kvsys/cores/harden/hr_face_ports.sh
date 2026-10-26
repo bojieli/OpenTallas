@@ -39,17 +39,23 @@ cat > $O/eq_$V.ys <<YS
 read_json $O/pre.json
 memory_share
 memory_map
+opt_clean
+opt_merge
 rename $MOD gold
 design -stash g
 read_json $O/$V.json
 memory_share
 memory_map
+opt_clean
+opt_merge
 rename $MOD gate
 design -copy-from g -as gold gold
 equiv_make gold gate eq
 hierarchy -top eq
 expose -evert eq/t:ot_sram*
 async2sync
+# Keep the existing reset abstraction; split wide FF/mux cells for bit-local SAT cones.
+simplemap
 equiv_simple -seq 2
 equiv_induct -seq 2
 equiv_status -assert
@@ -63,6 +69,8 @@ cat > $O/eq_v.ys <<YS
 read_json $O/pre.json
 memory_share
 memory_map
+opt_clean
+opt_merge
 rename $MOD gold
 design -stash g
 read_verilog -sv $O/$MOD.v
@@ -72,12 +80,16 @@ proc
 memory_collect
 memory_share
 memory_map
+opt_clean
+opt_merge
 rename $MOD gate
 design -copy-from g -as gold gold
 equiv_make gold gate eq
 hierarchy -top eq
 expose -evert eq/t:ot_sram*
 async2sync
+# Keep the existing reset abstraction; split wide FF/mux cells for bit-local SAT cones.
+simplemap
 equiv_simple -seq 2
 equiv_induct -seq 2
 equiv_status -assert
