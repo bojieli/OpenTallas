@@ -205,8 +205,27 @@ def clock_rects(mesh_dir, guide, layers=("M8", "M9")):
     w, _s = NDR[M["meta"].get("ndr", "4w")]
     xs, ys = M["xs"], M["ys"]
     h = w / 2
-    out = [("ck_mesh", "M8", xs[0] - h, y - h, xs[-1] + h, y + h, w) for y in ys]
-    out += [("ck_mesh", "M9", x - h, ys[0] - h, x + h, ys[-1] + h, w) for x in xs]
+    regions = M["meta"].get("regions")
+    if M["meta"].get("regions_depth", 0) and not regions:
+        raise ValueError("regional clock is missing its physical region strap geometry")
+    out = []
+    if regions:
+        # The clock builder names physically isolated meshes ck_mesh_r<k>.
+        # Reconstructing a full-die ck_mesh here would undo the region cuts and
+        # silently short clocks whose crossings require real landed hardware.
+        for r in regions:
+            rx, ry = xs[r["i0"]:r["i1"]], ys[r["j0"]:r["j1"]]
+            if not rx or not ry:
+                raise ValueError(f"empty clock region {r['k']}")
+            x0, y0, x1, y1 = r.get("strap_box_um", [rx[0], ry[0], rx[-1], ry[-1]])
+            if not (x0 <= rx[0] <= rx[-1] <= x1 and y0 <= ry[0] <= ry[-1] <= y1):
+                raise ValueError(f"clock region {r['k']} straps do not contain their intersections")
+            net = f"ck_mesh_r{r['k']}"
+            out += [(net, "M8", x0 - h, y - h, x1 + h, y + h, w) for y in ry]
+            out += [(net, "M9", x - h, y0 - h, x + h, y1 + h, w) for x in rx]
+    else:
+        out = [("ck_mesh", "M8", xs[0] - h, y - h, xs[-1] + h, y + h, w) for y in ys]
+        out += [("ck_mesh", "M9", x - h, ys[0] - h, x + h, ys[-1] + h, w) for x in xs]
     nets = set((d / "clock_nets.txt").read_text().split()) if (d / "clock_nets.txt").exists() else None
     G = read_guides(guide) if guide else {}
     for n, boxes in G.items():
@@ -394,7 +413,7 @@ def cmd_freeze(a):
         meta["clock"] = dict(dir=str(a.clock), guide=str(a.guide), ndr=M["meta"].get("ndr"), rects=len(crs),
                              nets=len({r[0] for r in crs}))
         for net, L, x0, y0, x1, y1, w in crs:
-            shapes.append((net, "clock", L, x0, y0, x1, y1, "STRIPE" if net == "ck_mesh" else "IOWIRE"))
+            shapes.append((net, "clock", L, x0, y0, x1, y1, "STRIPE" if net.startswith("ck_mesh") else "IOWIRE"))
             fp = footprint(L, (x0, y0, x1, y1), w, s)
             obs.append((L,) + fp)
             cls_rects.append(("clock", L) + fp)
@@ -413,8 +432,16 @@ def cmd_freeze(a):
         for L, x0, y0, x1, y1 in obs:
             f.write(f"create_obstruction -region {{{x0:.3f} {y0:.3f} {x1:.3f} {y1:.3f}}} -layer {L}\n")
     tracks = track_use(P, cls_rects)
-    rep = dict(plan=str(a.plan), pg=str(a.pg) if a.pg else "plan die.pg.grid", pg_file=str(Path(a.pg).resolve()) if a.pg else None, shapes=len(shapes), obstructions=len(obs),
+    # GRT guides are corridors, not detailed wires. The export has no via stack
+    # or terminal access, and cmd_grt currently consumes obstructions only.
+    # Preserve the useful capacity prototype without calling it a connected
+    # infrastructure freeze. The next implementation must materialize routes
+    # into the same design and check their actual connections.
+    rep = dict(qualification="CAPACITY_RESERVATION_ONLY", connected_preroutes=False,
+               missing_implementation=["via_and_terminal_routes", "fixed_route_import_into_signal_design"],
+               plan=str(a.plan), pg=str(a.pg) if a.pg else "plan die.pg.grid", pg_file=str(Path(a.pg).resolve()) if a.pg else None, shapes=len(shapes), obstructions=len(obs),
                tracks_taken=tracks, **meta)
+    (out / "preroute_shapes.json").write_text(json.dumps(shapes) + "\n")
     (out / "preroute.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps(rep, indent=1))
     return 0
@@ -508,6 +535,9 @@ def parse_grt(log):
 def cmd_report(a):
     rep = {}
     pre = json.loads((Path(a.pre) / "preroute.json").read_text())
+    rep["qualification"] = pre.get("qualification", "CAPACITY_RESERVATION_ONLY")
+    rep["connected_preroutes"] = pre.get("connected_preroutes", False)
+    rep["infrastructure_freeze"] = "NOT RUN"
     rep["tracks_taken"] = pre["tracks_taken"]
     rep["leftover_M8_M9"] = {L: round(1 - v["all"], 4) for L, v in pre["tracks_taken"].items()}
     for g in a.grt or []:

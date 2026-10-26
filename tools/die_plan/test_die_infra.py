@@ -18,6 +18,27 @@ def plan(W=108.0, H=108.0, grid=None):
 
 
 class T(unittest.TestCase):
+    def test_regional_preroute_preserves_physical_clock_cuts(self):
+        with tempfile.TemporaryDirectory() as td:
+            d = Path(td)
+            m = dict(meta=dict(ndr="4w", regions_depth=1, regions=[
+                dict(k=0, i0=0, i1=2, j0=0, j1=2, strap_box_um=[0, 0, 49, 100]),
+                dict(k=1, i0=2, i1=4, j0=0, j1=2, strap_box_um=[51, 0, 100, 100])]),
+                xs=[10, 40, 60, 90], ys=[10, 90])
+            (d / "mesh.json").write_text(json.dumps(m))
+            _, rects = DI.clock_rects(d, None)
+            self.assertEqual({r[0] for r in rects}, {"ck_mesh_r0", "ck_mesh_r1"})
+            self.assertEqual(len(rects), 8)
+            # A reconstructed full strap would cross this seam and short the
+            # independently driven regions. Preserve the deliberate NDR gap.
+            for net, layer, x0, y0, x1, y1, width in rects:
+                if net == "ck_mesh_r0": self.assertLess(x1, 50)
+                else: self.assertGreater(x0, 50)
+            m["meta"].pop("regions")
+            (d / "mesh.json").write_text(json.dumps(m))
+            with self.assertRaisesRegex(ValueError, "missing.*region"):
+                DI.clock_rects(d, None)
+
     def test_trim_pads_die_absorbs_residual(self):
         k, res = DI.trim_pads({"a": 30.0, "b": 0.0, "c": -12.0}, 10.0)
         self.assertEqual(k, {"a": 0, "b": 3, "c": 4})       # the latest tile gets none; others delayed to match
