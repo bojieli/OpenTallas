@@ -491,7 +491,7 @@ endmodule
 // (u_twp* becomes the shared relay stage in front of the per-SRAM landings) so that MIF=1 is exactly MIF=0 delayed by one
 // cycle on bs_q (bs_q(t+1) = bs_q_MIF0(t); write/read ordering unchanged); fault is unchanged (0 cycles).
 // PRICE vs MIF=0: BTAB read +1, table write +1.  The parent must schedule the +1 (static schedule).
-module qfd_dv_s8x_btab #(parameter integer MIF = 0, parameter integer ROW_WRITE_RELAY = 0, parameter integer WR_HALF_CYCLE = 0) (
+module qfd_dv_s8x_btab #(parameter integer MIF = 0, parameter integer ROW_WRITE_RELAY = 0, parameter integer WR_HALF_CYCLE = 0, parameter integer RD_HALF_CYCLE = 0) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire            bs_re,
@@ -543,6 +543,13 @@ module qfd_dv_s8x_btab #(parameter integer MIF = 0, parameter integer ROW_WRITE_
             end else begin : g_wrshared
                 assign row_twpw = twp_w; assign row_twpa = twp_a;
             end
+            wire pre_rce; wire [6:0] pre_ra;
+            if (RD_HALF_CYCLE != 0) begin : g_rdhalf
+                qfd_dv_s8x_kffn #(.W(1), .ID(7750 + 2*bk)) u_rce (.ck(ck), .d(pre_rce), .q(m_rce));
+                qfd_dv_s8x_kffn #(.W(7), .ID(7751 + 2*bk)) u_ra (.ck(ck), .d(pre_ra), .q(m_ra));
+            end else begin : g_rdfull
+                assign m_rce = pre_rce; assign m_ra = pre_ra;
+            end
             wire pre_we; wire [6:0] pre_wa; wire [255:0] pre_wd;
             // Keep rising staging, then sample it halfway to the SRAM consumption edge.
             if (WR_HALF_CYCLE != 0) begin : g_wrhalf
@@ -553,8 +560,8 @@ module qfd_dv_s8x_btab #(parameter integer MIF = 0, parameter integer ROW_WRITE_
                 assign m_we = pre_we; assign m_wa = pre_wa; assign m_wd = pre_wd;
             end
             // per-SRAM landing registers (distinct IDs: distinct kept modules, never merged), decode in front
-            qfd_dv_s8x_kff #(.W(1), .ID(7150 + bk)) u_rce (.ck(ck), .d(pbs_re && bs_word[1:0] == bk[1:0]), .q(m_rce));
-            qfd_dv_s8x_kff #(.W(7), .ID(7160 + bk)) u_ra (.ck(ck), .d(bs_word[8:2]), .q(m_ra));
+            qfd_dv_s8x_kff #(.W(1), .ID(7150 + bk)) u_rce (.ck(ck), .d(pbs_re && bs_word[1:0] == bk[1:0]), .q(pre_rce));
+            qfd_dv_s8x_kff #(.W(7), .ID(7160 + bk)) u_ra (.ck(ck), .d(bs_word[8:2]), .q(pre_ra));
             qfd_dv_s8x_kff #(.W(1), .ID(7170 + bk)) u_we (.ck(ck), .d(row_twpw), .q(pre_we));
             qfd_dv_s8x_kff #(.W(7), .ID(7180 + bk)) u_wa (.ck(ck), .d(row_twpa), .q(pre_wa));
             qfd_dv_s8x_kff #(.W(256), .ID(7190 + bk)) u_wd (.ck(ck), .d(twp_d[256*bk +: 256]), .q(pre_wd));
@@ -588,7 +595,7 @@ endmodule
 // MIF (PATH-QC-SRAMIF 2026-10-25, GEOM-REVIEW F6 on prog_s6): as qfd_dv_s8x_btab.  MIF=1 = per-SRAM read-address /
 // read-enable / write-address / write-enable / write-data landing registers with the bank decode in front; MIF=1 is
 // exactly MIF=0 delayed by one cycle on p_q (read +1, table write +1, write/read ordering unchanged).
-module qfd_dv_s8x_prog #(parameter integer MIF = 0, parameter integer ROW_WRITE_RELAY = 0, parameter integer WR_HALF_CYCLE = 0) (
+module qfd_dv_s8x_prog #(parameter integer MIF = 0, parameter integer ROW_WRITE_RELAY = 0, parameter integer WR_HALF_CYCLE = 0, parameter integer RD_HALF_CYCLE = 0) (
     input  wire            ck,
     input  wire            p_re,
     input  wire [8:0]      p_idx,
@@ -638,6 +645,15 @@ module qfd_dv_s8x_prog #(parameter integer MIF = 0, parameter integer ROW_WRITE_
                 assign row_lo_w = twp_w; assign row_hi_w = twp_w;
                 assign row_lo_a = twp_a; assign row_hi_a = twp_a;
             end
+            wire pre_lrce, pre_hrce; wire [7:0] pre_lra, pre_hra;
+            if (RD_HALF_CYCLE != 0) begin : g_rdhalf
+                qfd_dv_s8x_kffn #(.W(1), .ID(7850 + 4*bk)) u_lo_rce (.ck(ck), .d(pre_lrce), .q(lo_rce));
+                qfd_dv_s8x_kffn #(.W(1), .ID(7851 + 4*bk)) u_hi_rce (.ck(ck), .d(pre_hrce), .q(hi_rce));
+                qfd_dv_s8x_kffn #(.W(8), .ID(7852 + 4*bk)) u_lo_ra (.ck(ck), .d(pre_lra), .q(lo_ra));
+                qfd_dv_s8x_kffn #(.W(8), .ID(7853 + 4*bk)) u_hi_ra (.ck(ck), .d(pre_hra), .q(hi_ra));
+            end else begin : g_rdfull
+                assign lo_rce = pre_lrce; assign hi_rce = pre_hrce; assign lo_ra = pre_lra; assign hi_ra = pre_hra;
+            end
             wire pre_lw, pre_hw; wire [7:0] pre_la, pre_ha; wire [255:0] pre_ld; wire [200:0] pre_hd;
             if (WR_HALF_CYCLE != 0) begin : g_wrhalf
                 qfd_dv_s8x_kffn #(.W(1), .ID(7650 + 6*bk)) u_lo_we (.ck(ck), .d(pre_lw), .q(lo_we));
@@ -651,10 +667,10 @@ module qfd_dv_s8x_prog #(parameter integer MIF = 0, parameter integer ROW_WRITE_
                 assign lo_wd = pre_ld; assign hi_wd = pre_hd;
             end
             // per-SRAM landing registers (distinct IDs: distinct kept modules, never merged), decode in front
-            qfd_dv_s8x_kff #(.W(1), .ID(7250 + 2*bk)) u_lo_rce (.ck(ck), .d(pp_re && pp_idx[0] == bk[0]), .q(lo_rce));
-            qfd_dv_s8x_kff #(.W(1), .ID(7251 + 2*bk)) u_hi_rce (.ck(ck), .d(pp_re && pp_idx[0] == bk[0]), .q(hi_rce));
-            qfd_dv_s8x_kff #(.W(8), .ID(7260 + 2*bk)) u_lo_ra (.ck(ck), .d(pp_idx[8:1]), .q(lo_ra));
-            qfd_dv_s8x_kff #(.W(8), .ID(7261 + 2*bk)) u_hi_ra (.ck(ck), .d(pp_idx[8:1]), .q(hi_ra));
+            qfd_dv_s8x_kff #(.W(1), .ID(7250 + 2*bk)) u_lo_rce (.ck(ck), .d(pp_re && pp_idx[0] == bk[0]), .q(pre_lrce));
+            qfd_dv_s8x_kff #(.W(1), .ID(7251 + 2*bk)) u_hi_rce (.ck(ck), .d(pp_re && pp_idx[0] == bk[0]), .q(pre_hrce));
+            qfd_dv_s8x_kff #(.W(8), .ID(7260 + 2*bk)) u_lo_ra (.ck(ck), .d(pp_idx[8:1]), .q(pre_lra));
+            qfd_dv_s8x_kff #(.W(8), .ID(7261 + 2*bk)) u_hi_ra (.ck(ck), .d(pp_idx[8:1]), .q(pre_hra));
             qfd_dv_s8x_kff #(.W(1), .ID(7270 + 2*bk)) u_lo_we (.ck(ck), .d(row_lo_w), .q(pre_lw));
             qfd_dv_s8x_kff #(.W(1), .ID(7271 + 2*bk)) u_hi_we (.ck(ck), .d(row_hi_w), .q(pre_hw));
             qfd_dv_s8x_kff #(.W(8), .ID(7280 + 2*bk)) u_lo_wa (.ck(ck), .d(row_lo_a), .q(pre_la));
