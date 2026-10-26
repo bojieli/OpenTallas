@@ -263,7 +263,7 @@ class TickBase(Base):
         self.ap.rbash = lambda host, script, timeout=0: (0, "", "")
         self.ap.sh = lambda cmd, timeout=0, input=None: (0, "", "")
         self.ap.hub_procs = lambda path: []
-        self.ap.resolve_provenance = lambda src, flow="": {"src_commit": "0123456789ab" + "0" * 28,
+        self.ap.resolve_provenance = lambda src, flow="", die=None: {"src_commit": "0123456789ab" + "0" * 28,
                                                            "flow_tag": "flow-20261025-a"}
 
     def tick(self):

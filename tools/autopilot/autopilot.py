@@ -87,7 +87,20 @@ SRC_RE = re.compile(r"^[A-Za-z0-9_./-]+@[0-9a-f]{7,40}$")
 GEOM_OK = ("PASS", "PASS-COND")
 QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode", "canary_fix",
          "flow"]
-FLOW_TAG_RE = re.compile(r"^flow-\d{8}-[a-z]$")
+# PER-DIE FLOW RELEASES (METHODOLOGY 12.9e, OWNER 2026-10-26): flow-YYYYMMDD-a|b covers every die;
+# flow-YYYYMMDD-a|b-<die tag> covers only that die (route holds / provenance lift per die; a die whose canary is
+# pending keeps its previous tag).
+FLOW_TAG_RE = re.compile(r"^flow-\d{8}-[a-z](?:-(qc|s81|head|kv|hbm))?$")
+DIE_FLOW_TAG = {"qwen_compute": "qc", "s81": "s81", "cp1": "s81", "s81_head": "head", "qwen_kvsys": "kv", "kv": "kv",
+                "hbm": "hbm"}
+
+
+def tag_covers(tag, die=None):
+    """True when flow release tag `tag` covers die `die` (die None = any tag counts)"""
+    m = FLOW_TAG_RE.match(tag or "")
+    if not m:
+        return False
+    return die is None or m.group(1) is None or DIE_FLOW_TAG.get(die) == m.group(1)
 FLOW_TAGS_CHECKED = 30                                   # newest release tags compared with a src commit
 # queue/job states that are re-judged every tick (never submitted yet)
 WAITS = (None, "WAIT-GEOM", "WAIT-CANARY", "WAIT-PATH-GATE", "WAIT-PLAN-DELTA", "REJECTED", "WITHDRAWN")
@@ -291,7 +304,7 @@ def validate_row(r):
     if r["mode"] not in ("", "submit", "adopt", "withdraw", "trial"):
         return "mode must be submit|adopt|withdraw|trial"
     if r["flow"] and not FLOW_TAG_RE.match(r["flow"]):
-        return "flow must be a flow release tag flow-YYYYMMDD-a|b (or empty: derived from src)"
+        return "flow must be a flow release tag flow-YYYYMMDD-a|b[-qc|s81|head|kv|hbm] (or empty: derived from src)"
     if r["mode"] == "withdraw" and not r["geom_ref"].strip():
         return "withdraw requires an explicit reason/evidence in geom_ref"
     return ""
@@ -987,28 +1000,34 @@ def flow_exclude():
         return []
 
 
-def flow_tags():
-    """newest-first flow release tags on origin (ROOT-MERGE tags flow-YYYYMMDD-a/b), fetched once per tick"""
-    if "tags" not in CLOSURE:
+def _all_flow_tags():
+    """newest-first [(tag, creator unix time)] of every flow release tag on origin, fetched once per tick"""
+    if "all_tags" not in CLOSURE:
         sh(["git", "-C", str(REPO), "fetch", "-q", "origin", "+refs/tags/flow-*:refs/tags/flow-*"], timeout=120)
-        rc, out, _ = sh(["git", "-C", str(REPO), "for-each-ref", "--sort=-creatordate", "--format=%(refname:short)",
-                         "refs/tags/flow-*"], timeout=60)
-        CLOSURE["tags"] = [t for t in out.split() if FLOW_TAG_RE.match(t)][:FLOW_TAGS_CHECKED] if rc == 0 else []
-    return CLOSURE["tags"]
+        rc, out, _ = sh(["git", "-C", str(REPO), "for-each-ref", "--sort=-creatordate",
+                         "--format=%(refname:short) %(creatordate:unix)", "refs/tags/flow-*"], timeout=60)
+        tags = []
+        for line in (out.splitlines() if rc == 0 else []):
+            parts = line.split()
+            if len(parts) == 2 and FLOW_TAG_RE.match(parts[0]) and parts[1].isdigit():
+                tags.append((parts[0], int(parts[1])))
+        CLOSURE["all_tags"] = tags
+    return CLOSURE["all_tags"]
+
+
+def flow_tags(die=None):
+    """newest-first flow release tags on origin covering `die` (ROOT-MERGE tags flow-YYYYMMDD-a/b for all dies,
+    flow-YYYYMMDD-a/b-<qc|s81|head|kv|hbm> per die), at most FLOW_TAGS_CHECKED"""
+    return [t for t, _ in _all_flow_tags() if tag_covers(t, die)][:FLOW_TAGS_CHECKED]
 
 
 LEGACY_TAG = "SIGNED-LEGACY"   # GRANDFATHER (COORD ruling 2026-10-25 19:13): flow_tag value of a pre-first-tag sign-off
 
 
-def first_flow_tag_ts():
-    """unix time of the oldest flow-* release tag on origin (None: no flow release yet), once per tick"""
-    if "first_ts" not in CLOSURE:
-        flow_tags()
-        rc, out, _ = sh(["git", "-C", str(REPO), "for-each-ref", "--format=%(creatordate:unix)", "refs/tags/flow-*"],
-                        timeout=60)
-        ts = [int(x) for x in out.split() if x.isdigit()] if rc == 0 else []
-        CLOSURE["first_ts"] = min(ts) if ts else None
-    return CLOSURE["first_ts"]
+def first_flow_tag_ts(die=None):
+    """unix time of the oldest flow release tag on origin covering `die` (None: no flow release for it yet)"""
+    ts = [t for tag, t in _all_flow_tags() if tag_covers(tag, die)]
+    return min(ts) if ts else None
 
 
 def apply_legacy(j):
@@ -1017,7 +1036,7 @@ def apply_legacy(j):
     flow tag.  Sets j['flow_tag'] = LEGACY_TAG and returns True when it applies."""
     if j.get("flow_tag") or not (j.get("src_commit") or j.get("archive")):
         return False
-    first = first_flow_tag_ts()
+    first = first_flow_tag_ts(j.get("die"))
     started = float(j.get("started") or 0)
     if first is not None and not (0 < started < first):
         return False
@@ -1025,10 +1044,11 @@ def apply_legacy(j):
     return True
 
 
-def resolve_provenance(src, flow=""):
+def resolve_provenance(src, flow="", die=None):
     """-> {src_commit, flow_tag} or {..., error}: the full source commit of branch@sha (fetched on the hub repo when
     missing) and the flow release tag whose watched flow files (tools/flow_canary/canaries.json 'watch') are identical
-    to the commit's -- the named --flow tag, else the newest matching one.  Never guessed: no match -> error."""
+    to the commit's -- the named --flow tag, else the newest matching one.  Only tags covering `die` count
+    (per-die releases, 12.9e).  Never guessed: no match -> error."""
     branch, sha = src.rsplit("@", 1)
     rev = lambda: sh(["git", "-C", str(REPO), "rev-parse", "-q", "--verify", sha + "^{commit}"], timeout=60)
     rc, out, _ = rev()
@@ -1042,8 +1062,10 @@ def resolve_provenance(src, flow=""):
     if not watch:
         return {"src_commit": full, "flow_tag": "", "error": "flow watch list tools/flow_canary/canaries.json unreadable"}
     exclude = flow_exclude()
-    tags = flow_tags()
+    tags = flow_tags(die)
     if flow and flow not in tags:
+        if flow in flow_tags():
+            return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} does not cover die {die}"}
         return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} not found on origin"}
     for t in ([flow] if flow else tags):
         rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--name-only", t, full], timeout=120)
@@ -1100,7 +1122,7 @@ def retry_unversioned(st):
     for j in st["jobs"].values():
         if j.get("status") != "SIGNED-UNVERSIONED" or not j.get("archive"):
             continue
-        prov = resolve_provenance(j["src"], j.get("flow", ""))
+        prov = resolve_provenance(j["src"], j.get("flow", ""), j.get("die"))
         if prov.get("error"):
             j["prov_error"] = prov["error"]
             if not apply_legacy(j):
@@ -1393,7 +1415,7 @@ def archive(st, j):
     so = j["signoff"]
     sha = j["src"].split("@")[1][:10]
     dest = f"{ARCHIVE_ROOT}/{j['die']}/{j['type']}__{sha}"
-    prov = resolve_provenance(j["src"], j.get("flow", ""))
+    prov = resolve_provenance(j["src"], j.get("flow", ""), j.get("die"))
     j.update(src_commit=prov.get("src_commit", ""), flow_tag=prov.get("flow_tag", ""), prov_error=prov.get("error", ""))
     rec = {k: j.get(k) for k in ("id", "die", "type", "kit", "src", "geom", "geom_ref", "lane", "goal", "mem_gb",
                                  "src_commit", "flow_tag", "prov_error")}
