@@ -284,3 +284,11 @@ def test_pushdown_feedthrough_pins_clear_core_clock_entry():
     assert len(set(ports)) == 4
     assert (100,100) not in ports
     assert all(abs(abs(x-100)-2.16) < 1e-8 and abs(abs(y-100)-2.16) < 1e-8 for x,y in ports)
+
+
+def test_entry_pin_ring_keeps_exact_prior_order():
+    import master_plan as M
+    for cx,cy in [(0,0),(7,11),(-2,5)]:
+        for r in range(12):
+            old = [(cx+i,cy+j) for i in range(-r,r+1) for j in range(-r,r+1) if max(abs(i),abs(j))==r]
+            assert list(M.ring_cells(cx,cy,r)) == old

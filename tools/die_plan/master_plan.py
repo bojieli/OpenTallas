@@ -679,6 +679,20 @@ def entry_pin_limit(P, pg_grid, tracks, lower_pg_frac, margin=0.6, stagger=0.5, 
                                                            binding=min(free, key=free.get))
 
 
+def ring_cells(cx, cy, ring):
+    """Exact old lexicographic ring order in O(r), without scanning its O(r^2) square."""
+    if ring == 0:
+        yield cx, cy
+        return
+    for j in range(-ring, ring + 1):
+        yield cx - ring, cy + j
+    for i in range(-ring + 1, ring):
+        yield cx + i, cy - ring
+        yield cx + i, cy + ring
+    for j in range(-ring, ring + 1):
+        yield cx + ring, cy + j
+
+
 def place_pins(occ, bay, n, limit, P=None):
     """n M7 entry pins (down + up via per bit at a repeater/station drop) in the gcells nearest the bay, filling each
     gcell to <= limit across all bays (occ = shared per-gcell count).  Pins sit on every other M7 track (0.128) and
@@ -686,9 +700,7 @@ def place_pins(occ, bay, n, limit, P=None):
     cx, cy = int(((bay[0] + bay[2]) / 2) // G), int(((bay[1] + bay[3]) / 2) // G)
     out, ring = [], 0
     while len(out) < n and ring < 400:
-        cells = [(cx + i, cy + j) for i in range(-ring, ring + 1) for j in range(-ring, ring + 1)
-                 if max(abs(i), abs(j)) == ring]
-        for gx, gy in cells:
+        for gx, gy in ring_cells(cx, cy, ring):
             if gx < 0 or gy < 0 or (P and (gx * G > P.W or gy * G > P.H)):
                 continue
             while occ[(gx, gy)] < limit and len(out) < n:
