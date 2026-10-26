@@ -53,3 +53,9 @@ def test_successful_solver_does_not_hide_ir_failure(tmp_path,monkeypatch,status,
     (tmp_path/'irwin.json').write_text(json.dumps({'ir_budget_mv':budget}))
     monkeypatch.setattr(D,'psm_report',lambda *args:{'status':status,'worst_ir_drop_mv':drop})
     assert I.report(tmp_path)['ir_verdict']==verdict
+
+
+def test_hbm_phy_rectangle_adapter():
+    p=SimpleNamespace(parts={})
+    watts,basis=I.phy_power(p,{"iface":"hbm_phy","rect":[0.,0.,1000.,1000.]},4.37)
+    assert watts==1.3

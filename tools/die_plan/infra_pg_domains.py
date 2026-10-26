@@ -177,7 +177,7 @@ def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None):
     (out/'psm/psm.tcl').write_text('\n'.join(t)+'\n');(out/'psm/tracks.tcl').write_text(D.coarse_tracks(P,.72))
     (out/'run_psm.sh').write_text(D.run_sh('psm',32,8,'/usr/bin/time -v openroad -no_init -threads 8 -exit /work/psm/psm.tcl > /work/psm/psm.log 2>&1'))
     os.chmod(out/'run_psm.sh',0o755)
-    meta=dict(window=window['window'],window_um=window['window_um'],die=die,bumps=bumps,load_blocks=len(blocks),power_w=round(sum(b[4]for b in blocks),6),phy_grid=phy_grid,subdivision=division,contacts='native per-domain macro PG grid',explicit_phy_sources=phy_bumps is not None,scope='separate PHY-local grid; original bump positions and load densities unchanged; open window boundaries; no plan adoption')
+    meta=dict(window=window['window'],window_um=window['window_um'],die=die,bumps=bumps,load_blocks=len(blocks),power_w=round(sum(b[4]for b in blocks),6),phy_grid=phy_grid,subdivision=division,contacts='native per-domain macro PG grid',explicit_phy_sources=phy_bumps is not None,scope=('separate PHY-local grid; explicit published-template PHY sources; core sources and load densities unchanged; open window boundaries; no plan adoption' if phy_bumps is not None else 'separate PHY-local grid; original bump positions and load densities unchanged; open window boundaries; no plan adoption'))
     (out/'domains.json').write_text(json.dumps(meta,indent=1)+'\n');return meta
 
 def main():
