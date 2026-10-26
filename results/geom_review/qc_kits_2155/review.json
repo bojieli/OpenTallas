@@ -1,0 +1,24 @@
+[
+  {
+    "picture": "results/kits_wave_qc_2155/fe_reset_source_review.png",
+    "stage": "before fresh FE synthesis/place",
+    "sources": [
+      "5ee12cd0f",
+      "186e8631d",
+      "8d1605822"
+    ],
+    "findings": "56 planned reset/START cells in16 open-core clusters, max9 per site; no hard macros; unchanged outline/boundary/FT and planned375.7um hops. Actual placement census and density review required before CTS.",
+    "verdict": "PASS-COND synthesis/place only"
+  },
+  {
+    "pictures": [
+      "results/kits_wave_qc_2155/sram_proposal/all_types.png",
+      "results/kits_wave_qc_2155/sram_proposal/sle_st_a_v1.png",
+      "results/kits_wave_qc_2155/sram_proposal/sle_st_b_v1.png",
+      "results/kits_wave_qc_2155/sram_proposal/coll_n.png"
+    ],
+    "stage": "internal-macro plan proposal only",
+    "findings": "See results/kits_wave_qc_2155/sram_proposal/REVIEW.txt;182/182 macros with real views and5.4um halos; no overlaps or moved clock/reset contracts. Existing FT station bands remain; actual cell packing/interface reach/PDN and batch G2/GRT0 are conditions.",
+    "verdict": "PASS-COND for independent plan/G2 review; no route"
+  }
+]

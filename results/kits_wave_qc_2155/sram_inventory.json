@@ -1,0 +1,816 @@
+{
+  "sle_st_a_v1": {
+    "counts": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+      }
+    ],
+    "netlist": "/srv/opentallas-scratch2/claude/kits-wave/gen_b/qwen_compute/sle_st_a_v1/sle_st_a_v1/run/results/asap7/dp_sle_st_a_v1/base/1_2_yosys.v",
+    "netlist_sha256": "db9318ea567ee830c566708ed77688b92f051c6d1fde10c9a3a4142bcbc26668"
+  },
+  "sle_st_a_v2": {
+    "counts": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+      }
+    ],
+    "netlist": "/srv/opentallas-scratch2/claude/kits-wave/gen_b/qwen_compute/sle_st_a_v2/sle_st_a_v2/run/results/asap7/dp_sle_st_a_v2/base/1_2_yosys.v",
+    "netlist_sha256": "7da61e5d6c50da96513222621505028a82244c061c552b89a8d4bdc8a5a8a576"
+  },
+  "sle_st_b_v1": {
+    "counts": {
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+      }
+    ],
+    "netlist": "/srv/opentallas-scratch2/claude/kits-wave/gen_b/qwen_compute/sle_st_b_v1/sle_st_b_v1/run/results/asap7/dp_sle_st_b_v1/base/1_2_yosys.v",
+    "netlist_sha256": "e7642e028ff730f9a513de91abb915fbf2412b5e447a4b0e51103696b0a01c22"
+  },
+  "sle_st_b_v2": {
+    "counts": {
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+      }
+    ],
+    "netlist": "/srv/opentallas-scratch2/claude/kits-wave/gen_b/qwen_compute/sle_st_b_v2/sle_st_b_v2/run/results/asap7/dp_sle_st_b_v2/base/1_2_yosys.v",
+    "netlist_sha256": "ff471e29bfbb0aedd64391dda556f2253f85ba2f0f04461a6875bdc2fb2339cd"
+  },
+  "slw_st_a_v1": {
+    "counts": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+      }
+    ],
+    "netlist": "/srv/opentallas-scratch2/claude/kits-wave/gen_b/qwen_compute/slw_st_a_v1/slw_st_a_v1/run/results/asap7/dp_slw_st_a_v1/base/1_2_yosys.v",
+    "netlist_sha256": "98b3cdaf82cd3bf6e88a02ca617cc2f43bbc46d88f0463a3418af8d5b3dac301"
+  },
+  "slw_st_a_v2": {
+    "counts": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_128x256_m1_r2c2",
+        "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+      }
+    ],
+    "netlist": "/srv/opentallas-scratch2/claude/kits-wave/gen_b/qwen_compute/slw_st_a_v2/slw_st_a_v2/run/results/asap7/dp_slw_st_a_v2/base/1_2_yosys.v",
+    "netlist_sha256": "74ed8781daecada28e147efd1845c78eacfc0fe7dde492d75e2eebd4ab69c331"
+  },
+  "slw_st_b_v1": {
+    "counts": {
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+      }
+    ],
+    "netlist": "/srv/opentallas-scratch2/claude/kits-wave/gen_b/qwen_compute/slw_st_b_v1/slw_st_b_v1/run/results/asap7/dp_slw_st_b_v1/base/1_2_yosys.v",
+    "netlist_sha256": "ed23022dc292000ca487eaf810a960bafbb07b49ab14a28082ed8b813210f4ff"
+  },
+  "slw_st_b_v2": {
+    "counts": {
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m"
+      },
+      {
+        "module": "ot_sram_1r1w_32x64_m1",
+        "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+      }
+    ],
+    "netlist": "/srv/opentallas-scratch2/claude/kits-wave/gen_b/qwen_compute/slw_st_b_v2/slw_st_b_v2/run/results/asap7/dp_slw_st_b_v2/base/1_2_yosys.v",
+    "netlist_sha256": "0d43b3176dda86f0bd225109f9b5d12ab8cffc1684c49a5be2e50712d965351a"
+  },
+  "coll_n": {
+    "counts": {
+      "ot_sram_1r1w_64x512_m1_r2c2": 4,
+      "ot_sram_1r1w2c_64x546_m1": 2
+    },
+    "instances": [
+      {
+        "module": "ot_sram_1r1w_64x512_m1_r2c2",
+        "inst": "u_bound.u_core.g_codec.u_codec.g_bank[0].u_store.u_sram"
+      },
+      {
+        "module": "ot_sram_1r1w_64x512_m1_r2c2",
+        "inst": "u_bound.u_core.g_codec.u_codec.g_bank[1].u_store.u_sram"
+      },
+      {
+        "module": "ot_sram_1r1w_64x512_m1_r2c2",
+        "inst": "u_bound.u_core.g_codec.u_codec.g_bank[2].u_store.u_sram"
+      },
+      {
+        "module": "ot_sram_1r1w_64x512_m1_r2c2",
+        "inst": "u_bound.u_core.g_codec.u_codec.g_bank[3].u_store.u_sram"
+      },
+      {
+        "module": "ot_sram_1r1w2c_64x546_m1",
+        "inst": "u_bound.u_core.u_rx.u_mem"
+      },
+      {
+        "module": "ot_sram_1r1w2c_64x546_m1",
+        "inst": "u_bound.u_core.u_tx.u_mem"
+      }
+    ],
+    "netlist": "/srv/opentallas-scratch2/claude/kits-wave/gen_b/qwen_compute/coll_n/coll_n/run/results/asap7/dp_coll_n/base/1_2_yosys.v",
+    "netlist_sha256": "e7004da1d8372396fe0a05f57d45eeb652a494161d0312654e6a866cd7e31e5c"
+  }
+}
