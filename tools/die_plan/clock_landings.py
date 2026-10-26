@@ -261,14 +261,17 @@ class Landings:
         self.observer_source=dict(path=cell.path,emitted_instance=spec["instance_suffix"],module=cell.module,ports=[spec["fault_port"],spec["ready_port"]],
                                   added_data_cycles=0,added_external_ports=0)
 
-    def type_rtl(self, tn, text):
+    def type_rtl(self, tn, text, base=None):
         """Emit actual landing hardware before each incoming boundary/station.
 
         Existing data/epoch buses and their station chains stay intact. The
         landing streams ALL bits before the original capture, including epoch.
         """
-        mask = self.by_type[tn]
-        collector_info=self.collector["types"][tn] if self.collector else None
+        # A binder type split (T__vN, split_of=T) copies plan type T with different R8 pad depths only; the landing
+        # hardware is per plan type (mask uniformity over all T instances is checked in __init__).
+        key = base or tn
+        mask = self.by_type[key]
+        collector_info=self.collector["types"][key] if self.collector else None
         active_collector=collector_info and collector_info["mask"]["active"]
         if not mask["inputs"] and not mask["outputs"] and not active_collector:
             self.emitted_types.add(tn)
@@ -281,7 +284,7 @@ class Landings:
         for b in mask["outputs"]:
             extra.append(f"    output wire fclk_out_{b}")
             logic.append(f"    assign fclk_out_{b} = clk;")
-        part = next(p for p, v in self.parts.items() if v["type"] == tn)
+        part = next(p for p, v in self.parts.items() if v["type"] == key)
         for b in mask["inputs"]:
             r = self.ins[part][b]
             # Plan width excludes the in-band epoch bit; physical binding has
@@ -296,7 +299,7 @@ class Landings:
             # START-gated rst_n would start training AFTER mission launch.
             # Copy the nearest tap's raw reset relay at the SAME parent/depth.
             # This is a timed local data relay, never another synchronizer.
-            t = self.types[tn]
+            t = self.types[key]
             geom = next((x for x in t.get("buses", []) if x["name"] == b), None)
             if geom is None and collector_info:
                 geom=collector_info.get("bus_geometry",{}).get(b)

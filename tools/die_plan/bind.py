@@ -2468,7 +2468,7 @@ class Binder:
             txt, pnames = self.emit_type(tn, ps[0])
             if getattr(self, "clock_landings", None):
                 try:
-                    txt = self.clock_landings.type_rtl(tn, txt)
+                    txt = self.clock_landings.type_rtl(tn, txt, base=t.get("split_of", tn))
                 except ValueError as exc:
                     raise BindError(str(exc)) from exc
             self.pnames[tn] = pnames
