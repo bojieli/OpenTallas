@@ -426,6 +426,11 @@ SCHEMA = {
                                        "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
+                                       # Optional cut-parent mapping and placement halo. The halo is
+                                       # a cell-placement keepout, not a routing-layer OBS extension.
+                                       "halo_um": _nonneg,
+                                       "parent_instance": {"type": "string"},
+                                       "cut_instance": {"type": "string"},
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
                                            "type": "object", "required": ["name", "layer", "xy"],
                                            "additionalProperties": False,
