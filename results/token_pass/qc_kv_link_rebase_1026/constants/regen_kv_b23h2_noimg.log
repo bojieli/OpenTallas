@@ -1,0 +1,40 @@
+[OK      ] ectl       RESPONSE_LAT           12
+[OK      ] ectl       QK_ISSUE_AGE           34
+[OK      ] ectl       ROW_RETURN_LAT         19
+[OK      ] ectl       QK_ROW_LATENCY         14
+[OK      ] ectl       QK_D_QK                0
+[ERROR   ] ahub       ahub.__rule__          null  (ap WS: no crossing member source~astk_WS__u_strip_u_strip_u_ctl\.ap$ sink~^ahub$ port~None)
+[ERROR   ] pv         pv.__rule__            null  (as-built TRUNK_D/FLAG_D not in param_regen.json)
+[OK      ] vport      VPORT_RT               {"vport_EN_0": 47, "vport_EN_1": 48, "vport_EN_2": 49, "vport_EN_3": 50, "vport_ES_0": 47, "vport_ES
+[WARN    ] vport      VPORT_DQ               {"vport_EN_0": 25, "vport_EN_1": 9, "vport_EN_2": 16, "vport_EN_3": 1, "vport_ES_0": 25, "vport_ES_1
+[WARN    ] vport      CFG_FIA                113
+[OK      ] prog       KVN_A0                 28
+[OK      ] prog       D2D_AGES               {"programme_start": [50], "d2d_to_attention_rx": [56], "d2d_to_writer": [56], "d2d_to_seq_kvn": [55]
+[OK      ] prog       HROOT_DOWN_RET         {"WS": [11, 12], "WN": [14, 12], "ES": [12, 12], "EN": [14, 12]}
+[OK      ] xdie       XDIE_SEAM_K            "56,56,54,54,54,55,55"
+[OK      ] xdie       D2D_TXDP_K             "32'h03030471"
+[OK      ] xdie       D2D_KV_TX_LAT          113
+[ERROR   ] pc833      PC_CORE_CLOCK          {"qkd_kvs_pc": 1, "qkd_kvs_pc_h_head_p": 0}  (effective CORE_CLOCK of every PC master's u_pc controller chain (qkd_kvs_pc* -> u_pc fan_nc_b(_head_p) -> u_pce -> u_pat)
+[ERROR   ] pc833      PC_CONTROLLER_PROFILE  "mixed"  (one controller profile on the die: common833 (CORE_CLOCK=1) / legacy1024 (0))
+[OK      ] pc833      PC_HBM_RL              29
+[OK      ] pc833      PC_T_CCDL              4
+[OK      ] pc833      PC_T_FAW               19
+[OK      ] pc833      PC_T_RAS               35
+[OK      ] pc833      PC_T_RCD               24
+[OK      ] pc833      PC_T_RCDW              13
+[OK      ] pc833      PC_T_REFI              4680
+[OK      ] pc833      PC_T_REFIPB            144
+[OK      ] pc833      PC_T_RFC               421
+[OK      ] pc833      PC_T_RFCPB             241
+[OK      ] pc833      PC_T_RP                20
+[OK      ] pc833      PC_T_RRDL              5
+[OK      ] pc833      PC_T_RRDS              4
+[OK      ] pc833      PC_T_RREFD             10
+[OK      ] pc833      PC_T_RTP               8
+[OK      ] pc833      PC_T_RTW               13
+[OK      ] pc833      PC_T_WRR               35
+[OK      ] pc833      PC_T_WTR               18
+[OK      ] pc833      PC_WDONE               19
+[OK      ] pc833      PC_PHASE_TICKS         [625, 625]
+REGEN_CONSTANTS qwen_kvsys FAIL {'OK': 32, 'ERROR': 4, 'WARN': 2}
+rc=1

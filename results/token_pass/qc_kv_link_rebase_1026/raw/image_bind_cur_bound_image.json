@@ -1,0 +1,82 @@
+{
+ "image": "RUNROOT/xdie/fx/img_bound/d2d_cal_image.svh",
+ "calendars": {
+  "C_TX": {
+   "entries": 4,
+   "image_seg0": [
+    "095c0400",
+    "0004081f",
+    "0004d403",
+    "0012bc00"
+   ],
+   "law": [
+    "095c0400",
+    "0004081f",
+    "0004d403",
+    "0012bc00"
+   ],
+   "equal": true
+  },
+  "C_RX": {
+   "entries": 2,
+   "image_seg0": [
+    "27040c1f",
+    "035e1000"
+   ],
+   "law": [
+    "27040c1f",
+    "035e1000"
+   ],
+   "equal": true
+  },
+  "K_TX": {
+   "entries": 2,
+   "image_seg0": [
+    "25100c1f",
+    "035e1000"
+   ],
+   "law": [
+    "25100c1f",
+    "035e1000"
+   ],
+   "equal": true
+  },
+  "K_RX": {
+   "entries": 4,
+   "image_seg0": [
+    "09ac0400",
+    "0004081f",
+    "0004bc00",
+    "000ad403"
+   ],
+   "law": [
+    "09ac0400",
+    "0004081f",
+    "0004bc00",
+    "000ad403"
+   ],
+   "equal": true
+  }
+ },
+ "mode": "bind",
+ "TXDP_C": {
+  "law": "0a010308",
+  "image": "0a010308",
+  "equal": true,
+  "bound": "0a010308",
+  "bound_equals_image": true,
+  "bench": "0a010308"
+ },
+ "TXDP_K": {
+  "law": "03030471",
+  "image": "03030471",
+  "equal": true,
+  "bound": "03030471",
+  "bound_equals_image": true,
+  "bench": "03030471"
+ },
+ "txdp_source": "bound",
+ "TXDP_BOUND_gate": "PASS",
+ "token_period": 258048,
+ "all_equal_to_law": true
+}
