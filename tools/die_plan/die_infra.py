@@ -343,6 +343,8 @@ def clock_rects(mesh_dir, guide, layers=("M8", "M9")):
             net = f"ck_mesh_r{r['k']}"
             out += [(net, "M8", x0 - h, y - h, x1 + h, y + h, w) for y in ry]
             out += [(net, "M9", x - h, y0 - h, x + h, y1 + h, w) for x in rx]
+    elif not xs or not ys:              # CLOCK-128-R4 lattice-tree build: fixed tree wires only, no mesh straps
+        out = []
     else:
         out = [("ck_mesh", "M8", xs[0] - h, y - h, xs[-1] + h, y + h, w) for y in ys]
         out += [("ck_mesh", "M9", x - h, ys[0] - h, x + h, ys[-1] + h, w) for x in xs]
