@@ -312,23 +312,40 @@ class Landings:
             face = geom["face"]; at = sum(geom["window_um"]) / 2
             tw, th = t["outline_um"]
             x, y = (0 if face == "W" else tw, at) if face in "EW" else (at, 0 if face == "S" else th)
+            hard_tree = collector_info and (collector_info.get("tree") or {}).get("hard")
             taps = t.get("clock", {}).get("taps", [])
-            if taps:
+            if hard_tree:
+                tap, xy = None, [x, y]
+            elif taps:
                 tap = min(range(len(taps)), key=lambda i: abs(taps[i]["xy"][0]-x) + abs(taps[i]["xy"][1]-y))
                 xy = taps[tap]["xy"]
             else:
                 tap, xy = 0, t.get("clock", {}).get("tap_um", [tw/2, th/2])
-            reset = f"rst_n_t{tap}"
-            relay = re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\(" + reset + r"\)\);", body)
-            if relay is None:
+            if hard_tree:
+                # Hard partition (no generated reset tree): the ring sits in the
+                # soft wrapper at the received window, on the delivered reset
+                # that the wrapper's own boundary/ft stations already use.
+                if not re.search(r"\bwire rst_n = arst_n;", body):
+                    raise LandingError(f"{tn}.{b}: hard wrapper delivered reset rst_n not found")
+                reset = "rst_n"
+                self.reset_placements.setdefault(tn, {})[b] = dict(net=reset, xy_um=xy, copied_raw_parent="arst_n (delivered)",
+                    extra_control_flops=0, must_be_ready_before_start=True, boot_settle_cycles=21, hard_wrapper=True)
+                relay = None
+            else:
+                reset = f"rst_n_t{tap}"
+            relay = None if hard_tree else re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\(" + reset + r"\)\);", body)
+            if relay is None and not hard_tree:
                 raise LandingError(f"{tn}.{b}: timed local wavefront reset relay {reset} not found")
-            if relay.group(1) == "gate":
+            if hard_tree:
+                pass
+            elif relay.group(1) == "gate":
                 reset = f"cland_reset_{b}"
                 logic += [f"    wire {reset};",
                           f"    ot_dp_rrelay u_cland_rst_{b} (.clk(clk), .d({relay.group(2)}), .q({reset}));"]
-            self.reset_placements.setdefault(tn, {})[b] = dict(net=reset, xy_um=xy,
-                copied_raw_parent=relay.group(2), extra_control_flops=int(relay.group(1) == "gate"),
-                must_be_ready_before_start=True, boot_settle_cycles=21)
+            if not hard_tree:
+                self.reset_placements.setdefault(tn, {})[b] = dict(net=reset, xy_um=xy,
+                    copied_raw_parent=relay.group(2), extra_control_flops=int(relay.group(1) == "gate"),
+                    must_be_ready_before_start=True, boot_settle_cycles=21)
             extra += [f"    input wire fclk_in_{b}"]
             if self.collector:
                 logic.append(f"    wire landing_ready_{b}, landing_fault_{b};")
@@ -367,8 +384,11 @@ class Landings:
                     src.update(ready=f"(cland_dn_word_{i}[0] && cland_dn_trained_{i} && !cland_dn_guard_{i})",
                                fault=f"(cland_dn_word_{i}[1] || cland_dn_guard_{i})")
                 sources.append(src)
-            reduction=LC.build_local(collector_info["tree"],sources,body+"\n"+"\n".join(logic),
-                root_node=collector_info.get("collector_root_node","rst_root_n"))
+            if collector_info["tree"].get("hard"):
+                reduction=LC.build_hard_chain(collector_info["tree"],sources)
+            else:
+                reduction=LC.build_local(collector_info["tree"],sources,body+"\n"+"\n".join(logic),
+                    root_node=collector_info.get("collector_root_node","rst_root_n"))
             logic.extend(reduction["rtl"])
             self.reset_placements.setdefault(tn,{})["collector"]=reduction
             if collector_info["mask"].get("observer"):
