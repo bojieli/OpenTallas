@@ -52,3 +52,30 @@ def test_phy_macro_pg_landing_uses_actual_pin_layer_and_rejects_ambiguity(tmp_pa
     lef.write_text(lef.read_text().replace("END VSS", "LAYER M5 ;\nEND VSS"))
     with pytest.raises(ValueError, match="ambiguous"):
         gen_phys._macro_pg_layers(lef)
+
+
+def test_die_driver_islands_create_real_blockages_and_measure_rows():
+    import subprocess
+    import gen_phys
+    class P:
+        types = {"t": {"outline_um": [100, 100], "clock": {"die_islands_um": [[10, 10, 20, 20]]}}}
+    mock = r'''
+namespace eval ord {}
+namespace eval odb {}
+proc ord::get_db_block {} {return block}
+proc ord::get_db_tech {} {return tech}
+proc tech {m} {return 1000}
+proc block {m} {return {row0 row1}}
+proc row0 {m} {return box0}
+proc row1 {m} {return box1}
+proc box0 {m} {return [dict get {xMin 0 xMax 100000 yMin 15000 yMax 15270} $m]}
+proc box1 {m} {return [dict get {xMin 0 xMax 100000 yMin 25000 yMax 25270} $m]}
+proc odb::dbBlockage_create {b x0 y0 x1 y1} {puts "BLOCK $x0 $y0 $x1 $y1"}
+'''
+    result = subprocess.run(["tclsh"], input=mock + gen_phys.die_islands_tcl(P(), "t"),
+                            text=True, capture_output=True, check=True)
+    assert "BLOCK 10000 10000 20000 20000" in result.stdout
+    assert "blockages=1 rectangle_area_sum_um2=100.0 row_intersections=1" in result.stdout
+    P.types["t"]["clock"]["die_islands_um"] = [[90, 10, 110, 20]]
+    with pytest.raises(ValueError, match="outside outline"):
+        gen_phys.die_islands_tcl(P(), "t")

@@ -34,5 +34,13 @@
   "grid": "VDDPHY separate regional M6/M7 and native M6 macro PG landing",
   "macros": "exact PHY +4 SRAM +ROM, no prefixmatches",
   "scope": "PDN generation only; IR and electrical continuity signoff not run"
- }
+ },
+ "actual_driver_island_reservation": {
+  "verdict": "PASS",
+  "blockages_created": 74,
+  "rectangle_area_sum_um2": 150.33438,
+  "row_intersections": 222,
+  "scope": "read-only native OpenDB trial creates actual placement blockages; accepted KV mesh and tile clock ports unchanged"
+ },
+ "current_kv_schema_errors": 0
 }
