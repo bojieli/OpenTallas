@@ -66,7 +66,14 @@ module ot_hgi_coll_q_static_ctl_v5 #(
  // select and the source metadata are delayed VM_RT more edges (vm_valid_pipe / vm_select_pipe / vm_meta_pipe), and
  // vm_sel_d = the select delayed VM_RT edges feeds the assembly slices (their own 9-stage pipe then lands on the
  // capture edge). VM_RT 0 = the V7 leaf, edge- and bit-identical (vm_sel_d tied 0, unused by the v5 wrappers).
- parameter integer VM_RT=0
+ parameter integer VM_RT=0,
+ // Additional request/return face-register cycles. The observed-valid checker,
+ // assembled-valid pairing and source metadata follow this round trip;
+ // vm_sel_d is a one-way control path and retains its original VM_RT tap.
+ parameter integer VM_FACE_RT=0,
+ // Additional assembly-return face stages beyond the direct observed-valid
+ // round trip. The real q3 body keeps qslots: data crosses body->VM->body.
+ parameter integer VM_ASM_FACE_RT=0
 )(
  input wire clk_control,rst_n,
  input wire [1535:0] inst,
@@ -93,7 +100,7 @@ module ot_hgi_coll_q_static_ctl_v5 #(
  output wire [1:0] inj_source_v,
  output wire [65:0] inj_source_meta,
  output wire [131:0] vm_source_meta,
- output reg [3:0] vm_assembled_v,
+ output wire [3:0] vm_assembled_v,
  output wire [NPT*8-1:0] held_epoch,
  output reg [NPT*16-1:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output reg protocol_fault,
@@ -200,10 +207,13 @@ module ot_hgi_coll_q_static_ctl_v5 #(
 
  reg [1:0] inj_valid_pipe[0:INJLAT-1];
  reg [65:0] inj_meta_pipe[0:INJLAT-1];
- reg [131:0] vm_meta_pipe[0:9+VM_RT];
- reg [23:0] vm_select_pipe[0:8+VM_RT];
+ localparam integer VM_OBS_RT=VM_RT+VM_FACE_RT;
+ localparam integer VM_META_RT=VM_OBS_RT+VM_ASM_FACE_RT;
+ reg [3:0] vm_assembled_v_raw;
+ reg [131:0] vm_meta_pipe[0:9+VM_META_RT];
+ reg [23:0] vm_select_pipe[0:8+VM_OBS_RT];
  reg [7:0] vm_raw_valid;
- reg [7:0] vm_valid_pipe[0:8+VM_RT];
+ reg [7:0] vm_valid_pipe[0:8+VM_OBS_RT];
  // V7 pin captures of observed inputs + one-edge-delayed expected predicates
  reg [ND-1:0] dest_q;reg rc_v_q;reg [2:0] rc_tag_q;reg tkm_done_q,tkm_busy_q,issue_done_q;
  reg [2:0] lk_wr_v_e;reg lp_we_e;reg [2:0] lp_tag_e;reg tkm_done_slot_e,arg_active_e,arg_start_e;
@@ -243,17 +253,17 @@ module ot_hgi_coll_q_static_ctl_v5 #(
    rgx_addr_pin[j*40+:40]<=ks_rgx[j*40+:40];
   end
   vm_meta_pipe[0]<=p_vm_meta;
-  for(integer j=1;j<10+VM_RT;j=j+1)vm_meta_pipe[j]<=vm_meta_pipe[j-1];
+  for(integer j=1;j<10+VM_META_RT;j=j+1)vm_meta_pipe[j]<=vm_meta_pipe[j-1];
   vm_select_pipe[0]<=p_vm_pair_select;
-  for(integer j=1;j<9+VM_RT;j=j+1)vm_select_pipe[j]<=vm_select_pipe[j-1];
+  for(integer j=1;j<9+VM_OBS_RT;j=j+1)vm_select_pipe[j]<=vm_select_pipe[j-1];
   for(integer b=0;b<8;b=b+1)
    vm_req_sector[b*16+:16]<=p_vm_rq[b*17+:16]+m_vm;
  end
  always @(posedge clk_control or negedge rst_n)begin
   if(!rst_n)begin
-   protocol_fault<=0;cycles<=0;arg_active<=0;wr_sequence_overflow<=0;rd_sequence_overflow<=0;rx_sequence_overflow<=0;inj_req_pin<=0;vm_assembled_v<=0;vm_raw_valid<=0;
+   protocol_fault<=0;cycles<=0;arg_active<=0;wr_sequence_overflow<=0;rd_sequence_overflow<=0;rx_sequence_overflow<=0;inj_req_pin<=0;vm_assembled_v_raw<=0;vm_raw_valid<=0;
    for(integer j=0;j<INJLAT;j=j+1)inj_valid_pipe[j]<=0;
-   for(integer j=0;j<9+VM_RT;j=j+1)vm_valid_pipe[j]<=0;
+   for(integer j=0;j<9+VM_OBS_RT;j=j+1)vm_valid_pipe[j]<=0;
    dest_q<=0;rc_v_q<=0;rc_tag_q<=0;tkm_done_q<=0;tkm_busy_q<=0;issue_done_q<=0;
    lk_wr_v_e<=0;lp_we_e<=0;lp_tag_e<=0;tkm_done_slot_e<=0;arg_active_e<=0;arg_start_e<=0;
    for(integer b=0;b<8;b=b+1)vm_req_valid[b]<=0;
@@ -271,19 +281,19 @@ module ot_hgi_coll_q_static_ctl_v5 #(
     vm_req_valid[b]<=p_vm_rq[b*17+16];
     vm_valid_pipe[0][b]<=p_vm_rq[b*17+16];
 `ifdef OT_COLL_V7_MUT_OBS_NOALIGN
-    if(vm_raw_valid[b]!=vm_valid_pipe[7+VM_RT][b])protocol_fault<=1;   // mutant: observed captured, expected not delayed
+    if(vm_raw_valid[b]!=vm_valid_pipe[7+VM_OBS_RT][b])protocol_fault<=1;   // mutant: observed captured, expected not delayed
 `else
-    if(vm_raw_valid[b]!=vm_valid_pipe[8+VM_RT][b])protocol_fault<=1;
+    if(vm_raw_valid[b]!=vm_valid_pipe[8+VM_OBS_RT][b])protocol_fault<=1;
 `endif
    end
-   for(integer j=1;j<9+VM_RT;j=j+1)vm_valid_pipe[j]<=vm_valid_pipe[j-1];
+   for(integer j=1;j<9+VM_OBS_RT;j=j+1)vm_valid_pipe[j]<=vm_valid_pipe[j-1];
    for(integer j=0;j<4;j=j+1)begin
-    vm_assembled_v[j]<=vm_raw_valid[vm_select_pipe[8+VM_RT][j*6+:3]] &&
-                        vm_raw_valid[vm_select_pipe[8+VM_RT][j*6+3+:3]] &&
-                        vm_select_pipe[8+VM_RT][j*6+:3]!=vm_select_pipe[8+VM_RT][j*6+3+:3];
-    if(vm_select_pipe[8+VM_RT][j*6+:3]!=vm_select_pipe[8+VM_RT][j*6+3+:3] &&
-       vm_raw_valid[vm_select_pipe[8+VM_RT][j*6+:3]] !=
-       vm_raw_valid[vm_select_pipe[8+VM_RT][j*6+3+:3]])protocol_fault<=1;
+    vm_assembled_v_raw[j]<=vm_raw_valid[vm_select_pipe[8+VM_OBS_RT][j*6+:3]] &&
+                        vm_raw_valid[vm_select_pipe[8+VM_OBS_RT][j*6+3+:3]] &&
+                        vm_select_pipe[8+VM_OBS_RT][j*6+:3]!=vm_select_pipe[8+VM_OBS_RT][j*6+3+:3];
+    if(vm_select_pipe[8+VM_OBS_RT][j*6+:3]!=vm_select_pipe[8+VM_OBS_RT][j*6+3+:3] &&
+       vm_raw_valid[vm_select_pipe[8+VM_OBS_RT][j*6+:3]] !=
+       vm_raw_valid[vm_select_pipe[8+VM_OBS_RT][j*6+3+:3]])protocol_fault<=1;
 
    end
    for(integer k=0;k<NPT;k=k+1)begin
@@ -321,9 +331,21 @@ module ot_hgi_coll_q_static_ctl_v5 #(
 
   end
  end
+ generate if(VM_ASM_FACE_RT==0)begin:g_vmav_direct
+  assign vm_assembled_v=vm_assembled_v_raw;
+ end else begin:g_vmav_faces
+  reg [3:0] valid_pipe[0:VM_ASM_FACE_RT-1];
+  always @(posedge clk_control or negedge rst_n)
+   if(!rst_n)begin for(integer j=0;j<VM_ASM_FACE_RT;j=j+1)valid_pipe[j]<=0;end
+   else begin
+    valid_pipe[0]<=vm_assembled_v_raw;
+    for(integer j=1;j<VM_ASM_FACE_RT;j=j+1)valid_pipe[j]<=valid_pipe[j-1];
+   end
+  assign vm_assembled_v=valid_pipe[VM_ASM_FACE_RT-1];
+ end endgenerate
  assign inj_source_v=inj_valid_pipe[INJLAT-1];
  assign inj_source_meta=inj_meta_pipe[INJLAT-1];
- assign vm_source_meta=vm_meta_pipe[9+VM_RT];
+ assign vm_source_meta=vm_meta_pipe[9+VM_META_RT];
  if(VM_RT==0)begin:g_sel0 assign vm_sel_d=24'd0;end
  else begin:g_seld assign vm_sel_d=vm_select_pipe[VM_RT-1];end   // = the d3 select delayed VM_RT edges (flop Q)
  for(genvar k=0;k<NPT;k=k+1)assign held_epoch[k*8+:8]=link_epoch[k];

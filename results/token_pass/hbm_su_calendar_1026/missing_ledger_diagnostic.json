@@ -1,0 +1,1632 @@
+{
+  "schema": "opentallas.su31_calendar_bound_price.v1",
+  "status": "PROPOSED_DIAGNOSTIC_NOT_ADOPTED",
+  "target": {
+    "segment": 0,
+    "index": 31,
+    "unit": "SU",
+    "op": "VOP",
+    "tag": "attn.res_copy",
+    "orig_op": "SU.VOP"
+  },
+  "source_model": "d4g_2ring_qbg historical priced_layers compiler",
+  "raw_calendar_delta": {
+    "issue_wait_serial_edges": 48,
+    "pin_reg_drain_serial_edges": 4,
+    "total_serial_edges": 52,
+    "programme_edges_before": 134,
+    "programme_edges_after": 186,
+    "config_writes_before": 481,
+    "config_writes_after": 538
+  },
+  "historical_clock": "serial3:4 of 1.2GHz; +52 serial edges = +69.333333 stream cycles",
+  "current_b1": "NOT QUALIFIED: common833 row is a sensitivity only; no B1 rate adoption",
+  "stages_sha256": "9aaf96e45fbcb920cb2c95ce35412daaccc96ec492494236d0e744a63d380f6a",
+  "cases": {
+    "baseline": {
+      "cycles": 603819.3875988025,
+      "tok_s": 1987.34923827474,
+      "extra_stream_cycles_per_matched_record": 0,
+      "matched_records": 40,
+      "segments": {
+        "0": {
+          "cycles": 12661.782931385027,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 4677.279141911341,
+              "end": 4765.459141911341,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "1": {
+          "cycles": 19910.611877796106,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 94,
+              "tag": "attn.res_copy",
+              "start": 11926.108088322437,
+              "end": 12014.288088322437,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "2": {
+          "cycles": 19697.442169789665,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 59,
+              "tag": "attn.res_copy",
+              "start": 3092.8399999999992,
+              "end": 3181.019999999999,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "3": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "4": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "5": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "6": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "7": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "8": {
+          "cycles": 19697.442169789665,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 59,
+              "tag": "attn.res_copy",
+              "start": 3092.8399999999992,
+              "end": 3181.019999999999,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "9": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "10": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "11": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "12": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "13": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "14": {
+          "cycles": 26414.070533563918,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 122,
+              "tag": "attn.res_copy",
+              "start": 9847.868946411094,
+              "end": 9936.048946411094,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "15": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "16": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "17": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "18": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "19": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "20": {
+          "cycles": 21630.779169789665,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 48,
+              "tag": "attn.res_copy",
+              "start": 3351.43,
+              "end": 3439.6099999999997,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "21": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "22": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "23": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "24": {
+          "cycles": 20208.935372797187,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1840.8440000000003,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "25": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "26": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "27": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "28": {
+          "cycles": 20877.981051263727,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1840.8440000000003,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "29": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "30": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "31": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "32": {
+          "cycles": 20208.935372797187,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1840.8440000000003,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "33": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "34": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "35": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "36": {
+          "cycles": 20447.867265619367,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1840.8440000000003,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "37": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "38": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "39": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5294.541,
+              "added_work_stream_cycles": 0
+            }
+          ]
+        },
+        "head": {
+          "cycles": 6337.5960000000005,
+          "matched_records": 0,
+          "records": []
+        }
+      },
+      "added_token_cycles": 0.0,
+      "loss_pct": 0.0
+    },
+    "historical_serial_3to4": {
+      "cycles": 603819.3875988025,
+      "tok_s": 1987.34923827474,
+      "extra_stream_cycles_per_matched_record": 69.33333333333333,
+      "matched_records": 40,
+      "segments": {
+        "0": {
+          "cycles": 12661.782931385027,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 4677.279141911341,
+              "end": 4834.792475244674,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "1": {
+          "cycles": 19910.611877796106,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 94,
+              "tag": "attn.res_copy",
+              "start": 11926.108088322437,
+              "end": 12083.621421655771,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "2": {
+          "cycles": 19697.442169789665,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 59,
+              "tag": "attn.res_copy",
+              "start": 3092.8399999999992,
+              "end": 3250.3533333333326,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "3": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "4": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "5": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "6": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "7": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "8": {
+          "cycles": 19697.442169789665,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 59,
+              "tag": "attn.res_copy",
+              "start": 3092.8399999999992,
+              "end": 3250.3533333333326,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "9": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "10": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "11": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "12": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "13": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "14": {
+          "cycles": 26414.070533563918,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 122,
+              "tag": "attn.res_copy",
+              "start": 9847.868946411094,
+              "end": 10005.382279744426,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "15": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "16": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "17": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "18": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "19": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "20": {
+          "cycles": 21630.779169789665,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 48,
+              "tag": "attn.res_copy",
+              "start": 3351.43,
+              "end": 3508.943333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "21": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "22": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "23": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "24": {
+          "cycles": 20208.935372797187,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1910.1773333333335,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "25": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "26": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "27": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "28": {
+          "cycles": 20877.981051263727,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1910.1773333333335,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "29": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "30": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "31": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "32": {
+          "cycles": 20208.935372797187,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1910.1773333333335,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "33": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "34": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "35": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "36": {
+          "cycles": 20447.867265619367,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1910.1773333333335,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "37": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "38": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "39": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5363.874333333333,
+              "added_work_stream_cycles": 69.33333333333333
+            }
+          ]
+        },
+        "head": {
+          "cycles": 6337.5960000000005,
+          "matched_records": 0,
+          "records": []
+        }
+      },
+      "added_token_cycles": 0.0,
+      "loss_pct": 0.0
+    },
+    "common833_unqualified_sensitivity": {
+      "cycles": 603819.3875988025,
+      "tok_s": 1987.34923827474,
+      "extra_stream_cycles_per_matched_record": 52,
+      "matched_records": 40,
+      "segments": {
+        "0": {
+          "cycles": 12661.782931385027,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 4677.279141911341,
+              "end": 4817.459141911341,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "1": {
+          "cycles": 19910.611877796106,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 94,
+              "tag": "attn.res_copy",
+              "start": 11926.108088322437,
+              "end": 12066.288088322437,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "2": {
+          "cycles": 19697.442169789665,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 59,
+              "tag": "attn.res_copy",
+              "start": 3092.8399999999992,
+              "end": 3233.019999999999,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "3": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "4": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "5": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "6": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "7": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "8": {
+          "cycles": 19697.442169789665,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 59,
+              "tag": "attn.res_copy",
+              "start": 3092.8399999999992,
+              "end": 3233.019999999999,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "9": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "10": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "11": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "12": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "13": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "14": {
+          "cycles": 26414.070533563918,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 122,
+              "tag": "attn.res_copy",
+              "start": 9847.868946411094,
+              "end": 9988.048946411094,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "15": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "16": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "17": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "18": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "19": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "20": {
+          "cycles": 21630.779169789665,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 48,
+              "tag": "attn.res_copy",
+              "start": 3351.43,
+              "end": 3491.6099999999997,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "21": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "22": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "23": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "24": {
+          "cycles": 20208.935372797187,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1892.8440000000003,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "25": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "26": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "27": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "28": {
+          "cycles": 20877.981051263727,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1892.8440000000003,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "29": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "30": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "31": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "32": {
+          "cycles": 20208.935372797187,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1892.8440000000003,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "33": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "34": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "35": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "36": {
+          "cycles": 20447.867265619367,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 18,
+              "tag": "attn.res_copy",
+              "start": 1752.6640000000002,
+              "end": 1892.8440000000003,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "37": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "38": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "39": {
+          "cycles": 13190.864789473688,
+          "matched_records": 1,
+          "records": [
+            {
+              "index": 31,
+              "tag": "attn.res_copy",
+              "start": 5206.361,
+              "end": 5346.541,
+              "added_work_stream_cycles": 52
+            }
+          ]
+        },
+        "head": {
+          "cycles": 6337.5960000000005,
+          "matched_records": 0,
+          "records": []
+        }
+      },
+      "added_token_cycles": 0.0,
+      "loss_pct": 0.0
+    }
+  }
+}
