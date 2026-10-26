@@ -1,0 +1,10 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-kv-odds3-2200
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-kv-odds3-2200
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-kv-odds3-2200
+ot-run: localhost      admits   183 GB (avail 357, reserve 0, fresh 108.1, peak 0.8, headroom 0, waiters 0/0 GB) load 91/256 running 33 disk 597 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-2832618-1792990853 after 1 s
+CORE MITER kv3_head_eighth_e1 PASS mismatches=0 dropped_bit_nonzero=0 edges=19993 dropped_port_changes=0
+CORE MITER kv3_head_eighth_e1 FAIL mismatches=19031 dropped_bit_nonzero=0 edges=19993 dropped_port_changes=0
+CORE MITER kv3_head_eighth_e5 PASS mismatches=0 dropped_bit_nonzero=0 edges=19993 dropped_port_changes=0
+ot-run: RAN on localhost (unit oth-ubuntu-2832618-1792990853): exit 0

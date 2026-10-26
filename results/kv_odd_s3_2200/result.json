@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "runs": {
+  "e1": "CORE MITER kv3_head_eighth_e1 PASS mismatches=0 dropped_bit_nonzero=0 edges=19993 dropped_port_changes=0\n- tb.sv:37: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 20us; walltime 0.785 s; speed 25.467 us/s\n- Verilator: cpu 0.785 s on 1 threads; allocated 9 MB\n",
+  "e5": "CORE MITER kv3_head_eighth_e5 PASS mismatches=0 dropped_bit_nonzero=0 edges=19993 dropped_port_changes=0\n- tb.sv:37: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 20us; walltime 0.797 s; speed 25.082 us/s\n- Verilator: cpu 0.797 s on 1 threads; allocated 9 MB\n",
+  "mutant": "MISMATCH edge=25\nMISMATCH edge=33\nMISMATCH edge=34\nMISMATCH edge=35\nMISMATCH edge=37\nCORE MITER kv3_head_eighth_e1 FAIL mismatches=19031 dropped_bit_nonzero=0 edges=19993 dropped_port_changes=0\n- tb.sv:37: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 20us; walltime 0.819 s; speed 24.434 us/s\n- Verilator: cpu 0.819 s on 1 threads; allocated 9 MB\n"
+ },
+ "cycles_added": 0,
+ "extra_flops_per_lane8": 248
+}

@@ -1,0 +1,23 @@
+{
+ "selected": false,
+ "masters": [
+  "kv3_head_eighth_e1",
+  "kv3_head_eighth_e5"
+ ],
+ "generator": "physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py",
+ "flags": [
+  "--head-strap-odd",
+  "--head-lane-ltcopy",
+  "--head-lane-s3copy",
+  "--head-lane-taps"
+ ],
+ "cycles_added": 0,
+ "extra_flops_per_master_estimate_upper": 496,
+ "physical_adoption_requires": [
+  "new synthesis/LEC",
+  "placement geometry review",
+  "flow canary disposition",
+  "CTS/GRT and propagated-clock TT/FF signoff"
+ ],
+ "exact_gate": "results/kv_odd_s3_2200/result.json"
+}
