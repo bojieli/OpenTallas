@@ -1018,3 +1018,5 @@ CODEX: 2026-10-26 02:10 PDT KV takeover: batchb30 strict/R8PASS; inheritedverify
 
 CODEX: 2026-10-26 02:11 PDT S81 legacy took over latest2b9f7617e; collected l0/cfg placePASS, preserved ongoing jobs; XRT3 M6/track-phase generator fix dd6cb07d5 pushed, 9122pin-gridPASS, own place trial live intel2 unit1643125 (M5 ceiling unchanged).
 CODEX: 2026-10-26 02:11 PDT TOK-HBM diagnosed nativePR0/1 OOM96GiB, checkpoint copies resumed192GB4t epyc2 units1250260/1250262; actual5oneclk face source helper READY a950c934ed, programme qualification next.
+
+CODEX: 2026-10-26 02:18 PDT auxiliary4HBM strapkitLECs EQUIVALENT (59246/57326/73368/71928 points); lane_exp7point correspondence + idx_score4point faults under diagnosis, no duplicate routes.
