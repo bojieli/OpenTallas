@@ -436,3 +436,4 @@ qwen_kvsys	kv3_head_eighth_e6	epyc1:/srv/opentallas-scratch2/claude/path-kv/head
 qwen_kvsys	kv3_head_eighth_e2	epyc1:/srv/opentallas-scratch2/claude/path-kv/heads/m3/e2/kv3_head_eighth_e2__216x216	claude/path-kv-head-1025@0bc101e228	REQ	PATH-KV-HEAD m3 09:19	24	160000	PATH-KV				withdraw
 s81	ot_dsrom_su_hcpost_lane_pr	epyc1:/srv/opentallas-scratch2/claude/path-s81-hcpl/kits/ot_dsrom_su_hcpost_lane_pr_v1b	claude/path-s81-hcpl-1025@3ff7d0927d	REQ	PATH-S81/HCPL-V1B	16	40000	PATH-S81	finish		8
 qwen_kvsys	kv3_head_eighth_e2	epyc1:/srv/opentallas-scratch2/claude/path-kv/heads/m6/e2/kv3_head_eighth_e2__216x216	claude/path-kv-head2-1025@d1cb111f3	REQ	PATH-KV-HEAD m6 18:33	24	160000	PATH-KV	route
+qwen_kvsys	kv3_head_eighth_e6	epyc1:/srv/opentallas-scratch2/claude/path-kv/heads/m6/e6/kv3_head_eighth_e6__216x216	claude/path-kv-head2-1025@d1cb111f3	REQ	PATH-KV-HEAD m6 18:33	24	160000	PATH-KV	route
