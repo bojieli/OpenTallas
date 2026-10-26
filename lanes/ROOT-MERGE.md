@@ -131,3 +131,10 @@ HOLD (do NOT merge): codex/qc-crom-bind-1026@d58e17858a (folds into ONE QC infra
 - main = b272ba0ecb (hub ff'd). ac2ad01a82 -> 74dae043f4 ap-perdie-tag e244a0238 -> a893309164 flowtag17-flow2 f4b8580e0d (resolved: verify files = main, g2.py both) -> 51af75c895 pv-calendar 19d99afb7 -> b272ba0ecb kv-constants aef421fbd. Gates = baseline (G0 QC 0/head 0/S81 13/KV 13/B2n 37; pytest/ap/rom/csa rc0). Script epyc1:/srv/opentallas-scratch2/claude/root-merge-1026b-out/gates.sh (base/, m1/).
 - Canaries: flow2 is flow-watched for all dies -> trigger reruns on b272; tags stay on e68117ea12 until per-die NO-REGRESSION.
 - HOLD kvinfra e7713bbd11 (INFRA-FIRST ACK / COORD waiver), master-plan 979fc60bf0 + hbm-core-lat/b1-event (rebase). No live jobs; worktrees removed.
+
+## PARKED ROOT-MERGE-19 2026-10-26 12:17 PDT
+- main = fec963a5e8 (hub ff'd). 11 first-parent commits on b272ba0ecb: kvinfra, infra-r3b-sta, tok-hbm-b1map, core-lat-r3, s81-core-lat-qx, gunit lint cherry 844ead2a8b, hbm-hc-plainid, qx-stateproof, clock128-r2b, qc_kv_link_b48 receipts, master-plan-r3-tip (shas in COORD-REVIEW-QUEUE).
+- Gates = baseline except die_plan pytest tkinter ENV fail (test_core_infra tk test; passes in docker python:3.11). Script/logs epyc1:/srv/opentallas-scratch2/claude/root-merge19-out/{gates.sh,m2,m3}.
+- HOLD kv-land-r3 3873151ece (conflicts + KV plan adoption beyond approval), join2 (no READY), bf_col recipe (owner). Flow-watched: hbm-hc-plainid + master-plan-r3-tip -> tags stay on e68117ea12.
+- Lesson: never edit the merge worktree while gates.sh runs on it; pgrep/pkill -f on a pattern in the ssh command kills the ssh shell itself.
+- No live jobs. Worktree epyc1:/srv/opentallas-scratch2/claude/wt/root-merge19 removed at park.
