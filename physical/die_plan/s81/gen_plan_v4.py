@@ -556,8 +556,55 @@ def derived_core_conns(types):
                         out.append("bus:" + pb[n])
                 if out:
                     ent.setdefault(inst, {})[port] = sorted(set(out))
+        ent = _driver_sink_only(t, ent)
         if ent:
             CORE_CONNS_OUT[tn] = ent
+
+
+_LEF_DIR = {}
+
+
+def _lef_dirs(lef):
+    """{pin base name: INPUT/OUTPUT/INOUT} from a core LEF (bus bits share their base name)."""
+    if lef not in _LEF_DIR:
+        d, cur = {}, None
+        root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..")
+        for ln in open(os.path.join(root, lef)):
+            w = ln.split()
+            if not w:
+                continue
+            if w[0] == "PIN" and len(w) > 1:
+                cur = re.sub(r"\[\d+\]$", "", w[1])
+                d.setdefault(cur, None)
+            elif w[0] == "DIRECTION" and cur:
+                d[cur] = w[1].rstrip(";")
+            elif w[0] == "END" and len(w) > 1 and w[1] != "PORT":
+                cur = None
+        _LEF_DIR[lef] = d
+    return _LEF_DIR[lef]
+
+
+def _driver_sink_only(t, ent):
+    """S81-PLAN2/CCONN 10-25: core_conns_derive lists every pair of cores on one net, so INPUT pins that only share a
+    soft-driven net (the frame io_clk / io_e / io_n / io_w fan-outs from the bf_front_roots core's net, the ROM
+    addr_in / ce_in fan-outs) became 'core <-> core' hops (~4,470 of the 4,766 G0C internal_station findings).  A
+    reg-reg hop runs driver -> sink: keep a core:<partner> target only when this port and a port of the partner that
+    lists this core have opposite LEF directions (OUTPUT <-> INPUT); bus targets are kept as derived.  A soft-driven
+    fan-out is the glue's net (placed and repeated by P&R), not a core hop."""
+    dirs = {h["inst"]: _lef_dirs(h["lef"]) for h in t["hard_cores"] if h.get("lef")}
+    out = {}
+    for ci, ports in ent.items():
+        for p, tgs in ports.items():
+            want = {"OUTPUT": "INPUT", "INPUT": "OUTPUT"}.get(dirs.get(ci, {}).get(p))
+            keep = []
+            for tg in tgs:
+                k, _, n = tg.partition(":")
+                if k != "core" or (want and any(dirs.get(n, {}).get(q) == want and "core:" + ci in v
+                                                for q, v in ent.get(n, {}).items())):
+                    keep.append(tg)
+            if keep:
+                out.setdefault(ci, {})[p] = keep
+    return out
 
 
 def nonframe_hc_key(p):
@@ -2614,7 +2661,9 @@ def emit(parts, lanes, routes, chans, fmap, out):
     # landed col_h* frames + bk_sel + gunit (Codex faultfinal G0C: 4766 + 84 ERRORs, all pre-existing core-pair hops
     # > 405 um with no internal_stations[] entry; the missing-cores / core-relay lane owns them).  It is a separate
     # gate expansion, not part of the fault-feeder plan delta: opt-in until that lane adopts it.
-    if os.environ.get("OT_S81_DERIVED_CORE_CONNS") == "1":
+    # S81-PLAN2/CCONN 10-25: DEFAULT ON (driver -> sink pairs only; frame / gunit cores re-placed by
+    # delta_cconn_1025.py); OT_S81_DERIVED_CORE_CONNS=0 reproduces the hand-written-only sidecar.
+    if os.environ.get("OT_S81_DERIVED_CORE_CONNS", "1") == "1":
         derived_core_conns(plan["partition_types"])
     if CORE_CONNS_OUT:
         json.dump(CORE_CONNS_OUT, open(out / "core_conns.json", "w"), indent=0, sort_keys=True)
