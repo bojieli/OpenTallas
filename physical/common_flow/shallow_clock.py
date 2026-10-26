@@ -8,6 +8,7 @@ import argparse
 import bisect
 import json
 import math
+import heapq
 from pathlib import Path
 
 
@@ -140,7 +141,65 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
 def _man(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0):
+class ClockNavigation:
+    """Free-site navigation avoids snapping successive repeaters to opposite
+    sides of a wide macro. Edges bound physical buffer-to-buffer distance;
+    they are a placement proposal, not a claim of routed wire geometry."""
+    def __init__(self, g, endpoints, bound_um):
+        self.g = g
+        self.bound = bound_um * g['dbu']
+        sites = FreeSites(g)
+        a,b,c,d = g['core']
+        step = max(g['width'] * 2, self.bound / 2)
+        points = {tuple(q) for q in endpoints}
+        def add(q):
+            points.add(tuple(sites.legal(q, reserve=False)['xy']))
+        for ix in range(math.ceil((c-a)/step)+1):
+            for iy in range(math.ceil((d-b)/step)+1):
+                add([min(c,a+ix*step), min(d,b+iy*step)])
+        # Explicit macro corners/edges retain narrow channels a coarse grid
+        # could miss. Buffer footprints, including all logic, stay excluded.
+        gap = max(g['width'], g['height']) * 2
+        for _,x0,y0,x1,y1,block in g['cells']:
+            if not block: continue
+            for x in (x0-gap, x1+gap):
+                for i in range(math.ceil((y1-y0+2*gap)/step)+1):
+                    add([min(c,max(a,x)), min(d,max(b,y0-gap+i*step))])
+            for y in (y0-gap, y1+gap):
+                for i in range(math.ceil((x1-x0+2*gap)/step)+1):
+                    add([min(c,max(a,x0-gap+i*step)), min(d,max(b,y))])
+        self.points = sorted(points)
+        self.ids = {q:i for i,q in enumerate(self.points)}
+        self.edges = [[] for _ in self.points]
+        for i,q in enumerate(self.points):
+            for j in range(i):
+                distance = _man(q,self.points[j])
+                if 0 < distance <= self.bound:
+                    self.edges[i].append((j,distance))
+                    self.edges[j].append((i,distance))
+
+    def path(self, start, end):
+        start,end = self.ids[tuple(start)], self.ids[tuple(end)]
+        pending = [(0,start)]
+        dist = {start:0}
+        prev = {}
+        while pending:
+            cost,i = heapq.heappop(pending)
+            if cost != dist[i]: continue
+            if i == end:
+                ids = [i]
+                while i != start:
+                    i = prev[i]; ids.append(i)
+                return [list(self.points[i]) for i in reversed(ids)]
+            for j,edge in self.edges[i]:
+                value = cost+edge
+                if value < dist.get(j,math.inf):
+                    dist[j] = value; prev[j] = i
+                    heapq.heappush(pending,(value,j))
+        raise ValueError('no bounded free-site clock path through macro channels')
+
+
+def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, strict_geometry=False):
     """topology 'htree' (default): symmetric 2x2 H-tree over the tap region,
     pruned where a quadrant has no tap; every tap gets a private leg from its
     H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
@@ -168,7 +227,10 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
                 for grp in split(pts,fanout): link(cid,build(grp,level+1),level)
             else: add_taps(cid,pts,level)
             return cid
-        build(g['taps'],1)
+        # depth counts bisections from zero. Starting at one accidentally
+        # left fanout*leaf_fanout taps on the terminal cluster (e.g. eight
+        # starts for a declared leaf_fanout=2). Keep legacy mode unchanged.
+        build(g['taps'],0 if strict_geometry else 1)
     elif topology=='htree':
         xs=[t['xy'][0] for t in g['taps']]; ys=[t['xy'][1] for t in g['taps']]
         box=[min(xs),min(ys),max(xs),max(ys)]
@@ -216,13 +278,23 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
         L['A']=list(g['root']) if L['parent'] is None else clusters[L['parent']]['point']
         L['C']=clusters[L['child'][1]]['point'] if L['child'][0]=='cluster' else tapxy[L['child'][1]]
         L['d']=_man(L['A'],L['C'])
+    if strict_geometry:
+        if fanout > 4 or leaf_fanout > 4:
+            raise ValueError('strict clock clusters permit at most four leg starts')
+        # Reserve geometric headroom for row snapping and independent cluster
+        # starts. Stage counts come from the legal path, not its chord length.
+        navigation = ClockNavigation(g, [L[k] for L in legs for k in ('A','C')], 0.8*rmax_um)
+        for L in legs:
+            L['poly'] = navigation.path(L['A'],L['C'])
+            L['d'] = sum(_man(a,b) for a,b in zip(L['poly'],L['poly'][1:]))
     reps={}
     tl=max(L['level'] for L in legs)
     for lv in sorted({L['level'] for L in legs}):
         dm=max(L['d'] for L in legs if L['level']==lv)/u
-        if lv==0: reps[lv]=max(0,math.ceil(dm/rmax_um)-1)
-        elif lv==tl: reps[lv]=max(min_rep,math.ceil(dm*slack/rmax_um)-1)   # tap legs: always detour-capable
-        else: reps[lv]=max(0,math.ceil(dm*slack/rmax_um)-1)
+        segment = rmax_um * (0.8 if strict_geometry else 1.0)
+        if lv==0: reps[lv]=max(0,math.ceil(dm/segment)-1)
+        elif lv==tl: reps[lv]=max(min_rep,math.ceil(dm*slack/segment)-1)   # tap legs: always detour-capable
+        else: reps[lv]=max(0,math.ceil(dm*slack/segment)-1)
     k=0
     for L in sorted(legs,key=lambda L:(L['level'],L['id'])):
         L['n']=reps[L['level']]
@@ -235,7 +307,7 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
     p=dict(mode='closed_loop',topology=topology,clusters=clusters,legs=legs,taps=g['taps'],root=g['root'],root_name=g.get('root_name',''),
            dbu=u,core=g['core'],master=g['master'],width=g['width'],height=g['height'],
            obstacles=[cc[1:5] for cc in g['cells'] if cc[5]],rmax_um=rmax_um,reps=reps,iters=[],
-           fanout=fanout,leaf_fanout=leaf_fanout)
+           fanout=fanout,leaf_fanout=leaf_fanout,strict_geometry=strict_geometry)
     realize(p,g)
     return p
 
@@ -269,12 +341,12 @@ def along(poly,s):
     return list(poly[-1])
 
 
-def ellipse_pick(sites,B,C,R,prev,core,rmax,u,rays=20):
+def ellipse_pick(sites,B,C,R,prev,core,rmax,u,rays=20,strict=False):
     """Free site q with |B-q|+|q-C| ~= R (an L1 ellipse around B,C), both
     halves <= rmax, nearest to the previous choice (continuity)."""
     M=[(B[0]+C[0])/2,(B[1]+C[1])/2]
     def f(q): return _man(B,q)+_man(q,C)
-    cands=[]
+    cands=[prev] if prev is not None else []
     if R<=_man(B,C)+1: cands.append(M)
     else:
         for k in range(rays):
@@ -292,8 +364,10 @@ def ellipse_pick(sites,B,C,R,prev,core,rmax,u,rays=20):
     for q in cands:
         s=sites.legal(q,reserve=False)['xy']
         over=max(0.0,max(_man(B,s),_man(s,C))-rmax*u)
+        if strict and over > 0: continue
         cost=abs(f(s)-R)+25*over+(0.25*_man(s,prev) if prev else 0)
         if best is None or cost<best[0]: best=(cost,s)
+    if best is None: raise ValueError('no free row-legal repeater meets the hard clock segment bound')
     return best[1]
 
 
@@ -305,7 +379,7 @@ def realize(p,g):
     last={}; u=p['dbu']
     for L in sorted(p['legs'],key=lambda L:(L['level'],L['id'])):
         n=L['n'];A,C=L['A'],L['C'];d=L['d']
-        poly=leg_path(A,C,d,p['core'])
+        poly=L.get('poly') or leg_path(A,C,d,p['core'])
         parent=None if L['parent'] is None else last[('cl',L['parent'])]
         pos=[]
         for i,nm in enumerate(L['bufs']):
@@ -315,7 +389,13 @@ def realize(p,g):
                 B=pos[-1]
                 done=sum(_man(a,b) for a,b in zip(pos,pos[1:]))
                 R=max(_man(B,C),L['d']+L['x']-done)
-                xy=ellipse_pick(sites,B,C,R,L.get('qprev'),p['core'],p['rmax_um'],u)
+                hint=L.get('qprev')
+                if hint is None and p.get('strict_geometry'): hint=along(poly,d*n/(n+1))
+                # Leave space for the independently legalized child-cluster
+                # input buffers; checking only the ideal endpoint hid 1–4 um
+                # excursions beyond the physical segment cap.
+                pick_bound=p['rmax_um']-(5.0 if p.get('strict_geometry') else 0.0)
+                xy=ellipse_pick(sites,B,C,R,hint,p['core'],pick_bound,u,strict=p.get('strict_geometry',False))
             node=dict(name=nm,parent=parent,depth=L['level'],leg=L['id'],**sites.legal(xy))
             pos.append(node['xy'])
             nodes.append(node)
@@ -334,6 +414,18 @@ def realize(p,g):
                       max_hop_um=hop,rmax_um=p['rmax_um'],added_cycles=0,
                       added_area_um2=len(nodes)*p['width']*p['height']/p['dbu']**2)
     validate(p)
+    if p.get('strict_geometry'):
+        if hop > p['rmax_um']:
+            raise ValueError(f'actual planned clock segment {hop:.3f} um exceeds hard bound {p["rmax_um"]}')
+        starts={}
+        for L in p['legs']:
+            if L['parent'] is not None:
+                starts.setdefault(L['parent'],[]).append(xy[L['bufs'][0]])
+        for cid,points in starts.items():
+            diameter=max((_man(a,b) for a in points for b in points),default=0)/u
+            if len(points)>4 or diameter>20:
+                raise ValueError(f'clock cluster {cid}: {len(points)} starts span {diameter:.3f} um (limit four / 20 um)')
+        p['summary']['strict_geometry']=True
     return p
 
 
@@ -523,7 +615,8 @@ def main():
     if a.closed_loop:
         p=plan_legs(g,fanout=int(env.get('OT_DTSH_FANOUT','4')),leaf_fanout=int(env.get('OT_DTSH_LEAF_FANOUT','2')),
                     rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')),topology=env.get('OT_DTSH_TOPOLOGY','bisect'),
-                    levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')))
+                    levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')),
+                    strict_geometry=env.get('OT_DTSH_STRICT_GEOM','0')=='1')
     else:
         p=plan(g)
     Path(a.out).write_text(json.dumps(p,indent=1)+'\n')
