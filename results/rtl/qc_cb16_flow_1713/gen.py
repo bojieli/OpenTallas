@@ -1,7 +1,7 @@
 import re,json
 from pathlib import Path
 r=Path(__file__).resolve().parent;c=json.load(open(r/'dag_candidate.json'));classes=sorted({(sum(b-a+1 for a,b in m['sink_bits']),m['tree_align']) for m in c['members']})
-src=(r/'bind.py').read_text();module=re.search(r'module ot_dp_dly\b[\s\S]*?endmodule',src)[0];(r/'ot_dp_dly.sv').write_text('`timescale 1ns/1ps\n'+module+'\n')
+src=(r.parents[2]/'tools/die_plan/bind.py').read_text();module=re.search(r'module ot_dp_dly\b[\s\S]*?endmodule',src)[0];(r/'ot_dp_dly.sv').write_text('`timescale 1ns/1ps\n'+module+'\n')
 body=['`timescale 1ns/1ps','module tb;','reg clk=0;always #0.4165 clk=~clk;','integer cycle=0,mut=0,checks=0;','initial begin if($value$plusargs("MUT=%d",mut))begin end end']
 for k,(w,d) in enumerate(classes):
  v=0 if w==516 else 512
