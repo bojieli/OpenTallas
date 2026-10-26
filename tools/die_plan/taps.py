@@ -186,7 +186,27 @@ def sink_sites(P, tn):
     else:
         out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn)]
     out += [(float(r[0]), float(r[1]), float(r[2]) if len(r) > 2 else 1.0) for r in rows]
+    if ck.get("control_sinks"):
+        out += [(x, y, 1.0) for _, x, y in control_pin_sinks(P, tn)]
     return [p for p in out if p[2] > 0]
+
+
+def control_pin_sinks(P, tn):
+    """[(port, x, y)] the registered control pins of a wavefront soft type: the reset IN (arst_n -> u_rst_in), the
+    START IN (start_i -> u_run_in) and every registered reset / START OUT (rst_o_<k>, start_o_<k>).  Each is captured
+    or launched by one register AT its pin (rule LC1: a boundary pin register is captured within its declared
+    interface latency), so with clock.control_sinks a density-tap plan covers it like a face register: a control
+    pin far from every data sink gets its own light tap within tap_radius_um instead of the nearest data tap's long
+    arm (QC coll_ftm 10-25: START at the E face 513 um from clk_t18, FF hold -167.66 ps on start_i -> u_run_in)."""
+    import reset_tree as RT
+    t = P.types[tn]
+    if t.get("hard") or not RT.wavefront(P):
+        return []
+    out = [("arst_n",) + tuple(RT.in_pin(P, tn))]
+    if RT.start_broadcast(P):
+        out.append(("start_i",) + tuple(RT.start_in_pin(P, tn)))
+    out += [tuple(q) for q in RT.out_pins(P, tn) + RT.start_out_pins(P, tn)]
+    return [(n, float(x), float(y)) for n, x, y in out]
 
 
 def _wmedian(pts, i):

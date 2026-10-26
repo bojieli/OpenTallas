@@ -344,6 +344,9 @@ SCHEMA = {
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},
+                        # rule LC1 (10-25): density taps also cover the registered control pins (arst_n, start_i,
+                        # rst_o_<k>, start_o_<k>), so a remote control pin gets its own light tap (taps.control_pin_sinks)
+                        "control_sinks": {"type": "boolean"},
                         "sink_sites_um": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
                                                                      "items": {"type": "number"}}},
                         "sink_bins_file": {"type": "string"},
