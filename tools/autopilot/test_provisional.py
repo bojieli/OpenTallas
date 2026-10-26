@@ -34,7 +34,7 @@ class Provisional(unittest.TestCase):
   self.assertEqual(self.j['status'],'WAIT-PARENT')
  def test_later_qualified_signed_record_is_archived(self):
   self.A.failure_resolutions=lambda:{};self.A.hub_procs=lambda p:[]
-  self.A.probe_job=lambda j:{'signoff':dict(verdict='SIGNED',release_qualified=True)}
+  self.A.probe_job=lambda j:{'signoff':dict(verdict='SIGNED',release_qualified=True,pg='PASS')}
   calls=[];self.A.archive=lambda st,j:calls.append(j['status'])
   self.A.retry_pending(self.st)
   self.assertEqual(self.j['status'],'SIGNED');self.assertEqual(calls,['SIGNED'])

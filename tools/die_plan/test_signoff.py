@@ -30,13 +30,14 @@ OLD_SDC = GOOD_SDC.replace("set_input_delay -min -40.0000", "set_input_delay -mi
 
 
 def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, slew=0, unconstrained=0, done=True,
-                 pair_setup=30.0, pair_hold=25.0):
+                 pair_setup=30.0, pair_hold=25.0, pg_open=0):
     out = {}
     for c, (smax, smin, sp) in dict(ss=(ss_setup, 30.0, 50.0), ff=(150.0, ff_hold, 30.0),
                                     tt=(tt_setup, 10.0, spread_tt)).items():
         L = [f"SO CORNER {c.upper()}", "SO PARASITICS spef", "SO DESIGN blk", "SO CELLS 1000",
              "SO CLOCK_PORTS ck", "SO INPUTS a b", "SO OUTPUTS y", "SO CLOCKS clk vclk", "SO VCLKS vclk",
              "SO PERIOD clk 833", "SO PERIOD vclk 833",
+             f"SO PG 2000 {pg_open} " + ("u1/VDD" if pg_open else "-"),
              f"SO SDC_WNS_MAX {smax}", f"SO SDC_WNS_MIN {smin + 5}", "SO SDC_TNS_MAX 0", "SO SDC_TNS_MIN 0",
              "SO SDC_NVIOL_MAX 0", "SO SDC_NVIOL_MIN 0", "SO OVERLAY applied vclk in_min -40 out_min 0",
              f"SO STD_WNS_MAX {smax}", f"SO STD_WNS_MIN {smin}", "SO STD_TNS_MAX 0",
@@ -61,7 +62,7 @@ def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, sl
 def record(**kw):
     rec = dict(name="blk", corners={})
     for c, t in session_text(**{k: v for k, v in kw.items() if k in ("tt_setup", "ss_setup", "ff_hold", "spread_tt", "slew",
-                                                                         "unconstrained", "done", "pair_setup", "pair_hold")}).items():
+                                                                         "unconstrained", "done", "pair_setup", "pair_hold", "pg_open")}).items():
         r = signoff.corner_result(signoff.parse_session(t))
         r.update(corner=c, macro_missing=[])
         rec["corners"][c] = r
@@ -447,3 +448,24 @@ def test_ff_bound_ps_cli_requires_bound_ff_and_contract():
         with pytest.raises(SystemExit) as e:
             signoff.main(['run', '--base', '/unused', '--out', '/unused'] + extra)
         assert e.value.code == 2
+
+
+def test_pg_census_blocks():
+    # FLOW 10-26: supply terminals of the signed ODB (s8b d73a0fbb938f: 216 open on dont_touch spine buffers)
+    rec = signoff.evaluate(record())
+    assert rec["checks"]["pg"]["verdict"] == "PASS" and rec["checks"]["pg"]["pg_terms"] == 2000
+    rec = signoff.evaluate(record(pg_open=216))
+    assert rec["verdict"] == "NOT SIGNED" and rec["checks"]["pg"]["verdict"] == "FAIL"
+    assert rec["checks"]["pg"]["open_terms"] == 216 and rec["checks"]["pg"]["first"] == "u1/VDD"
+    assert any(r.startswith("pg: FAIL 216 of 2000") for r in rec["reasons"])
+    rec = record()
+    for c in rec["corners"].values():
+        c["pg_open"] = c["pg_terms"] = None              # older session text without the census
+    rec = signoff.evaluate(rec)
+    assert rec["verdict"] == "NOT SIGNED" and rec["checks"]["pg"]["verdict"] == "NOT RUN"
+
+
+def test_pg_census_in_session_after_read_db():
+    t = signoff.session_tcl("tt", [], spef=True)
+    assert t.index("read_db /base/") < t.index("so PG $so_pg_terms $so_pg_open $so_pg_first") < t.index("read_spef")
+    assert "getMTerms" in t and "{POWER GROUND}" in t
