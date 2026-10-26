@@ -1,4 +1,4 @@
-# OpenTallas release tree (pending only; refreshed 2026-10-26 01:55 PDT by CLAUDE coordinator)
+# OpenTallas release tree (pending only; refreshed 2026-10-26 02:32 PDT by CODEX coordinator)
 
 Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574fd + cp1-driverview; full canary set submitted on e0d486853 01:19) · FROZEN: none (QC + S81-HEAD UNFROZEN 01:37 by owner, infra-first) · no die has die STA on real views · flow tag flow-20261025-b not cut yet.
 
@@ -11,8 +11,8 @@ Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574f
 - Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS FROZEN BLOCKED NOT RUN.
 
 ## INFRA-FIRST · shared tool (all dies)
-- [ ] IF.TOOL die_infra.py: PG from IR → clock pre-route (consumes die_clock_mesh output) → reset → fixed pre-routes in die kit; stub-trim knob; per-type trial placement · INFRA-FIRST · RUNNING · lane file lanes/INFRA-FIRST.md
-- [ ] IF.MESH Regional mesh + landed seams option in die_clock_mesh.py (claude/clock-mesh-2355@87c291a185) · CLOCK-MESH-2 · RUNNING · QC 146/132 FAIL single mesh; early/late range = ASAP7 BUFx24 rise_capacitance_range (PATH-KV-GRTMESH 01:32), not rise/fall mix, not derate
+- [ ] IF.TOOL die_infra.py fixed infrastructure: preserve regional cuts + actual connected route import · INFRA-FIRST / CODEX / FLOW · RUNNING · 1d5b87430 fixes regional export; initial qc0 is capacity reservation only; actual ODB clock/PG wires+vias+terminals import tiny PASS, signal GRT50 confirmation running
+- [ ] IF.MESH Regional clock + actual landed crossings · CLOCK-MESH / QC-LANDING · RUNNING · actual BUF24 width1.62 (old1.35), clock occupancy correction; real ring crossing measured +3cycles, ~1.01M storage FF / 439 crossings, QC composition pending
 - [ ] IF.MERGE Merge mesh tool fdb5b851c7 (COORD APPROVED 01:1x) · ROOT-MERGE-16 · WAITS · after its gates
 
 ## DIE qwen_compute · Qwen compute · rev UNFROZEN 54a1aeb5 · PROTOTYPE of infra-first
@@ -33,7 +33,7 @@ Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574f
 
 ## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
 - [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · b29 @6f8f4cce4d strict PASS 0 err/unbound/tied/undriven/MD + R8 PASS (L747 = 8 plan fix, odd-head strap_bsel compose); b30 @2fadbbc172 adds KVN_A0/QK_ISSUE_AGE/TXDP regen
-- [ ] KV.CLK Mesh skew on the batch's reserved sites · PATH-KV · PASS · batch 650841e1ef reserved sites (9503/9503): CPPR 73.16/73.50 ps TT/FF, 0 pairs > 80; do NOT rebuild mesh (rebuild 87/82 FAIL)
+- [ ] KV.CLK Legal mesh placement + routed skew · PATH-KV / CLOCK-MESH · FAIL · old73.16/73.50ps timing diagnostic: actual1.62um bodies2210overlap-pairs/4370cells in9503reservedcells; ONE batch legalization+RC successor running
 - [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · WAITS · → IF.TOOL
 - [ ] KV.GRT GRT0 incl. clock on the batch · PATH-KV · PASS · batch 650841e1ef one global_route signals M4-M7 + mesh M8-M9: ovf 0 TT+FF; freeze waits KV.BIND + D-INFRA-FIRST PG/pre-route
 - [ ] KV.STA Die STA on real views · DIE-PROTO · WAITS · → KV.CLK, → KV.TILES
@@ -41,7 +41,7 @@ Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574f
 
 ## DIE s81 · S81 (DeepSeek ROM layer die) · rev main · B2 batch
 - [ ] S81.B2 One plan event D-S81-B2: A25 + stations v4 + PHY pins + leaf pins + eng SRAM r0c0 + FT alignment/corridors + D-S81-PHY + infra-first · PATH-S81 · RUNNING · gate: lateral jog <5M bit-um → GRT0 → skew
-- [ ] S81.GRT Die GRT0 · PATH-S81 · FAIL · 1.80M (a8): hot spots on/between L1/L3 hard cores walled to M7; FT-M89-PROBE testing (a) S81 hard cores capped at M5 (HBM fix pattern), (b) FT on M8/M9 → S81.B2
+- [ ] S81.GRT Die GRT0 · PATH-S81 · PASS SIGNAL DIAGNOSTIC · B5(A25+C+D+E,M5tplcaps) configured50iterations overflow0, converged10; freeze still waits real PHY geometry + infra → S81.B2
 - [ ] S81.PHY 14 SerDes windows at published N7 macro size · PATH-S81 / COORD · BLOCKED · rows 0/19 hold 43.3 mm, need 44.9-48.2 mm (01:41) → may need owner decision (die area / lanes)
 - [ ] S81.CLK Clock skew · INFRA-FIRST · NOT RUN · → S81.GRT
 - [ ] S81.BIND Strict bind on main · TOK-DS · PASS on 877cfdeb2 (0 tied, 10,352 straps) → re-run after S81.B2
@@ -52,7 +52,7 @@ Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574f
 - [ ] HBM.B1 Plan event: all hard cores M5 ceiling (COORD approved, owner M5 rule) + spu1 band + b002/b011 FT bands + 107 G0 lower-row errors + q_su11 tap + infra-first · PATH-HBM · RUNNING
 - [ ] HBM.GRT Die GRT0 · PATH-HBM · FAIL as declared 1.73M; all cores at M5 → 0 @50 it → HBM.B1
 - [ ] HBM.CLK Mesh clock + skew · PATH-HBM · NOT RUN · → HBM.B1
-- [ ] HBM.BIND Native one-clock bind · PATH-HBM · WAITS · rootpipe 47a537213, reset relay 401b1d4346, q3/oneclk unmerged
+- [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · recovered native generator: CUT0/clock967PASS, format literals64→0 via exact local BF16 formatter; W128 actual demands exceed oldW64plan, 98unreadoutputs under diagnosis
 - [ ] HBM.STA Die STA on real views · DIE-PROTO · WAITS · → HBM.GRT
 
 ## TOKEN · Token-pass gate per design
