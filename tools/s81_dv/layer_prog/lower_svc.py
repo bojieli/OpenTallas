@@ -692,7 +692,8 @@ def lower(die, op, ctx):
         arg, jw = job_word(s['nframes'], job.tag)
         r['rows'] = [dict(eng=ENG['SVC'], issue=s['issue'], done=s['issue'] + SEQ['done_v'] + s['ls'], arg=arg,
                           raw_arg=True, what=f'svc attention job ({s["nframes"]} q frames, T {job.T}, tag {job.tag:#04x})')]
-        r['svc_jobs'] = [dict(layer=ctx.get('layer'), tag=job.tag, arg=arg, j_word=f'{jw:09x}', s_j=s['s_j'],
+        r['svc_jobs'] = [dict(layer=ctx.get('layer'), tag=job.tag, timing_profile=job.timing_profile,
+                              engine_profile=job.timing['engine_profile'], arg=arg, j_word=f'{jw:09x}', s_j=s['s_j'],
                               j_pin=dict(u_rsv_05=s['j_w'], u_rsv_11=s['j_e']),
                               source_owner=job.owner, source_owner_field='CFG[52:33], valid[53]; latch before GO',
                               source_owner_qualification='SOURCE ABI ONLY; stamp/transpose consumer binding pending', frames=s['at'], go=s['go'],
