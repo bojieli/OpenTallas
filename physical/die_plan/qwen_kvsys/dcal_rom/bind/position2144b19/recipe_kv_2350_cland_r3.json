@@ -4597,18 +4597,19 @@
   "kv3_pc_v3__cl9ecbf6d8",
   "kv3_pc_v3__cldeeb17a5"
  ],
- "land_r8": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+ "land_r8": "physical/die_plan/qwen_kvsys/bind/kvland_r3/r8/qwen_kvsys_r8_landing.json",
  "param_regen": {
   "file": "physical/die_plan/qwen_kvsys/bind/kvbind1025/regen_kv_2350.py"
  },
  "position_banks": "kv_pc_r8_position_bank_v1",
  "land_r8_extra": [
-  "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/vport_request_extra.json",
-  "physical/die_plan/qwen_kvsys/bind/kvbind1025/pv_calendar_restore_b31.json"
+  "physical/die_plan/qwen_kvsys/bind/kvland_r3/r8/vport_request_extra_cland_r3.json",
+  "physical/die_plan/qwen_kvsys/bind/kvland_r3/r8/pv_calendar_restore_cland_r3.json"
  ],
  "dcal_rom_note": "Approved D-ROM-3b: TX/RX init images are dead and removed; START/PERIOD/SEG/ADM/FIRST data comes from one generated64x32m2 ROM. No production or boot edge added; eight scalar reads occupy existing suppressed init. New recipe only.",
  "param_regen_note": "PATH-KV 2026-10-26: one composed KV hook (kv_regen ECTL/AHUB + PV age bounds + pair-image TXDP); the 2144 recipe had dropped kv_regen.py.",
  "pv_calendar_note": "CANDIDATE ONLY: restore all internal PV crossing ages to original source, +115581 FF, 0 original schedule cycles. Physical footprints and repeated-type matching pending.",
  "clock_landing_table": "physical/die_plan/qwen_kvsys/bind/kvland_r3/landing_placement_table.json",
- "clock_landing_note": "KV-LAND-R3: 662 c3t crossings landed (+3 data cycles each); hard PHY rings in the soft wrapper; observer hub_C u_seq_u_core hf/lp_run"
+ "clock_landing_note": "KV-LAND-R3: 662 c3t crossings landed (+3 data cycles each); hard PHY rings in the soft wrapper; observer hub_C u_seq_u_core hf/lp_run",
+ "land_r8_cland_r3_note": "KV-BIND-R3: R8 table + extras rebased onto die_plan_cland_r3.json (+3/landed crossing) by kvland_r3/make_r8_cland_r3.py from the B33 bus groups; report r8/make_r8_cland_r3.report.json"
 }

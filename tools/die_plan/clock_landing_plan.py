@@ -371,9 +371,15 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None):
             if not hard and band.get("rect_um") and abs(tapxy[tap][0]-point[0])+abs(tapxy[tap][1]-point[1])>405:
                 # The ring's ready/fault flops sit in its band, not at the pin.
                 # Only when the pin is beyond reach of every tap (QC never is)
-                # the collector tap is chosen from the band centre instead.
+                # the collector tap is chosen from the band centre instead, among
+                # ALL reset tree ends (clock taps + the seam out taps rst_n_t<n>
+                # that feed monitor children): an out tap is a real legal reset
+                # relay site on the same tree, and its reverse path to the root
+                # is the one the monitor children already use (KV-BIND-R3:
+                # kv3_hg_v1p4 owner_fault band 423 um from the nearest clock tap,
+                # 160 um from out tap rst_n_t16).
                 x0,y0,x1,y1=band["rect_um"];status=[round((x0+x1)/2,3),round((y0+y1)/2,3)]
-                tap=min(range(tree["n_clock_taps"]),key=lambda i:abs(tapxy[i][0]-status[0])+abs(tapxy[i][1]-status[1]))
+                tap=min(sorted(tapxy),key=lambda i:(abs(tapxy[i][0]-status[0])+abs(tapxy[i][1]-status[1]),i))
             info["local_sources"].append(dict(name=bus,ready="landing_ready_"+bus,fault="landing_fault_"+bus,tap=tap,
                 xy_um=status or point,pin_xy_um=point,band=band,**(dict(node=tree["leaf_node"],reset="delivered") if hard else {})))
             b=_scalar(t,"fclk_in_"+bus,"in",point,"clock");t["buses"].append(b)

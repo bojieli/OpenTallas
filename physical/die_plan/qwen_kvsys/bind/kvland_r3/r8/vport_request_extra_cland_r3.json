@@ -1,0 +1,959 @@
+{
+"schema": "opentallas.die_plan.r8_extra.v1",
+"die": "qwen_kvsys",
+"source_bind_sha256": "fb28782864336360bf1bcc7cf412f427f22a5095e4cd13533f387ec9aa7c22d6",
+"note": "Request-only actual per-member R8 pads. Align pr_t+pr_valid word first, then add max(DQ-15,0) as the b15 image prep requires. Table authoritative for listed IDs, preserves all other R8. Physical source realization and shared-type consistency required before token adoption. | KV-BIND-R3 rebased onto die_plan_cland_r3.json: 12 moved, 12 pad-absorbed, 0 infeasible",
+"members": [
+{
+"id": "vport_WS_0.pr_t[0:13]<-pvw_0__u_ctl.req_t@48",
+"sink": "vport_WS_0",
+"sink_part": "pv_S_3",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_0__u_ctl.req_t",
+"source_bits": [
+[
+0,
+13
+]
+],
+"asbuilt": 48,
+"bound": 29,
+"pad": 7,
+"landed": 36,
+"lane": "L1841"
+},
+{
+"id": "vport_WS_0.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@48",
+"sink": "vport_WS_0",
+"sink_part": "pv_S_3",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_0__u_ctl.req_valid",
+"source_bits": [
+[
+0,
+0
+]
+],
+"asbuilt": 48,
+"bound": 34,
+"pad": 2,
+"landed": 36,
+"lane": "L1845"
+},
+{
+"id": "vport_WS_1.pr_t[0:13]<-pvw_0__u_ctl.req_t@57",
+"sink": "vport_WS_1",
+"sink_part": "pv_S_5",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_0__u_ctl.req_t",
+"source_bits": [
+[
+14,
+27
+]
+],
+"asbuilt": 57,
+"bound": 15,
+"pad": 39,
+"landed": 54,
+"lane": "L1840"
+},
+{
+"id": "vport_WS_1.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@57",
+"sink": "vport_WS_1",
+"sink_part": "pv_S_5",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_0__u_ctl.req_valid",
+"source_bits": [
+[
+1,
+1
+]
+],
+"asbuilt": 57,
+"bound": 20,
+"pad": 34,
+"landed": 54,
+"lane": "L1844"
+},
+{
+"id": "vport_WS_2.pr_t[0:13]<-pvw_0__u_ctl.req_t@43",
+"sink": "vport_WS_2",
+"sink_part": "pv_S_1",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_0__u_ctl.req_t",
+"source_bits": [
+[
+28,
+41
+]
+],
+"asbuilt": 43,
+"bound": 42,
+"pad": 1,
+"landed": 43,
+"lane": "L1842"
+},
+{
+"id": "vport_WS_2.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@43",
+"sink": "vport_WS_2",
+"sink_part": "pv_S_1",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_0__u_ctl.req_valid",
+"source_bits": [
+[
+2,
+2
+]
+],
+"asbuilt": 43,
+"bound": 43,
+"pad": 0,
+"landed": 43,
+"lane": "L1846"
+},
+{
+"id": "vport_WS_3.pr_t[0:13]<-pvw_0__u_ctl.req_t@64",
+"sink": "vport_WS_3",
+"sink_part": "pv_S_7",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_0__u_ctl.req_t",
+"source_bits": [
+[
+42,
+55
+]
+],
+"asbuilt": 64,
+"bound": 2,
+"pad": 60,
+"landed": 62,
+"lane": "L1839"
+},
+{
+"id": "vport_WS_3.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@64",
+"sink": "vport_WS_3",
+"sink_part": "pv_S_7",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_0__u_ctl.req_valid",
+"source_bits": [
+[
+3,
+3
+]
+],
+"asbuilt": 64,
+"bound": 2,
+"pad": 60,
+"landed": 62,
+"lane": "L1843"
+},
+{
+"id": "vport_WN_0.pr_t[0:13]<-pvw_1__u_ctl.req_t@58",
+"sink": "vport_WN_0",
+"sink_part": "pv_N_3",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_1__u_ctl.req_t",
+"source_bits": [
+[
+0,
+13
+]
+],
+"asbuilt": 58,
+"bound": 29,
+"pad": 7,
+"landed": 36,
+"lane": "L1953"
+},
+{
+"id": "vport_WN_0.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@58",
+"sink": "vport_WN_0",
+"sink_part": "pv_N_3",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_1__u_ctl.req_valid",
+"source_bits": [
+[
+0,
+0
+]
+],
+"asbuilt": 58,
+"bound": 34,
+"pad": 2,
+"landed": 36,
+"lane": "L1957"
+},
+{
+"id": "vport_WN_1.pr_t[0:13]<-pvw_1__u_ctl.req_t@48",
+"sink": "vport_WN_1",
+"sink_part": "pv_N_5",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_1__u_ctl.req_t",
+"source_bits": [
+[
+14,
+27
+]
+],
+"asbuilt": 48,
+"bound": 15,
+"pad": 39,
+"landed": 54,
+"lane": "L1952"
+},
+{
+"id": "vport_WN_1.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@48",
+"sink": "vport_WN_1",
+"sink_part": "pv_N_5",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_1__u_ctl.req_valid",
+"source_bits": [
+[
+1,
+1
+]
+],
+"asbuilt": 48,
+"bound": 20,
+"pad": 34,
+"landed": 54,
+"lane": "L1956"
+},
+{
+"id": "vport_WN_2.pr_t[0:13]<-pvw_1__u_ctl.req_t@65",
+"sink": "vport_WN_2",
+"sink_part": "pv_N_1",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_1__u_ctl.req_t",
+"source_bits": [
+[
+28,
+41
+]
+],
+"asbuilt": 65,
+"bound": 42,
+"pad": 1,
+"landed": 43,
+"lane": "L1954"
+},
+{
+"id": "vport_WN_2.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@65",
+"sink": "vport_WN_2",
+"sink_part": "pv_N_1",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_1__u_ctl.req_valid",
+"source_bits": [
+[
+2,
+2
+]
+],
+"asbuilt": 65,
+"bound": 43,
+"pad": 0,
+"landed": 43,
+"lane": "L1958"
+},
+{
+"id": "vport_WN_3.pr_t[0:13]<-pvw_1__u_ctl.req_t@44",
+"sink": "vport_WN_3",
+"sink_part": "pv_N_7",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_1__u_ctl.req_t",
+"source_bits": [
+[
+42,
+55
+]
+],
+"asbuilt": 44,
+"bound": 5,
+"pad": 56,
+"landed": 61,
+"lane": "L1951"
+},
+{
+"id": "vport_WN_3.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@44",
+"sink": "vport_WN_3",
+"sink_part": "pv_N_7",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_1__u_ctl.req_valid",
+"source_bits": [
+[
+3,
+3
+]
+],
+"asbuilt": 44,
+"bound": 5,
+"pad": 56,
+"landed": 61,
+"lane": "L1955"
+},
+{
+"id": "vport_ES_0.pr_t[0:13]<-pvw_0__u_ctl.req_t@43",
+"sink": "vport_ES_0",
+"sink_part": "pv_S_3",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_0__u_ctl.req_t",
+"source_bits": [
+[
+56,
+69
+]
+],
+"asbuilt": 43,
+"bound": 29,
+"pad": 7,
+"landed": 36,
+"lane": "L1841"
+},
+{
+"id": "vport_ES_0.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@43",
+"sink": "vport_ES_0",
+"sink_part": "pv_S_3",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_0__u_ctl.req_valid",
+"source_bits": [
+[
+4,
+4
+]
+],
+"asbuilt": 43,
+"bound": 34,
+"pad": 2,
+"landed": 36,
+"lane": "L1845"
+},
+{
+"id": "vport_ES_1.pr_t[0:13]<-pvw_0__u_ctl.req_t@51",
+"sink": "vport_ES_1",
+"sink_part": "pv_S_5",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_0__u_ctl.req_t",
+"source_bits": [
+[
+70,
+83
+]
+],
+"asbuilt": 51,
+"bound": 15,
+"pad": 36,
+"landed": 51,
+"lane": "L1840"
+},
+{
+"id": "vport_ES_1.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@51",
+"sink": "vport_ES_1",
+"sink_part": "pv_S_5",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_0__u_ctl.req_valid",
+"source_bits": [
+[
+5,
+5
+]
+],
+"asbuilt": 51,
+"bound": 20,
+"pad": 31,
+"landed": 51,
+"lane": "L1844"
+},
+{
+"id": "vport_ES_2.pr_t[0:13]<-pvw_0__u_ctl.req_t@41",
+"sink": "vport_ES_2",
+"sink_part": "pv_S_1",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_0__u_ctl.req_t",
+"source_bits": [
+[
+84,
+97
+]
+],
+"asbuilt": 41,
+"bound": 42,
+"pad": 1,
+"landed": 43,
+"lane": "L1842"
+},
+{
+"id": "vport_ES_2.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@41",
+"sink": "vport_ES_2",
+"sink_part": "pv_S_1",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_0__u_ctl.req_valid",
+"source_bits": [
+[
+6,
+6
+]
+],
+"asbuilt": 41,
+"bound": 43,
+"pad": 0,
+"landed": 43,
+"lane": "L1846"
+},
+{
+"id": "vport_ES_3.pr_t[0:13]<-pvw_0__u_ctl.req_t@59",
+"sink": "vport_ES_3",
+"sink_part": "pv_S_7",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_0__u_ctl.req_t",
+"source_bits": [
+[
+98,
+111
+]
+],
+"asbuilt": 59,
+"bound": 2,
+"pad": 56,
+"landed": 58,
+"lane": "L1839"
+},
+{
+"id": "vport_ES_3.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@59",
+"sink": "vport_ES_3",
+"sink_part": "pv_S_7",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_0__u_ctl.req_valid",
+"source_bits": [
+[
+7,
+7
+]
+],
+"asbuilt": 59,
+"bound": 2,
+"pad": 56,
+"landed": 58,
+"lane": "L1843"
+},
+{
+"id": "vport_EN_0.pr_t[0:13]<-pvw_1__u_ctl.req_t@53",
+"sink": "vport_EN_0",
+"sink_part": "pv_N_3",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_1__u_ctl.req_t",
+"source_bits": [
+[
+56,
+69
+]
+],
+"asbuilt": 53,
+"bound": 29,
+"pad": 7,
+"landed": 36,
+"lane": "L1953"
+},
+{
+"id": "vport_EN_0.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@53",
+"sink": "vport_EN_0",
+"sink_part": "pv_N_3",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_1__u_ctl.req_valid",
+"source_bits": [
+[
+4,
+4
+]
+],
+"asbuilt": 53,
+"bound": 34,
+"pad": 2,
+"landed": 36,
+"lane": "L1957"
+},
+{
+"id": "vport_EN_1.pr_t[0:13]<-pvw_1__u_ctl.req_t@42",
+"sink": "vport_EN_1",
+"sink_part": "pv_N_5",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_1__u_ctl.req_t",
+"source_bits": [
+[
+70,
+83
+]
+],
+"asbuilt": 42,
+"bound": 15,
+"pad": 36,
+"landed": 51,
+"lane": "L1952"
+},
+{
+"id": "vport_EN_1.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@42",
+"sink": "vport_EN_1",
+"sink_part": "pv_N_5",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_1__u_ctl.req_valid",
+"source_bits": [
+[
+5,
+5
+]
+],
+"asbuilt": 42,
+"bound": 20,
+"pad": 31,
+"landed": 51,
+"lane": "L1956"
+},
+{
+"id": "vport_EN_2.pr_t[0:13]<-pvw_1__u_ctl.req_t@60",
+"sink": "vport_EN_2",
+"sink_part": "pv_N_1",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_1__u_ctl.req_t",
+"source_bits": [
+[
+84,
+97
+]
+],
+"asbuilt": 60,
+"bound": 42,
+"pad": 1,
+"landed": 43,
+"lane": "L1954"
+},
+{
+"id": "vport_EN_2.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@60",
+"sink": "vport_EN_2",
+"sink_part": "pv_N_1",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_1__u_ctl.req_valid",
+"source_bits": [
+[
+6,
+6
+]
+],
+"asbuilt": 60,
+"bound": 43,
+"pad": 0,
+"landed": 43,
+"lane": "L1958"
+},
+{
+"id": "vport_EN_3.pr_t[0:13]<-pvw_1__u_ctl.req_t@44",
+"sink": "vport_EN_3",
+"sink_part": "pv_N_7",
+"src_part": "hub_C",
+"sink_port": "pr_t",
+"sink_bits": [
+[
+0,
+13
+]
+],
+"source": "pvw_1__u_ctl.req_t",
+"source_bits": [
+[
+98,
+111
+]
+],
+"asbuilt": 44,
+"bound": 5,
+"pad": 52,
+"landed": 57,
+"lane": "L1951"
+},
+{
+"id": "vport_EN_3.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@44",
+"sink": "vport_EN_3",
+"sink_part": "pv_N_7",
+"src_part": "hub_C",
+"sink_port": "pr_valid",
+"sink_bits": [
+[
+0,
+0
+]
+],
+"source": "pvw_1__u_ctl.req_valid",
+"source_bits": [
+[
+7,
+7
+]
+],
+"asbuilt": 44,
+"bound": 5,
+"pad": 52,
+"landed": 57,
+"lane": "L1955"
+}
+],
+"ports": {
+"vport_WS_0": {
+"request_max_before": 31,
+"extra_for_dq_cap": 5,
+"landed_target": 36,
+"current_request_skew": [
+26,
+31
+]
+},
+"vport_WS_1": {
+"request_max_before": 20,
+"extra_for_dq_cap": 34,
+"landed_target": 54,
+"current_request_skew": [
+15,
+20
+]
+},
+"vport_WS_2": {
+"request_max_before": 43,
+"extra_for_dq_cap": 0,
+"landed_target": 43,
+"current_request_skew": [
+42,
+43
+]
+},
+"vport_WS_3": {
+"request_max_before": 2,
+"extra_for_dq_cap": 60,
+"landed_target": 62,
+"current_request_skew": [
+2
+]
+},
+"vport_WN_0": {
+"request_max_before": 31,
+"extra_for_dq_cap": 5,
+"landed_target": 36,
+"current_request_skew": [
+26,
+31
+]
+},
+"vport_WN_1": {
+"request_max_before": 20,
+"extra_for_dq_cap": 34,
+"landed_target": 54,
+"current_request_skew": [
+15,
+20
+]
+},
+"vport_WN_2": {
+"request_max_before": 43,
+"extra_for_dq_cap": 0,
+"landed_target": 43,
+"current_request_skew": [
+42,
+43
+]
+},
+"vport_WN_3": {
+"request_max_before": 2,
+"extra_for_dq_cap": 59,
+"landed_target": 61,
+"current_request_skew": [
+2
+]
+},
+"vport_ES_0": {
+"request_max_before": 31,
+"extra_for_dq_cap": 5,
+"landed_target": 36,
+"current_request_skew": [
+26,
+31
+]
+},
+"vport_ES_1": {
+"request_max_before": 20,
+"extra_for_dq_cap": 31,
+"landed_target": 51,
+"current_request_skew": [
+15,
+20
+]
+},
+"vport_ES_2": {
+"request_max_before": 43,
+"extra_for_dq_cap": 0,
+"landed_target": 43,
+"current_request_skew": [
+42,
+43
+]
+},
+"vport_ES_3": {
+"request_max_before": 2,
+"extra_for_dq_cap": 56,
+"landed_target": 58,
+"current_request_skew": [
+2
+]
+},
+"vport_EN_0": {
+"request_max_before": 31,
+"extra_for_dq_cap": 5,
+"landed_target": 36,
+"current_request_skew": [
+26,
+31
+]
+},
+"vport_EN_1": {
+"request_max_before": 20,
+"extra_for_dq_cap": 31,
+"landed_target": 51,
+"current_request_skew": [
+15,
+20
+]
+},
+"vport_EN_2": {
+"request_max_before": 43,
+"extra_for_dq_cap": 0,
+"landed_target": 43,
+"current_request_skew": [
+42,
+43
+]
+},
+"vport_EN_3": {
+"request_max_before": 2,
+"extra_for_dq_cap": 55,
+"landed_target": 57,
+"current_request_skew": [
+2
+]
+}
+},
+"summary": {
+"members": 32,
+"request_width": 240,
+"total_pad_ff": 6316,
+"additional_pad_ff": 6316,
+"previous_pad_ff": 0,
+"virtual_dq_only_pad_ff": 5700,
+"skew_align_added_ff": 616
+}
+}
