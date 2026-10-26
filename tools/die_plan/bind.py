@@ -3073,7 +3073,7 @@ def _glue(c, conns, r):
         return f"    assign {conns['Y']} = {_GLUE_UN[t]}{op(conns['A'], sg('A_SIGNED'))};{src}"
     if t == "$mux":
         return f"    assign {conns['Y']} = {conns['S']} ? {conns['B']} : {conns['A']};{src}"
-    if t in ("$dff", "$adff", "$sdff", "$dffe", "$adffe", "$sdffe", "$sdffce"):
+    if t in ("$dff", "$adff", "$sdff", "$dffe", "$adffe", "$sdffe", "$sdffce", "$aldff", "$aldffe"):
         clkpol = "posedge" if P.get("CLK_POLARITY", "1").endswith("1") else "negedge"
         lines = []
         q = conns["Q"]
@@ -3082,7 +3082,14 @@ def _glue(c, conns, r):
         en = ""
         if "EN" in conns:
             en = f"if ({'' if P.get('EN_POLARITY', '1').endswith('1') else '!'}{conns['EN']}) "
-        if t.startswith("$adff"):
+        if t.startswith("$aldff"):
+            # Slang uses asynchronous-load FFs even for some constant-reset RTL.
+            # Preserve the actual load data and event polarity; never turn this
+            # into a synchronous reset or treat dynamic AD as a reset constant.
+            apol = P.get("ALOAD_POLARITY", "1").endswith("1")
+            lines.append(f"    always @({clkpol} {conns['CLK']} or {'posedge' if apol else 'negedge'} {conns['ALOAD']})\n"
+                         f"        if ({'' if apol else '!'}{conns['ALOAD']}) {nm}_q <= {conns['AD']}; else {en}{nm}_q <= {conns['D']};{src}")
+        elif t.startswith("$adff"):
             apol = P.get("ARST_POLARITY", "1").endswith("1")
             av = P.get("ARST_VALUE", "0")
             lines.append(f"    always @({clkpol} {conns['CLK']} or {'posedge' if apol else 'negedge'} {conns['ARST']})\n"
