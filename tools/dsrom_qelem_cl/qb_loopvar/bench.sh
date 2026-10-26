@@ -1,7 +1,7 @@
 #!/bin/bash
 # S81-CORE-LAT-R2/LV bench: tb_qxpq_loopvar (q element NEW RTL vs OLD RTL renamed *_old), Verilator 5.050.
 #   bench.sh REPO OLD_SHA NEW_ROOT WORK      REPO = git repo holding OLD_SHA; NEW_ROOT = source tree (rtl/, tools/) at the new sha
-# Runs: CPR 0 (S81 die params) x seeds 1 2 3, CPR 1 x seed 1, and the negative control (TB_MUT, must FAIL).  BENCH_RC 0 = all OK.
+# Runs: S81 die params x seeds 1 2 3 4 (60k-cycle-class runs each), and the negative control (TB_MUT, must FAIL).  BENCH_RC 0 = all OK.
 set -u
 R=$(cd "$1" && pwd); OLD=$2; S=$(cd "$3" && pwd); W=$4; mkdir -p "$W"; W=$(cd "$W" && pwd)
 D=$(cd "$(dirname "$0")" && pwd)
@@ -23,9 +23,8 @@ run() { # name expect seed
   grep '^QXPQ_LV cycles' "$W/$1_s$3.log"
   [ $ok = 1 ]
 }
-build cpr0 || exit 2; build cpr1 +define+TB_CPR=1 || exit 2; build mut +define+TB_MUT || exit 2
+build pass || exit 2; build mut +define+TB_MUT || exit 2
 rc=0
-for s in 1 2 3; do run cpr0 pass $s || rc=1; done
-run cpr1 pass 1 || rc=1
+for s in 1 2 3 4; do run pass pass $s || rc=1; done
 run mut fail 1 || rc=1
 echo "BENCH_RC $rc"; exit $rc

@@ -81,7 +81,10 @@ def main():
                     o = None      # hashed paramod names hash the module name too: pair by order below
                 if o in olds:
                     pairs.append((o, n))
-            if not pairs:     # slang / hashed names: pair in elaboration order (same parameter sets, same order)
+            if fe == "slang":   # slang names each instance's module <M>$<instance path>: pair u_old.X <-> u_new.X
+                pairs = [(o, o.replace(t + "_old$lv_top.u_old.", t + "$lv_top.u_new.", 1)) for o in olds]
+                pairs = [(o, n) for o, n in pairs if n in news]
+            if not pairs:     # hashed names: pair in elaboration order (same parameter sets, same order)
                 pairs = list(zip(sorted(olds), sorted(news))) if len(olds) == len(news) else []
             if not pairs:
                 fr["pairs"].append({"module": t, "verdict": "NO_PAIR", "old": olds, "new": news}); rc_all = 1
@@ -91,7 +94,7 @@ def main():
         # one script: elaborate once, then per pair load the elaborated design and check it
         cmds = read_cmds(fe, files) + ["design -save elab"]
         for t, tag, o, n in todo:
-            cmds += ["design -load elab", f"rename {o} lv_gold", f"rename {n} lv_gate", "flatten lv_gold lv_gate",
+            cmds += ["design -load elab", "setattr -mod -unset keep_hierarchy", f"rename {o} lv_gold", f"rename {n} lv_gate", "flatten lv_gold lv_gate",
                      "memory -nomap lv_gold lv_gate", "memory_map lv_gold lv_gate", "opt_clean lv_gold lv_gate",
                      "async2sync lv_gold lv_gate", "equiv_make lv_gold lv_gate lv_eq",
                      "equiv_simple -seq 5 lv_eq", "equiv_struct lv_eq", "equiv_simple -seq 5 lv_eq",

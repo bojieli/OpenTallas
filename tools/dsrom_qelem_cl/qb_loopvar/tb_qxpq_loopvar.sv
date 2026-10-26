@@ -2,13 +2,10 @@
 // tb_qxpq_loopvar (S81-CORE-LAT-R2/LV 2026-10-26): the q element ot_v41_rom_elem_q_qxpq_w10 at the NEW RTL (loop-scoped
 // loop integers, a9da16ea9 + 403622c09) against the OLD RTL (parent 95107779c; every module renamed *_old by
 // qb_loopvar/mk_old.sh), both at the S81 die parameters (rtl/dsrom_sys/s81_dv/frame/col_h10.sv u_e0/u_e2: QX 10, QM 5,
-// QS 5, RSTP 1, CPR 0 -- the canonical core spec), same ROM fixture, same stimulus and same pin timing (stimulus of
+// QS 5, RSTP 1 -- the canonical core spec; the CPR option is not in this RTL), same ROM fixture, same stimulus and same pin timing (stimulus of
 // tb_qxpq_cpr: configuration loads, go / go_tag, x beats incl. off-schedule beats, random resets in mid-run).
 // PASS: every output of the two elements identical every cycle (=== incl. X), local reset release 2 edges for both.
 // MUT (+define+TB_MUT): the dut misses the 5th go command -> must FAIL (negative control: the compare sees a difference).
-`ifndef TB_CPR
-`define TB_CPR 0
-`endif
 module tb_qxpq_loopvar;
 
  parameter integer NCYC = 60000;
@@ -22,7 +19,7 @@ module tb_qxpq_loopvar;
  reg [255:0] xs_q0 = 0, xs_q1 = 0; reg [9:0] xs_e0 = 10'd127, xs_e1 = 10'd127;
  always @(posedge clk) rst_l <= rst_e;
  wire dut_rst = rst_e;
- // the go command: stimulus go / go_tag = the CPR element's (die issues it one cycle early); the ref gets it one edge later
+ // go_l / go_tag_l: unused (kept from tb_qxpq_cpr); both elements get go / go_tag at the same edge
  reg go_l = 0; reg [1:0] go_tag_l = 0;
  always @(posedge clk) begin go_l <= go; go_tag_l <= go_tag; end
 `ifdef TB_MUT
@@ -34,12 +31,12 @@ module tb_qxpq_loopvar;
  wire [1:0] av, bv, ae, be; wire [63:0] ad, bd; wire [31:0] ar, br; wire [9:0] asg, bsg, an, bn; wire [5:0] ap, bp;
  wire ab, bb, af, bf, awk, bwk, abf, bbf, ash, bsh;
 `define QP .MTP(1), .EARLY(1), .NB(2), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(10), .PQ(1), .QW(0), .QM(5), .QS(5)
- ot_v41_rom_elem_q_qxpq_w10_old #(`QP, .RSTP(1), .CPR(`TB_CPR), .INSTANCE("r")) ref_e (
+ ot_v41_rom_elem_q_qxpq_w10_old #(`QP, .RSTP(1), .INSTANCE("r")) ref_e (
   .clk(clk), .rst_n(rst_e), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag),
   .walking(awk), .bank_free(abf), .sh_free(ash),
   .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
   .xs_pos(xs_pos), .pv(av), .pval(ad), .prow(ar), .pseg(asg), .pnseg(an), .perr(ae), .ppos(ap), .busy(ab), .fault(af));
- ot_v41_rom_elem_q_qxpq_w10 #(`QP, .RSTP(1), .CPR(`TB_CPR), .INSTANCE("d")) dut_e (
+ ot_v41_rom_elem_q_qxpq_w10 #(`QP, .RSTP(1), .INSTANCE("d")) dut_e (
   .clk(clk), .rst_n(dut_rst), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(dut_go), .go_tag(dut_go_tag),
   .walking(bwk), .bank_free(bbf), .sh_free(bsh),
   .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
