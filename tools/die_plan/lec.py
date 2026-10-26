@@ -1363,6 +1363,7 @@ def fsm_proposals(L, log, words=2, max_bits=4):
     (code, one-hot bit) pair; a map consistent with every observed transition is proposed as
       gate B#t[pi(c)] == (gold B == c)    (a 'cube' hypothesis: the gate flop is bound to the gold state compare)
       gold B in dom(pi)                   (a state constraint: the codes the recoded FSM implements)
+    An optimized-away idle flop may encode one additional state with all gate bits zero.
     Both are proved inductively with every other hypothesis (assumed on the current state, proved on the next); a
     wrong map can only fail and be dropped, never hide a difference."""
     m, kind = L.build(with_compare=False, with_hyp=False)
@@ -1394,7 +1395,7 @@ def fsm_proposals(L, log, words=2, max_bits=4):
         dl = [L.dlit[("gold", k)] for k in gk] + [L.dlit[("gate", k)] for k in tk]
         R = {}
         for c in range(1 << n):
-            for j in range(nt):
+            for j in range(-1, nt):
                 ones = (1 << (64 * words)) - 1
                 fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
                 fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
@@ -1403,7 +1404,7 @@ def fsm_proposals(L, log, words=2, max_bits=4):
                 for lane in range(64 * words):
                     gn = sum(((vals[b] >> lane) & 1) << b for b in range(n))
                     tn = [(vals[n + i] >> lane) & 1 for i in range(nt)]
-                    obs[(gn, tn.index(1) if sum(tn) == 1 else -1)] += 1
+                    obs[(gn, tn.index(1) if sum(tn) == 1 else (-1 if sum(tn) == 0 else -2))] += 1
                 R[(c, j)] = obs
         # the next states also depend on registers not yet paired (a renamed alias of a state flag is a free input
         # on each side), so a transition agrees only where those agree: pick the map with the most agreeing
@@ -1420,15 +1421,36 @@ def fsm_proposals(L, log, words=2, max_bits=4):
                     best, second, pi = sc, best, cand
                 elif sc > second:
                     second = sc
-        if pi is None or best == second or 2 * best <= nt * lanes:
+        # Synthesis can remove the idle-state flop: all zero is then one
+        # additional encoding. Propose its code only when its observed score
+        # is uniquely better than the ordinary one-hot candidate. Every cube
+        # and the enlarged valid-state set still go through induction.
+        count = nt
+        if nt < (1 << n) and math.perm(1 << n, nt + 1) <= 200000:
+            zbest, zsecond, zpi = -1, -1, None
+            for codes in itertools.combinations(range(1 << n), nt + 1):
+                for perm in itertools.permutations(range(-1, nt)):
+                    cand = dict(zip(codes, perm))
+                    sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
+                             if ti >= -1 and cand.get(gn, -2) == ti)
+                    if sc > zbest:
+                        zbest, zsecond, zpi = sc, zbest, cand
+                    elif sc > zsecond:
+                        zsecond = sc
+            if zpi is not None and zbest > zsecond and 2 * zbest > (nt + 1) * lanes and (
+                    pi is None or best == second or 2 * best <= nt * lanes or zbest * nt > best * (nt + 1)):
+                best, second, pi, count = zbest, zsecond, zpi, nt + 1
+        if pi is None or best == second or 2 * best <= count * lanes:
             log.append(f"fsm: {base} ({n} gold / {nt} gate bits): no unique encoding (best {best}, next {second} of "
-                       f"{nt * lanes} transitions), none proposed")
+                       f"{count * lanes} transitions), none proposed")
             continue
         for c, j in sorted(pi.items()):
+            if j < 0:
+                continue
             L.hyp[("gate", tk[j])] = ("cube", "gold", list(gk), [(c >> b) & 1 for b in range(n)])
             n_new += 1
         L.cons.append(("gold", list(gk), [[(c >> b) & 1 for b in range(n)] for c in sorted(pi)]))
-        log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j]}" for c, j in sorted(pi.items())))
+        log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j] if j >= 0 else 'zero-hot'}" for c, j in sorted(pi.items())))
     return n_new
 
 

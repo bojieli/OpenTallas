@@ -1126,3 +1126,34 @@ def test_relay_keying_preserves_main_scalar_element_normalization(tmp_path, monk
     assert lec.slang_element_keys(L, [], work=tmp_path) == 1
     assert L.tp == {'ff:u.rv[4]': 40}
     assert L.tc == {'ff:u.rv[4]': 41}
+
+
+def test_fsm_implicit_zero_idle_is_proposed_and_inductively_checked():
+    """Four-state binary cycle versus three flops with an implicit all-zero idle."""
+    def design(gate):
+        m = lec.Aig()
+        reset = m.add_input('reset')
+        q = [m.add_input(str(i)) for i in range(3 if gate else 2)]
+        if gate:
+            active = m.AND(m.AND(q[0] ^ 1, q[1] ^ 1), q[2] ^ 1)
+            nxt = [m.AND(reset ^ 1, x) for x in (active, q[0], q[1])]
+        else:
+            nxt = [m.AND(reset ^ 1, q[0] ^ 1), m.AND(reset ^ 1, m.XOR(q[1], q[0]))]
+        d = dict(I=1, L=len(q), O=0, A=len(m.ands)//2, latches=nxt, outputs=[], ands=m.ands)
+        mp = {'input': {0: [('reset', 0)]}, 'output': {}, 'latch': {
+            i: [(f'u_dut.st[{i}]$_DFF_P_.lecq', 0)] for i in range(len(q))}}
+        return d, mp
+    g, gm = design(False)
+    t, tm = design(True)
+    L = lec.Lec(g, gm, t, tm)
+    log = []
+    assert lec.fsm_proposals(L, log) == 3
+    assert any('zero-hot' in row for row in log)
+    assert len(L.cons[-1][2]) == 4
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {'proved'}
+    key = next(iter(L.hyp))
+    h = L.hyp[key]
+    L.hyp[key] = (h[0], h[1], h[2], [b ^ 1 for b in h[3]])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert 'differs' in _sim_prove(m).values()
