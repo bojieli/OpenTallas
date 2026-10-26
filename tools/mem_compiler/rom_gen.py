@@ -363,7 +363,8 @@ def tile_image(image: list[int], data_bits: int, spec: RomSpec, tile_data_bits: 
     return tiles
 
 
-def verify_personalisation(manifest_path: Path, image_path: Path | None = None) -> dict[str, Any]:
+def verify_personalisation(manifest_path: Path, image_path: Path | None = None,
+                           macro_sheet: Path | None = None) -> dict[str, Any]:
     """Functional / LEC check of one content against its macro: the via maps ARE the content.
 
     For every instance of a personalisation manifest: the via-map file hashes to the recorded SHA-256, its read-back
@@ -377,8 +378,8 @@ def verify_personalisation(manifest_path: Path, image_path: Path | None = None) 
     if asap7.sha256_file(image_path) != man["image_sha256"]:
         return {"verdict": "FAIL", "error": f"image {image_path} does not hash to the manifest image_sha256"}
     base = manifest_path.parent
-    macro_json = None
-    for cand in (ROOT / "physical" / "asap7_memory_macros_v2" / man["macro"] / f"{man['macro']}.json",
+    macro_json = macro_sheet if macro_sheet and Path(macro_sheet).exists() else None
+    for cand in () if macro_json else (ROOT / "physical" / "asap7_memory_macros_v2" / man["macro"] / f"{man['macro']}.json",
                  ROOT / "physical" / "asap7_memory_macros" / man["macro"] / f"{man['macro']}.json"):
         if cand.exists():
             macro_json = cand
@@ -445,9 +446,10 @@ def main() -> int:
     v = sub.add_parser("verify", help="per-content functional/LEC check: via maps against the weight image")
     v.add_argument("--manifest", type=Path, required=True, help="<prefix>.personalisation.json")
     v.add_argument("--image", type=Path, default=None, help="the content file (default: the manifest's)")
+    v.add_argument("--macro", type=Path, default=None, help="datasheet JSON of a shape not in physical/ (fresh compile)")
     args = ap.parse_args()
     if args.cmd == "verify":
-        res = verify_personalisation(args.manifest, args.image)
+        res = verify_personalisation(args.manifest, args.image, args.macro)
         print(json.dumps(res, indent=1, sort_keys=True))
         return 0 if res["verdict"] == "PASS" else 1
     if args.cmd == "compile":
