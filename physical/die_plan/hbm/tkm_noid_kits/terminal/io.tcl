@@ -692,4 +692,4 @@ place_pin -pin_name {tile_up_out[342]} -layer M5 -location {274.7760 0.0960} -pi
 place_pin -pin_name {tile_up_out[343]} -layer M5 -location {275.5440 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {tile_clr_o} -layer M5 -location {10.5840 345.5040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {tile_conv} -layer M3 -location {10.9530 345.5040} -pin_size {0.0180 0.1920}
-place_pin -pin_name {tile_clk} -layer M6 -location {319.5840 172.7040} -pin_size {0.1920 0.0320}
+place_pin -pin_name {tile_clk} -layer M4 -location {319.5840 172.7280} -pin_size {0.1920 0.0240}
