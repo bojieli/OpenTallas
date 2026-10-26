@@ -3078,6 +3078,124 @@
   },
   {
    "design": "r25gq",
+   "unit": "HBM.D4G_B1_FT_OVERLAY",
+   "group": "HBM.D4G_B1_FT_OVERLAY",
+   "measured": 2.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles a record (max over ops)",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.499,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of each op (one schedule)",
+     "base_cycles": 576702.4,
+     "cycles": 579595.5,
+     "added_cycles": 2893.1,
+     "terms": [
+      [
+       "ARGMAX.LOCAL",
+       2.0
+      ],
+      [
+       "COLL.ALL_GATHER",
+       2.0
+      ],
+      [
+       "COLL.ARGMAX_MERGE",
+       2.0
+      ],
+      [
+       "COLL.GROUP_REDUCE_MCAST",
+       2.0
+      ],
+      [
+       "COLL.ROW_GATHER",
+       2.0
+      ],
+      [
+       "COLL.TOPK_MERGE",
+       2.0
+      ],
+      [
+       "FUSED.HC_POST",
+       1.0
+      ],
+      [
+       "FUSED.HC_PRE_NORM",
+       1.0
+      ],
+      [
+       "HC.HC_MIX_POST",
+       1.0
+      ],
+      [
+       "SU.VOP",
+       2.0
+      ]
+     ],
+     "program_records": {
+      "ARGMAX.LOCAL": 1,
+      "COLL.ALL_GATHER": 584,
+      "COLL.ARGMAX_MERGE": 1,
+      "COLL.GROUP_REDUCE_MCAST": 40,
+      "COLL.ROW_GATHER": 8,
+      "COLL.TOPK_MERGE": 9,
+      "FUSED.HC_POST": 80,
+      "FUSED.HC_PRE_NORM": 81,
+      "HC.HC_MIX_POST": 80,
+      "SU.VOP": 1356
+     },
+     "e2e_loss_pct": 0.499
+    },
+    "qwen_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of each op (one schedule)",
+     "base_cycles": 1269120.1,
+     "cycles": 1270278.1,
+     "added_cycles": 1158.0,
+     "terms": [
+      [
+       "ARGMAX.LOCAL",
+       2.0
+      ],
+      [
+       "COLL.ALL_REDUCE_SUM",
+       2.0
+      ],
+      [
+       "COLL.ARGMAX_MERGE",
+       2.0
+      ],
+      [
+       "FUSED.ROW_NORM",
+       2.0
+      ],
+      [
+       "SU.VOP",
+       2.0
+      ]
+     ],
+     "program_records": {
+      "ARGMAX.LOCAL": 1,
+      "COLL.ALL_REDUCE_SUM": 2,
+      "COLL.ARGMAX_MERGE": 1,
+      "FUSED.ROW_NORM": 5,
+      "SU.VOP": 12
+     },
+     "e2e_loss_pct": 0.091
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/token_pass/hbm_b1_lane_map_1026/price_request.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-26",
+   "status": "accepted",
+   "note": "D-HBM-B1 FT-overlay lane stations (native_cut_bands_r3 0552ecf2 -> b1n6 60d58330; b1e 43fb3b14 keeps the same 230 live-lane latencies): fixed cycles per record SU.VOP/ARGMAX.LOCAL/COLL.*/FUSED.ROW_NORM +2 (L36 hub->su, L101/L126 ctl), HC.HC_MIX_POST/FUSED.HC_* +1 (L15 bank chain); L93/L119/L146(+m) dead (removed in b1e). Price = plan lane latency (Plan.lane_latency), not a bench; MTP not priced (no r25gq MTP basis).",
+   "accepted_date": "2026-10-26",
+   "acceptance_note": "COORD 2026-10-26 11:33 PDT accepted under the accepted-cost rule pending NUMBER-CHECK; NUMBER-CHECK confirmed 11:48 PDT (COORD-REVIEW-QUEUE); filed by TOK-HBM"
+  },
+  {
+   "design": "r25gq",
    "unit": "HC.HC_MIX_POST",
    "group": "HC.HC_MIX_POST",
    "measured": 692.3,
@@ -3576,13 +3694,13 @@
    "superseded_pct_not_counted": 24.435
   },
   "r25gq": {
-   "accepted_pct": 10.915,
+   "accepted_pct": 11.414,
    "proposed_pct": 190.176,
-   "accepted_plus_proposed_pct": 201.091,
+   "accepted_plus_proposed_pct": 201.59,
    "limit_pct": 15.0,
-   "accepted_rows": 4,
+   "accepted_rows": 5,
    "proposed_rows": 28,
-   "headroom_pct": 4.085,
+   "headroom_pct": 3.586,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": false,
    "superseded_rows": 4,

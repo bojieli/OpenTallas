@@ -28,3 +28,5 @@ both sides = b1n6 core_conns.json (directed HC graph; the b1m5 graph's false HC 
 - 46 changed lanes are traversed by no record in the b1n6 core graph (map.json 'families' empty) -- bind owner to
   confirm they are dead (or declare their soft endpoints).
 MTP not priced: the accepted-cost r25gq basis has ds_ar + qwen_ar only.
+
+- file_ft_overlay_row.py (2026-10-26 TOK-HBM): re-runs the S2 schedule with price_request.json lower terms (matches 2893.1 / 1158.0 cycles), files + accepts r25gq HBM.D4G_B1_FT_OVERLAY (ds_ar 0.499 %, qwen_ar 0.091 %; r25gq accepted 10.915 -> 11.414 %). Needs a full results/arch + results/rtl checkout: a sparse tree silently changes the S2 base (557291.4 vs 576702.4).
