@@ -55,21 +55,18 @@ def make(plan,cells):
  c['types']['kv3_hg_v1']['replicas']=[x['name']for x in p['partitions']if x['type']=='kv3_hg_v1']
  return p,c,dict(candidate_only=True,removed_types=removed,types_after=len(T),ports=len(changed),old_port_bits=sum(w for _,w in changed),new_port_bits=2*len(changed),added_registers=0,added_cycles=0,obligations=['strict bind/R8','startup identity arrival vs config readiness','bootcfg/fault contract','render and G0C before route'])
 
-# PLANDIR sidecars the die tools resolve next to the plan file (reset_tree.die_io_entries, die_ci): a relocated
-# candidate must carry them byte-identical, else the declared reset pad falls back to its bare name (b21 ERROR
-# 'pll.por_n driven by pad_por_n, expected io_pad_por_n', PATH-KV 2026-10-25 23:32).
-SIDECARS=('die_io.json',)
-
-def copy_sidecars(pin,out,p):
- src=Path(pin).resolve().parent;copied=[]
- for n in SIDECARS:
-  if (src/n).is_file():(out/n).write_bytes((src/n).read_bytes());copied.append(n)
+# The plan's PLANDIR-relative references (564 hard_cores pins_file 'cores/...', census/ rows/map/bitcon, the
+# die_io.json sidecar of reset_tree.die_io_entries, r8/ tables) resolve against the directory of the plan FILE, so
+# the candidate plan is written as a SIBLING of its input plan (PLANDIR/die_plan.<OUT name>.json); OUT holds only the
+# plan cells, impact and recipe.  A relocated plan lost die_io.json (b21 ERROR 'pll.por_n driven by pad_por_n,
+# expected io_pad_por_n') and then the cores/ pin tables (b24 ResetError), PATH-KV 2026-10-25 23:4x.
+def check_reset_pad(plan_file,p):
  pad=(p.get('reset',{}).get('source') or {}).get('pad')
  if pad and not p.get('die',{}).get('io'):
-  io=json.loads((out/'die_io.json').read_text()) if (out/'die_io.json').is_file() else []
+  sc=Path(plan_file).parent/'die_io.json'
+  io=json.loads(sc.read_text()) if sc.is_file() else []
   if not any(w.get('name')==pad for w in io):
-   raise SystemExit(f'declared reset pad {pad}: no die.io entry in the plan and no die_io.json sidecar next to {pin}')
- return copied
+   raise SystemExit(f'declared reset pad {pad}: no die.io entry in the plan and no {sc}')
 
 IDENTITY_RTL='rtl/physical/kv_hg_identity_cfg.sv'
 MERGED_INTO='kv3_hg_v1'
@@ -109,10 +106,13 @@ def rewrite_recipe(rin,out,removed):
 
 if __name__=='__main__':
  pin,cin,out,*rest=sys.argv[1:];out=Path(out)
- if out.exists():raise SystemExit('Refuse existing output directory')
- p,c,r=make(json.loads(Path(pin).read_text()),json.loads(Path(cin).read_text()));out.mkdir(parents=True)
- r['sidecars']=copy_sidecars(pin,out,p)
- docs=[('plan.json',p),('plan_cells.json',c),('impact.json',r)]
+ plan_out=Path(pin).resolve().parent/f'die_plan.{out.name}.json'
+ if out.exists() or plan_out.exists():raise SystemExit(f'Refuse existing output {out} / {plan_out}')
+ p,c,r=make(json.loads(Path(pin).read_text()),json.loads(Path(cin).read_text()))
+ check_reset_pad(plan_out,p);out.mkdir(parents=True)
+ import os;r['plan']=os.path.relpath(plan_out,Path.cwd())
+ plan_out.write_text(json.dumps(p,indent=1)+'\n')
+ docs=[('plan_cells.json',c),('impact.json',r)]
  if rest:docs.append(('recipe.json',rewrite_recipe(rest[0],out,r['removed_types'])))
  for n,d in docs: (out/n).write_text(json.dumps(d,indent=1)+'\n')
  print(json.dumps(r))

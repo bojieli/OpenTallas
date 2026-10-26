@@ -377,7 +377,7 @@
  "files_note": "BINDER2: ASAP7 std-cell verilog models (ORFS asap7 platform verilog/stdcell) for the gate-level qkd_kvs_grp_r2c / grp_h_r2c leaves (lint closure) | /srv/opentallas-scratch2/claude/codex-kv45/asap7_cells = ORFS openroad/orfs:asap7lock /OpenROAD-flow-scripts/flow/platforms/asap7/verilog/stdcell (kv44/mk_kv44.sh extracts and substitutes).",
  "lint_split": true,
  "lint_jobs": 3,
- "plan_cells": "physical/die_plan/qwen_kvsys/hg_identity_2340/plan_cells.json",
+ "plan_cells": "physical/die_plan/qwen_kvsys/hg_identity_2350/plan_cells.json",
  "rewires": {
   "file": "physical/die_plan/qwen_kvsys/bind/kv44/plan_rewires_kv44.json",
   "classes": [
