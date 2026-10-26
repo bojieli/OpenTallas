@@ -1,0 +1,24 @@
+{
+  "scope": "Inherited hard-core routes and current canonical source relation; no new P&R launch",
+  "picture": "931414fdf6:results/qc_sramif4_1025/jp_bufx16f_clock.png",
+  "review": "Viewed four stacked macros with bilateral interface rows, open clock-access channels and four pads local to P0/R0W/R2E/S1. Existing GRT-only review remains appropriate; actual routed RCX images and full reach required after inherited jobs finish.",
+  "status": {
+    "prog": "LIVE intel1 sramif2-prog_fh16_s40-rt6-1437971, detailed route iteration24 about100violations",
+    "btab": "LIVE intel2 sramif2-btab_fh_s40-rt6-1217757, detailed route about465violations"
+  },
+  "source_relation": {
+    "canonical_bound": "prog/btab MIF0",
+    "inherited_kit": "MIF1 ROW_WRITE_RELAY1 WR_HALF_CYCLE1 RD_HALF_CYCLE1",
+    "library_delta": "Qualified default-off row/write/read-half source now composed. Remaining file differences are dormant MIF0 reset branches and other unreachable modules for selected MIF1. Explicit source-profile and MIF1 +1 read/write pricing still required."
+  },
+  "holds": [
+    "Parent io_hold_parent40 receipt from actual assembled parent",
+    "Coherent native MIF1 source/cycle adoption",
+    "Final route RCX20ps tap windows, local pads and hold-buffer count review"
+  ],
+  "verdict": "HOLD canonical adoption; inherited hard-core routes continue. No duplicate route launched.",
+  "cycles": {
+    "row_halfcycle": 0,
+    "MIF1_vs_MIF0": 1
+  }
+}
