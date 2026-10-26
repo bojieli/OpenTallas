@@ -9,7 +9,7 @@ Usage: python3 build_kit.py --out DIR [--anchors ENTRIES]    (--install-anchors 
 """
 import argparse,shutil,subprocess,sys
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument('--anchors');p.add_argument('--install-anchors')
+p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument('--anchors');p.add_argument('--install-anchors');p.add_argument('--flatten-reset-wrappers',action='store_true')
 a=p.parse_args()
 root=Path(__file__).resolve().parents[3];here=Path(__file__).resolve().parent;packet=here.parent
 out=Path(a.out).resolve();k=out/'native59'
@@ -32,7 +32,9 @@ shutil.copytree(root/'physical/common_flow',k/'cf',dirs_exist_ok=True)
  '# GEOM-REVIEW-11 23:44 fix (2)).  Sourcing ot_rst_copies.tcl alone (N59-4 rstB, N59-5 first synth) split the loads but\n'
  '# the vector rst_cp_* cells had keep only as multi-bit cells: techmap split them without keep and opt_merge folded every\n'
  '# family back to copy [0] (10 rst_cp flops in 1_2_yosys.v; rstB reset census 3901 pins > 405 um).\n'
- 'source /work/n59_keep_replicas.tcl\nsource /work/cf/ot_keep_regs.tcl\n')
+ 'source /work/n59_keep_replicas.tcl\n'+
+ ((here/'hooks/n59_flatten_reset_wrappers.tcl').read_text() if a.flatten_reset_wrappers else '')+
+ 'source /work/cf/ot_keep_regs.tcl\n')
 (k/'pre_gpl.tcl').write_text('source /work/face_flops.tcl\nsource /work/n59_stations.tcl\nsource /work/cf/macro_pin_flops.tcl\nsource /work/n59_reach405.tcl\n')
 (k/'pre_dpl.tcl').write_text('source /work/face_flops_release.tcl\nsource /work/n59_stations_release.tcl\nsource /work/cf/macro_pin_flops_release.tcl\nsource /work/n59_reach405.tcl\n')
 c=(k/'config.mk').read_text()
