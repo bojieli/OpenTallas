@@ -1040,3 +1040,4 @@ CODEX: 2026-10-26 02:24 PDT HBM native logical tooling recovered/source-onlyREAD
 CODEX: 2026-10-26 02:25 PDT KV ASTK/e1: e1 full LEC29998EQ; place advanced. ASTK face-root ancestor~100ps diagnosed, cold CTS structural trial exit0; actual nativepairmeasure running. ExactJSONQaliasfix6bdc0ae25 tiny exhaustive+mutantsPASS/fullASTKLECrunning.
 
 CODEX: 2026-10-26 02:26 PDT TOK-DS recoveredgenuineL14Engram inputs fromreleasedcheckpoint,57348wordsPASS+mutant; nativeentry20480Hwords/3920rows/80NXpartialsPASS. Narrowcompilerfe8866226+receipt5e0303fe3READY actualhubverified; closingservice1136PVerrors diagnosedprogrammeprofile,shiftedrunslive.
+CODEX: 2026-10-26 02:31 PDT host_qm929a canonicalPLACEPASS179arcsmax104um; trialrow001d839021ce awaitsGEOM+canary. SCphysicalKEEPfixrestores6/6actualFFs and catches deletionmutant. FreshVQ LEC13045/13045PASS,placing. Reviewreceipts330101a02.
