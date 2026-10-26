@@ -26,3 +26,9 @@ def test_watch_rules_remain_part_of_flow_contract():
     after=copy.deepcopy(spec)
     after['watch'].append('physical/*')
     assert watch.spec_flow_changed(spec, after, 's81_head')
+
+
+def test_test_changes_do_not_hold_rows_but_production_changes_do():
+    spec={'watch':['physical/common_flow/*'], 'watch_exclude':['*/test_*.py','*/tests/*']}
+    assert watch.flow_paths(['physical/common_flow/test_shallow_clock_cl.py'],spec,'s81_head') == []
+    assert watch.flow_paths(['physical/common_flow/shallow_clock.py'],spec,'s81_head') == ['physical/common_flow/shallow_clock.py']
