@@ -8,6 +8,8 @@
 // Verdict line: "PASS hd_ctl" / "FAIL hd_ctl <reason>".
 module tb_s81hd_ctl;
  parameter integer MUT=0;
+ parameter integer TAGGED=1;
+ localparam[9:0]USER_ID=TAGGED?10'd777:10'd0;
     wire xgo,xxv,xbusy,xdone,xfault,xready,xactive,xlv,xfwd;
     wire[6:0] xidx;wire[1023:0] xdata;wire[31:0] xtag,xmessage;
     wire[1103:0] xfstage;wire[255:0] xxa,xxb;wire[7:0] xevents;
@@ -122,7 +124,7 @@ module tb_s81hd_ctl;
             for (b = 0; b < 80; b = b + 1) begin
                 ri = 0; ri[0] = 1; ri[3:1] = 3'd2; ri[8:4] = 5'd1; ri[20:13] = perm[b][7:0];
                 for (k = 0; k < 64; k = k + 1) ri[21 + 16*k +: 16] = xv[64*perm[b] + k];
-                mu_rt = {1'b1, 10'd777, pos};
+                mu_rt = {1'(TAGGED), 10'd777, pos};
                 tick; ri = 0; mu_rt = 0;
                 if (b % 3 == 0) tick;
             end
@@ -135,14 +137,14 @@ module tb_s81hd_ctl;
             while (mtx_v == 6'd0) tick;
             if (mtx_v != 6'h3F) fail("BEST not on all mesh lanes");
             ownrec = mtx_d[16 +: 81];
-            if (mtx_d[3:0] != 4'd1 || mtx_d[5:4] != 2'd1 || ownrec[0] != 1'b1 || ownrec[80:60] != pos || ownrec[59:50] != 10'd777)
+            if (mtx_d[3:0] != 4'd1 || mtx_d[5:4] != 2'd1 || ownrec[0] != 1'b1 || ownrec[80:60] != pos || ownrec[59:50] != USER_ID)
                 fail("own BEST frame header / tag");
             for (k = 1; k < 6; k = k + 1) if (mtx_d[k*FW +: FW] != mtx_d[0 +: FW]) fail("mesh lanes differ");
             // peers: pair p lanes 2p / 2p+1, copies at different delays
             for (k = 0; k < 6; k = k + 1) begin
                 repeat (3 + k) tick;
                 mrx_v = 0; mrx_v[k] = 1;
-                mrx_d[k*FW +: FW] = {1'b1, 455'd0, pos, 10'd777, (k < 2) ? b0 : (k < 4) ? b1 : b2, (k < 2) ? r0 : (k < 4) ? r1 : r2, 1'b1, 8'd0, 2'd0, 2'(k/2 + 2), 4'd1};
+                mrx_d[k*FW +: FW] = {1'b1, 455'd0, pos, USER_ID, (k < 2) ? b0 : (k < 4) ? b1 : b2, (k < 2) ? r0 : (k < 4) ? r1 : r2, 1'b1, 8'd0, 2'd0, 2'(k/2 + 2), 4'd1};
                 tick; mrx_v = 0;
             end
             repeat (300) tick;
