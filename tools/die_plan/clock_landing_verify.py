@@ -25,7 +25,9 @@ class Verification:
         self.F,self.G,self.raw,self.table,self.names=F,G,raw,table,names
         self.observer_seen=set();self.errors=[];self.byname={c.path:c for c in F.cells};self.expected=set();self.memo={}
         self.parts={p['name']:p for p in raw['partitions']};self.collector=table['collector']
-        self.region={pn:r['tag'] for r in table['regions'] for pn in r['parts']}
+        # QC tables list region members; the KV c3t table carries a member COUNT (parts: int) -> centre-in-box below,
+        # the same rule clock_landing_plan.compose uses
+        self.region={pn:r['tag'] for r in table['regions'] if isinstance(r['parts'],list) for pn in r['parts']}
         # Some profile manifests carry the authoritative part map separately.
         for p in self.parts:
             if p not in self.region:
