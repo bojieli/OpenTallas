@@ -713,6 +713,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         out["unplaced"].append(["root", "STRUCTURAL root-to-tree span exceeds 750 um", round(trunk, 3)])
     out["meta"]["root_um"] = list(root)
     out["meta"]["trunk_um"] = round(trunk, 2)
+    # DECLARED meta-only change (PATH-KV 10-26, COORD-REVIEW-20): trunk_um is now measured from the die root to the
+    # PLACED ckm_n0 site (q), not to the grid centre c0 as before; the old figure is kept as trunk_um_c0. No geometry,
+    # net or timing change in a default build (ckm_n0 was always placed at q).
+    out["meta"]["trunk_um_basis"] = "root->placed ckm_n0 site"
+    out["meta"]["trunk_um_c0"] = round(abs(root[0] - c0[0]) + abs(root[1] - c0[1]), 2)
     out["meta"]["trunk_reps"] = len(trunk_reps)
     chain = trunk_reps + [n0]
     nets.append(dict(name="root", drv="port:root", loads=[chain[0]], level=-1))
@@ -1586,6 +1591,38 @@ def sink_arrivals(M, arr, corner, early_by_plan):
             {p: v[1] + offsets[p] for p, v in arr.items()}, offsets)
 
 
+INFO_128D = "INFO-12.8d (not qualifying)"
+
+
+def banned_means_12_8d(M):
+    """METHODOLOGY 12.8d: a build that used measured stub trims, balance pads, early-tap branches or core offsets is
+    diagnostic evidence only; its report never carries PASS (12.8f re-measure on the 12.8 structure)."""
+    meta = M.get("meta", {})
+    why = []
+    if meta.get("stubtrim"):
+        why.append("stubtrim (per-tap trim chosen after a measurement)")
+    if meta.get("balance"):
+        why.append("balance pads (chosen after a measurement)")
+    if any(float(t.get("early_ps") or 0.0) != 0.0 for t in M.get("taps", [])):
+        why.append("early-tap branch / core offset")
+    if meta.get("early_branches") or meta.get("core_offsets"):
+        why.append("early-tap branch / core offset")
+    return sorted(set(why))
+
+
+def apply_12_8d(rep, why):
+    """Relabel every corner verdict of a banned-means build (never PASS) and return the qualification blocker."""
+    if not why:
+        return None
+    for r in rep["corners"].values():
+        r["verdict_measured"] = r["verdict"]
+        r["verdict"] = INFO_128D
+        if "landed_verdict" in r:
+            r["landed_verdict_measured"] = r["landed_verdict"]
+            r["landed_verdict"] = INFO_128D
+    return "built with 12.8d banned means: " + "; ".join(why)
+
+
 def regional_qualification(M, corners, crossings):
     """A regional clock diagnostic is not evidence of implemented forwarded-clock landings."""
     reasons = []
@@ -1706,7 +1743,15 @@ def cmd_report(a):
             + ncell * DC.BUF_CIN_FF / 1e3 + len(M["taps"]) * DC.TAP_LOAD_FF / 1e3
         r["clock_switched_cap_pF"] = round(c_tot, 1)
         r["clock_wire_power_W"] = round(c_tot * 1e-12 * VDD[corner] ** 2 / (DC.PERIOD_PS * 1e-12), 3)
+    why = banned_means_12_8d(M)
+    for r in rep["corners"].values():
+        if r.get("core_offset_taps") and "early-tap branch / core offset" not in why:
+            why.append("early-tap branch / core offset")
+    blocker = apply_12_8d(rep, why)
     rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"] if crossing_table else 0)
+    if blocker:
+        rep["qualification"]["blockers"].append(blocker)
+        rep["qualification"]["release_verdict"] = "BLOCKED"
     (d / "clock_report.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps({c: {k: v for k, v in r.items() if k != "worst"} for c, r in rep["corners"].items()}, indent=1))
     return 0

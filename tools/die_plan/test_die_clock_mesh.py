@@ -225,3 +225,24 @@ def test_kv_site_fixes_default_off():
     assert sig.parameters["driver_pair_span_um"].default == 0.0
     assert sig.parameters["split_yfirst"].default is False
     assert inspect.signature(DM.split_long).parameters["yfirst"].default is False
+
+
+def test_report_12_8d_banned_means_never_pass():
+    import die_clock_mesh as DM
+    clean = dict(meta={}, taps=[dict(port="a", early_ps=0.0)])
+    assert DM.banned_means_12_8d(clean) == []
+    rep = dict(corners={"TT": dict(verdict="PASS", landed_verdict="PASS"), "FF": dict(verdict="PASS")})
+    assert DM.apply_12_8d(rep, []) is None and rep["corners"]["TT"]["verdict"] == "PASS"
+    for meta, taps in [(dict(stubtrim=dict(pads=3)), []), (dict(balance=dict(pads=2)), []),
+                       ({}, [dict(port="a", early_ps=-40.0)])]:
+        M = dict(meta=meta, taps=taps)
+        why = DM.banned_means_12_8d(M)
+        assert why
+        rep = dict(corners={"TT": dict(verdict="PASS", landed_verdict="PASS"), "FF": dict(verdict="PASS")})
+        b = DM.apply_12_8d(rep, why)
+        assert b.startswith("built with 12.8d banned means")
+        assert all(r["verdict"] == DM.INFO_128D for r in rep["corners"].values())
+        assert rep["corners"]["TT"]["landed_verdict"] == DM.INFO_128D
+        assert rep["corners"]["TT"]["verdict_measured"] == "PASS"
+        q = DM.regional_qualification(dict(meta={}), rep["corners"], 0)
+        assert q["release_verdict"] == "BLOCKED"
