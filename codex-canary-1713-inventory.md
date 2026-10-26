@@ -14,3 +14,5 @@ Source: actual hub main c51d6d93039d; own sparse scratch2 worktree epyc1:/srv/op
 | KV ffgrt A/B976d | terminal16:55, routed TT−57.66/254EP FF−1.01/1; DRC/DRV/pair PASS | OldFF-builtCTS bug fixed and reset recovery now+257.81MET. True global TT line[38]→g_d[0].u_b/u_ca.r[105] fanout/decode, FF internalr[65]→err[0]. KV cores explicitly owns structural check vs current source. A/B copied checker has missingface_guard import and oldbound-ff rejection; not canonicalPASS. Signoff libraries are old wildcard sessions, diagnostic-only version qualification. |
 
 READY c3ba1b9fb8: core helper packaging; two focused runtime packaging/Tcl availability tests PASS. Source only; no P&R reroute, no changed timing/clock/RTL/cycles. Parent root merges.
+
+2026-10-25 17:26 PDT: READY corebundle adoption codex/core-bundle-1713@4d2faeb22e, own sparse epyc1scratch2 wt/codex-core-bundle-1713. BasePROTO f8931b1446 + c3ba dependency cherry38823db92d; six packaging/runtime testsPASS. No gen_phys edits. Parent root owns integration. Next one read-only exactnative qualification of retainedKV ffgrt AB afteractualimage review; no reroute or canarybinding.
