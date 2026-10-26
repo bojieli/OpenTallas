@@ -26,7 +26,8 @@ assert H.root_rows(p, 39) == baseline  # no ambient state leaked
 mutants = 0
 with tempfile.TemporaryDirectory() as td:
     for section, key, value in (("tail", "selected_result_latency", 496),
-                                ("kernel", "SYS_LAT", 146), ("parameters", "NQ", 4)):
+                                ("kernel", "SYS_LAT", 146), ("parameters", "NQ", 4), ("parameters", "SMUT", 1),
+                                ("source_identity", "sha256", "missing")):
         doc = copy.deepcopy(json.loads(args.profile.read_text()))
         doc[section][key] = value
         path = Path(td) / "mutant.json"

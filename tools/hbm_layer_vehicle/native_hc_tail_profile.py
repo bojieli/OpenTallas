@@ -9,7 +9,7 @@ def load(path):
     p = json.loads(raw)
     expected = {
         "top": "ot_hbm_hc_root_static_nq2_split",
-        "parameters": {"QDRLY": 2, "QCHX": 11, "NQ": 2},
+        "parameters": {"QDRLY": 2, "QCHX": 11, "NQ": 2, "MUT": 0, "SMUT": 0},
     }
     if p.get("schema") != "opentallas.hbm.hc_root_nq2.profile.v1":
         raise ValueError("native HC tail profile schema mismatch")
@@ -22,6 +22,12 @@ def load(path):
     }.items():
         if any(p.get(section, {}).get(k) != v for k, v in values.items()):
             raise ValueError(f"native HC {section} contract mismatch")
-    return dict(top=p["top"], parameters=p["parameters"], tail_latency=503,
+    identity = p.get("source_identity", {})
+    sha = identity.get("sha256", "")
+    if (len(sha) != 64 or any(c not in "0123456789abcdef" for c in sha)
+            or not identity.get("source_base_commit")
+            or identity.get("path") != "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static_nq2_split.sv"):
+        raise ValueError("native HC source identity missing or malformed")
+    return dict(source_identity=identity, top=p["top"], parameters=p["parameters"], tail_latency=503,
                 additional_core_cycles=7, profile_sha256=hashlib.sha256(raw).hexdigest(),
                 scope="tail launch to emit and unit reuse only; source_model_not_execution_qualification")
