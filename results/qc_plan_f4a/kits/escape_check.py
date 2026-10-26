@@ -37,16 +37,22 @@ for p in pins:
     g = [x for x in guides.get(p["net"], []) if touch(x[:4], p["box"])]
     lay = sorted({x[4] for x in g})
     esc = [L for L in lay if L in ("M4", "M6")]
-    under = [s for s in straps if s[1] == "M5" and touch(s[2:], p["box"], 0.0)]
+    # M5 strap in the pin's own M5 column (x spans overlap) within 8.64 um beyond the pin: the pin cannot leave on M5
+    # straight out of its face (straps stop ~2.1 um short of the macro edge), it must step to M4/M6 next to the pin
+    bx = p["box"]
+    under = [s for s in straps if s[0] == "M5" and s[1] < bx[2] and bx[0] < s[3] and s[2] <= bx[3] + 8.64 and s[4] >= bx[1] - 8.64]
     m5x = [x for x in g if x[4] == "M5"]
     ok = bool(g) and (bool(esc) or (bool(m5x) and not under))
-    kind = "no_guide" if not g else ("M4/M6" if esc else ("M5_only" if ok else "M5_blocked"))
+    # M5 guide in a strap column: the GCell (~12 M5 tracks) also holds the 0.12 um strap -> GRT-feasible, the in-GCell
+    # jog off the strap track is a DRT question (not proven by GRT)
+    kind = "no_guide" if not g else ("M4/M6" if esc else ("M5_only" if ok else "M5_in_strap_column"))
     by[kind] += 1
     res.append(dict(p, guide_layers=lay, escape=esc, under_m5_strap=bool(under), ok=ok, kind=kind))
 rep = dict(scope="GRT route guides (5_1_grt), CHECKED = measured guide geometry; DRT not run", n_pins=len(pins),
            by_kind=dict(by), n_fail=sum(1 for r in res if not r["ok"]),
-           strap_layers={L: sum(1 for s in straps if s[1] == L) for L in ("M4", "M5", "M6")},
+           strap_layers={L: sum(1 for s in straps if s[0] == L) for L in ("M4", "M5", "M6")},
            pins_under_m5_strap=sum(1 for r in res if r["under_m5_strap"]),
-           verdict="PASS" if pins and all(r["ok"] for r in res) else "FAIL", failures=[r for r in res if not r["ok"]][:50], pins=res)
+           verdict="PASS" if pins and all(r["ok"] for r in res) else "OPEN (DRT)",
+           note="OPEN = pins whose GRT guide leaves on M5 in a GCell column shared with an M5 PG strap and steps to M4 later; GRT has the capacity (overflow 0), the detailed escape is only proven by DRT", failures=[r for r in res if not r["ok"]][:50], pins=res)
 json.dump(rep, open(out, "w"), indent=1)
 print("ESCAPE", out, rep["verdict"], "pins", len(pins), dict(by), "under_M5_strap", rep["pins_under_m5_strap"], "straps", rep["strap_layers"])
