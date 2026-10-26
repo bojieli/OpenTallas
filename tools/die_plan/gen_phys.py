@@ -1028,6 +1028,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *([f"export CAP_MARGIN = {margins[1]:g}"] if margins and margins[1] is not None else []),
            # CP1-R10 10-24: ORFS synth_odb.tcl eliminate_dead_logic deleted face registers whose q the leaf leaves
            # unused (r10b: 120 in-bus flops); boundary cells dont_touch around that step only
+           # Keep declared internal replicated registers before Yosys opt_merge; face_keep below
+           # protects boundary cells at the later OpenROAD synth_odb step.
+           "export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl",
            "export PRE_SYNTH_TCL = /work/face_keep.tcl",
            "export POST_SYNTH_TCL = /work/face_keep_release.tcl",
            *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
@@ -1114,6 +1117,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
         cfg += ["export OT_TAP_GRT_PRE = 1", "export OT_PINREG_PAD = 1"]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    # Full shared hook and its guarded optional dependencies; no new RTL state or timing stage.
+    common_flow = Path(__file__).resolve().parents[2] / "physical/common_flow"
+    for f in ("ot_keep_regs.tcl", "ot_pin_regs.tcl", "ot_rst_copies.tcl", "ot_rst_copies.py"):
+        shutil.copyfile(common_flow / f, kd / f)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
