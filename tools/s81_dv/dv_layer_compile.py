@@ -1252,6 +1252,21 @@ def main(argv=None):
     ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
     ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
+    ap.add_argument('--bound-control-only', action='store_true',
+                    help='Compile actual current bound control routes; never read a legacy die tree')
+    ap.add_argument('--bound', type=Path, help='Current strict bind out/ for native control mode')
+    ap.add_argument('--bound-inventory', type=Path, help='Current logical and atomic source inventory')
+    ap.add_argument('--bound-local-timing', type=Path, help='Source-qualified atomic control-stage receipts')
+    ap.add_argument('--bound-source-root', type=Path, help='Exact current implementation source root')
+    ap.add_argument('--bound-asbuilt-manifest', help='Repo-relative exact as-built source selection manifest')
+    ap.add_argument('--native-entry-program', type=Path, help='Optional actual bound entry command/template record')
+    ap.add_argument('--retime-native-entry', action='store_true',help='Propose consecutive per-slice NORMR commands; keep GO dates and all readiness holds')
+    ap.add_argument('--compose-native-boot', action='store_true', help='Emit concrete unsealed HOST words from measured native control')
+    ap.add_argument('--native-boot-cadence', type=Path, help='Actual direct-native CSR cadence receipt')
+    ap.add_argument('--native-boot-seqhost-timing', type=Path, help='Original source-qualified seqhost reset/KS phase receipt')
+    ap.add_argument('--native-entry-rows', type=Path, help='Optional actual entry writes, encoded in template-table batches')
+    ap.add_argument('--native-mux-config', type=Path, help='Explicit programme-specific MU tracker/window values')
+    ap.add_argument('--native-host-booking', type=Path, help='Explicit candidate host pin-event dates')
     ap.add_argument('--entry-engram-inputs', default=None,
                     help='Checkpoint-derived Engram sidecars for actual attention-entry native rows and NX partials')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
@@ -1265,6 +1280,27 @@ def main(argv=None):
                          'xfin NX flit as checked output words (needs --fixtures; layer_prog/norm_nx.py); "all" = every '
                          'slice\'s norm + entry state + the 16-flit snake words')
     a = ap.parse_args(argv)
+    if a.retime_native_entry and not a.native_entry_program:
+        ap.error('--retime-native-entry requires the actual native entry command record')
+    boot_inputs=(a.native_boot_cadence,a.native_boot_seqhost_timing,a.native_entry_rows,a.native_mux_config,a.native_host_booking)
+    if a.compose_native_boot and not (a.bound_control_only and a.native_entry_program and a.native_boot_cadence and a.native_boot_seqhost_timing):
+        ap.error('--compose-native-boot requires native control, entry programme, cadence and original seqhost timing')
+    if any(boot_inputs) and not a.compose_native_boot:
+        ap.error('native boot inputs require --compose-native-boot')
+    if a.bound_control_only:
+        if not all((a.bound,a.bound_inventory,a.bound_local_timing,a.bound_source_root,a.bound_asbuilt_manifest)):
+            ap.error('--bound-control-only requires bound, inventory, local timing, source root and source manifest')
+        if a.die_src or a.mu_cal or a.mu_ctx or a.dense_stage:
+            ap.error('native bound control cannot consume legacy geometry or MU/dense schedule tables')
+        from layer_prog.bound_control import compile_control
+        raise SystemExit(compile_control(layer=a.layer,out=a.out,bound=a.bound,inventory=a.bound_inventory,
+            timing=a.bound_local_timing,source_root=a.bound_source_root,asbuilt_manifest=a.bound_asbuilt_manifest,
+            entry_program=a.native_entry_program,retime_entry=a.retime_native_entry,
+            boot=dict(cadence=a.native_boot_cadence,seqhost_receipt=a.native_boot_seqhost_timing,
+                      entry_rows=a.native_entry_rows,mux_config=a.native_mux_config,
+                      host_booking=a.native_host_booking) if a.compose_native_boot else None))
+    if any((a.bound,a.bound_inventory,a.bound_local_timing,a.bound_source_root,a.bound_asbuilt_manifest,a.native_entry_program,a.retime_native_entry)):
+        ap.error('native bound inputs require --bound-control-only; do not mix current and legacy ages')
     if a.dense_stage is not None and (a.mu_cal or a.mu_ctx):
         ap.error('--dense-stage MU requires corrected per-position static stage graph binding')
     if a.svc_owner_epoch is not None and a.mu_cal:

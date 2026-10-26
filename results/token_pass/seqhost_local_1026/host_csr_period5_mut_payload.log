@@ -1,0 +1,34 @@
+SEQ_KS job=0 edge=662 phase=0
+SEQ_ACCEPT job=0 edge=665 ks_delta=3
+SEQ_CMD job=0 eng=0 op=0 edge=678 ks_delta=16 accept_delta=13
+SEQ_BAD north edge=685
+SEQ_OUT job=0 port=vo_n edge=685 command_delta=7 ks_delta=23 word=000000000000000000251221fdb97531ffddbb99775533100e0c0a080604020000801
+SEQ_CMD job=0 eng=1 op=1 edge=690 ks_delta=28 accept_delta=25
+SEQ_BAD south edge=698
+SEQ_OUT job=0 port=vo_s edge=698 command_delta=8 ks_delta=36 word=0000000000000000003e0003700026b3ffddbb99775533100e0c0a080604020200801
+SEQ_CMD job=0 eng=0 op=2 edge=702 ks_delta=40 accept_delta=37
+SEQ_BAD north edge=709
+SEQ_OUT job=0 port=vo_n edge=709 command_delta=7 ks_delta=47 word=000000000000000000000de5fdb97535ffddbb99775533100e0c0a080604020400801
+SEQ_CMD job=0 eng=2 op=3 edge=714 ks_delta=52 accept_delta=49
+SEQ_CW job=0 edge=717 command_delta=3 a=512 d=0000000000000000000000000000000000000000000000000000010403020103
+SEQ_KIT job=0 edge=741 ks_delta=79
+SEQ_KS job=1 edge=814 phase=0
+SEQ_ACCEPT job=1 edge=817 ks_delta=3
+SEQ_CMD job=1 eng=0 op=0 edge=830 ks_delta=16 accept_delta=13
+SEQ_BAD north edge=837
+SEQ_OUT job=1 port=vo_n edge=837 command_delta=7 ks_delta=23 word=000000000000000000251221fdb97531ffddbb99775533100e0c0a080604020000801
+SEQ_CMD job=1 eng=1 op=1 edge=842 ks_delta=28 accept_delta=25
+SEQ_BAD south edge=850
+SEQ_OUT job=1 port=vo_s edge=850 command_delta=8 ks_delta=36 word=00000000000000000040000380002733ffddbb99775533100e0c0a080604020200801
+SEQ_CMD job=1 eng=0 op=2 edge=854 ks_delta=40 accept_delta=37
+SEQ_BAD north edge=861
+SEQ_OUT job=1 port=vo_n edge=861 command_delta=7 ks_delta=47 word=000000000000000000000e25fdb97535ffddbb99775533100e0c0a080604020400801
+SEQ_CMD job=1 eng=2 op=3 edge=866 ks_delta=52 accept_delta=49
+SEQ_CW job=1 edge=869 command_delta=3 a=512 d=0000000000000000000000000000000000000000000000000000010403020103
+SEQ_KIT job=1 edge=893 ks_delta=79
+SEQ_TIMING jobs=2 north=4 south=2 gunit=2 kits=2 errors=6
+FAIL
+- tools/s81_dv/seqhost_timing_1026/tb.sv:101: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 994ns; walltime 0.006 s; speed 157.121 us/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 7 MB
