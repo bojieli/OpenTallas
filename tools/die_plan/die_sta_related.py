@@ -32,6 +32,15 @@ kit is therefore "slack left for logic", not a path slack.
 
   setup slack = T - unc_setup - (L_late + clkq_max + wire) + (C_early - setup) + credit
   hold  slack = (L_early + clkq_min) - (C_late + hold) - unc_hold + credit
+KIT HOLD CONTRACT (INFRA-FIRST-R3b, always reported next to the zero-logic numbers): what the plan-declared kit SDC
+already guarantees, so the die only has to deliver its tap arrivals inside the declared window.
+  seam   receiver input min delay in_min (legacy -insertion_tol, or clock.seam_hold) + sender output min out_min
+         (gen_phys.sdc / seam_hold): the two kit checks sum to   die seam hold slack >= W_seam - damage_hold,
+         W_seam = seam_hold.seam_ps if declared, else insertion_tol_ps - HOLD_OUT_MIN (0)  (gen_phys.seam_hold).
+  intra  gen_phys.sdc puts every tap port of a partition on ONE ideal clock (create_clock clk [all taps]), so a kit
+         guarantees nothing for die tap-to-tap arrival differences:  die intra hold slack >= W_intra - damage_hold,
+         W_intra = --intra-window-ps (default 0 = today's kit SDC; a declared per-tap latency window would raise it).
+  The bound is exact for a kit pair signed with zero slack and conservative otherwise; it never uses kit numbers.
 Landed hops are timed as the plan defines them (die_clock_mesh report): the region-to-region clock damage against the
 landing window (--landing-window-ps, default T/2) -> margin = window - damage; their single-cycle slacks are INFO.
 
@@ -179,7 +188,7 @@ def nearest_pairs(d, plan_path, tool, taps):
     return {"seam_nearest_INFO": seam, "landed_nearest_INFO": landed}
 
 
-def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None):
+def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None):
     ws, wh, sk, rows = None, None, 0.0, []
     nneg_s = nneg_h = 0
     mds = mdh = float('-inf')
@@ -213,6 +222,21 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                sens_core_tol=dict(tol_ps=lat_tol, worst_setup_slack_ps=round(ws[0] - 2 * lat_tol, 2),
                                   worst_hold_slack_ps=round(wh[0] - 2 * lat_tol, 2)),
                worst_skew=[[round(v, 2), a, b] for v, a, b in sorted(rows, reverse=True)[:5]])
+    if hold_window is not None:
+        hd = []
+        for a, b, tag in pairs:
+            A, B = taps[a], taps[b]
+            node = A["cppr_node"] if A["cppr_node"] == B["cppr_node"] else "h"
+            cr = credit(rng, node, A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"])
+            hd.append((B["late_ps"] - A["early_ps"] - cr, a, b, tag))
+        hd.sort(reverse=True)
+        w = float(hold_window["ps"])
+        out["kit_contract_hold"] = dict(
+            window_ps=w, basis=hold_window["basis"], worst_hold_bound_ps=round(w - hd[0][0], 2),
+            neg_pairs=sum(1 for v in hd if v[0] > w), window_needed_ps=round(max(0.0, hd[0][0]), 2),
+            worst=dict(launch=hd[0][1], capture=hd[0][2], where=hd[0][3], damage_ps=round(hd[0][0], 2)),
+            damage_pctl_ps={q: round(hd[min(len(hd) - 1, int(len(hd) * (1 - q / 100.0)))][0], 2) for q in (50, 99, 99.9)},
+            verdict="PASS" if hd[0][0] <= w else "FAIL")
     if landed:
         out["plan_landing"] = dict(window_ps=round(window, 2), setup_margin_ps=round(window - mds, 2),
                                    hold_margin_ps=round(window - mdh, 2),
@@ -236,6 +260,8 @@ def main(argv=None):
     ap.add_argument("--seam-wire-um", type=float, default=40.0)
     ap.add_argument("--wire-ff-per-um", type=float, default=0.15)
     ap.add_argument("--landing-window-ps", type=float)
+    ap.add_argument("--intra-window-ps", type=float, default=0.0,
+                    help="declared kit per-tap latency window for intra-partition pairs (0 = today's one-ideal-clock SDC)")
     ap.add_argument("--kit", action="append", default=[], help="part_or_type=kit.json (interface model); none yet for QC")
     a = ap.parse_args(argv)
     corners = a.corner or ["TT", "FF"]
@@ -261,6 +287,17 @@ def main(argv=None):
     period = a.period_ps
     window = a.landing_window_ps if a.landing_window_ps else period / 2
     lat_tt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
+    pc = plan.get("clock", {})
+    if pc.get("seam_hold"):
+        wseam = dict(ps=float(pc["seam_hold"]["seam_ps"]), basis="plan clock.seam_hold.seam_ps (gen_phys.seam_hold)")
+    else:
+        wseam = dict(ps=float(pc.get("insertion_tol_ps", 40.0)) - 0.0,
+                     basis="legacy: receiver in_min -insertion_tol, sender out_min 0 (gen_phys.seam_hold)")
+    if pc.get("io_hold"):
+        wseam["basis"] += "; plan has clock.io_hold (sender_min) -> per-port, not modelled: bound is conservative"
+    hwin = dict(intra=dict(ps=a.intra_window_ps, basis="kit SDC: all taps of a partition on one ideal clock"
+                           + ("" if a.intra_window_ps == 0 else f" + declared window {a.intra_window_ps:g} ps")),
+                seam=wseam, seam_nearest_INFO=wseam)
     lat = dict(TT=lat_tt, FF=a.core_latency_ff if a.core_latency_ff is not None else lat_tt)
     res = dict(proof=str(Path(a.proof).resolve()), timed_dir=str(d.resolve()), plan=str(Path(a.plan).resolve()),
                period_ps=period, unc_setup_ps=UNC_SETUP_PS, unc_hold_ps=UNC_HOLD_PS, gate="METHODOLOGY 12.4a v4.3: TT setup "
@@ -281,7 +318,8 @@ def main(argv=None):
         cr = dict(basis=meta.get("basis"), tap_slew_max_ps=round(slew, 2), register=reg, classes={})
         for k, pl in pairs.items():
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
-                                          landed=k.startswith("landed"), window=window)
+                                          landed=k.startswith("landed"), window=window,
+                                          hold_window=hwin.get(k) if c == "FF" else None)
             cr["classes"][k]["label"] = "declared-budget" + (" / INFO subset" if k.endswith("INFO") else "")
         res["corners"][c] = cr
     res["coverage"] = cov
@@ -292,6 +330,13 @@ def main(argv=None):
         gate[k] = dict(tt_setup_ps=s.get("worst_setup_slack_ps"), ff_hold_ps=h.get("worst_hold_slack_ps"),
                        verdict="PASS" if (s.get("worst_setup_slack_ps", -1) >= 0 and h.get("worst_hold_slack_ps", -1) >= 0)
                        else "FAIL")
+    for k in ("intra", "seam"):
+        kc = res["corners"].get("FF", {}).get("classes", {}).get(k, {}).get("kit_contract_hold")
+        if kc:
+            gate[k]["ff_hold_kit_contract_ps"] = kc["worst_hold_bound_ps"]
+            gate[k]["kit_contract_window_ps"] = kc["window_ps"]
+            gate[k]["kit_contract_window_needed_ps"] = kc["window_needed_ps"]
+            gate[k]["kit_contract_verdict"] = kc["verdict"]
     lt = res["corners"].get("TT", {}).get("classes", {}).get("landed", {}).get("plan_landing", {})
     lf = res["corners"].get("FF", {}).get("classes", {}).get("landed", {}).get("plan_landing", {})
     gate["landed"] = dict(tt_setup_margin_ps=lt.get("setup_margin_ps"), ff_hold_margin_ps=lf.get("hold_margin_ps"),
@@ -303,7 +348,9 @@ def main(argv=None):
             if v.get("pairs"):
                 print(f"{d.name} {c} {k:18s} pairs {v['pairs']:7d} setup {v['worst_setup_slack_ps']:8.2f} "
                       f"(neg {v['setup_neg_pairs']}) hold {v['worst_hold_slack_ps']:8.2f} (neg {v['hold_neg_pairs']}) "
-                      f"skew {v['skew_diag_max_ps']:7.2f}" + (f" landing {v['plan_landing']}" if "plan_landing" in v else ""))
+                      f"skew {v['skew_diag_max_ps']:7.2f}" + (f" kit-contract hold {v['kit_contract_hold']['worst_hold_bound_ps']:.2f}"
+                      f" (W {v['kit_contract_hold']['window_ps']:g}, need {v['kit_contract_hold']['window_needed_ps']:.2f},"
+                      f" neg {v['kit_contract_hold']['neg_pairs']})" if "kit_contract_hold" in v else "") + (f" landing {v['plan_landing']}" if "plan_landing" in v else ""))
     print("SUMMARY", json.dumps(res["summary"]))
     return 0
 
