@@ -1,0 +1,32 @@
+{
+  "status": "PASS_CONDITIONAL_SOURCE_PROPOSAL",
+  "physical": "HOLD: arithmetic LEC and adopted current-B2 native bind clock receipt required",
+  "overlay": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-native-rtlsmoke/native_bind_r3/top/die_b2.v",
+  "overlay_adoption": "NOT adopted as whole B2 integration",
+  "overlay_sha256": "1053b3eab2ec0651746d2a5fe7852d2a00c0e3ae1257eea596985b57c8a93f57",
+  "historical": "r18h5 four-quadrant source; overlay retains NW/NE",
+  "source_hashes": {
+    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static.sv": "5e8bca20789994495dcbf35ff6f43dc6e2df51261a67212fd14e482d55b6c395",
+    "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv": "1f9ba1c46b5d4ecc9029726435dd9757e0ab106873d23a3df9953ba75aecd7fa",
+    "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv": "6229bd8e01e2eed6b1d7f02e79c50a2cc71b48303a3af750ff0e97eeae4e3d3e"
+  },
+  "target": "r0c0_k1h0",
+  "path": "e=0 c=0 g=1 hf=0: pair[r] -> chunk_pair[4+r] -> clk_hslice[8+2*r] -> hb_ckgen__pll_stream[0]",
+  "native_bit_ids": [
+    2,
+    2
+  ],
+  "nonclock_bits": 1214,
+  "data_cycle_delta": 0,
+  "boot_cycle_delta": 0,
+  "defines_delta": [],
+  "wrapper_sha256": "6f2de2ea0c00d03c71c9ebf1a295990edb928712b3164adc369c5dc9263ada44",
+  "current_B2_clock_contract": "Must bind both original clocks to one native scalar with no inversion, phase operation, gating or extra edge; requalify the actual adopted binding before physical attachment",
+  "edge_miter": {
+    "period_ps": 833,
+    "half_edges": 1000,
+    "baseline": "PASS",
+    "wrong_inner_clock_mutant": "CAUGHT",
+    "scope": "clock-mechanism witness, structural all data-bit identity; arithmetic LEC remains separate"
+  }
+}
