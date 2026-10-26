@@ -1,0 +1,25 @@
+{
+  "status": "PASS_CTS_GEOMETRY_HOLD_ROUTE",
+  "source": "codex/s81-legacy2144",
+  "job": "intel2:oth-ubuntu-3343709-1792994652",
+  "odb_sha1_prefix": "24f57d6f7c34d8425e4a",
+  "review": "Viewed actual CTS cell placement: south-central SRAM, broad north logic and west/east interface bands; no macro sliver or cell wall. Original placed ODB unchanged.",
+  "dynamic_macro_if": {
+    "paths": 520,
+    "max_um": 13.221,
+    "over_20_um": 0
+  },
+  "constant_macro_if_pins": 298,
+  "constant_obligation": "Explicit fixed source inputs, no waiver or dynamic-coverage claim",
+  "clock_insertion_ps": {
+    "mean": 241,
+    "min": 222,
+    "max": 274,
+    "default_250_pm40": "PASS",
+    "trial_250_pm20": "FAIL upper274>270; spread52>40"
+  },
+  "estimated_tt_setup_wns_ps": 116.8,
+  "related_ff_sram_clock_difference_ps": 56.92,
+  "hold_ff": "NOT_RUN",
+  "route": "NOT_RUN"
+}
