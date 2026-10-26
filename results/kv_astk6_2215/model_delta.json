@@ -1,0 +1,16 @@
+{
+ "added_cycles": 0,
+ "added_control_ff_per_master": 64,
+ "masters_per_die": 4,
+ "added_control_ff_die": 256,
+ "bits_per_cycle_unchanged": true,
+ "ports_unchanged": true,
+ "outline_um": [
+  190.08,
+  181.44
+ ],
+ "control_sink_limit": 32,
+ "prestage_module_fanout": 16,
+ "drain_predictor": "next stl zero iff !start and current stl<=1; reset clears enables asynchronously with existing rn_q",
+ "placement_requirement": "each4enableFF rowbank lies near its4groups of32storageFF; use existing zone clock tap and measure propagated-clock timing"
+}

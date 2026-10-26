@@ -1,0 +1,18 @@
+{
+ "verdict": "PASS",
+ "checks": 15993,
+ "output_mismatches": 0,
+ "enable_mismatches": 0,
+ "store_mismatches": 0,
+ "mutant_mismatches": 25,
+ "writes": 7868,
+ "start_edges": 40,
+ "reset_edges": 8,
+ "added_cycles": 0,
+ "control_ff_added": 64,
+ "row_modules": 16,
+ "ff_per_row": 4,
+ "sd_bits_per_enable": 32,
+ "source_scope": "production ASTK5 zn0 ZC0; actual FP add RTL and full store state compared",
+ "physical_signoff": "NOT RUN"
+}
