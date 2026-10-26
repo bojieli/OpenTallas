@@ -1,0 +1,11 @@
+--- /srv/opentallas-scratch2/claude/cores-kits/s81/kits/dsdv_gunit_l3_k26b/rtl/ot_s81_su_rw.sv	2026-10-26 01:31:31.331941401 -0700
++++ /srv/opentallas-scratch2/claude/cores-kits/s81/lintA/eq/dsdv_gunit_l3/mut/ot_s81_su_rw.sv	2026-10-26 01:32:37.978551736 -0700
+@@ -75,7 +75,7 @@
+                 1: if (i_v) begin                               // operand rows
+                        cnt <= cnt + 1;
+                        if (cnt == 0) begin
+-                           for (integer i = 0; i < KMAX; i = i + 1) id[i] <= i_x[32 * i +: 9];
++                           for (integer i = 0; i < KMAX; i = i + 1) id[i] <= ~i_x[32 * i +: 9];
+                            k <= k_i; off <= off_i; scale <= scale_i;
+                            if (k_i == 0 || k_i > KMAX || {1'b0, off_i} + {1'b0, k_i} > 5'd16) fault <= 1;
+                        end
