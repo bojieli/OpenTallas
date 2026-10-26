@@ -90,6 +90,23 @@ def vmr_core_latency(raw):
     return dict(taps=rows, cycles=0, note="absolute measured insertion, not an offset to the obsolete vmr_s6h budget")
 
 
+def fw_source_split(raw):
+    """The E2 FW has a different native ch_dn_i connection, so it is a real type."""
+    old, new, part = "sle_fw_v1", "sle_fw_v1_e2", "sl_E2_fw"
+    types = raw["partition_types"]
+    if new in types:
+        raise ValueError(f"{new} already exists; do not compose the source split twice")
+    t = copy.deepcopy(types[old]);t["module"] += "_e2"
+    t["note"] = t.get("note", "") + "; native E2 ch_dn_i connection differs from E0/E4; exact interface clone,0 cycles"
+    types[new] = t
+    ps = [p for p in raw["partitions"] if p["name"] == part]
+    if len(ps) != 1 or ps[0]["type"] != old:
+        raise ValueError(f"expected exactly one {part} with source type {old}")
+    ps[0]["type"] = new
+    return dict(base_type=old,new_type=new,part=part,cycles=0,
+                reason="strict native source signature ch_dn_i differs; no generic type waiver")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("plan")
@@ -152,9 +169,10 @@ def main(argv=None):
                                                 "regional mesh exists (CLOCK-MESH / INFRA-FIRST step 2)")
     rep["deltas"]["D-QC-CB-STRAPS"] = CBIDS.apply(raw)
     rep["deltas"]["D-QC-VMR-LATENCY"] = vmr_core_latency(raw)
+    rep["deltas"]["D-QC-FW-NATIVE-E2"] = fw_source_split(raw)
 
     # every type no delta names keeps its interface byte-identical
-    touched = set(fe["types"]) | set(rep["deltas"]["D-QC-CB-STRAPS"]["types"]) | {"coll_ftm", *IOHOLD_SENDERS, SC_ROOT, "slw_su_c", "sle_su_c"}
+    touched = set(fe["types"]) | set(rep["deltas"]["D-QC-CB-STRAPS"]["types"]) | {"coll_ftm", *IOHOLD_SENDERS, SC_ROOT, "slw_su_c", "sle_su_c", "sle_fw_v1_e2"}
     for tn, bt in base["partition_types"].items():
         if tn not in touched:
             assert iface(types[tn]) == iface(bt), tn

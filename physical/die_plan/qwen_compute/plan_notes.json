@@ -260,7 +260,7 @@
   },
   "sle_fw_v1": {
    "cells": 60000,
-   "instances": 3,
+   "instances": 2,
    "outline_um": [
     622.08,
     1339.2
@@ -650,6 +650,15 @@
    "instances": 1,
    "outline_um": [
     613.44,
+    1339.2
+   ],
+   "macros": 0
+  },
+  "sle_fw_v1_e2": {
+   "cells": 60000,
+   "instances": 1,
+   "outline_um": [
+    622.08,
     1339.2
    ],
    "macros": 0
@@ -5179,6 +5188,53 @@
        0.0,
        669.6,
        613.44,
+       1339.2
+      ],
+      "reach_um": 648.0,
+      "insertion_ps": 223,
+      "insertion_tol_ps": 40,
+      "from_root_um": 328.3
+     }
+    ],
+    "max_from_root_um": 337.0,
+    "max_nearest_tap_um": 665.3,
+    "glue_taps_over_290ps": []
+   },
+   "sle_fw_v1_e2": {
+    "root_um": [
+     311.04,
+     673.92
+    ],
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       336.96
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       669.6
+      ],
+      "reach_um": 648.0,
+      "insertion_ps": 223,
+      "insertion_tol_ps": 40,
+      "from_root_um": 337.0
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       1002.24
+      ],
+      "region_um": [
+       0.0,
+       669.6,
+       622.08,
        1339.2
       ],
       "reach_um": 648.0,

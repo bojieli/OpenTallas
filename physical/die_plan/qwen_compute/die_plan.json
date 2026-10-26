@@ -332829,6 +332829,830 @@
     "sync_stages": 2
    },
    "ft_track_frac": 0.5
+  },
+  "sle_fw_v1_e2": {
+   "module": "qfd_qc_sle_fw_e2",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "buses": [
+    {
+     "name": "x_fe_i",
+     "dir": "in",
+     "width": 553,
+     "kind": "data",
+     "leaf": "u_pstn.x_fe_i",
+     "face": "E",
+     "window_um": [
+      393.312,
+      489.008
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fe_p1_i",
+     "dir": "in",
+     "width": 552,
+     "kind": "data",
+     "leaf": "u_pstn.x_fe_p1_i",
+     "face": "E",
+     "window_um": [
+      584.336,
+      680.064
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_ctl_i",
+     "dir": "in",
+     "width": 631,
+     "kind": "data",
+     "leaf": "u_pstn.x_ctl_i",
+     "face": "N",
+     "window_um": [
+      275.568,
+      384.768
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_ctl_p1_i",
+     "dir": "in",
+     "width": 631,
+     "kind": "data",
+     "leaf": "u_pstn.x_ctl_p1_i",
+     "face": "E",
+     "window_um": [
+      95.52,
+      204.752
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_stm_i",
+     "dir": "in",
+     "width": 544,
+     "kind": "data",
+     "leaf": "u_pstn.x_stm_i",
+     "face": "E",
+     "window_um": [
+      933.472,
+      1027.664
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_stm_p1_i",
+     "dir": "in",
+     "width": 543,
+     "kind": "data",
+     "leaf": "u_pstn.x_stm_p1_i",
+     "face": "E",
+     "window_um": [
+      1124.608,
+      1218.56
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_sc_i",
+     "dir": "in",
+     "width": 48,
+     "kind": "data",
+     "leaf": "u_pstn.x_sc_i",
+     "face": "E",
+     "window_um": [
+      869.504,
+      877.68
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fe_o",
+     "dir": "out",
+     "width": 539,
+     "kind": "data",
+     "leaf": "u_pstn.x_fe_o",
+     "face": "E",
+     "window_um": [
+      489.968,
+      583.376
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fe_p1_o",
+     "dir": "out",
+     "width": 539,
+     "kind": "data",
+     "leaf": "u_pstn.x_fe_p1_o",
+     "face": "E",
+     "window_um": [
+      681.024,
+      774.048
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fe_p2_o",
+     "dir": "out",
+     "width": 538,
+     "kind": "data",
+     "leaf": "u_pstn.x_fe_p2_o",
+     "face": "E",
+     "window_um": [
+      775.008,
+      868.544
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_ctl_o",
+     "dir": "out",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_pstn.x_ctl_o",
+     "face": "N",
+     "window_um": [
+      385.728,
+      478.496
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_ctl_p1_o",
+     "dir": "out",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_pstn.x_ctl_p1_o",
+     "face": "E",
+     "window_um": [
+      205.712,
+      298.496
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_ctl_p2_o",
+     "dir": "out",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_pstn.x_ctl_p2_o",
+     "face": "E",
+     "window_um": [
+      299.456,
+      392.352
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_sc_o",
+     "dir": "out",
+     "width": 48,
+     "kind": "data",
+     "leaf": "u_pstn.x_sc_o",
+     "face": "E",
+     "window_um": [
+      878.64,
+      886.816
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_stm_o",
+     "dir": "out",
+     "width": 549,
+     "kind": "data",
+     "leaf": "u_pstn.x_stm_o",
+     "face": "E",
+     "window_um": [
+      1028.624,
+      1123.648
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_stm_p1_o",
+     "dir": "out",
+     "width": 548,
+     "kind": "data",
+     "leaf": "u_pstn.x_stm_p1_o",
+     "face": "E",
+     "window_um": [
+      1219.52,
+      1314.416
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_a_o",
+     "dir": "out",
+     "width": 258,
+     "kind": "data",
+     "leaf": "u_pstn.x_st_a_o",
+     "face": "N",
+     "window_um": [
+      525.088,
+      569.728
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_b_o",
+     "dir": "out",
+     "width": 258,
+     "kind": "data",
+     "leaf": "u_pstn.x_st_b_o",
+     "face": "E",
+     "window_um": [
+      887.776,
+      932.512
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "ag_eo",
+     "dir": "out",
+     "width": 10,
+     "kind": "data",
+     "leaf": "u_pstn.ag_eo",
+     "face": "W",
+     "window_um": [
+      4.32,
+      6.16
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "ard_eo",
+     "dir": "out",
+     "width": 512,
+     "kind": "data",
+     "leaf": "u_pstn.ard_eo",
+     "face": "W",
+     "window_um": [
+      7.12,
+      95.824
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "arl_eo",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.arl_eo",
+     "face": "W",
+     "window_um": [
+      96.784,
+      97.76
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "arm_eo",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.arm_eo",
+     "face": "W",
+     "window_um": [
+      98.72,
+      99.104
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "art_eo",
+     "dir": "out",
+     "width": 32,
+     "kind": "data",
+     "leaf": "u_pstn.art_eo",
+     "face": "W",
+     "window_um": [
+      100.064,
+      105.568
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "arv_eo",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.arv_eo",
+     "face": "W",
+     "window_um": [
+      106.528,
+      106.912
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "dd_eo",
+     "dir": "out",
+     "width": 548,
+     "kind": "data",
+     "leaf": "u_pstn.dd_eo",
+     "face": "W",
+     "window_um": [
+      129.136,
+      224.048
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "sc_eo",
+     "dir": "out",
+     "width": 48,
+     "kind": "data",
+     "leaf": "u_pstn.sc_eo",
+     "face": "W",
+     "window_um": [
+      492.08,
+      500.256
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "st_eo",
+     "dir": "out",
+     "width": 1087,
+     "kind": "data",
+     "leaf": "u_pstn.st_eo",
+     "face": "W",
+     "window_um": [
+      510.352,
+      698.336
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "l9_wi",
+     "dir": "in",
+     "width": 514,
+     "kind": "data",
+     "leaf": "u_pstn.l9_wi",
+     "face": "E",
+     "window_um": [
+      5.664,
+      94.56
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "cmd_ei",
+     "dir": "in",
+     "width": 116,
+     "kind": "data",
+     "leaf": "u_pstn.cmd_ei",
+     "face": "W",
+     "window_um": [
+      107.872,
+      128.176
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "dr_ei",
+     "dir": "in",
+     "width": 520,
+     "kind": "data",
+     "leaf": "u_pstn.dr_ei",
+     "face": "W",
+     "window_um": [
+      225.008,
+      314.928
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "hr_ei",
+     "dir": "in",
+     "width": 453,
+     "kind": "data",
+     "leaf": "u_pstn.hr_ei",
+     "face": "W",
+     "window_um": [
+      317.232,
+      395.76
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "rd_ei",
+     "dir": "in",
+     "width": 512,
+     "kind": "data",
+     "leaf": "u_pstn.rd_ei",
+     "face": "W",
+     "window_um": [
+      396.72,
+      485.456
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "re_ei",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.re_ei",
+     "face": "W",
+     "window_um": [
+      486.416,
+      486.8
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "rl_ei",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.rl_ei",
+     "face": "W",
+     "window_um": [
+      487.76,
+      488.144
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "rr_ei",
+     "dir": "in",
+     "width": 3,
+     "kind": "ctl",
+     "leaf": "u_pstn.rr_ei",
+     "face": "W",
+     "window_um": [
+      489.104,
+      489.776
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "rv_ei",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.rv_ei",
+     "face": "W",
+     "window_um": [
+      490.736,
+      491.12
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "sc_ei",
+     "dir": "in",
+     "width": 48,
+     "kind": "data",
+     "leaf": "u_pstn.sc_ei",
+     "face": "W",
+     "window_um": [
+      501.216,
+      509.392
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "st_ei",
+     "dir": "in",
+     "width": 1088,
+     "kind": "data",
+     "leaf": "u_pstn.st_ei",
+     "face": "W",
+     "window_um": [
+      699.296,
+      887.312
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "treq_ei",
+     "dir": "in",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_pstn.treq_ei",
+     "face": "W",
+     "window_um": [
+      888.272,
+      889.952
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_stm_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_stm_i",
+     "face": "E",
+     "window_um": [
+      4.32,
+      4.704
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_wo",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_wo",
+     "face": "W",
+     "window_um": [
+      315.888,
+      316.272
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "cws0",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 516,
+     "stations": 5,
+     "out_window_um": [
+      481.888,
+      571.12
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "rsn",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 514,
+     "stations": 4,
+     "out_window_um": [
+      185.696,
+      274.608
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "rsf",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 514,
+     "stations": 4,
+     "out_window_um": [
+      95.808,
+      184.736
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_st_a_fe",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 258,
+     "stations": 4,
+     "out_window_um": [
+      436.32,
+      480.928
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "contents": [
+    {
+     "inst": "u_fdn",
+     "module": "slice s6b u_fdn",
+     "status": "rework",
+     "note": "slice glue re-derived per region partition"
+    },
+    {
+     "inst": "u_pstn",
+     "module": "sle_fw_v1_pstn",
+     "status": "new",
+     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    }
+   ],
+   "note": "slice region partition fw (E slice, landed region fw); est. std-cell fill 0.06 at util 0.6: 50% of M4-M7 to ft; native E2 ch_dn_i connection differs from E0/E4; exact interface clone,0 cycles",
+   "clock": {
+    "tap_um": [
+     311.04,
+     673.92
+    ],
+    "layer": "M9",
+    "insertion_ps": 250,
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       336.96
+      ],
+      "insertion_ps": 223,
+      "insertion_tol_ps": 40,
+      "from_root_um": 337.0
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       1002.24
+      ],
+      "insertion_ps": 223,
+      "insertion_tol_ps": 40,
+      "from_root_um": 328.3
+     }
+    ]
+   },
+   "reset": {
+    "tap_um": [
+     311.04,
+     673.92
+    ],
+    "sync_stages": 2
+   },
+   "ft_track_frac": 0.5
   }
  },
  "partitions": [
@@ -335633,7 +336457,7 @@
   },
   {
    "name": "sl_E2_fw",
-   "type": "sle_fw_v1",
+   "type": "sle_fw_v1_e2",
    "origin_um": [
     21332.16,
     11793.6

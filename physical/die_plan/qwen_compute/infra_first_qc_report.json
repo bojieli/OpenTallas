@@ -702,6 +702,13 @@
    ],
    "cycles": 0,
    "note": "absolute measured insertion, not an offset to the obsolete vmr_s6h budget"
+  },
+  "D-QC-FW-NATIVE-E2": {
+   "base_type": "sle_fw_v1",
+   "new_type": "sle_fw_v1_e2",
+   "part": "sl_E2_fw",
+   "cycles": 0,
+   "reason": "strict native source signature ch_dn_i differs; no generic type waiver"
   }
  }
 }
