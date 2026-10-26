@@ -300,12 +300,12 @@ class Landings:
             # Copy the nearest tap's raw reset relay at the SAME parent/depth.
             # This is a timed local data relay, never another synchronizer.
             t = self.types[key]
-            geom = next((x for x in t.get("buses", []) if x["name"] == b), None)
+            geom = next((x for x in t.get("buses", []) if x["name"] == b and "face" in x and "window_um" in x), None)
             if geom is None and collector_info:
                 geom=collector_info.get("bus_geometry",{}).get(b)
             if geom is None:
                 slot = next((x for x in t.get("ft_slots", []) if x["name"] + "_i" == b), None)
-                if slot:
+                if slot and "in_window_um" in slot:
                     geom = dict(face=slot["in_face"], window_um=slot["in_window_um"])
             if geom is None:
                 raise LandingError(f"{tn}.{b}: receiver face geometry not found")
