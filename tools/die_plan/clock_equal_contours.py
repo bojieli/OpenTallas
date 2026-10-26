@@ -32,9 +32,10 @@ def points(a,b,r):
     return result
 
 
-def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False):
+def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False,relocate_internal=False):
     P=S.Plan(S.load(plan));T=DC.load_tree(source);tree=json.loads((source/'tree.json').read_text())
     T.cells,legal=legalize_cells(T.cells,plan)
+    base_positions={n:(c['x'],c['y']) for n,c in T.cells.items()}
     K=DC.KeepIndex(DC.keepouts(P),die=(P.W,P.H));sx,sy=.054,.27;ns=30;width=1.62
     ports={'port:'+t['port']:tuple(t['xy']) for t in tree['taps']};ports['port:root']=tuple(tree['meta']['root_um'])
     def xy(node):return ports[node] if node.startswith('port:') else (T.cells[node]['x'],T.cells[node]['y'])
@@ -138,7 +139,7 @@ def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False):
         return None
     out.mkdir(parents=True,exist_ok=True)
     identity=hashlib.sha256(plan.read_bytes()+(source/'nets.json').read_bytes()+(source/'place.json').read_bytes()).hexdigest()
-    selected={};radii={};leg_counts={};maxerror=0.;failures=[]
+    selected={};radii={};leg_counts={};maxerror=0.;failures=[];relocations={}
     checkpoint=out/'checkpoint.json'
     if resume and checkpoint.exists():
         cp=json.loads(checkpoint.read_text())
@@ -147,6 +148,14 @@ def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False):
         radii={int(k):v for k,v in cp['radii'].items()};leg_counts={int(k):v for k,v in cp['legs'].items()}
         if any(n>max_legs for n in leg_counts.values()):raise ValueError('checkpoint exceeds requested leg profile')
         maxerror=cp['maxerror']
+        if cp.get('relocations') and not relocate_internal:raise ValueError('checkpoint contains internal relocations; enable the same opt-in')
+        for name,c in cp.get('relocations',{}).items():
+            old=T.cells[name];ix,iy=round(old['x']/sx),round(old['y']/sy)
+            occupied.difference_update((iy,j) for j in range(ix,ix+ns))
+        for name,c in cp.get('relocations',{}).items():
+            ix,iy=round(c['x']/sx),round(c['y']/sy);sites={(iy,j) for j in range(ix,ix+ns)}
+            if sites&occupied:raise ValueError('checkpoint moved clock cell overlaps base')
+            occupied.update(sites);T.cells[name].update(c);relocations[name]=c
         for ps in selected.values():
             for x,y,iy,error in ps:
                 ix=round(x/sx);sites={(iy,j) for j in range(ix,ix+ns)}
@@ -175,13 +184,42 @@ def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False):
                 order=[order[-1]]+order[:-1]
             for r in order:
                 circle_cache.clear()
-                placed=set();chosen=[];blocked=None
+                placed=set();chosen=[];blocked=None;moves=[]
                 for ni,bi,src,dst,layer in edges:
                     found=route(xy(src),xy(dst),r,legs)
+                    if found is None and relocate_internal and not dst.startswith('port:'):
+                        # Internal clock buffers are placement variables, not
+                        # frozen tile pins. Move the endpoint onto a free
+                        # equal-leg scaffold; later stages use its new geometry.
+                        old=dict(T.cells[dst]);oldxy=xy(dst);a=xy(src)
+                        ox,oy=round(old['x']/sx),round(old['y']/sy)
+                        oldsites={(oy,j) for j in range(ox,ox+ns)}
+                        occupied.difference_update(oldsites)
+                        candidates=[]
+                        for axis in [0,1]:
+                            for count_ in range(-legs,legs+1,2):
+                                if not count_:continue
+                                q=list(a);q[axis]+=count_*r
+                                x,y=round(q[0]/sx)*sx,round(q[1]/sy)*sy
+                                displacement=abs(x-oldxy[0])+abs(y-oldxy[1])
+                                if displacement<=405:candidates.append((displacement,x,y))
+                        moved=False
+                        for displacement,x,y in sorted(candidates):
+                            ix,iy=round(x/sx),round(y/sy);sites={(iy,j) for j in range(ix,ix+ns)}
+                            if x<1 or y<1 or x+width>P.W-1 or y+.27>P.H-1 or sites&occupied:continue
+                            if any(K.hit(u,v) for u,v in [(x,y),(x+width,y),(x,y+.27),(x+width,y+.27)]):continue
+                            occupied.update(sites);T.cells[dst].update(x=round(x,6),y=round(y,6),orient='MX' if iy%2 else 'R0')
+                            found=route(a,xy(dst),r,legs)
+                            if found is not None:
+                                moves.append((dst,old,oldsites,sites));moved=True;break
+                            occupied.difference_update(sites)
+                        if not moved:T.cells[dst]=old;occupied.update(oldsites)
                     if found is None:blocked=(ni,bi,src,dst);break
                     ps,sites=found;placed.update(sites);chosen.append((ni,bi,ps))
                 if blocked is None:success=True;break
                 occupied.difference_update(placed)
+                for name,old,oldsites,newsites in moves:occupied.difference_update(newsites)
+                for name,old,oldsites,newsites in moves:T.cells[name]=old;occupied.update(oldsites)
             if success:break
         if not success:
             failures.append(dict(stage=stage,edges=len(edges),minimum_radius_um=first,failed_edge=blocked,max_legs=max_legs))
@@ -189,9 +227,10 @@ def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False):
         for ni,bi,ps in chosen:
             selected[(ni,bi)]=ps
             maxerror=max(maxerror,max(p[3] for p in ps))
+        for name,old,oldsites,newsites in moves:relocations[name]={k:T.cells[name][k] for k in ['x','y','orient']}
         radii[stage]=round(r,3);leg_counts[stage]=legs
         print(json.dumps(dict(stage=stage,edges=len(edges),legs=legs,radius_um=round(r,3))),flush=True)
-        cp=dict(identity=identity,radii=radii,legs=leg_counts,maxerror=maxerror,selected={f'{ni}:{bi}':ps for (ni,bi),ps in selected.items()})
+        cp=dict(identity=identity,radii=radii,legs=leg_counts,maxerror=maxerror,relocations=relocations,selected={f'{ni}:{bi}':ps for (ni,bi),ps in selected.items()})
         temporary=out/'checkpoint.tmp';temporary.write_text(json.dumps(cp));temporary.replace(checkpoint)
     out.mkdir(parents=True,exist_ok=True)
     if failures:
@@ -229,12 +268,12 @@ def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False):
         if node=='port:root':return []
         return path(parent[node])+([] if node.startswith('port:') else [node])
     for t in tree['taps']:t['path']=path('port:'+t['port']);t['pad_nets']=[]
-    for name,node in tree['nodes'].items():node['path']=path(name)
+    for name,node in tree['nodes'].items():node['path']=path(name);node['xy']=[T.cells[name]['x'],T.cells[name]['y']]
     ds=[len(t['path']) for t in tree['taps']]
     if min(ds)!=max(ds):raise ValueError('physical contour transform changed relative clock depth')
     meta=dict(added_clock_cells=count,clock_stages_per_tap=ds[0],radius_by_stage_um=radii,legs_by_stage=leg_counts,wide_through_original_stage=wide_through,
         max_native_grid_leg_error_um=round(maxerror,6),max_physical_hop_um=round(maxhop,6),
-        added_cell_area_um2=round(count*1.62*.27,4),data_cycles_added=0,hidden_wire_pad_um=0,base_legalization=legal,closure_first=closure_first)
+        added_cell_area_um2=round(count*1.62*.27,4),data_cycles_added=0,hidden_wire_pad_um=0,base_legalization=legal,closure_first=closure_first,relocated_internal_clock_cells=len(relocations),max_internal_relocation_um=round(max((abs(c['x']-base_positions[n][0])+abs(c['y']-base_positions[n][1]) for n,c in relocations.items()),default=0.),6))
     tree['meta'].update(ndr=f'4W;8W through normalized clock stage{wide_through}',cells=len(T.cells),wire_um=round(sum(L for n in T.nets for L,*_ in n['branches']),3),padding_um=0.,pad_um=0.,pads=0,physical_equal_contours=meta)
     DC.NDR_MODE='4w';DC.WIDE_LEVELS=6;DC.write_verilog(T,out/'ctree.v');DC.write_spef(T,out/'ctree.spef')
     for file,obj in [('tree.json',tree),('place.json',T.cells),('nets.json',dict(ports=T.ports,nets=T.nets))]:(out/file).write_text(json.dumps(obj))
@@ -242,5 +281,5 @@ def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False):
     print(json.dumps(meta,indent=2))
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('plan',type=Path);p.add_argument('source',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--max-legs',type=int,choices=[2,3,4],default=4);p.add_argument('--closure-first',action='store_true');p.add_argument('--resume',action='store_true')
-    a=p.parse_args();equalize(a.plan,a.source,a.out,a.max_legs,a.closure_first,a.resume)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('plan',type=Path);p.add_argument('source',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--max-legs',type=int,choices=[2,3,4],default=4);p.add_argument('--closure-first',action='store_true');p.add_argument('--resume',action='store_true');p.add_argument('--relocate-internal',action='store_true')
+    a=p.parse_args();equalize(a.plan,a.source,a.out,a.max_legs,a.closure_first,a.resume,a.relocate_internal)
