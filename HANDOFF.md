@@ -838,3 +838,5 @@ Other ops: AP/canary timers exit0, all5hosts admit, scratch minimumepyc2~213GB/l
 
 OWNER?
 No new INFRA owner decisions.
+CODEX: 18:22 RESET HCORE/SVC1713 parked. HCOREtimedsource/profile2781+2129 merged; exactALL30562+KEEP625 NEWROOTvalidatedreceipt admitted. LIVEactualnativePLACE02unit767394, iter670ovf.194; noCTS. Native01hashguardcaughtunneededresynth, failedcheckpointpreserved;02reusesoriginalvalidated0890+4e4dSYNTHcache. SVCroleWIPcb613dce72 pushed NOTREADY (13HROW+6UP+8timedstations); entrycomponent3seedPASS+two controlsCAUGHT, fullroleproof/rehardeningstillowed. DetailedCODEX-LOG18:22; noOWNERitems.
+CODEX: HEAD1713 parked18:22 on ROOT RESET. f460sourceL4 mergedmain675: scalar351253+mutant, B128exact−119, A32+argmax−126, actualreleasedweight2tiletransportALL4PASS8304cycles. NativeB293 timedcontrolreset/GO prototype fb7c45a5aa pushed WIP ONLY, prepared elemB_if2g_l4_native_v2, UNCOMPILED/no synth/PNR/LEC yet. All own jobs terminal, full exactpaths/failures/next/OWNER CODEX-LOG18:22.
