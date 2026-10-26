@@ -1,0 +1,13 @@
+{
+  "scope": "legal-cell mesh timing prototype; connected fixed pre-route gate separate",
+  "verdict": "PASS-COND TRIAL ONLY",
+  "image": "/srv/opentallas-scratch/claude/codex-head-clock-1026/legal162b0/mesh.png",
+  "findings": [
+    "Actual BUF24 LEF body1.62x0.27; zero cell-body overlaps and zero unplaced cells after dynamic footprint reservation.",
+    "8792-class clockcells fit beside hardmacro keepouts; repeated edgeSerDes bands still drive long stubs with splitrepeaters; no newdatahop.",
+    "Seedbalance consumes olddriverarrivals only as startingguess; fresh50iteration physicalRC rerun decides skew.",
+    "PG and specialclock actualvia/terminal connectivity remains separate infra gate, nofreeze."
+  ],
+  "clock_period_ps": 833,
+  "gate": "TT/FF CPPR relatedpairs <=80ps; NOT RUN"
+}
