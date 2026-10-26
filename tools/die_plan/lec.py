@@ -1366,7 +1366,7 @@ def fsm_proposals(L, log, words=2, max_bits=4):
     An optimized-away idle flop may encode one additional state with all gate bits zero.
     Both are proved inductively with every other hypothesis (assumed on the current state, proved on the next); a
     wrong map can only fail and be dropped, never hide a difference."""
-    m, kind = L.build(with_compare=False, with_hyp=False)
+    m, kind = L.build(with_compare=False, with_hyp=True)
     var = {}
     for v, (kd, k) in kind.items():
         if kd in ("gold_only", "gate_only"):
