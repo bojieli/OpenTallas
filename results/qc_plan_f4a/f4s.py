@@ -20,7 +20,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1] / "results/master_plan_r4/qc_su_refloor"))
-sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parents[1] / "tools/die_plan"))
 from macro_tracks import lef_pins, snap_origin_x  # noqa: E402
 LEF = HERE.parents[1] / "physical/asap7_memory_macros_v2_col/ot_sram_1r1w_1024x256_m1b2_r2c2_ns/ot_sram_1r1w_1024x256_m1b2_r2c2_ns.lef"
 from refloor import L, group, read, spread, write_geo  # noqa: E402

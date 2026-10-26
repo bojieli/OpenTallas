@@ -561,7 +561,7 @@ band["with_prog_residual_TT"] = round(band["TT_mean"] - 16.6, 2)
 rep["band"] = band
 # G1 macro-pin track check (COORD RULING QC-PLAN-F4A (1)): every macro signal pin centre on its layer's kit track
 # (M5 x / M4 y, offset 0.012 pitch 0.048), orientation from the floorplan meta (GEO.json); missing meta = FAIL
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools/die_plan"))
 import macro_tracks as MT  # noqa: E402
 _g1 = []
 try:

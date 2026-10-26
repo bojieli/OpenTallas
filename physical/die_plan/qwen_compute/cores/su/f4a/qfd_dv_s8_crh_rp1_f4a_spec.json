@@ -1,0 +1,119 @@
+{
+ "name": "qfd_dv_s8_crh_rp1_f4a",
+ "top": "qfd_dv_s8_crh_rp1",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+  "physical/asap7_memory_macros_v2_col/ot_sram_1r1w_1024x256_m1b2_r2c2_ns/ot_sram_1r1w_1024x256_m1b2_r2c2_ns_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 250.56,
+  "h": 216.0
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2_col/ot_sram_1r1w_1024x256_m1b2_r2c2_ns",
+   "count": 1,
+   "inst": "*g_crb?0?*u_m",
+   "at": [
+    17.904,
+    38.88
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2_col/ot_sram_1r1w_1024x256_m1b2_r2c2_ns",
+   "count": 1,
+   "inst": "*g_crb?1?*u_m",
+   "at": [
+    136.08,
+    38.88
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "cr_re",
+   "cr_addr",
+   "q"
+  ],
+  "S": [
+   "rst_n",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "tw_d",
+   "fault",
+   "ck"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every input and every output at its pin (vm8 pin registers, priced); a flow pin register would add a second, unpriced edge"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in two registered stages (rl0 -> rl1) and rl1 resets only the sticky fault register"
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: RTL registers every input and output at its pin (= vm8 pin registers); rst_n lands rl0 -> rl1 and resets only the sticky fault; no combinational pin arc",
+  "2_reach": "PASS (by floorplan): outline 259.2 x 276.48, every pin <= 276 um from any sink; gate wire_reach checks 405 um",
+  "3_fanout": "OWED fresh mapped native census on new2bit half/bank controls, then qualified gate; oldCRH census not alias.",
+  "4_depth": "PASS: = vm8 (census depth recorded); no logic before a macro pin except the 2-register collision compare",
+  "5_storage": "PASS: all > 2 kb state in SRAM macros",
+  "6_floorplan": "PASS: x on 43.2, y on 8.64, macro channels >= 20 um, S band 86.4, aspect 1.07, faces W 456 / 276.5 = 1.6/um, S 542 / 259.2 = 2.1/um",
+  "7_clock": "ONE CTS root (S-centre ck) over the whole leaf = one region; pin-flop spread <= 80 TT+FF judged in the gate; every crossing to a slice2 neighbour lands in a parent mesochronous ring; io_hold_margin 0.03",
+  "8_schedule": "Same CRH sequential stages; focused actual-RP-to-CRH SRAM eight-beat byte/bank test passed with two mutants. Selected s8 LP programme ages OWED (4 new landings/pad3 D4), no whole-parent age claim."
+ },
+ "fill_reason": {
+  "pin_bound": "macro- and pin-bound leaf: the dense S face (W 456 / 276.5 = 1.6/um, S 542 / 259.2 = 2.1/um) carries the registered table/VM write bus; the leaf is kept <= 259.2 um wide on that face so every pin register sits <= 130 um from the S-centre clock pin (r1 leaves 302-475 um wide: pin-flop spread 107-146 ps); the outline is set by the face width x macro column, not by the std-cell area"
+ },
+ "structural_change": "Existing CRH with c0f8097f3 CRH1 half-write recovery: two kept half/bank selector bits at same capture age, per-bank WCE, legal half-address fault. Same ABI/read stages/two SRAMs/outline; new source must close independently.",
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "f4a": {
+  "lane": "QC-PLAN-F4A",
+  "floorplan": "results/qc_plan_f4a/f4s.py (W column MY origin track-snapped, RULING (1))",
+  "geo": "results/qc_plan_f4a/geo/rp1_f4s.geo.json",
+  "tree": "results/qc_plan_f4a/rp1_f4s_g4c.json",
+  "entry_um": [
+   125.28,
+   108.0
+  ],
+  "ck_pin_um": [
+   125.292,
+   108.0
+  ],
+  "mif": 0
+ }
+}

@@ -50,7 +50,8 @@ QC = REPO / "physical/die_plan/qwen_compute"
 TOOL = REPO / "tools/die_plan"
 sys.path.insert(0, str(TOOL))
 import sdc_lint  # noqa: E402
-import core_flow  # noqa: E402  (FLOW-FIX 10-25: shared HBM / KV / QC core-kit flow defaults)
+import core_flow  # noqa: E402
+import macro_tracks as MT  # noqa: E402  (G1 macro-pin track check)  (FLOW-FIX 10-25: shared HBM / KV / QC core-kit flow defaults)
 
 CORE_MARGIN_UM = 4.32
 RECT = {"M3": (0.018, 0.038), "M4": (0.084, 0.024), "M5": (0.024, 0.084)}   # repin.py: (w, h) of a pin shape
@@ -495,7 +496,11 @@ def main():
         hc = {k: v for k, v in hc.items() if k != "pins"}
         hc.update(pins_file=rec["pins_file"], lef=rec["lef"])
     spec_src = rec.get("spec_git")       # "<rev>:<path>" for a kit spec that is only in history (sources from the tree)
-    spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
+    if rec.get("spec_file"):            # QC-PLAN-F4A: a plan-delta kit spec committed beside its pin table (repo-relative)
+        spec_src = rec["spec_file"]
+        spec = json.load(open(REPO / spec_src))
+    else:
+        spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
     mod = spec["top"]
     assert mod == hc["module"], (mod, hc["module"])
     if spec.get("children"):
@@ -550,8 +555,11 @@ def main():
         lef = (md / f"{master}.lef").read_text()
         sz = re.search(r"SIZE ([\d.]+) BY ([\d.]+)", lef)
         mw, mh = float(sz.group(1)), float(sz.group(2))
-        mm = re.search(r"LAYER M4 ;\s*RECT\s+[\d.]+\s+([\d.]+)\s+[\d.]+\s+([\d.]+)", lef)
-        ph = (float(mm.group(1)) + float(mm.group(2))) / 2 if mm else 0.012
+        # M4 track phase from the macro's M4 SIGNAL pins (QC-PLAN-F4A: the first M4 rect of a column view is a PG rail);
+        # a view without M4 signal pins has no y phase to keep (G1 below checks every signal pin on its own layer track)
+        _sz, _pins = MT.lef_pins(md / f"{master}.lef")
+        _m4 = [q for q in _pins if q[1] == "M4"]
+        ph = _m4[0][3] if _m4 else None
         for _ in range(int(m.get("count") or 1)):
             idx = len(mplace.setdefault(master, []))
             if master in sites:
@@ -559,10 +567,16 @@ def main():
             else:
                 x, y = m["at"]
                 o = m.get("orient", "R0")
-                y = round(round((y + ph - 0.012) / 0.048) * 0.048 + 0.012 - ph, 4)
-            k = (y + ph - 0.012) / 0.048
-            if abs(k - round(k)) > 1e-3:
-                raise SystemExit(f"{master}: site y {y} off the M4 track phase")
+                if ph is not None:
+                    y = round(round((y + ph - 0.012) / 0.048) * 0.048 + 0.012 - ph, 4)
+            if ph is not None:
+                k = (y + ph - 0.012) / 0.048
+                if abs(k - round(k)) > 1e-3:
+                    raise SystemExit(f"{master}: site y {y} off the M4 track phase")
+            # G1 (COORD RULING QC-PLAN-F4A (1)): every macro signal pin on its layer's kit track at this site/orient
+            _bad = MT.check(_sz, _pins, x, y, o)
+            if _bad:
+                raise SystemExit(f"{master}: G1 {len(_bad)} macro pins off track at {x},{y} {o}, e.g. {_bad[:2]}")
             m_ = rec.get("core_margin", CORE_MARGIN_UM)
             if not (x >= m_ and y >= m_ and x + mw <= w - m_ and y + mh <= h - m_):
                 raise SystemExit(f"{master}: site {x},{y} ({mw}x{mh}) outside the core area of {w}x{h}")
@@ -581,6 +595,16 @@ def main():
     rows = []
     snapped = 0
     for q in pins:
+        if q.get("face") == "island":
+            # 12.8a / 12.2a1 interior clock-entry pin (die M9->M5 stack lands on it; pushdown.tcl places the same point):
+            # only the clock port may be interior, strictly inside the core, on its M5 track
+            if q["name"] != spec["clock_port"] or q["layer"] != "M5" or not (0 < q["x"] < w and 0 < q["y"] < h):
+                raise SystemExit(f"{mod}: interior pin {q['name']} {q['layer']} ({q['x']}, {q['y']}) refused")
+            pw, ph_ = RECT["M5"]
+            io.append(f"place_pin -pin_name {{{q['name']}}} -layer M5 -location {{{q['x']:.4f} {q['y']:.4f}}} "
+                      f"-pin_size {{{pw:.4f} {ph_:.4f}}}")
+            rows.append(dict(bus=q["name"], bit=None, layer="M5", x=round(q["x"], 4), y=round(q["y"], 4), face="island"))
+            continue
         f = face_of(q["x"], q["y"], w, h)
         L_ = shapes.get(q["name"], (q["layer"],))[0]
         if L_ != q["layer"]:

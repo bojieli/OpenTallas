@@ -1,0 +1,19 @@
+# copied 2026-10-26 from intel1:/srv/opentallas-scratch2/claude/qc-su-kits2-1026/prog_m0 (QC-SU-KITS-2 MIF0 kit), unchanged
+d727caa0acd393a1169702527697565c  ./cf/macro_pin_flops.tcl
+e22068c9fe8c7ce7a86efe0add490027  ./cf/macro_pin_flops_release.tcl
+7ba3e7505092883afb017d01a4f83a5a  ./cf/main/postcts_gate.tcl
+87d978c6ffa2cbc451d9fc5bbf7dd619  ./cf/main/setRC_rcx_asap7.tcl
+d1c79b741ee54627afd4650d536fa100  ./cf/main/vclk_corner.tcl
+2193ddf277f6da0f7d56471ee7126e5a  ./cf/mscts_core.tcl
+5d92e6116067c9bb2339f7bd2c86db82  ./cf/mscts_h.tcl
+1d4b876761e5004f1e4cfed6b171ce13  ./cf/mscts_projection.tcl
+288424b15ded7c75207ad84f66cb917c  ./cf/rc_cal.tcl
+be9f1294957f052e116a6cd0f96d56e6  ./cts_m0.sh
+d2e600bc1d24d0a7539b15014b61ce7e  ./dump_geo_m0.tcl
+bc30077f13a71778957c620dfd1bd76d  ./place_m0.sh
+82f30ba4f2b82f03e178b1789ba5ec8e  ./post_cts_s5.tcl
+f63f3b6bea901a29eba48e7618ce7a45  ./post_grt_s5.tcl
+74daf04a3f5df92c38726a3287494c40  ./pre_cts_m0.tcl
+fd3e351e3586df7c89864d16969cec90  ./pre_dpl_m0.tcl
+7eac2b01f455665cfad8a455febec838  ./pre_gpl_m0.tcl
+5e7915075494f59291d5f4fd1ff359aa  ./pushdown.tcl
