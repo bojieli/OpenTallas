@@ -26,5 +26,5 @@ python3 /o/gen_harness.py obj_old/Vold.h old new mutW mutB > tb.cpp
 make -s -C obj_old -f Vold.mk libverilated.a > build_rt.log 2>&1
 VR=/usr/local/share/verilator/include; [ -d \$VR ] || VR=\$(dirname \$(find / -name verilated.h -path '*include*' 2>/dev/null | head -1))
 g++ -O1 -std=c++17 -I\$VR -I\$VR/vltstd -Iobj_old -Iobj_new -Iobj_mutW -Iobj_mutB tb.cpp obj_old/libVold.a obj_new/libVnew.a obj_mutW/libVmutW.a obj_mutB/libVmutB.a obj_old/libverilated.a -lpthread -latomic -o tb
-./tb $N | tee lockstep.txt
+./tb $N 0 | tee lockstep.txt; ./tb $N 1 | tee -a lockstep.txt
 "
