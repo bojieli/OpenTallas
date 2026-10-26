@@ -70,3 +70,33 @@ def test_inventory_does_not_claim_hardware_or_physical_pass():
     r = requirements(p, t)
     assert r["required_new_scalar_pins"] == 4
     assert r["added_live_data_storage_flops"] == 25
+
+
+def test_registered_monitor_replaces_long_die_status_vectors():
+    p,t=vehicle()
+    def pin(n,d):return dict(name=n,dir=d,width=1,face="E",window_um=[1,2],layers=["M4"])
+    for ty in p["partition_types"].values():
+        ty["buses"] += [pin("cland_up_ready","out"),pin("cland_up_fault","out")]
+    p["partition_types"]["A"]["buses"] += [pin("cland_dn_ready_0","in"),pin("cland_dn_fault_0","in"),pin("fclk_in_cland_dn_0","in")]
+    p["partition_types"]["B"]["buses"].append(pin("fclk_out_cland_up","out"))
+    tree=dict(root=[1,1],n_clock_taps=1,relays=[dict(q="rst_n_t0",d="rst_root_n",xy=[2,1])])
+    t["collector"]=dict(root="a",parts={"a":dict(parent=None,active=True),"b":dict(parent="a",active=True)},
+        edges=[dict(src="b",dst="a",dst_index=0,seam=True)],types={
+            "A":dict(mask=dict(active=True,up_seam=False),tree=tree,local_sources=[],children=[
+                dict(index=0,tap=0,seam=True,ready="cland_dn_ready_0",fault="cland_dn_fault_0",xy_um=[2,1])]),
+            "B":dict(mask=dict(active=True,up_seam=True),tree=tree,children=[],local_sources=[
+                dict(name="y",tap=0,ready="landing_ready_y",fault="landing_fault_y",xy_um=[10,1.5])])})
+    c=Landings(p,t)
+    a="module a_mod (\n input wire clk,\n output wire [4:0] x\n);\n wire rst_root_n; wire rr_t0;\n assign x=0;\nendmodule\n"
+    b="module b_mod (\n input wire clk,\n input wire [4:0] y\n);\n wire rst_root_n, rst_n_t0;\n ot_dp_rgate u_rrl_0 (.clk(clk),.d(rst_root_n),.run(run),.q(rst_n_t0));\n wire [4:0] y_q; assign y_q=y;\nendmodule\n"
+    aa=c.type_rtl("A",a);bb=c.type_rtl("B",b)
+    assert "ot_dp_clk_landing #(.W(2)) u_cland_monitor_0" in aa
+    assert "ot_dp_landing_collect" in aa
+    assert "output wire landing_fault_y" not in bb
+    assert "wire landing_ready_y, landing_fault_y;" in bb
+    top="module die_bound_top (rst_n, clk_core);\n    a_mod a (\n        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\nendmodule\n"
+    out=c.top_rtl(top)
+    assert "output wire clock_landing_ready;" in out
+    assert "output wire [0:0] clock_landing_ready;" not in out
+    assert ".cland_dn_ready_0(cland_ready_b)" in out
+    assert ".cland_up_ready(clock_landing_ready)" in out
