@@ -133,6 +133,27 @@ P(r"""
     cyc <= cyc + 1;
     since_pub = since_pub + 1;
     if (pending_reset) begin pend_age = pend_age + 1; if (pend_age > 3000) begin $display("EDGE_SCHED FAIL phase %0d never reached", phase_target); $finish; end end
+    // ---- compare (outputs of the previous edge; before this cycle's schedule/reset decisions) ----
+    if (in_rst) begin
+      if ({%OUTS_L%} !== {%OUTS_S%}) rmism = rmism + 1;
+    end else begin
+      cmpc = cmpc + 1;
+%NONFLIT%
+      if (o_arg_out_flit_L !== o_arg_out_flit_S) begin
+        if (o_arg_out_v_L || o_arg_out_v_S) begin mism = mism + 1; if (mism < 20) $display("MISMATCH_PUBLISHED cyc=%0d arg_out_flit", cyc); end
+        else begin dontcare = dontcare + 1; if (o_arg_fault_L) dontcare_v0f1 = dontcare_v0f1 + 1; if (dontcare < 40) $display("DONTCARE cyc=%0d arg_out_flit v=0 fault=%0d nreset=%0d", cyc, o_arg_fault_L, nreset); end
+      end
+      if (o_arg_fault_L || o_arg_fault_S) begin fault_seen = fault_seen + 1; if (fault_seen < 5) $display("FAULT cyc=%0d L=%0d S=%0d", cyc, o_arg_fault_L, o_arg_fault_S); end
+      if (o_arg_out_v_L) begin
+        if (exp_rd >= exp_wr) begin gold_bad = gold_bad + 1; if (gold_bad < 10) $display("GOLDEN_UNEXPECTED_PUBLISH cyc=%0d id=%h", cyc, o_arg_out_flit_L[31:0]); end
+        else begin
+          if (o_arg_out_flit_L === {1'b1, 8'hFF, exp_rank[exp_rd %% 4096], 16'h0, 480'h0, exp_id[exp_rd %% 4096]} &&
+              o_arg_out_flit_S === o_arg_out_flit_L) gold_ok = gold_ok + 1;
+          else begin gold_bad = gold_bad + 1; if (gold_bad < 10) $display("GOLDEN_MISMATCH cyc=%0d got=%h exp=%h", cyc, o_arg_out_flit_L[31:0], exp_id[exp_rd %% 4096]); end
+          exp_rd = exp_rd + 1;
+        end
+      end
+    end
     // ---- link pins: identical random traffic to both cores (link lockstep already PASS) ----
 """.replace("%SEED%", str(a.seed)))
 for d, w, n in ports:
@@ -222,27 +243,6 @@ P(r"""
           end
           default: ;
         endcase
-      end
-    end
-    // ---- compare ----
-    if (in_rst) begin
-      if ({%OUTS_L%} !== {%OUTS_S%}) rmism = rmism + 1;
-    end else begin
-      cmpc = cmpc + 1;
-%NONFLIT%
-      if (o_arg_out_flit_L !== o_arg_out_flit_S) begin
-        if (o_arg_out_v_L || o_arg_out_v_S) begin mism = mism + 1; if (mism < 20) $display("MISMATCH_PUBLISHED cyc=%0d arg_out_flit", cyc); end
-        else begin dontcare = dontcare + 1; if (o_arg_fault_L) dontcare_v0f1 = dontcare_v0f1 + 1; if (dontcare < 40) $display("DONTCARE cyc=%0d arg_out_flit v=0 fault=%0d nreset=%0d", cyc, o_arg_fault_L, nreset); end
-      end
-      if (o_arg_fault_L || o_arg_fault_S) begin fault_seen = fault_seen + 1; if (fault_seen < 5) $display("FAULT cyc=%0d L=%0d S=%0d", cyc, o_arg_fault_L, o_arg_fault_S); end
-      if (o_arg_out_v_L) begin
-        if (exp_rd >= exp_wr) begin gold_bad = gold_bad + 1; if (gold_bad < 10) $display("GOLDEN_UNEXPECTED_PUBLISH cyc=%0d id=%h", cyc, o_arg_out_flit_L[31:0]); end
-        else begin
-          if (o_arg_out_flit_L === {1'b1, 8'hFF, exp_rank[exp_rd %% 4096], 16'h0, 480'h0, exp_id[exp_rd %% 4096]} &&
-              o_arg_out_flit_S === o_arg_out_flit_L) gold_ok = gold_ok + 1;
-          else begin gold_bad = gold_bad + 1; if (gold_bad < 10) $display("GOLDEN_MISMATCH cyc=%0d got=%h exp=%h", cyc, o_arg_out_flit_L[31:0], exp_id[exp_rd %% 4096]); end
-          exp_rd = exp_rd + 1;
-        end
       end
     end
     if (runs_started >= %RUNS% && st == S_GAP && gap == 0 && rst_left == 0 && postrel == 0 && cyc > 50) begin : fin
