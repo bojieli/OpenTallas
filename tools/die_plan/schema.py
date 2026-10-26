@@ -128,7 +128,10 @@ _bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", 
                                                          "note": {"type": "string"}}}}
 
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
-_physical_id_widths = {"strap_corner": 2, "strap_hid": 2, "strap_bsel": 2, "strap_tile_tid": 6}
+_physical_id_widths = {"strap_corner": 2, "strap_hid": 2, "strap_bsel": 2, "strap_tile_tid": 6,
+                       # TYPE-REDUCE-2/HBM 10-25: HBM split-master lane IDs
+                       "strap_map_lane_j": 4, "strap_lane_lane_id": 11,
+                       **{f"strap_lane{k}_lane_id": 11 for k in range(4)}}
 _parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
     name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
            "properties": {"width": ({"type": "integer", "const": _physical_id_widths[name]} if name in _physical_id_widths
@@ -138,17 +141,19 @@ _parent_id_straps = {"type": "object", "additionalProperties": False, "propertie
     for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", *_physical_id_widths)}}
 
 # Exact identity ports only. G0's semantic validator enforces each port's width;
-# allOf gives full JSON-Schema consumers the same cross-field restriction.
+# allOf gives full JSON-Schema consumers the same cross-field restriction (one if/then per port).
+_id_widths_set = sorted(set(_physical_id_widths.values()))
 _core_id_straps = {"type": "array", "items": {
     "type": "object", "required": ["port", "width", "value"], "additionalProperties": False,
     "properties": {"port": {"enum": list(_physical_id_widths)},
-                   "width": {"enum": [2, 6]},
-                   "value": {"type": ["integer", "string"], "minimum": 0, "maximum": 63,
-                             "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6})$"},
+                   "width": {"enum": _id_widths_set},
+                   "value": {"type": ["integer", "string"], "minimum": 0, "maximum": (1 << max(_id_widths_set)) - 1,
+                             "pattern": "^(" + "|".join(f"{w}'[bB][01]{{{w}}}" for w in _id_widths_set) + ")$"},
                    "note": {"type": "string"}},
-    "allOf": [{"if": {"properties": {"port": {"const": "strap_tile_tid"}}},
-               "then": {"properties": {"width": {"const": 6}, "value": {"maximum": 63, "pattern": "^6'[bB][01]{6}$"}}},
-               "else": {"properties": {"width": {"const": 2}, "value": {"maximum": 3, "pattern": "^2'[bB][01]{2}$"}}}}]}}
+    "allOf": [{"if": {"properties": {"port": {"const": p}}},
+               "then": {"properties": {"width": {"const": w}, "value": {"maximum": (1 << w) - 1,
+                                                                        "pattern": f"^{w}'[bB][01]{{{w}}}$"}}}}
+              for p, w in _physical_id_widths.items()]}}
 
 SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",

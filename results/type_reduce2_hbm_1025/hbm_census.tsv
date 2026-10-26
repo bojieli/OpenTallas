@@ -1,0 +1,276 @@
+die	item	kind	replicas	reason	after_class	note
+hbm	q_b000	type	2	different-logic	q_b000	no other type binds the same hard-core masters
+hbm	q_b001	type	2	outline	q_b001	same core masters as q_b003, outline differs
+hbm	q_b002	type	2	glue-by-position	q_b002	same masters/outline as q_b011; buses+ft differ
+hbm	q_b003	type	2	outline	q_b003	same core masters as q_b001, outline differs
+hbm	q_b010	type	2	different-logic	q_b010	no other type binds the same hard-core masters
+hbm	q_b011	type	2	glue-by-position	q_b011	same masters/outline as q_b002; buses+ft differ
+hbm	q_b012	type	2	glue-by-position	q_b012	same masters/outline as q_b001; buses+ft differ
+hbm	q_b013	type	2	outline	q_b013	same core masters as q_b001, outline differs
+hbm	q_b100	type	2	glue-by-position	q_b100	same masters/outline as q_b102; buses+ft differ
+hbm	q_b101	type	2	different-logic	q_b101	no other type binds the same hard-core masters
+hbm	q_b102	type	2	glue-by-position	q_b102	same masters/outline as q_b100; buses+ft differ
+hbm	q_b103	type	2	different-logic	q_b103	no other type binds the same hard-core masters
+hbm	q_b110	type	2	different-logic	q_b110	no other type binds the same hard-core masters
+hbm	q_b112	type	2	outline	q_b112	same core masters as q_b111, outline differs
+hbm	q_b113	type	2	different-logic	q_b113	no other type binds the same hard-core masters
+hbm	q_mcb	type	2	different-logic	q_mcb	no other type binds the same hard-core masters
+hbm	q_spb2	type	2	glue-by-position	q_spb2	same masters/outline as q_spt0; buses+ft differ
+hbm	q_spt0	type	2	glue-by-position	q_spt0	same masters/outline as q_spb2; buses+ft differ
+hbm	q_spt1	type	2	different-logic	q_spt1	no other type binds the same hard-core masters
+hbm	q_spt2	type	2	different-logic	q_spt2	no other type binds the same hard-core masters
+hbm	q_spu0	type	2	different-logic	q_spu0	no other type binds the same hard-core masters
+hbm	q_spu1	type	2	different-logic	q_spu1	no other type binds the same hard-core masters
+hbm	q_su01	type	2	outline	q_su01	same core masters as q_su11, outline differs
+hbm	q_su10	type	2	outline	q_su10	same core masters as q_su00, outline differs
+hbm	q_su11	type	2	outline	q_su11	same core masters as q_su01, outline differs
+hbm	q_su21	type	2	outline	q_su21	same core masters as q_su31, outline differs
+hbm	q_su30	type	2	outline	q_su30	same core masters as q_su20, outline differs
+hbm	root	type	1	different-logic	root	no other type binds the same hard-core masters; PATH-HBM root partition
+hbm	vsN5	type	1	different-logic	vsN5	no other type binds the same hard-core masters
+hbm	vsN6	type	1	different-logic	vsN6	no other type binds the same hard-core masters
+hbm	NE_io	type	1	outline	NE_io	same core masters as q_spb0, outline differs
+hbm	NW_io	type	1	different-logic	NW_io	no other type binds the same hard-core masters
+hbm	PHY_N	type	1	different-logic	PHY_N	no other type binds the same hard-core masters
+hbm	hfd_ep_static_261e40d1235d	core	1	pin-positions	hfd_ep_static_261e40d1235d	per-slot table kept: one table: 389 pins >405 um (max 586.5)
+hbm	hfd_ep_static_936f8dc7fe73	core	5	pin-positions	hfd_ep_static_936f8dc7fe73	per-slot table kept: one table: 389 pins >405 um (max 586.5)
+hbm	hfd_hgi_vm_calendar_f20	core	2	different-logic	hfd_hgi_vm_calendar_f20	only design of its RTL master
+hbm	hfd_hgi_vms_glue_nw_t	core	2	different-logic	hfd_hgi_vms_glue_nw_t	only design of its RTL master
+hbm	hfd_vms_bank_native_q0_faces_08b030c8c5fa	core	2	pin-positions	hfd_vms_bank_native_q0_faces_08b030c8c5fa	per-slot table kept: one table: 874 pins >405 um (max 535.7)
+hbm	hfd_vms_bank_native_q0_faces_1dc19a048d64	core	2	pin-positions	hfd_vms_bank_native_q0_faces_1dc19a048d64	per-slot table kept: one table: 874 pins >405 um (max 535.7)
+hbm	hfd_vms_bank_native_q0_faces_48eaaf6eb467	core	2	pin-positions	hfd_vms_bank_native_q0_faces_48eaaf6eb467	per-slot table kept: one table: 874 pins >405 um (max 535.7)
+hbm	hfd_vms_bank_native_q0_faces_60b03fdc5b14	core	2	pin-positions	hfd_vms_bank_native_q0_faces_60b03fdc5b14	per-slot table kept: one table: 874 pins >405 um (max 535.7)
+hbm	hfd_vms_bank_native_q0_faces_70f7f3b9c4b9	core	2	pin-positions	hfd_vms_bank_native_q0_faces_70f7f3b9c4b9	per-slot table kept: one table: 874 pins >405 um (max 535.7)
+hbm	hfd_vms_bank_native_q0_faces_9119a4edb587	core	2	pin-positions	hfd_vms_bank_native_q0_faces_9119a4edb587	per-slot table kept: one table: 874 pins >405 um (max 535.7)
+hbm	hfd_vms_bank_native_q0_faces_cdf7edf6aef9	core	2	pin-positions	hfd_vms_bank_native_q0_faces_cdf7edf6aef9	per-slot table kept: one table: 874 pins >405 um (max 535.7)
+hbm	hfd_vms_bank_native_q0_faces_f98a45862fe1	core	2	pin-positions	hfd_vms_bank_native_q0_faces_f98a45862fe1	per-slot table kept: one table: 874 pins >405 um (max 535.7)
+hbm	hnx_rp3lp3h_n	core	128	different-logic	hnx_rp3lp3h_n	only design of its RTL master
+hbm	hnx_rp3lp3h_s	core	128	different-logic	hnx_rp3lp3h_s	only design of its RTL master
+hbm	ot_hbm_hc_bankq0_static__lanes0_2	core	2	edge	ot_hbm_hc_bankq0_static__lanes0_2	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq0_static__lanes3_5	core	2	edge	ot_hbm_hc_bankq0_static__lanes3_5	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq0_static__lanes6_7_bank	core	2	different-logic	ot_hbm_hc_bankq0_static__lanes6_7_bank	only design of its RTL master
+hbm	ot_hbm_hc_bankq_ft_static__lanes0_2_43d2a3be8b5a	core	2	edge	ot_hbm_hc_bankq_ft_static__lanes0_2_43d2a3be8b5a	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862	core	2	edge	ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3	core	2	edge	ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq_ft_static__lanes3_5_20947a7cbdde	core	2	edge	ot_hbm_hc_bankq_ft_static__lanes3_5_20947a7cbdde	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq_ft_static__lanes6_7_bank_26496f98b6d5	core	2	pin-positions	ot_hbm_hc_bankq_ft_static__lanes6_7_bank_26496f98b6d5	per-slot table kept: one table: 1402 pins >405 um (max 721.4)
+hbm	ot_hbm_hc_bankq_ft_static__lanes6_7_bank_56966ec8a129	core	2	pin-positions	ot_hbm_hc_bankq_ft_static__lanes6_7_bank_56966ec8a129	per-slot table kept: one table: 1402 pins >405 um (max 721.4)
+hbm	ot_hbm_hc_bankq_static__lanes0_2_73698994063d	core	6	edge	ot_hbm_hc_bankq_static__lanes0_2_7bb202609277	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq_static__lanes0_2_96294e05efa9	core	2	edge	ot_hbm_hc_bankq_static__lanes0_2_96294e05efa9	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq_static__lanes0_2_e6588042a5d1	core	2	edge	ot_hbm_hc_bankq_static__lanes0_2_e6588042a5d1	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq_static__lanes3_5_2217a22f183c	core	2	edge	ot_hbm_hc_bankq_static__lanes3_5_2217a22f183c	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq_static__lanes3_5_2d54ff50920c	core	6	edge	ot_hbm_hc_bankq_static__lanes3_5_f7d56fe75a6c	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq_static__lanes3_5_60b283a425e3	core	2	edge	ot_hbm_hc_bankq_static__lanes3_5_60b283a425e3	non-ID constants ['lg0_fst', 'lg1_fst', 'lg2_fst'] (chain-first flags) stay baked
+hbm	ot_hbm_hc_bankq_static__lanes6_7_bank_345a3ba2271a	core	2	pin-positions	ot_hbm_hc_bankq_static__lanes6_7_bank_345a3ba2271a	per-slot table kept: one table: 10197 pins >405 um (max 1075.5)
+hbm	ot_hbm_hc_bankq_static__lanes6_7_bank_4766a3ee91ef	core	2	pin-positions	ot_hbm_hc_bankq_static__lanes6_7_bank_4766a3ee91ef	per-slot table kept: one table: 10197 pins >405 um (max 1075.5)
+hbm	ot_hbm_hc_bankq_static__lanes6_7_bank_4be7d9f11ffa	core	2	pin-positions	ot_hbm_hc_bankq_static__lanes6_7_bank_4be7d9f11ffa	per-slot table kept: one table: 10197 pins >405 um (max 1075.5)
+hbm	ot_hbm_hc_bankq_static__lanes6_7_bank_9ac6b0c89af5	core	2	pin-positions	ot_hbm_hc_bankq_static__lanes6_7_bank_9ac6b0c89af5	per-slot table kept: one table: 10197 pins >405 um (max 1075.5)
+hbm	ot_hbm_hc_bankq_term_static__lanes6_7_bank	core	2	different-logic	ot_hbm_hc_bankq_term_static__lanes6_7_bank	only design of its RTL master
+hbm	ot_hbm_hc_qhub_static	core	2	different-logic	ot_hbm_hc_qhub_static	only design of its RTL master
+hbm	ot_hbm_hc_root_static__hcp_sys1	core	1	different-logic	ot_hbm_hc_root_static__hcp_sys1	only design of its RTL master
+hbm	ot_hbm_hc_root_static__tail0_rest	core	1	pin-positions	hc_tail_rest one table (deferred)	root partition (PATH-HBM type) excluded from this delta; 2 per-slot tables -> 1
+hbm	ot_hbm_hc_root_static__tail0_sk_steady	core	1	pin-positions	hc_sk_steady one table (deferred)	root partition (PATH-HBM type) excluded from this delta; 2 per-slot tables -> 1
+hbm	ot_hbm_hc_root_static__tail0_sk_step0	core	1	pin-positions	hc_sk_step0 one table (deferred)	root partition (PATH-HBM type) excluded from this delta; 2 per-slot tables -> 1
+hbm	ot_hbm_hc_root_static__tail1_rest	core	1	pin-positions	hc_tail_rest one table (deferred)	root partition (PATH-HBM type) excluded from this delta; 2 per-slot tables -> 1
+hbm	ot_hbm_hc_root_static__tail1_sk_steady	core	1	pin-positions	hc_sk_steady one table (deferred)	root partition (PATH-HBM type) excluded from this delta; 2 per-slot tables -> 1
+hbm	ot_hbm_hc_root_static__tail1_sk_step0	core	1	pin-positions	hc_sk_step0 one table (deferred)	root partition (PATH-HBM type) excluded from this delta; 2 per-slot tables -> 1
+hbm	ot_hbm_host_cp_rxs	core	1	different-logic	ot_hbm_host_cp_rxs	only design of its RTL master
+hbm	ot_hbm_idx_query_static	core	2	different-logic	ot_hbm_idx_query_static	only design of its RTL master
+hbm	ot_hbm_idx_score_quarter_static__r0c0_k0h0	core	10	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h0	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__r0c0_k2h1	core	6	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h1	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__r0c0_k3h1	core	6	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h1	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__r0c1_k2h0	core	8	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h0	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__r0c1_k2h1	core	12	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h1	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__r0c1_k3h0	core	6	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h0	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__r0c3_k3h1	core	2	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h1	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__r1c0_k0h0	core	2	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h0	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__r1c1_k0h0	core	2	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h0	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__r1c1_k3h1	core	2	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h1	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__tail1	core	2	pin-positions	ot_hbm_idx_score_quarter_static__tail0	one table per (master,outline) applied
+hbm	ot_hbm_idx_selector_static_sel	core	1	different-logic	ot_hbm_idx_selector_static_sel	only design of its RTL master
+hbm	ot_hbm_idx_topk_link_static	core	1	different-logic	ot_hbm_idx_topk_link_static	only design of its RTL master
+hbm	ot_hbm_idx_vm_query_static_n12	core	2	different-logic	ot_hbm_idx_vm_query_static_n12	only design of its RTL master
+hbm	ot_hbm_sm_vm_wr_q_t_lanes4	core	2	different-logic	ot_hbm_sm_vm_wr_q_t_lanes4	only design of its RTL master
+hbm	ot_hbm_su_programme_pslice_c5	core	2	different-logic	ot_hbm_su_programme_pslice_c5	only design of its RTL master
+hbm	ot_hbm_su_static_cxport_ij_q	core	2	different-logic	ot_hbm_su_static_cxport_ij_q	only design of its RTL master
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp0	core	4	ID-constant	ot_hbm_su_static_pgslice_lg__lane_exp0	ID ['lane_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp10_2912e200f83d	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7358affb5393	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp10_8d2f62efc35d	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_69871696c553	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp11_1510b1b6a90f	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_f293325494e7	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp11_628405c4b899	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_1f3eea850df6	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp12_75dc9e6a2efa	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7358affb5393	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp12_9bb0c4d58883	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7d9c0b588244	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp13_2918e8eb5d6c	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_a7f91d11182c	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp13_fea6b23e56b4	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7358affb5393	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp14_4a8fa8d47007	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_a7f91d11182c	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp14_dbc0410883c5	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_69871696c553	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp1_cc6a70ac5f18	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7d9c0b588244	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp1_d5715440ccac	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_f293325494e7	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp2_4240b9ef0b3f	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_dc476f17a7d2	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp2_d3ba1a7783b3	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7d9c0b588244	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp3_565417693226	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_a7f91d11182c	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp3_6549fac62117	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_6c28a5843955	ID ['lane_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp4_b74f1b0dd8d3	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_12868f193940	ID ['lane_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp4_be1a70a46266	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7358affb5393	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp5_4f3a945c1229	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_6e9f97eb07ce	ID ['lane_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp5_bde86fff1bda	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_dc476f17a7d2	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp6_82d218e839cd	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7358affb5393	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp6_9f91e5c14a67	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7d9c0b588244	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp7_3fa591887d18	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_1f3eea850df6	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp7_6245e6cd25b3	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_f293325494e7	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp8	core	4	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7358affb5393	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp9_1b3202c4b870	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_a7f91d11182c	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp9_de7a529fa6e7	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7358affb5393	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp_l_2e4754467283	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_7358affb5393	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp_l_99db70deab19	core	2	ID-constant	ot_hbm_su_pg_lane_exp_core_strap_a7f91d11182c	ID ['lane_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lanes0_3	core	4	ID-constant	ot_hbm_su_static_pgslice_lg__lanes0_3	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes12_15_aee690bf3444	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes12_15_aee690bf3444	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes12_15_eb590bc5e9de	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes12_15_eb590bc5e9de	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes16_19_0d1ec45f866e	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes16_19_0d1ec45f866e	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes16_19_6930bb464143	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes16_19_6930bb464143	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes20_23_f5958ea07f29	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes20_23_f5958ea07f29	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes20_23_f62fbff895b8	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes20_23_f62fbff895b8	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes24_27_53fde75129b8	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes24_27_53fde75129b8	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes24_27_ac922fae577a	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes24_27_ac922fae577a	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes28_31_4ce1cba54fb1	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes28_31_4ce1cba54fb1	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes28_31_97095470da01	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes28_31_97095470da01	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes4_7_3b8d20184137	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes4_7_3b8d20184137	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes4_7_7c5136131e9e	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes4_7_7c5136131e9e	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes8_11_1516af9871b4	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes8_11_1516af9871b4	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes8_11_a1c0c37ab566	core	2	ID-constant	ot_hbm_su_static_pgslice_lg__lanes8_11_a1c0c37ab566	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain0_3	core	4	ID-constant	ot_hbm_su_pg_lanes4_core_strap_6d0f95192ef0	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain12_15_871944876423	core	2	ID-constant	ot_hbm_su_pg_lanes4_core_strap_af48c98c93aa	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain12_15_a15494473cec	core	2	ID-constant	ot_hbm_su_pg_lanes4_core_strap_80dab52fb970	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain4_7_80ba81b7a4cd	core	2	ID-constant	ot_hbm_su_pg_lanes4_core_strap_bfef55aae11f	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain4_7_9e7c6dac470e	core	2	ID-constant	ot_hbm_su_pg_lanes4_core_strap_6d0f95192ef0	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain8_11	core	4	ID-constant	ot_hbm_su_pg_lanes4_core_strap_6d0f95192ef0	ID ['lane0_lane_id', 'lane1_lane_id', 'lane2_lane_id', 'lane3_lane_id'] -> strap_* pins (option B)
+hbm	ot_hbm_su_static_pgslice_lg__pretree_0132854c0b0e	core	6	pin-positions	ot_hbm_su_static_pgslice_lg__pretree_0132854c0b0e	per-slot table kept: one table: 79 pins >405 um (max 458.0)
+hbm	ot_hbm_su_static_pgslice_lg__pretree_44645377c174	core	2	pin-positions	ot_hbm_su_static_pgslice_lg__pretree_44645377c174	per-slot table kept: one table: 79 pins >405 um (max 458.0)
+hbm	ot_hbm_su_static_pgslice_lg__side_rest	core	4	different-logic	ot_hbm_su_static_pgslice_lg__side_rest	only design of its RTL master
+hbm	ot_hbm_su_static_pgslice_lg__side_softplus	core	4	different-logic	ot_hbm_su_static_pgslice_lg__side_softplus	only design of its RTL master
+hbm	ot_hbm_su_static_qcore_r13	core	2	different-logic	ot_hbm_su_static_qcore_r13	only design of its RTL master
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_0ba555c248ef	core	8	pin-positions	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_0ba555c248ef	per-slot table kept: one table: 0 pins >405 but G0C core_faces 1E+14W (ports turned away)
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_22cce13e347f	core	2	pin-positions	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_22cce13e347f	per-slot table kept: one table: 0 pins >405 but G0C core_faces 1E+14W (ports turned away)
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_34e30ff4f4aa	core	2	pin-positions	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_34e30ff4f4aa	per-slot table kept: one table: 0 pins >405 but G0C core_faces 1E+14W (ports turned away)
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_437e9758ecb9	core	2	pin-positions	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_437e9758ecb9	per-slot table kept: one table: 0 pins >405 but G0C core_faces 1E+14W (ports turned away)
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_73e88d49e427	core	2	pin-positions	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_73e88d49e427	per-slot table kept: one table: 0 pins >405 but G0C core_faces 1E+14W (ports turned away)
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_91cace6cf5b1	core	2	pin-positions	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_91cace6cf5b1	per-slot table kept: one table: 0 pins >405 but G0C core_faces 1E+14W (ports turned away)
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_cc82b5aed9bc	core	2	pin-positions	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_cc82b5aed9bc	per-slot table kept: one table: 0 pins >405 but G0C core_faces 1E+14W (ports turned away)
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_ddd96e4df4f5	core	2	pin-positions	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_ddd96e4df4f5	per-slot table kept: one table: 0 pins >405 but G0C core_faces 1E+14W (ports turned away)
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_e94f31d435ad	core	2	pin-positions	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_e94f31d435ad	per-slot table kept: one table: 0 pins >405 but G0C core_faces 1E+14W (ports turned away)
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_f667644f356a	core	8	pin-positions	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_f667644f356a	per-slot table kept: one table: 0 pins >405 but G0C core_faces 1E+14W (ports turned away)
+hbm	ot_hbm_svc_sm_group_rel_id_0f9e9fbe2050	core	2	pin-positions	ot_hbm_svc_sm_group_rel_id_0f9e9fbe2050	per-slot table kept: one table: 8481 pins >405 um (max 1415.9)
+hbm	ot_hbm_svc_sm_group_rel_id_63240fc857a9	core	2	pin-positions	ot_hbm_svc_sm_group_rel_id_63240fc857a9	per-slot table kept: one table: 8481 pins >405 um (max 1415.9)
+hbm	ot_hbm_svc_sm_group_rel_id_6c0e8c7a853b	core	2	pin-positions	ot_hbm_svc_sm_group_rel_id_6c0e8c7a853b	per-slot table kept: one table: 8481 pins >405 um (max 1415.9)
+hbm	ot_hbm_svc_sm_group_rel_id_97add0219b22	core	2	pin-positions	ot_hbm_svc_sm_group_rel_id_97add0219b22	per-slot table kept: one table: 8481 pins >405 um (max 1415.9)
+hbm	ot_hbm_svc_sm_xcal_rel_t_3a407d730120	core	2	pin-positions	ot_hbm_svc_sm_xcal_rel_t_3a407d730120	per-slot table kept: one table: 33 pins >405 um (max 496.6)
+hbm	ot_hbm_svc_sm_xcal_rel_t_bb4af239dbb1	core	2	pin-positions	ot_hbm_svc_sm_xcal_rel_t_bb4af239dbb1	per-slot table kept: one table: 33 pins >405 um (max 496.6)
+hbm	ot_hbm_svc_sm_xcal_rel_t_c060b9fea7b6	core	2	pin-positions	ot_hbm_svc_sm_xcal_rel_t_c060b9fea7b6	per-slot table kept: one table: 33 pins >405 um (max 496.6)
+hbm	ot_hbm_svc_sm_xcal_rel_t_e3533f638d2f	core	2	pin-positions	ot_hbm_svc_sm_xcal_rel_t_e3533f638d2f	per-slot table kept: one table: 33 pins >405 um (max 496.6)
+hbm	ot_hbm_svc_vm_kshare_splitstrap_5b4268cf4000	core	2	pin-positions	ot_hbm_svc_vm_kshare_splitstrap_5b4268cf4000	per-slot table kept: one table: 5927 pins >405 um (max 803.4)
+hbm	ot_hbm_svc_vm_kshare_splitstrap_6bbd87383348	core	2	pin-positions	ot_hbm_svc_vm_kshare_splitstrap_6bbd87383348	per-slot table kept: one table: 5927 pins >405 um (max 803.4)
+hbm	ot_hbm_svc_vm_kshare_splitstrap_cd020cecd26b	core	2	pin-positions	ot_hbm_svc_vm_kshare_splitstrap_cd020cecd26b	per-slot table kept: one table: 5927 pins >405 um (max 803.4)
+hbm	ot_hbm_svc_vm_kshare_splitstrap_fcb962e88e4d	core	2	pin-positions	ot_hbm_svc_vm_kshare_splitstrap_fcb962e88e4d	per-slot table kept: one table: 5927 pins >405 um (max 803.4)
+hbm	ot_hbm_svc_vmdel_lane_n_2a05a10afa45	core	2	pin-positions	ot_hbm_svc_vmdel_lane_n_2a05a10afa45	per-slot table kept: one table: 0 pins >405 but G0C core_faces 7W
+hbm	ot_hbm_svc_vmdel_lane_n_307cf2d942d9	core	2	pin-positions	ot_hbm_svc_vmdel_lane_n_307cf2d942d9	per-slot table kept: one table: 0 pins >405 but G0C core_faces 7W
+hbm	ot_hbm_svc_vmdel_lane_n_400683920753	core	4	pin-positions	ot_hbm_svc_vmdel_lane_n_400683920753	per-slot table kept: one table: 0 pins >405 but G0C core_faces 7W
+hbm	ot_hbm_svc_vmdel_lane_n_7b8f4f130078	core	2	pin-positions	ot_hbm_svc_vmdel_lane_n_7b8f4f130078	per-slot table kept: one table: 0 pins >405 but G0C core_faces 7W
+hbm	ot_hbm_svc_vmdel_lane_n_9b0a52d82cb0	core	6	pin-positions	ot_hbm_svc_vmdel_lane_n_9b0a52d82cb0	per-slot table kept: one table: 0 pins >405 but G0C core_faces 7W
+hbm	ot_hbm_svc_wb_kport_q	core	2	different-logic	ot_hbm_svc_wb_kport_q	only design of its RTL master
+hbm	ot_hbm_xp_aq_tree13_fmt_55d250ae9185	core	2	pin-positions	ot_hbm_xp_aq_tree13_fmt_55d250ae9185	per-slot table kept: one table: G0C core_faces 4E
+hbm	ot_hbm_xp_aq_tree13_fmt_a7982cec9a7d	core	2	pin-positions	ot_hbm_xp_aq_tree13_fmt_a7982cec9a7d	per-slot table kept: one table: G0C core_faces 4E
+hbm	ot_hfd_coll_q2_hard_v8g__body	core	2	different-logic	ot_hfd_coll_q2_hard_v8g__body	only design of its RTL master
+hbm	ot_hfd_coll_q2_hard_v8g__reduce	core	2	different-logic	ot_hfd_coll_q2_hard_v8g__reduce	only design of its RTL master
+hbm	ot_hgi_coll_gq_issue	core	2	different-logic	ot_hgi_coll_gq_issue	only design of its RTL master
+hbm	ot_hgi_coll_tkm_m_tp192__tile1	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile10	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile11	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile12	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile13	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile14	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile15	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile16	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile17	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile18	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile19	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile2	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile20	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile21	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile22	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile23	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile24	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile25	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile26	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile27	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile28	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile29	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile3	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile30	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile31	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile4	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile5	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile6	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile7	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile8	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_coll_tkm_m_tp192__tile9	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hgi_dma_back_static_vp4_banks_cp	core	2	different-logic	ot_hgi_dma_back_static_vp4_banks_cp	only design of its RTL master
+hbm	ot_hgi_qw_dec	core	2	different-logic	ot_hgi_qw_dec	only design of its RTL master
+hbm	ot_hgi_sfu_core_split3__ctl	core	2	different-logic	ot_hgi_sfu_core_split3__ctl	only design of its RTL master
+hbm	ot_hgi_sfu_core_split3__lane0	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_aa5f3a5ad7b3	ID ['map_lane_j'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hgi_sfu_core_split3__lane1	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_12be60f4dd58	ID ['map_lane_j'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hgi_sfu_core_split3__lane10	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_ff61b449dedc	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__lane11	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_56e47744fb16	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__lane12	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_56e47744fb16	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__lane13	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_ff61b449dedc	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__lane14	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_634435bd67ab	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__lane15	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_61f31b5f4189	ID ['map_lane_j'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hgi_sfu_core_split3__lane2	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_56e47744fb16	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__lane3	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_634435bd67ab	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__lane4	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_ff61b449dedc	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__lane5	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_ff61b449dedc	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__lane6	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_56e47744fb16	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__lane7	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_486e4805cbcc	ID ['map_lane_j'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hgi_sfu_core_split3__lane8	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_efdd5481e3ba	ID ['map_lane_j'] -> strap_* pins (option B); stays: own face class / table
+hbm	ot_hgi_sfu_core_split3__lane9	core	2	ID-constant	ot_hgi_sfu_split3_lane_core_strap_ff61b449dedc	ID ['map_lane_j'] -> strap_* pins (option B)
+hbm	ot_hgi_sfu_core_split3__opstore_a	core	2	different-logic	ot_hgi_sfu_core_split3__opstore_a	only design of its RTL master
+hbm	ot_hgi_sfu_core_split3__opstore_b	core	2	different-logic	ot_hgi_sfu_core_split3__opstore_b	only design of its RTL master
+hbm	ot_hgi_sfu_programme_store_r10	core	2	different-logic	ot_hgi_sfu_programme_store_r10	only design of its RTL master
+hbm	ot_hgi_sm_xload_cl2_bdring_2f4ce4cfb609	core	2	pin-positions	ot_hgi_sm_xload_cl2_bdring_2f4ce4cfb609	per-slot table kept: one table: G0C core_faces 2E
+hbm	ot_hgi_sm_xload_cl2_bdring_709af958dd74	core	2	pin-positions	ot_hgi_sm_xload_cl2_bdring_709af958dd74	per-slot table kept: one table: G0C core_faces 2E
+hbm	ot_hgi_sm_xload_cl2_bfqg_1b2fb119b618	core	6	pin-positions	ot_hgi_sm_xload_cl2_bfqg_1b2fb119b618	per-slot table kept: one table: 801 pins >405 um (max 595.9)
+hbm	ot_hgi_sm_xload_cl2_bfqg_1d82ff40b7b2	core	2	pin-positions	ot_hgi_sm_xload_cl2_bfqg_1d82ff40b7b2	per-slot table kept: one table: 801 pins >405 um (max 595.9)
+hbm	ot_hgi_sm_xload_cl2_bfqg_a386c1ab9f9d	core	2	pin-positions	ot_hgi_sm_xload_cl2_bfqg_a386c1ab9f9d	per-slot table kept: one table: 801 pins >405 um (max 595.9)
+hbm	ot_hgi_sm_xload_cl2_bfqg_c13e769a54d7	core	6	pin-positions	ot_hgi_sm_xload_cl2_bfqg_c13e769a54d7	per-slot table kept: one table: 801 pins >405 um (max 595.9)
+hbm	ot_hgi_sm_xload_cl2_ctlx	core	2	different-logic	ot_hgi_sm_xload_cl2_ctlx	only design of its RTL master
+hbm	ot_hgi_sm_xload_xq_pegress_7730b41f6dbc	core	2	pin-positions	ot_hgi_sm_xload_xq_pegress_7730b41f6dbc	per-slot table kept: one table: G0C core_faces 2E
+hbm	ot_hgi_sm_xload_xq_pegress_9839b19b37d6	core	2	pin-positions	ot_hgi_sm_xload_xq_pegress_9839b19b37d6	per-slot table kept: one table: G0C core_faces 2E
+hbm	ot_pdie_serdes	core	5	different-logic	ot_pdie_serdes	only design of its RTL master
+hbm	q_b111	type	2	outline	q_b111	same core masters as q_b112, outline differs
+hbm	q_mca	type	2	different-logic	q_mca	no other type binds the same hard-core masters
+hbm	q_sm0	type	2	glue-by-position	q_sm0	same masters/outline as q_sm1; bus set/position glue differs
+hbm	q_sm1	type	2	glue-by-position	q_sm1	same masters/outline as q_sm0; bus set/position glue differs
+hbm	q_sm2	type	2	glue-by-position	q_sm2	same masters/outline as q_sm0; bus set/position glue differs
+hbm	q_sm3	type	2	glue-by-position	q_sm3	same masters/outline as q_sm0; bus set/position glue differs
+hbm	q_spb0	type	2	outline	q_spb0	same core masters as vsN0, outline differs
+hbm	q_spb1	type	2	different-logic	q_spb1	no other type binds the same hard-core masters
+hbm	q_su00	type	2	outline	q_su00	same core masters as q_su10, outline differs
+hbm	q_su20	type	2	outline	q_su20	same core masters as q_su30, outline differs
+hbm	q_su31	type	2	outline	q_su31	same core masters as q_su21, outline differs
+hbm	vsN1	type	1	different-logic	vsN1	no other type binds the same hard-core masters
+hbm	vsN2	type	1	different-logic	vsN2	no other type binds the same hard-core masters
+hbm	ot_hgi_coll_tkm_m_tp192__root	core	1	different-logic	ot_hgi_coll_tkm_m_tp192__root	only design of its RTL master
+hbm	ot_hgi_coll_tkm_m_tp192__tile0	core	1	ID-constant	tkm_tile common_noid (x31) / terminal_noid (tile31) [PATH-HBM]	tile_tid baked per tile + per-slot pins; DEFERRED to PATH-HBM no-ID templates (not in this delta)
+hbm	ot_hbm_idx_qctl_static	core	2	different-logic	ot_hbm_idx_qctl_static	only design of its RTL master
+hbm	ot_hbm_idx_rootctl_static_am	core	1	different-logic	ot_hbm_idx_rootctl_static_am	only design of its RTL master
+hbm	ot_hbm_idx_score_quarter_static__r0c0_k0h1	core	36	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h1	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__r0c0_k1h0	core	36	pin-positions	ot_hbm_idx_score_quarter_static__r0c0_k0h0	one table per (master,outline) applied
+hbm	ot_hbm_idx_score_quarter_static__tail0	core	2	pin-positions	ot_hbm_idx_score_quarter_static__tail0	one table per (master,outline) applied
+hbm	ot_hbm_static_cfg_collar_idx256r	core	1	different-logic	ot_hbm_static_cfg_collar_idx256r	only design of its RTL master
+hbm	ot_hfd_coll_q2_hard_v8g__ring_ag	core	2	different-logic	ot_hfd_coll_q2_hard_v8g__ring_ag	only design of its RTL master
+hbm	ot_hgi_coll_inj_idx_join_rg	core	2	different-logic	ot_hgi_coll_inj_idx_join_rg	only design of its RTL master
+hbm	ot_hbm_argmax_static_sw_vm_r2	core	1	different-logic	ot_hbm_argmax_static_sw_vm_r2	only design of its RTL master
+hbm	ot_hbm_su_static_sfustore_hw	core	2	different-logic	ot_hbm_su_static_sfustore_hw	only design of its RTL master
+hbm	ot_hgi_coll_gq_land	core	2	different-logic	ot_hgi_coll_gq_land	only design of its RTL master
+hbm	q_hub	type	2	different-logic	q_hub	no other type binds the same hard-core masters
+hbm	vsN0	type	1	outline	vsN0	same core masters as q_spb0, outline differs
+hbm	vsN4	type	1	different-logic	vsN4	no other type binds the same hard-core masters

@@ -1187,13 +1187,21 @@
              "strap_corner",
              "strap_hid",
              "strap_bsel",
-             "strap_tile_tid"
+             "strap_tile_tid",
+             "strap_map_lane_j",
+             "strap_lane_lane_id",
+             "strap_lane0_lane_id",
+             "strap_lane1_lane_id",
+             "strap_lane2_lane_id",
+             "strap_lane3_lane_id"
             ]
            },
            "width": {
             "enum": [
              2,
-             6
+             4,
+             6,
+             11
             ]
            },
            "value": {
@@ -1202,14 +1210,74 @@
              "string"
             ],
             "minimum": 0,
-            "maximum": 63,
-            "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6})$"
+            "maximum": 2047,
+            "pattern": "^(2'[bB][01]{2}|4'[bB][01]{4}|6'[bB][01]{6}|11'[bB][01]{11})$"
            },
            "note": {
             "type": "string"
            }
           },
           "allOf": [
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_corner"
+              }
+             }
+            },
+            "then": {
+             "properties": {
+              "width": {
+               "const": 2
+              },
+              "value": {
+               "maximum": 3,
+               "pattern": "^2'[bB][01]{2}$"
+              }
+             }
+            }
+           },
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_hid"
+              }
+             }
+            },
+            "then": {
+             "properties": {
+              "width": {
+               "const": 2
+              },
+              "value": {
+               "maximum": 3,
+               "pattern": "^2'[bB][01]{2}$"
+              }
+             }
+            }
+           },
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_bsel"
+              }
+             }
+            },
+            "then": {
+             "properties": {
+              "width": {
+               "const": 2
+              },
+              "value": {
+               "maximum": 3,
+               "pattern": "^2'[bB][01]{2}$"
+              }
+             }
+            }
+           },
            {
             "if": {
              "properties": {
@@ -1228,15 +1296,124 @@
                "pattern": "^6'[bB][01]{6}$"
               }
              }
+            }
+           },
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_map_lane_j"
+              }
+             }
             },
-            "else": {
+            "then": {
              "properties": {
               "width": {
-               "const": 2
+               "const": 4
               },
               "value": {
-               "maximum": 3,
-               "pattern": "^2'[bB][01]{2}$"
+               "maximum": 15,
+               "pattern": "^4'[bB][01]{4}$"
+              }
+             }
+            }
+           },
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_lane_lane_id"
+              }
+             }
+            },
+            "then": {
+             "properties": {
+              "width": {
+               "const": 11
+              },
+              "value": {
+               "maximum": 2047,
+               "pattern": "^11'[bB][01]{11}$"
+              }
+             }
+            }
+           },
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_lane0_lane_id"
+              }
+             }
+            },
+            "then": {
+             "properties": {
+              "width": {
+               "const": 11
+              },
+              "value": {
+               "maximum": 2047,
+               "pattern": "^11'[bB][01]{11}$"
+              }
+             }
+            }
+           },
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_lane1_lane_id"
+              }
+             }
+            },
+            "then": {
+             "properties": {
+              "width": {
+               "const": 11
+              },
+              "value": {
+               "maximum": 2047,
+               "pattern": "^11'[bB][01]{11}$"
+              }
+             }
+            }
+           },
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_lane2_lane_id"
+              }
+             }
+            },
+            "then": {
+             "properties": {
+              "width": {
+               "const": 11
+              },
+              "value": {
+               "maximum": 2047,
+               "pattern": "^11'[bB][01]{11}$"
+              }
+             }
+            }
+           },
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_lane3_lane_id"
+              }
+             }
+            },
+            "then": {
+             "properties": {
+              "width": {
+               "const": 11
+              },
+              "value": {
+               "maximum": 2047,
+               "pattern": "^11'[bB][01]{11}$"
               }
              }
             }
@@ -1393,6 +1570,120 @@
              "type": "integer",
              "minimum": 0,
              "maximum": 63
+            }
+           }
+          },
+          "strap_map_lane_j": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 4
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 15
+            }
+           }
+          },
+          "strap_lane_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
+            }
+           }
+          },
+          "strap_lane0_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
+            }
+           }
+          },
+          "strap_lane1_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
+            }
+           }
+          },
+          "strap_lane2_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
+            }
+           }
+          },
+          "strap_lane3_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
             }
            }
           }
@@ -1720,6 +2011,120 @@
              "type": "integer",
              "minimum": 0,
              "maximum": 63
+            }
+           }
+          },
+          "strap_map_lane_j": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 4
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 15
+            }
+           }
+          },
+          "strap_lane_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
+            }
+           }
+          },
+          "strap_lane0_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
+            }
+           }
+          },
+          "strap_lane1_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
+            }
+           }
+          },
+          "strap_lane2_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
+            }
+           }
+          },
+          "strap_lane3_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
             }
            }
           }

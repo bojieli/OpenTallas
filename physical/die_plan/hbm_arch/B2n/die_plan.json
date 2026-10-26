@@ -1,6 +1,6 @@
 {
 "schema": "opentallas.die_plan.v1",
-"note": "HBM-ARCH concept (B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels); gen_arch.py; quad-tile array, beachfront PHYs, seam fabric, root tile; r2 cores_b2.py: hard cores = measured split pieces / d4g cores / SM halves, plan-track pins | B2m derived by physical/die_plan/hbm_arch/b2m.py: host in-band: dropped u_host_N (10333 cells) + io_NW_io_u_host_N; io_NW_io_u_lk_N0 host in_band route NW_io -> [L48] -> root; pg domains: 5 SerDes PHY supplies (phy_NW_io_u_lk_N0, phy_NW_spb0_u_lk_S0, phy_vsN0_u_lk_S1, phy_NE_io_u_lk_N2, phy_NE_spb0_u_lk_S0); core taps: 562 early core taps (434 from measured insertion > 250 ps, the rest SM halves at 250); clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4885, \"drivers\": 1874, \"cells\": [64, 64], \"taps\": 3322, \"drivers_moved\": 554, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 178, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1429.6, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 45, \"intra_over_80ps_at_5pct\": 45}; clock INFO alternative (zero-skew, not adopted): {\"method\": \"partition-aware zero-skew tree (guillotine bisection + linear-delay merge)\", \"taps\": 3322, \"early_taps\": 861, \"nodes\": 6643, \"depth\": 14, \"root_um\": [13754.88, 7078.317], \"insertion_wire_um\": 25254.2, \"insertion_ps_model\": 2525.4, \"wire_mm\": 2220.8, \"snake_mm\": 638.5, \"seams_over_80ps_5pct_ocv\": 118} | B2n derived by physical/die_plan/hbm_arch/b2n.py: decision 12: 460 ports drop M8/M9 (2 pin layers), reach / ft_station_max 405; boundary q_su10 +216 / q_spu0 -216 um (hub<->su10 N face carries 2998+1719+1615+514+514+268 b = 1363 um at 5.6 pins/um on M7/M5 vs 1166 um of hub overlap; spu0 (soft, no cores) gives 216 um (its hub face needs 1087 of 2290 um)); boundary q_su30 +216 / q_spu1 -216 um (hub<->su30 S face: same traffic as su10 (mirror in y); spu1 soft); lane delta (lane_delta.json, results/arch/hbm_arch_1024/b2_delays.json @ 818651e99): 26 lanes widened (L0 2998->2999, L0m 2998->2999, L1 2998->2999, L1m 2998->2999, L2 2998->2999, L2m 2998->2999, L3 2998->2999, L3m 2998->2999, L10 2334->2335, L10m 2334->2335, L11 2334->2335, L11m 2334->2335, L71 266->267, L71m 266->267, L72 266->267, L72m 266->267, L73 266->267, L73m 266->267, L82 139->140, L82m 139->140, L12 2134->3143, L12m 2134->3143, L13 2133->3143, L13m 2133->3143, L74 223->1491, L74m 223->1491); 10 new lanes (L150 NW_hub->NE_hub 560 b via NW_spu0/NW_su10/NW_su11/root/NE_su11/NE_su10/NE_spu0; L150m NE_hub->NW_hub 560 b via NE_spu0/NE_su10/NE_su11/root/NW_su11/NW_su10/NW_spu0; L151 NW_spb0->NW_hub 615 b via NW_spb1/NW_spb2/NW_spu1; L151m NE_spb0->NE_hub 615 b via NE_spb1/NE_spb2/NE_spu1; L152 NW_hub->NW_spb0 632 b via NW_spu1/NW_spb2/NW_spb1; L152m NE_hub->NE_spb0 632 b via NE_spu1/NE_spb2/NE_spb1; L153 vsN0->root 615 b via vsN1/vsN2; L154 root->vsN0 632 b via vsN2/vsN1; L155 NW_spt0->root 9 b via NW_spu0/NW_su10/NW_su11; L155m NE_spt0->root 9 b via NE_spu0/NE_su10/NE_su11); 16/18 bundles carry their RTL need; SHORT (hub perimeter / su-row cuts full, partition change needed): NW_hub->root data 1491 < 3749; NE_hub->root data 1491 < 2709; re-windowed 950 ports (917 grown to <= 5.6 pins/um on 2 layers); 0 infeasible face groups; mirror: 28 second-instance port windows set from the first instance (type frame); re-windowed 19 ports (6 grown to <= 5.6 pins/um on 2 layers); 6 infeasible face groups; mirror pin tables: 16 port pairs nudged to one table, 0 unresolved; core outlines (core_reshape.json): NW_io: 2 x hfd_ep_static -> 276.48x315.36 (128 internal links re-routed); NE_io: 1 x hfd_ep_static -> 276.48x315.36 (16 internal links re-routed); q_spb0: 1 x hfd_ep_static -> 276.48x315.36 (2 internal links re-routed); vsN0: 1 x hfd_ep_static -> 276.48x315.36 (2 internal links re-routed); q_b000: 1 x ot_hbm_hc_bankq0_static__lanes6_7_bank -> 440.64x496.8 (10 internal links re-routed); q_hub: 1 x ot_hbm_su_static_sfustore_hw -> 293.76x354.24 (297 internal links re-routed); q_hub: 1 x ot_hgi_coll_gq_land -> 142.56x207.36 (163 internal links re-routed); q_hub: 1 x ot_hgi_coll_inj_idx_join_rg -> 211.68x315.36 (179 internal links re-routed); q_hub: 1 x ot_hgi_sfu_programme_store_r10 -> 613.44x691.2 (147 internal links re-routed); core outlines (core_grow.json): q_hub: 16 x ot_hbm_svc_pc_ctrl_leaf_cfg_h9b -> 177.984x177.984 (1829 internal links re-routed); q_spt0: 2 x ot_hbm_svc_sm_xcal_rel_t -> 250.56x250.56 (2 internal links re-routed); q_spb2: 2 x ot_hbm_svc_sm_xcal_rel_t -> 250.56x250.56 (4 internal links re-routed); q_b100: grid re-pack 3 columns x 6 rows; q_b100: 16 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (159 internal links re-routed); q_b101: grid re-pack 3 columns x 6 rows; q_b101: 17 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (210 internal links re-routed); q_b102: grid re-pack 3 columns x 6 rows; q_b102: 16 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (159 internal links re-routed); q_b103: grid re-pack 3 columns x 6 rows; q_b103: 17 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (107 internal links re-routed); core outlines (exp_lane.json): q_su00: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (212 internal links re-routed); q_su01: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (138 internal links re-routed); q_su10: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (189 internal links re-routed); q_su11: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (253 internal links re-routed); exp lanes (GEOM 23:29, exp_lane.json): 32 lane_exp cores -> 440.64x207.36, family macro placement (6 SRAM), 32 early core taps; SU grid (COORD GEOM 23:23, B2n_inputs/su_grid.json): q_su00 3x3 grid of 8 440.64x457.92 cells (12 cores, 4 stacked) + side column 5 (E of grid) at x 1062.72..2626.56 of 2885.76 (220 internal links re-routed); q_su01 3x3 grid of 7 440.64x457.92 cells (11 cores, 4 stacked) + side column 0 (E of grid) at x 725.76..2064.96 of 2540.16 (138 internal links re-routed); q_su10 3x3 grid of 8 440.64x457.92 cells (12 cores, 4 stacked) + side column 0 (E of grid) at x 8.64..1347.84 of 2756.16 (196 internal links re-routed); q_su11 3x3 grid of 7 440.64x457.92 cells (11 cores, 4 stacked) + side column 5 (E of grid) at x 8.64..1572.48 of 2885.76 (256 internal links re-routed); q_su20 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 6 (E of grid) at x 898.56..2877.12 of 2885.76 (36 internal links re-routed); q_su21 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 0 (E of grid) at x 535.68..2064.96 of 2540.16 (17 internal links re-routed); q_su30 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 1 (E of grid) at x 8.64..1987.2 of 2756.16 (22 internal links re-routed); q_su31 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 5 (E of grid) at x 8.64..1762.56 of 2885.76 (28 internal links re-routed); ft slot stations 1188 -> 2742; internal stations 22349 -> 59787 (+0 new links over 405 um); 0 unroutable; clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4805, \"drivers\": 1824, \"cells\": [64, 64], \"taps\": 3370, \"drivers_moved\": 458, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 8, \"coherence_moves\": 196, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1412.5, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 47, \"intra_over_80ps_at_5pct\": 45}; ft_budget: 98 M8/M9 ft reservations dropped (ruling 9.3); reset: wavefront mode not in this tool base (RESET claude/reset-1024 pending) -> B2m reset kept; latency: 202/298 lanes +cycles (max +47, sum +2550)",
+"note": "HBM-ARCH concept (B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels); gen_arch.py; quad-tile array, beachfront PHYs, seam fabric, root tile; r2 cores_b2.py: hard cores = measured split pieces / d4g cores / SM halves, plan-track pins | B2m derived by physical/die_plan/hbm_arch/b2m.py: host in-band: dropped u_host_N (10333 cells) + io_NW_io_u_host_N; io_NW_io_u_lk_N0 host in_band route NW_io -> [L48] -> root; pg domains: 5 SerDes PHY supplies (phy_NW_io_u_lk_N0, phy_NW_spb0_u_lk_S0, phy_vsN0_u_lk_S1, phy_NE_io_u_lk_N2, phy_NE_spb0_u_lk_S0); core taps: 562 early core taps (434 from measured insertion > 250 ps, the rest SM halves at 250); clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4885, \"drivers\": 1874, \"cells\": [64, 64], \"taps\": 3322, \"drivers_moved\": 554, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 178, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1429.6, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 45, \"intra_over_80ps_at_5pct\": 45}; clock INFO alternative (zero-skew, not adopted): {\"method\": \"partition-aware zero-skew tree (guillotine bisection + linear-delay merge)\", \"taps\": 3322, \"early_taps\": 861, \"nodes\": 6643, \"depth\": 14, \"root_um\": [13754.88, 7078.317], \"insertion_wire_um\": 25254.2, \"insertion_ps_model\": 2525.4, \"wire_mm\": 2220.8, \"snake_mm\": 638.5, \"seams_over_80ps_5pct_ocv\": 118} | B2n derived by physical/die_plan/hbm_arch/b2n.py: decision 12: 460 ports drop M8/M9 (2 pin layers), reach / ft_station_max 405; boundary q_su10 +216 / q_spu0 -216 um (hub<->su10 N face carries 2998+1719+1615+514+514+268 b = 1363 um at 5.6 pins/um on M7/M5 vs 1166 um of hub overlap; spu0 (soft, no cores) gives 216 um (its hub face needs 1087 of 2290 um)); boundary q_su30 +216 / q_spu1 -216 um (hub<->su30 S face: same traffic as su10 (mirror in y); spu1 soft); lane delta (lane_delta.json, results/arch/hbm_arch_1024/b2_delays.json @ 818651e99): 26 lanes widened (L0 2998->2999, L0m 2998->2999, L1 2998->2999, L1m 2998->2999, L2 2998->2999, L2m 2998->2999, L3 2998->2999, L3m 2998->2999, L10 2334->2335, L10m 2334->2335, L11 2334->2335, L11m 2334->2335, L71 266->267, L71m 266->267, L72 266->267, L72m 266->267, L73 266->267, L73m 266->267, L82 139->140, L82m 139->140, L12 2134->3143, L12m 2134->3143, L13 2133->3143, L13m 2133->3143, L74 223->1491, L74m 223->1491); 10 new lanes (L150 NW_hub->NE_hub 560 b via NW_spu0/NW_su10/NW_su11/root/NE_su11/NE_su10/NE_spu0; L150m NE_hub->NW_hub 560 b via NE_spu0/NE_su10/NE_su11/root/NW_su11/NW_su10/NW_spu0; L151 NW_spb0->NW_hub 615 b via NW_spb1/NW_spb2/NW_spu1; L151m NE_spb0->NE_hub 615 b via NE_spb1/NE_spb2/NE_spu1; L152 NW_hub->NW_spb0 632 b via NW_spu1/NW_spb2/NW_spb1; L152m NE_hub->NE_spb0 632 b via NE_spu1/NE_spb2/NE_spb1; L153 vsN0->root 615 b via vsN1/vsN2; L154 root->vsN0 632 b via vsN2/vsN1; L155 NW_spt0->root 9 b via NW_spu0/NW_su10/NW_su11; L155m NE_spt0->root 9 b via NE_spu0/NE_su10/NE_su11); 16/18 bundles carry their RTL need; SHORT (hub perimeter / su-row cuts full, partition change needed): NW_hub->root data 1491 < 3749; NE_hub->root data 1491 < 2709; re-windowed 950 ports (917 grown to <= 5.6 pins/um on 2 layers); 0 infeasible face groups; mirror: 28 second-instance port windows set from the first instance (type frame); re-windowed 19 ports (6 grown to <= 5.6 pins/um on 2 layers); 6 infeasible face groups; mirror pin tables: 16 port pairs nudged to one table, 0 unresolved; core outlines (core_reshape.json): NW_io: 2 x hfd_ep_static -> 276.48x315.36 (128 internal links re-routed); NE_io: 1 x hfd_ep_static -> 276.48x315.36 (16 internal links re-routed); q_spb0: 1 x hfd_ep_static -> 276.48x315.36 (2 internal links re-routed); vsN0: 1 x hfd_ep_static -> 276.48x315.36 (2 internal links re-routed); q_b000: 1 x ot_hbm_hc_bankq0_static__lanes6_7_bank -> 440.64x496.8 (10 internal links re-routed); q_hub: 1 x ot_hbm_su_static_sfustore_hw -> 293.76x354.24 (297 internal links re-routed); q_hub: 1 x ot_hgi_coll_gq_land -> 142.56x207.36 (163 internal links re-routed); q_hub: 1 x ot_hgi_coll_inj_idx_join_rg -> 211.68x315.36 (179 internal links re-routed); q_hub: 1 x ot_hgi_sfu_programme_store_r10 -> 613.44x691.2 (147 internal links re-routed); core outlines (core_grow.json): q_hub: 16 x ot_hbm_svc_pc_ctrl_leaf_cfg_h9b -> 177.984x177.984 (1829 internal links re-routed); q_spt0: 2 x ot_hbm_svc_sm_xcal_rel_t -> 250.56x250.56 (2 internal links re-routed); q_spb2: 2 x ot_hbm_svc_sm_xcal_rel_t -> 250.56x250.56 (4 internal links re-routed); q_b100: grid re-pack 3 columns x 6 rows; q_b100: 16 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (159 internal links re-routed); q_b101: grid re-pack 3 columns x 6 rows; q_b101: 17 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (210 internal links re-routed); q_b102: grid re-pack 3 columns x 6 rows; q_b102: 16 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (159 internal links re-routed); q_b103: grid re-pack 3 columns x 6 rows; q_b103: 17 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (107 internal links re-routed); core outlines (exp_lane.json): q_su00: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (212 internal links re-routed); q_su01: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (138 internal links re-routed); q_su10: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (189 internal links re-routed); q_su11: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (253 internal links re-routed); exp lanes (GEOM 23:29, exp_lane.json): 32 lane_exp cores -> 440.64x207.36, family macro placement (6 SRAM), 32 early core taps; SU grid (COORD GEOM 23:23, B2n_inputs/su_grid.json): q_su00 3x3 grid of 8 440.64x457.92 cells (12 cores, 4 stacked) + side column 5 (E of grid) at x 1062.72..2626.56 of 2885.76 (220 internal links re-routed); q_su01 3x3 grid of 7 440.64x457.92 cells (11 cores, 4 stacked) + side column 0 (E of grid) at x 725.76..2064.96 of 2540.16 (138 internal links re-routed); q_su10 3x3 grid of 8 440.64x457.92 cells (12 cores, 4 stacked) + side column 0 (E of grid) at x 8.64..1347.84 of 2756.16 (196 internal links re-routed); q_su11 3x3 grid of 7 440.64x457.92 cells (11 cores, 4 stacked) + side column 5 (E of grid) at x 8.64..1572.48 of 2885.76 (256 internal links re-routed); q_su20 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 6 (E of grid) at x 898.56..2877.12 of 2885.76 (36 internal links re-routed); q_su21 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 0 (E of grid) at x 535.68..2064.96 of 2540.16 (17 internal links re-routed); q_su30 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 1 (E of grid) at x 8.64..1987.2 of 2756.16 (22 internal links re-routed); q_su31 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 5 (E of grid) at x 8.64..1762.56 of 2885.76 (28 internal links re-routed); ft slot stations 1188 -> 2742; internal stations 22349 -> 59787 (+0 new links over 405 um); 0 unroutable; clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4805, \"drivers\": 1824, \"cells\": [64, 64], \"taps\": 3370, \"drivers_moved\": 458, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 8, \"coherence_moves\": 196, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1412.5, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 47, \"intra_over_80ps_at_5pct\": 45}; ft_budget: 98 M8/M9 ft reservations dropped (ruling 9.3); reset: wavefront mode not in this tool base (RESET claude/reset-1024 pending) -> B2m reset kept; latency: 202/298 lanes +cycles (max +47, sum +2550) | TYPE-REDUCE-2/HBM 2026-10-25: one pin template per (RTL master, outline), ID straps option B (physical/die_plan/hbm_arch/core_templates.py).",
 "die": {
 "name": "hbm_arch_B2n",
 "label": "B2n = B2m + decision 12 (ft <= M7, 405-um stations); B2m = B2l (accepted 10-24, ~22% DS-AR loss vs d4g) + in-band host, balanced binary H-tree, SerDes PHY supplies",
@@ -3882,8 +3882,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6__q_b003_u_hcb_Q3_lanes0_2.json",
-"note": "split piece lanes0_2 of ot_hbm_hc_bankq_static (ot_hbm_hc_bankq_static.split.json); 288852 cells"
+"pins_file": "cores_tmpl/ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6__a9b87bf0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6__a9b87bf0.json), orient R0; was ot_hbm_hc_bankq_static__lanes0_2 cores/ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6__q_b003_u_hcb_Q3_lanes0_2.json | split piece lanes0_2 of ot_hbm_hc_bankq_static (ot_hbm_hc_bankq_static.split.json); 288852 cells"
 },
 {
 "inst": "u_hcb_Q3_lanes3_5",
@@ -4218,8 +4218,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_hc_bankq_term_static__lanes0_2__172.8x345.6__q_b010_u_hcb_Q7_lanes0_2.json",
-"note": "split piece lanes0_2 of ot_hbm_hc_bankq_term_static (ot_hbm_hc_bankq_term_static.split.json); 288852 cells"
+"pins_file": "cores_tmpl/ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6__a9b87bf0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6__a9b87bf0.json), orient R0; was ot_hbm_hc_bankq_term_static__lanes0_2 cores/ot_hbm_hc_bankq_term_static__lanes0_2__172.8x345.6__q_b010_u_hcb_Q7_lanes0_2.json | split piece lanes0_2 of ot_hbm_hc_bankq_term_static (ot_hbm_hc_bankq_term_static.split.json); 288852 cells"
 },
 {
 "inst": "u_hcb_Q7_lanes3_5",
@@ -4236,8 +4236,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_hc_bankq_term_static__lanes3_5__172.8x345.6__q_b010_u_hcb_Q7_lanes3_5.json",
-"note": "split piece lanes3_5 of ot_hbm_hc_bankq_term_static (ot_hbm_hc_bankq_term_static.split.json); 288852 cells"
+"pins_file": "cores_tmpl/ot_hbm_hc_bankq_term_static__lanes3_5__172.8x345.6__a9b87bf1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_hc_bankq_term_static__lanes3_5__172.8x345.6__a9b87bf1.json), orient R0; was ot_hbm_hc_bankq_term_static__lanes3_5 cores/ot_hbm_hc_bankq_term_static__lanes3_5__172.8x345.6__q_b010_u_hcb_Q7_lanes3_5.json | split piece lanes3_5 of ot_hbm_hc_bankq_term_static (ot_hbm_hc_bankq_term_static.split.json); 288852 cells"
 },
 {
 "inst": "u_hcb_Q7_lanes6_7_bank",
@@ -7883,8 +7883,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_hc_bankq_static__lanes3_5__172.8x345.6__q_b012_u_hcb_Q5_lanes3_5.json",
-"note": "split piece lanes3_5 of ot_hbm_hc_bankq_static (ot_hbm_hc_bankq_static.split.json); 288852 cells"
+"pins_file": "cores_tmpl/ot_hbm_hc_bankq_term_static__lanes3_5__172.8x345.6__a9b87bf1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_hc_bankq_term_static__lanes3_5__172.8x345.6__a9b87bf1.json), orient R0; was ot_hbm_hc_bankq_static__lanes3_5 cores/ot_hbm_hc_bankq_static__lanes3_5__172.8x345.6__q_b012_u_hcb_Q5_lanes3_5.json | split piece lanes3_5 of ot_hbm_hc_bankq_static (ot_hbm_hc_bankq_static.split.json); 288852 cells"
 },
 {
 "inst": "u_hcb_Q5_lanes6_7_bank",
@@ -8295,8 +8295,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6__q_b013_u_hcb_Q4_lanes0_2.json",
-"note": "split piece lanes0_2 of ot_hbm_hc_bankq_static (ot_hbm_hc_bankq_static.split.json); 288852 cells"
+"pins_file": "cores_tmpl/ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6__a9b87bf0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6__a9b87bf0.json), orient R0; was ot_hbm_hc_bankq_static__lanes0_2 cores/ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6__q_b013_u_hcb_Q4_lanes0_2.json | split piece lanes0_2 of ot_hbm_hc_bankq_static (ot_hbm_hc_bankq_static.split.json); 288852 cells"
 },
 {
 "inst": "u_hcb_Q4_lanes3_5",
@@ -8313,8 +8313,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_hc_bankq_static__lanes3_5__172.8x345.6__q_b013_u_hcb_Q4_lanes3_5.json",
-"note": "split piece lanes3_5 of ot_hbm_hc_bankq_static (ot_hbm_hc_bankq_static.split.json); 288852 cells"
+"pins_file": "cores_tmpl/ot_hbm_hc_bankq_term_static__lanes3_5__172.8x345.6__a9b87bf1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_hc_bankq_term_static__lanes3_5__172.8x345.6__a9b87bf1.json), orient R0; was ot_hbm_hc_bankq_static__lanes3_5 cores/ot_hbm_hc_bankq_static__lanes3_5__172.8x345.6__q_b013_u_hcb_Q4_lanes3_5.json | split piece lanes3_5 of ot_hbm_hc_bankq_static (ot_hbm_hc_bankq_static.split.json); 288852 cells"
 },
 {
 "inst": "u_hcb_Q4_lanes6_7_bank",
@@ -9191,8 +9191,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k0h0.json",
-"note": "split piece r0c0_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k0h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c0_k0h0 cores/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k0h0.json | split piece r0c0_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k0h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c0_k0h1",
@@ -9209,8 +9209,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k0h1.json",
-"note": "split piece r0c0_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k0h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c0_k0h1 cores/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k0h1.json | split piece r0c0_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k0h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c0_k1h0",
@@ -9227,8 +9227,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c0_k1h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k1h0.json",
-"note": "split piece r0c0_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k1h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k1h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c0_k1h0 cores/ot_hbm_idx_score_quarter_static__r0c0_k1h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k1h0.json | split piece r0c0_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k1h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k1h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c0_k1h1",
@@ -9245,8 +9245,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c0_k1h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k1h1.json",
-"note": "split piece r0c0_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k1h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k1h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c0_k1h1 cores/ot_hbm_idx_score_quarter_static__r0c0_k1h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k1h1.json | split piece r0c0_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k1h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k1h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c0_k2h0",
@@ -9263,8 +9263,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c0_k2h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k2h0.json",
-"note": "split piece r0c0_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k2h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k2h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c0_k2h0 cores/ot_hbm_idx_score_quarter_static__r0c0_k2h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k2h0.json | split piece r0c0_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k2h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k2h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c0_k2h1",
@@ -9281,8 +9281,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c0_k2h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k2h1.json",
-"note": "split piece r0c0_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k2h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k2h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c0_k2h1 cores/ot_hbm_idx_score_quarter_static__r0c0_k2h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k2h1.json | split piece r0c0_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k2h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k2h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c0_k3h0",
@@ -9299,8 +9299,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c0_k3h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k3h0.json",
-"note": "split piece r0c0_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k3h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k3h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c0_k3h0 cores/ot_hbm_idx_score_quarter_static__r0c0_k3h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k3h0.json | split piece r0c0_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k3h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k3h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c0_k3h1",
@@ -9317,8 +9317,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c0_k3h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k3h1.json",
-"note": "split piece r0c0_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k3h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k3h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c0_k3h1 cores/ot_hbm_idx_score_quarter_static__r0c0_k3h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c0_k3h1.json | split piece r0c0_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c0_k3h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c0_k3h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c1_k0h0",
@@ -9335,8 +9335,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c1_k0h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k0h0.json",
-"note": "split piece r0c1_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k0h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k0h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c1_k0h0 cores/ot_hbm_idx_score_quarter_static__r0c1_k0h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k0h0.json | split piece r0c1_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k0h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k0h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c1_k0h1",
@@ -9353,8 +9353,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c1_k0h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k0h1.json",
-"note": "split piece r0c1_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k0h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k0h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c1_k0h1 cores/ot_hbm_idx_score_quarter_static__r0c1_k0h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k0h1.json | split piece r0c1_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k0h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k0h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c1_k1h0",
@@ -9371,8 +9371,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c1_k1h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k1h0.json",
-"note": "split piece r0c1_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k1h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k1h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c1_k1h0 cores/ot_hbm_idx_score_quarter_static__r0c1_k1h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k1h0.json | split piece r0c1_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k1h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k1h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c1_k1h1",
@@ -9389,8 +9389,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c1_k1h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k1h1.json",
-"note": "split piece r0c1_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k1h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k1h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c1_k1h1 cores/ot_hbm_idx_score_quarter_static__r0c1_k1h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k1h1.json | split piece r0c1_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k1h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k1h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c1_k2h0",
@@ -9407,8 +9407,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c1_k2h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k2h0.json",
-"note": "split piece r0c1_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k2h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k2h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r0c1_k2h0 cores/ot_hbm_idx_score_quarter_static__r0c1_k2h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k2h0.json | split piece r0c1_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k2h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k2h0.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c1_k2h1",
@@ -9425,8 +9426,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c1_k2h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k2h1.json",
-"note": "split piece r0c1_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k2h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k2h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r0c1_k2h1 cores/ot_hbm_idx_score_quarter_static__r0c1_k2h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k2h1.json | split piece r0c1_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k2h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k2h1.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c1_k3h0",
@@ -9443,8 +9445,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c1_k3h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k3h0.json",
-"note": "split piece r0c1_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k3h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k3h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r0c1_k3h0 cores/ot_hbm_idx_score_quarter_static__r0c1_k3h0__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k3h0.json | split piece r0c1_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k3h0__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k3h0.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c1_k3h1",
@@ -9461,8 +9464,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c1_k3h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k3h1.json",
-"note": "split piece r0c1_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k3h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k3h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r0c1_k3h1 cores/ot_hbm_idx_score_quarter_static__r0c1_k3h1__218.592x187.488__q_b100_u_hb_idx__s_Q_r0c1_k3h1.json | split piece r0c1_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c1_k3h1__181.44x155.52__q_b100_u_hb_idx__s_Q_r0c1_k3h1.json",
+"orient": "MX"
 }
 ],
 "internal_stations": [
@@ -14873,8 +14877,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c2_k0h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k0h0.json",
-"note": "split piece r0c2_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k0h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k0h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c2_k0h0 cores/ot_hbm_idx_score_quarter_static__r0c2_k0h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k0h0.json | split piece r0c2_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k0h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k0h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c2_k0h1",
@@ -14891,8 +14895,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c2_k0h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k0h1.json",
-"note": "split piece r0c2_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k0h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k0h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c2_k0h1 cores/ot_hbm_idx_score_quarter_static__r0c2_k0h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k0h1.json | split piece r0c2_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k0h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k0h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c2_k1h0",
@@ -14909,8 +14913,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c2_k1h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k1h0.json",
-"note": "split piece r0c2_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k1h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k1h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c2_k1h0 cores/ot_hbm_idx_score_quarter_static__r0c2_k1h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k1h0.json | split piece r0c2_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k1h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k1h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c2_k1h1",
@@ -14927,8 +14931,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c2_k1h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k1h1.json",
-"note": "split piece r0c2_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k1h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k1h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c2_k1h1 cores/ot_hbm_idx_score_quarter_static__r0c2_k1h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k1h1.json | split piece r0c2_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k1h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k1h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c2_k2h0",
@@ -14945,8 +14949,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c2_k2h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k2h0.json",
-"note": "split piece r0c2_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k2h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k2h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c2_k2h0 cores/ot_hbm_idx_score_quarter_static__r0c2_k2h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k2h0.json | split piece r0c2_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k2h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k2h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c2_k2h1",
@@ -14963,8 +14967,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c2_k2h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k2h1.json",
-"note": "split piece r0c2_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k2h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k2h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c2_k2h1 cores/ot_hbm_idx_score_quarter_static__r0c2_k2h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k2h1.json | split piece r0c2_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k2h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k2h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c2_k3h0",
@@ -14981,8 +14985,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c2_k3h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k3h0.json",
-"note": "split piece r0c2_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k3h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k3h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c2_k3h0 cores/ot_hbm_idx_score_quarter_static__r0c2_k3h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k3h0.json | split piece r0c2_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k3h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k3h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c2_k3h1",
@@ -14999,8 +15003,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c2_k3h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k3h1.json",
-"note": "split piece r0c2_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k3h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k3h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c2_k3h1 cores/ot_hbm_idx_score_quarter_static__r0c2_k3h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c2_k3h1.json | split piece r0c2_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c2_k3h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c2_k3h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c3_k0h0",
@@ -15017,8 +15021,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c3_k0h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k0h0.json",
-"note": "split piece r0c3_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k0h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k0h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c3_k0h0 cores/ot_hbm_idx_score_quarter_static__r0c3_k0h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k0h0.json | split piece r0c3_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k0h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k0h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c3_k0h1",
@@ -15035,8 +15039,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c3_k0h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k0h1.json",
-"note": "split piece r0c3_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k0h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k0h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c3_k0h1 cores/ot_hbm_idx_score_quarter_static__r0c3_k0h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k0h1.json | split piece r0c3_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k0h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k0h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c3_k1h0",
@@ -15053,8 +15057,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c3_k1h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k1h0.json",
-"note": "split piece r0c3_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k1h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k1h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c3_k1h0 cores/ot_hbm_idx_score_quarter_static__r0c3_k1h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k1h0.json | split piece r0c3_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k1h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k1h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c3_k1h1",
@@ -15071,8 +15075,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c3_k1h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k1h1.json",
-"note": "split piece r0c3_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k1h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k1h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c3_k1h1 cores/ot_hbm_idx_score_quarter_static__r0c3_k1h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k1h1.json | split piece r0c3_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k1h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k1h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c3_k2h0",
@@ -15089,8 +15093,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c3_k2h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k2h0.json",
-"note": "split piece r0c3_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k2h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k2h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r0c3_k2h0 cores/ot_hbm_idx_score_quarter_static__r0c3_k2h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k2h0.json | split piece r0c3_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k2h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k2h0.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c3_k2h1",
@@ -15107,8 +15112,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c3_k2h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k2h1.json",
-"note": "split piece r0c3_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k2h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k2h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r0c3_k2h1 cores/ot_hbm_idx_score_quarter_static__r0c3_k2h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k2h1.json | split piece r0c3_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k2h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k2h1.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c3_k3h0",
@@ -15125,8 +15131,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c3_k3h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k3h0.json",
-"note": "split piece r0c3_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k3h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k3h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r0c3_k3h0 cores/ot_hbm_idx_score_quarter_static__r0c3_k3h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k3h0.json | split piece r0c3_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k3h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k3h0.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r0c3_k3h1",
@@ -15143,8 +15150,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r0c3_k3h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k3h1.json",
-"note": "split piece r0c3_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k3h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k3h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r0c3_k3h1 cores/ot_hbm_idx_score_quarter_static__r0c3_k3h1__218.592x187.488__q_b101_u_hb_idx__s_Q_r0c3_k3h1.json | split piece r0c3_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r0c3_k3h1__181.44x155.52__q_b101_u_hb_idx__s_Q_r0c3_k3h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c0_k0h0",
@@ -15161,8 +15168,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c0_k0h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r1c0_k0h0.json",
-"note": "split piece r1c0_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k0h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r1c0_k0h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c0_k0h0 cores/ot_hbm_idx_score_quarter_static__r1c0_k0h0__218.592x187.488__q_b101_u_hb_idx__s_Q_r1c0_k0h0.json | split piece r1c0_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k0h0__181.44x155.52__q_b101_u_hb_idx__s_Q_r1c0_k0h0.json"
 }
 ],
 "internal_stations": [
@@ -22147,8 +22154,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c0_k0h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k0h1.json",
-"note": "split piece r1c0_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k0h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k0h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c0_k0h1 cores/ot_hbm_idx_score_quarter_static__r1c0_k0h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k0h1.json | split piece r1c0_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k0h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k0h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c0_k1h0",
@@ -22165,8 +22172,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c0_k1h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k1h0.json",
-"note": "split piece r1c0_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k1h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k1h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c0_k1h0 cores/ot_hbm_idx_score_quarter_static__r1c0_k1h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k1h0.json | split piece r1c0_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k1h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k1h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c0_k1h1",
@@ -22183,8 +22190,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c0_k1h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k1h1.json",
-"note": "split piece r1c0_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k1h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k1h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c0_k1h1 cores/ot_hbm_idx_score_quarter_static__r1c0_k1h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k1h1.json | split piece r1c0_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k1h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k1h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c0_k2h0",
@@ -22201,8 +22208,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c0_k2h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k2h0.json",
-"note": "split piece r1c0_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k2h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k2h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c0_k2h0 cores/ot_hbm_idx_score_quarter_static__r1c0_k2h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k2h0.json | split piece r1c0_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k2h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k2h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c0_k2h1",
@@ -22219,8 +22226,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c0_k2h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k2h1.json",
-"note": "split piece r1c0_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k2h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k2h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c0_k2h1 cores/ot_hbm_idx_score_quarter_static__r1c0_k2h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k2h1.json | split piece r1c0_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k2h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k2h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c0_k3h0",
@@ -22237,8 +22244,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c0_k3h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k3h0.json",
-"note": "split piece r1c0_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k3h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k3h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c0_k3h0 cores/ot_hbm_idx_score_quarter_static__r1c0_k3h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k3h0.json | split piece r1c0_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k3h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k3h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c0_k3h1",
@@ -22255,8 +22262,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c0_k3h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k3h1.json",
-"note": "split piece r1c0_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k3h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k3h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c0_k3h1 cores/ot_hbm_idx_score_quarter_static__r1c0_k3h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c0_k3h1.json | split piece r1c0_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c0_k3h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c0_k3h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c1_k0h0",
@@ -22273,8 +22280,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c1_k0h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k0h0.json",
-"note": "split piece r1c1_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k0h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k0h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c1_k0h0 cores/ot_hbm_idx_score_quarter_static__r1c1_k0h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k0h0.json | split piece r1c1_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k0h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k0h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c1_k0h1",
@@ -22291,8 +22298,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c1_k0h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k0h1.json",
-"note": "split piece r1c1_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k0h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k0h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c1_k0h1 cores/ot_hbm_idx_score_quarter_static__r1c1_k0h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k0h1.json | split piece r1c1_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k0h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k0h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c1_k1h0",
@@ -22309,8 +22316,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c1_k1h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k1h0.json",
-"note": "split piece r1c1_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k1h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k1h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c1_k1h0 cores/ot_hbm_idx_score_quarter_static__r1c1_k1h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k1h0.json | split piece r1c1_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k1h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k1h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c1_k1h1",
@@ -22327,8 +22334,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c1_k1h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k1h1.json",
-"note": "split piece r1c1_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k1h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k1h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c1_k1h1 cores/ot_hbm_idx_score_quarter_static__r1c1_k1h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k1h1.json | split piece r1c1_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k1h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k1h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c1_k2h0",
@@ -22345,8 +22352,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c1_k2h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k2h0.json",
-"note": "split piece r1c1_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k2h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k2h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c1_k2h0 cores/ot_hbm_idx_score_quarter_static__r1c1_k2h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k2h0.json | split piece r1c1_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k2h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k2h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c1_k2h1",
@@ -22363,8 +22370,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c1_k2h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k2h1.json",
-"note": "split piece r1c1_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k2h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k2h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r1c1_k2h1 cores/ot_hbm_idx_score_quarter_static__r1c1_k2h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k2h1.json | split piece r1c1_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k2h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k2h1.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c1_k3h0",
@@ -22381,8 +22389,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c1_k3h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k3h0.json",
-"note": "split piece r1c1_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k3h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k3h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r1c1_k3h0 cores/ot_hbm_idx_score_quarter_static__r1c1_k3h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k3h0.json | split piece r1c1_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k3h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k3h0.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c1_k3h1",
@@ -22399,8 +22408,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c1_k3h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k3h1.json",
-"note": "split piece r1c1_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k3h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k3h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r1c1_k3h1 cores/ot_hbm_idx_score_quarter_static__r1c1_k3h1__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c1_k3h1.json | split piece r1c1_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c1_k3h1__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c1_k3h1.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c2_k0h0",
@@ -22417,8 +22427,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c2_k0h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c2_k0h0.json",
-"note": "split piece r1c2_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k0h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c2_k0h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r1c2_k0h0 cores/ot_hbm_idx_score_quarter_static__r1c2_k0h0__218.592x187.488__q_b102_u_hb_idx__s_Q_r1c2_k0h0.json | split piece r1c2_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k0h0__181.44x155.52__q_b102_u_hb_idx__s_Q_r1c2_k0h0.json",
+"orient": "MX"
 }
 ],
 "internal_stations": [
@@ -27770,8 +27781,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c2_k0h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k0h1.json",
-"note": "split piece r1c2_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k0h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k0h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c2_k0h1 cores/ot_hbm_idx_score_quarter_static__r1c2_k0h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k0h1.json | split piece r1c2_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k0h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k0h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c2_k1h0",
@@ -27788,8 +27799,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c2_k1h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k1h0.json",
-"note": "split piece r1c2_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k1h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k1h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c2_k1h0 cores/ot_hbm_idx_score_quarter_static__r1c2_k1h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k1h0.json | split piece r1c2_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k1h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k1h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c2_k1h1",
@@ -27806,8 +27817,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c2_k1h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k1h1.json",
-"note": "split piece r1c2_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k1h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k1h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c2_k1h1 cores/ot_hbm_idx_score_quarter_static__r1c2_k1h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k1h1.json | split piece r1c2_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k1h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k1h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c2_k2h0",
@@ -27824,8 +27835,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c2_k2h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k2h0.json",
-"note": "split piece r1c2_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k2h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k2h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c2_k2h0 cores/ot_hbm_idx_score_quarter_static__r1c2_k2h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k2h0.json | split piece r1c2_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k2h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k2h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c2_k2h1",
@@ -27842,8 +27853,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c2_k2h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k2h1.json",
-"note": "split piece r1c2_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k2h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k2h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c2_k2h1 cores/ot_hbm_idx_score_quarter_static__r1c2_k2h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k2h1.json | split piece r1c2_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k2h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k2h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c2_k3h0",
@@ -27860,8 +27871,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c2_k3h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k3h0.json",
-"note": "split piece r1c2_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k3h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k3h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c2_k3h0 cores/ot_hbm_idx_score_quarter_static__r1c2_k3h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k3h0.json | split piece r1c2_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k3h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k3h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c2_k3h1",
@@ -27878,8 +27889,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c2_k3h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k3h1.json",
-"note": "split piece r1c2_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k3h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k3h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c2_k3h1 cores/ot_hbm_idx_score_quarter_static__r1c2_k3h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c2_k3h1.json | split piece r1c2_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c2_k3h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c2_k3h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c3_k0h0",
@@ -27896,8 +27907,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c3_k0h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k0h0.json",
-"note": "split piece r1c3_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k0h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k0h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c3_k0h0 cores/ot_hbm_idx_score_quarter_static__r1c3_k0h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k0h0.json | split piece r1c3_k0h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k0h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k0h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c3_k0h1",
@@ -27914,8 +27925,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c3_k0h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k0h1.json",
-"note": "split piece r1c3_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k0h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k0h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c3_k0h1 cores/ot_hbm_idx_score_quarter_static__r1c3_k0h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k0h1.json | split piece r1c3_k0h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k0h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k0h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c3_k1h0",
@@ -27932,8 +27943,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c3_k1h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k1h0.json",
-"note": "split piece r1c3_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k1h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k1h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c3_k1h0 cores/ot_hbm_idx_score_quarter_static__r1c3_k1h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k1h0.json | split piece r1c3_k1h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k1h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k1h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c3_k1h1",
@@ -27950,8 +27961,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c3_k1h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k1h1.json",
-"note": "split piece r1c3_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k1h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k1h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c3_k1h1 cores/ot_hbm_idx_score_quarter_static__r1c3_k1h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k1h1.json | split piece r1c3_k1h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k1h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k1h1.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c3_k2h0",
@@ -27968,8 +27979,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c3_k2h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k2h0.json",
-"note": "split piece r1c3_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k2h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k2h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__r1c3_k2h0 cores/ot_hbm_idx_score_quarter_static__r1c3_k2h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k2h0.json | split piece r1c3_k2h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k2h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k2h0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c3_k2h1",
@@ -27986,8 +27997,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c3_k2h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k2h1.json",
-"note": "split piece r1c3_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k2h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k2h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r1c3_k2h1 cores/ot_hbm_idx_score_quarter_static__r1c3_k2h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k2h1.json | split piece r1c3_k2h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k2h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k2h1.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c3_k3h0",
@@ -28004,8 +28016,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c3_k3h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k3h0.json",
-"note": "split piece r1c3_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k3h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k3h0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h0__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r1c3_k3h0 cores/ot_hbm_idx_score_quarter_static__r1c3_k3h0__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k3h0.json | split piece r1c3_k3h0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 195127 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k3h0__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k3h0.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_r1c3_k3h1",
@@ -28022,8 +28035,9 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__r1c3_k3h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k3h1.json",
-"note": "split piece r1c3_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k3h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k3h1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__r0c0_k0h1__218.592x187.488.json), orient MX; was ot_hbm_idx_score_quarter_static__r1c3_k3h1 cores/ot_hbm_idx_score_quarter_static__r1c3_k3h1__218.592x187.488__q_b103_u_hb_idx__s_Q_r1c3_k3h1.json | split piece r1c3_k3h1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 186410 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__r1c3_k3h1__181.44x155.52__q_b103_u_hb_idx__s_Q_r1c3_k3h1.json",
+"orient": "MX"
 },
 {
 "inst": "u_hb_idx__s_Q_tail0",
@@ -28040,8 +28054,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488__q_b103_u_hb_idx__s_Q_tail0.json",
-"note": "split piece tail0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 52348 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__tail0__181.44x155.52__q_b103_u_hb_idx__s_Q_tail0.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__tail0 cores/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488__q_b103_u_hb_idx__s_Q_tail0.json | split piece tail0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 52348 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__tail0__181.44x155.52__q_b103_u_hb_idx__s_Q_tail0.json"
 },
 {
 "inst": "u_hb_idx__s_Q_tail1",
@@ -28058,8 +28072,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1.json",
-"note": "split piece tail1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 52348 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__tail1__181.44x155.52__q_b103_u_hb_idx__s_Q_tail1.json"
+"pins_file": "cores_tmpl/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488.json), orient R0; was ot_hbm_idx_score_quarter_static__tail1 cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1.json | split piece tail1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 52348 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__tail1__181.44x155.52__q_b103_u_hb_idx__s_Q_tail1.json"
 }
 ],
 "internal_stations": [
@@ -32237,7 +32251,7 @@
 "hard_cores": [
 {
 "inst": "u_sfucore_Q_lane0",
-"module": "ot_hgi_sfu_core_split3__lane0",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 1235.52,
 241.92
@@ -32250,12 +32264,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane0__388.8x345.6__q_b110_u_sfucore_Q_lane0.json",
-"note": "split piece lane0 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af3.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af3.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane0 cores/ot_hgi_sfu_core_split3__lane0__388.8x345.6__q_b110_u_sfucore_Q_lane0.json | split piece lane0 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b0000"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane1",
-"module": "ot_hgi_sfu_core_split3__lane1",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 1235.52,
 604.8
@@ -32268,12 +32289,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane1__388.8x345.6__q_b110_u_sfucore_Q_lane1.json",
-"note": "split piece lane1 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af4.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af4.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane1 cores/ot_hgi_sfu_core_split3__lane1__388.8x345.6__q_b110_u_sfucore_Q_lane1.json | split piece lane1 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b0001"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane2",
-"module": "ot_hgi_sfu_core_split3__lane2",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 1235.52,
 967.68
@@ -32286,12 +32314,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane2__388.8x345.6__q_b110_u_sfucore_Q_lane2.json",
-"note": "split piece lane2 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af1.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane2 cores/ot_hgi_sfu_core_split3__lane2__388.8x345.6__q_b110_u_sfucore_Q_lane2.json | split piece lane2 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b0010"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane3",
-"module": "ot_hgi_sfu_core_split3__lane3",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 829.44,
 241.92
@@ -32304,8 +32339,15 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane3__388.8x345.6__q_b110_u_sfucore_Q_lane3.json",
-"note": "split piece lane3 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af2.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af2.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane3 cores/ot_hgi_sfu_core_split3__lane3__388.8x345.6__q_b110_u_sfucore_Q_lane3.json | split piece lane3 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b0011"
+}
+]
 }
 ],
 "internal_stations": [
@@ -34038,7 +34080,7 @@
 "hard_cores": [
 {
 "inst": "u_sfucore_Q_lane4",
-"module": "ot_hgi_sfu_core_split3__lane4",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 34.56,
 34.56
@@ -34051,12 +34093,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane4__388.8x345.6__q_b111_u_sfucore_Q_lane4.json",
-"note": "split piece lane4 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane4 cores/ot_hgi_sfu_core_split3__lane4__388.8x345.6__q_b111_u_sfucore_Q_lane4.json | split piece lane4 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b0100"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane5",
-"module": "ot_hgi_sfu_core_split3__lane5",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 34.56,
 397.44
@@ -34069,12 +34118,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane5__388.8x345.6__q_b111_u_sfucore_Q_lane5.json",
-"note": "split piece lane5 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane5 cores/ot_hgi_sfu_core_split3__lane5__388.8x345.6__q_b111_u_sfucore_Q_lane5.json | split piece lane5 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b0101"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane6",
-"module": "ot_hgi_sfu_core_split3__lane6",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 34.56,
 760.32
@@ -34087,12 +34143,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane6__388.8x345.6__q_b111_u_sfucore_Q_lane6.json",
-"note": "split piece lane6 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af1.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane6 cores/ot_hgi_sfu_core_split3__lane6__388.8x345.6__q_b111_u_sfucore_Q_lane6.json | split piece lane6 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b0110"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane7",
-"module": "ot_hgi_sfu_core_split3__lane7",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 449.28,
 397.44
@@ -34105,12 +34168,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane7__388.8x345.6__q_b111_u_sfucore_Q_lane7.json",
-"note": "split piece lane7 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af5.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af5.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane7 cores/ot_hgi_sfu_core_split3__lane7__388.8x345.6__q_b111_u_sfucore_Q_lane7.json | split piece lane7 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b0111"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane8",
-"module": "ot_hgi_sfu_core_split3__lane8",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 449.28,
 34.56
@@ -34123,8 +34193,15 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane8__388.8x345.6__q_b111_u_sfucore_Q_lane8.json",
-"note": "split piece lane8 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af6.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af6.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane8 cores/ot_hgi_sfu_core_split3__lane8__388.8x345.6__q_b111_u_sfucore_Q_lane8.json | split piece lane8 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b1000"
+}
+]
 }
 ],
 "internal_stations": [
@@ -34919,7 +34996,7 @@
 "hard_cores": [
 {
 "inst": "u_sfucore_Q_lane9",
-"module": "ot_hgi_sfu_core_split3__lane9",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 34.56,
 34.56
@@ -34932,12 +35009,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane9__388.8x345.6__q_b112_u_sfucore_Q_lane9.json",
-"note": "split piece lane9 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane9 cores/ot_hgi_sfu_core_split3__lane9__388.8x345.6__q_b112_u_sfucore_Q_lane9.json | split piece lane9 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b1001"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane10",
-"module": "ot_hgi_sfu_core_split3__lane10",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 34.56,
 397.44
@@ -34950,12 +35034,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane10__388.8x345.6__q_b112_u_sfucore_Q_lane10.json",
-"note": "split piece lane10 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane10 cores/ot_hgi_sfu_core_split3__lane10__388.8x345.6__q_b112_u_sfucore_Q_lane10.json | split piece lane10 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b1010"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane11",
-"module": "ot_hgi_sfu_core_split3__lane11",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 34.56,
 760.32
@@ -34968,12 +35059,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane11__388.8x345.6__q_b112_u_sfucore_Q_lane11.json",
-"note": "split piece lane11 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af1.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane11 cores/ot_hgi_sfu_core_split3__lane11__388.8x345.6__q_b112_u_sfucore_Q_lane11.json | split piece lane11 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b1011"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane12",
-"module": "ot_hgi_sfu_core_split3__lane12",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 449.28,
 397.44
@@ -34986,12 +35084,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane12__388.8x345.6__q_b112_u_sfucore_Q_lane12.json",
-"note": "split piece lane12 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af1.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane12 cores/ot_hgi_sfu_core_split3__lane12__388.8x345.6__q_b112_u_sfucore_Q_lane12.json | split piece lane12 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b1100"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane13",
-"module": "ot_hgi_sfu_core_split3__lane13",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 449.28,
 34.56
@@ -35004,8 +35109,15 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane13__388.8x345.6__q_b112_u_sfucore_Q_lane13.json",
-"note": "split piece lane13 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane13 cores/ot_hgi_sfu_core_split3__lane13__388.8x345.6__q_b112_u_sfucore_Q_lane13.json | split piece lane13 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b1101"
+}
+]
 }
 ],
 "internal_stations": [
@@ -35549,7 +35661,7 @@
 "hard_cores": [
 {
 "inst": "u_sfucore_Q_lane14",
-"module": "ot_hgi_sfu_core_split3__lane14",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 743.04,
 1555.2
@@ -35562,12 +35674,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane14__388.8x345.6__q_b113_u_sfucore_Q_lane14.json",
-"note": "split piece lane14 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af2.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af2.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane14 cores/ot_hgi_sfu_core_split3__lane14__388.8x345.6__q_b113_u_sfucore_Q_lane14.json | split piece lane14 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b1110"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_lane15",
-"module": "ot_hgi_sfu_core_split3__lane15",
+"module": "ot_hgi_sfu_split3_lane_core_strap",
 "origin_um": [
 1157.76,
 1555.2
@@ -35580,8 +35699,15 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_core_split3__lane15__388.8x345.6__q_b113_u_sfucore_Q_lane15.json",
-"note": "split piece lane15 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells"
+"pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af7.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af7.json), orient R0; ID straps ['strap_map_lane_j'] tied at the parent (owner option B); was ot_hgi_sfu_core_split3__lane15 cores/ot_hgi_sfu_core_split3__lane15__388.8x345.6__q_b113_u_sfucore_Q_lane15.json | split piece lane15 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells",
+"straps": [
+{
+"port": "strap_map_lane_j",
+"width": 4,
+"value": "4'b1111"
+}
+]
 },
 {
 "inst": "u_sfucore_Q_opstore_a",
@@ -301230,7 +301356,7 @@
 },
 {
 "inst": "u_su_Q0_lane_exp2",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp2",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1062.72,
 760.32
@@ -301243,12 +301369,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x207.36__q_su00_u_su_Q0_lane_exp2.json",
-"note": "split piece lane_exp2 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x457.92__q_su00_u_su_Q0_lane_exp2.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af4.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af4.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp2 cores/ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x207.36__q_su00_u_su_Q0_lane_exp2.json | split piece lane_exp2 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x457.92__q_su00_u_su_Q0_lane_exp2.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000010"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp4",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp4",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1512.0,
 77.76
@@ -301261,12 +301394,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x207.36__q_su00_u_su_Q0_lane_exp4.json",
-"note": "split piece lane_exp4 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x457.92__q_su00_u_su_Q0_lane_exp4.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af7.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af7.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp4 cores/ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x207.36__q_su00_u_su_Q0_lane_exp4.json | split piece lane_exp4 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x457.92__q_su00_u_su_Q0_lane_exp4.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000100"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp6",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp6",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1512.0,
 293.76
@@ -301279,12 +301419,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x207.36__q_su00_u_su_Q0_lane_exp6.json",
-"note": "split piece lane_exp6 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x457.92__q_su00_u_su_Q0_lane_exp6.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp6 cores/ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x207.36__q_su00_u_su_Q0_lane_exp6.json | split piece lane_exp6 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x457.92__q_su00_u_su_Q0_lane_exp6.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000110"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp8",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp8",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1961.28,
 544.32
@@ -301297,12 +301444,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x207.36__q_su00_u_su_Q0_lane_exp8.json",
-"note": "split piece lane_exp8 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x457.92__q_su00_u_su_Q0_lane_exp8.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp8 cores/ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x207.36__q_su00_u_su_Q0_lane_exp8.json | split piece lane_exp8 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x457.92__q_su00_u_su_Q0_lane_exp8.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001000"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp10",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp10",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1961.28,
 760.32
@@ -301315,12 +301469,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x207.36__q_su00_u_su_Q0_lane_exp10.json",
-"note": "split piece lane_exp10 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x457.92__q_su00_u_su_Q0_lane_exp10.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp10 cores/ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x207.36__q_su00_u_su_Q0_lane_exp10.json | split piece lane_exp10 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x457.92__q_su00_u_su_Q0_lane_exp10.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001010"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp12",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp12",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1512.0,
 1010.88
@@ -301333,12 +301494,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x207.36__q_su00_u_su_Q0_lane_exp12.json",
-"note": "split piece lane_exp12 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x457.92__q_su00_u_su_Q0_lane_exp12.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp12 cores/ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x207.36__q_su00_u_su_Q0_lane_exp12.json | split piece lane_exp12 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x457.92__q_su00_u_su_Q0_lane_exp12.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001100"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp14",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp14",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1512.0,
 1226.88
@@ -301351,12 +301519,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x207.36__q_su00_u_su_Q0_lane_exp14.json",
-"note": "split piece lane_exp14 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x457.92__q_su00_u_su_Q0_lane_exp14.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af1.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp14 cores/ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x207.36__q_su00_u_su_Q0_lane_exp14.json | split piece lane_exp14 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x457.92__q_su00_u_su_Q0_lane_exp14.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001110"
+}
+]
 },
 {
 "inst": "u_su_Q0_lanes_plain0_3",
-"module": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3",
+"module": "ot_hbm_su_pg_lanes4_core_strap",
 "origin_um": [
 1961.28,
 77.76
@@ -301369,12 +301544,34 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92__q_su00_u_su_Q0_lanes_plain0_3.json",
-"note": "split piece lanes_plain0_3 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json), orient R0; ID straps ['strap_lane0_lane_id', 'strap_lane1_lane_id', 'strap_lane2_lane_id', 'strap_lane3_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lanes_plain0_3 cores/ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92__q_su00_u_su_Q0_lanes_plain0_3.json | split piece lanes_plain0_3 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells",
+"straps": [
+{
+"port": "strap_lane0_lane_id",
+"width": 11,
+"value": "11'b00001000000"
+},
+{
+"port": "strap_lane1_lane_id",
+"width": 11,
+"value": "11'b00001000001"
+},
+{
+"port": "strap_lane2_lane_id",
+"width": 11,
+"value": "11'b00001000010"
+},
+{
+"port": "strap_lane3_lane_id",
+"width": 11,
+"value": "11'b00001000011"
+}
+]
 },
 {
 "inst": "u_su_Q0_lanes_plain8_11",
-"module": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11",
+"module": "ot_hbm_su_pg_lanes4_core_strap",
 "origin_um": [
 1062.72,
 77.76
@@ -301387,8 +301584,30 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain8_11__440.64x457.92__q_su00_u_su_Q0_lanes_plain8_11.json",
-"note": "split piece lanes_plain8_11 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json), orient R0; ID straps ['strap_lane0_lane_id', 'strap_lane1_lane_id', 'strap_lane2_lane_id', 'strap_lane3_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lanes_plain8_11 cores/ot_hbm_su_static_pgslice_lg__lanes_plain8_11__440.64x457.92__q_su00_u_su_Q0_lanes_plain8_11.json | split piece lanes_plain8_11 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells",
+"straps": [
+{
+"port": "strap_lane0_lane_id",
+"width": 11,
+"value": "11'b00001001000"
+},
+{
+"port": "strap_lane1_lane_id",
+"width": 11,
+"value": "11'b00001001001"
+},
+{
+"port": "strap_lane2_lane_id",
+"width": 11,
+"value": "11'b00001001010"
+},
+{
+"port": "strap_lane3_lane_id",
+"width": 11,
+"value": "11'b00001001011"
+}
+]
 },
 {
 "inst": "u_su_Q0_side_softplus",
@@ -308626,7 +308845,7 @@
 "hard_cores": [
 {
 "inst": "u_su_Q0_lane_exp1",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp1",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1624.32,
 77.76
@@ -308639,12 +308858,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x207.36__q_su01_u_su_Q0_lane_exp1.json",
-"note": "split piece lane_exp1 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92__q_su01_u_su_Q0_lane_exp1.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af2.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af2.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp1 cores/ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x207.36__q_su01_u_su_Q0_lane_exp1.json | split piece lane_exp1 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92__q_su01_u_su_Q0_lane_exp1.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000001"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp3",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp3",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1624.32,
 293.76
@@ -308657,12 +308883,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x207.36__q_su01_u_su_Q0_lane_exp3.json",
-"note": "split piece lane_exp3 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x457.92__q_su01_u_su_Q0_lane_exp3.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af8.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af8.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp3 cores/ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x207.36__q_su01_u_su_Q0_lane_exp3.json | split piece lane_exp3 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x457.92__q_su01_u_su_Q0_lane_exp3.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000011"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp5",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp5",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 725.76,
 544.32
@@ -308675,12 +308908,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x207.36__q_su01_u_su_Q0_lane_exp5.json",
-"note": "split piece lane_exp5 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x457.92__q_su01_u_su_Q0_lane_exp5.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af4.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af4.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp5 cores/ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x207.36__q_su01_u_su_Q0_lane_exp5.json | split piece lane_exp5 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x457.92__q_su01_u_su_Q0_lane_exp5.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000101"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp7",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp7",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 725.76,
 760.32
@@ -308693,12 +308933,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x207.36__q_su01_u_su_Q0_lane_exp7.json",
-"note": "split piece lane_exp7 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x457.92__q_su01_u_su_Q0_lane_exp7.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af3.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af3.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp7 cores/ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x207.36__q_su01_u_su_Q0_lane_exp7.json | split piece lane_exp7 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x457.92__q_su01_u_su_Q0_lane_exp7.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000111"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp9",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp9",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1175.04,
 544.32
@@ -308711,12 +308958,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x207.36__q_su01_u_su_Q0_lane_exp9.json",
-"note": "split piece lane_exp9 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x457.92__q_su01_u_su_Q0_lane_exp9.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp9 cores/ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x207.36__q_su01_u_su_Q0_lane_exp9.json | split piece lane_exp9 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x457.92__q_su01_u_su_Q0_lane_exp9.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001001"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp11",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp11",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 1175.04,
 760.32
@@ -308729,12 +308983,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x207.36__q_su01_u_su_Q0_lane_exp11.json",
-"note": "split piece lane_exp11 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x457.92__q_su01_u_su_Q0_lane_exp11.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af3.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af3.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp11 cores/ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x207.36__q_su01_u_su_Q0_lane_exp11.json | split piece lane_exp11 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x457.92__q_su01_u_su_Q0_lane_exp11.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001011"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp13",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp13",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 725.76,
 1010.88
@@ -308747,12 +309008,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x207.36__q_su01_u_su_Q0_lane_exp13.json",
-"note": "split piece lane_exp13 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x457.92__q_su01_u_su_Q0_lane_exp13.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp13 cores/ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x207.36__q_su01_u_su_Q0_lane_exp13.json | split piece lane_exp13 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x457.92__q_su01_u_su_Q0_lane_exp13.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001101"
+}
+]
 },
 {
 "inst": "u_su_Q0_lane_exp_l",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp_l",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 725.76,
 1226.88
@@ -308765,12 +309033,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x207.36__q_su01_u_su_Q0_lane_exp_l.json",
-"note": "split piece lane_exp_l of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 234742 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x457.92__q_su01_u_su_Q0_lane_exp_l.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp_l cores/ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x207.36__q_su01_u_su_Q0_lane_exp_l.json | split piece lane_exp_l of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 234742 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x457.92__q_su01_u_su_Q0_lane_exp_l.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001111"
+}
+]
 },
 {
 "inst": "u_su_Q0_lanes_plain4_7",
-"module": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7",
+"module": "ot_hbm_su_pg_lanes4_core_strap",
 "origin_um": [
 1175.04,
 77.76
@@ -308783,12 +309058,34 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain4_7__440.64x457.92__q_su01_u_su_Q0_lanes_plain4_7.json",
-"note": "split piece lanes_plain4_7 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json), orient R0; ID straps ['strap_lane0_lane_id', 'strap_lane1_lane_id', 'strap_lane2_lane_id', 'strap_lane3_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lanes_plain4_7 cores/ot_hbm_su_static_pgslice_lg__lanes_plain4_7__440.64x457.92__q_su01_u_su_Q0_lanes_plain4_7.json | split piece lanes_plain4_7 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells",
+"straps": [
+{
+"port": "strap_lane0_lane_id",
+"width": 11,
+"value": "11'b00001000100"
+},
+{
+"port": "strap_lane1_lane_id",
+"width": 11,
+"value": "11'b00001000101"
+},
+{
+"port": "strap_lane2_lane_id",
+"width": 11,
+"value": "11'b00001000110"
+},
+{
+"port": "strap_lane3_lane_id",
+"width": 11,
+"value": "11'b00001000111"
+}
+]
 },
 {
 "inst": "u_su_Q0_lanes_plain12_15",
-"module": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15",
+"module": "ot_hbm_su_pg_lanes4_core_strap",
 "origin_um": [
 725.76,
 77.76
@@ -308801,8 +309098,30 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain12_15__440.64x457.92__q_su01_u_su_Q0_lanes_plain12_15.json",
-"note": "split piece lanes_plain12_15 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t1.json), orient R0; ID straps ['strap_lane0_lane_id', 'strap_lane1_lane_id', 'strap_lane2_lane_id', 'strap_lane3_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lanes_plain12_15 cores/ot_hbm_su_static_pgslice_lg__lanes_plain12_15__440.64x457.92__q_su01_u_su_Q0_lanes_plain12_15.json | split piece lanes_plain12_15 of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells",
+"straps": [
+{
+"port": "strap_lane0_lane_id",
+"width": 11,
+"value": "11'b00001001100"
+},
+{
+"port": "strap_lane1_lane_id",
+"width": 11,
+"value": "11'b00001001101"
+},
+{
+"port": "strap_lane2_lane_id",
+"width": 11,
+"value": "11'b00001001110"
+},
+{
+"port": "strap_lane3_lane_id",
+"width": 11,
+"value": "11'b00001001111"
+}
+]
 },
 {
 "inst": "u_su_Q0_side_rest",
@@ -314420,7 +314739,7 @@
 },
 {
 "inst": "u_su_Q1_lane_exp2",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp2",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 907.2,
 293.76
@@ -314433,12 +314752,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x207.36__q_su10_u_su_Q1_lane_exp2.json",
-"note": "split piece lane_exp2 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x457.92__q_su10_u_su_Q1_lane_exp2.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af2.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af2.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp2 cores/ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x207.36__q_su10_u_su_Q1_lane_exp2.json | split piece lane_exp2 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x457.92__q_su10_u_su_Q1_lane_exp2.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000010"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp4",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp4",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 8.64,
 1010.88
@@ -314451,12 +314777,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x207.36__q_su10_u_su_Q1_lane_exp4.json",
-"note": "split piece lane_exp4 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x457.92__q_su10_u_su_Q1_lane_exp4.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp4 cores/ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x207.36__q_su10_u_su_Q1_lane_exp4.json | split piece lane_exp4 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x457.92__q_su10_u_su_Q1_lane_exp4.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000100"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp6",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp6",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 8.64,
 1226.88
@@ -314469,12 +314802,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x207.36__q_su10_u_su_Q1_lane_exp6.json",
-"note": "split piece lane_exp6 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x457.92__q_su10_u_su_Q1_lane_exp6.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af2.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af2.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp6 cores/ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x207.36__q_su10_u_su_Q1_lane_exp6.json | split piece lane_exp6 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x457.92__q_su10_u_su_Q1_lane_exp6.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000110"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp8",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp8",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 457.92,
 1010.88
@@ -314487,12 +314827,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x207.36__q_su10_u_su_Q1_lane_exp8.json",
-"note": "split piece lane_exp8 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x457.92__q_su10_u_su_Q1_lane_exp8.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp8 cores/ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x207.36__q_su10_u_su_Q1_lane_exp8.json | split piece lane_exp8 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x457.92__q_su10_u_su_Q1_lane_exp8.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001000"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp10",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp10",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 457.92,
 1226.88
@@ -314505,12 +314852,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x207.36__q_su10_u_su_Q1_lane_exp10.json",
-"note": "split piece lane_exp10 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x457.92__q_su10_u_su_Q1_lane_exp10.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af5.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af5.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp10 cores/ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x207.36__q_su10_u_su_Q1_lane_exp10.json | split piece lane_exp10 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x457.92__q_su10_u_su_Q1_lane_exp10.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001010"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp12",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp12",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 8.64,
 544.32
@@ -314523,12 +314877,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x207.36__q_su10_u_su_Q1_lane_exp12.json",
-"note": "split piece lane_exp12 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x457.92__q_su10_u_su_Q1_lane_exp12.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af2.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af2.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp12 cores/ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x207.36__q_su10_u_su_Q1_lane_exp12.json | split piece lane_exp12 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x457.92__q_su10_u_su_Q1_lane_exp12.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001100"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp14",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp14",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 8.64,
 760.32
@@ -314541,12 +314902,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x207.36__q_su10_u_su_Q1_lane_exp14.json",
-"note": "split piece lane_exp14 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x457.92__q_su10_u_su_Q1_lane_exp14.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af5.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af5.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp14 cores/ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x207.36__q_su10_u_su_Q1_lane_exp14.json | split piece lane_exp14 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x457.92__q_su10_u_su_Q1_lane_exp14.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001110"
+}
+]
 },
 {
 "inst": "u_su_Q1_lanes_plain0_3",
-"module": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3",
+"module": "ot_hbm_su_pg_lanes4_core_strap",
 "origin_um": [
 8.64,
 77.76
@@ -314559,12 +314927,34 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92__q_su10_u_su_Q1_lanes_plain0_3.json",
-"note": "split piece lanes_plain0_3 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json), orient R0; ID straps ['strap_lane0_lane_id', 'strap_lane1_lane_id', 'strap_lane2_lane_id', 'strap_lane3_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lanes_plain0_3 cores/ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92__q_su10_u_su_Q1_lanes_plain0_3.json | split piece lanes_plain0_3 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells",
+"straps": [
+{
+"port": "strap_lane0_lane_id",
+"width": 11,
+"value": "11'b00001000000"
+},
+{
+"port": "strap_lane1_lane_id",
+"width": 11,
+"value": "11'b00001000001"
+},
+{
+"port": "strap_lane2_lane_id",
+"width": 11,
+"value": "11'b00001000010"
+},
+{
+"port": "strap_lane3_lane_id",
+"width": 11,
+"value": "11'b00001000011"
+}
+]
 },
 {
 "inst": "u_su_Q1_lanes_plain8_11",
-"module": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11",
+"module": "ot_hbm_su_pg_lanes4_core_strap",
 "origin_um": [
 457.92,
 544.32
@@ -314577,8 +314967,30 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain8_11__440.64x457.92__q_su10_u_su_Q1_lanes_plain8_11.json",
-"note": "split piece lanes_plain8_11 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json), orient R0; ID straps ['strap_lane0_lane_id', 'strap_lane1_lane_id', 'strap_lane2_lane_id', 'strap_lane3_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lanes_plain8_11 cores/ot_hbm_su_static_pgslice_lg__lanes_plain8_11__440.64x457.92__q_su10_u_su_Q1_lanes_plain8_11.json | split piece lanes_plain8_11 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells",
+"straps": [
+{
+"port": "strap_lane0_lane_id",
+"width": 11,
+"value": "11'b00001001000"
+},
+{
+"port": "strap_lane1_lane_id",
+"width": 11,
+"value": "11'b00001001001"
+},
+{
+"port": "strap_lane2_lane_id",
+"width": 11,
+"value": "11'b00001001010"
+},
+{
+"port": "strap_lane3_lane_id",
+"width": 11,
+"value": "11'b00001001011"
+}
+]
 },
 {
 "inst": "u_su_Q1_side_softplus",
@@ -321013,7 +321425,7 @@
 "hard_cores": [
 {
 "inst": "u_su_Q1_lane_exp1",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp1",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 457.92,
 544.32
@@ -321026,12 +321438,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x207.36__q_su11_u_su_Q1_lane_exp1.json",
-"note": "split piece lane_exp1 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92__q_su11_u_su_Q1_lane_exp1.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af3.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af3.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp1 cores/ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x207.36__q_su11_u_su_Q1_lane_exp1.json | split piece lane_exp1 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92__q_su11_u_su_Q1_lane_exp1.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000001"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp3",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp3",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 457.92,
 760.32
@@ -321044,12 +321463,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x207.36__q_su11_u_su_Q1_lane_exp3.json",
-"note": "split piece lane_exp3 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x457.92__q_su11_u_su_Q1_lane_exp3.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af1.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp3 cores/ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x207.36__q_su11_u_su_Q1_lane_exp3.json | split piece lane_exp3 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x457.92__q_su11_u_su_Q1_lane_exp3.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000011"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp5",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp5",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 907.2,
 544.32
@@ -321062,12 +321488,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x207.36__q_su11_u_su_Q1_lane_exp5.json",
-"note": "split piece lane_exp5 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x457.92__q_su11_u_su_Q1_lane_exp5.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af9.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af9.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp5 cores/ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x207.36__q_su11_u_su_Q1_lane_exp5.json | split piece lane_exp5 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x457.92__q_su11_u_su_Q1_lane_exp5.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000101"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp7",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp7",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 907.2,
 760.32
@@ -321080,12 +321513,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x207.36__q_su11_u_su_Q1_lane_exp7.json",
-"note": "split piece lane_exp7 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x457.92__q_su11_u_su_Q1_lane_exp7.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af6.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af6.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp7 cores/ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x207.36__q_su11_u_su_Q1_lane_exp7.json | split piece lane_exp7 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x457.92__q_su11_u_su_Q1_lane_exp7.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000000111"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp9",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp9",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 8.64,
 1010.88
@@ -321098,12 +321538,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x207.36__q_su11_u_su_Q1_lane_exp9.json",
-"note": "split piece lane_exp9 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x457.92__q_su11_u_su_Q1_lane_exp9.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af1.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp9 cores/ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x207.36__q_su11_u_su_Q1_lane_exp9.json | split piece lane_exp9 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x457.92__q_su11_u_su_Q1_lane_exp9.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001001"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp11",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp11",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 8.64,
 1226.88
@@ -321116,12 +321563,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x207.36__q_su11_u_su_Q1_lane_exp11.json",
-"note": "split piece lane_exp11 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x457.92__q_su11_u_su_Q1_lane_exp11.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af6.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af6.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp11 cores/ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x207.36__q_su11_u_su_Q1_lane_exp11.json | split piece lane_exp11 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x457.92__q_su11_u_su_Q1_lane_exp11.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001011"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp13",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp13",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 8.64,
 544.32
@@ -321134,12 +321588,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x207.36__q_su11_u_su_Q1_lane_exp13.json",
-"note": "split piece lane_exp13 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x457.92__q_su11_u_su_Q1_lane_exp13.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af1.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp13 cores/ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x207.36__q_su11_u_su_Q1_lane_exp13.json | split piece lane_exp13 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 209541 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x457.92__q_su11_u_su_Q1_lane_exp13.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001101"
+}
+]
 },
 {
 "inst": "u_su_Q1_lane_exp_l",
-"module": "ot_hbm_su_static_pgslice_lg__lane_exp_l",
+"module": "ot_hbm_su_pg_lane_exp_core_strap",
 "origin_um": [
 8.64,
 760.32
@@ -321152,12 +321613,19 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x207.36__q_su11_u_su_Q1_lane_exp_l.json",
-"note": "split piece lane_exp_l of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 234742 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x457.92__q_su11_u_su_Q1_lane_exp_l.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af1.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af1.json), orient R0; ID straps ['strap_lane_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lane_exp_l cores/ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x207.36__q_su11_u_su_Q1_lane_exp_l.json | split piece lane_exp_l of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 234742 cells | B2n grow (HBM-CORES): 440.64x457.92 -> 440.64x207.36, was ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x457.92__q_su11_u_su_Q1_lane_exp_l.json | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x ot_sram_1r1w_128x256_m1_r2c2, core frame): k0 69.12,57.888 R0; k1 172.8,57.888 R0; k2 276.48,57.888 R0; k3 69.12,108 R0; k4 172.8,108 R0; k5 276.48,108 R0 | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset",
+"straps": [
+{
+"port": "strap_lane_lane_id",
+"width": 11,
+"value": "11'b00000001111"
+}
+]
 },
 {
 "inst": "u_su_Q1_lanes_plain4_7",
-"module": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7",
+"module": "ot_hbm_su_pg_lanes4_core_strap",
 "origin_um": [
 8.64,
 77.76
@@ -321170,12 +321638,34 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain4_7__440.64x457.92__q_su11_u_su_Q1_lanes_plain4_7.json",
-"note": "split piece lanes_plain4_7 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t2.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t2.json), orient R0; ID straps ['strap_lane0_lane_id', 'strap_lane1_lane_id', 'strap_lane2_lane_id', 'strap_lane3_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lanes_plain4_7 cores/ot_hbm_su_static_pgslice_lg__lanes_plain4_7__440.64x457.92__q_su11_u_su_Q1_lanes_plain4_7.json | split piece lanes_plain4_7 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells",
+"straps": [
+{
+"port": "strap_lane0_lane_id",
+"width": 11,
+"value": "11'b00001000100"
+},
+{
+"port": "strap_lane1_lane_id",
+"width": 11,
+"value": "11'b00001000101"
+},
+{
+"port": "strap_lane2_lane_id",
+"width": 11,
+"value": "11'b00001000110"
+},
+{
+"port": "strap_lane3_lane_id",
+"width": 11,
+"value": "11'b00001000111"
+}
+]
 },
 {
 "inst": "u_su_Q1_lanes_plain12_15",
-"module": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15",
+"module": "ot_hbm_su_pg_lanes4_core_strap",
 "origin_um": [
 907.2,
 77.76
@@ -321188,8 +321678,30 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain12_15__440.64x457.92__q_su11_u_su_Q1_lanes_plain12_15.json",
-"note": "split piece lanes_plain12_15 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells"
+"pins_file": "cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t3.json",
+"note": "TYPE-REDUCE-2/HBM 10-25: one pin template per (master, outline) (cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t3.json), orient R0; ID straps ['strap_lane0_lane_id', 'strap_lane1_lane_id', 'strap_lane2_lane_id', 'strap_lane3_lane_id'] tied at the parent (owner option B); was ot_hbm_su_static_pgslice_lg__lanes_plain12_15 cores/ot_hbm_su_static_pgslice_lg__lanes_plain12_15__440.64x457.92__q_su11_u_su_Q1_lanes_plain12_15.json | split piece lanes_plain12_15 of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 308480 cells",
+"straps": [
+{
+"port": "strap_lane0_lane_id",
+"width": 11,
+"value": "11'b00001001100"
+},
+{
+"port": "strap_lane1_lane_id",
+"width": 11,
+"value": "11'b00001001101"
+},
+{
+"port": "strap_lane2_lane_id",
+"width": 11,
+"value": "11'b00001001110"
+},
+{
+"port": "strap_lane3_lane_id",
+"width": 11,
+"value": "11'b00001001111"
+}
+]
 },
 {
 "inst": "u_su_Q1_side_rest",

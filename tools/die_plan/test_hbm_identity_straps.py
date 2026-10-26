@@ -55,3 +55,32 @@ def test_formal_schema_cross_fields_preserve_kv_and_hbm_widths():
     js.validate({'port':'strap_hid','width':2,'value':"2'b11"},item)
     for d in [{'port':PORT,'width':2,'value':"2'b11"}, {'port':'strap_hid','width':6,'value':"6'b000011"}]:
         with pytest.raises(js.ValidationError):js.validate(d,item)
+
+
+# TYPE-REDUCE-2/HBM 10-25: HBM split-master lane IDs (sfu lane map_lane_j, su pg lane_lane_id) as strap_* pins
+@pytest.mark.parametrize('port,width', [('strap_map_lane_j', 4), ('strap_lane_lane_id', 11), ('strap_lane0_lane_id', 11),
+                                        ('strap_lane3_lane_id', 11)])
+def test_hbm_lane_id_straps_exact_width(port, width):
+    pins = [f'{port}[{i}]' for i in range(width)]
+    for value in (0, 1, (1 << width) - 1):
+        d = {'inst': 'lane', 'straps': [{'port': port, 'width': width, 'value': f"{width}'b{value:0{width}b}"}]}
+        assert validate_parent_id_straps(d, {port: width}, pins) == {port: {'width': width, 'value': value}}
+    for bad_w in (width - 1, width + 1, 6):
+        with pytest.raises(ValueError):
+            validate_parent_id_straps({'inst': 'lane', 'straps': [{'port': port, 'width': bad_w, 'value': 0}]})
+    with pytest.raises(ValueError):
+        validate_parent_id_straps({'inst': 'lane', 'straps': [{'port': port, 'width': width, 'value': 0}]},
+                                  {port: width}, pins[:-1])
+
+
+def test_hbm_lane_id_formal_schema():
+    js = pytest.importorskip('jsonschema')
+    item = schema._core_id_straps['items']
+    js.validate({'port': 'strap_map_lane_j', 'width': 4, 'value': "4'b1010"}, item)
+    js.validate({'port': 'strap_lane_lane_id', 'width': 11, 'value': "11'b00000101010"}, item)
+    for d in [{'port': 'strap_map_lane_j', 'width': 11, 'value': "11'b00000000001"},
+              {'port': 'strap_lane_lane_id', 'width': 4, 'value': "4'b0001"},
+              {'port': 'strap_tile_tid', 'width': 4, 'value': "4'b0001"},
+              {'port': 'strap_lane4_lane_id', 'width': 11, 'value': "11'b00000000001"}]:
+        with pytest.raises(js.ValidationError):
+            js.validate(d, item)

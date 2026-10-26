@@ -12,7 +12,10 @@ with TIEHI/TIELO next to the pin (gate side: straps.py).
 """
 
 KV_ID_WIDTHS = {'strap_corner': 2, 'strap_hid': 2, 'strap_bsel': 2}
-PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6}
+# HBM split-master IDs (TYPE-REDUCE-2/HBM 10-25): sfu lane index (4 b), su pg lane id (11 b, lanes4: 4 lanes)
+HBM_ID_WIDTHS = {'strap_tile_tid': 6, 'strap_map_lane_j': 4, 'strap_lane_lane_id': 11,
+                 **{f'strap_lane{k}_lane_id': 11 for k in range(4)}}   # su pg lanes4: one ID per lane
+PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, **HBM_ID_WIDTHS}
 ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', *PHYSICAL_ID_WIDTHS})
 
 
