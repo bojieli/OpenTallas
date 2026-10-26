@@ -11,5 +11,11 @@
     "Clock footprint now32802 additional cells, per-type reservation must be composed before freeze. Existing PG/clock connectivity is a separate open infra gate.",
     "Library prediction72/64ps is not a physical verdict; actual50-iteration combined GRT and two-corner clock reconstruction required."
   ],
-  "gate": "50-iteration combined GRT plus TT/FF related-pair <=80ps; NOT RUN"
+  "gate": "50-iteration combined GRT plus TT/FF related-pair <=80ps; NOT RUN",
+  "leaf2": {
+    "verdict": "PASS-COND TRIAL ONLY",
+    "image": "/srv/opentallas-scratch/claude/codex-head-clock-1026/leaf2/mesh.png",
+    "fix": "BUFx24 both ends; same hard-keepout and occupied-footprint site checks; no data-cycle change.",
+    "leaf1_actual": "GRT0, skew228.94/161.47ps FAIL, tap slew373ps; previous record retained."
+  }
 }
