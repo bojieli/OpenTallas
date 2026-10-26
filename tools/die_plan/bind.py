@@ -3170,8 +3170,29 @@ def plan_base(path, raw):
     return str(E.REPO)
 
 
+def _write_provenance(a, step):
+    """closure order rule 3 (OWNER 10-25): every bind result names the commit and the repository-relative plan and
+    manifest it was made from (out/provenance_<step>.json; tools/die_plan/manifest_paths.py --result checks it)."""
+    import manifest_paths
+    rec = manifest_paths.provenance(E.REPO)
+
+    def rel(p):
+        if not p:
+            return None
+        try:
+            return str(Path(p).resolve().relative_to(E.REPO.resolve()))
+        except ValueError:
+            return str(Path(p).resolve())
+    rec.update(step=step, plan=rel(a.plan), manifest=rel(getattr(a, "asbuilt", None)),
+               external_paths_allowed=bool(_AB_OVERRIDE.get("allow_external_paths")))
+    rec["inputs"] = [x for x in (rec["plan"], rec["manifest"]) if x]
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    (Path(a.out) / f"provenance_{step}.json").write_text(json.dumps(dict(provenance=rec), indent=1) + "\n")
+
+
 def cmd_elab(a):
     raw = load_plan(a.plan)
+    _write_provenance(a, "elab")
     rec = E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem)
     print(json.dumps({k: (v if k not in ("ambiguous", "undefined") else len(v)) for k, v in rec.items()}))
     return 0
@@ -3179,6 +3200,7 @@ def cmd_elab(a):
 
 def cmd_bind(a):
     raw = load_plan(a.plan)
+    _write_provenance(a, "bind")
     out = Path(a.out)
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))

@@ -9,7 +9,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import manifest_paths as M  # noqa: E402
 
 REPO = M.REPO
-# the operational manifests of record (one per die path); each must stay repository-relative
+# the operational bind manifests of record (one per die path); each must stay repository-relative.  HBM's
+# hbm/bind/asbuilt.json still reads scratch (273 paths) and joins this list when TOK-HBM regenerates it.
 OPERATIONAL = [
     "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
     "physical/die_plan/qwen_compute/bind/asbuilt.json",
@@ -90,3 +91,39 @@ def test_bind_load_plan_gates_in_repo_manifest(tmp_path, monkeypatch):
         assert bind.load_plan(str(plan))["asbuilt"]["files"] == ["/srv/frozen/rtl/a.sv"]
     finally:
         m.unlink(missing_ok=True)
+
+
+def test_generic_lec_token_manifest(tmp_path):
+    good = _write(tmp_path, "r/lec_cfg.json", {"kit": "physical/die_plan/s81/kits/x", "hints": ["a.json"], "n": "1/2"})
+    assert M.check_file(good, tmp_path, kind="lec") == []
+    bad = _write(tmp_path, "r/tok.json", {"images": ["/srv/opentallas-scratch2/claude/x/kv.hex"],
+                                          "nested": {"src": "../../../elsewhere/rtl/a.sv"}, "home": "~/coord/x"})
+    errs = M.check_file(bad, tmp_path, kind="token")
+    assert len(errs) == 3
+    # auto: a JSON with bind keys is checked as a bind section
+    b = _write(tmp_path, "r/m.json", {"files": ["/abs.sv"]})
+    assert M.check_file(b, tmp_path) and "files" in M.check_file(b, tmp_path)[0]
+
+
+def test_result_requires_commit(tmp_path):
+    assert M.check_result({"verdict": "EQUIVALENT"}, tmp_path)
+    assert M.check_result({"provenance": {"commit": "9a59376bb9", "dirty": False}}, tmp_path) == []
+    assert M.check_result({"source_commit": "9a59376bb988365caa7c5df84829dd767405979b"}, tmp_path) == []
+    assert M.check_result({"provenance": {"commit": "9a59376bb9", "dirty": True}}, tmp_path)
+    assert M.check_result({"provenance": {"commit": "9a59376bb9", "inputs": ["/srv/x/m.json"]}}, tmp_path)
+
+
+def test_provenance_from_cohort(tmp_path):
+    (tmp_path / "cohort.json").write_text(json.dumps({"source_commit": "441e2fb399fa5f617bad638cc50417513a102e55"}))
+    p = M.provenance(tmp_path)
+    assert p["commit"].startswith("441e2fb399") and p["source"] == "cohort.json"
+    assert M.provenance(tmp_path / "nothing")["commit"] is None
+
+
+def test_bind_writes_provenance(tmp_path):
+    import argparse
+    import bind
+    a = argparse.Namespace(plan=str(tmp_path / "die_plan.json"), asbuilt=None, out=str(tmp_path / "out"))
+    bind._write_provenance(a, "bind")
+    rec = json.loads((tmp_path / "out" / "provenance_bind.json").read_text())
+    assert rec["provenance"]["step"] == "bind" and "commit" in rec["provenance"]
