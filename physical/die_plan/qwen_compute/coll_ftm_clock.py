@@ -7,7 +7,7 @@ emitters recompute clock ports and local control-reset topology from this plan.
 from copy import deepcopy
 
 PROFILE = dict(tap_mode="density", tap_max_sinks=1000, tap_target_sinks=800,
-               tap_radius_um=180.0, tap_min_sinks=1)
+               tap_radius_um=180.0, tap_min_sinks=1, control_sinks=True)
 
 
 def apply(raw):

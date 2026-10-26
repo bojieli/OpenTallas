@@ -704,6 +704,18 @@ def _taps(P, tn):
 _S_TAP_GRID = S.tap_grid
 
 
+def _plan_taps(P, tn):
+    """the taps the wavefront SITING reads (face / corner / start sites, depth estimate): for a density type with
+    clock.control_sinks these are the planning taps without the control-pin sinks (taps.density_taps control=False),
+    because those sinks are the very pins sited here; otherwise = _taps."""
+    t = P.types[tn]
+    ck = t.get("clock", {})
+    if ck.get("tap_mode") == "density" and ck.get("control_sinks") and not t.get("hard"):
+        import taps as T
+        return [(n, x, y) for n, x, y, _, _ in T.density_taps(P, tn, control=False)]
+    return _taps(P, tn)
+
+
 def reset_pin(P, tn):
     """gen_phys.tap_points(P, tn)[1] (the arst_n tap, type frame) with the memoised tap grid."""
     import gen_phys
@@ -936,7 +948,7 @@ def face_sites(P, tn):
     sp = max(50.0, hop_um(P) - MARGIN_UM)
     boxes = blockages(t)
     box_out = (CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM)
-    taken = [(x, y) for _, x, y in _taps(P, tn)]
+    taken = [(x, y) for _, x, y in _plan_taps(P, tn)]
     out = []
     for face, L in (("S", w), ("E", h), ("N", w), ("W", h)):
         m = max(1, math.ceil(L / sp))
@@ -965,7 +977,7 @@ def corner_sites(P, tn):
         w, h = t["outline_um"]
         boxes = blockages(t)
         box_out = (CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM)
-        taken = [(x, y) for _, x, y in _taps(P, tn)] + [s["xy"] for s in face_sites(P, tn)]
+        taken = [(x, y) for _, x, y in _plan_taps(P, tn)] + [s["xy"] for s in face_sites(P, tn)]
         out = []
         for x, y in ((INSET_UM, INSET_UM), (w - INSET_UM, INSET_UM), (w - INSET_UM, h - INSET_UM),
                      (INSET_UM, h - INSET_UM)):
@@ -982,7 +994,7 @@ def corner_sites(P, tn):
 def _est_depth(P, tn, xy):
     """planning estimate of a type's relay depth from an entry at xy (reach-limited hops to the farthest tap / site)."""
     pr = relay_um(P) - MARGIN_UM
-    pts = [(x, y) for _, x, y in _taps(P, tn)] + [s["xy"] for s in face_sites(P, tn)]
+    pts = [(x, y) for _, x, y in _plan_taps(P, tn)] + [s["xy"] for s in face_sites(P, tn)]
     return max(1, max(math.ceil(_man(xy, p) / pr) for p in pts))
 
 
@@ -1191,7 +1203,7 @@ def _start_sites(P, tn):
     key = ("start_sites", tn)
     if key not in cache:
         import schema as S
-        taken = [(x, y) for _, x, y in _taps(P, tn)] + [tuple(in_pin(P, tn))] + \
+        taken = [(x, y) for _, x, y in _plan_taps(P, tn)] + [tuple(in_pin(P, tn))] + \
             [(x, y) for _, x, y in out_pins(P, tn)] + [tuple(v[1:3]) for v in S.core_taps(P, tn)]
         sin = _beside(P, tn, in_pin(P, tn), taken)
         taken.append(sin)
