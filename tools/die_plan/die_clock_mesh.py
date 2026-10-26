@@ -134,6 +134,90 @@ def strap_bounds(g, xs, ys, axis):
     return (xs[g["i0"]], xs[g["i1"] - 1]) if axis == 0 else (ys[g["j0"]], ys[g["j1"] - 1])
 
 
+def strap_span(M, g, xs, ys, axis, idx):
+    """extent of ONE strap (axis 0 = M8 row j=idx, 1 = M9 column i=idx) of region g: the region extent, clipped at
+    declared macro holes when the build recorded per-strap spans (--clock-floorplan); None = strap removed."""
+    sp = (M or {}).get("strap_spans")
+    if sp is None:
+        return strap_bounds(g, xs, ys, axis)
+    v = sp.get(f"{'H' if axis == 0 else 'V'}:{idx}:{g.get('k')}")
+    return tuple(v) if v else None
+
+
+def clip_span(lo, hi, c, axis, holes, margin):
+    """clip strap [lo, hi] (at perpendicular coordinate c) at every hole rect it crosses; a hole must touch one end
+    of the strap (it may not split it in two: one strap = one metal segment).  None when nothing remains."""
+    for h in holes:
+        r = h["rect_um"]
+        plo, phi = (r[1], r[3]) if axis == 0 else (r[0], r[2])
+        if not plo - margin <= c <= phi + margin:
+            continue
+        a, b = ((r[0], r[2]) if axis == 0 else (r[1], r[3]))
+        a, b = a - margin, b + margin
+        if b <= lo or a >= hi:
+            continue
+        if a <= lo:
+            lo = b
+        elif b >= hi:
+            hi = a
+        else:
+            raise ValueError(f"clock-floorplan hole {h['name']} splits a strap in two at {c}: declare regions so a hole "
+                             f"touches a region strap end")
+        if hi - lo < 1.0:
+            return None
+    return (round(lo, 4), round(hi, 4))
+
+
+def floorplan_regions(fp, W, H, ny):
+    """explicit clock regions on declared partition edges (x_cuts_um), each a complete power-of-two mesh of
+    region_nx columns x ny rows; returns (xs, R).  Tags h0..h<n-1>: the die root drives one tree per region."""
+    cuts = [0.0] + [float(c) for c in fp.get("x_cuts_um", [])] + [float(W)]
+    nxs = [int(n) for n in fp["region_nx"]]
+    if len(nxs) != len(cuts) - 1 or any(b <= a for a, b in zip(cuts, cuts[1:])) or not all(pow2(n) for n in nxs):
+        raise ValueError("clock-floorplan: region_nx must give one power-of-two column count per x_cuts_um interval")
+    if len(nxs) > 10:
+        raise ValueError("clock-floorplan: at most 10 regions (one-digit region tags)")
+    xs, R, i0 = [], [], 0
+    for k, ((a, b), n) in enumerate(zip(zip(cuts, cuts[1:]), nxs)):
+        xs += [a + (i + 0.5) * (b - a) / n for i in range(n)]
+        R.append(dict(k=k, tag=f"h{k}", i0=i0, i1=i0 + n, j0=0, j1=ny, box_um=[round(a, 3), 0.0, round(b, 3), round(H, 3)]))
+        i0 += n
+    return xs, R
+
+
+def floorplan_tag(i, j, R, ny):
+    """H-tree tag of intersection (i, j) under explicit floorplan regions: region tag + its own bisection bits."""
+    g = next(g for g in R if g["i0"] <= i < g["i1"])
+    return g["tag"] + htree_tag(i - g["i0"], j - g["j0"], g["i1"] - g["i0"], g["j1"] - g["j0"])[1:]
+
+
+def floorplan_holes(P, fp):
+    """declared macro holes (straps stop at the macro edge, no drivers / tree cells inside, no taps allowed) and the
+    driverless hard-core rects (cores at or below M7 under the M8/M9 mesh: straps pass over, a driver whose
+    intersection has no legal site within max-move is dropped; the core's own tree is its declared tap latency)."""
+    holes = []
+    for name in fp.get("macro_holes", []):
+        if isinstance(name, dict):
+            holes.append(dict(name=name["name"], rect_um=list(map(float, name["rect_um"]))))
+        else:
+            holes.append(dict(name=name, rect_um=list(map(float, P.rect(name)))))
+    cores = []
+    if fp.get("hard_core_drivers") == "drop":
+        for n, p in P.parts.items():
+            for hc in P.types[p["type"]].get("hard_cores", []) or []:
+                om = hc.get("obs_max")
+                if om is None or int(str(om).lstrip("Mm")) > 7:
+                    continue      # unknown / above M7: never assume the mesh may pass over it
+                (x0, y0), (w, h) = hc["origin_um"], hc["outline_um"]
+                a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x0 + w, y0 + h))
+                cores.append((min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1]), f"{n}/{hc['inst']}"))
+    return holes, cores
+
+
+def in_rect(r, x, y, m=0.0):
+    return r[0] - m <= x <= r[2] + m and r[1] - m <= y <= r[3] + m
+
+
 def cell_width(c):
     lib = c.get("lib", BUF)
     if lib not in BUF_WIDTHS:
@@ -344,7 +428,7 @@ def leg_sites(K, a, b, seg, out, tag, step=STEP_UM, s_init=0.0):
     return pts
 
 
-def stub_foot(K, xs, ys, x, y, limit, box=None, extent=None):
+def stub_foot(K, xs, ys, x, y, limit, box=None, extent=None, span=None):
     """stub input site for a tap at (x, y): over the two nearest M8 (horizontal) and two nearest M9 (vertical) straps,
     the perpendicular foot slid along the strap to the nearest free site; the one with the shortest stub wins.
     box = (i0, i1, j0, j1): only that clock region's straps, foot inside the region's strap extent.
@@ -359,12 +443,20 @@ def stub_foot(K, xs, ys, x, y, limit, box=None, extent=None):
     ci = i0 + bisect.bisect_left(xs_, x)
     cj = j0 + bisect.bisect_left(ys_, y)
     for j in {max(cj - 1, j0), min(cj, j1 - 1)}:
+        if span is not None:
+            bx = span(0, j)
+            if bx is None:
+                continue
         q, d = free_along(K, (min(max(x, bx[0] if bx else xs_[0]), bx[1] if bx else xs_[-1]), ys[j]), 0, limit, bounds=bx)
         if q is not None:
             L = abs(q[0] - x) + abs(q[1] - y)
             if best is None or L < best[0]:
                 best = (L, q, d, 0, int(min(range(len(xs)), key=lambda k: abs(xs[k] - q[0]))), j)
     for i in {max(ci - 1, i0), min(ci, i1 - 1)}:
+        if span is not None:
+            by = span(1, i)
+            if by is None:
+                continue
         q, d = free_along(K, (xs[i], min(max(y, by[0] if by else ys_[0]), by[1] if by else ys_[-1])), 1, limit, bounds=by)
         if q is not None:
             L = abs(q[0] - x) + abs(q[1] - y)
@@ -447,7 +539,8 @@ def part_regions(P, R):
 
 
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
-          regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None):
+          regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None,
+          floorplan=None):
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
@@ -456,6 +549,13 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     K = DC.KeepIndex(ko, die=(W, H))
     xs = [(i + 0.5) * W / nx for i in range(nx)]
     ys = [(j + 0.5) * H / ny for j in range(ny)]
+    fp = floorplan
+    if fp is not None:
+        if regions:
+            raise ValueError("--clock-floorplan declares its own regions; do not combine with --regions")
+        xs, R_fp = floorplan_regions(fp, W, H, ny)
+        nx = len(xs)
+        holes, cores = floorplan_holes(P, fp)
     axis_snap = None
     if pg_shapes is not None:
         if track_profile is None:
@@ -472,7 +572,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         out["meta"].update(pg_aware=True, pg_tracks=track_profile, pg_axis_snap_max_um=axis_snap)
     if delta_id:
         out["meta"]["delta_id"] = delta_id
-    R = region_boxes(nx, ny, regions, W, H)
+    if fp is not None:
+        R, regions = R_fp, 1
+        out["meta"].update(clock_floorplan=fp, macro_holes=holes, driverless_hard_cores=len(cores))
+    else:
+        R = region_boxes(nx, ny, regions, W, H)
     if region_edge_straps:
         if not regions:
             raise ValueError("--region-edge-straps requires --regions")
@@ -491,6 +595,20 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     if regions:
         out["meta"].update(regions_depth=regions, regions=R)
         out["part_region"] = part_regions(P, R)
+    span = None
+    if fp is not None:
+        hm = NDR[ndr]["width"] / 2 + NDR[ndr]["space"]
+        spans = {}
+        for g in R:
+            for j in range(g["j0"], g["j1"]):
+                spans[f"H:{j}:{g['k']}"] = clip_span(*strap_bounds(g, xs, ys, 0), ys[j], 0, holes, hm)
+            for i in range(g["i0"], g["i1"]):
+                spans[f"V:{i}:{g['k']}"] = clip_span(*strap_bounds(g, xs, ys, 1), xs[i], 1, holes, hm)
+        out["strap_spans"] = spans
+        out["hole_drivers"] = []
+
+        def span(axis, idx, g=None):
+            return strap_span(out, g, xs, ys, axis, idx)
 
     def cell(name, x, y, kind, **kw):
         cells[name] = dict(x=snap(x - BUF_W / 2, SITE_X), y=snap(y - ROW_Y / 2, ROW_Y), kind=kind, **kw)
@@ -504,12 +622,23 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             best = None
             g = R[reg_ij[(i, j)]]
             rk = dict(region=g["k"]) if regions else {}
+            if fp is not None:
+                mh = next((h["name"] for h in holes if in_rect(h["rect_um"], x, y)), None)
+                if mh is not None:
+                    out["hole_drivers"].append([i, j, "macro_hole", mh])
+                    continue
             for axis in (0, 1):
-                bnd = strap_bounds(g, xs, ys, axis)
+                bnd = strap_bounds(g, xs, ys, axis) if fp is None else span(axis, j if axis == 0 else i, g)
+                if bnd is None:
+                    continue
                 q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
                 if q is not None and (best is None or d < best[1]):
                     best = (q, d, axis)
             if best is None:
+                hc = next((c[4] for c in cores if in_rect(c, x, y)), None) if fp is not None else None
+                if hc is not None:
+                    out["hole_drivers"].append([i, j, "hard_core", hc])
+                    continue
                 out["unplaced"].append([i, j])
                 continue
             q, d, axis = best
@@ -523,21 +652,30 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     def node_xy(i0, i1, j0, j1):
         return ((xs[i0] + xs[i1 - 1]) / 2, (ys[j0] + ys[j1 - 1]) / 2)
 
-    def rec(i0, i1, j0, j1, level, drv_cell, path):
-        """drv_cell drives the branch point of this region (already at node_xy)."""
+    def live(i0, i1, j0, j1):
+        return any(f"{i}_{j}" in out["drivers"] for i in range(i0, i1) for j in range(j0, j1))
+
+    def rec(i0, i1, j0, j1, level, drv_cell, path, kids=None, here=None):
+        """drv_cell drives the branch point of this region (already at node_xy).  kids/here (--clock-floorplan
+        root only): the region boxes driven from the die root point."""
         ni, nj = i1 - i0, j1 - j0
         if ni == 1 and nj == 1:
             raise AssertionError
         ax = 0 if ni >= nj and ni > 1 else 1
-        if ax == 0:
+        if kids is not None:
+            ax = 0
+        elif ax == 0:
             h = (i0 + i1) // 2
             kids = [(i0, h, j0, j1), (h, i1, j0, j1)]
         else:
             h = (j0 + j1) // 2
             kids = [(i0, i1, j0, h), (i0, i1, h, j1)]
-        here = node_xy(i0, i1, j0, j1)
+        here = here or node_xy(i0, i1, j0, j1)
         loads = []
         for c, kr in enumerate(kids):
+            if fp is not None and not live(*kr):    # dead branch: every driver below sits in a hole
+                out.setdefault("pruned_branches", []).append(f"{path}{c}")
+                continue
             kp = node_xy(*kr)
             L = abs(kp[0] - here[0]) + abs(kp[1] - here[1])
             n_seg = max(1, math.ceil(L / rep_um - 1e-9))
@@ -602,6 +740,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     c0 = node_xy(0, nx, 0, ny)
     sp = P.clock.get("spine", {}) or {}
     root = tuple(sp.get("die_root_um") or sp.get("root_um") or c0)
+    if fp is not None:
+        c0 = root      # the die root drives one tree per explicit region: no trunk
     q, d = free_along(K, c0, 0, 2 * rep_um)
     if q is None:
         q, d = free_near(K, c0, limit=max(W, H))
@@ -611,9 +751,15 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     n0 = cell("ckm_n0", q[0], q[1], "node", level=0)
     trunk = abs(root[0] - c0[0]) + abs(root[1] - c0[1])
     out["meta"]["root_um"] = list(root)
+    if fp is not None:
+        out["meta"].update(nx=nx, pitch_um=[max((g["box_um"][2] - g["box_um"][0]) / (g["i1"] - g["i0"]) for g in R),
+                                            H / ny], hole_drivers=len(out["hole_drivers"]))
     out["meta"]["trunk_um"] = round(trunk, 2)
     nets.append(dict(name="root", drv="port:root", loads=[n0], level=-1))
-    rec(0, nx, 0, ny, 0, n0, "h")
+    if fp is not None:
+        rec(0, nx, 0, ny, 0, n0, "h", kids=[(g["i0"], g["i1"], g["j0"], g["j1"]) for g in R], here=c0)
+    else:
+        rec(0, nx, 0, ny, 0, n0, "h")
     # --- stubs: every partition tap
     taps = DC.plan_taps(P)
     early_c = DC.plan_tap_early(P)
@@ -627,7 +773,10 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         rk = dict(region=g["k"]) if regions else {}
         fq, fd, axis, i, j = stub_foot(K, xs, ys, x, y, 4 * max_move,
                                        box=(g["i0"], g["i1"], g["j0"], g["j1"]) if regions else None,
-                                       extent=g.get("strap_box_um"))
+                                       extent=g.get("strap_box_um"),
+                                       span=(lambda ax_, k_, g=g: span(ax_, k_, g)) if fp is not None else None)
+        if fp is not None and any(in_rect(h["rect_um"], x, y) for h in holes):
+            out["unplaced"].append([tp, "tap inside a declared macro hole"])
         if fq is None:
             fq, fd = (x, y), -1.0
             out["unplaced"].append([tp, "stub"])
@@ -659,8 +808,12 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                        stub_max_um=max(t["stub_um"] for t in tap_rows),
                        htree_wire_mm=round(sum(h["len_um"] for h in out["htree"]) / 1e3 + trunk / 1e3, 2),
                        mesh_wire_mm=round(sum((g["j1"] - g["j0"]) * (strap_bounds(g, xs, ys, 0)[1] - strap_bounds(g, xs, ys, 0)[0]) +
-                                              (g["i1"] - g["i0"]) * (strap_bounds(g, xs, ys, 1)[1] - strap_bounds(g, xs, ys, 1)[0]) for g in R) / 1e3, 2),
+                                              (g["i1"] - g["i0"]) * (strap_bounds(g, xs, ys, 1)[1] - strap_bounds(g, xs, ys, 1)[0]) for g in R) / 1e3, 2)
+                       if fp is None else round(sum(s_[1] - s_[0] for s_ in out["strap_spans"].values() if s_) / 1e3, 2),
                        stub_wire_mm=round(sum(t["stub_um"] for t in tap_rows) / 1e3, 2))
+    if fp is not None:
+        out["meta"]["pruned_branches"] = len(out.get("pruned_branches", []))
+        out["meta"]["strap_spans_removed"] = sum(1 for v in out["strap_spans"].values() if not v)
     return cells, nets, ports, out
 
 
@@ -713,8 +866,10 @@ def cmd_build(a):
         pg = json.loads(Path(a.pg_json).read_text())
         pg_shapes = DI.pg_rects(P, pg["grid"])
         tracks = mesh_tracks(a.track_file, P)
+    fp = json.loads(Path(a.clock_floorplan).read_text()) if a.clock_floorplan else None
     cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
-                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks)
+                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks,
+                                  floorplan=fp)
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
@@ -911,16 +1066,22 @@ def cmd_combo(a):
         ylo, yhi = strap_bounds(g, xs, ys, 1)
         L += [f"set mn [$blk findNet {mesh_net(g['k'])}]", "$mn setSpecial", "$mn setSigType CLOCK",
               "$mn setWildConnected", "foreach it [$mn getITerms] { $it setSpecial }", "set sw [odb::dbSWire_create $mn ROUTED]"]
-        for y in ry:
+        if "strap_spans" in M:    # --clock-floorplan: per-strap extents clipped at macro holes
+            hsp = [(y, strap_span(M, g, xs, ys, 0, j)) for j, y in zip(range(g["j0"], g["j1"]), ry)]
+            vsp = [(x, strap_span(M, g, xs, ys, 1, i)) for i, x in zip(range(g["i0"], g["i1"]), rx)]
+            hsp, vsp = [v for v in hsp if v[1]], [v for v in vsp if v[1]]
+        else:
+            hsp, vsp = [(y, (xlo, xhi)) for y in ry], [(x, (ylo, yhi)) for x in rx]
+        for y, (xlo, xhi) in hsp:
             L.append(f"odb::dbObstruction_create $blk $l8 [um {xlo - hs:.4f}] [um {y - hs:.4f}] [um {xhi + hs:.4f}] "
                      f"[um {y + hs:.4f}]")
-        for x in rx:
+        for x, (ylo, yhi) in vsp:
             L.append(f"odb::dbObstruction_create $blk $l9 [um {x - hs:.4f}] [um {ylo - hs:.4f}] [um {x + hs:.4f}] "
                      f"[um {yhi + hs:.4f}]")
-        for y in ry:
+        for y, (xlo, xhi) in hsp:
             L.append(f"odb::dbSBox_create $sw $l8 [um {xlo - hw:.4f}] [um {y - hw:.4f}] [um {xhi + hw:.4f}] "
                      f"[um {y + hw:.4f}] STRIPE")
-        for x in rx:
+        for x, (ylo, yhi) in vsp:
             L.append(f"odb::dbSBox_create $sw $l9 [um {x - hw:.4f}] [um {ylo - hw:.4f}] [um {x + hw:.4f}] "
                      f"[um {yhi + hw:.4f}] STRIPE")
     clock_nets = [n["name"] for n in data["nets"]]
@@ -1038,18 +1199,25 @@ def cmd_mesh(a):
     regs = M["meta"].get("regions") or [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))]
     for g in regs:
         for j in range(g["j0"], g["j1"]):
-            hpts[(j, g["k"])] |= {round(x, 3) for x in xs[g["i0"]:g["i1"]]}
-            hpts[(j, g["k"])] |= {round(x, 3) for x in strap_bounds(g, xs, ys, 0)}
+            sj = strap_span(M, g, xs, ys, 0, j)
+            if sj is None:
+                continue
+            hpts[(j, g["k"])] |= {round(x, 3) for x in xs[g["i0"]:g["i1"]] if sj[0] - 1e-3 <= x <= sj[1] + 1e-3}
+            hpts[(j, g["k"])] |= {round(x, 3) for x in sj}
         for i in range(g["i0"], g["i1"]):
-            vpts[(i, g["k"])] |= {round(y, 3) for y in ys[g["j0"]:g["j1"]]}
-            vpts[(i, g["k"])] |= {round(y, 3) for y in strap_bounds(g, xs, ys, 1)}
+            si = strap_span(M, g, xs, ys, 1, i)
+            if si is None:
+                continue
+            vpts[(i, g["k"])] |= {round(y, 3) for y in ys[g["j0"]:g["j1"]] if si[0] - 1e-3 <= y <= si[1] + 1e-3}
+            vpts[(i, g["k"])] |= {round(y, 3) for y in si}
     ext = {g["k"]: g for g in regs}
 
-    def on_strap(k, axis, v):   # the point lies on its region's strap segment (checked with --regions)
+    def on_strap(k, axis, v, idx=None):   # the point lies on its region's strap segment (checked with --regions)
         if k is None:
             return
         g = ext[k]
-        lo, hi = strap_bounds(g, xs, ys, axis)
+        lo, hi = strap_bounds(g, xs, ys, axis) if idx is None or "strap_spans" not in M else \
+            (strap_span(M, g, xs, ys, axis, idx) or (math.inf, -math.inf))
         if not lo - 1e-3 <= v <= hi + 1e-3:
             raise SystemExit(f"die_clock_mesh mesh: point {v} off region {k} strap extent [{lo}, {hi}]")
     xi = {round(x, 3): i for i, x in enumerate(xs)}
@@ -1059,11 +1227,11 @@ def cmd_mesh(a):
         X, Y = round(dv["site"][0], 3), round(dv["site"][1], 3)
         rk = dv.get("region")
         if dv["strap"] == "M8":
-            on_strap(rk, 0, X)
+            on_strap(rk, 0, X, dv["j"])
             hpts[(dv["j"], rk)].add(X)
             key = ("H", dv["j"], X)
         else:
-            on_strap(rk, 1, Y)
+            on_strap(rk, 1, Y, dv["i"])
             vpts[(dv["i"], rk)].add(Y)
             key = ("V", dv["i"], Y)
         drv_at.append((key, dv))
@@ -1073,11 +1241,11 @@ def cmd_mesh(a):
         X, Y = round(t["foot"][0], 3), round(t["foot"][1], 3)
         rk = t.get("region")
         if L_ == "M8":
-            on_strap(rk, 0, X)
+            on_strap(rk, 0, X, idx)
             hpts[(idx, rk)].add(X)
             key = ("H", idx, X)
         else:
-            on_strap(rk, 1, Y)
+            on_strap(rk, 1, Y, idx)
             vpts[(idx, rk)].add(Y)
             key = ("V", idx, Y)
         stub_at.append((key, t))
@@ -1325,6 +1493,8 @@ def cmd_report(a):
     nx, ny = len(xs), len(ys)
 
     def path_of(i, j):
+        if M["meta"].get("clock_floorplan"):
+            return floorplan_tag(i, j, M["meta"]["regions"], ny)
         return htree_tag(i, j, nx, ny)
     import numpy as np
     xa, ya = np.array(xs), np.array(ys)
@@ -1355,7 +1525,7 @@ def cmd_report(a):
         _, N = read_tree(d / f"tree_{corner}.txt")
         rng = {"h": 0.0}
         for name, (late, early, _) in N.items():
-            m_ = re.match(r"ckm_n\d+_(h[01]*)$", name)
+            m_ = re.match(r"ckm_n\d+_(h[0-9]?[01]*)$", name)
             if m_:
                 rng[m_.group(1)] = late - early
         if "ckm_n0" in N:
@@ -1439,14 +1609,24 @@ def cmd_render(a):
     xs, ys = M["xs"], M["ys"]
     for g in M["meta"].get("regions") or [dict(i0=0, i1=len(xs), j0=0, j1=len(ys))]:
         rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
-        for y in ry:
-            ax.plot(strap_bounds(g, xs, ys, 0), [y, y], color="tab:blue", lw=0.25)
-        for x in rx:
-            ax.plot([x, x], strap_bounds(g, xs, ys, 1), color="tab:blue", lw=0.25)
+        for j, y in zip(range(g["j0"], g["j1"]), ry):
+            sj = strap_span(M, g, xs, ys, 0, j)
+            if sj:
+                ax.plot(sj, [y, y], color="tab:blue", lw=0.25)
+        for i, x in zip(range(g["i0"], g["i1"]), rx):
+            si = strap_span(M, g, xs, ys, 1, i)
+            if si:
+                ax.plot([x, x], si, color="tab:blue", lw=0.25)
         if "box_um" in g:
             b = g["box_um"]
             ax.add_patch(Rectangle((b[0], b[1]), b[2] - b[0], b[3] - b[1], fill=False, lw=1.2, ec="tab:purple", ls="--"))
             ax.text(b[0] + 150, b[3] - 600, g["tag"], fontsize=6, color="tab:purple")
+    for h in M["meta"].get("macro_holes", []):
+        r = h["rect_um"]
+        ax.add_patch(Rectangle((r[0], r[1]), r[2] - r[0], r[3] - r[1], fill=False, lw=1.0, ec="tab:brown", hatch="//"))
+    hd = M.get("hole_drivers", [])
+    if hd:
+        ax.scatter([xs[v[0]] for v in hd], [ys[v[1]] for v in hd], s=2.0, c="tab:brown", marker="x", lw=0.4)
     for h in M["htree"]:
         lw = max(0.3, 2.4 - 0.18 * h["level"])
         ax.plot([h["a"][0], h["b"][0]], [h["a"][1], h["b"][1]], color="tab:red", lw=lw)
@@ -1497,6 +1677,10 @@ def main(argv=None):
     b.add_argument("--pg-json", help="actual IR-sized PG file; consumes die_infra.pg_rects geometry (trial-only if infeasible)")
     b.add_argument("--track-file", help="actual die kit grt/tracks.tcl, required with --pg-json")
     b.add_argument("--delta-id", help="plan delta tag recorded in mesh.json meta (e.g. D-QC-CLKMESH)")
+    b.add_argument("--clock-floorplan", help="opt-in JSON: x_cuts_um (region seams on partition edges) + region_nx "
+                   "(power-of-two columns per region), macro_holes (part names / {name, rect_um}: straps stop at the "
+                   "macro edge, no cells inside, dead branches pruned), hard_core_drivers='drop' (cores <= M7 under the "
+                   "mesh: an intersection with no legal site is driverless; the core tree is its declared tap latency)")
     bl = sub.add_parser("balance")
     bl.add_argument("dir")
     bl.add_argument("--out", required=True)

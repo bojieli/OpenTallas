@@ -60,6 +60,59 @@ class T(unittest.TestCase):
         self.assertEqual(R[0]["box_um"], [0.0, 0.0, 200.0, 400.0])   # x, y, x halvings
         self.assertEqual(CM.region_boxes(8, 8, 0)[0]["tag"], "h")
 
+    def test_floorplan_regions_on_partition_edges(self):
+        xs, R = CM.floorplan_regions(dict(x_cuts_um=[700., 900.], region_nx=[4, 1, 4]), 1600., 800., 4)
+        self.assertEqual(len(xs), 9)
+        self.assertEqual([g["box_um"][0] for g in R], [0., 700., 900.])
+        self.assertEqual([g["tag"] for g in R], ["h0", "h1", "h2"])
+        self.assertTrue(all(700. < x < 900. for x in xs[R[1]["i0"]:R[1]["i1"]]))
+        for g in R:
+            for i in range(g["i0"], g["i1"]):
+                for j in range(4):
+                    self.assertTrue(CM.floorplan_tag(i, j, R, 4).startswith(g["tag"]))
+        with self.assertRaises(ValueError):
+            CM.floorplan_regions(dict(x_cuts_um=[700.], region_nx=[3, 4]), 1600., 800., 4)
+
+    def test_macro_hole_clips_strap_end_never_splits(self):
+        hole = [dict(name="PHY", rect_um=[600., 600., 1000., 800.])]
+        self.assertEqual(CM.clip_span(0., 700., 700., 0, hole, 0.5), (0., 599.5))       # row ends at the macro edge
+        self.assertEqual(CM.clip_span(0., 700., 500., 0, hole, 0.5), (0., 700.))        # row below the macro: untouched
+        self.assertIsNone(CM.clip_span(700., 900., 700., 0, hole, 0.5))                  # wholly inside: removed
+        self.assertEqual(CM.clip_span(0., 800., 800., 1, hole, 0.5), (0., 599.5))       # column stops at the macro
+        with self.assertRaises(ValueError):
+            CM.clip_span(0., 1600., 700., 0, hole, 0.5)                                  # would split: refuse
+
+    def test_floorplan_build_holes_prune_and_explicit_regions(self):
+        types = dict(ta=dict(hard_cores=[dict(inst="core", origin_um=[400., 100.], outline_um=[250., 500.],
+                                              obs_max="M5")]), tb={}, tc={})
+        rects = dict(A=(0., 0., 700., 800.), B=(700., 0., 900., 600.), C=(900., 0., 1600., 800.),
+                     PHY=(600., 600., 1000., 800.))
+        P = SimpleNamespace(W=1600., H=800., clock={}, types=types,
+                            parts=dict(A=dict(type="ta"), B=dict(type="tb"), C=dict(type="tc")),
+                            rect=lambda n: rects[n], to_die=lambda n, xy: xy)
+        ko = [(400., 100., 650., 600., "A/core"), (600., 600., 1000., 800., "io/PHY")]
+        fp = dict(x_cuts_um=[700., 900.], region_nx=[2, 1, 2], macro_holes=[dict(name="PHY", rect_um=list(rects["PHY"]))],
+                  hard_core_drivers="drop")
+        taps = [("A", "clk", 300., 300., 0.), ("B", "clk", 790., 300., 0.), ("C", "clk", 1200., 300., 0.)]
+        with patch.object(CM.DC, "keepouts", return_value=ko), patch.object(CM.DC, "plan_taps", return_value=taps), \
+                patch.object(CM.DC, "plan_tap_early", return_value={}):
+            cells, nets, ports, M = CM.build(P, 4, 4, m=1, max_move=50., region_edge_straps=True, floorplan=fp)
+        self.assertEqual(M["unplaced"], [])
+        self.assertEqual([g["tag"] for g in M["meta"]["regions"]], ["h0", "h1", "h2"])
+        self.assertEqual(M["part_region"], dict(A=0, B=1, C=2))
+        kinds = {(v[0], v[1]): v[2] for v in M["hole_drivers"]}
+        self.assertEqual(kinds[(2, 3)], "macro_hole")                    # centre column top row: under the PHY
+        self.assertIn("hard_core", kinds.values())                       # x=525 rows inside the core: driverless
+        self.assertIsNone(M["strap_spans"]["H:3:1"])                      # centre top row wholly in the hole
+        self.assertLess(M["strap_spans"]["V:2:1"][1], 600.)               # centre column stops at the macro edge
+        self.assertIn("h111", M["pruned_branches"])                       # dead centre-top leaf pruned
+        for c in cells.values():                                          # no clock cell inside the macro hole
+            self.assertFalse(CM.in_rect(rects["PHY"], c["x"], c["y"]))
+        loads = {ld for n in nets for ld in n["loads"]}
+        undriven = [c for c, v in cells.items() if c != "ckm_n0" and v["kind"] != "stub" and c not in loads]
+        self.assertEqual(undriven, [])                                     # every tree cell is driven (stubs: mesh)
+        self.assertEqual(CM.floorplan_tag(3, 0, M["meta"]["regions"], 4)[:2], "h2")
+
     def test_free_along_bounds(self):
         K = Box((90, -5, 110, 5))
         q, d = CM.free_along(K, (100.0, 0.0), 0, 50.0)
