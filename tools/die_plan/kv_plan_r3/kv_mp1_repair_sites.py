@@ -19,6 +19,7 @@ sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'tools/die_plan'))
 import schema as S
 import ft_sites_unblock as U
 from gen_phys import type_pins
+import die_hop_scan as D
 from tools.die_trial.legal_sites import RowAllocator
 
 
@@ -48,24 +49,37 @@ def allocate_between(al,target,prev,nxt):
 def repair(raw):
     P=S.Plan(raw); report=[]
     for tn,ty in raw['partition_types'].items():
-        slots=[s for s in ty.get('ft_slots',[]) if s.get('bit_sites_um')]
+        slots=list(ty.get('ft_slots',[]))
         if not slots:continue
         boxes=list(S.placed_macro_boxes(ty,halo=0).values())
-        if not boxes:continue
         W,H=ty['outline_um'];U.FRAME[:]=[W,H]
         pins={}
         for bus,bit,_l,x,y,face in type_pins(P,tn):pins.setdefault(bus,{})[bit]=(x,y,face)
-        badslots=[]
+        _,chain_tables=D.type_tables(P,tn)
+        badslots=[];implicit=set();originals={}
         for s in slots:
-            cw,ch=s['bit_site_cell_um'];hits=sum(overlap(x,y,cw,ch,boxes) for st in s['bit_sites_um'] for x,y in st)
-            if hits:badslots.append((s,hits))
+            name=s['name'];chains=chain_tables[name];cw,ch=s.get('bit_site_cell_um',U.CELL)
+            sites=s.get('bit_sites_um')
+            if not sites:
+                sites=[[[chains[b][j][0]-cw/2,chains[b][j][1]-ch/2] for b in range(s['width']+1)] for j in range(1,s['stations'])]
+            hits=sum(overlap(x,y,cw,ch,boxes) for st in sites for x,y in st)
+            worst=0.
+            for bit,st in chains.items():
+                bp=pins[name+'_o'][bit];dx,dy=D.INSET[bp[2]];end=(bp[0]+dx,bp[1]+dy)
+                worst=max(worst,max(U.man(a,b) for a,b in zip(st,st[1:]+[end])))
+            if hits or worst>405.+1e-6:
+                originals[name]=copy.deepcopy(s)
+                if not s.get('bit_sites_um'):
+                    implicit.add(name);s['bit_sites_um']=sites;s['bit_site_cell_um']=[cw,ch]
+                badslots.append((s,hits))
         if not badslots:continue
         grow=[(a-4.32,b-4.32,c+4.32,d+4.32) for a,b,c,d in boxes]
         # Reserve every surviving physical register once; a failed re-site never frees it.
         al=RowAllocator((4.32,4.32,W-4.32,H-4.32),blocked=grow,cell_size=U.CELL,column_pitch=2.16,row_pitch=.27,origin=(4.32,4.32))
         for s in slots:
-            cw,ch=s['bit_site_cell_um']
-            for st in s['bit_sites_um']:
+            if s['name'] in implicit:continue
+            cw,ch=s.get('bit_site_cell_um',U.CELL)
+            for st in s.get('bit_sites_um',[]):
                 for x,y in st:
                     if not overlap(x,y,cw,ch,boxes):al.reserve_rectangle((x,y,x+cw,y+ch))
         g=np.mgrid[8.64:W-4.32:2.16,8.64:H-4.32:2.16].reshape(2,-1).T
@@ -73,13 +87,17 @@ def repair(raw):
         for a,b,c,d in grow:ok &= ~((g[:,0]>a)&(g[:,0]<c)&(g[:,1]>b)&(g[:,1]<d))
         free=g[ok]
         for s,hits in badslots:
-            old=copy.deepcopy(s);cw,ch=s['bit_site_cell_um'];name=s['name'];k=s['stations'];pts={}
+            name=s['name'];old=copy.deepcopy(s);original=originals[name];cw,ch=s['bit_site_cell_um'];k=s['stations'];pts={}
             try:
                 for bit in range(s['width']+1):
                     A,B=pins[name+'_i'][bit],pins[name+'_o'][bit]
                     inset=lambda p: {'E':(p[0]-1,p[1]),'W':(p[0]+1,p[1]),'N':(p[0],p[1]-1),'S':(p[0],p[1]+1)}[p[2]]
                     a,b=inset(A),inset(B);r=U.C.zroute(a,b,A[2],B[2]);ps=[(st[bit][0]+cw/2,st[bit][1]+ch/2) for st in s['bit_sites_um']]
                     pts[bit]=(a,b,r,U.C.plen(r),ps)
+                import math
+                direct=max(U.man(a,b) for a,b,*_ in pts.values())
+                if direct>k*405.+1e-6:raise ValueError(f'minimum direct reach needs {math.ceil(direct/405.)} stations, priced {k}; plan window/station delta required')
+                if k<2:raise ValueError('direct slot exceeds reach; no internal station at unchanged depth')
                 moved=U._move(pts,list(pts),k,grow,free,395.,tn,name)
                 # A moved endpoint can invalidate otherwise macro-free old
                 # stations. Re-solve that bit at the same depth as well.
@@ -91,7 +109,7 @@ def repair(raw):
                 for bit,(a,b,r,L,ps) in pts.items():
                     for stage,p in enumerate(ps):
                         x,y=old['bit_sites_um'][stage][bit]
-                        if overlap(x,y,cw,ch,boxes) or abs(x+cw/2-p[0])+abs(y+ch/2-p[1])>1e-5:
+                        if name in implicit or overlap(x,y,cw,ch,boxes) or abs(x+cw/2-p[0])+abs(y+ch/2-p[1])>1e-5:
                             prev=a if stage==0 else (new[stage-1][bit][0]+cw/2,new[stage-1][bit][1]+ch/2)
                             nxt=b if stage==len(ps)-1 else ps[stage+1]
                             try:
@@ -109,7 +127,7 @@ def repair(raw):
                 s['bit_sites_um']=new
                 row=dict(type=tn,slot=name,status='PASS',repaired_hits=hits,moved=moved,stations=k,max_hop_um=worst,added_cycles=0)
             except (ValueError,SystemExit) as e:
-                s.clear();s.update(old);row=dict(type=tn,slot=name,status='FAIL',original_macro_hits=hits,reason=str(e),added_cycles=0)
+                s.clear();s.update(original);row=dict(type=tn,slot=name,status='FAIL',original_macro_hits=hits,reason=str(e),added_cycles=0)
             report.append(row);print(json.dumps(row),flush=True)
     return report
 
