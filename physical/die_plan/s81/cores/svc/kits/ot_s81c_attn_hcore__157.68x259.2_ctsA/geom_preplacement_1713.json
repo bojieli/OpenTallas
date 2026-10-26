@@ -1,0 +1,15 @@
+{
+  "scope": "Pin/floorplan review only, ONE fresh placement; no CTS/route/SIGNED",
+  "source_cohort": "/srv/opentallas-scratch2/claude/codex-hcore-1309/cohort_timed_07d10_0890ad6f",
+  "runtime": "/srv/opentallas-scratch2/claude/codex-s81-hcore-1713/native_0890_place02",
+  "native_hcore_sha": "eafc9c83190a0845ec442f59004d996db7d514b8c896615955e29cf1f83edc50",
+  "native_netlist_sha": "0890ad6feceab83e0b3429f62a756778a6bf2abc85b19632d1ee727310920813",
+  "eq_receipt": "lec/lec.json",
+  "eq_proved": 30562,
+  "kept": 625,
+  "image": "/home/ubuntu/coord/hcore1309-review/hcore_plan.png",
+  "viewed": "CODEX1713 and independentGEOM sameexactretainedpinrender",
+  "findings": "157.68x259.2,1214pins; N580(3.68/um), W590(2.28/um), E42(.16/um), sparseSclock/reset. No macros/walls. Privateentry andcentralrelaytargets legalsite/row/orient snapped, QNrestoringINV footprints adjacent. Actualplacedallcells/fullreset-sinkreachimage required beforeCTS.",
+  "verdict": "PASS-COND one placement only after sourceproof+ROOT receipt admission (now satisfied).",
+  "note": "Native01 stoppedbeforeplacement on text-hashguard; no placementtokenconsumed. Native02 reuses original validated0890+4e4d cachedsynthinputs explicitly."
+}

@@ -1,0 +1,13 @@
+{
+  "files": {
+    "run/results/asap7/hc_ot_s81c_attn_hcore_swr/base/1_synth.sdc": "c84b37551ac2b643e9544e169110f411cef6f26667cfed1f5f066525a1f53898",
+    "run/results/asap7/hc_ot_s81c_attn_hcore_swr/base/clock_period.txt": "e2a13ac29367204ad42dfc6962e94fe6fd7155353a0ed59d4c204fb31aa4095b",
+    "run/results/asap7/hc_ot_s81c_attn_hcore_swr/base/1_synth.odb": "4e4d685163629cc0ab12a4e820ac56c42e44253dc08fb67187d1fba9dd4924b2",
+    "run/results/asap7/hc_ot_s81c_attn_hcore_swr/base/mem.json": "49882b6794c5bafd432928c4cf5fc1a6cf1fea6ee161cdac8d6573f3b296b82c",
+    "run/results/asap7/hc_ot_s81c_attn_hcore_swr/base/1_2_yosys.v": "0890ad6feceab83e0b3429f62a756778a6bf2abc85b19632d1ee727310920813",
+    "run/results/asap7/hc_ot_s81c_attn_hcore_swr/base/1_1_yosys_canonicalize.rtlil": "22d65d894b7df8b1abe5b58bf6e6c043956c19fddb7a1b19148a3eb38e13c621",
+    "run/results/asap7/hc_ot_s81c_attn_hcore_swr/base/1_2_yosys.sdc": "91ce61ddbe2e10dd4d210bf1e30eda5cb06cf35eadf3ef5e52f9f7a44903da36"
+  },
+  "reason": "Declared immutable validated synth cache; native01 unneeded resynthesis changed text aliases but produced byte-identical1_synth.odb. No source/constraint changes. make-o suppresses cache regeneration; all source+cache bytes checked.",
+  "failed_checkpoint": "/srv/opentallas-scratch2/claude/codex-s81-hcore-1713/native_0890_place01"
+}

@@ -1,0 +1,11 @@
+{
+  "scope": "physical hook only; no RTL/config/netlist modification",
+  "reason": "Actual mapped rst_e_q/rst_r_q are driven by QN-restoringINV, not directlyDFF. Walk<=4unaryINV/BUF/HB to actualDFF andco-locateunarytail. PreviouscandidatehasnoP&Rjob.",
+  "cohort": "cohort_timed_07d10_0890ad6f",
+  "new_runtime": "/srv/opentallas-scratch2/claude/codex-hcore-1309/physical_timed_07d10_0890_placement_v2",
+  "actual_DFF_instances": [
+    "rst_e_q$_DFF_P_",
+    "rst_r_q$_DFF_P_"
+  ],
+  "pending": "OpenROAD placement exercise after component proof+LEC; actual image beforeCTS"
+}
