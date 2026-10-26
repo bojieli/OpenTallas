@@ -1575,6 +1575,7 @@ def cmd_combo(a):
     hs = hw + nd["space"]
     regs = M["meta"].get("regions") or [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))]
     vias_meta, cross_meta = {}, {}
+    shield_segs_all = []      # every shielded clock segment (straps, jogs, fixed tree wires): VSS ties below
     for g in regs:      # one special net per clock region (the whole strap grid without --regions)
         rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
         xlo, xhi = strap_bounds(g, xs, ys, 0)
@@ -1641,6 +1642,7 @@ def cmd_combo(a):
                 segs.append(("M8", min(fx, cx), cy, max(fx, cx), cy) if dv["strap"] == "M9" else
                             ("M9", cx, min(fy, cy), cx, max(fy, cy)))
             sw2 = nd["width"] / 2
+            shield_segs_all += segs
             for lay, a0, b0, a1, b1 in segs:
                 for sgn in (-1, 1):
                     if lay == "M8":
@@ -1661,6 +1663,33 @@ def cmd_combo(a):
         sp = C128.spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
         for c_ in ("TT", "FF"):
             (d / f"native_{c_}.spef").write_text(sp)
+        shield_segs_all += [s_ for w_ in wires for s_ in w_["segs"]]
+    shield_net = (M["meta"].get("clock_floorplan") or {}).get("shield_net") or \
+        (M["meta"]["rule_12_8"]["shield_net"] if C128.enabled(M) else None)
+    if shield_net and shield_segs_all:
+        # 12.7a / COORD 07:04: every shield stripe via-tied to the die VSS grid (plan die.pg.grid + PHY domain grids):
+        # VIA89 at each shield x perpendicular VSS stripe and each M8 x M9 shield crossing; the VSS stripes the ties land
+        # on are written as special wires of the shield net (the kit models the die grid only as obstructions).
+        import die_infra as DI
+        Pp = S.Plan(S.load(getattr(a, "plan", None) or M["meta"]["plan"]))
+        pgr = DI.pg_rects(Pp, C128.pg_grid(Pp))
+        stripes = C128.shield_stripes(shield_segs_all, nd)
+        ties = C128.shield_ties(stripes, pgr, nd["width"], net=shield_net)
+        L += [f"set tn [$blk findNet {shield_net}]",
+              f"if {{$tn eq \"NULL\"}} {{ set tn [odb::dbNet_create $blk {shield_net}] }}",
+              "$tn setSpecial", "$tn setSigType GROUND", "set tsw [odb::dbSWire_create $tn ROUTED]"]
+        L += C128.grid_tcl(pgr, "$tsw", shield_net, used=ties["used_grid"])
+        L += C128.tie_tcl(ties, "$tsw")
+        cs = M["meta"].get("clock_shield") or {}
+        cs.update(C128.tie_record(ties))
+        cs["freeze_evidence_ok"] = bool(cs["vss_tied"] and cs.get("complete"))
+        cs["tie_grid_stripes"] = len(ties["used_grid"])
+        M["meta"]["clock_shield"] = cs
+        (d / "shield_ties.json").write_text(json.dumps(dict(
+            record=C128.tie_record(ties), untied=[stripes[k] for k in ties["untied"][:200]],
+            shorts=[[stripes[k], n_] for k, n_ in ties["shorts"][:200]])) + "\n")
+        (d / "mesh.json").write_text(json.dumps(M) + "\n")
+        print("shield ties", json.dumps(C128.tie_record(ties)))
     L += [f"puts \"OT_MESH regions {len(regs)} straps {sum((g['i1'] - g['i0']) + (g['j1'] - g['j0']) for g in regs)}\"",
           "create_clock -name dck -period 833.000 [get_ports root]",
           "set_routing_layers -signal M4-M7 -clock M8-M9"]
