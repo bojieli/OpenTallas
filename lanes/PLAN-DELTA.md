@@ -22,3 +22,7 @@ PENDING-DELTA D-QC-N59-1C qc native59,coll_ftc
 PENDING-DELTA TR2-S81 s81 ot_s81sl_ve_m,ot_s81sl_ve_s,ot_s81sl_vn_a,ot_s81sl_vn_b,ot_s81sl_vq,ot_s81sl_vs
 PENDING-DELTA TR2-KV qwen_kvsys kv3_head_eighth_e1,kv3_head_eighth_e3,kv3_head_eighth_e5,kv3_head_eighth_e7
 PENDING-DELTA TR2-HBM hbm ot_hgi_sfu_core_split3,ot_hbm_su_static_pgslice_lg,ot_hbm_idx_score_quarter_static
+[COORD 2026-10-25 20:44 PDT] QC batch 1 (frozen plan 441d1401):
+ - D-QC-SU1713: APPROVED as INTERNAL. It moves core positions inside the slice partitions only; the partition outline, pins, FT and clock taps are unchanged, so the frozen interfaces stand. New plan plan_ck177 (sha256 ebb30e72, G0C PASS).
+ - D-QC-N59-1C: APPROVED as interface batch item 1. It moves the dr_o window down the E face on native59 and its E neighbour, chosen by GEOM, +0 cycles.
+ Condition for both: DIE-PROTO re-runs QC die GRT0 + die clock (combined, ~3 min) on the merged plan. On PASS, PATH-FREEZE gets a new FROZEN QC line at the new sha; on FAIL, revert N59-1C.
