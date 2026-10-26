@@ -269,6 +269,12 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  assign rst_ctx=rst_cp_ctx[0];assign rst_land=rst_cp_land[0];assign rst_pin=rst_cp_pin[0];assign rst_top=rst_cp_top[0];
  // ---------------------------------------------------------------- pin registers (every input, flop-first)
  reg p_hev,p_hfc;reg[15:0]p_he;reg[58:0]p_ht;reg[1:0]p_hg;
+ // PATH-QC-N59-4: emb_go / cmd_bad decoded from bnd_native_cmd and registered beside p_cmd (same edge, same reset):
+ // p_emb_go == (!p_cmd[0]&&p_cmd[379:376]==E) and p_cmd_bad == the old 357-bit OR decode on every edge (0 cycles).
+ // Removes the 380-bit p_cmd -> ea_c / emb_act / dvf wide-OR fan-in (271 arcs > 405 um after anchoring).
+ wire bnd_emb_go=!bnd_native_cmd[0]&&bnd_native_cmd[379:376]==4'hE;
+ wire bnd_cmd_bad=(bnd_emb_go&&((|bnd_native_cmd[357:1])||bnd_native_cmd[375:358]>=18'd151936))||(!bnd_native_cmd[0]&&(|bnd_native_cmd)&&!bnd_emb_go);
+ reg p_emb_go,p_cmd_bad;
  reg p_lcv;reg[5:0]p_stage;reg[17:0]p_tok,p_pos;reg[379:0]p_cmd;reg[547:0]p_dd;
  reg p_kvs,p_x3s;reg[1:0]p_kvi;
  wire[9:0]x3_slot_pub;
@@ -303,13 +309,13 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  reg[511:0]p_ecq;reg[15:0]p_esq;reg p_vis,p_cs;
  always @(posedge ck or negedge rst_pin)
   if(!rst_pin)begin
-   p_hev<=0;p_hfc<=0;p_he<=0;p_ht<=0;p_hg<=0;p_lcv<=0;p_stage<=0;p_tok<=0;p_pos<=0;p_cmd<=0;p_dd<=0;
+   p_hev<=0;p_hfc<=0;p_he<=0;p_ht<=0;p_hg<=0;p_lcv<=0;p_stage<=0;p_tok<=0;p_pos<=0;p_cmd<=0;p_dd<=0;p_emb_go<=0;p_cmd_bad<=0;
    p_tu<=0;p_ru<=0;
    p_kvs<=0;p_x3s<=0;p_kvi<=0;p_ts<=0;p_tk<=0;p_tb<=0;p_rv<=0;p_rp<=0;p_rs<=0;p_rk<=0;p_rb<=0;
    p_ecq<=0;p_esq<=0;p_vis<=0;p_cs<=0;
   end else begin
    p_hev<=bnd_host_epoch_valid;p_hfc<=bnd_host_fused_capability;p_he<=bnd_host_epoch;p_ht<=bnd_host_tag;p_hg<=bnd_host_generation;
-   p_lcv<=bnd_layer_context_v;p_stage<=bnd_command_stage;p_tok<=bnd_native_token;p_pos<=bnd_native_position;p_cmd<=bnd_native_cmd;p_dd<=bnd_dd_i;
+   p_lcv<=bnd_layer_context_v;p_stage<=bnd_command_stage;p_tok<=bnd_native_token;p_pos<=bnd_native_position;p_cmd<=bnd_native_cmd;p_dd<=bnd_dd_i;p_emb_go<=bnd_emb_go;p_cmd_bad<=bnd_cmd_bad;
    p_kvs<=bnd_kv_word_slot;p_x3s<=bnd_kv_x3_slot;p_kvi<=bnd_kv_word_index;
    p_tu<=bnd_tx_user;p_ru<=bnd_rx_user;
    p_ts<=bnd_tx_slot;p_tk<=bnd_tx_slot_kind;p_tb<=bnd_tx_slot_beat;p_rv<=bnd_native_rx_v;p_rp<=bnd_native_rx_payload;
@@ -767,8 +773,8 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   .emit_beat_pub2(emit_beat_pub[3*gs+2]),.vm_commit_beat_pub3(vm_commit_beat_pub3),.vm_commit_beat_pub4(vm_commit_beat_pub4));
  end endgenerate
  // ---------------------------------------------------------------- embedding row read (G9), 65 EMB + optional ARM/RoPE tail
- wire emb_go=!p_cmd[0]&&p_cmd[379:376]==4'hE;
- wire cmd_bad=(emb_go&&((|p_cmd[357:1])||p_cmd[375:358]>=18'd151936))||(!p_cmd[0]&&(|p_cmd)&&!emb_go);
+ wire emb_go=p_emb_go;   // PATH-QC-N59-4: registered decode (see p_emb_go)
+ wire cmd_bad=p_cmd_bad;
  // Twelve invalid positions let RP1 arm after the 65 EMB words. The same
  // e1/e2/e3 (and optional e4) pipeline carries valid, beat, and payload ages.
  localparam integer ROPE_FIRST=77;

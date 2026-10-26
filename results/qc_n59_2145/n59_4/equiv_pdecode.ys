@@ -1,0 +1,20 @@
+# PATH-QC-N59-4: old vs new qfd_native59_svc_obs1 (registered emb_go/cmd_bad decode), register-correspondence induction.
+read_verilog -sv -defer /rtl/kit_cells.sv /rtl/bind_cells_kit.sv /rtl/ot_reset_sync.sv /rtl/qfd_native59_command_context.sv /rtl/qfd_native59_dv_headprep_obs1.sv /rtl/qfd_native59_mctx_helpers.sv /rtl/qfd_native59_q_export_control.sv /rtl/qfd_native59_record_endpoint.sv /rtl/qfd_native59_static_service_obs1.sv /rtl/qfd_status_obs_hold_chunk.sv /rtl/qkd_native_attention_record.sv /rtl/ot_qfd_su_kv_static_posted.sv /rtl/qfd_kvn_static_transport.sv /e/old/qfd_native59_svc_obs1.sv
+hierarchy -top qfd_native59_svc_obs1
+proc; flatten; opt_clean; memory -nomap; opt_clean
+async2sync
+rename qfd_native59_svc_obs1 gold
+design -stash gold
+read_verilog -sv -defer /rtl/kit_cells.sv /rtl/bind_cells_kit.sv /rtl/ot_reset_sync.sv /rtl/qfd_native59_command_context.sv /rtl/qfd_native59_dv_headprep_obs1.sv /rtl/qfd_native59_mctx_helpers.sv /rtl/qfd_native59_q_export_control.sv /rtl/qfd_native59_record_endpoint.sv /rtl/qfd_native59_static_service_obs1.sv /rtl/qfd_status_obs_hold_chunk.sv /rtl/qkd_native_attention_record.sv /rtl/ot_qfd_su_kv_static_posted.sv /rtl/qfd_kvn_static_transport.sv /e/new/qfd_native59_svc_obs1.sv
+hierarchy -top qfd_native59_svc_obs1
+proc; flatten; opt_clean; memory -nomap; opt_clean
+async2sync
+rename qfd_native59_svc_obs1 gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert
