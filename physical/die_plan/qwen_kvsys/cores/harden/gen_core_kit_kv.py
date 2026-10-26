@@ -549,6 +549,9 @@ def main():
                     help="PATH-KV-ASTK2 10-25 (GEOM 10:05): 4 contiguous zn zone GPL regions (2x2 over the upper core) + ctl "
                          "S band (zone_fence.tcl, released before DPL) and one regional clock tap per zone + ctl "
                          "(astk_zone_taps.tcl, CTS -balance_levels); needs --astk-write-decode")
+    ap.add_argument("--astk-ctl-slot-regs", action="store_true",
+                    help="PATH-KV-ASTK7 10-25: ctl z_done_slot as a next-state register z_done_r; zd0 and the fault terms read "
+                         "l_slot_r/z_slot_r/z_done_r (0 cycles, astk_ctl_slots.py, lockstep results/astk_ctl7_1025); needs --astk-path4")
     ap.add_argument("--astk-balance-levels", action=argparse.BooleanOptionalAction, default=True,
                     help="with --astk-zone-fences: CTS -balance_levels across the tap trees (default, ASTK2..6); "
                          "--no-astk-balance-levels = PATH-KV-ASTK7 (landing regs to the 250/202.5 insertion contract)")
@@ -756,6 +759,16 @@ def main():
                      cause="start -> zst_n/sa_n select -> 16-b subtract -> 17 zk copies (TT -44.68, 19 EP)",
                      proof="tb_astk4 lockstep 0-cycle (all ctl outputs + 17 zk_r), mutant caught"),
             tok="KV-TOK: zn_0 chain +1 cycle (zo/fo of zn_0 one edge later -> Z start age +1)"), indent=1) + "\n")
+    if a.astk_ctl_slot_regs:
+        if not a.astk_path4:
+            raise SystemExit("--astk-ctl-slot-regs needs --astk-path4")
+        import astk_ctl_slots
+        astk_ctl_slots.apply_kit(kd / "rtl")
+        (kd / "astk_ctl_slots_delta.json").write_text(json.dumps(dict(added_cycles=0, ff_added=1, change="z_done_r <= "
+            "next-state z_done_slot; zd0 + f read l_slot_r/z_slot_r/z_done_r", cause="ASTK5 TT: schedule_age -> subtract -> "
+            "== nblk*Z_STRIDE -> zd0 -> ap[0] / f across the ctl band", not_done="start landing duplicate (face_guard: one "
+            "landing flop per input port bit)", proof="results/astk_ctl7_1025 lockstep vs ASTK6 ctl 119991 edges PASS, "
+            "mutant 818 mismatches caught"), indent=1) + "\n")
     if a.astk_storage_enable:
         if not a.astk_path4:
             raise SystemExit("--astk-storage-enable needs --astk-path4")
