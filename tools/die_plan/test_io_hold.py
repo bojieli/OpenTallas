@@ -168,3 +168,28 @@ def test_parent_check_requires_pair_skew():
         c.pop("pairskew")
     r = io_hold_parent.check(None, sta, all_seams=True)
     assert r["verdict"] == "INCOMPLETE" and r["counts"]["not_timed"] == 3
+
+
+def test_sender_check_two_sided_40(monkeypatch):
+    """PATH-QC 10-26 (COORD 00:19 two-sided 40-ps budget): a sender type with clock.out_hold_check_ps 40 checks it at
+    its OWN outputs (min output delay 12.5 - 40 = -27.5, lint + hold gate + sign-off context agree); a per-type
+    io_hold sender_min receiver then takes 40 on the ports it drives; other types stay byte-identical."""
+    monkeypatch.delenv("OT_IO_HOLD", raising=False)
+    raw = copy.deepcopy(PAIR)
+    raw["partition_types"]["fb"].setdefault("clock", {})["out_hold_check_ps"] = 40
+    raw["partition_types"]["fa"].setdefault("clock", {})["io_hold"] = "sender_min"
+    P = schema.Plan(raw)
+    P0 = _plan()
+    assert gen_phys.io_hold_mode(P) == "legacy" and gen_phys.io_hold_mode(P, "fa") == "sender_min"
+    assert gen_phys.hold_out_min_ps(P, "fb") == -27.5 and gen_phys.hold_out_min_ps(P, "fa") == 0.0
+    sb = gen_phys.sdc(P, "fb", gen_phys.type_pins(P, "fb"))
+    assert "set_output_delay -min -27.5000 -clock vclk [all_outputs]" in sb
+    cb = sdc_lint.kit_context(P, "fb")
+    assert cb["hold_out_min_ps"] == -27.5 and cb["seam_hold_ps"] == 67.5 and sdc_lint.lint(sb, **cb) == []
+    fa = gen_phys.input_hold_min(P, "fa")
+    assert fa["r_i"]["in_min_ps"] == 40.0 and fa["r_i"]["basis"] == "sender kit check fb"
+    assert gen_phys.input_hold_min(P, "fb") == {}            # fb is no sender_min receiver
+    sa = gen_phys.sdc(P, "fa", gen_phys.type_pins(P, "fa"))
+    assert sdc_lint.lint(sa, **sdc_lint.kit_context(P, "fa")) == []
+    assert "seam_hold_ps" not in sdc_lint.kit_context(P, "fa")
+    assert sdc_lint.kit_context(P0, "fb") == sdc_lint.kit_context(_plan(), "fb")

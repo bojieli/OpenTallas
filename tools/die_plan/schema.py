@@ -315,6 +315,12 @@ SCHEMA = {
                         # IO-HOLD option A: the signed view's measured guarantee (ps after vclk, FF) that no
                         # output changes earlier = contract guarantee + worst output-hold slack; absent = contract
                         "out_hold_guarantee_ps": {"type": "number"},
+                        # PATH-QC 10-26 (COORD 00:19 two-sided 40-ps hold budget): the type's OWN kit checks this
+                        # sender guarantee at every output (min output delay (1-UNC_SPLIT) x UNC_HOLD - G), so its
+                        # receivers may take G as their min input delay; "io_hold" = this type's receiver mode
+                        # (overrides the die clock.io_hold for this type only)
+                        "out_hold_check_ps": _nonneg,
+                        "io_hold": {"enum": ["legacy", "sender_min"]},
                         "keepouts_um": {"type": "array", "items": _rect},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
@@ -344,6 +350,9 @@ SCHEMA = {
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},
+                        # rule LC1 (10-25): density taps also cover the registered control pins (arst_n, start_i,
+                        # rst_o_<k>, start_o_<k>), so a remote control pin gets its own light tap (taps.control_pin_sinks)
+                        "control_sinks": {"type": "boolean"},
                         "sink_sites_um": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
                                                                      "items": {"type": "number"}}},
                         "sink_bins_file": {"type": "string"},
