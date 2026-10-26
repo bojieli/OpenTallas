@@ -1,0 +1,15 @@
+{
+ "verdict": "PASS",
+ "scope": "actual Yosys ROM metadata frontend: positive plus unknown-parameter and old-defer controls",
+ "positive_exit": 0,
+ "unknown_parameter_exit": 1,
+ "old_defer_exit": 1,
+ "actual_sysc": "Synthesis + native OpenROAD link + face preflight PASS; LEC gold metadata fix pending actual rerun",
+ "cells": "raw+ODB face4967/4967, netlist ports4987/4987, registers31309 fanoutover64=0",
+ "not_measured": [
+  "placement",
+  "route",
+  "STA",
+  "signoff"
+ ]
+}

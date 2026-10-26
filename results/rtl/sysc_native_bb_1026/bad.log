@@ -1,0 +1,25 @@
+
+-- Executing script file `bad.ys' --
+
+1. Executing Liberty frontend: /work/ot_rom_64x32_m2_tt.lib
+Imported 1 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /work/ot_rom_64x32_m2_bb.v
+Parsing SystemVerilog input from `/work/ot_rom_64x32_m2_bb.v' to AST representation.
+Replacing existing blackbox module `\ot_rom_64x32_m2' at /work/ot_rom_64x32_m2_bb.v:5.1-11.10.
+Generating RTLIL representation for module `\ot_rom_64x32_m2'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /work/bad.v
+Parsing SystemVerilog input from `/work/bad.v' to AST representation.
+Storing AST representation for module `$abstract\top'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\top'.
+Generating RTLIL representation for module `\top'.
+
+5.1. Analyzing design hierarchy..
+Top module:  \top
+ERROR: Module `ot_rom_64x32_m2' referenced in module `top' in cell `u_rom' does not have a parameter named 'INSTNCE'.
