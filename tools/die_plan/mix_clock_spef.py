@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """Select actual routed per-net RC from uniform 4W and 8W estimates.
 
-Both SPEFs must come from the same loaded routed design, estimated once with
-M8/M9 R/4,C*1.3 and once R/8,C*1.6.  Selection preserves their via resistors;
-scaling every resistor in an existing SPEF would incorrectly scale vias too.
+Both SPEFs must come from the same loaded routed design, estimated with
+STANDARD layer resistance and C*1.3/C*1.6. The current native estimator already
+credits each assigned NDR resistance; manually dividing R would double-count
+width. Use estimate_parasitics -global_routing -spef_file, then restore the
+terminal wire caps with restore_clock_spef_caps.py before selection. Selection
+preserves native via resistors; never scale all resistors in a written SPEF.
 """
 import argparse
 import json
