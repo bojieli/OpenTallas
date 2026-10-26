@@ -1,0 +1,604 @@
+{
+  "schema": "opentallas.s81.head-source-model.v1",
+  "status": "COMPONENT FRONTIER; not whole-head asbuilt; G5 remains open",
+  "plan": "physical/die_plan/s81_head/die_plan.json",
+  "plan_sha256": "d7b8d1eb935cf641061b2ec18389d57919ee804e9344f519aa00431dc002473e",
+  "head_dies": 4,
+  "hbm": 0,
+  "partitions": 326,
+  "partition_types": 16,
+  "parts": [
+    {
+      "type": "hd_tile",
+      "module": "ot_s81hd_tile_p",
+      "replicas": 264,
+      "buses": [
+        {
+          "name": "i",
+          "width": 565,
+          "direction": "in"
+        },
+        {
+          "name": "o",
+          "width": 565,
+          "direction": "out"
+        }
+      ],
+      "leaves": [
+        {
+          "inst": "u_core",
+          "module": "ot_s81hd_tile",
+          "source": "rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv",
+          "params": {
+            "CV": "1",
+            "A_INPUT_STAGES": "1",
+            "MERGE_HOP": "1",
+            "CMP_STAGES": "3"
+          },
+          "bind": {
+            "ck": "clk",
+            "rst_n": "rst_n",
+            "row0": "net:row0",
+            "ten": "net:ten"
+          }
+        },
+        {
+          "inst": "u_strap",
+          "module": "ot_s81hd_strap",
+          "source": "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv",
+          "params": {
+            "ROW0": "0",
+            "TEN": "1"
+          },
+          "bind": {
+            "row0": "net:row0",
+            "ten": "net:ten"
+          }
+        }
+      ]
+    },
+    {
+      "type": "hd_turn_a",
+      "module": "ot_s81hd_turn_a",
+      "replicas": 12,
+      "buses": [],
+      "leaves": []
+    },
+    {
+      "type": "hd_turn_b",
+      "module": "ot_s81hd_turn_b",
+      "replicas": 12,
+      "buses": [],
+      "leaves": []
+    },
+    {
+      "type": "hd_spn",
+      "module": "ot_s81hd_spn",
+      "replicas": 5,
+      "buses": [
+        {
+          "name": "x_i",
+          "width": 565,
+          "direction": "in"
+        },
+        {
+          "name": "b_o",
+          "width": 565,
+          "direction": "out"
+        },
+        {
+          "name": "xw_o",
+          "width": 565,
+          "direction": "out"
+        },
+        {
+          "name": "xe_o",
+          "width": 565,
+          "direction": "out"
+        },
+        {
+          "name": "bw_i",
+          "width": 565,
+          "direction": "in"
+        },
+        {
+          "name": "be_i",
+          "width": 565,
+          "direction": "in"
+        },
+        {
+          "name": "x_o",
+          "width": 565,
+          "direction": "out"
+        },
+        {
+          "name": "b_i",
+          "width": 565,
+          "direction": "in"
+        }
+      ],
+      "leaves": [
+        {
+          "inst": "u_spo",
+          "module": "ot_s81hd_spo",
+          "source": "rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv",
+          "params": {},
+          "bind": {
+            "ck": "clk",
+            "rst_n": "rst_n"
+          }
+        },
+        {
+          "inst": "u_spr",
+          "module": "ot_s81hd_spr",
+          "source": "rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv",
+          "params": {},
+          "bind": {
+            "ck": "clk",
+            "rst_n": "rst_n"
+          }
+        }
+      ]
+    },
+    {
+      "type": "hd_spn_end",
+      "module": "ot_s81hd_spn_end",
+      "replicas": 1,
+      "buses": [
+        {
+          "name": "x_i",
+          "width": 565,
+          "direction": "in"
+        },
+        {
+          "name": "b_o",
+          "width": 565,
+          "direction": "out"
+        },
+        {
+          "name": "xw_o",
+          "width": 565,
+          "direction": "out"
+        },
+        {
+          "name": "xe_o",
+          "width": 565,
+          "direction": "out"
+        },
+        {
+          "name": "bw_i",
+          "width": 565,
+          "direction": "in"
+        },
+        {
+          "name": "be_i",
+          "width": 565,
+          "direction": "in"
+        }
+      ],
+      "leaves": [
+        {
+          "inst": "u_spo",
+          "module": "ot_s81hd_spo",
+          "source": "rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv",
+          "params": {},
+          "bind": {
+            "ck": "clk",
+            "rst_n": "rst_n",
+            "o": "net:bottom_seed"
+          }
+        },
+        {
+          "inst": "u_spr",
+          "module": "ot_s81hd_spr",
+          "source": "rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv",
+          "params": {},
+          "bind": {
+            "ck": "clk",
+            "rst_n": "rst_n",
+            "i": "net:bottom_seed"
+          }
+        }
+      ]
+    },
+    {
+      "type": "hd_serdes",
+      "module": "ot_s81hd_serdes",
+      "replicas": 12,
+      "buses": [
+        {
+          "name": "coll_i0",
+          "width": 512,
+          "direction": "in"
+        },
+        {
+          "name": "coll_o0",
+          "width": 514,
+          "direction": "out"
+        }
+      ],
+      "leaves": [
+        {
+          "inst": "u_phy",
+          "module": "ot_pdie_serdes",
+          "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+          "params": {},
+          "bind": {}
+        }
+      ]
+    },
+    {
+      "type": "hd_st_turn",
+      "module": "ot_s81hd_st_turn",
+      "replicas": 4,
+      "buses": [],
+      "leaves": []
+    },
+    {
+      "type": "hd_st_str",
+      "module": "ot_s81hd_st_str",
+      "replicas": 4,
+      "buses": [],
+      "leaves": []
+    },
+    {
+      "type": "hd_st_n3",
+      "module": "ot_s81hd_st_n3",
+      "replicas": 1,
+      "buses": [],
+      "leaves": []
+    },
+    {
+      "type": "hd_st_n4",
+      "module": "ot_s81hd_st_n4",
+      "replicas": 1,
+      "buses": [],
+      "leaves": []
+    },
+    {
+      "type": "hd_st_m",
+      "module": "ot_s81hd_st_m",
+      "replicas": 3,
+      "buses": [],
+      "leaves": []
+    },
+    {
+      "type": "hd_st_k5",
+      "module": "ot_s81hd_st_k5",
+      "replicas": 1,
+      "buses": [],
+      "leaves": []
+    },
+    {
+      "type": "hd_mesh",
+      "module": "ot_s81hd_mesh_ep",
+      "replicas": 3,
+      "buses": [
+        {
+          "name": "coll_ia",
+          "width": 514,
+          "direction": "in"
+        },
+        {
+          "name": "coll_oa",
+          "width": 512,
+          "direction": "out"
+        },
+        {
+          "name": "coll_ib",
+          "width": 514,
+          "direction": "in"
+        },
+        {
+          "name": "coll_ob",
+          "width": 512,
+          "direction": "out"
+        },
+        {
+          "name": "m_tx_i",
+          "width": 64,
+          "direction": "in"
+        },
+        {
+          "name": "m_rx_o",
+          "width": 64,
+          "direction": "out"
+        }
+      ],
+      "leaves": [
+        {
+          "inst": "u_core",
+          "module": "ot_s81hd_mesh_ep",
+          "source": null,
+          "params": {},
+          "bind": {}
+        }
+      ]
+    },
+    {
+      "type": "hd_lep0N",
+      "module": "ot_s81hd_lep0N",
+      "replicas": 1,
+      "buses": [
+        {
+          "name": "coll_i0",
+          "width": 514,
+          "direction": "in"
+        },
+        {
+          "name": "coll_o0",
+          "width": 512,
+          "direction": "out"
+        },
+        {
+          "name": "coll_i1",
+          "width": 514,
+          "direction": "in"
+        },
+        {
+          "name": "coll_o1",
+          "width": 512,
+          "direction": "out"
+        },
+        {
+          "name": "coll_i2",
+          "width": 514,
+          "direction": "in"
+        },
+        {
+          "name": "coll_o2",
+          "width": 512,
+          "direction": "out"
+        },
+        {
+          "name": "coll_i3",
+          "width": 514,
+          "direction": "in"
+        },
+        {
+          "name": "coll_o3",
+          "width": 512,
+          "direction": "out"
+        },
+        {
+          "name": "lepk_i0",
+          "width": 1104,
+          "direction": "in"
+        },
+        {
+          "name": "lepk_o0",
+          "width": 1104,
+          "direction": "out"
+        },
+        {
+          "name": "lepf_i0",
+          "width": 1,
+          "direction": "in"
+        },
+        {
+          "name": "unit_i0",
+          "width": 45,
+          "direction": "in"
+        },
+        {
+          "name": "ctrl_o0",
+          "width": 32,
+          "direction": "out"
+        },
+        {
+          "name": "tl_i",
+          "width": 276,
+          "direction": "in"
+        },
+        {
+          "name": "ca_o",
+          "width": 276,
+          "direction": "out"
+        },
+        {
+          "name": "cb_o",
+          "width": 276,
+          "direction": "out"
+        }
+      ],
+      "leaves": [
+        {
+          "inst": "u_core",
+          "module": "dsdv_slice_lepw_mu.LP",
+          "source": null,
+          "params": {},
+          "bind": {}
+        }
+      ]
+    },
+    {
+      "type": "hd_ctl",
+      "module": "ot_s81hd_ctl",
+      "replicas": 1,
+      "buses": [
+        {
+          "name": "lepk_i0",
+          "width": 1104,
+          "direction": "in"
+        },
+        {
+          "name": "lepk_o0",
+          "width": 1104,
+          "direction": "out"
+        },
+        {
+          "name": "lepf_o0",
+          "width": 1,
+          "direction": "out"
+        },
+        {
+          "name": "unit_o0",
+          "width": 45,
+          "direction": "out"
+        },
+        {
+          "name": "ctrl_i0",
+          "width": 32,
+          "direction": "in"
+        },
+        {
+          "name": "x_o",
+          "width": 565,
+          "direction": "out"
+        },
+        {
+          "name": "b_i",
+          "width": 565,
+          "direction": "in"
+        },
+        {
+          "name": "h_tx_o",
+          "width": 276,
+          "direction": "out"
+        },
+        {
+          "name": "h_rx_i",
+          "width": 276,
+          "direction": "in"
+        },
+        {
+          "name": "a_tx_o",
+          "width": 64,
+          "direction": "out"
+        },
+        {
+          "name": "a_rx_i",
+          "width": 64,
+          "direction": "in"
+        },
+        {
+          "name": "b7_tx_o",
+          "width": 64,
+          "direction": "out"
+        },
+        {
+          "name": "b7_rx_i",
+          "width": 64,
+          "direction": "in"
+        },
+        {
+          "name": "n_tx_o",
+          "width": 64,
+          "direction": "out"
+        },
+        {
+          "name": "n_rx_i",
+          "width": 64,
+          "direction": "in"
+        },
+        {
+          "name": "tl_o",
+          "width": 276,
+          "direction": "out"
+        },
+        {
+          "name": "ca_i",
+          "width": 276,
+          "direction": "in"
+        },
+        {
+          "name": "cb_i",
+          "width": 276,
+          "direction": "in"
+        }
+      ],
+      "leaves": [
+        {
+          "inst": "u_core",
+          "module": "ot_s81hd_ctl",
+          "source": null,
+          "params": {},
+          "bind": {}
+        }
+      ]
+    },
+    {
+      "type": "hd_host",
+      "module": "ot_s81hd_host_ep",
+      "replicas": 1,
+      "buses": [
+        {
+          "name": "coll_i0",
+          "width": 514,
+          "direction": "in"
+        },
+        {
+          "name": "coll_o0",
+          "width": 512,
+          "direction": "out"
+        },
+        {
+          "name": "coll_i1",
+          "width": 514,
+          "direction": "in"
+        },
+        {
+          "name": "coll_o1",
+          "width": 512,
+          "direction": "out"
+        },
+        {
+          "name": "h_tx_i",
+          "width": 276,
+          "direction": "in"
+        },
+        {
+          "name": "h_rx_o",
+          "width": 276,
+          "direction": "out"
+        }
+      ],
+      "leaves": [
+        {
+          "inst": "u_core",
+          "module": "ot_s81hd_host_ep",
+          "source": null,
+          "params": {},
+          "bind": {}
+        }
+      ]
+    }
+  ],
+  "xstore": {
+    "provider": "rtl/dsrom_sys/s81_head/ot_s81hd_xstore_replay.sv",
+    "role": "concrete ctl subcomponent; no host decode or whole-ctl provider",
+    "payload_bits": 81920,
+    "stage_load_words": 160,
+    "stage_word_bits": 512,
+    "banks": [
+      {
+        "name": "A",
+        "rows": 256,
+        "bits": 256
+      },
+      {
+        "name": "B",
+        "rows": 64,
+        "bits": 256
+      }
+    ],
+    "local_load_layout": "A consecutive low256/high256 halves, then B; explicit candidate ABI",
+    "output": "xa=A[m%256],xb=B[m%64] at G+5+m",
+    "cycles": "8192+7*SK; SK11=8269",
+    "write_bits_per_cycle": 512,
+    "read_bits_per_cycle": 512,
+    "data_reset": false,
+    "physical_storage_mapping": "unmapped; no SRAM timing/area claim",
+    "actual_source_witness": "rtl/dsrom_sys/s81_head/test/tb_s81hd_mini.sv: loop ma[m%256]/mb[m%64]",
+    "fullhead_issue_authority": "unresolved; consume compiled native/head START contract"
+  },
+  "blockers": [
+    "hd_ctl: real stage/context admission, x command origin, rank-argmax merge/token formation missing; xstore now implemented separately",
+    "hd_mesh: 64-bit static lane lacks record/valid/phase definition; safe8_ntf rx515 includes channel-board bit while plan carries514",
+    "hd_host: real dsdv_hostb_stage_hbc1104-bit ring/context/status interface is not a drop-in276-bit endpoint; 553-bit record needs explicit N3 codec or279-bit N2 lane",
+    "hd_lep0N: provider named dsdv_slice_lepw_mu.LP is nested historical source; exact current source extraction and input contracts required",
+    "tile position ROW0/TEN must be mapped from current264-slot/253-active plan, not copied from old253-tile17-SerDes top",
+    "physical SerDes PMA boundary must remain explicit and status live"
+  ],
+  "wholehead_implementation_allowed": false
+}
