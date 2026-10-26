@@ -1,0 +1,7 @@
+{
+ "lane8_s3_copy": 2,
+ "extra_flops_estimate": 496,
+ "added_cycles": 0,
+ "source": "PATH-KV-HEAD 2026-10-25: head6ff TT worst u_g_t_13_u_l8.g3g -> g_d[*].u_p stage1 through a 3-level fanout tree; rtl/hdc/nearhbm/ot_qkh_subtiles.sv S3_COPY",
+ "note": "default S3_COPY=0 = unchanged leaf (odd heads e1/e3/e5/e7 signed)"
+}

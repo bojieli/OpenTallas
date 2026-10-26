@@ -1,0 +1,3 @@
+Odd-head S3_COPY structural fallback, default production selection unchanged.
+The existing --head-lane-s3copy generator helper is applied to current TR3 e1/e5 strap masters; LT_COPY1 retained. Test compares each master S3_COPY0 vs S3_COPY1 across20kcycles, randomized inputs/straps/reset and a new-only inverted cg3 mutant.0scheduledcycles; existing generator estimate248FF/lane8 is conservative, actual FFdelta needs synth. This source is a fallback only: no CTS/route before fresh actual placement review and canary disposition. E1f historical cohort aa073c9f47 remains immutable.
+Run via ot-run16GB/24threads: bash results/kv_odd_s3_2200/run.sh. Local relative paths make it runnable from this committed fixture directory. No physical or final-token closure claim.
