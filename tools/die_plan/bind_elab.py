@@ -403,7 +403,9 @@ def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
             all_modules.update(m.group(1) for m in MOD_RE.finditer(_strip(Path(name).read_text())))
         # A full source file can co-host structural wrappers and physical hard
         # cores. Blackbox leaves BEFORE elaboration, including those co-hosts.
-        bb = " ".join("--blackboxed-module " + n for n in sorted(all_modules - body_modules))
+        # Named parameterized interfaces must be specialized before late blackboxing.
+        abi_leaves = set(ab.get("slang_parameterized_blackboxes", []))
+        bb = " ".join("--blackboxed-module " + n for n in sorted(all_modules - body_modules - abi_leaves))
         lines.append(f"read_slang --keep-hierarchy --empty-blackboxes --allow-use-before-declare --top {ab.get('_elab_top', ab['top'])} "
                      f"{bb} {dflags} {iflags} " + " ".join(lib + full + tops))
         # sv-elab specialises structural masters as master$top.instance.
@@ -562,11 +564,30 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
         parse_full, rf = string_parameter_compat(parse_full, compat)
         parse_lib, rl = string_parameter_compat(parse_lib, compat)
         rec["string_parameter_compat"] = rt + rf + rl
+    if ab.get("slang_parameterized_blackboxes"):
+        if ab.get("frontend", "native") != "slang":
+            raise ElabError("slang_parameterized_blackboxes requires the slang frontend")
+        import bind_slang_abi as ABI
+        keep = ({ab['top'], ab.get('_elab_top', ab['top'])} | set(ab.get('dissolve', []))
+                | set(ab.get('substitute', {})) | set(pvar))
+        nt, nf = len(parse_tops), len(parse_full)
+        try:
+            staged, records = ABI.stage(parse_tops + parse_full + parse_lib, keep,
+                ab["slang_parameterized_blackboxes"], out / "parameterized_interfaces", MOD_RE, _strip, _match)
+        except ValueError as e:
+            raise ElabError(str(e)) from e
+        parse_tops, parse_full, parse_lib = staged[:nt], staged[nt:nt+nf], staged[nt+nf:]
+        rec["parameterized_interfaces"] = records
     sc.write_text(yosys_script(ab, parse_tops, parse_full, parse_lib, js, inc_files=lib + tops + full))
     mounts = [out, Path(base).resolve(), REPO] + [Path(f).parent for f in tops + full + lib]
     roots = sorted({str(Path(m).resolve()) for m in mounts}, key=len)
     mounts = [m for i, m in enumerate(roots) if not any(m.startswith(r + "/") for r in roots[:i])]
     run_yosys(sc, out / "asbuilt.yosys.log", mounts, mem_gb)
+    if ab.get("slang_parameterized_blackboxes"):
+        try:
+            rec["parameterized_interface_restore"] = ABI.restore(js, ab["slang_parameterized_blackboxes"])
+        except ValueError as e:
+            raise ElabError(str(e)) from e
     rec.update(json=str(js), script=str(sc), top=ab["top"])
     (out / "asbuilt_sources.json").write_text(json.dumps(dict(rec, tops=tops, full=full, lib=lib), indent=1))
     return rec

@@ -259,6 +259,44 @@ def face_cover(netlist, pins_json, top=None, die_plan_dir=None, clock_ports=(), 
               fails={k: v[:5] for k, v in r["fails"].items()})
 
 
+def core_bound_ff_errors(kit, so, expected):
+    """Recognise only signoff.py's typed hard-core FF contract; ordinary types still require rebind."""
+    import math
+    kit = Path(kit)
+    ctx = jload(kit / "boundary_guard_context.json") or {}
+    ctx = ctx if isinstance(ctx, dict) else {}
+    source = ctx.get("source_core_json")
+    cc = None
+    if ctx.get("schema") == "opentallas.core_boundary_guard_context.v1" and isinstance(source, str):
+        path = Path(source)
+        path = path if path.is_absolute() else kit / path
+        try:
+            path.resolve().relative_to(kit.resolve())
+            core = jload(path)
+            cc = core.get("clock_contract") if isinstance(core, dict) else None
+        except ValueError:
+            pass
+    bad = []
+    clock = ((so.get("checks") or {}).get("clock") or {})
+    if not isinstance(cc, dict) or cc.get("kind") != "hard_core_latency" or clock.get("core_latency_contract") != "hard_core_latency":
+        bad.append("bound-ff requires the typed manifest/core hard_core_latency contract and matching signoff record")
+    lctx = jload(kit / "sdc_lint.json") or {}
+    pol = so.get("policy") or {}
+    ref = ((so.get("corners") or {}).get("ff") or {}).get("ff_vclk_reference") or ""
+    match = re.fullmatch(r"applied mode bound_ff clock vclk latency_ps ([+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)", ref)
+    values = {"declared core FF insertion": lctx.get("insertion_ff_ps"),
+              "signoff FF bound": pol.get("ff_vclk_bound_ps"),
+              "applied FF reference": float(match[1]) if match else None}
+    for label, value in values.items():
+        try:
+            valid = not isinstance(value, bool) and math.isfinite(float(value)) and abs(float(value) - float(expected)) <= VCLK_SDC_TOL_PS
+        except (TypeError, ValueError):
+            valid = False
+        if not valid:
+            bad.append(f"{label} {value!r} does not match clock_binding FF {expected}")
+    return bad
+
+
 def vclk_basis(kit, so):
     """IO virtual-clock basis = per-corner insertion binding (gen_phys keys).  FAIL when config.mk lacks
     OT_VCLK_TT / OT_VCLK_FF, clock_binding.json {insertion_ps: {tt, ff}, insertion_tol_ps} is missing, OT_VCLK_* differ
@@ -305,7 +343,9 @@ def vclk_basis(kit, so):
         return st(None, f"pre-route basis OK (TT {vt:g} / FF {vf:g}, tol {tol:g}); no signoff.json: routed per-corner "
                         f"pin-register mean not checked", **info)
     pol = so.get("policy") or {}
-    if pol.get("ff_vclk") != "rebind":
+    if pol.get("ff_vclk") == "bound-ff":
+        bad.extend(core_bound_ff_errors(kit, so, bf))
+    elif pol.get("ff_vclk") != "rebind":
         bad.append(f"sign-off IO vclk mode {pol.get('ff_vclk')!r}, not 'rebind' (IO timed against the fixed SDC vclk)")
     ib = pol.get("insertion_bound") or {}
     routed = {}

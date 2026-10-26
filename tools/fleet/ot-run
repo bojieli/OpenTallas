@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ot-run: run a heavy command on the least CPU-loaded fleet host that can admit it (admission is by memory only).
 
-  ot-run --mem GB [--threads N] [--dir REMOTE_DIR] [--disk GB] [--hosts a,b] [--pick] -- <command...>
+  ot-run --mem GB [--threads N] [--dir REMOTE_DIR] [--disk GB] [--hosts a,b] [--pick] [--stage PATH ...] -- <command...>
   ot-run --selftest [HOST]   proves on HOST (default: every host) that a command runs and returns ITS exit status, and
                              that a request that cannot be admitted fails non-zero with NOT RUN (never a silent 0)
   ot-run --status          one line: per host, the largest request it admits now, MemAvailable, load1/cores, waiters;
@@ -61,6 +61,18 @@ is refused (real data); (3) per-lane flock around extraction, copy retried 3x, b
 removed only after a successful back-copy; (4) a pending record (~/.local/state/ot-run/spill_pending/<tag>.json) outlives
 a killed client: `ot-run --spill-sweep [--dry-run]` (started detached by job clients at most every 10 min) copies the
 outputs back once the client is gone and the unit has ended; failures go to spill_stuck.log.
+STAGE (v14, INFRA 2026-10-25: 20 waiters / 700 GB queued on epyc1 while epyc2/3 + intel1/2 admitted ~2 TB: their kits
+were 10 MB each, but SPILL copies whole LANE roots and every lane script that names the shared worktree lane (claude/wt,
+1-2 TB) made the lane unspillable (> OT_RUN_SPILL_MAX_GB)): --stage PATH (repeatable, or comma-separated; absolute
+directories or files) is the caller's statement that the job's inputs are EXACTLY these paths (a self-contained kit dir
++ its run script).  A SPILL / LOAD SPILL of such a job copies only them (not the lane root, no lane-script scan) to the
+same absolute path on the spill host, runs there, and copies every file the run wrote back (same marker / flock /
+retry / pending-record / --spill-sweep machinery).  --dir must lie inside a staged directory and every /srv path the
+command names inside a staged path; an absolute symlink out of the staged paths, > OT_RUN_SPILL_MAX_GB, or a staged
+path that exists UNMARKED on the spill host (real data there) refuses the spill (the job then waits as before).  A lane
+root that the stage creates on the spill host is marked too, and normal placement ignores a --dir any of whose
+ancestors up to the lane root is marked, so later jobs never run on a staged copy by accident.  Without --stage
+nothing changes.  Example: ot-run --mem 36 --dir $K/run --stage $K --stage $LANE/run_kit_r.sh -- bash $LANE/run_kit_r.sh $K route 36 8
 OT_SCRATCH (v8): the job's environment carries OT_SCRATCH = the host's /srv/opentallas-scratch* volume with the most
 free space; put NEW lane / job / die-chain directories under $OT_SCRATCH/claude/<lane>.
 SCRATCH2 (v12, SCRATCH2-1021 2026-10-21, owner "definitely the tools should write both scratch disks to leverage space":
@@ -137,7 +149,7 @@ HOST_MAX_DIE = {}   # v10 FLEET-PLACE 2026-10-19: the die COUNT cap is gone (ot-
 # while lanes queued; the old coord host was shared with ~10 agent sessions, this one runs ~30 agents that use little CPU.
 # It is now a normal host minus a per-host reserve for the agents and merges: placement sees ncpu - threads and
 # admit/free/total RAM - GB (the host's own ot-heavy MIN_AVAIL_FRAC=0.15 still applies on top).  host -> (threads, GB)
-HOST_RESERVE = {"localhost": (32, 64)}
+HOST_RESERVE = {"localhost": (8, 16)}   # 2026-10-24 ~21:00 COORD (owner: use epyc1 fully; agents moved to rtx-pro): only ot-run clients remain here
 DIE_DISK_GB = int(os.environ.get("OT_RUN_DIE_DISK_GB", "60"))   # estimated scratch of one die chain (measured 10-19:
 # die case dirs 0.7 GB at start, die chains 16-40 GB per lane); the default --disk of a die job
 DISK_RESERVE_BELOW_GB = 2000     # below this, also reserve declared scratch for active die scopes
@@ -146,18 +158,23 @@ DISK_RESERVE_BELOW_GB = 2000     # below this, also reserve declared scratch for
 def probe(host, d, spill_ok=False):
     """spill_ok=False: a --dir that is a SPILL copy (marker in its lane root) does not qualify (stale data)"""
     q = shlex.quote(d or "/")
-    mark = shlex.quote(spill_root(d) + "/" + SPILL_MARK) if d else "/nonexistent-ot-run-mark"
+    marks = " ".join(shlex.quote(a + "/" + SPILL_MARK) for a in mark_ancestors(d)) if d else "/nonexistent-ot-run-mark"
     # --dir carries source/build locality. A lane root or sibling run cannot stand in
     # for the exact working directory; SCRATCH2 may place NEW mkdir output dirs later.
     test = f"test -d {q} || {{ echo NODIR; exit 0; }}; t={q}; "
-    cmd = test + ("" if spill_ok else f"test -e {mark} && {{ echo NODIR; exit 0; }}; ") + SCRATCH_FREE_SH \
+    cmd = test + ("" if spill_ok else f"for m in {marks}; do test -e $m && {{ echo NODIR; exit 0; }}; done; ") + SCRATCH_FREE_SH \
         + "/usr/local/bin/ot-heavy-reconcile --free $t"
     try:
         r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", host, cmd], capture_output=True,
                            text=True, timeout=40)
+        if r.returncode:
+            return host, {"error": f"SSH probe exit {r.returncode}: {r.stderr.strip()[-160:]}"}
         if "NODIR" in r.stdout:
             return host, None
-        row = json.loads(r.stdout.strip().splitlines()[-1])
+        lines = r.stdout.strip().splitlines()
+        if not lines:
+            return host, {"error": "SSH probe returned no admission JSON"}
+        row = json.loads(lines[-1])
         return host, scratch_disk(row, d, r.stdout)
     except Exception as e:
         return host, {"error": str(e)[:80]}
@@ -179,6 +196,9 @@ SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
 SCRATCH_DISK_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB", "50"))
 # v13 DISK GUARD: a host whose root fs is more than this % full admits no new job (any host, md0 included).
 ROOTFS_MAX_PCT = int(os.environ.get("OT_RUN_ROOTFS_MAX_PCT", "85"))
+# COORD 2026-10-24 ~20:00 (owner split epyc1/epyc3 RAID1 -> separate scratch disk): on a host whose new work goes to
+# a separate scratch disk the root fs only holds OS/docker/old dirs, so it is refused only above this higher limit.
+ROOTFS_MAX_PCT_SCRATCH = int(os.environ.get("OT_RUN_ROOTFS_MAX_PCT_SCRATCH", "95"))
 
 
 def scratch2_on():
@@ -224,8 +244,9 @@ def host_refusal(row):
     if not isinstance(row, dict):
         return ""
     pct = row.get("rootfs_pct")
-    if pct is not None and pct > ROOTFS_MAX_PCT:
-        return (f"ROOT FS {pct}% full > {ROOTFS_MAX_PCT}% (DISK GUARD, owner 2026-10-24: never use root disks for work; "
+    lim = ROOTFS_MAX_PCT_SCRATCH if row.get("scratch_disk") else ROOTFS_MAX_PCT
+    if pct is not None and pct > lim:
+        return (f"ROOT FS {pct}% full > {lim}% (DISK GUARD, owner 2026-10-24: never use root disks for work; "
                 f"move data to the scratch disk, OT_RUN_ROOTFS_MAX_PCT overrides)")
     if row.get("scratch_disk") and row.get("scratch_disk_gb", 0) < SCRATCH_DISK_FLOOR_GB:
         return (f"scratch disk {row['scratch_disk']} has {row['scratch_disk_gb']} GB free < floor {SCRATCH_DISK_FLOOR_GB} GB "
@@ -555,8 +576,8 @@ def choose_selftest():
         # FLEET-DISK 2026-10-24: localhost = normal host minus HOST_RESERVE (32 threads, 64 GB) for the agents
         ("localhost idle, server busy: localhost takes it now", {"localhost": row(700, 60, 256), "epyc2": row(300, 120)}, 32, 16, "localhost"),
         ("localhost when no server admits the request now", {"localhost": row(700, 10, 256), "epyc2": row(20, 10)}, 300, 16, "localhost"),
-        ("localhost 64 GB reserve: 100 GB free admits no 48 GB job", {"localhost": row(100, 10, 256), "epyc2": row(60, 100)}, 48, 16, "epyc2"),
-        ("localhost 32-thread reserve: 200/256 load counts as 200/224", {"localhost": row(700, 200, 256), "epyc2": row(300, 100)}, 8, 16, "epyc2"),
+        ("localhost 16 GB reserve: 40 GB free admits no 32 GB job", {"localhost": row(40, 10, 256), "epyc2": row(60, 100)}, 32, 16, "epyc2"),
+        ("localhost 8-thread reserve: 245/256 load counts as 245/248", {"localhost": row(700, 245, 256), "epyc2": row(300, 100)}, 8, 16, "epyc2"),
     ]
     cases = [c if len(c) == 6 else c + (False,) for c in cases]
     bad = [f"{n}: got {choose(r, m, t, dj)[0]}, want {w}" for n, r, m, t, w, dj in cases if choose(r, m, t, dj)[0] != w]
@@ -732,8 +753,8 @@ SCRATCH_ENV = ("export OT_SCRATCH=$(rd=$(stat -c %d /); for r in /srv/opentallas
 # v13 DISK GUARD on the job host (the client checked the probe; this re-checks at submission, so a stale probe or an
 # old client cannot start work on a full root fs, nor on a scratch-disk host whose disk is below its floor).
 def disk_guard_sh(tag):
-    return (f"p=$(df --output=pcent / | tail -1 | tr -dc 0-9); if [ \"${{p:-0}}\" -gt {ROOTFS_MAX_PCT} ]; then "
-            f"echo \"ot-run: DISK GUARD: root fs $p% full > {ROOTFS_MAX_PCT}% on $(hostname -s); no new job admitted "
+    return (f"p=$(df --output=pcent / | tail -1 | tr -dc 0-9); lim={ROOTFS_MAX_PCT}; sd0=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd0\" != \"$(stat -c %d /)\" ] && lim={ROOTFS_MAX_PCT_SCRATCH}; if [ \"${{p:-0}}\" -gt $lim ]; then "
+            f"echo \"ot-run: DISK GUARD: root fs $p% full > $lim% on $(hostname -s); no new job admitted "
             f"(owner 2026-10-24: never use root disks for work)\" >&2; echo OT_RUN_ROOTFULL {tag} >&2; exit 97; fi; "
             f"if sd=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd\" != \"$(stat -c %d /)\" ]; then "
             f"f=$(df -BG --output=avail $OT_SCRATCH/claude/ | tail -1 | tr -dc 0-9); if [ \"${{f:-0}}\" -lt {SCRATCH_DISK_FLOOR_GB} ]; then "
@@ -1010,6 +1031,13 @@ def main():
         elif o == "--hosts": hosts = a.pop(0).split(",")
         elif o == "--pick": pick = True
         elif o == "--no-spill": spill = False
+        elif o == "--stage":
+            for x in a.pop(0).split(","):
+                if not x.startswith("/"):
+                    sys.exit(f"ot-run: --stage takes absolute paths ({x!r})")
+                if os.path.normpath(x) in ("/", "/srv") or SCRATCH_RE.match(os.path.normpath(x)) is None and x.startswith("/srv/"):
+                    sys.exit(f"ot-run: --stage {x!r}: name a path inside a scratch lane (/srv/opentallas-scratch*/claude/<lane>/...)")
+                STAGE.append(os.path.normpath(x))
         elif o == "--max-wait": max_wait = int(a.pop(0))
         elif o == "--threads": threads = int(a.pop(0))
         elif o == "--priority":
@@ -1071,7 +1099,7 @@ def main():
         best, queue = choose(ok, mem, threads, die=die)
         if spill and d and not pick and not queue and best and load_spill_wanted(ok[best], threads):   # v11 LOAD SPILL
             src_r = ratio(ok[best], threads)
-            root = spill_root(d)
+            root = spill_root(d) if not STAGE else "stage_" + __import__("hashlib").sha1(",".join(sorted(STAGE)).encode()).hexdigest()[:16]
             if not load_spill_neg(root):
                 plan, why, permanent = spill_plan(best, d, cmd, mem, threads, die, disk, held, say,
                                                   max_ratio=min(LOAD_SPILL_DST, src_r - LOAD_SPILL_GAP))
@@ -1150,7 +1178,7 @@ def trigger_reaper(host, why):
 
 
 SPILL_MARK = ".ot-run-spill-copy"
-SPILL_HOSTS_EXCLUDE = {"localhost", "ot-pve1", "ot-agidock128"}          # small / shared hosts never receive spills
+SPILL_HOSTS_EXCLUDE = {"ot-pve1", "ot-agidock128"}          # small / shared hosts never receive spills
 NO_AVX512 = {"epyc2", "epyc3", "ot-epyc7", "ot-epyc9"}                         # Zen 3: a -march=native build from Zen 4/5 would SIGILL there
 SCRATCH_RE = re.compile(r"^(/srv/opentallas-scratch[^/]*/claude/[^/]+)(/|$)")
 
@@ -1177,6 +1205,28 @@ def load_spill_neg(root, why=None):
     return True
 
 
+STAGE = []   # v14 --stage: the job's exact input paths (absolute, normalised); empty = lane-root SPILL as before
+
+
+def mark_ancestors(d):
+    """v14: d and its ancestors up to its lane root (just the lane root when d is not inside one; d itself when it is
+    not under a scratch lane) -- a SPILL / STAGE marker in any of them makes d a copy"""
+    d = os.path.normpath(d)
+    root = spill_root(d)
+    if root == d or not d.startswith(root + "/"):
+        return [root]
+    out, a = [], d
+    while a != root:
+        out.append(a)
+        a = os.path.dirname(a)
+    return out + [root]
+
+
+def under(p, roots):
+    p = os.path.normpath(p)
+    return any(p == r or p.startswith(r.rstrip("/") + "/") for r in roots)
+
+
 def spill_root(d):
     """the unit a spill copies: the lane directory under a scratch root's claude/, else --dir itself"""
     d = os.path.normpath(d)
@@ -1193,11 +1243,67 @@ SHARED_LANES = {"git-mirror", "flowhold", "ttbatch", "ttviews"}   # provisioned 
 LANE_RE = re.compile(r"/srv/opentallas-scratch[^/\s'\";|&()<>]*/claude/[A-Za-z0-9_+-][A-Za-z0-9_.+-]*")
 
 
+def command_srv_paths(cmd):
+    """Host paths, recognizing only Docker run/create volume flags before its image.
+
+    A Docker bind argument is host:container[:mode], not one host filename. Never
+    split arbitrary colon paths, other commands, or the container command after the
+    image. Compound shell scripts keep the original conservative path scan.
+    """
+    args = list(cmd)
+    if len(args) == 3 and os.path.basename(args[0]) in ("bash", "sh") and args[1] in ("-c", "-lc", "-ec", "-euc"):
+        if not any(c in args[2] for c in ";&|\n"):
+            try:
+                args = shlex.split(args[2])
+            except ValueError:
+                pass
+    start = 0
+    if args[:1] == ["sudo"]:
+        start = 2 if args[1:2] == ["-n"] else 1
+    if args[start:start+1] == ["exec"]:
+        start += 1
+    is_docker = (len(args) > start+1 and os.path.basename(args[start]) == "docker"
+                 and args[start+1] in ("run", "create"))
+    if is_docker:
+        modes = {"ro", "rw", "z", "Z", "cached", "delegated", "consistent", "private", "rprivate",
+                 "shared", "rshared", "slave", "rslave", "nocopy"}
+        values = {"--cpus", "--memory", "--memory-swap", "--name", "--entrypoint", "--user", "-u",
+                  "--workdir", "-w", "--env", "-e", "--env-file", "--network", "--hostname", "-h",
+                  "--label", "-l", "--gpus", "--device", "--shm-size", "--ulimit"}
+        flags = {"--rm", "--init", "--privileged", "--read-only", "--detach", "-d", "--interactive",
+                 "--tty", "-i", "-t", "-it", "-ti"}
+        i = start+2
+        while i < len(args):
+            a = args[i]
+            if a in ("-v", "--volume") and i+1 < len(args):
+                at, prefix = i+1, ""
+                step = 2
+            elif a.startswith("--volume="):
+                at, prefix, step = i, "--volume=", 1
+            elif a.startswith("-v") and len(a) > 2:
+                at, prefix, step = i, "-v", 1
+            elif a in values:
+                i += 2
+                continue
+            elif a in flags or (a.startswith("--") and "=" in a):
+                i += 1
+                continue
+            else:
+                break  # image, --, or an unknown option: never guess its arity
+            spec = args[at][len(prefix):]
+            parts = spec.split(":")
+            if (len(parts) in (2, 3) and parts[0].startswith("/") and parts[1].startswith("/")
+                    and (len(parts) == 2 or (parts[2] and set(parts[2].split(",")) <= modes))):
+                args[at] = prefix + parts[0]
+            i += step
+    return re.findall(r"/srv/[^\s'\";|&()<>]*", " ".join(args))
+
+
 def spill_paths_ok(cmd, d, root):
     """-> (reason, extra lane roots).  /srv paths the command names must lie in a lane root (copied with it);
     '../' only when --dir is below its root"""
     j, extra = " ".join(cmd), set()
-    for p in re.findall(r"/srv/[^\s'\";|&()<>]*", j):
+    for p in command_srv_paths(cmd):
         p = os.path.normpath(p)
         if p == root or p.startswith(root + "/"):
             continue
@@ -1211,7 +1317,7 @@ def spill_paths_ok(cmd, d, root):
     return "", extra
 
 
-def spill_scan(src, roots):
+def spill_scan(src, roots, strict=False):
     """one ssh: size, absolute symlinks out of the roots, -march=native, scratch lanes named by lane scripts (depth <= 2:
     lane scripts and filelists, not a repo clone under the lane)"""
     qs = " ".join(shlex.quote(r) for r in roots)
@@ -1219,7 +1325,7 @@ def spill_scan(src, roots):
     scripts = (f"find {qs} -maxdepth 2 -size -2M -type f \\( -name 'Makefile*' -o -name '*.mk' -o -name '*.sh' -o -name '*.py' "
                f"-o -name '*.f' -o -name '*.tcl' -o -name '*.json' -o -name '*.yaml' -o -name '*.cfg' \\) -print0 | "
                f"timeout 90 xargs -0r grep -hoIs -E ")
-    r = ssh_sh(src, f"for r in {qs}; do test -d $r || echo MISSING $r; done; du -scb {qs} | tail -1 | cut -f1; "
+    r = ssh_sh(src, f"for r in {qs}; do test -e $r || echo MISSING $r; done; du -scb {qs} | tail -1 | cut -f1; "
                     f"find {qs} -type l -lname '/*' {inside} -printf '%p\\t%l\\n' | head -50; echo ==; {scripts} 'march=native' | head -1; echo ==; "
                     f"{scripts} {shlex.quote(LANE_RE.pattern)} | sort -u | head -50", timeout=300)
     head, tail, ext = (r.stdout.split("==\n") + ["", ""])[:3]
@@ -1233,7 +1339,7 @@ def spill_scan(src, roots):
     for x in lines[1:]:          # v12 SCRATCH2: a symlink into the lane's twin root (same lane, other scratch root) adds it
         p, _, t = x.partition("\t")
         m = SCRATCH_RE.match(os.path.normpath(t)) if t else None
-        if m and m.group(1).rsplit("/", 1)[-1] in names:
+        if m and m.group(1).rsplit("/", 1)[-1] in names and not strict:
             lanes.add(m.group(1))
         elif not sym:
             sym = p
@@ -1243,30 +1349,49 @@ def spill_scan(src, roots):
 def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
     """-> ((dst, roots, size_gb), "", False) or (None, reason, permanent).  The roots are --dir's lane root plus every
     scratch lane the command or the lane's scripts name (closed under that relation, <= 4 lanes)"""
-    root = spill_root(d)
-    why, extra = spill_paths_ok(cmd, d, root)
-    if why:
-        return None, why, True
-    roots = {root} | extra
-    try:
-        for _ in range(3):
-            missing, size_gb, sym, native, lanes = spill_scan(src, sorted(roots))
-            if lanes <= roots:
-                break
-            roots |= lanes
-        else:
-            return None, f"lane references keep growing ({len(roots)} lanes)", True
-    except Exception as e:
-        return None, f"cannot scan {sorted(roots)} on {src}: {str(e)[:80]}", True
+    if STAGE:                    # v14 STAGE: exactly the caller's paths, no lane-root closure
+        if not under(d, STAGE):
+            return None, f"--dir {d} is not inside a --stage path", True
+        for p in command_srv_paths(cmd):
+            m = SCRATCH_RE.match(os.path.normpath(p))
+            if not under(p, STAGE) and not (m and m.group(1).rsplit("/", 1)[-1] in SHARED_LANES):
+                return None, f"command names {p} outside the --stage paths", True
+        roots = set(STAGE)
+        try:
+            r = ssh_sh(src, "for p in " + " ".join(shlex.quote(x) for x in STAGE) + "; do test -f $p && echo $p; done; true", timeout=60)
+            STAGE_FILES.clear()
+            STAGE_FILES.update(os.path.normpath(x) for x in r.stdout.split())
+            missing, size_gb, sym, native, lanes = spill_scan(src, sorted(roots), strict=True)
+        except Exception as e:
+            return None, f"cannot scan {sorted(roots)} on {src}: {str(e)[:80]}", True
+        other = sorted(x for x in lanes if not under(x, STAGE) and not any(under(r, [x]) for r in STAGE))
+        if other:
+            say(f"ot-run: STAGE: the staged scripts name other lane(s) {', '.join(other[:4])}; not copied (--stage says the inputs are complete)")
+    else:
+        root = spill_root(d)
+        why, extra = spill_paths_ok(cmd, d, root)
+        if why:
+            return None, why, True
+        roots = {root} | extra
+        try:
+            for _ in range(3):
+                missing, size_gb, sym, native, lanes = spill_scan(src, sorted(roots))
+                if lanes <= roots:
+                    break
+                roots |= lanes
+            else:
+                return None, f"lane references keep growing ({len(roots)} lanes)", True
+        except Exception as e:
+            return None, f"cannot scan {sorted(roots)} on {src}: {str(e)[:80]}", True
     if missing:
         return None, f"{src} lacks {', '.join(missing[:3])} (data not on the queue host)", True
-    if len(roots) > 4:
+    if len(roots) > 4 and not STAGE:
         return None, f"{len(roots)} lanes referenced ({', '.join(sorted(roots)[:5])})", True
     cap = SPILL_MAX_DIE_GB if die else SPILL_MAX_GB
     if size_gb > cap:
         return None, f"{', '.join(sorted(roots))} total {size_gb:.0f} GB > {'OT_RUN_SPILL_MAX_DIE_GB' if die else 'OT_RUN_SPILL_MAX_GB'} {cap}", True
     if sym:
-        return None, f"absolute symlink out of the lane(s): {sym[:120]}", True
+        return None, f"absolute symlink out of the {'--stage path(s)' if STAGE else 'lane(s)'}: {sym[:120]}", True
     bases = sorted({r.rsplit("/claude/", 1)[0] if SCRATCH_RE.match(r) else os.path.dirname(r) for r in roots})
     cands = [h for h in HOSTS if h != src and h not in SPILL_HOSTS_EXCLUDE and h not in held
              and not (native and h in NO_AVX512)]
@@ -1334,6 +1459,27 @@ for root in sys.argv[1:]:
     return f"flock {spill_lock(roots)} bash -c {shlex.quote(setup + TAR_X)}"
 
 
+STAGE_FILES = set()   # v14: --stage paths that are files on the source host (no marker inside; parent dir created)
+
+
+def stage_pre(src, r):
+    """v14 STAGE: dst-side preparation of one staged path below a lane root.  Refused (exit 3, OT_SPILL_REAL) when it
+    exists on dst and neither it nor an ancestor up to the lane root carries the marker (real data there); a lane root it
+    creates is marked (so a later lane SPILL / normal placement treats it as a copy); a staged dir gets its own marker."""
+    r = os.path.normpath(r)
+    q, lane = shlex.quote(r), spill_root(r)
+    chain = mark_ancestors(os.path.dirname(r) if r in STAGE_FILES else r)
+    marks = " ".join(shlex.quote(a + "/" + SPILL_MARK) for a in chain)
+    s = (f"if test -e {q}; then k=0; for m in {marks}; do test -e $m && k=1; done; "
+         f"[ $k = 1 ] || {{ echo OT_SPILL_REAL {q} >&2; exit 3; }}; fi; ")
+    if lane != r:
+        s += (f"if ! test -e {shlex.quote(lane)}; then mkdir -p {shlex.quote(lane)} && "
+              f"echo {src} > {shlex.quote(lane + '/' + SPILL_MARK)} || exit 4; fi; ")
+    if r in STAGE_FILES:
+        return s + f"mkdir -p {shlex.quote(os.path.dirname(r))} || exit 4;"
+    return s + f"mkdir -p {q} && echo {src} > {shlex.quote(r + '/' + SPILL_MARK)} || exit 4;"
+
+
 def spill_fwd_cmd(src, dst, roots, stamp, listed=False):
     """src -> dst copy.  v10: on dst the marker is written BEFORE extraction, so a failed or partial copy is never a
     'real' data host for normal placement (v8 wrote it after a successful tar: a failed copy left an UNMARKED tree, the next
@@ -1342,7 +1488,7 @@ def spill_fwd_cmd(src, dst, roots, stamp, listed=False):
     rels = " ".join(shlex.quote(r.lstrip("/")) for r in roots)
     pre = " ".join(f"if test -e {shlex.quote(r)} && ! test -e {shlex.quote(r + '/' + SPILL_MARK)}; then echo OT_SPILL_REAL "
                    f"{shlex.quote(r)} >&2; exit 3; fi; mkdir -p {shlex.quote(r)} && echo {src} > {shlex.quote(r + '/' + SPILL_MARK)} || exit 4;"
-                   for r in roots)
+                   if spill_root(r) == os.path.normpath(r) else stage_pre(src, r) for r in roots)
     dcmd = f"{pre} {tar_x(roots)} && touch {stamp}"
     stc = "cd / && tar --null --no-recursion -T - -cf - | zstd -q -1 -T8" if listed else f"tar -C / -cf - {rels} | zstd -q -1 -T8"
     return (f"ssh -o ControlPath=none -o BatchMode=yes {src} {shlex.quote(stc)}" + (f" < {shlex.quote(listed)}" if listed else "") + " | "

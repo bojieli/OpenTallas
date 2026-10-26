@@ -1,6 +1,23 @@
 """Opt-in native realization of the same FIRM stations used by physical kits."""
-import contextlib,io,json,shutil
+import contextlib,io,json,shutil,copy
 from pathlib import Path
+
+
+def source_entries(typ):
+    """Coalesce only identical OUT geometry; IN/core entries remain owned by their existing flow."""
+    buses={x['name']:x for x in typ.get('buses',[])}
+    selected={}
+    for e in typ.get('internal_stations',[]):
+        if not e.get('conn','').startswith('bus:'):continue
+        name=e['conn'][4:]
+        if name not in buses:raise ValueError(f'internal station references unknown bus {name}')
+        if buses[name]['dir']!='out':continue
+        geometry={k:v for k,v in e.items() if k!='note'}
+        if name in selected:
+            old={k:v for k,v in selected[name].items() if k!='note'}
+            if geometry!=old:raise ValueError(f'conflicting OUT station geometry {name}')
+        else:selected[name]=copy.deepcopy(e)
+    return list(selected.values())
 
 
 def annotate(b):
@@ -12,10 +29,8 @@ def annotate(b):
     for part,p in b.parts.items():
         if p['type'] not in selected:continue
         t=b.types[p['type']]
-        for e in t.get('internal_stations',[]):
-            if not e.get('conn','').startswith('bus:'):raise ValueError('native stations supports explicit bus entries only')
+        for e in source_entries(t):
             name=e['conn'][4:];bus=next(x for x in t['buses'] if x['name']==name)
-            if bus['dir']!='out':raise ValueError('native source station relocation requires an out bus')
             count=len(e['regs_um']);matches=[L for L in b.out_bus[part] if L['oname']==name]
             if len(matches)!=1:raise ValueError(f'native stations {part}.{name}: expected one outgoing lane')
             L=matches[0];raw=lanes.get(L.get('lane'),{})
@@ -28,6 +43,9 @@ def annotate(b):
 def materialize(b,tn,file):
     typ=b.types[tn];original=typ.get('split_of',tn)
     if original not in set(b.ab.get('internal_stations_types',[])):return
+    typ=copy.deepcopy(typ)
+    typ['internal_stations']=source_entries(typ)
+    if not typ['internal_stations']:return
     import kit_istations
     file=Path(file);kd=file.parent.parent/'native_internal_stations'/tn;kd.mkdir(parents=True,exist_ok=True)
     local=kd/file.name;shutil.copyfile(file,local)
