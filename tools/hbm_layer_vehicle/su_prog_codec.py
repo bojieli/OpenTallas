@@ -62,10 +62,46 @@ def encode(lines,meta,tools):
 
 def vmw(x): return (x>>VMW_LO)&((1<<VMW_W)-1)
 
+def hold_copy_controls(lines, tools):
+    """Reserve the existing homogeneous VM-copy controls through their consumers.
+
+    Emit/LD edges and all active words remain exact. Only zero control slots
+    gain standing controls, since co_dst/co_rnd and other backend controls are
+    consumed at their pipeline stages rather than captured solely at emit.
+    This diagnostic transform refuses mixed functions and non-copy arithmetic.
+    """
+    sys.path.insert(0,str(tools))
+    from su_arith_generate import FIELDS
+    offsets={}; pos=0; widths=dict(FIELDS)
+    for name,width in reversed(FIELDS): offsets[name]=pos;pos+=width
+    assert pos==1742
+    mask=((1<<pos)-1)<<680
+    controls=[(x>>680)&((1<<pos)-1) for x in lines]
+    active=[x for x in controls if x]
+    if not active: raise ValueError('copy hold requires active controls')
+    field=lambda x,n:(x>>offsets[n])&((1<<widths[n])-1)
+    variable=sum(((1<<widths[n])-1)<<offsets[n] for n in ('ld','emit','i_v','vb'))
+    signatures={x&~variable for x in active}
+    if len(signatures)!=1: raise ValueError('mixed backend controls cannot share one reservation')
+    first=active[0]
+    if field(first,'dst')!=1 or field(first,'co_dst')!=1 or field(first,'srcs')!=0:
+        raise ValueError('only direct VM-to-VM copy profile is qualified for this diagnostic')
+    for name in ('cp_m1','cm_m1','cm_m2','cm_qm','ca_ad','ci_sfu','cs_sfu','cs_e1','ce_e2'):
+        if field(first,name): raise ValueError('copy hold refuses arithmetic or SFU: '+name)
+    clear=(1<<offsets['ld'])|(1<<offsets['emit'])
+    hold=first&~clear; result=[]; changed=[]
+    for i,(word,ctl) in enumerate(zip(lines,controls)):
+        if ctl: hold=ctl&~clear;result.append(word)
+        else: result.append((word&~mask)|(hold<<680));changed.append(i)
+    return result,dict(scope='diagnostic homogeneous VM-copy control reservation',
+        changed_zero_control_edges=changed,unchanged_active_words=len(active),
+        length_before=len(lines),length_after=len(result),added_cycles=0)
+
 def main():
     a=argparse.ArgumentParser(); a.add_argument('replay',type=Path); a.add_argument('--tools',type=Path,required=True)
     a.add_argument('--vmw-shift',type=int,default=0,help='extra drain (vmw) edges: die PIN_REG 1 lane write +4')
     a.add_argument('--issue-shift',type=int,default=0,help='all non-fill fields (control/vmw/rf/red/tree) +D edges; checks +D')
+    a.add_argument('--control-hold',action='store_true',help='diagnostic: hold homogeneous VM-copy backend controls in zero slots')
     a.add_argument('--out',type=Path)
     a=a.parse_args()
     H,V,M=rd(a.replay); pr,writes,start,N=decode(H,V)
@@ -84,6 +120,9 @@ def main():
         mask=((1<<VMW_W)-1)<<VMW_LO; fmask=((1<<240)-1)<<440; full=(1<<SB)-1; omask=full&~fmask&~mask
         L=lambda e: lines[e] if 0<=e<N else 0
         new=[(L(e)&fmask)|(L(e-D)&omask)|(L(e-D-s)&mask) for e in range(N2)]
+        if a.control_hold:
+            new,hold_receipt=hold_copy_controls(new,a.tools)
+            rep['control_hold']=hold_receipt
         cfg,man=encode(new,meta,a.tools)
         # drives: same last-write cycle (start fixed), one write per cycle, writes earlier if more
         st_c=start[0]; last_w=writes[-1][0]; c0=last_w-len(cfg)+1
@@ -127,7 +166,8 @@ def main():
                 for i in blocks[d]: out_h.append(H[i]); out_v.append(V[i]); out_m.append(M[i])
         # keep any type-3 tail
         out_h+= [h for h in H if (h>>62)==3]; out_v+=[0]*(len(out_h)-len(out_v)); out_m+=[0]*(len(out_h)-len(out_m))
-        a.out.mkdir(parents=True,exist_ok=True)
+        if a.out.exists(): raise ValueError('output exists; preserve previous attempt')
+        a.out.mkdir(parents=True)
         W=1024
         (a.out/'hdr.mem').write_text(''.join(f'{h:016x}\n' for h in out_h))
         (a.out/'val.mem').write_text(''.join(f'{v:0{W}x}\n' for v in out_v))
@@ -136,7 +176,11 @@ def main():
             (a.out/fn).write_bytes((a.replay/fn).read_bytes())
         idx=json.loads((a.replay/'index.json').read_text())
         idx['events']=len(out_h); idx['drives']=sum(1 for h in out_h if h>>62==1); idx['checks']=sum(1 for h in out_h if h>>62==2)
-        idx.setdefault('diagnostic',{})['su_programme_retime']=dict(tool='tools/hbm_layer_vehicle/su_prog_codec.py',
+        diag=idx.setdefault('diagnostic',{})
+        if 'su_programme_retime' in diag:
+            diag.setdefault('su_programme_retime_history',[]).append(diag['su_programme_retime'])
+        if a.control_hold: diag['control_hold']=hold_receipt
+        diag['su_programme_retime']=dict(tool='tools/hbm_layer_vehicle/su_prog_codec.py',
             vmw_shift=s,issue_shift=D,reason='die binds pgslice_lg PIN_REG 1 (leaf split): lane write/first output +4 (leaf_split_latency su_write); '
             'programme was lowered for PIN_REG 0, so every drain (vmw) command moves +4 edges (checks already +4); '
             'issue_shift: lane write-backs (all 32 store banks, single bank write port) must not land on a fill-return write '
