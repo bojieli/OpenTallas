@@ -1,0 +1,25 @@
+{
+  "geometry": "PASS-COND for independent review; no route authorization",
+  "automated_verdict": "FAIL (fixed-slot lowfill/empty)",
+  "image": "q0final.png",
+  "source_fix": "d6d3e08a3",
+  "scope": "placement-only, unchanged RTL/outline/pins/cycles",
+  "actual": {
+    "signal_pins_anchored": 1474,
+    "missing": 0,
+    "pin_reg_p90_um": 8.05,
+    "pin_reg_max_um": 13.78,
+    "r2r_max_um": 277.45,
+    "r2r_above_405": 0,
+    "fill": 0.1492,
+    "empty": 0.5881
+  },
+  "findings": [
+    "Bottom SRAM moved y7.068 to20.124um; halo4.32 retained. CORE_AREA is4.32..211.68, correcting earlier2.7um assumption.",
+    "All south/west/east dedicated FFs now reach their pin bands. No macro wall across data band; south legal rows under SRAM are continuous.",
+    "Clock/reset vector pins excluded from data anchor pass; out-of-core south pin search clamped. No unregistered signal pins.",
+    "PDN shape unchanged; actual CTS/GRT continuity remains to be checked.",
+    "Low fill and blank NE remain visible and automated FAIL retained. Root is reviewing one CTS-only trial; no route/sign-off claim."
+  ],
+  "physical_next": "q0_cts_only.sh exact reviewed ODB/pins/SDC guard; autopilot trial only after root GEOM decision"
+}
