@@ -1,6 +1,6 @@
 `timescale 1ps/1ps
 `default_nettype none
-// TOK-HBM-SUV 2026-10-26: SU Q0 slice vehicle lock-step.  DUT = suv_asm_<k> (su_slice_vehicle.py: the B2n q_su00+q_su01
+// TOK-HBM-SUV 2026-10-26: SU Q0 slice vehicle lock-step.  DUT = suv_su_asm_<k> (su_slice_vehicle.py: the B2n q_su00+q_su01
 // hard cores composed into the slice glue, strap pins tied to die_plan.json values); REF = the unsplit twin
 // ot_hbm_su_static_pgslice_lg_s at the plan parameters (QID 0, G 0, d4g MLAT 4 ALAT 3 LEAF 1, MULTIRATE 1, COLLPORT 1,
 // RF_LOCAL 1, PIN_REG 1, RSYNC 1, PRETREE 1).  Stimulus = tb_hbm_su_pgslice_lg_s (random traffic on every input incl.

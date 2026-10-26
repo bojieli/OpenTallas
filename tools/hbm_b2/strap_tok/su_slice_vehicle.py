@@ -24,7 +24,9 @@ ap.add_argument('parent'); ap.add_argument('out')
 ap.add_argument('--plan', default='physical/die_plan/hbm_arch/B2n/die_plan.json')
 ap.add_argument('--variants', default='results/type_reduce3_1025/hbm/variants.json')
 ap.add_argument('--repo', default='.')
-ap.add_argument('--parts', default='q_su00,q_su01')
+ap.add_argument('--parts', default=None)
+ap.add_argument('--design', default='su', choices=['su', 'sfu'])
+ap.add_argument('--old-dir', default=None, help='sfu: dir of gen_core_kit_hbm.py old kits (<mod>_<sha>/rtl/<mod>__wrap.sv)')
 a = ap.parse_args()
 R = a.repo
 spec = importlib.util.spec_from_file_location('split_asm', os.path.join(R, 'physical/die_plan/hbm/cores/harden/split_asm.py'))
@@ -34,8 +36,14 @@ WR = 'physical/die_plan/hbm_arch_cores/wrappers/'
 CANON = {'full': CS + 'ot_hbm_su_pg_lane_full_core.sv', 'exp': CS + 'ot_hbm_su_pg_lane_exp_core.sv',
          'lanes4': CS + 'ot_hbm_su_pg_lanes4_core.sv', 'pretree': CS + 'ot_hbm_su_pg_pretree_core.sv',
          'softplus': CS + 'ot_hbm_su_side_softplus_core.sv'}
+CF = 'rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/'
+CANON['sfu_lane'] = CF + 'ot_hgi_sfu_split3_lane_core.sv'
 STRAP = {'ot_hbm_su_pg_lane_exp_core_strap': CS + 'ot_hbm_su_pg_lane_exp_core_strap.sv',
-         'ot_hbm_su_pg_lanes4_core_strap': CS + 'ot_hbm_su_pg_lanes4_core_strap.sv'}
+         'ot_hbm_su_pg_lanes4_core_strap': CS + 'ot_hbm_su_pg_lanes4_core_strap.sv',
+         'ot_hgi_sfu_split3_lane_core_strap': CF + 'ot_hgi_sfu_split3_lane_core_strap.sv'}
+CORE_FILE = {os.path.basename(f)[:-3]: f for f in list(CANON.values())}
+if a.parts is None:
+    a.parts = 'q_su00,q_su01' if a.design == 'su' else 'q_b110,q_b111,q_b112,q_b113'
 
 ptxt = open(a.parent).read()
 W = sa.decls(ptxt)
@@ -46,7 +54,21 @@ src_used = {a.plan, a.variants, 'physical/die_plan/hbm/cores/harden/split_asm.py
 
 
 def rd(p):
+    if os.path.isabs(p):
+        return open(p).read()                    # generated (old kit wrapper in OUT), recorded separately
     src_used.add(p); return open(os.path.join(R, p)).read()
+
+
+def ports_of(txt, top):
+    """split_asm.wrapper_ports after stripping // comments (it splits the header on ',' and a comment after a port
+    hides the next declaration: the hand core ot_hbm_su_side_softplus_core lost x/rst_n/r that way in suv_r1)."""
+    t = re.sub(r'//[^\n]*', '', txt)
+    ps = sa.wrapper_ports(t, top)
+    hdr = re.search(r'(?ms)^module\s+' + re.escape(top) + r'\s*\((.*?)\);', t).group(1)
+    names = re.findall(r'\b(?:input|output)\s+wire\s+(?:\[\d+:\d+\]\s*)?(\w+(?:\s*,\s*(?!input|output)\w+)*)', hdr)
+    n = sum(len(x.split(',')) for x in names)
+    assert len(ps) == n, (top, len(ps), n)       # fail closed: every declared port parsed
+    return ps
 
 
 def top_of(txt):
@@ -68,6 +90,11 @@ def nb(e):
 
 
 def roles_of(inst):
+    m = re.fullmatch(r'u_sfucore_Q_lane(\d+)', inst)
+    if m:
+        j = int(m.group(1)); g = [b for b in blocks if re.search(r'g_lane\[%d\]\.' % j, b) and b.endswith(('.u_map', '.u_sfu'))]
+        assert len(g) == 2, (inst, g)
+        return 'sfu_lane', {b: ('u_map' if b.endswith('.u_map') else 'u_sfu') for b in g}
     m = re.fullmatch(r'u_su_Q0_lane_exp(\d+|_l)', inst)
     if m:
         n = 15 if m.group(1) == '_l' else int(m.group(1))
@@ -87,7 +114,7 @@ def roles_of(inst):
 
 def canon_map(kind, roles):
     """(canonical port, bit) -> parent bit expression; ports of the canonical core."""
-    txt = rd(CANON[kind]); top = top_of(txt); ports = sa.wrapper_ports(txt, top)
+    txt = rd(CANON[kind]); top = top_of(txt); ports = ports_of(txt, top)
     pw = {p[0]: p[2] for p in ports}
     pin = {}
     for path, role in roles.items():
@@ -123,10 +150,10 @@ def canon_map(kind, roles):
 def wrap_map(path):
     """pure-wiring wrapper around a canonical core -> ports, {(wport,bit): [(cport,bit)..]} inputs, {(wport,bit): (cport,bit)}
     outputs, {(cport,bit): const} canonical inputs tied inside the wrapper, set of canonical output bits that reach a port."""
-    txt = rd(path); top = top_of(txt); ports = sa.wrapper_ports(txt, top); D = wdecls(txt)
-    m = re.search(r'^\s*(ot_hbm_su_pg_\w+)\s+u_core\s*\((.*?)\);', txt, re.M | re.S)
+    txt = rd(path); top = top_of(txt); ports = ports_of(txt, top); D = wdecls(txt)
+    m = re.search(r'^\s*(ot_\w+)\s+u_core\s*\((.*?)\);', txt, re.M | re.S)
     ctop = m.group(1)
-    cports = {p[0]: (p[1], p[2]) for p in sa.wrapper_ports(rd(CS + ctop + '.sv'), ctop)}
+    cports = {p[0]: (p[1], p[2]) for p in ports_of(rd(CORE_FILE[ctop]), ctop)}
     w2c_in, c_const, cw2c, w2c_out = {}, {}, {}, {}
     for pm in re.finditer(r'\.(\w+)\s*\(([^()]*)\)', m.group(2)):
         cp, ex = pm.group(1), pm.group(2).strip()
@@ -188,16 +215,18 @@ cm = {}
 for hc in cores:
     kind, roles = roles_of(hc['inst'])
     if kind is None:
-        rep['skipped'].append(dict(inst=hc['inst'], module=hc['module'], why='remainder of u_side (stays in the glue; text-verbatim core)'))
+        rep['skipped'].append(dict(inst=hc['inst'], module=hc['module'], why='not a member-set core: its logic stays in the extracted glue'))
         continue
     ctop, cports, csm = canon_map(kind, roles)
     cm[hc['inst']] = (kind, roles, ctop, cports, csm, hc)
 used_cells = set(p for v in cm.values() for p in v[1])
-member_cells = set(b for b in blocks if re.match(r'\\u_slice\.(g_lane|g_bank|g_pretree|g_side_pipe)', b))
+member_cells = set(b for b in blocks if (re.match(r'\\u_slice\.(g_lane|g_bank|g_pretree|g_side_pipe)', b) if a.design == 'su'
+                                         else re.search(r'g_lane\[\d+\]\.', b)))
 rep['member_cells'] = len(member_cells); rep['replaced_cells'] = len(used_cells)
 rep['cells_not_replaced'] = sorted(member_cells - used_cells)
 
-lane_swap = {'u_su_Q0_lane_exp3': 'u_su_Q0_lane_exp5', 'u_su_Q0_lane_exp5': 'u_su_Q0_lane_exp3'}
+lane_swap = ({'u_su_Q0_lane_exp3': 'u_su_Q0_lane_exp5', 'u_su_Q0_lane_exp5': 'u_su_Q0_lane_exp3'} if a.design == 'su' else
+             {'u_sfucore_Q_lane3': 'u_sfucore_Q_lane5', 'u_sfucore_Q_lane5': 'u_sfucore_Q_lane3'})
 for veh in ('canon', 'strap', 'old', 'mut'):
     repl, vrep = [], []
     for inst, (kind, roles, ctop, cports, csm, hc) in cm.items():
@@ -216,7 +245,11 @@ for veh in ('canon', 'strap', 'old', 'mut'):
             elif hc['module'] in STRAP:
                 vs = [v for v in variants[hc['module']] if {k: vbits(x) for k, x in v['straps'].items()} == straps]
                 assert len(vs) == 1, (inst, straps)
-                wpath = WR + vs[0]['old_module'] + '.sv'
+                if a.design == 'sfu':
+                    om, sha = vs[0]['old_view'].split('@')
+                    wpath = os.path.join(os.path.abspath(a.old_dir), f'{om}_{sha}', 'rtl', f'{om}__wrap.sv')
+                else:
+                    wpath = WR + vs[0]['old_module'] + '.sv'
             else:
                 wpath = WR + hc['module'] + '.sv'
             mod, wctop, ports, w2c_in, w2c_out, c_const = wrap_map(wpath)
@@ -245,9 +278,9 @@ for veh in ('canon', 'strap', 'old', 'mut'):
                 if isinstance(tg, tuple) and tg[0] != '?':
                     sm[(wp, i)] = csm[tg]; reached.add(tg)
             notes['open_canon_out'] = sum(1 for nm, d, w in cports if d == 'output' for j in range(w) if (nm, j) not in reached)
-        if veh == 'canon' and kind in ('exp', 'full', 'lanes4'):
+        if veh == 'canon' and kind in ('exp', 'full', 'lanes4', 'sfu_lane'):
             for nm, d, w in cports:
-                if nm.endswith('lane_id'):
+                if nm.endswith('lane_id') or nm == 'map_lane_j':
                     mv = ''.join(csm[(nm, j)][-1] for j in range(w - 1, -1, -1))
                     sp = 'strap_' + nm
                     pv = {s['port']: vbits(s['value']) for s in hc.get('straps', [])}.get(sp)
@@ -264,8 +297,8 @@ for veh in ('canon', 'strap', 'old', 'mut'):
     out = ptxt
     for s, e, t in sorted(repl, reverse=True):
         out = out[:s] + t + out[e:]
-    out = re.sub(r'^module elab_top\(', f'module suv_asm_{veh}(', out, count=1, flags=re.M)
-    open(os.path.join(a.out, f'asm_{veh}.v'), 'w').write(f'// GENERATED by tools/hbm_b2/strap_tok/su_slice_vehicle.py ({veh}). Bench only.\n' + out)
+    out = re.sub(r'^module elab_top\(', f'module suv_{a.design}_asm_{veh}(', out, count=1, flags=re.M)
+    open(os.path.join(a.out, f'{a.design}_asm_{veh}.v'), 'w').write(f'// GENERATED by tools/hbm_b2/strap_tok/su_slice_vehicle.py ({veh}). Bench only.\n' + out)
     rep['vehicles'][veh] = vrep
 bad = []
 for veh, vr in rep['vehicles'].items():
@@ -283,7 +316,7 @@ for veh, vr in rep['vehicles'].items():
 rep['compose_errors'] = bad
 rep['sources'] = sorted(src_used)
 rep['verdict'] = 'PASS' if not bad and not rep['cells_not_replaced'] else 'FAIL'
-json.dump(rep, open(os.path.join(a.out, 'report.json'), 'w'), indent=1)
+json.dump(rep, open(os.path.join(a.out, f'{a.design}_report.json'), 'w'), indent=1)
 print(json.dumps(dict(verdict=rep['verdict'], cores=len(cm), skipped=[s['inst'] for s in rep['skipped']],
                       replaced=rep['replaced_cells'], members=rep['member_cells'], not_replaced=rep['cells_not_replaced'][:6],
                       errors=bad[:10])))
