@@ -19,13 +19,17 @@ T=physical/die_plan/qwen_kvsys/boot_v36/kv_boot_v36.py
 set -a; . "$AS/kv_flags.env"; set +a
 export OT_KV_RETIRE_SUCCESSOR=$AS/health_successor.json OT_KV_RETIRE_LOGICAL=1 PYTHONDONTWRITEBYTECODE=1
 python3 $T prep --rs "$AS/relay_stages.json" --model "$AS/static_model.json" --groups "$BG" --out "$O/prep" > "$O/prep.log"
-D2D_K_STAGES=$KST D2D_DIE_STAGES=2,2,2,3,2,2/$KST D2D_MU=1 D2D_EMB_WINDOW=595 D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 \
+EMB=${OT_KV_EMB_WIN_REC:-1627}; HP=12   # one link profile for the pair image AND the compile (link_image_check fails closed)
+D2D_K_STAGES=$KST D2D_DIE_STAGES=2,2,2,3,2,2/$KST D2D_MU=1 D2D_EMB_WINDOW=$EMB D2D_ROPE=1 D2D_HEAD_PREPARE_EDGES=$HP \
+  D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 \
   bash tools/qwen_split/d2d_cal_image_production.sh "$O/img_bnd" > "$O/img.log" 2>&1
-export OT_KV_EMB_WIN=${OT_KV_EMB_WIN_REC:-1627} OT_KV_ROPE_OVL=1 OT_KV_HEAD_PREP_EDGES=12 OT_KV_CONTROLLER_CORE=1
+export OT_KV_EMB_WIN=$EMB OT_KV_ROPE_OVL=1 OT_KV_HEAD_PREP_EDGES=$HP OT_KV_CONTROLLER_CORE=1
+# NO_CONTRACT=1: diagnostic compile without target10 DIECFG (layer/MU/static schedule only; never the image of record)
+CONTRACT="--native-contract results/rtl/native_die_cfg_contract_1713/contract.json --capability 1"; [ "${NO_CONTRACT:-0}" = 1 ] && CONTRACT=
 export OT_KV_MU_FRAME_F=${OT_KV_MU_FRAME_F:-2} OT_KV_LINK_IMAGE=$O/img_bnd/d2d_cal_image.svh
+export -p | grep -E " (OT_KV_|PYTHONDONTWRITEBYTECODE)" > "$O/compile.env"   # token_gate.sh recompiles with exactly this env
 /usr/bin/time -f "elapsed %e s maxrss %M KB" python3 $T compile --ages "$O/prep/die_ages_bound_padded.json" \
-  --rs "$O/prep/relay_stages_bound.json" --mu --native-contract results/rtl/native_die_cfg_contract_1713/contract.json \
-  --capability 1 --out "$O/cmp_mu833" > "$O/compile.log" 2>&1
+  --rs "$O/prep/relay_stages_bound.json" --mu $CONTRACT --out "$O/cmp_mu833" > "$O/compile.log" 2>&1
 ( cd "$O/cmp_mu833" && sha256sum target*.hex boot_bundle.json ../img_bnd/d2d_cal_image.svh > "$O/targets.sha256" )
 echo "RECIPE: commit $(git -C "$R" rev-parse --short=10 HEAD) BIND=$B KST=$KST F=$OT_KV_MU_FRAME_F bash physical/die_plan/qwen_kvsys/boot_v36/run_mu833.sh BIND OUT" > "$O/RECIPE"
 tail -3 "$O/compile.log"
