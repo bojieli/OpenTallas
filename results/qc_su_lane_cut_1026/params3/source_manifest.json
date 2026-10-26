@@ -1,0 +1,89 @@
+{
+ "schema": "opentallas.qc_su_source_product.v1",
+ "source": "canonical bind_mapped at QC58c5 / parentcells alignment3 read_extra0",
+ "added_cycles": 0,
+ "apply": "Use plan_overlay hard_cores and pin files together; grouped bound_frames replace matching ungrouped bind output; add16newcore RTL files to bound source closure",
+ "validation": "raw cuts, not SIGNED. Dedicated-face preflight and G0/G2/render/trial remain",
+ "files": [
+  {
+   "path": "results/qc_su_lane_cut_1026/params3/bound_frames/qfd_qc_slw_su_l1.sv",
+   "sha256": "7709b2167f8abbd570c6db2a66d5a20ca43e1eae32d5df70ab2b88ae15240bc2"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_w_l3.sv",
+   "sha256": "d6e7b6f8f04b0e75fd4ad4e283a1fdced2640823db84b0b27fec9ddc16c08832"
+  },
+  {
+   "path": "results/qc_su_lane_cut_1026/params3/bound_frames/qfd_qc_slw_su_l0.sv",
+   "sha256": "09fc8e4fc2e4fe0279287882f258491f95c3c107501dd2f23d5720afded327bc"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_e_l0.sv",
+   "sha256": "6f73a2c3632833fee6ee1026344e4e29bb6de65a081cc5941acfc1703bb07bc6"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_w_l7.sv",
+   "sha256": "d044ab597f84a08e717d895572b4ae9540fdcd6e0d368cb4df801a5f64f0643f"
+  },
+  {
+   "path": "results/qc_su_lane_cut_1026/params3/bound_frames/qfd_qc_sle_su_l0.sv",
+   "sha256": "f857760890223aca13bd37bd87b0fc92243f19b1853f7169ad2459ca19616c46"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_e_l7.sv",
+   "sha256": "c0c884ed5e96b69f8eb89d547af373f6691466cac4865aba7e2cb58c318677e8"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_w_l2.sv",
+   "sha256": "9a67beaf83a3be17bc3db1257b71f8356a7186ee345d9aebdb1199ad6b558b5c"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_e_l1.sv",
+   "sha256": "10197016552bf1f81ef2096ef6ee21bbd5964d1422f3d714d487efeeb1a58a35"
+  },
+  {
+   "path": "results/qc_su_lane_cut_1026/params3/bound_frames/qfd_qc_sle_su_l1.sv",
+   "sha256": "1ce15a50432a95563346600e665e4e3a6fd67fd4cca709d6ed9d9a9e5243733b"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_e_l6.sv",
+   "sha256": "f85e7c131e4d2e6276105b2a15e13e88c7888395a141ec21c0329d9716727176"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_e_l2.sv",
+   "sha256": "f9c018718c5f95298d44256eacbf3a6ec67d233a0bd46230106f96a6e0a3d84e"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_w_l0.sv",
+   "sha256": "c0a36a4ef33b8e439e692b9b3ad4da3d60ab14b51f35b8e414b7492989701c53"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_w_l4.sv",
+   "sha256": "ceed4a26adf589d367bae5cdfbf8ba6de58693acbbe8bc2e842063c456cde517"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_e_l5.sv",
+   "sha256": "f29fec3365b394f5d2e0d4490e08b5e1e59157d9818aa5e843b05782fb306aca"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_e_l4.sv",
+   "sha256": "de8279e08155f8b624d9a6bb6ca2cba71f637279cad2af136220321d3116d93b"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_w_l5.sv",
+   "sha256": "f65c22cc02902a567fd23dd26e852270ceb735fc47be22b6554a9654020dc5f4"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_w_l6.sv",
+   "sha256": "90d20e87394e097849dfb8696a6bbc4691d8be0ed674faa6294da4337401f8df"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_w_l1.sv",
+   "sha256": "b75d16fa6e2257421877018084dc0a054f621f99b071648b7497d20caaf155e6"
+  },
+  {
+   "path": "rtl/physical/qfd_qc_su_lane_e_l3.sv",
+   "sha256": "f890caba7fb829d33b9e024d0b84020d9aeb3af14c6bc1483603fb4cf81037c5"
+  }
+ ]
+}

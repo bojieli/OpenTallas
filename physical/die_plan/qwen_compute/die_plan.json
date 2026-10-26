@@ -119191,11 +119191,11 @@
       "from_root_um": 328.3
      },
      {
-      "name": "u_lane4.ck",
+      "name": "u_lane4.clk",
       "kind": "core",
       "xy": [
-       224.64,
-       164.16
+       224.664,
+       302.304
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -119203,11 +119203,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane5.ck",
+      "name": "u_lane5.clk",
       "kind": "core",
       "xy": [
-       224.64,
-       483.84
+       224.664,
+       621.984
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -119215,11 +119215,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane6.ck",
+      "name": "u_lane6.clk",
       "kind": "core",
       "xy": [
-       224.64,
-       855.36
+       224.664,
+       993.504
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -119227,11 +119227,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane7.ck",
+      "name": "u_lane7.clk",
       "kind": "core",
       "xy": [
-       224.64,
-       1175.04
+       224.664,
+       1313.184
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -119250,7 +119250,7 @@
    "hard_cores": [
     {
      "inst": "u_lane4",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_w_l4",
      "origin_um": [
       17.28,
       34.56
@@ -119265,12 +119265,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l1_u_lane4_pins.json",
-     "note": "SU lane-group 4 hard core = u_exp4, u_rsq4, u_head4, u_rcp4, u_lrly4 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/slw_su_l1_u_lane4_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane5",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_w_l5",
      "origin_um": [
       17.28,
       354.24
@@ -119285,12 +119285,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l1_u_lane5_pins.json",
-     "note": "SU lane-group 5 hard core = u_exp5, u_rsq5, u_head5, u_rcp5, u_lrly5 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/slw_su_l1_u_lane5_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane6",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_w_l6",
      "origin_um": [
       17.28,
       725.76
@@ -119305,12 +119305,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l1_u_lane6_pins.json",
-     "note": "SU lane-group 6 hard core = u_exp6, u_rsq6, u_head6, u_rcp6, u_lrly6 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/slw_su_l1_u_lane6_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane7",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_w_l7",
      "origin_um": [
       17.28,
       1045.44
@@ -119325,8 +119325,8 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l1_u_lane7_pins.json",
-     "note": "SU lane-group 7 hard core = u_exp7, u_rsq7, u_head7, u_rcp7, u_lrly7 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/slw_su_l1_u_lane7_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     }
    ]
   },
@@ -145522,11 +145522,11 @@
       "from_root_um": 328.3
      },
      {
-      "name": "u_lane0.ck",
+      "name": "u_lane0.clk",
       "kind": "core",
       "xy": [
-       397.44,
-       164.16
+       397.464,
+       302.304
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -145534,11 +145534,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane1.ck",
+      "name": "u_lane1.clk",
       "kind": "core",
       "xy": [
-       397.44,
-       483.84
+       397.464,
+       621.984
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -145546,11 +145546,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane2.ck",
+      "name": "u_lane2.clk",
       "kind": "core",
       "xy": [
-       397.44,
-       855.36
+       397.464,
+       993.504
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -145558,11 +145558,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane3.ck",
+      "name": "u_lane3.clk",
       "kind": "core",
       "xy": [
-       397.44,
-       1175.04
+       397.464,
+       1313.184
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -145581,7 +145581,7 @@
    "hard_cores": [
     {
      "inst": "u_lane0",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_w_l0",
      "origin_um": [
       190.08,
       34.56
@@ -145596,12 +145596,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
-     "note": "SU lane-group 0 hard core = u_exp0, u_rsq0, u_head0, u_rcp0, u_lrly0 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 247, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/slw_su_l0_u_lane0_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane1",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_w_l1",
      "origin_um": [
       190.08,
       354.24
@@ -145616,12 +145616,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
-     "note": "SU lane-group 1 hard core = u_exp1, u_rsq1, u_head1, u_rcp1, u_lrly1 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/slw_su_l0_u_lane1_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane2",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_w_l2",
      "origin_um": [
       190.08,
       725.76
@@ -145636,12 +145636,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l0_u_lane2_pins.json",
-     "note": "SU lane-group 2 hard core = u_exp2, u_rsq2, u_head2, u_rcp2, u_lrly2 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/slw_su_l0_u_lane2_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane3",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_w_l3",
      "origin_um": [
       190.08,
       1045.44
@@ -145656,8 +145656,8 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l0_u_lane3_pins.json",
-     "note": "SU lane-group 3 hard core = u_exp3, u_rsq3, u_head3, u_rcp3, u_lrly3 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/slw_su_l0_u_lane3_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     }
    ]
   },
@@ -178804,11 +178804,11 @@
       "from_root_um": 328.3
      },
      {
-      "name": "u_lane4.ck",
+      "name": "u_lane4.clk",
       "kind": "core",
       "xy": [
-       224.64,
-       164.16
+       224.664,
+       302.304
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -178816,11 +178816,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane5.ck",
+      "name": "u_lane5.clk",
       "kind": "core",
       "xy": [
-       224.64,
-       483.84
+       224.664,
+       621.984
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -178828,11 +178828,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane6.ck",
+      "name": "u_lane6.clk",
       "kind": "core",
       "xy": [
-       224.64,
-       855.36
+       224.664,
+       993.504
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -178840,11 +178840,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane7.ck",
+      "name": "u_lane7.clk",
       "kind": "core",
       "xy": [
-       224.64,
-       1175.04
+       224.664,
+       1313.184
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -178863,7 +178863,7 @@
    "hard_cores": [
     {
      "inst": "u_lane4",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_e_l4",
      "origin_um": [
       17.28,
       34.56
@@ -178878,12 +178878,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l1_u_lane4_pins.json",
-     "note": "SU lane-group 4 hard core = u_exp4, u_rsq4, u_head4, u_rcp4, u_lrly4 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/sle_su_l1_u_lane4_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane5",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_e_l5",
      "origin_um": [
       17.28,
       354.24
@@ -178898,12 +178898,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l1_u_lane5_pins.json",
-     "note": "SU lane-group 5 hard core = u_exp5, u_rsq5, u_head5, u_rcp5, u_lrly5 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/sle_su_l1_u_lane5_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane6",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_e_l6",
      "origin_um": [
       17.28,
       725.76
@@ -178918,12 +178918,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l1_u_lane6_pins.json",
-     "note": "SU lane-group 6 hard core = u_exp6, u_rsq6, u_head6, u_rcp6, u_lrly6 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/sle_su_l1_u_lane6_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane7",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_e_l7",
      "origin_um": [
       17.28,
       1045.44
@@ -178938,8 +178938,8 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l1_u_lane7_pins.json",
-     "note": "SU lane-group 7 hard core = u_exp7, u_rsq7, u_head7, u_rcp7, u_lrly7 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/sle_su_l1_u_lane7_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     }
    ]
   },
@@ -216611,11 +216611,11 @@
       "from_root_um": 328.3
      },
      {
-      "name": "u_lane0.ck",
+      "name": "u_lane0.clk",
       "kind": "core",
       "xy": [
-       397.44,
-       164.16
+       397.464,
+       302.304
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -216623,11 +216623,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane1.ck",
+      "name": "u_lane1.clk",
       "kind": "core",
       "xy": [
-       397.44,
-       483.84
+       397.464,
+       621.984
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -216635,11 +216635,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane2.ck",
+      "name": "u_lane2.clk",
       "kind": "core",
       "xy": [
-       397.44,
-       855.36
+       397.464,
+       993.504
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -216647,11 +216647,11 @@
       "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      },
      {
-      "name": "u_lane3.ck",
+      "name": "u_lane3.clk",
       "kind": "core",
       "xy": [
-       397.44,
-       1175.04
+       397.464,
+       1313.184
       ],
       "orient": "R0",
       "insertion_ps": 250,
@@ -216670,7 +216670,7 @@
    "hard_cores": [
     {
      "inst": "u_lane0",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_e_l0",
      "origin_um": [
       190.08,
       34.56
@@ -216685,12 +216685,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
-     "note": "SU lane-group 0 hard core = u_rsq0, u_exp0, u_rcp0, u_head0, u_lrly0 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 247, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/sle_su_l0_u_lane0_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane1",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_e_l1",
      "origin_um": [
       190.08,
       354.24
@@ -216705,12 +216705,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
-     "note": "SU lane-group 1 hard core = u_rsq1, u_exp1, u_rcp1, u_head1, u_lrly1 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/sle_su_l0_u_lane1_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane2",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_e_l2",
      "origin_um": [
       190.08,
       725.76
@@ -216725,12 +216725,12 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l0_u_lane2_pins.json",
-     "note": "SU lane-group 2 hard core = u_rsq2, u_exp2, u_rcp2, u_head2, u_lrly2 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/sle_su_l0_u_lane2_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     },
     {
      "inst": "u_lane3",
-     "module": "qfd_qc_su_lane_w",
+     "module": "qfd_qc_su_lane_e_l3",
      "origin_um": [
       190.08,
       1045.44
@@ -216745,8 +216745,8 @@
       0.0
      ],
      "obs_max": "M6",
-     "pins_file": "cores/su/slw_su_l0_u_lane3_pins.json",
-     "note": "SU lane-group 3 hard core = u_rsq3, u_exp3, u_rcp3, u_head3, u_lrly3 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+     "pins_file": "cores/su_exact/sle_su_l0_u_lane3_pins.json",
+     "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
     }
    ]
   },

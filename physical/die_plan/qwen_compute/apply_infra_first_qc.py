@@ -71,6 +71,11 @@ def scroot_notes(path):
     ct = n.get("clock_taps", {}).get("types", {})
     if SC_BASE in ct and SC_ROOT not in ct:
         ct[SC_ROOT] = copy.deepcopy(ct[SC_BASE])
+    if "sle_fw_v1_e2" not in cpt:
+        cpt["sle_fw_v1_e2"] = dict(copy.deepcopy(cpt["sle_fw_v1"]), instances=1)
+        cpt["sle_fw_v1"]["instances"] -= 1
+    if "sle_fw_v1" in ct and "sle_fw_v1_e2" not in ct:
+        ct["sle_fw_v1_e2"] = copy.deepcopy(ct["sle_fw_v1"])
     path.write_text(json.dumps(n, indent=1) + "\n")
 
 
@@ -105,6 +110,34 @@ def fw_source_split(raw):
     ps[0]["type"] = new
     return dict(base_type=old,new_type=new,part=part,cycles=0,
                 reason="strict native source signature ch_dn_i differs; no generic type waiver")
+
+
+def su_exact_product(raw):
+    """Install the measured source-facing pin overlay; grouping is a final bind step."""
+    product = ROOT / "results/qc_su_lane_cut_1026/params3"
+    overlay = json.loads((product / "plan_overlay.json").read_text())
+    rows = []
+    for tn, item in overlay.items():
+        typ = raw["partition_types"][tn]
+        typ["hard_cores"] = copy.deepcopy(item["hard_cores"])
+        cores = {c["inst"]: c for c in typ["hard_cores"]}
+        for tap in typ["clock"].get("taps", []):
+            if tap.get("kind") != "core":
+                continue
+            inst = tap["name"].split(".")[0]
+            core = cores[inst]
+            pins = json.loads((HERE / core["pins_file"]).read_text())["pins"]
+            pin = next(p for p in pins if p["name"] == "clk")
+            if core.get("orient", "R0") != "R0":
+                raise ValueError(f"{tn}/{inst}: explicit orientation transform required")
+            tap["name"] = inst + ".clk"
+            tap["xy"] = [round(core["origin_um"][0] + pin["x"], 4), round(core["origin_um"][1] + pin["y"], 4)]
+            rows.append(dict(type=tn, inst=inst, clock_pin="clk", xy=tap["xy"]))
+    if len(rows) != 16:
+        raise ValueError(f"expected16 actual SU core clock pins, found{len(rows)}")
+    return dict(cores=16, clock_pins=rows, cycles=0,
+                source="results/qc_su_lane_cut_1026/params3/source_manifest.json",
+                final_bind_step="regenerate grouped frames from final qualified bind; add16 core RTL files to source closure")
 
 
 def main(argv=None):
@@ -170,9 +203,10 @@ def main(argv=None):
     rep["deltas"]["D-QC-CB-STRAPS"] = CBIDS.apply(raw)
     rep["deltas"]["D-QC-VMR-LATENCY"] = vmr_core_latency(raw)
     rep["deltas"]["D-QC-FW-NATIVE-E2"] = fw_source_split(raw)
+    rep["deltas"]["D-QC-SU-EXACT-CUT"] = su_exact_product(raw)
 
     # every type no delta names keeps its interface byte-identical
-    touched = set(fe["types"]) | set(rep["deltas"]["D-QC-CB-STRAPS"]["types"]) | {"coll_ftm", *IOHOLD_SENDERS, SC_ROOT, "slw_su_c", "sle_su_c", "sle_fw_v1_e2"}
+    touched = set(fe["types"]) | set(rep["deltas"]["D-QC-CB-STRAPS"]["types"]) | {"coll_ftm", *IOHOLD_SENDERS, SC_ROOT, "slw_su_c", "sle_su_c", "sle_fw_v1_e2", "slw_su_l0", "slw_su_l1", "sle_su_l0", "sle_su_l1"}
     for tn, bt in base["partition_types"].items():
         if tn not in touched:
             assert iface(types[tn]) == iface(bt), tn

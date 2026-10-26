@@ -709,6 +709,158 @@
    "part": "sl_E2_fw",
    "cycles": 0,
    "reason": "strict native source signature ch_dn_i differs; no generic type waiver"
+  },
+  "D-QC-SU-EXACT-CUT": {
+   "cores": 16,
+   "clock_pins": [
+    {
+     "type": "slw_su_l1",
+     "inst": "u_lane4",
+     "clock_pin": "clk",
+     "xy": [
+      224.664,
+      302.304
+     ]
+    },
+    {
+     "type": "slw_su_l1",
+     "inst": "u_lane5",
+     "clock_pin": "clk",
+     "xy": [
+      224.664,
+      621.984
+     ]
+    },
+    {
+     "type": "slw_su_l1",
+     "inst": "u_lane6",
+     "clock_pin": "clk",
+     "xy": [
+      224.664,
+      993.504
+     ]
+    },
+    {
+     "type": "slw_su_l1",
+     "inst": "u_lane7",
+     "clock_pin": "clk",
+     "xy": [
+      224.664,
+      1313.184
+     ]
+    },
+    {
+     "type": "slw_su_l0",
+     "inst": "u_lane0",
+     "clock_pin": "clk",
+     "xy": [
+      397.464,
+      302.304
+     ]
+    },
+    {
+     "type": "slw_su_l0",
+     "inst": "u_lane1",
+     "clock_pin": "clk",
+     "xy": [
+      397.464,
+      621.984
+     ]
+    },
+    {
+     "type": "slw_su_l0",
+     "inst": "u_lane2",
+     "clock_pin": "clk",
+     "xy": [
+      397.464,
+      993.504
+     ]
+    },
+    {
+     "type": "slw_su_l0",
+     "inst": "u_lane3",
+     "clock_pin": "clk",
+     "xy": [
+      397.464,
+      1313.184
+     ]
+    },
+    {
+     "type": "sle_su_l1",
+     "inst": "u_lane4",
+     "clock_pin": "clk",
+     "xy": [
+      224.664,
+      302.304
+     ]
+    },
+    {
+     "type": "sle_su_l1",
+     "inst": "u_lane5",
+     "clock_pin": "clk",
+     "xy": [
+      224.664,
+      621.984
+     ]
+    },
+    {
+     "type": "sle_su_l1",
+     "inst": "u_lane6",
+     "clock_pin": "clk",
+     "xy": [
+      224.664,
+      993.504
+     ]
+    },
+    {
+     "type": "sle_su_l1",
+     "inst": "u_lane7",
+     "clock_pin": "clk",
+     "xy": [
+      224.664,
+      1313.184
+     ]
+    },
+    {
+     "type": "sle_su_l0",
+     "inst": "u_lane0",
+     "clock_pin": "clk",
+     "xy": [
+      397.464,
+      302.304
+     ]
+    },
+    {
+     "type": "sle_su_l0",
+     "inst": "u_lane1",
+     "clock_pin": "clk",
+     "xy": [
+      397.464,
+      621.984
+     ]
+    },
+    {
+     "type": "sle_su_l0",
+     "inst": "u_lane2",
+     "clock_pin": "clk",
+     "xy": [
+      397.464,
+      993.504
+     ]
+    },
+    {
+     "type": "sle_su_l0",
+     "inst": "u_lane3",
+     "clock_pin": "clk",
+     "xy": [
+      397.464,
+      1313.184
+     ]
+    }
+   ],
+   "cycles": 0,
+   "source": "results/qc_su_lane_cut_1026/params3/source_manifest.json",
+   "final_bind_step": "regenerate grouped frames from final qualified bind; add16 core RTL files to source closure"
   }
  }
 }
