@@ -1,0 +1,11 @@
+{
+ "scope": "btab R6 model-calibration build (CTS + GRT, GRT-RC lat probe; no DRT, NOT signed off). Kit epyc2:/srv/opentallas-scratch2/claude/qc-su-lat-r6/btab_r6, spec md5 7e51e6666318a9e2836ca660b192990c = results/qc_su_lat/r6/btab_r6.tcl (unchanged, run once 2026-10-26 12:35-12:41 PDT). All numbers UNCHECKED (NUMBER-CHECK pending).",
+ "build": {"TT": {"mean": 260.8, "tap_mean_window": 16.6, "min": 252.1, "max": 275.2}, "FF": {"mean": 200.5, "tap_mean_window": 14.6, "min": 193.7, "max": 213.5}, "n_sinks": 5644, "taps": 120, "clock_cells": 413, "grt_overflow": 0, "gate_250pm20_TT_202.5pm20_FF_window_le20": "PASS (UNCHECKED)"},
+ "predictions": {"NLDM_Elmore": {"TT": [273.9, 14.7], "FF": [225.0, 13.9]}, "OpenSTA_DMP": {"TT": [252.8, 13.2], "FF": [205.4, 12.9]}},
+ "fixed_offset_meas_minus_model_ps": {
+  "R6": {"NLDM": {"TT": -13.07, "FF": -24.52}, "DMP": {"TT": 8.06, "FF": -4.89}},
+  "R5_star_GRT": {"NLDM": {"TT": -12.5, "FF": "not on record"}, "DMP": {"TT": 14.97, "FF": 6.08}}
+ },
+ "per_leaf_resid_sd_after_offset_ps": {"R6": {"NLDM": {"TT": 1.24, "FF": 1.36}, "DMP": {"TT": 1.28, "FF": 0.97}}, "R5_DMP": {"TT": 10.1, "FF": 9.04}},
+ "note": "R5 NLDM 292.3 and native 279.8 are lane-recorded values (R5 = GRT RC, same probe). 'routed' = global-routed RC, not DRT."
+}

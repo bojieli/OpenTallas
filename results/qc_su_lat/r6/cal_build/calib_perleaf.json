@@ -1,0 +1,62 @@
+{
+ "r6_nldm": {
+  "TT": {
+   "leaves": 120,
+   "offset_meas_minus_model": -13.07,
+   "resid_sd_after_offset": 1.24,
+   "resid_range": [
+    -2.4,
+    4.6
+   ]
+  },
+  "FF": {
+   "leaves": 120,
+   "offset_meas_minus_model": -24.52,
+   "resid_sd_after_offset": 1.36,
+   "resid_range": [
+    -3.1,
+    4.4
+   ]
+  }
+ },
+ "r6_dmp": {
+  "TT": {
+   "leaves": 120,
+   "offset_meas_minus_model": 8.06,
+   "resid_sd_after_offset": 1.28,
+   "resid_range": [
+    -2.4,
+    4.3
+   ]
+  },
+  "FF": {
+   "leaves": 120,
+   "offset_meas_minus_model": -4.89,
+   "resid_sd_after_offset": 0.97,
+   "resid_range": [
+    -1.8,
+    3.6
+   ]
+  }
+ },
+ "r5_dmp": {
+  "TT": {
+   "leaves": 64,
+   "offset_meas_minus_model": 14.97,
+   "resid_sd_after_offset": 10.1,
+   "resid_range": [
+    -19.3,
+    21.1
+   ]
+  },
+  "FF": {
+   "leaves": 64,
+   "offset_meas_minus_model": 6.08,
+   "resid_sd_after_offset": 9.04,
+   "resid_range": [
+    -17.9,
+    17.6
+   ]
+  }
+ }
+}
