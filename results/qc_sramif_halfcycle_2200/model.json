@@ -1,0 +1,31 @@
+{
+  "candidate": "MIF1 ROW_WRITE_RELAY1 WR_HALF_CYCLE1",
+  "default": "OFF",
+  "added_cycles": {
+    "production": 0,
+    "boot": 0,
+    "write_consumption": 0
+  },
+  "added_ff_vs_mif1": {
+    "btab": {
+      "rising": 24,
+      "falling": 1056
+    },
+    "prog": {
+      "rising": 27,
+      "falling": 950
+    }
+  },
+  "edge_timing_budget_ps": {
+    "period": 833,
+    "rise_to_fall": 416.5,
+    "fall_to_rise": 416.5,
+    "setup_uncertainty": 60,
+    "hold_uncertainty": 25
+  },
+  "same_core_clock": true,
+  "ports_and_bits_per_cycle": "unchanged",
+  "memory_ordering": "all consumed SRAM writes checked at each original risingedge",
+  "physical_status": "NOT RUN: mapped-clock inversion must be regionalized after taps; direct-clock-only existing MSCTS hook rejects root inverter",
+  "constraints_policy": "no generated domain, no exceptions, no multicycle or uncertainty changes; both halfcycle paths timed TT/FF"
+}
