@@ -859,6 +859,16 @@
        "out_hold_guarantee_ps": {
         "type": "number"
        },
+       "out_hold_check_ps": {
+        "type": "number",
+        "minimum": 0
+       },
+       "io_hold": {
+        "enum": [
+         "legacy",
+         "sender_min"
+        ]
+       },
        "keepouts_um": {
         "type": "array",
         "items": {
