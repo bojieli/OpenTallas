@@ -1,0 +1,13 @@
+{
+  "reviewer": "Codex",
+  "image": "results/qc_sramif_readhalf_2220/fullhalf_plan.png",
+  "verdict": "PASS-COND PLACEONLY, freshactualreviewbeforeCTS",
+  "findings": [
+    "ReadCE/ADDR halfcycle repeats validated write-stage localrising/falling template; macro/facepin/halos unchanged.",
+    "Only36PROG/32BTAB additional fallingFF, placedatoldreadpinlanding sites; retainedrisingstaging anchored8..14um behind. Existing density0.448PROG/0.445BTAB leaves local capacity.",
+    "Same833 coreclock, top-two clocklayersM4/M5; no newclock/exception/latencycycle.",
+    "AllconsumedREAD/WRITE/output/fault lockstep20000cycles0differences, wrongREADedge caughtcycle13 beforephysical.",
+    "PROG preGPL localanchor applied; BTAB use correctedpostGPL/preDPL banding toavoid documentedFIRM-GPL divergence. Need count986/1088 nativefallcells+allanchors andactualF6/density beforeCTS.",
+    "All priorWR-onlyclock/read/inputholdFAIL records retained; 935inputminhold obligations not waived."
+  ]
+}

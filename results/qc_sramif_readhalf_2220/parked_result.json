@@ -1,0 +1,45 @@
+{
+  "status": "PARKEDonClaudeReset2026-10-25T23:23PDT",
+  "source": "ac0a49bd1",
+  "native_halfcycle_read_write_exactness": "PASS20k+wrongedge_mutant",
+  "physical_verdict": "NOTSIGNED",
+  "PROG": {
+    "native_falling_FF": 986,
+    "TT_setup_ps": 178.405846,
+    "FF_SRAM_input_hold_ps": 413.475952,
+    "clock_window_TT_FF_ps": [
+      19,
+      21.2
+    ],
+    "clock_window": "FAIL_FF,limit20unchanged",
+    "FF_hold_min_ps": -60.210448,
+    "FF_failure_classes": {
+      "input": 935,
+      "internal": 3
+    },
+    "internal_failure": "row0risingstage->risinglanding,-1.359/-0.877/-0.214ps"
+  },
+  "BTAB": {
+    "native_falling_FF": 1088,
+    "TT_setup_ps": 124.708966,
+    "FF_SRAM_input_hold_ps": 413.483246,
+    "clock_window_TT_FF_ps": [
+      18.1,
+      12.9
+    ],
+    "clock_window": "PASS",
+    "FF_hold_min_ps": -66.321976,
+    "FF_failure_classes": {
+      "input": 1061,
+      "internal": 0
+    }
+  },
+  "IO_policy": "-40psinputminunchanged;actualpercornerpinregmeanrebound,no massrepairorwaiver",
+  "next": [
+    "jointTT/FFclockprojection4sharedpadsforPROG,sourcehelper5d3ea4fbd;actualRCnotyetvalidated",
+    "design/priceinput-delaybandsfor935/1059ports underunchangedminholdcontract",
+    "small3PROGinternalholdrepairafterclockprofilefinal",
+    "native80psrelatedpairs+route+uniformsignoffremainNOTRUN"
+  ],
+  "jobs": "AllownSRAMIFheavyjobsterminal, existingotherlanejobscontinue"
+}
