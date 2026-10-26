@@ -8,7 +8,8 @@ usage: apply_clkmesh_sites.py PLAN MESH_DIR [--write --delta-id D-<DIE>-CLKMESH]
 * per partition type: partition_types[t].clock.die_islands_um = the UNION over all instances of that type of the
   local rect of every die clock cell placed inside an instance (cell footprint + halo).  One list per type, so every
   replica stays identical (FT-station style); an island unused by a given replica is filled like any free row.
-Checks: no island overlaps a type hard core / clock keep-out; every die cell lies in at most one partition.
+Checks: no island overlaps a type hard core / clock keep-out; cell+halo portions crossing an abutted
+partition boundary are reserved in every touched partition type. Site rows retain their original format.
 """
 import argparse
 import hashlib
@@ -54,6 +55,7 @@ def main():
             for j in range(int(r[1] // B), int(r[3] // B) + 1):
                 grid[(i, j)].append(n)
     sites, isl = [], defaultdict(set)
+    partial_owners = {}
     per_kind = defaultdict(int)
     for name, c in sorted(cells.items()):
         x, y = c["x"], c["y"]
@@ -65,12 +67,33 @@ def main():
         part = own[0] if own else "die"
         sites.append([name, c["kind"], x, y, part])
         per_kind[(c["kind"], part != "die")] += 1
-        if own:
-            tn = P.parts[part]["type"]
-            corners = [P.to_type(part, (x + dx, y + dy)) for dx in (-HALO_X, cell_w + HALO_X) for dy in (-HALO_Y, CELL_H + HALO_Y)]
-            r = (round(min(p[0] for p in corners), 3), round(min(p[1] for p in corners), 3),
-                 round(max(p[0] for p in corners), 3), round(max(p[1] for p in corners), 3))
-            isl[tn].add(r)
+        # A die-level clock body can span abutted tile outlines. Reserve every
+        # touched portion; labelling such a body "die" must not leave either
+        # adjacent hardened tile free to fill its occupied physical area.
+        halo = (x-HALO_X, y-HALO_Y, x+cell_w+HALO_X, y+CELL_H+HALO_Y)
+        candidates = {n for i in range(int(halo[0]//B),int(halo[2]//B)+1)
+                      for j in range(int(halo[1]//B),int(halo[3]//B)+1) for n in grid[(i,j)]}
+        body_parts = []
+        reserved_parts = set()
+        for touched in sorted(candidates):
+            pr = rects[touched]
+            if min(x+cell_w,pr[2])-max(x,pr[0]) > 1e-6 and min(y+CELL_H,pr[3])-max(y,pr[1]) > 1e-6:
+                body_parts.append(touched)
+            clipped = (max(halo[0],pr[0]),max(halo[1],pr[1]),min(halo[2],pr[2]),min(halo[3],pr[3]))
+            if clipped[0] >= clipped[2] or clipped[1] >= clipped[3]:
+                continue
+            tn = P.parts[touched]["type"]
+            corners = [P.to_type(touched,(xx,yy)) for xx in (clipped[0],clipped[2]) for yy in (clipped[1],clipped[3])]
+            r = (round(min(p[0] for p in corners),3),round(min(p[1] for p in corners),3),
+                 round(max(p[0] for p in corners),3),round(max(p[1] for p in corners),3))
+            if r[0] < r[2] and r[1] < r[3]:
+                isl[tn].add(r)
+                reserved_parts.add(touched)
+        missing = set(body_parts) - reserved_parts
+        if missing:
+            raise SystemExit(f"{name} has unreserved physical body in {sorted(missing)}")
+        if body_parts and not own:
+            partial_owners[name] = body_parts
     # merge identical / overlapping islands per type and check against hard cores + keep-outs
     bad = []
     out_types = {}
@@ -97,7 +120,7 @@ def main():
                              rects=[list(r) for r in merged])
     summary = dict(plan_sha256=hashlib.sha256(Path(a.plan).read_bytes()).hexdigest(), cells=len(sites),
                    in_partitions={f"{k}{'_part' if p else '_die'}": v for (k, p), v in sorted(per_kind.items())},
-                   cell_body_overlaps=0, types_with_islands=len(out_types), island_overlaps_hard_core=len(bad),
+                   cell_body_overlaps=0, unreserved_body_parts=0, boundary_spanning_cells=len(partial_owners), types_with_islands=len(out_types), island_overlaps_hard_core=len(bad),
                    max_type_frac=max((v["frac"] for v in out_types.values()), default=0),
                    islands_per_type={k: v["islands"] for k, v in sorted(out_types.items())})
     print(json.dumps(summary, indent=1))
@@ -106,7 +129,7 @@ def main():
         return 1
     if a.write:
         sp = Path(a.sites_out or Path(a.plan).parent / "clock_mesh_sites.json")
-        sp.write_text(json.dumps(dict(meta=M["meta"], sites=sites)) + "\n")
+        sp.write_text(json.dumps(dict(meta=M["meta"], sites=sites, partial_owners=partial_owners)) + "\n")
         mm = {k: M["meta"][k] for k in ("nx", "ny", "m", "rep_um", "ndr", "pitch_um")}
         if M["meta"].get("regions_depth"):
             mm.update(regions_depth=M["meta"]["regions_depth"], regions=M["meta"]["regions"])
