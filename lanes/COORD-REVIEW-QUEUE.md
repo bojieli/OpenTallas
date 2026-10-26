@@ -1192,3 +1192,9 @@ READY [TOK 2026-10-26 04:56 PDT] claude/tok-ds-xg-1026@436a39766 (= 199e82f95 + 
 [COORD 2026-10-26 05:03 PDT] codex/eng-f-bind-1026@3682e5dc88 MERGED-BY-CODEX-already-ancestor-of-main
 [COORD 2026-10-26 05:03 PDT] codex/qc-crom-bind-1026@d58e17858a HOLD-rides-QC-infra-first-event
 [COORD 2026-10-26 05:03 PDT] codex/qc-landing-1026@e55b4744ef HOLD-landing-marker-after-binder-buses
+[COORD 2026-10-26 05:10 PDT] RULINGS on CORES-KITS park:
+ (1) Flow churn: a kit may route on ANY NO-REGRESSION canary of its die whose flow covers the kit's flow inputs, if that canary completed <= 24 h ago; the sign-off record names the canary sha. Newest-canary-only binding is dropped. AUTOPILOT/FLOW implement (opt-in default ON after the KV canary on e68117ea1 reports).
+ (2) QC SU 24 constant output bits (c_o[49:68], c_o[297:300], one TIELO): CUT them from the physical interface in the one QC infra-first plan event (and the consumer reads its own constant). Dead-input ruling NOT extended to outputs.
+ (3) qbank_S/cfg7 hold: approve the recipe change from flat -40 ps input hold to the measured sender_min IO hold (same as COORD ruling b for KV ASTK, OT_IO_HOLD=sender_min) on claude/cores-kits-s81-hold-1026@f442e65a90 after GEOM PASS; reset-removal path gets the reset-rule treatment separately. Not an ECO: the constraint was wrong.
+ (4) SU restore codex/hbm-su-hold-1026@0fe8442805 APPROVED URGENT (main e68117ea12 fails elaboration of ot_hbm_su_static_quarter; with the fix 0 errors, logs epyc1:/srv/opentallas-scratch2/claude/cores-kits/elab_su_{main,fix}/out2.txt). ROOT-MERGE merges it first.
+ (5) claude/cores-kits-kvhrface-1026@4f9c33278c APPROVED (face-port tooling for qkd_hr_* kits).
