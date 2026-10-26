@@ -3,7 +3,7 @@
 // Same random stimulus (incl. reset sequences) on every other input; every output compared every cycle.
 // TMUT 1 = mutant (class A: the original gets value MV; head: random predecessor inputs; eo: eo + 1).
 module tb_ot_qwen_tp8_pv_wide_ctl_tbf_p #(parameter integer TMUT = 0, parameter integer V0 = 0, parameter integer MV0 = 0);
-    localparam integer FIRST_INPUT_AGE = 127;
+    localparam integer FIRST_INPUT_AGE = 255;
     localparam integer END_FLOOR = 1;
     localparam integer RESET_PIN = 1;
     localparam integer MUT = 0;

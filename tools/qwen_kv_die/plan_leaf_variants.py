@@ -69,7 +69,7 @@ VARIANTS = [
          libs=['rtl/lib/ot_rst_relay.sv', 'rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv']),
     dict(name='ot_qwen_tp8_pv_wide_ctl_tbf_p', src='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv',
          module='ot_qwen_tp8_pv_wide_ctl_tbf', die='ot_qwen_tp8_pv_wide_ctl_tbf.pair_id', param=[('pair_id', 'PAIR_ID')],
-         ov={'FIRST_INPUT_AGE': '127', 'END_FLOOR': '1', 'RESET_PIN': '1', 'MUT': '0', 'TRUNK_D': '54', 'FLAG_D': '58'},
+         ov={'FIRST_INPUT_AGE': '255', 'END_FLOOR': '1', 'RESET_PIN': '1', 'MUT': '0', 'TRUNK_D': '54', 'FLAG_D': '58'},
          vals=[[0], [1]], mut=[[0], [1]], libs=['rtl/lib/ot_rst_relay_bounded32.sv']),
     dict(name='qkd_astk_ctl_s_p', src='rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv', module='qkd_astk_ctl_s',
          die='qkd_astk_ctl_s.st', param=[('st', 'ST')], ov={'Z_STRIDE': '4'}, vals=[[0], [1], [2], [3]], mut=[[1], [0]],
