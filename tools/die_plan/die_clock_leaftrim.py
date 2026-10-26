@@ -106,7 +106,16 @@ def run(a):
             ds={c:chain_delay(libs[c],ch,arr[c][t['port']][2],3.0,wire_ff=4.0)[0] for c in ('TT','FF')}
             actual.append((max(abs(ds[c]-need[c]) for c in ('TT','FF')),len(ch),ch,ds))
         err,_,ch,ds=min(actual)
-        base={'x':t['xy'][0]-M.BUF_W/2,'y':t['xy'][1]-M.ROW_Y/2}; names=[]
+        endpoint_net=next(n for n in data['nets'] if 'port:'+t['port'] in n['loads'])
+        tail_driver=cells[endpoint_net['drv']]
+        anchor=t['xy']
+        fallback=False
+        if M.hitf(keeps,anchor):
+            # A PHY pin may lie over the macro. Put the die-owned delay island
+            # by the already legal final tail driver, preserving that tail.
+            anchor=(tail_driver['x']+M.BUF_W/2,tail_driver['y']+M.ROW_Y/2)
+            fallback=True
+        base={'x':anchor[0]-M.BUF_W/2,'y':anchor[1]-M.ROW_Y/2}; names=[]
         for k,lib in enumerate(ch):
             # Row-aligned local island; never move a cell into a hard keep-out.
             q=(base['x']+M.BUF_W/2+(k+1)*M.BUF_W*1.12,base['y']+M.ROW_Y/2+2*M.ROW_Y)
@@ -124,7 +133,7 @@ def run(a):
         original['loads']=[names[0] if x=='port:'+t['port'] else x for x in original['loads']]
         for u,v in zip(names,names[1:]+['port:'+t['port']]):
             data['nets'].append({'name':f'ckm_w_leaftrim_{ti}_{u}','drv':u,'loads':[v],'level':99})
-        t['leaftrim']={'cells':names,'TT_added_ps':round(ds['TT'],3),'FF_added_ps':round(ds['FF'],3),'fit_error_ps':round(err,3)}
+        t['leaftrim']={'cells':names,'anchor_um':list(anchor),'macro_tail_fallback':fallback,'TT_added_ps':round(ds['TT'],3),'FF_added_ps':round(ds['FF'],3),'fit_error_ps':round(err,3)}
         residuals.append(err)
     mesh['meta']['cells']=len(cells)
     mesh['meta']['leaftrim']={'source':str(src),'target_ps':targets,'max_prediction_error_ps':round(max(residuals),3),'added_cells':sum(len(t['leaftrim']['cells']) for t in mesh['taps']),'qualification':'NOT RUN: requires reviewed physical reroute and TT/FF skew gate'}
