@@ -1,0 +1,12 @@
+module ot_hgi_coll_tkm_tp192_tile_core
+input [0:0] tile_clk
+input [0:0] tile_clr
+input [0:0] tile_conv
+output [0:0] tile_clr_o
+output [0:0] tile_conv_o
+input [0:0] tile_ins_v
+input [343:0] tile_ins_b
+input [343:0] tile_up_in
+output [0:0] tile_ovf_v
+output [343:0] tile_ovf_b
+output [343:0] tile_up_out

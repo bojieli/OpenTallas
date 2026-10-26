@@ -1,0 +1,29 @@
+{
+ "status": "TRIAL_CTS_ONLY (HBM die gate FAIL: trial builds only, closure order rule 1)",
+ "minimum_miter": "PASS",
+ "mutant": "CAUGHT",
+ "minimum_miter_detail": {
+  "proven": 161697,
+  "unproven": 0
+ },
+ "mutant_detail": "wrong_up_out_bit0 mutant rejected (proof.json)",
+ "minimum_proof": "results/geom_review/hbm_tkm_noid_1713/proof.json (main; = codex/hbm-physical-1713@4f800e1ed9)",
+ "canonical_file": "rtl/ot_hgi_coll_tkm_tp192_tile_core.sv",
+ "canonical_sha256": "3118f95a2b80427bc24e0bd240bab58369e5572691302ed189838ca387db8c9f",
+ "rtl_sha256": {
+  "rtl/ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+  "rtl/ot_hgi_coll_tkm.sv": "9dd57b88c999570f3c00bc9d6c418da2a0334baed0befded6148a9cb308a1b61",
+  "rtl/ot_hgi_coll_tkm_static.sv": "b0c1cb519892223d69201f72106334407b6a132cc5314be28d24bc32a4444634",
+  "rtl/ot_hgi_coll_tkm_tp192_tile_core.sv": "3118f95a2b80427bc24e0bd240bab58369e5572691302ed189838ca387db8c9f",
+  "rtl/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__fshell.sv": "695f1e753a9a61f6b5853b161c2521a69b6213940e0e63db39898595fed50083",
+  "rtl/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__wrap.sv": "9380ed94f45cfa171953565bf15fcad7f9b7a72d81383e362da08a079a1a245d"
+ },
+ "netlist_sha256": {
+  "run/results/asap7/hbc_ot_hgi_coll_tkm_tp192_tile_core__idpin__strap/base/1_synth.v": "361f42e0b9556eda5954208356c309a54533560d8891dff8cdfa77ae23d1857a",
+  "run/results/asap7/hbc_ot_hgi_coll_tkm_tp192_tile_core__idpin__strap/base/1_2_yosys.v": "cd4b3101ca5a41fbafe5596c1e3e6f9acd0aaa050fc266623dfdd44e841968d1",
+  "run/results/asap7/hbc_ot_hgi_coll_tkm_tp192_tile_core__idpin__strap/base/1_synth.odb": "950238dc97190fd01dc5d26ed9640423f9e117048e507c3aa5ab4c21a08d669e"
+ },
+ "synthesis_source": "this kit's run/ (run_tkm_kit_synth.sh via ot-run epyc2); kit = physical/die_plan/hbm/tkm_noid_kits/build_kit.py build common --clock @6d021fb609",
+ "lec_tool": "tools/die_plan/lec.py at claude/path-hbm-tkmlec2-1025@c5ba1df3a0 (sha256 d9185d4ab312)",
+ "lec_verdict": "EQUIVALENT 25873/25873 (689 RTL-X dont-care, no hints)"
+}
