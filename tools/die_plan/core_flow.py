@@ -30,19 +30,21 @@ LINT_STEP = ("python3 -I /work/rtl_lint.py /work > /work/rtl_lint.log 2>&1; rc=\
              "tail -3 /work/rtl_lint.log; if [ \\$rc != 0 ]; then echo 'FAIL_PREFLOOR lint (implicit / undriven nets, "
              "missing module or port; or NOT RUN), see rtl_lint.json' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; ")
 
-# FF-only GRT hold repair in the FF vclk frame before the main goal (goals that reach GRT: finish / route); the
+# GRT hold repair in the FF vclk frame before the main goal (goals that reach GRT: finish / route); the
 # following `make <goal>` resumes from 5_1_grt.  OT_HOLD_FF_MARGIN unset (or OT_VCLK_FF unset) = step skipped.
 # CLOCK-RESET 2026-10-25 (KV core canary TT -222.85): `make grt` builds every missing prerequisite, so without a
 # prior `make cts` floorplan / place resize / CTS repair_timing all ran with CORNERS=bc (FF libraries only) and TT
 # setup was never repaired before the sign-off TT STA.  `\$M cts` (the kit's own CORNER / CORNERS, a no-op when
 # 4_cts.odb is current) first, so only the 5_1_grt step runs in the FF frame.
+# Preserve tc+bc for MCMM kits: FF-only libraries suppress TT setup repair on GRT RC.
+# Single-corner kits retain their BC-only fallback.
 FF_GRT_STEP = ("HM=\\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); "
                "VF=\\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk); "
                "if [ \\$rc = 0 ] && [ -n \\\"\\$HM\\\" ] && [ -n \\\"\\$VF\\\" ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; "
                "then \\$M cts; rc=\\$?; if [ \\$rc != 0 ]; then echo 'CTS (kit corners) before the FF-only GRT step failed'; fi; fi; "
                "if [ \\$rc = 0 ] && [ -n \\\"\\$HM\\\" ] && [ -n \\\"\\$VF\\\" ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; "
-               "then OT_VCLK_CORNER=ff \\$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\\$HM; rc=\\$?; "
-               "if [ \\$rc != 0 ]; then echo 'FF-only GRT hold repair (FF vclk frame) failed'; fi; fi; ")
+               "then GC='CORNER=BC CORNERS=bc'; if grep -q '^export CORNERS = tc bc' /work/config.mk; then GC=; fi; OT_VCLK_CORNER=ff \\$M grt \\$GC HOLD_SLACK_MARGIN=\\$HM; rc=\\$?; "
+               "if [ \\$rc != 0 ]; then echo 'GRT hold repair (FF vclk frame) failed'; fi; fi; ")
 
 
 def binding(tt_ps, ff_ps=None, tol_ps=40.0, basis_tt="plan clock", basis_ff=None):

@@ -56,7 +56,7 @@ class GeneratedKit(unittest.TestCase):
         i_lint, i_sdc = rk.index("/work/rtl_lint.py /work"), rk.index("/work/sdc_lint.py /work")
         i_sel, i_synth = rk.index("/work/selrange_gate.py /work"), rk.index("\\$M synth")
         i_fg, i_lec = rk.index("/work/face_guard_core.py"), rk.index("/work/lec.py /work --netlist")
-        i_ffg, i_goal = rk.index("OT_VCLK_CORNER=ff \\$M grt CORNER=BC CORNERS=bc"), rk.index("\\$M $GOAL; rc")
+        i_ffg, i_goal = rk.index("OT_VCLK_CORNER=ff \\$M grt \\$GC"), rk.index("\\$M $GOAL; rc")
         self.assertTrue(i_lint < i_sdc < i_sel < i_synth < i_fg < i_lec < i_ffg < i_goal)
         for marker in ("rc=8", "FAIL_PREFLOOR selrange (FAIL or NOT RUN)", "rc=3", "FAIL_PREFLOOR LEC NOT EQUIVALENT",
                        "rc=5", "LEC WARNING"):
