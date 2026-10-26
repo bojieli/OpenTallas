@@ -1,0 +1,27 @@
+{
+  "status": "SOURCE_ONLY_NOT_SELECTED",
+  "file": "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_native_cuts.sv",
+  "modules": [
+    "ot_s81sl_native_kve",
+    "ot_s81sl_native_kvp",
+    "ot_s81sl_native_kvt"
+  ],
+  "purpose": "Expose actual selected CN/IK live norm129 and mode/base16 outputs before genuine physical cuts; existing closed dsfd wrappers and raw HARD_RQ0 provider unchanged",
+  "gate": {
+    "kind": "actual Verilator lint with selected raw bank source manifest",
+    "job": "epyc2:oth-ubuntu-321016-1792995600",
+    "results": {
+      "kve": 0,
+      "kvp": 0,
+      "kvt": 0
+    }
+  },
+  "future": [
+    "complete interface/port grouping and physical budget",
+    "fresh native views with real pin/clock contracts",
+    "source-correct bind/equivalence and arithmetic epoch/transport calendar",
+    "geometry review before physical jobs"
+  ],
+  "route_authorized": false,
+  "added_cycles": 0
+}
