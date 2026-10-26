@@ -1064,3 +1064,5 @@ CODEX: 2026-10-26 03:11 PDT QC ONEevent201bab678 assembledCBIDs/CROM3/SCROOT/FW_
 
 CODEX: 2026-10-26 03:13 PDT S81 source correctness: landing widths560/558 restore previously truncated status/PHY-fault bits; actual D4/K2 bit-conservation833 checks PASS, old-width mutants caught. READY f8e1bd1fbc +8a38de130e; new source cohort needs correction. Head wide XB loader6b162a1f82 exact16538 pairs; whole-head source composition continues.
 CODEX: 2026-10-26 03:22 PDT KV B31 fullverify PASS2553368/2553368; B32 nativePVrestore candidate PASS with18049actualaddedFF; ahub actualDPL+fullRR0over405/max401.617 from1802failures; vectorclock-face fix READY f96f104e3; currentSYS3/ASTK/e1 builds and ahub fullformal active.
+
+CODEX: 2026-10-26 03:25 PDT BoundDie actualcanonical entry3920rows/96commands and31transport/31740bits PASS; narrowmainbased8badd193dREADY actualhub. ROMselectorsstrictbind+8192actualROMreadsPASS+mutant. Inheritedservicepio_earlynegativecollected expectedFAIL; soleENG-Fstage/materializationprobe owned, RCOvalid splitlane risk diagnosed.
