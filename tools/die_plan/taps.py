@@ -169,7 +169,7 @@ def _root():
     return Path(__file__).resolve().parents[2]
 
 
-def sink_sites(P, tn):
+def sink_sites(P, tn, control=True):
     """[(x, y, weight)] type-frame clock sinks for clock.tap_mode "density": the FIRM planned sinks (planned_sinks,
     weight 1) plus the plan's internal sink inventory -- clock.sink_sites_um ([x, y] or [x, y, n] rows) -- or, with
     clock.sink_bins_file (the full register inventory of a placed netlist, which already holds the face / ft
@@ -186,7 +186,7 @@ def sink_sites(P, tn):
     else:
         out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn)]
     out += [(float(r[0]), float(r[1]), float(r[2]) if len(r) > 2 else 1.0) for r in rows]
-    if ck.get("control_sinks"):
+    if control and ck.get("control_sinks"):
         out += [(x, y, 1.0) for _, x, y in control_pin_sinks(P, tn)]
     return [p for p in out if p[2] > 0]
 
@@ -291,7 +291,7 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
         leaves = [q for k, q in enumerate(leaves) if k not in (i, j)] + [m]
 
 
-def density_taps(P, tn):
+def density_taps(P, tn, control=True):
     """OWNER decision 5 (10-24, industry multi-source CTS): partition clock taps placed by SINK DENSITY.
 
     The sinks (sink_sites: face / ft registers + the internal inventory) are split by weighted median bisection into
@@ -306,7 +306,11 @@ def density_taps(P, tn):
     k-medians refinement on the kit's own split rule (assign: nearest tap + cap), so the planned load of every tap is
     what clock_taps.tcl will give it.  Deterministic.
     Returns [(port, x, y, planned_sinks (kit split at the hard cap), max sink distance um)]."""
-    key = ("density", id(P), tn)
+    # control=False: the PLANNING taps (no control-pin sinks).  The reset wavefront solver sites arst_n / start_i /
+    # rst_o from the tap set (reset_tree._est_depth / face_sites), so it must read these to stay acyclic; the final
+    # taps (control=True, the default = schema.tap_grid) then add the control pins as sinks (clock.control_sinks).
+    control = bool(control and P.types[tn].get("clock", {}).get("control_sinks"))
+    key = ("density", id(P), tn, control)
     if key in _CACHE:
         return _CACHE[key]
     import schema
@@ -317,11 +321,13 @@ def density_taps(P, tn):
     radius = float(ck.get("tap_radius_um", 200.0))
     if cap <= 0 or target <= 0 or radius <= 0 or target > cap:
         raise ValueError(f"type {tn}: density taps need 0 < tap_target_sinks <= tap_max_sinks and tap_radius_um > 0")
-    pts = sink_sites(P, tn)
+    pts = sink_sites(P, tn, control)
     if not pts:
         raise ValueError(f"type {tn}: clock.tap_mode 'density' but no sinks (no pins / ft slots / sink inventory)")
     w, h = t["outline_um"]
     taken = [(x, y) for _, x, y, _ in schema.core_taps(P, tn)]
+    if control:
+        taken += [(x, y) for _, x, y in control_pin_sinks(P, tn)]
     boxes = [(c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
               c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores", []) or []]
     blocked = lambda x, y: any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in boxes)
