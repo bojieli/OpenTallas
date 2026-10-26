@@ -228,7 +228,11 @@ def main():
     ap.add_argument('--asbuilt', required=True)
     ap.add_argument('--delta', required=True)
     ap.add_argument('--out', required=True, type=Path)
+    ap.add_argument('--declared-unread', help='b2_unread_declared.json: proven-redundant / debug-only unread outputs '
+                    '(exact inst.port + unread/width match -> OUTPUT_UNREAD_DECLARED; unmatched -> DECLARED_STALE)')
     a = ap.parse_args()
+    declared = {e['output']: e for e in json.loads(Path(a.declared_unread).read_text())['declared']} \
+        if a.declared_unread else {}
     ab = json.loads(Path(a.asbuilt).read_text())
     delta = json.loads(Path(a.delta).read_text())
     die = Die(a.die, ab['transport'])
@@ -436,8 +440,17 @@ def main():
                 continue
             unread = [b for b in range(w) if not loads[net].get(b)]
             if unread:
+                dcl = declared.get(f'{n}.{port}')
+                if dcl and dcl['unread'] == f'{len(unread)}/{w}':
+                    rep['OUTPUT_UNREAD_DECLARED'].append(f'{n}.{port} {len(unread)}/{w} b [{dcl["cls"]}]')
+                    stats['out_unread_declared'] += len(unread)
+                    dcl['_hit'] = True
+                    continue
                 rep['OUTPUT_UNREAD'].append(f'{n}.{port} {len(unread)}/{w} b')
                 stats['out_unread'] += len(unread)
+    for o, e in sorted(declared.items()):
+        if not e.get('_hit'):
+            rep['DECLARED_STALE'].append(f'{o} {e["unread"]} (declared, not an unread output of this top)')
 
     # emit Verilog
     def vexpr(flat):

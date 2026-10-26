@@ -7,8 +7,10 @@ BASE=${5:-d13ff7c78};ROOT=$(git rev-parse --show-toplevel);cd "$ROOT";mkdir -p "
 export PATH=$HOME/.local/opentallas-tools/bin:$PATH
 bash tools/hbm_b2/regen_b2.sh "$OUT/raw" "$PL" "$CM" > "$OUT/regen.log" 2>&1
 python3 tools/hbm_b2/native_clock_items.py "$OUT/raw/wiring.json" --out "$OUT/clock_wiring.json"
-python3 tools/hbm_b2/native_root_items.py "$OUT/clock_wiring.json" --out "$OUT/native_wiring.json"
-python3 tools/hbm_b2/b2_top.py --die physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz --asbuilt physical/die_plan/hbm/bind/asbuilt.json --delta "$OUT/native_wiring.json" --out "$OUT/top" > "$OUT/b2.log" 2>&1
+python3 tools/hbm_b2/native_root_items.py "$OUT/clock_wiring.json" --out "$OUT/root_wiring.json"
+# HBM-BIND-CMP (COORD ruling 4): SM request check groups (RQD from b2_delays via make_wiring) + declared unread outputs
+python3 tools/hbm_b2/native_reqcheck_items.py "$OUT/root_wiring.json" --die physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz --asbuilt physical/die_plan/hbm/bind/asbuilt.json --out "$OUT/native_wiring.json"
+python3 tools/hbm_b2/b2_top.py --die physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz --asbuilt physical/die_plan/hbm/bind/asbuilt.json --delta "$OUT/native_wiring.json" --declared-unread tools/hbm_b2/b2_unread_declared.json --out "$OUT/top" > "$OUT/b2.log" 2>&1
 python3 tools/hbm_b2/clock_gate.py "$OUT/top/die_b2.v" --out "$OUT/clock_gate.json"
 python3 tools/hbm_b2/start_alignment.py --die "$OUT/top/die_b2.v" --plan "$PL" --census-map "$CM" --out "$OUT/start_alignment.json"
 # Canonical HC child closure replaces scoped old default-width definitions.

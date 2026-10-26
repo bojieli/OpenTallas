@@ -1,0 +1,114 @@
+{
+ "schema": "opentallas.hbm_b2.unread_declared.v1",
+ "rule": "HBM-BIND-CMP 10-26 (COORD ruling 4): an OUTPUT_UNREAD of the B2 top may stand only if declared here with a proof; b2_top.py --declared-unread moves an exact match (inst.port + unread/width) to OUTPUT_UNREAD_DECLARED and reports a declaration that matches nothing as DECLARED_STALE. Classes: REDUNDANT (bit-exact function of consumed outputs), DEBUG_ONLY (observability, no on-die or host-path consumer by design), UNUSED_DOMAIN.",
+ "declared": [
+  {
+   "output": "calendar_NW.ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "hfd_hgi_vm_calendar_f20 ordinal = issued-word counter of the calendar (observability); no on-die consumer by design, the host status leaf (hleaf) carries ready/active/fault only; the static schedule never reads it"
+  },
+  {
+   "output": "epcal_NW.ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "hfd_hgi_vm_calendar_f20_role ordinal = issued-word counter (same calendar core); observability only"
+  },
+  {
+   "output": "vmfc_NW.ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "hfd_hgi_vm_calendar_f20_role ordinal = issued-word counter (same calendar core); observability only"
+  },
+  {
+   "output": "sfup_NW.programme_ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "ot_hgi_sfu_programme_store_r10 programme_ordinal = ordinal of the row representative (header l.31-45: ordinal agreement is checked INSIDE the store -> fault); output is observability"
+  },
+  {
+   "output": "sfup_NW.io_ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "ot_hgi_sfu_programme_store_r10 io_ordinal = si_ord[0] (l.302), cross-stripe agreement checked inside (fault); observability"
+  },
+  {
+   "output": "xl_NW_aqlo.y",
+   "unread": "512/512",
+   "cls": "REDUNDANT",
+   "proof": "ot_hbm_xp_aq_tree13 header l.23-25: y = the dequantised q * 2^e as BF16, a bit-exact function of the consumed outputs q and e (same edge); the block-linear lane consumes q/e only"
+  },
+  {
+   "output": "xl_NW_aqhi.y",
+   "unread": "512/512",
+   "cls": "REDUNDANT",
+   "proof": "ot_hbm_xp_aq_tree13 header l.23-25: y = the dequantised q * 2^e as BF16, a bit-exact function of the consumed outputs q and e (same edge); the block-linear lane consumes q/e only"
+  },
+  {
+   "output": "calendar_NE.ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "hfd_hgi_vm_calendar_f20 ordinal = issued-word counter of the calendar (observability); no on-die consumer by design, the host status leaf (hleaf) carries ready/active/fault only; the static schedule never reads it"
+  },
+  {
+   "output": "epcal_NE.ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "hfd_hgi_vm_calendar_f20_role ordinal = issued-word counter (same calendar core); observability only"
+  },
+  {
+   "output": "vmfc_NE.ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "hfd_hgi_vm_calendar_f20_role ordinal = issued-word counter (same calendar core); observability only"
+  },
+  {
+   "output": "sfup_NE.programme_ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "ot_hgi_sfu_programme_store_r10 programme_ordinal = ordinal of the row representative (header l.31-45: ordinal agreement is checked INSIDE the store -> fault); output is observability"
+  },
+  {
+   "output": "sfup_NE.io_ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "ot_hgi_sfu_programme_store_r10 io_ordinal = si_ord[0] (l.302), cross-stripe agreement checked inside (fault); observability"
+  },
+  {
+   "output": "xl_NE_aqlo.y",
+   "unread": "512/512",
+   "cls": "REDUNDANT",
+   "proof": "ot_hbm_xp_aq_tree13 header l.23-25: y = the dequantised q * 2^e as BF16, a bit-exact function of the consumed outputs q and e (same edge); the block-linear lane consumes q/e only"
+  },
+  {
+   "output": "xl_NE_aqhi.y",
+   "unread": "512/512",
+   "cls": "REDUNDANT",
+   "proof": "ot_hbm_xp_aq_tree13 header l.23-25: y = the dequantised q * 2^e as BF16, a bit-exact function of the consumed outputs q and e (same edge); the block-linear lane consumes q/e only"
+  },
+  {
+   "output": "hb_quant_NW__program_leaf.ordinal",
+   "unread": "32/32",
+   "cls": "DEBUG_ONLY",
+   "proof": "ot_hgi_qdq_nw_program_leaf ordinal = issued (l.70), calendar issue counter; observability only"
+  },
+  {
+   "output": "hb_ckgen.pll_serial",
+   "unread": "1/1",
+   "cls": "UNUSED_DOMAIN",
+   "proof": "hfd_ckgen_nolink serial-domain clock: the B2 die runs every link on pll_stream (header l.4); no serial-domain sequential element exists on the die (same argument as the removed pll_link); the PLL macro output is the only driver"
+  },
+  {
+   "output": "hb_ckgen.por_serial",
+   "unread": "1/1",
+   "cls": "UNUSED_DOMAIN",
+   "proof": "hfd_ckgen_nolink serial-domain reset release of the unused serial domain (see pll_serial)"
+  },
+  {
+   "output": "pgp_NE.busy",
+   "unread": "1/1",
+   "cls": "DEBUG_ONLY",
+   "proof": "ot_hbm_su_programme_pslice_c5 busy = programme-slice running status; consumers read valid/done/fault/edge_index/command; on the static schedule busy is implied by the calendar; observability only"
+  }
+ ]
+}

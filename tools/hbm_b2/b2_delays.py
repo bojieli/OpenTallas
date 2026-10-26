@@ -210,6 +210,26 @@ def main():
             v = 4 + lc(n, 'sel_op', sel, 'op') + lc(sel, 'selected_v', n, 'selected_v')
             der.append(dict(inst=n, param='SEL_LAT', have=parse_params(i['params']).get('SEL_LAT', 4), want=v, formula='4 + lane(sel_op) + lane(selected_v)'))
             params[n]['SEL_LAT'] = v
+    # HBM-BIND-CMP (COORD ruling 4, 10-26): SM request check round trip in the service group (ot_hbm_sm_req_check):
+    # expected_request(t) = sm_command(t-1); SM request(t) = sm_command(t - Ls - 1 - QSPLIT); the check's pin flop sees it
+    # Lr edges later -> RQD = Ls + Lr + 1 + QSPLIT (die SM QSPLIT 1, asbuilt.json).  Pair = the svg driving sm.command.
+    for n, i in die.insts.items():
+        if not i['master'].startswith('ot_hbm_svc_sm_group_rel_id'):
+            continue
+        sm = 'sm_' + n[len('svg_'):] if n.startswith('svg_') else None
+        if sm not in die.insts:
+            continue
+        ls = lc(n, 'sm_command', sm, 'command')
+        back = lane(sm, n, 'data')
+        if ls is None or back is None:
+            der.append(dict(inst=n, param='RQD', have=None, want=None, status='FAIL',
+                            formula='Ls + Lr + 1 + QSPLIT', bad=[f'no lane {n}.sm_command -> {sm}.command' if ls is None
+                                                                  else f'no lane {sm} -> {n}']))
+            continue
+        v = ls + back[0] + 2
+        der.append(dict(inst=n, param='RQD', have=parse_params(i['params']).get('RQD'), want=v,
+                        formula=f'Ls {ls} (sm_command) + Lr {back[0]} (request, lanes {back[3]}) + 1 + QSPLIT 1'))
+        params[n]['RQD'] = v
     # hub echo (cq -> hub -> cr) for the root clients on the two-stop ring master
     hub = next((x for x in die.insts if die.insts[x]['master'] == 'hfd_hgi_vms_glue_nw2_t'), None)
     peer = next((x for x in die.insts if die.insts[x]['master'] == 'hfd_hgi_vms_static_NE2_glue'), None)
