@@ -721,15 +721,16 @@ module qkd_host_native_engine #(
         reg  [127:0] i1_code [0:3];
         reg  [15:0]  hw;
         integer b;
+        integer k1;  // I1 loop variable (sharing the I0 block's k = multi-driven for Yosys check -assert)
         always @(posedge clk or negedge rst_n)
             if (!rst_n) i1_v <= 1'b0; else i1_v <= i0_v;
         always @(posedge clk) if (i0_v) begin
             i1_slot <= i0_slot; i1_last <= i0_last; i1_use <= i0_use; i1_isv <= i0_isv;
-            for (k = 0; k < 4; k = k + 1) begin
-                hw = hw_word(i0_g[k], i0_lhd, i0_dd[k]);
-                i1_word[k] <= hw[LWP-1:0];
-                i1_lane[k] <= (QMUT == 1 && !i0_isv[k]) ? (i0_t[k] ^ 4'd1) : i0_t[k];
-                for (b = 0; b < 16; b = b + 1) i1_code[k][b*8 +: 8] <= cq[k*16 + b];
+            for (k1 = 0; k1 < 4; k1 = k1 + 1) begin
+                hw = hw_word(i0_g[k1], i0_lhd, i0_dd[k1]);
+                i1_word[k1] <= hw[LWP-1:0];
+                i1_lane[k1] <= (QMUT == 1 && !i0_isv[k1]) ? (i0_t[k1] ^ 4'd1) : i0_t[k1];
+                for (b = 0; b < 16; b = b + 1) i1_code[k1][b*8 +: 8] <= cq[k1*16 + b];
             end
         end
         // QPIPE 2 (QP2) state seen by the shared output-FIFO / completion logic; tied off (continuous assigns) otherwise
