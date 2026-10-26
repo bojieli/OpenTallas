@@ -1,0 +1,66 @@
+Official commit6cb3f2b704 src/grt/src/GlobalRouter.cpp
+2051:     std::vector<int8_t>*& edge_costs_per_layer)
+2052: {
+2053:   edge_costs_per_layer = nullptr;
+2054:   track_consumption = 1;
+2055:   odb::dbNet* db_net = net->getDbNet();
+2056:   int net_min_layer;
+2057:   int net_max_layer;
+2058:   getNetLayerRange(db_net, net_min_layer, net_max_layer);
+2059: 
+2060:   odb::dbTechNonDefaultRule* ndr = db_net->getNonDefaultRule();
+2061:   if (ndr) {
+2062:     int num_layers = grid_->getNumLayers();
+2063:     edge_costs_per_layer = new std::vector<int8_t>(num_layers + 1, 1);
+2064:     std::vector<odb::dbTechLayerRule*> layer_rules;
+2065:     ndr->getLayerRules(layer_rules);
+2066: 
+2067:     for (odb::dbTechLayerRule* layer_rule : layer_rules) {
+2068:       int layerIdx = layer_rule->getLayer()->getRoutingLevel();
+2069: 
+2070:       if (layerIdx > getMaxRoutingLayer() || layerIdx < getMinRoutingLayer()) {
+2071:         continue;
+2072:       }
+2073: 
+2074:       RoutingTracks routing_tracks = getRoutingTracksByIndex(layerIdx);
+2075:       int default_width = layer_rule->getLayer()->getWidth();
+2076:       int default_pitch = routing_tracks.getTrackPitch();
+2077:       int default_spacing = default_pitch - default_width;
+2078: 
+2079:       int ndr_spacing = layer_rule->getSpacing();
+2080:       int ndr_width = layer_rule->getWidth();
+2081:       int ndr_pitch = (ndr_width + 2 * ndr_spacing + default_width) / 2;
+2082: 
+2083:       // Account for both sides
+2084:       int consumption = 2 * std::ceil((float) ndr_pitch / default_pitch) - 1;
+2085:       if (consumption > std::numeric_limits<int8_t>::max()) {
+2086:         logger_->error(GRT,
+2087:                        272,
+2088:                        "NDR consumption {} exceeds {} and is unsupported",
+2089:                        consumption,
+2090:                        std::numeric_limits<int8_t>::max());
+2091:       }
+2092:       (*edge_costs_per_layer)[layerIdx - 1] = consumption;
+2093: 
+2094:       track_consumption
+2095:           = std::max(track_consumption, static_cast<int8_t>(consumption));
+2096: 
+2097:       if (logger_->debugCheck(GRT, "ndrInfo", 2)) {
+2098:         logger_->report(
+2099:             "default_width: {} default_spacing: {} default_pitch: {} "
+2100:             "ndr_spacing: {} ndr_width: {} ndr_pitch: {}",
+2101:             default_width,
+2102:             default_spacing,
+2103:             default_pitch,
+2104:             ndr_spacing,
+2105:             ndr_width,
+2106:             ndr_pitch);
+2107:       }
+2108:       if (logger_->debugCheck(GRT, "ndrInfo", 1)) {
+2109:         logger_->report(
+2110:             "Net: {} NDR cost in {} (float/int): {}/{}  Edge cost: {}",
+2111:             net->getConstName(),
+2112:             layer_rule->getLayer()->getConstName(),
+2113:             2 * (float) ndr_pitch / default_pitch - 1,
+2114:             consumption,
+2115:             track_consumption);

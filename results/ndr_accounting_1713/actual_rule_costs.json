@@ -1,0 +1,93 @@
+{
+  "net_counts": {
+    "DEFAULT": 91496,
+    "CTS_NDR_0": 284,
+    "ot_dtsh_4w2s": 297
+  },
+  "formula": "ndr_pitch=(ndr_width+2*ndr_spacing+default_width)/2 integer division; consumption=2*ceil(float(ndr_pitch)/default_pitch)-1; edgeCost=max layer consumption over globally eligible layers",
+  "routing_range_for_observed_failure": "M2-M5 per original E5 log",
+  "layers": {
+    "CTS_NDR_0": [
+      {
+        "layer": "M2",
+        "default_width": 18,
+        "track_pitch": 39,
+        "ndr_width": 18,
+        "ndr_spacing": 36,
+        "ndr_pitch": 54,
+        "consumption": 3
+      },
+      {
+        "layer": "M3",
+        "default_width": 18,
+        "track_pitch": 36,
+        "ndr_width": 18,
+        "ndr_spacing": 36,
+        "ndr_pitch": 54,
+        "consumption": 3
+      },
+      {
+        "layer": "M4",
+        "default_width": 24,
+        "track_pitch": 48,
+        "ndr_width": 24,
+        "ndr_spacing": 48,
+        "ndr_pitch": 72,
+        "consumption": 3
+      },
+      {
+        "layer": "M5",
+        "default_width": 24,
+        "track_pitch": 48,
+        "ndr_width": 24,
+        "ndr_spacing": 48,
+        "ndr_pitch": 72,
+        "consumption": 3
+      }
+    ],
+    "ot_dtsh_4w2s": [
+      {
+        "layer": "M2",
+        "default_width": 18,
+        "track_pitch": 39,
+        "ndr_width": 72,
+        "ndr_spacing": 36,
+        "ndr_pitch": 81,
+        "consumption": 5
+      },
+      {
+        "layer": "M3",
+        "default_width": 18,
+        "track_pitch": 36,
+        "ndr_width": 72,
+        "ndr_spacing": 36,
+        "ndr_pitch": 81,
+        "consumption": 5
+      },
+      {
+        "layer": "M4",
+        "default_width": 24,
+        "track_pitch": 48,
+        "ndr_width": 96,
+        "ndr_spacing": 48,
+        "ndr_pitch": 108,
+        "consumption": 5
+      },
+      {
+        "layer": "M5",
+        "default_width": 24,
+        "track_pitch": 48,
+        "ndr_width": 96,
+        "ndr_spacing": 48,
+        "ndr_pitch": 108,
+        "consumption": 5
+      }
+    ]
+  },
+  "edgeCost": {
+    "CTS_NDR_0": 3,
+    "ot_dtsh_4w2s": 5
+  },
+  "source_odb_sha256": "3a4d7b0 prefix supplied CLOCK; no new design load",
+  "actual_event_order": "NOT COLLECTED"
+}

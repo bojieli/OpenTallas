@@ -1,0 +1,43 @@
+{
+  "scope": "hypothetical per-net charge ledger, not router fix; capacity-layer restoration not implemented",
+  "controls": [
+    {
+      "removal_order": [
+        "A",
+        "B"
+      ],
+      "trace": [
+        {
+          "net": "A",
+          "removed_stored_charge": 5,
+          "balance": 315
+        },
+        {
+          "net": "B",
+          "removed_stored_charge": 300,
+          "balance": 15
+        }
+      ],
+      "final_balance": 15
+    },
+    {
+      "removal_order": [
+        "B",
+        "A"
+      ],
+      "trace": [
+        {
+          "net": "B",
+          "removed_stored_charge": 300,
+          "balance": 20
+        },
+        {
+          "net": "A",
+          "removed_stored_charge": 5,
+          "balance": 15
+        }
+      ],
+      "final_balance": 15
+    }
+  ]
+}

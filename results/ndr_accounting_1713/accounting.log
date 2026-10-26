@@ -1,17 +1,17 @@
-SCENARIO same_cost_negative_delta_safe background=16
-TRACE action=add_A net=A edge=V x=0 y=0 edgeCost=4 requested=4 returned_delta=4 ndr_before=0 ndr_after=0 est_before=16 est_after=20 present=1 cap_ndr=0
-TRACE action=add_B net=B edge=V x=0 y=0 edgeCost=4 requested=4 returned_delta=400 ndr_before=0 ndr_after=1 est_before=20 est_after=420 present=2 cap_ndr=-4
-TRACE action=remove_A net=A edge=V x=0 y=0 edgeCost=4 requested=-4 returned_delta=-400 ndr_before=1 ndr_after=0 est_before=420 est_after=20 present=1 cap_ndr=0
+SCENARIO same_cost_negative_delta_safe background=15
+TRACE action=add_A net=A edge=V x=0 y=0 edgeCost=5 requested=5 returned_delta=5 ndr_before=0 ndr_after=0 est_before=15 est_after=20 present=1 cap_ndr=0
+TRACE action=add_B net=B edge=V x=0 y=0 edgeCost=5 requested=5 returned_delta=500 ndr_before=0 ndr_after=1 est_before=20 est_after=520 present=2 cap_ndr=-5
+TRACE action=remove_A net=A edge=V x=0 y=0 edgeCost=5 requested=-5 returned_delta=-500 ndr_before=1 ndr_after=0 est_before=520 est_after=20 present=1 cap_ndr=0
 RESULT same_cost_negative_delta_safe signed_before_conversion=20 stored_usage=20
-SCENARIO heterogeneous background=16
-TRACE action=add_A net=A edge=V x=0 y=0 edgeCost=4 requested=4 returned_delta=4 ndr_before=0 ndr_after=0 est_before=16 est_after=20 present=1 cap_ndr=0
-TRACE action=add_B net=B edge=V x=0 y=0 edgeCost=2 requested=2 returned_delta=200 ndr_before=0 ndr_after=1 est_before=20 est_after=220 present=2 cap_ndr=-2
-TRACE action=remove_A net=A edge=V x=0 y=0 edgeCost=4 requested=-4 returned_delta=-400 ndr_before=1 ndr_after=0 est_before=220 est_after=-180 present=1 cap_ndr=2
+SCENARIO heterogeneous background=15
+TRACE action=add_A net=A edge=V x=0 y=0 edgeCost=5 requested=5 returned_delta=5 ndr_before=0 ndr_after=0 est_before=15 est_after=20 present=1 cap_ndr=0
+TRACE action=add_B net=B edge=V x=0 y=0 edgeCost=3 requested=3 returned_delta=300 ndr_before=0 ndr_after=1 est_before=20 est_after=320 present=2 cap_ndr=-3
+TRACE action=remove_A net=A edge=V x=0 y=0 edgeCost=5 requested=-5 returned_delta=-500 ndr_before=1 ndr_after=0 est_before=320 est_after=-180 present=1 cap_ndr=2
 RESULT heterogeneous signed_before_conversion=-180 stored_usage=65356
-SCENARIO heterogeneous_reverse_remove_safe background=16
-TRACE action=add_A net=A edge=V x=0 y=0 edgeCost=4 requested=4 returned_delta=4 ndr_before=0 ndr_after=0 est_before=16 est_after=20 present=1 cap_ndr=0
-TRACE action=add_B net=B edge=V x=0 y=0 edgeCost=2 requested=2 returned_delta=200 ndr_before=0 ndr_after=1 est_before=20 est_after=220 present=2 cap_ndr=-2
-TRACE action=remove_B net=B edge=V x=0 y=0 edgeCost=2 requested=-2 returned_delta=-200 ndr_before=1 ndr_after=0 est_before=220 est_after=20 present=1 cap_ndr=0
-TRACE action=remove_A net=A edge=V x=0 y=0 edgeCost=4 requested=-4 returned_delta=-4 ndr_before=0 ndr_after=0 est_before=20 est_after=16 present=0 cap_ndr=4
-RESULT heterogeneous_reverse_remove_safe signed_before_conversion=16 stored_usage=16
+SCENARIO heterogeneous_reverse_remove_safe background=15
+TRACE action=add_A net=A edge=V x=0 y=0 edgeCost=5 requested=5 returned_delta=5 ndr_before=0 ndr_after=0 est_before=15 est_after=20 present=1 cap_ndr=0
+TRACE action=add_B net=B edge=V x=0 y=0 edgeCost=3 requested=3 returned_delta=300 ndr_before=0 ndr_after=1 est_before=20 est_after=320 present=2 cap_ndr=-3
+TRACE action=remove_B net=B edge=V x=0 y=0 edgeCost=3 requested=-3 returned_delta=-300 ndr_before=1 ndr_after=0 est_before=320 est_after=20 present=1 cap_ndr=0
+TRACE action=remove_A net=A edge=V x=0 y=0 edgeCost=5 requested=-5 returned_delta=-5 ndr_before=0 ndr_after=0 est_before=20 est_after=15 present=0 cap_ndr=5
+RESULT heterogeneous_reverse_remove_safe signed_before_conversion=15 stored_usage=15
 RESULT positive_control signed_before_conversion=65356 stored_usage=65356

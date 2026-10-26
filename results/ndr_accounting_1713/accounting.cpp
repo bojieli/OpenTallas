@@ -211,7 +211,7 @@ static void step(Graph2D& g,FrNet& n,double amount,const char* action) {
  <<" present="<<g.v_ndr_nets_[0][0].size()<<" cap_ndr="<<g.v_cap_3D_[0][0][0].cap_ndr<<"\n";
 }
 static void scenario(const char* label,int ac,int bc,int background,bool reverse) {
- Graph2D g;g.v_cap_3D_[0][0][0]={4,4.0};g.h_cap_3D_[0][0][0]={4,4.0};
+ Graph2D g;g.v_cap_3D_[0][0][0]={uint16_t(ac),double(ac)};g.h_cap_3D_[0][0][0]={uint16_t(ac),double(ac)};
  auto& e=g.v_edges_[0][0];e.est_usage=background;
  FrNet a{"A",int8_t(ac)},b{"B",int8_t(bc)};
  std::cout<<"SCENARIO "<<label<<" background="<<background<<"\n";
@@ -223,11 +223,11 @@ static void scenario(const char* label,int ac,int bc,int background,bool reverse
  std::cout<<"RESULT "<<label<<" signed_before_conversion="<<signed_before<<" stored_usage="<<e.usage<<"\n";
 }
 int main(int argc,char** argv) {
- int background=argc>1?std::atoi(argv[1]):16;
- if(argc>2 && std::string(argv[2])=="bad-only") {scenario("heterogeneous",4,2,background,false);return 0;}
- scenario("same_cost_negative_delta_safe",4,4,background,false);
- scenario("heterogeneous",4,2,background,false);
- scenario("heterogeneous_reverse_remove_safe",4,2,background,true);
+ int background=argc>1?std::atoi(argv[1]):15;
+ if(argc>2 && std::string(argv[2])=="bad-only") {scenario("heterogeneous",5,3,background,false);return 0;}
+ scenario("same_cost_negative_delta_safe",5,5,background,false);
+ scenario("heterogeneous",5,3,background,false);
+ scenario("heterogeneous_reverse_remove_safe",5,3,background,true);
  // A genuine positive penalized/congested quantity can have the identical stored value.
  Graph2D large;large.v_edges_[0][0].est_usage=65356.0;large.addEstUsageToUsage();
  std::cout<<"RESULT positive_control signed_before_conversion=65356 stored_usage="<<large.v_edges_[0][0].usage<<"\n";
