@@ -1,0 +1,32 @@
+{
+  "source": "d863d21529fef537ac98196343e30c6cefb60d91",
+  "scope": "MODEL DIAGNOSTIC; NOT FROZEN",
+  "plan_sha256": "3e5eafa2e633239a82b5066fb6a3ea4ff21dcad4c57bd5224c76b3c32a9ee989",
+  "ft_track_frac": 0.5,
+  "head_obs": "M7",
+  "open": [
+    "actual joint partition kit track budget enforcement",
+    "hgi_v8 four face budget/G2 failures",
+    "real-view path STA"
+  ],
+  "corners": {
+    "TT": {
+      "total_overflow": 0,
+      "slew_cap_violations": 0,
+      "grt_underflow_errors": 0,
+      "exit": 0,
+      "taps": 2088,
+      "insertion_min_ps": 6041.538078,
+      "insertion_max_ps": 6731.660637
+    },
+    "FF": {
+      "total_overflow": 0,
+      "slew_cap_violations": 0,
+      "grt_underflow_errors": 0,
+      "exit": 0,
+      "taps": 2088,
+      "insertion_min_ps": 5234.817862999999,
+      "insertion_max_ps": 5844.9619059999995
+    }
+  }
+}
