@@ -122,7 +122,8 @@ def _with_core(raw, tap_xy=(432.0, 432.0), insertion=None, core=((332.64, 332.64
     raw = copy.deepcopy(raw)
     t = raw["partition_types"]["mid"]
     (ox, oy), (w, h) = core
-    t["hard_cores"] = [dict(inst="u_c", module="core_m", origin_um=[ox, oy], outline_um=[w, h], orient="R0")]
+    t["hard_cores"] = [dict(inst="u_c", module="core_m", origin_um=[ox, oy], outline_um=[w, h], orient="R0",
+                             pins=[dict(name="ck", layer="M5", xy=[MP.snap(w/2), MP.snap(h/2)])])]
     common = raw.get("clock", {}).get("common_latency_ps", 250)
     t.setdefault("clock", {})["taps"] = [dict(name="u_c.ck", kind="core", xy=list(tap_xy),
                                               insertion_ps=insertion or common, insertion_tol_ps=40)]
@@ -316,3 +317,36 @@ def test_disjoint_explicit_bank_keeps_core_holes_and_real_collision_gate():
     assert not any(M.rect_overlap(r,cores[0]) for r in pieces)
     _,hits=M.explicit_bay_regions(rect,ff+[(1,10,2.404,10.27)],cores)
     assert hits==["hc"]
+
+
+@pytest.mark.parametrize("port", ["ck", "clk", "ref_clock"])
+def test_core_clock_entry_named_native_ports(port, tmp_path):
+    raw = _with_core(json.loads(TINY.read_text()))
+    P = plan(raw, tmp_path)
+    h = raw["partition_types"]["mid"]["hard_cores"][0]
+    h["pins"][0]["name"] = port
+    taps = [dict(name="u_c."+port, kind="core", xy=[432,432])]
+    checked = MP.core_clock_entry_check(P,h,taps,[99.36,99.36])
+    assert checked["verdict"] == "PASS" and checked["native_pin"] == port
+
+
+def test_core_clock_entry_rejects_ambiguous_taps_and_missing_pins(tmp_path):
+    raw = _with_core(json.loads(TINY.read_text()))
+    P = plan(raw,tmp_path); h = raw["partition_types"]["mid"]["hard_cores"][0]
+    taps = [dict(name="u_c.ck",kind="core",xy=[432,432]), dict(name="u_c.clk",kind="core",xy=[432,432])]
+    assert "ambiguous plan core clock taps" in MP.core_clock_entry_check(P,h,taps,[99.36,99.36])["issues"]
+    h["pins"].append(dict(name="ck",layer="M5",xy=[0.042,99.36]))
+    assert "ambiguous native clock pins" in MP.core_clock_entry_check(P,h,taps[:1],[99.36,99.36])["issues"]
+    h.pop("pins")
+    checked = MP.core_clock_entry_check(P,h,taps[:1],[99.36,99.36])
+    assert checked["verdict"] == "FAIL" and "missing native core clock-pin metadata" in checked["issues"]
+
+
+def test_core_clock_entry_catches_fake_centre_tap_against_native_file(tmp_path):
+    raw = _with_core(json.loads(TINY.read_text()))
+    P = plan(raw,tmp_path); h = raw["partition_types"]["mid"]["hard_cores"][0]
+    h.pop("pins");h["pins_file"] = "native.json"
+    (tmp_path/"native.json").write_text(json.dumps({"pins":[dict(name="ck",x=0.042,y=99.36)]}))
+    checked = MP.core_clock_entry_check(P,h,[dict(name="u_c.ck",kind="core",xy=[432,432])],[99.36,99.36])
+    assert checked["verdict"] == "FAIL" and checked["native_to_entry_um"] == 99.318
+    assert checked["tap_to_native_um"] == 99.318 and checked["off_um"] == 0

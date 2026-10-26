@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.root_retained_lec_receipt.v1",
+ "module": "ot_hgi_coll_tkm_m_tp192__root",
+ "snapshot": "/srv/opentallas-scratch2/claude/lecdiag/root_rerun_1a20967",
+ "source_provenance": {
+  "commit": "1a20967d65f45e1be4ca02a8108b756000b3a9ba",
+  "dirty": false,
+  "source": "git"
+ },
+ "source_kit_readonly": "/srv/opentallas-scratch2/claude/codex-hbm-cores-1026/root_kit/ot_hgi_coll_tkm_m_tp192__root_6a18a3e72633",
+ "tool_source_commit": "9db7acb24",
+ "driver_source_commit": "2e63f9b13",
+ "method": "canonical Lec.build/prove, ordinary untrusted hints, no cold correspondence",
+ "joint_obligations": 1340,
+ "actual_compare_points": 13213,
+ "different": 0,
+ "undecided": 0,
+ "state_constraints": 0,
+ "added_sram_or_buffer_format_constraints": 0,
+ "black_box_outputs": "shared free inputs, unchanged canonical abstraction",
+ "kept_registers": {
+  "declared": 3572,
+  "in_netlist": 3572,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "retention_source": "/srv/opentallas-scratch2/claude/lecdiag/root_rerun_1a20967/lec.json",
+ "original_kit_lec_json_overwritten": false,
+ "physical_timing": "NOT RUN by this proof; existing master/core holds remain",
+ "proof_unit": "oth-ubuntu-4144393-1793035040",
+ "fingerprints": {
+  "/srv/opentallas-scratch2/claude/lecdiag/root_rerun_1a20967/gold.aig": {
+   "bytes": 1874612,
+   "sha256": "14bc127816d2a567ba73ba94d4562ed67f99f4c6e9af0df27f64a910bc12c066"
+  },
+  "/srv/opentallas-scratch2/claude/lecdiag/root_rerun_1a20967/gate.aig": {
+   "bytes": 390358,
+   "sha256": "a1fc55cbc5a19fffefa5d03e0c1a0477161d30c28320783cfbe447ca73ba7740"
+  },
+  "/srv/opentallas-scratch2/claude/lecdiag/root_rerun_1a20967/gold.map": {
+   "bytes": 3252211,
+   "sha256": "efc01e4c4efb365e500e62ed29f19931a75c72438b2cdadfc1bd337de8612986"
+  },
+  "/srv/opentallas-scratch2/claude/lecdiag/root_rerun_1a20967/gate.map": {
+   "bytes": 4029821,
+   "sha256": "70cacbcf2c8bf84ebe0b4f8ac91559700d601d48e7b17ea4213f3a5b9572c76f"
+  },
+  "/srv/opentallas-scratch2/claude/lecdiag/root_rerun_1a20967/hyp.json": {
+   "bytes": 20583,
+   "sha256": "ad8129b6cbdb51a577e0050e0b6ee4421b6570d5be01460eec87f71d03c9dcfa"
+  },
+  "/srv/opentallas-scratch2/claude/lecdiag/root_rerun_1a20967/gold.keep": {
+   "bytes": 4949,
+   "sha256": "b92cdbaf3657cc0b722867e1d59cec8717d1f75e1a89e0d3aaed0d4b8a10edaf"
+  },
+  "/srv/opentallas-scratch2/claude/lecdiag/root_rerun_1a20967/lec.json": {
+   "bytes": 317228,
+   "sha256": "a26d457ae08e786ea42e22b9c1352326d61428fbd0ea83ffb1ecba0fb34a4930"
+  },
+  "/srv/opentallas-scratch2/claude/codex-rootnext-0733/profile_tool/lec.py": {
+   "bytes": 159823,
+   "sha256": "a2beec6645bfe6663f957c333afc70c550ba39abe74a1a683790fe9da46b9eeb"
+  },
+  "/srv/opentallas-scratch2/claude/codex-rootnext-0733/profile_tool/hbm_root_history.py": {
+   "bytes": 9250,
+   "sha256": "2fc1bba587f3729310c77ce87feeb077160d9f2ed1682d8ca1301c5abf16cff0"
+  },
+  "/srv/opentallas-scratch2/claude/codex-rootnext-0733/profile_tool/ordinary_codec_hints.json": {
+   "bytes": 177184,
+   "sha256": "0313451f13d985323329a3f3d29d93958290fe0cffe94608560630c30c0cb958"
+  },
+  "/srv/opentallas-scratch2/claude/codex-hbm-cores-1026/root_kit/ot_hgi_coll_tkm_m_tp192__root_6a18a3e72633/rtl/ot_hbm_face_reg.sv": {
+   "bytes": 540,
+   "sha256": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5"
+  },
+  "/srv/opentallas-scratch2/claude/codex-hbm-cores-1026/root_kit/ot_hgi_coll_tkm_m_tp192__root_6a18a3e72633/rtl/ot_hgi_coll_tkm_m_tp192__root__fshell.sv": {
+   "bytes": 6505,
+   "sha256": "fe53e4fb922e70e1e366b3ac4fbbe4ed4848b3edfe0ba99dc608ddde847ba8cc"
+  },
+  "/srv/opentallas-scratch2/claude/codex-hbm-cores-1026/root_kit/ot_hgi_coll_tkm_m_tp192__root_6a18a3e72633/rtl/ot_hgi_coll_tkm_m_tp192__root__wrap.sv": {
+   "bytes": 2138,
+   "sha256": "cd4ff07175032c20f7f384ca9066f014eeb58a4b1d08d399750e333cee045dd5"
+  },
+  "/srv/opentallas-scratch2/claude/codex-hbm-cores-1026/root_kit/ot_hgi_coll_tkm_m_tp192__root_6a18a3e72633/rtl/ot_hgi_coll_tkm_tp192_root_core.sv": {
+   "bytes": 3750649,
+   "sha256": "06efb8de8902f74c80c6652d91cc799eac3c93c9849744b0c790c3d8951129bb"
+  }
+ }
+}

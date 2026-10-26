@@ -56,7 +56,7 @@ module ot_v41_bterm5_w10 #(
         if (c[2:1] == 2'd0) e2m1 = {c[3], c[0] ? 4'd6 : 4'd0, 3'd0};
         else                e2m1 = {c[3], {2'b00, c[2:1]} + 4'd6, c[0], 2'b00};
     endfunction
-    integer i;
+    // loop-scoped: i (S81-CORE-LAT/QB 10-26 rtl_lint shared loop integer)
 
     // valid chain (async reset), one bit a stage
     reg [LATENCY-1:0] vs;
@@ -85,7 +85,7 @@ module ot_v41_bterm5_w10 #(
     reg [7:0]         xc, wc;
     always @(posedge clk) begin
         p0_es <= m_xe + m_we;
-        for (i = 0; i < 32; i = i + 1) begin
+        for (int i = 0; i < 32; i = i + 1) begin
             xc = m_xq[8*i +: 8];
             wc = m_fp4[(i * FPC) / 32] ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
             p0_nan[i] <= (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
@@ -107,20 +107,20 @@ module ot_v41_bterm5_w10 #(
     if (P0B != 0) begin : g_p0b
         always @(posedge clk) begin
             q0_es <= p0_es;
-            for (i = 0; i < 32; i = i + 1) begin
+            for (int i = 0; i < 32; i = i + 1) begin
                 q0_sg[i] <= p0_sg[i]; q0_xs[i] <= p0_xs[i]; q0_ws[i] <= p0_ws[i]; q0_xf[i] <= p0_xf[i]; q0_wf[i] <= p0_wf[i];
                 if (P0B == 2) begin
                     q0_pm[i] <= p0_xs[i] * p0_ws[i];
                     q0_sh[i] <= {1'b0, p0_xf[i]} + {1'b0, p0_wf[i]} - 5'd2;
                 end
             end
-            for (i = 0; i < 8; i = i + 1) q0_nan[i] <= |p0_nan[4*i +: 4];
+            for (int i = 0; i < 8; i = i + 1) q0_nan[i] <= |p0_nan[4*i +: 4];
             q0_nan[31:8] <= '0;
         end
     end else begin : g_np0b
         always @(*) begin
             q0_es = p0_es; q0_nan = p0_nan;
-            for (i = 0; i < 32; i = i + 1) begin
+            for (int i = 0; i < 32; i = i + 1) begin
                 q0_sg[i] = p0_sg[i]; q0_xs[i] = p0_xs[i]; q0_ws[i] = p0_ws[i]; q0_xf[i] = p0_xf[i]; q0_wf[i] = p0_wf[i];
             end
         end
@@ -135,7 +135,7 @@ module ot_v41_bterm5_w10 #(
     if (P0B >= 3) begin : g_p0c
         always @(posedge clk) begin
             q1_es <= q0_es; q1_nan <= q0_nan[7:0];
-            for (i = 0; i < 32; i = i + 1) begin
+            for (int i = 0; i < 32; i = i + 1) begin
                 q1_sg[i] <= q0_sg[i];
                 q1_pm[i] <= q0_xs[i] * q0_ws[i];
                 q1_sh[i] <= {1'b0, q0_xf[i]} + {1'b0, q0_wf[i]} - 5'd2;
@@ -156,7 +156,7 @@ module ot_v41_bterm5_w10 #(
 `else
         pa_nan <= (P0B >= 3) ? |q1_nan : |q0_nan;
 `endif
-        for (i = 0; i < 32; i = i + 1) begin
+        for (int i = 0; i < 32; i = i + 1) begin
             pa_sg[i] <= (P0B >= 3) ? q1_sg[i] : q0_sg[i];
             pa_pm[i] <= (P0B >= 3) ? q1_pm[i] : (P0B >= 2) ? q0_pm[i] : q0_xs[i] * q0_ws[i];
             pa_sh[i] <= (P0B >= 3) ? q1_sh[i] : (P0B >= 2) ? q0_sh[i] : {1'b0, q0_xf[i]} + {1'b0, q0_wf[i]} - 5'd2;
@@ -170,7 +170,7 @@ module ot_v41_bterm5_w10 #(
     reg signed [10:0] p1_es;
     always @(posedge clk) begin
         p1_nan <= pa_nan; p1_es <= pa_es;
-        for (i = 0; i < 32; i = i + 1) begin
+        for (int i = 0; i < 32; i = i + 1) begin
 `ifdef BT5_MUTANT_SH
             p1_q[i] <= $signed(pa_sg[i] ? -$signed({1'b0, pa_pm[i]}) : $signed({1'b0, pa_pm[i]})) <<< pa_sh[i][1];  // negative control
 `else
@@ -183,7 +183,7 @@ module ot_v41_bterm5_w10 #(
     // -- S4: terms (units of 2^-18) and CSA 32 -> 15 ----------------------------------------------------
     reg [32*W-1:0] terms;
     always @(*)
-        for (i = 0; i < 32; i = i + 1)
+        for (int i = 0; i < 32; i = i + 1)
             terms[W*i +: W] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
     // S4a (P0B >= 3): the shifted terms registered before the 32 -> 15 CSA (owner rule 3: a reduction over > 4 inputs
     // gets a register level; Z29c post-CTS at 730: p2h_c -48.3)

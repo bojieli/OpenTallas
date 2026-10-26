@@ -586,6 +586,10 @@ def cmd_submit(a):
                                f"cp -a {src}/tools/die_plan {runtime_src}/tools/; "
                                f"cp -a {src}/physical/common_flow {runtime_src}/physical/; "
                                f"cp -a {src}/physical/die_plan/qwen_kvsys/cores/harden/eco "
+                               f"{runtime_src}/physical/die_plan/qwen_kvsys/cores/harden/; "
+                               # mk_eco.sh copies these sibling dependencies into the ECO kit.
+                               f"cp -a {src}/physical/die_plan/qwen_kvsys/cores/harden/"
+                               f"{{run_kit_kv.sh,corners.tcl,pin_audit_core.py}} "
                                f"{runtime_src}/physical/die_plan/qwen_kvsys/cores/harden/; ")
         (run / "route.sh").write_text("#!/bin/bash\nset -u\n" + route +
                                       '\necho "CANARY_FLOW_RC $?"\n')

@@ -63,11 +63,11 @@ module ot_v41_chain4 #(
     end
     reg [LAT-1:0] pv;
     reg [SW-1:0] ps [0:LAT-1];
-    integer k;
+    // loop-scoped: k (S81-CORE-LAT/QB 10-26 rtl_lint shared loop integer)
     reg hazard;
     always @* begin
         hazard = 1'b0;
-        for (k = 0; k < LAT - 1; k = k + 1) if (pv[k] && ps[k] == slot_r) hazard = 1'b1;
+        for (int k = 0; k < LAT - 1; k = k + 1) if (pv[k] && ps[k] == slot_r) hazard = 1'b1;
     end
     wire [31:0] sum;
     wire [1:0] err;
@@ -131,7 +131,7 @@ module ot_v41_chain4 #(
     end
     always @(posedge clk) begin
         ps[0] <= slot_r;
-        for (k = 1; k < LAT; k = k + 1) ps[k] <= ps[k-1];
+        for (int k = 1; k < LAT; k = k + 1) ps[k] <= ps[k-1];
         if (sv && !d_last) acc[ps[LAT-1]] <= sum;
         sp_slot <= ps[LAT-1]; sp_val <= sum; sp_f <= d_f;
     end
