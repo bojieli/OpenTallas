@@ -93,16 +93,28 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--core', required=True, choices=TOPS)
     ap.add_argument('--profile-dir', required=True)
+    ap.add_argument('--diagnostic-plan', action='store_true',
+                    help='allow an external scratch plan; not release evidence')
     ap.add_argument('core_args', nargs=argparse.REMAINDER)
     a = ap.parse_args()
     args = a.core_args[1:] if a.core_args[:1] == ['--'] else a.core_args
-    if '--view' not in args:
+    if '--view' not in args or '--views' not in args:
         ap.error('ordinary core-generator --view is required after --')
     view = args[args.index('--view') + 1]
     # Select a unique recipe key without mutating the shared recipe tables.
     if '--recipe-key' in args:
         ap.error('--recipe-key is supplied by this source profile')
+    views_path = Path(args[args.index('--views') + 1]).resolve()
+    views = json.loads(views_path.read_text())
+    plan_path = Path(views['plan'])
+    if not plan_path.is_absolute():
+        plan_path = views_path.parent / plan_path
+    if not a.diagnostic_plan:
+        for path in (views_path, plan_path.resolve()):
+            if not path.is_relative_to(REPO):
+                ap.error('external plan requires --diagnostic-plan: ' + str(path))
     recipe, staged, receipt = materialize(a.core, a.profile_dir)
+    receipt['diagnostic_inputs'] = bool(a.diagnostic_plan)
     p = REPO / 'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py'
     sys.path.insert(0, str(p.parent))
     sys.path.insert(0, str(REPO / 'tools/die_plan'))

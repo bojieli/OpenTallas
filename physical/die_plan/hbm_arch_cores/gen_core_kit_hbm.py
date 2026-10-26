@@ -923,6 +923,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if source_profile:
         fz["source_profile"] = source_profile
         fz["source_commit"] = source_profile["source_commit"]
+        if plan_path.resolve().is_relative_to(REPO):
+            fz["plan"] = str(plan_path.resolve().relative_to(REPO))
+            fz["pins_file"] = str((pdir / v["pins_file"]).resolve().relative_to(REPO))
+        elif not source_profile.get("diagnostic_inputs"):
+            raise SystemExit("external source-profile plan is diagnostic only")
     fz["flow_defaults"] = dict(flow, rule="FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)")
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
