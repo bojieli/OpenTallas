@@ -994,13 +994,17 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         raise ValueError('--entry-engram-inputs requires --entry-norm-check so native entry rows actually consume H')
     if dense_stage is not None and mu_ctx:
         raise ValueError('DENSE2 MU requires the corrected per-position static stage graph binding')
-    if fixtures is not None:
+    if fixtures is not None and layer in LAYERS:
         if svc_timing_profile is None:
             raise ValueError('fixture programmes require explicit --svc-timing-profile matching the selected service engine')
         defines = {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}
         expected = 'legacy_fg3' if 'SVCQ_ENG_FG3' in defines else 'closing_allq'
         if svc_timing_profile != expected:
             raise ValueError(f'service timing profile {svc_timing_profile} disagrees with selected source {expected}')
+        if svc_timing_profile == 'closing_allq':
+            required = {'OT_ATTN_HCORE', 'OT_S81C_HCORE_CTLA', 'OT_S81C_HCORE_RST_TIMED', 'OT_SVC_ALLQ'}
+            if not required <= defines:
+                raise ValueError('closing_allq timing requires selected source defines ' + ','.join(sorted(required)))
     if svc_owner_epoch is not None and mu_ctx:
         raise ValueError('SO source-owner fields require per-user MU remapping before admission')
     out = Path(out)

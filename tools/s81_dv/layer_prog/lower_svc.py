@@ -660,6 +660,8 @@ def lower(die, op, ctx):
     if fx is None:
         return dict(base, status='GAP', gap=dict(module='lower_svc', port='fixtures',
                                                  missing='no fixture dir (--fixtures): q / P / own row are runtime data'))
+    if ctx.get('svc_timing_profile') is None:
+        raise ValueError('service programme requires an explicit svc_timing_profile')
     key = (str(fx), ctx.get('layer'), ctx.get('svc_tag', 0), ctx.get('svc_owner_epoch'),
            json.dumps(ctx.get('svc_sot_booking'), sort_keys=True))
     if key not in _CACHE:
