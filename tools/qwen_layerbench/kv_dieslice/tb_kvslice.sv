@@ -45,8 +45,19 @@ module tb_kvslice;
         .kv_fwd_lrst_pad(far_epraw ? dut.sys_c.w_d2d_kv_fwd_link_rst_n[0] : dut.sys_c.d5_d2d_kv_fwd_link_rst_n[0]),
         .mut_cmd_late(far_m1), .c2k_v(c2k_v), .c2k_flit(c2k_flit));
     // die host TX (two halves) -> host board port RX
-    wire d2h_v = dut.sys_SW.u_core.tx_v & dut.sys_SE.u_core.tx_v;
-    wire [1042:0] d2h_flit = {dut.sys_SE.u_core.tx_flit, dut.sys_SW.u_core.tx_flit};
+    // KV-TOK 10-26 (C1): the x12 host SerDes return is two x6 halves (sys_SW = flit[521:0], sys_SE = flit[1042:522]) on
+    // their own lanes/synchronisers; a same-cycle AND of the two tx_v drops every flit whose halves arrive in different
+    // cycles (B33: 11 die->host flits lost -> host adapter SEQUENCE fault). Board join = the k-th SW half pairs with the
+    // k-th SE half via ordered queues (ot_fdi_join2, like a multi-lane PHY deskew); order and values preserved.
+    // ot_fdi_join2 = the existing rtl/physical/ot_fdi_join2.sv (PATH-KV-BIND 0497760df), compiled from the staged
+    // vehicle files.f (every B33+ vehicle stages it, e.g. B33 build9 files.f); not copied here.
+    wire d2h_v;
+    wire [1042:0] d2h_flit;
+    ot_fdi_join2 #(.WA(522), .WB(521), .DEPTH(16)) u_board_half_join (
+        .clk(ck_phy), .rst_n(por_n),
+        .a_v(dut.sys_SW.u_core.tx_v), .a_d(dut.sys_SW.u_core.tx_flit),
+        .b_v(dut.sys_SE.u_core.tx_v), .b_d(dut.sys_SE.u_core.tx_flit),
+        .o_v(d2h_v), .o_d(d2h_flit));
     reg  [1042:0] d2h_q [0:3]; reg d2h_vq [0:3];
     always @(posedge ck_phy) begin
         d2h_q[0] <= d2h_flit; d2h_vq[0] <= d2h_v;
