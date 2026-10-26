@@ -1625,7 +1625,8 @@ def mesh_segments(M, jogs=True):
     """[(layer, x0, y0, x1, y1, net, kind)] centre lines of the mesh straps and island jogs exactly as cmd_combo draws
     them (strap spans clipped at macro holes with --clock-floorplan)."""
     xs, ys = M["xs"], M["ys"]
-    regs = M["meta"].get("regions") or [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))]
+    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") else
+                                        [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))])
     md = {L: (M["meta"].get("strap_shield") or {}).get(L, C128.DRAWN) for L in ("M8", "M9")}
     out = []
     for g in regs:
@@ -1699,6 +1700,235 @@ def write_verilog(cells, nets, ports, path):
     return ren
 
 
+LAT_TOL_UM = 0.01            # plan coordinates are r3-rounded: equal-cut / midpoint checks to 0.01 um
+
+
+def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, track_profile=None, rule128=None,
+                  tree_only=False):
+    """CLOCK-128-R4 (COORD RULING MASTER-PLAN-R5 12:58): the die H-tree built FROM the master plan's die_tree_plan.json
+    lattice.nodes (binding xy, no search, no slide).  Every node = a partition pushdown island (binding
+    new_partition_island / existing_island), every leg straight with n = ceil(L / rep_um) equal segments whose cuts are
+    the plan's leg_repeater_sites (partition_bay, in channels).  Fail closed: any plan inconsistency (sha, verdict,
+    binding, midpoint, unequal path, leg-repeater mismatch, cell on a hard keep-out, L leg) is a C128.PlanError.
+    Root: the plan's die clock input (clock.spine.root_um, PG-snapped) drives the lattice root through an equal-cut
+    trunk; trunk repeater sites obey the same partition-bay rule and are listed as derived (plan must declare them).
+    Below the leaves the plan declares no regional distribution yet: without tree_only the build stops with a
+    no_regional_distribution plan error; tree_only builds the plan-declared part (root -> 16 region leaves), each leaf
+    driving one region-entry port t_reg_<tag> -- diagnostic of the die tree, never freeze evidence."""
+    if rule128 is None:
+        raise ValueError("--tree-plan needs the METHODOLOGY 12.8 build")
+    perr = []
+    if dtp.get("schema") != "opentallas.die_tree_plan.v1":
+        raise C128.PlanError([dict(kind="tree_plan_schema", name="die_tree_plan", detail=str(dtp.get("schema")))])
+    if dtp.get("plan_sha256") != plan_sha:
+        raise C128.PlanError([dict(kind="tree_plan_sha", name="die_tree_plan",
+                                   detail=f"tree plan cut from {str(dtp.get('plan_sha256'))[:12]}, build plan {plan_sha[:12]}")])
+    lat = dtp.get("lattice") or {}
+    gate, nodes = lat.get("gate") or {}, lat.get("nodes") or []
+    if gate.get("verdict") != "PASS" or not nodes:
+        raise C128.PlanError([dict(kind="tree_plan_gate", name="lattice", detail=f"lattice gate {gate.get('verdict')}, "
+                                   f"{len(nodes)} nodes")])
+    W, H = float(P.W), float(P.H)
+    ko = DC.keepouts(P)
+    K = DC.KeepIndex(ko, die=(W, H))
+    parts = [(n_, P.rect(n_)) for n_ in P.parts]
+
+    def host(xy, half=None):
+        """partition holding xy (cell body inside it and clear of every hard keep-out), else None."""
+        hw = (BUF_W / 2, ROW_Y / 2) if half is None else half
+        for dx in (-hw[0], hw[0]):
+            for dy in (-hw[1], hw[1]):
+                if K.hit(xy[0] + dx, xy[1] + dy, m=0.0):
+                    return None, "on_hard_keepout"
+        for name, r in parts:
+            if r[0] <= xy[0] <= r[2] and r[1] <= xy[1] <= r[3]:
+                return name, None
+        return None, "outside_partitions"
+    by_tag = {n_["tag"]: n_ for n_ in nodes}
+    kids = defaultdict(list)
+    for n_ in nodes:
+        if n_["parent"] is not None:
+            if n_["parent"] not in by_tag:
+                perr.append(dict(kind="tree_plan_parent", name=n_["tag"], detail=f"parent {n_['parent']} missing"))
+                continue
+            kids[n_["parent"]].append(n_["tag"])
+    roots = [n_ for n_ in nodes if n_["parent"] is None]
+    if len(roots) != 1:
+        raise C128.PlanError([dict(kind="tree_plan_root", name="lattice", detail=f"{len(roots)} roots")])
+    for n_ in nodes:
+        xy = tuple(n_["xy_um"])
+        if n_.get("binding") not in ("new_partition_island", "existing_island"):
+            perr.append(dict(kind="node_binding", name=n_["tag"], detail=str(n_.get("binding"))))
+        part, why = host(xy)
+        if part is None:
+            perr.append(dict(kind="node_site", name=n_["tag"], detail=f"{why} at {xy}"))
+        elif n_.get("host") and n_["host"] != part:
+            perr.append(dict(kind="node_host", name=n_["tag"], detail=f"plan host {n_['host']} != {part}"))
+        ch = kids.get(n_["tag"], [])
+        if ch and len(ch) != 2:
+            perr.append(dict(kind="node_arity", name=n_["tag"], detail=f"{len(ch)} children"))
+        if len(ch) == 2:
+            a_, b_ = by_tag[ch[0]]["xy_um"], by_tag[ch[1]]["xy_um"]
+            mid = ((a_[0] + b_[0]) / 2, (a_[1] + b_[1]) / 2)
+            if abs(mid[0] - xy[0]) + abs(mid[1] - xy[1]) > LAT_TOL_UM:
+                perr.append(dict(kind="node_midpoint", name=n_["tag"], detail=f"{xy} vs children midpoint {mid}"))
+    reps_plan = defaultdict(list)
+    for r_ in gate.get("leg_repeater_sites") or []:
+        reps_plan[r_["leg"]].append(r_)
+    cells, nets, ports = {}, [], [("input", "root")]
+
+    def cell(name, x, y, kind, **kw):
+        cells[name] = dict(x=snap(x - BUF_W / 2, SITE_X), y=snap(y - ROW_Y / 2, ROW_Y), kind=kind, **kw)
+        return name
+    shielded = True
+    shield_foot = C128.shield_geom(NDR[ndr])[2] if shielded else NDR[ndr]["width"] / 2
+    sp = P.clock.get("spine", {}) or {}
+    root = tuple(sp.get("die_root_um") or sp.get("root_um") or roots[0]["xy_um"])
+    out = dict(meta=dict(nx=0, ny=0, m=0, rep_um=rep_um, ndr=ndr, sites="plan_lattice", W=W, H=H, pitch_um=gate.get("pitch_um"),
+                         lattice_tree=dict(source="die_tree_plan.json lattice.nodes", plan_sha256=plan_sha,
+                                           nodes=len(nodes), leaves=sum(1 for n_ in nodes if not kids.get(n_["tag"])),
+                                           lattice=gate.get("lattice"), path_len_um=gate.get("path_len_um"),
+                                           tree_only=bool(tree_only))),
+               xs=[], ys=[], drivers={}, htree=[], stubs=[], unplaced=[])
+    import gen_phys as GP
+    out["meta"]["tap_layer"] = P.layer_budget["partition_signal_max"]
+    out["meta"]["tap_pin_size_um"] = [GP.LAYER_W.get(out["meta"]["tap_layer"], .04), 4 * GP.PIN_LEN_UM]
+    if pg_shapes is not None:
+        planned_root = root
+        root = (pg_free_axis([root[0]], pg_shapes, "M9", 0, W, track_profile["M9"], shield_foot, NDR[ndr]["space"],
+                             MAX_MOVE_UM)[0], root[1])
+        out["meta"].update(pg_aware=True, pg_tracks=track_profile, root_plan_um=list(planned_root),
+                           root_pg_shift_um=round(abs(root[0] - planned_root[0]), 6))
+    out["meta"]["root_um"] = list(root)
+    rt = roots[0]
+    # --- trunk: die clock input -> lattice root, equal cuts (common to every pair: no skew effect)
+    txy = tuple(rt["xy_um"])
+    trunk = abs(root[0] - txy[0]) + abs(root[1] - txy[1])
+    if abs(root[0] - txy[0]) > 1e-6 and abs(root[1] - txy[1]) > 1e-6:
+        perr.append(dict(kind="trunk_l", name="trunk", detail=f"root {root} -> lattice root {txy} is not straight"))
+    n_tr = max(1, math.ceil(trunk / rep_um - 1e-9))
+    chain, derived = [], []
+    for k in range(1, n_tr):
+        p = (root[0] + (txy[0] - root[0]) * k / n_tr, root[1] + (txy[1] - root[1]) * k / n_tr)
+        part, why = host(p)
+        if part is None:
+            perr.append(dict(kind="trunk_site", name=f"ckm_t_{k}", detail=f"{why} at {p}"))
+        derived.append(dict(cell=f"ckm_t_{k}", xy_um=[round(p[0], 3), round(p[1], 3)], part=part,
+                            binding="partition_bay (derived, not yet declared in die_tree_plan)"))
+        chain.append(cell(f"ckm_t_{k}", p[0], p[1], "rep", level=0))
+    out["meta"].update(trunk_um=round(trunk, 3), trunk_reps=len(chain), trunk_um_basis="die input -> lattice root",
+                       derived_trunk_sites=derived)
+    n0 = cell("ckm_n0", txy[0], txy[1], "node", level=0, plan_tag=rt["tag"])
+    chain.append(n0)
+    nets.append(dict(name="root", drv="port:root", loads=[chain[0]], level=-1))
+    for a_, b_ in zip(chain, chain[1:]):
+        nets.append(dict(name=f"ckm_w_{a_}", drv=a_, loads=[b_], level=-1))
+    tap_rows, plen = [], {rt["tag"]: 0.0}
+
+    def rec(tag, drv_cell, level):
+        here = tuple(by_tag[tag]["xy_um"])
+        loads = []
+        for ct in kids.get(tag, []):
+            cn = by_tag[ct]
+            kp = tuple(cn["xy_um"])
+            L = abs(kp[0] - here[0]) + abs(kp[1] - here[1])
+            plen[ct] = plen[tag] + L
+            if abs(kp[0] - here[0]) > 1e-6 and abs(kp[1] - here[1]) > 1e-6:
+                perr.append(dict(kind="leg_l", name=ct, detail="L-shaped leg: the plan must split it at a corner node"))
+            n_seg = max(1, math.ceil(L / rep_um - 1e-9))
+            pl = reps_plan.get(ct, [])
+            if len(pl) != n_seg - 1:
+                perr.append(dict(kind="leg_reps", name=ct, detail=f"plan {len(pl)} leg repeaters, equal cuts need {n_seg - 1}"))
+            nb = cell(f"ckm_n{level + 1}_{ct}", kp[0], kp[1], "node", level=level + 1, plan_tag=ct)
+            reps, prev, first = [], None, None
+            for k in range(1, n_seg):
+                p = (here[0] + (kp[0] - here[0]) * k / n_seg, here[1] + (kp[1] - here[1]) * k / n_seg)
+                q = next((r_ for r_ in pl if abs(r_["xy_um"][0] - p[0]) + abs(r_["xy_um"][1] - p[1]) <= LAT_TOL_UM), None)
+                if q is None or q.get("binding") != "partition_bay":
+                    perr.append(dict(kind="leg_rep_site", name=f"ckm_r{level + 1}_{ct}_{k}",
+                                     detail=f"equal cut {p} has no plan partition_bay site"))
+                part, why = host(p)
+                if part is None:
+                    perr.append(dict(kind="leg_rep_body", name=f"ckm_r{level + 1}_{ct}_{k}", detail=f"{why} at {p}"))
+                rn = cell(f"ckm_r{level + 1}_{ct}_{k}", p[0], p[1], "rep", level=level + 1)
+                reps.append(dict(cell=rn, slide_um=0.0, plan_part=(q or {}).get("part")))
+                if prev is None:
+                    first = rn
+                else:
+                    nets.append(dict(name=f"ckm_w_{prev}", drv=prev, loads=[rn], level=level + 1))
+                prev = rn
+            if prev is not None:
+                nets.append(dict(name=f"ckm_w_{prev}", drv=prev, loads=[nb], level=level + 1))
+            loads.append(first or nb)
+            leaf = not kids.get(ct)
+            out["htree"].append(dict(level=level + 1, tag=ct, a=list(here), b=list(kp), len_um=round(L, 3), n_seg=n_seg,
+                                     reps=reps, node=nb, node_move_um=0.0, leaf=False, region_leaf=leaf,
+                                     plan_binding=cn.get("binding"), plan_host=cn.get("host")))
+            if leaf:
+                tp = f"t_reg_{ct}"
+                ports.append(("output", tp))
+                # region-entry port one island pitch (8.64 um) beside the leaf island (straight M8 stub)
+                pxy = (kp[0] + 8.64, kp[1])
+                nets.append(dict(name=f"ckm_w_{nb}", drv=nb, loads=["port:" + tp], level=99))
+                tap_rows.append(dict(part=cn.get("host"), tap="region_entry", port=tp, xy=[round(pxy[0], 4), pxy[1]],
+                                     layer="M8", pin_size_um=[0.32, 0.16], region_leaf=ct, early_ps=0.0, stub=nb, foot=list(kp),
+                                     strap=None, slide_um=0.0, stub_um=8.64))
+            else:
+                rec(ct, nb, level + 1)
+        nets.append(dict(name=f"ckm_w_{drv_cell}", drv=drv_cell, loads=loads, level=level))
+    rec(rt["tag"], n0, 0)
+    lv = [plen[n_["tag"]] for n_ in nodes if not kids.get(n_["tag"]) and n_["tag"] in plen]
+    spread = (max(lv) - min(lv)) if lv else float("inf")
+    if spread > LAT_TOL_UM:
+        perr.append(dict(kind="path_spread", name="lattice", detail=f"root->leaf spread {spread:.3f} um"))
+    out["taps"] = tap_rows
+    if not tree_only:
+        n_t = len(DC.plan_taps(P))
+        perr.append(dict(kind="no_regional_distribution", name="regions",
+                         detail=f"{n_t} partition clock taps: the plan declares no distribution (regional mesh drivers / "
+                                f"sub-tree islands) below the {len(lv)} lattice leaves; MASTER-PLAN must declare it"))
+    overlaps = placement_overlaps(cells)
+    out["clock_cell_overlaps"] = overlaps
+    out["clock_hard_keepout_violations"] = hard_keepout_violations(P, cells)
+    if overlaps:
+        perr.append(dict(kind="cell_overlap", name="cells", detail=str(overlaps[:3])))
+    if out["clock_hard_keepout_violations"]:
+        perr.append(dict(kind="hard_keepout", name="cells", detail=str(out["clock_hard_keepout_violations"][:3])))
+    rows = perr + [dict(kind="empty_tree_net", name=n["name"], detail="tree net without loads") for n in nets if not n["loads"]]
+    if rows:
+        raise C128.PlanError(rows)
+    out["rule_12_8"] = dict(early_offset_taps=[], early_offset_cores={}, stub_sizing=None)
+    sh = "VSS"
+    if pg_shapes is not None:
+        pgr = pg_shapes
+    else:
+        import die_infra as DI
+        pgr = DI.pg_rects(P, C128.pg_grid(P))
+    router = C128.TrackRouter(NDR[ndr], sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM)
+    router.reserve(C128.pg_shapes(pgr))
+    wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, router=router)
+    out["fixed_wires"] = wires
+    out["meta"]["tree_tracks"] = dict(
+        method="C128.TrackRouter: nearest PG-aware track, clock metal + VSS shields clear of PG/clock/shields by the NDR "
+               "space", tracks=track_profile or DEFAULT_TRACKS, max_move_um=TRACK_MOVE_UM, segments=len(router.moves),
+        moved=sum(1 for v in router.moves if v > 1e-6), modes=dict(router.modes),
+        move_max_um=round(max(router.moves or [0.0]), 4), pg_rects=len(pgr),
+        pg_source="--pg-json" if pg_shapes is not None else "plan die.pg.grid")
+    out["meta"]["clock_shield"] = C128.shield_record(wires, sh, 0, 0)
+    out["meta"]["rule_12_8"] = dict(methodology="v4.4 12.8 + 12.4b", shield_net=sh, sizing="BUFx24 nodes/repeaters (plan)",
+                                    early_offset_taps=0, tap_slew_max_ps=rule128.get("tap_slew_max_ps", C128.TAP_SLEW_MAX_PS))
+    out["meta"].update(cells=len(cells), drivers=0, bufx24_drivers=0,
+                       nodes=sum(1 for c in cells.values() if c["kind"] == "node"),
+                       reps=sum(1 for c in cells.values() if c["kind"] == "rep"), stubs=len(tap_rows),
+                       taps_early_nonzero=0, unplaced=0, clock_cell_overlap_pairs=0, clock_hard_keepout_violations=0,
+                       driver_moves=0, driver_move_max_um=0, rep_slide_max_um=0.0, node_move_max_um=0.0,
+                       stub_max_um=max([t["stub_um"] for t in tap_rows] or [0]),
+                       htree_wire_mm=round(sum(h["len_um"] for h in out["htree"]) / 1e3 + trunk / 1e3, 3),
+                       mesh_wire_mm=0.0, stub_wire_mm=round(sum(t["stub_um"] for t in tap_rows) / 1e3, 3),
+                       path_spread_um=round(spread, 4), root_leaf_path_um=round(max(lv), 3))
+    return cells, nets, ports, out
+
+
 def cmd_build(a):
     P = S.Plan(S.load(a.plan))
     if getattr(a, "rule_12_8", False):
@@ -1736,17 +1966,26 @@ def cmd_build(a):
         plan_sites["source"] = str(a.plan_sites)
         plan_sites["sha256"] = hashlib.sha256(Path(a.plan_sites).read_bytes()).hexdigest()
     try:
-        cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
-                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks, region_spec,
-                                  trunk_repeaters=a.trunk_repeaters, driver_pair_span_um=a.driver_pair_span,
-                                  split_yfirst=a.split_yfirst, floorplan=fp,
-                                  rule128=(dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps,
-                                                allow_plan_errors=getattr(a, "allow_plan_errors", False))
-                                           if getattr(a, "rule_12_8", False) else None), plan_sites=plan_sites,
-                                  lattice=(json.loads(Path(a.lattice_spec).read_text())
-                                           if getattr(a, "lattice_spec", None) else None),
-                                  uniform_regions=(json.loads(Path(a.uniform_regions).read_text())
-                                                   if getattr(a, "uniform_regions", None) else None))
+        if getattr(a, "tree_plan", None):
+            import hashlib
+            rule = dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps) if getattr(a, "rule_12_8", False) else None
+            cells, nets, ports, M = build_lattice(P, json.loads(Path(a.tree_plan).read_text()),
+                                                  hashlib.sha256(Path(a.plan).read_bytes()).hexdigest(), a.rep_um,
+                                                  a.ndr, pg_shapes, tracks, rule, tree_only=a.tree_only)
+            M["meta"]["lattice_tree"]["tree_plan"] = str(a.tree_plan)
+            M["meta"]["lattice_tree"]["tree_plan_sha256"] = hashlib.sha256(Path(a.tree_plan).read_bytes()).hexdigest()
+        else:
+          cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
+                                    a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks, region_spec,
+                                    trunk_repeaters=a.trunk_repeaters, driver_pair_span_um=a.driver_pair_span,
+                                    split_yfirst=a.split_yfirst, floorplan=fp,
+                                    rule128=(dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps,
+                                                  allow_plan_errors=getattr(a, "allow_plan_errors", False))
+                                             if getattr(a, "rule_12_8", False) else None), plan_sites=plan_sites,
+                                    lattice=(json.loads(Path(a.lattice_spec).read_text())
+                                             if getattr(a, "lattice_spec", None) else None),
+                                    uniform_regions=(json.loads(Path(a.uniform_regions).read_text())
+                                                     if getattr(a, "uniform_regions", None) else None))
     except C128.PlanError as e:
         (out / "plan_errors.json").write_text(json.dumps(dict(plan=str(a.plan), error=str(e), rows=e.rows), indent=1)
                                               + "\n")
@@ -2152,7 +2391,8 @@ def cmd_combo(a):
           "proc um {v} { global dbu; return [expr {round($v*$dbu)}] }"]
     # the strap footprint (+ NDR spacing) is also a routing obstruction: GRT does not derate special wires
     hs = hw + nd["space"]
-    regs = M["meta"].get("regions") or [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))]
+    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") else
+                                        [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))])
     vias_meta, cross_meta = {}, {}
     shield_segs_all = []      # every shielded clock segment (straps, jogs, fixed tree wires): VSS ties below
     for g in regs:      # one special net per clock region (the whole strap grid without --regions)
@@ -3042,6 +3282,10 @@ def main(argv=None):
     b.add_argument("--lattice-spec", help="opt-in JSON (CLOCK-KV-R3, 12.8e1 continuous mesh): ys_um (all strap rows, "
                    "any count), driver_rows (power-of-two list of strap-row indices carrying mesh drivers), axes "
                    "(tree split order, e.g. yyyyxxxxxyy); other rows are driverless straps of the same mesh")
+    b.add_argument("--tree-plan", help="CLOCK-128-R4: build the die H-tree from the master plan's die_tree_plan.json "
+                   "lattice.nodes (binding xy; fail closed on any plan inconsistency)")
+    b.add_argument("--tree-only", action="store_true", help="with --tree-plan: build only the plan-declared die tree "
+                   "(root -> lattice leaves, one region-entry port per leaf); diagnostic, never freeze evidence")
     b.add_argument("--allow-plan-errors", action="store_true",
                    help="DIAGNOSTIC: write the build despite plan errors (never qualifies; combo refuses it)")
     b.add_argument("--clock-floorplan", help="opt-in JSON: x_cuts_um (region seams on partition edges) + region_nx "
