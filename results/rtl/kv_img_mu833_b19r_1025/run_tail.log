@@ -1,0 +1,11 @@
+elapsed 16.78 s maxrss 104740 KB
+STATIC_SCHEDULE PASS {"F": 2, "mu_words": 471, "checks": {"events": 1800, "event_cycles": 1494, "service_windows": 180, "collisions": 0}, "tokens_per_frame": {"0": 2, "1": 1, "2": 1, "3": 1}, "aggregate_tok_s": 10223.6}
+SU327 fault=0 code=00 installed=001 next=0
+NATIVE_MU327 fault=1 code=80 installed=000 next=326 gap=1
+NATIVE_MU471 fault=0 code=00 installed=001 next=0
+ACTUAL_NATIVE_MU471_IMAGE_PASS
+OLD_COUNT77 fault=1 code=08 sealed=0
+NATIVE_AGES96 fault=0 code=00 sealed=1 cfgfault=0 att=6f003726 pv=8383
+DEFAULT_AGES0_LOCKSTEP_PASS
+ACTUAL_DISPATCH_DCFG_AGES96_PASS
+KV_TOKEN_GATE PASS
