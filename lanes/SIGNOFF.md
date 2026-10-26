@@ -79,3 +79,6 @@ Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER?
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: Tool DONE; canonical TT/FF signoff current. Jobs: No standalone live jobs; old 138 lost-DB reruns superseded by current per-die paths. Next: Physical owners close real views; clock_reset owns per-corner clock gate. Failure disposition: Legacy ref_tile SDC/face failures remain historical, no false SIGNED.
+
+## FLOW-PG 2026-10-26 12:40 PDT — sign-offs INVALID for unbound VDD/VSS (archives kept, nothing deleted)
+ODB census of every signed record (42 unique): INVALID 3 = kq_qfd_dv_s8x_prog_pd40a0 (QC s8b d73a0fbb938f, 108 ot_ms_* spine bufs/216 terms), ot_nhb_zh (KV legacy reuse, 555 CTS clkbufs), ot_qkh_recip_leaf (KV legacy reuse, 1.28M insts unbound). UNVERIFIED 13 rows/12 names (no 6_final.odb survives anywhere). CLEAN 26 incl. rp1_f62. List: lanes/FLOW-PG-INVALID.tsv; full screen (3237 rows incl. closed archive: local 1871/2054 + offloaded 985/1136 AFFECTED, mostly legacy ot_inhold/outhold dont_touch) on claude/flow-pg-final-1026@eda7910d2 results/flow_pg_1026/pg_screen.tsv. Signoff "pg" check (BLOCKING) + autopilot STRUCTURAL pg-unbound on that branch stop any new one.
