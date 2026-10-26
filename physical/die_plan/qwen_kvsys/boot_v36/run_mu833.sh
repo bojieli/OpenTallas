@@ -18,10 +18,11 @@ KST=${KST:-$(python3 "$H/kst.py" "$BG")}; echo "KST $KST"
 T=physical/die_plan/qwen_kvsys/boot_v36/kv_boot_v36.py
 set -a; . "$AS/kv_flags.env"; set +a
 export OT_KV_RETIRE_SUCCESSOR=$AS/health_successor.json OT_KV_RETIRE_LOGICAL=1 PYTHONDONTWRITEBYTECODE=1
-python3 $T prep --rs "$AS/relay_stages.json" --model "$AS/static_model.json" --groups "$BG" --out "$O/prep" > "$O/prep.log"
+PV_ARGS=(); [ -z "${OT_KV_PV_RESULT_CALENDAR:-}" ] || PV_ARGS=(--pv-result-calendar "$OT_KV_PV_RESULT_CALENDAR")
+python3 $T prep "${PV_ARGS[@]}" --rs "$AS/relay_stages.json" --model "$AS/static_model.json" --groups "$BG" --out "$O/prep" > "$O/prep.log"
 EMB=${OT_KV_EMB_WIN_REC:-1627}; HP=12   # one link profile for the pair image AND the compile (link_image_check fails closed)
 D2D_K_STAGES=$KST D2D_DIE_STAGES=2,2,2,3,2,2/$KST D2D_MU=1 D2D_EMB_WINDOW=$EMB D2D_ROPE=1 D2D_HEAD_PREPARE_EDGES=$HP \
-  D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 \
+  D2D_ATTN_SERVICE_PAD=${OT_KV_ATTN_SERVICE_PAD:-0} D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 \
   bash tools/qwen_split/d2d_cal_image_production.sh "$O/img_bnd" > "$O/img.log" 2>&1
 export OT_KV_EMB_WIN=$EMB OT_KV_ROPE_OVL=1 OT_KV_HEAD_PREP_EDGES=$HP OT_KV_CONTROLLER_CORE=1
 # NO_CONTRACT=1: diagnostic compile without target10 DIECFG (layer/MU/static schedule only; never the image of record)
