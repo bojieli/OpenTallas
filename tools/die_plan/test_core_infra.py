@@ -55,6 +55,7 @@ def test_tree_assignments_are_explicit_equal_depth_and_equal_load():
         dict(name="n0", master="BUFx8_ASAP7_75t_R", xy_um=[200,200], parent="root"),
         dict(name="n1", master="BUFx8_ASAP7_75t_R", xy_um=[600,600], parent="root")],
         "leaves": [dict(node="n0", sinks=["u0/CLK", "u1/CLK"]), dict(node="n1", sinks=["u2/CLK", "u3/CLK"])]}
+    s["pg_obstructions_um"] = {}          # explicit: no macro PG on the trunk layers
     tcl = CI.emit_tcl(s)
     assert "ot_ci_tree_sink {n0} {u0/CLK}" in tcl and "nearest" not in tcl
     assert CI.compile_slice(s)["core_tree"]["depth"] == 2

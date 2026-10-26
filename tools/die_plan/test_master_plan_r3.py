@@ -129,3 +129,27 @@ def test_island_tree_reports_asymmetry_and_leg_gaps():
            dict(id=2, xy=(1000.0, 0.0), role="die_node", inst=None)]
     g, _ = MP.island_tree(far, [0, 1])
     assert g["leg_repeater_gap_fails"] == 2 and g["verdict"] == "FAIL"
+
+
+def _tree_slice():
+    s = sample()
+    s["core_tree"] = {"clock_port": "ck", "nodes": [
+        dict(name="root", master="BUFx16f_ASAP7_75t_R", xy_um=[430, 430], parent="port:ck"),
+        dict(name="n0", master="BUFx8_ASAP7_75t_R", xy_um=[200, 200], parent="root"),
+        dict(name="n1", master="BUFx8_ASAP7_75t_R", xy_um=[600, 600], parent="root")],
+        "leaves": [dict(node="n0", sinks=["u0/CLK", "u1/CLK"]), dict(node="n1", sinks=["u2/CLK", "u3/CLK"])]}
+    return s
+
+
+def test_core_trunk_refused_without_pg_model_and_over_sram_pg():
+    s = _tree_slice()
+    with pytest.raises(CI.InfraError, match="NOT RUN"):
+        CI.emit_tcl(s)
+    # an SRAM M5 PG stripe column blocking the vertical leg of both L routes root -> n1 (x 590..610, y 300..700)
+    # and the M4 horizontal at y 600 / y 430: both orientations blocked -> refused
+    s["pg_obstructions_um"] = {"M5": [[590, 300, 610, 700], [425, 300, 435, 700]], "M4": []}
+    with pytest.raises(CI.InfraError, match="PG clearance FAIL"):
+        CI.emit_tcl(s)
+    s["pg_obstructions_um"] = {"M5": [[590, 300, 610, 700]], "M4": []}   # route via x=430 vertical is clear
+    assert "ot_ci_tree_begin" in CI.emit_tcl(s)
+    assert CI.trunk_pg_clearance(s, CI.compile_slice(s))["verdict"] == "PASS"

@@ -283,9 +283,61 @@ def named_tree_report(report, clock_port, macro_pins=None, load_balance="equal_c
                 load_basis="equal register counts per leaf; macro leaves separately classified and timed")
 
 
+# ASAP7 preferred directions: horizontal M2/M4/M6, vertical M3/M5/M7
+H_LAYERS, V_LAYERS = ("M2", "M4", "M6"), ("M3", "M5", "M7")
+
+
+def _seg_hits(a, b, rects):
+    x0, x1 = sorted((a[0], b[0]))
+    y0, y1 = sorted((a[1], b[1]))
+    return [r for r in rects if x0 < r[2] and r[0] < x1 + 1e-9 and y0 < r[3] and r[1] < y1 + 1e-9
+            and (x1 - x0 > 1e-9 and r[1] <= a[1] <= r[3] or y1 - y0 > 1e-9 and r[0] <= a[0] <= r[2])]
+
+
+def trunk_pg_clearance(sl, plan):
+    """COORD 10-26 (GEOM-REVIEW, VMR model): a planned core clock trunk may only run where PG allows it.  Every tree
+    edge parent -> child is an L on core_tree.trunk_layers (one horizontal + one vertical layer); the edge is legal when
+    at least one L orientation crosses no declared PG obstruction (macro PG pins/stripes, slice pg_obstructions_um
+    {layer: [rects]}) on its layer.  A tree without a PG declaration is refused (PG not modelled = not a plan)."""
+    tree = plan.get("core_tree")
+    if not tree:
+        return dict(verdict="NOT APPLICABLE")
+    pg = sl.get("pg_obstructions_um")
+    if pg is None:
+        return dict(verdict="NOT RUN", issue="slice declares no pg_obstructions_um (macro PG pins/stripes); "
+                                             "core trunk legality unknown -> no physical build")
+    layers = tree.get("trunk_layers") or ["M4", "M5"]
+    hl = [l for l in layers if l in H_LAYERS]
+    vl = [l for l in layers if l in V_LAYERS]
+    if len(hl) != 1 or len(vl) != 1:
+        return dict(verdict="FAIL", issue=f"trunk_layers {layers} must name one horizontal and one vertical layer")
+    hr, vr = pg.get(hl[0], []), pg.get(vl[0], [])
+    xy_of = {c["name"]: c["xy_um"] for c in tree["nodes"]}
+    if tree.get("clock_port") and plan.get("clock_entry"):
+        xy_of["port:" + tree["clock_port"]] = plan["clock_entry"]["xy_um"]
+    bad = []
+    for c in tree["nodes"]:
+        a, b = xy_of.get(c["parent"]), c["xy_um"]
+        if a is None:
+            continue
+        ok = False
+        for corner in ((b[0], a[1]), (a[0], b[1])):
+            h_seg, v_seg = ((a, corner), (corner, b)) if corner[1] == a[1] else ((corner, b), (a, corner))
+            if not _seg_hits(*h_seg, hr) and not _seg_hits(*v_seg, vr):
+                ok = True
+                break
+        if not ok:
+            bad.append(dict(edge=[c["parent"], c["name"]], from_um=a, to_um=b))
+    return dict(verdict="FAIL" if bad else "PASS", layers=[hl[0], vl[0]], edges=len(tree["nodes"]),
+                blocked_edges=len(bad), examples=bad[:10])
+
+
 def emit_tcl(sl):
     plan = compile_slice(sl)
     tree = plan.get("core_tree")
+    pgc = trunk_pg_clearance(sl, plan)
+    if pgc["verdict"] not in ("PASS", "NOT APPLICABLE"):
+        raise InfraError(f"core clock trunk PG clearance {pgc['verdict']}: {pgc.get('issue') or pgc['examples'][:3]}")
     if tree and not tree.get("equal_load", True):
         q = tree.get("model_qualification", {})
         if q.get("measured_timing_used") is not False:
