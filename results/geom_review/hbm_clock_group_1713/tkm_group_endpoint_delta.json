@@ -1,0 +1,237 @@
+{
+ "status": "PROPOSAL-NOT-ADOPTED",
+ "source": "/srv/opentallas-scratch2/claude/path-hbm/r1delta_1025/plan_cond/die_plan.json",
+ "source_sha256": "ad8f1c3aabca05b9ac7bfcf62263cb55eff1c3b2eb9df7fcc6c138bb1c9fc9cc",
+ "type": "root",
+ "name": "tkm_shared",
+ "port": "clk_tkm_group",
+ "xy": [
+  1036.8,
+  2916.0
+ ],
+ "members": [
+  {
+   "inst": "u_tkm_SW_root",
+   "pin": "clk",
+   "tap": "u_tkm_SW_root"
+  },
+  {
+   "inst": "u_tkm_SW_root",
+   "pin": "buffer_clk",
+   "tap": "u_tkm_SW_root"
+  },
+  {
+   "inst": "u_tkm_SW_tile0",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile0"
+  },
+  {
+   "inst": "u_tkm_SW_tile1",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile1"
+  },
+  {
+   "inst": "u_tkm_SW_tile2",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile2"
+  },
+  {
+   "inst": "u_tkm_SW_tile3",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile3"
+  },
+  {
+   "inst": "u_tkm_SW_tile4",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile4"
+  },
+  {
+   "inst": "u_tkm_SW_tile5",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile5"
+  },
+  {
+   "inst": "u_tkm_SW_tile6",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile6"
+  },
+  {
+   "inst": "u_tkm_SW_tile7",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile7"
+  },
+  {
+   "inst": "u_tkm_SW_tile8",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile8"
+  },
+  {
+   "inst": "u_tkm_SW_tile9",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile9"
+  },
+  {
+   "inst": "u_tkm_SW_tile10",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile10"
+  },
+  {
+   "inst": "u_tkm_SW_tile11",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile11"
+  },
+  {
+   "inst": "u_tkm_SW_tile12",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile12"
+  },
+  {
+   "inst": "u_tkm_SW_tile13",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile13"
+  },
+  {
+   "inst": "u_tkm_SW_tile14",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile14"
+  },
+  {
+   "inst": "u_tkm_SW_tile15",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile15"
+  },
+  {
+   "inst": "u_tkm_SW_tile16",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile16"
+  },
+  {
+   "inst": "u_tkm_SW_tile17",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile17"
+  },
+  {
+   "inst": "u_tkm_SW_tile18",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile18"
+  },
+  {
+   "inst": "u_tkm_SW_tile19",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile19"
+  },
+  {
+   "inst": "u_tkm_SW_tile20",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile20"
+  },
+  {
+   "inst": "u_tkm_SW_tile21",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile21"
+  },
+  {
+   "inst": "u_tkm_SW_tile22",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile22"
+  },
+  {
+   "inst": "u_tkm_SW_tile23",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile23"
+  },
+  {
+   "inst": "u_tkm_SW_tile24",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile24"
+  },
+  {
+   "inst": "u_tkm_SW_tile25",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile25"
+  },
+  {
+   "inst": "u_tkm_SW_tile26",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile26"
+  },
+  {
+   "inst": "u_tkm_SW_tile27",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile27"
+  },
+  {
+   "inst": "u_tkm_SW_tile28",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile28"
+  },
+  {
+   "inst": "u_tkm_SW_tile29",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile29"
+  },
+  {
+   "inst": "u_tkm_SW_tile30",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile30"
+  },
+  {
+   "inst": "u_tkm_SW_tile31",
+   "pin": "tile_clk",
+   "tap": "u_tkm_SW_tile31"
+  }
+ ],
+ "removed_ports": [
+  "clk_c1",
+  "clk_c2",
+  "clk_c3",
+  "clk_c4",
+  "clk_c5",
+  "clk_c6",
+  "clk_c7",
+  "clk_c8",
+  "clk_c9",
+  "clk_c10",
+  "clk_c11",
+  "clk_c12",
+  "clk_c13",
+  "clk_c14",
+  "clk_c15",
+  "clk_c16",
+  "clk_c17",
+  "clk_c18",
+  "clk_c19",
+  "clk_c20",
+  "clk_c21",
+  "clk_c22",
+  "clk_c23",
+  "clk_c24",
+  "clk_c25",
+  "clk_c26",
+  "clk_c27",
+  "clk_c28",
+  "clk_c29",
+  "clk_c30",
+  "clk_c31",
+  "clk_c32",
+  "clk_c33"
+ ],
+ "nonselected_ports_preserved": [
+  "clk_c0"
+ ],
+ "cores": 33,
+ "clock_pins": 34,
+ "added_physical_ports": 1,
+ "removed_physical_ports": 33,
+ "net_delta_ports": -32,
+ "contracts": {
+  "tile_tt_budget_ps": 250,
+  "tile_ff_budget_ps": 202.5,
+  "group_root_to_flop_tt_ps": null,
+  "group_root_to_flop_ff_ps": null,
+  "basis": "OPEN: requires explicit modeled first-route budget then selected-view TT/FF measured pin-register means"
+ },
+ "physical_network": "OPEN: requires complete row-legal upstream graph and fixed eight corridor nodes+24repeaters; no kit generation before complete graph",
+ "no_data_cycles_added": 0,
+ "release_qualified": false
+}

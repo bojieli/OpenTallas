@@ -23,7 +23,7 @@ proc ot_core_tap_bind {corner} {
     puts "OT_CORE_TAP_BIND corner ff overlay $overlay"
   } elseif {$corner eq "tt"} {
     foreach line [split $text \n] {
-      if {[regexp {^set_clock_latency -source -clock clk [-0-9.]+ \[get_ports clk_c[0-9]+\]$} $line]} {
+      if {[regexp {^set_clock_latency -source -clock clk [-0-9.]+ \[get_ports [A-Za-z_][A-Za-z0-9_]*\]$} $line]} {
         uplevel #0 $line
       }
     }

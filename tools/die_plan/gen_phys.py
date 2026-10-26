@@ -161,6 +161,10 @@ def core_tap_rows(P, tn, corner="TT"):
     insts = [c["inst"] for c in P.types[tn].get("hard_cores", []) or []]
     out = []
     for n, _, _, tp in S.core_taps(P, tn):
+        if "core_group" in tp:
+            out.extend((n, m["inst"], m["pin"], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner))
+                       for m in tp["core_group"]["members"])
+            continue
         nm = tp["name"]
         hit = None
         for i in sorted(insts, key=len, reverse=True):
@@ -179,10 +183,15 @@ def core_tap_rows(P, tn, corner="TT"):
 
 def core_tap_ff_sdc(P, tn):
     """Corner overlay for dedicated core taps; the golden SDC retains its TT basis."""
-    return "".join(
-        f"# CP2 FF core tap {n} ({inst}/{pin}: internal {ins:g} ps)\n"
-        f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n"
-        for n, inst, pin, early, ins in core_tap_rows(P, tn, "FF"))
+    seen = set()
+    lines = []
+    for n, inst, pin, early, ins in core_tap_rows(P, tn, "FF"):
+        if n in seen:
+            continue
+        seen.add(n)
+        lines.append(f"# CP2 FF core tap {n} ({inst}/{pin}: internal {ins:g} ps)\n"
+                     f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
+    return "".join(lines)
 
 
 def edge_clock_pins(P, tn):
@@ -557,9 +566,13 @@ def sdc(P, tn, pins):
            "set non_clk_in [all_inputs -no_clocks]\n"
            f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
+    source_ports = set()
     if core_tap_rows(P, tn):
         out += "# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc\n"
     for n, inst, pin, early, ins in core_tap_rows(P, tn):
+        if n in source_ports:
+            continue
+        source_ports.add(n)
         out += (f"# CP2 early core tap {n} ({inst}/{pin}: internal {ins:g} ps): the spine delivers it {early:g} ps early\n"
                 f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
     if slots:
@@ -693,6 +706,8 @@ def _corner_libs(mlib, kd, corner):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True):
     t = P.types[tn]
+    import core_clock_groups as CG
+    grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
     ib = insertion_binding(P, tn)
     w, h = t["outline_um"]
     macros = type_macros(P, tn)
@@ -779,7 +794,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if RT.pipelined(P) or RT.wavefront(P):
         leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n"
                       "source /work/reset_taps.tcl\nunset rt_postplace\n")
-    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check)
+    group_hook = ""
+    if grouped["groups"]:
+        (kd / "core_clock_groups.json").write_text(json.dumps(grouped, indent=1) + "\n")
+        (kd / "core_clock_groups_apply.tcl").write_text(CG.tcl_text(grouped))
+        shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/core_clock_groups.tcl",
+                        kd / "core_clock_groups.tcl")
+        group_hook = "\nsource /work/core_clock_groups_apply.tcl\n"
+    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
