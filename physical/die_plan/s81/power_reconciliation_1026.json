@@ -1,0 +1,83 @@
+{
+  "schema": "opentallas.s81.power_reconciliation.v1",
+  "source_commit": "977bd97569d9254d710d05d02f067c0a378ad262",
+  "status": "PHY accounting reconciled; current 72-frame core power NOT MEASURED",
+  "inventory": {
+    "frames_per_layer_die": 72,
+    "stages": 241,
+    "rank_layer_dies": 964,
+    "copy_b_dies": 192,
+    "physical_layer_die_copies": 1156,
+    "head_dies": 4,
+    "total_dies": 1160,
+    "physical_layer_frames": 83232,
+    "serdes_macros_per_layer_die": 14,
+    "serdes_instance_names": [
+      "lk_WS0",
+      "lk_WS1",
+      "lk_WN0",
+      "lk_WN1",
+      "lk_WN2",
+      "lk_WN3",
+      "lk_ES0",
+      "lk_ES1",
+      "lk_EN0",
+      "lk_EN1",
+      "lk_WS2",
+      "lk_WS3",
+      "lk_EN2",
+      "lk_EN3"
+    ],
+    "grade": "MODEL",
+    "note": "72 is frames per die, not the count of stages, dies or copy-B groups."
+  },
+  "historical_die": {
+    "total_saturated_w": 84.1,
+    "included_serdes_w": 30.6,
+    "non_serdes_proxy_w": 53.5,
+    "basis": "static: tools/ds_energy_silicon_authoritative.LAYER_DIE_W (ICG ledger, 30.6 W of it SerDes); dynamic: uarch_model._v41_graph(proposal) L20 per-die energy (field 0.497, idx MAC 0.049, HBM IF 0.115, attention 0.007 mJ/token) x head-bound saturated 80,833.5 tok/s; IR windows use the local peak in-phase densities below, not this average",
+    "source": "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json#scan_die_power",
+    "limitation": "The old die is not the current 72-frame implementation. Do not scale it by 72/81; its stages=81 is the old array stage count."
+  },
+  "current_PHY": {
+    "grade": "published ASSUMPTION",
+    "per_macro_w": 4.37,
+    "plan_all_macros_w": 61.18,
+    "die_total_with_historical_core_proxy_w": 114.68,
+    "all_layer_die_PHY_w": 70724.08,
+    "prior_rack_macros_per_rank": 10,
+    "prior_rack_macros_per_copy_ab": 12,
+    "limitation": "Physical plan inventory is 14. Rack active-circuit counts 10/12 do not establish that the remaining PHYs are power-gated."
+  },
+  "rack_known_double_count": {
+    "layer_die_copies": 1156,
+    "per_die_w": 30.6,
+    "total_w": 35373.6,
+    "old_it_kw": 156.469,
+    "head_PHY_double_count": "UNKNOWN; head ledger needs an independent component split"
+  },
+  "scenarios": [
+    {
+      "name": "remove_known_legacy_PHY_double_count",
+      "grade": "MODEL sensitivity",
+      "it_kw": 121.096,
+      "dc_kw": 139.191,
+      "wall_D_kw": 145.303,
+      "explanation": "Same historical core and active-circuit PHY inventory; subtract only the proven included 30.6 W per layer/copy-B die."
+    },
+    {
+      "name": "all_14_layer_PHYs_powered",
+      "grade": "MODEL sensitivity",
+      "it_kw": 140.766,
+      "dc_kw": 161.8,
+      "wall_D_kw": 168.854,
+      "explanation": "Historical non-PHY core proxy retained; all 14 physical SerDes macros per layer/copy-B die powered at the published assumption. Head charge stays historical; no new idle-gating claim."
+    }
+  ],
+  "remaining": [
+    "Current 72-frame core static/dynamic power and activity at the priced token calendar.",
+    "Released PHY idle/power-gating contract and active macro counts by die role.",
+    "Head-die power split after 4-die/no-HBM composition.",
+    "Re-run infra-first PG/IR at per-region current power and published PHY 4.37 W/macro."
+  ]
+}
