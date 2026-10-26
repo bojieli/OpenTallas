@@ -1032,3 +1032,4 @@ CODEX: 2026-10-26 02:18 PDT shared kit dependency bundle READY5015c984a, hub15/1
 
 CODEX: 2026-10-26 02:20 PDT HBM idx quarter4LECdifferences root-caused scalar→unpacked-wire alias flattening; source687ef703ff defers alias to formalfunctionpairing. Actual immutable target ALL33871/33871 PROVED incl all10065old+3new obligations;43tests+mutantPASS. OriginalFAIL retained, noRTL/cycles/route.
 CODEX: 2026-10-26 02:21 PDT hard-core progress: KVHR host_qm e6cbdc9e7 face8/8+pins10/10+LEC25/25,1FF0cycles; QC SU exact-cut tool6e39e059f prevents stale alignment0 adoption; ECTLK Sface halo structural trial and fresh canaried VQ PLACE live.
+CODEX: 2026-10-26 02:22 PDT S81 B5 and hub-aligned signal trials both GRT0 with 50-iteration budgets (converged10); infra-first still owed. Power ledger c28ddf273 proves old84.1W includes30.6W PHY, exposes35.374kW rack duplicate; 14-macro current PHY envelope61.18W/die; current core power not measured.
