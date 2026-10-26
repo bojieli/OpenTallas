@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.qc_bindprice_1026.v1",
+ "status": "BIND_DERIVED_PRICE: actual final strict bind lanes; composer ages = QCL measured S8 ages; not a whole-die RTL token run",
+ "bind": {"commit": "claude/qc-bindprice-1026@009bc96f5b", "plan": "physical/die_plan/qwen_compute/die_plan_landing_phase_r8_1026.json",
+          "asbuilt": "physical/die_plan/qwen_compute/bind/asbuilt_landing_phase_r8_1026.json",
+          "strict": {"partitions": 377, "types": 100, "crossings": 1921, "errors": 0}},
+ "control_v7ctl_ext": {"cycles_per_token": 296341, "tok_s": 4051.0, "chained_per_layer": 8129, "note": "reproduces the 63f4e17f63 v7 base exactly"},
+ "final": {"cycles_per_token": 301813, "tok_s": 3977.6, "chained_per_layer": 8281, "cold_l0": 8793, "die_edges_per_layer": 1361},
+ "reference_model_fe_land_vertical4": {"cycles_per_token": 303397, "tok_s": 3956.8, "chained_per_layer": 8325,
+   "source": "codex/qc-land-price-1026@63f4e17f63 results/token_pass/qc_v7_1025/clock_region_price_1026/summary.json cases.slice_vertical_4.model.fe_land"},
+ "delta_final_vs_reference": {"cycles_per_token": -1584, "per_layer": -44, "tok_s": 20.8},
+ "per_layer_vs_v7": {
+  "slice2_landed_parent": {"v7": 796, "final": 924, "delta": 128, "model": 160,
+    "why": "pass st 6->8 and sc 6->8 (+2 FE, x10 hops = +120); ch 12->12 (+0: FE +2 on x_fw lanes absorbed by existing R8 pad slack, landed 12 in both); taps ar/mv station->ctl 12->14 (+8)"},
+  "dv_chain_slice_hops": {"v7": 0, "final": 55, "delta": 55, "model": 31,
+    "why": "law 11 hops x max(landed-asbuilt) = 5 (FE +2 and landing +3 on one hop class); model charged FE 11x2 = 22 + landing on the 3 crossed hops only = 9"},
+  "qkv_l9_pair_word": {"v7": 34, "final": 39, "delta": 5, "model": 5},
+  "cb16_xin_root_rs_x4": {"v7": 64, "final": 28, "delta": -36, "model": 0,
+    "why": "max_root_plus_rs 16 -> 7 per matvec x 4: final plan lineage has max root +1 (as frozen 441), not v7's +8 x-broadcast pipeline stages; CHECK the x-in lanes carry their 405-um hop stations"},
+  "sum": {"delta": 152, "model": 196}
+ }
+}
