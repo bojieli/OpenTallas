@@ -28,7 +28,7 @@ proc ot_subtract {a b} {
   lassign $r a b c d;if {$a < $c && $b < $d} {lappend out $r}
  };return $out
 }
-set b [ord::get_db_block];set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+set ot_iso_block [ord::get_db_block];set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set outer {};set inner {}
 foreach r $ot_phy_boxes {
  lassign $r a b c d
@@ -37,7 +37,7 @@ foreach r $ot_phy_boxes {
 }
 set clipped 0
 foreach netname {VDD VDDPHY} {
- set net [$b findNet $netname]
+ set net [$ot_iso_block findNet $netname]
  foreach sw [$net getSWires] {
   foreach s [$sw getWires] {
    set r [list [$s xMin] [$s yMin] [$s xMax] [$s yMax]];set rs {}
@@ -62,6 +62,41 @@ puts "OT_PG_POWER_ISOLATION_CLIPPED $clipped"
 ''']
     return '\n'.join(text)+'\n'
 
+def stitch_tcl(core_grid):
+    maxgap=max(q['pitch_um']for q in core_grid)*2
+    return f'set ot_pg_maxgap {maxgap:g}\n'+r'''
+set ot_mesh_block [ord::get_db_block]
+set ot_mesh_count 0
+foreach ot_mesh_name {VDD VSS} {
+ set ot_mesh_net [$ot_mesh_block findNet $ot_mesh_name];set ot_mesh_groups {}
+ foreach sw [$ot_mesh_net getSWires] {foreach s [$sw getWires] {
+  if {[$s isVia]} continue
+  set layer [[$s getTechLayer] getName]
+  if {$layer eq "M9"} {set key [list $layer [expr {([$s xMin]+[$s xMax])/2.0}]];set range [list [$s yMin] [$s yMax] [expr {[$s xMax]-[$s xMin]}]]} elseif {$layer eq "M8"} {set key [list $layer [expr {([$s yMin]+[$s yMax])/2.0}]];set range [list [$s xMin] [$s xMax] [expr {[$s yMax]-[$s yMin]}]]} else {continue}
+  dict lappend ot_mesh_groups $key $range
+ }}
+ set ot_mesh_sw [odb::dbSWire_create $ot_mesh_net ROUTED];set ot_net_stitches 0
+ foreach key [dict keys $ot_mesh_groups] {
+  lassign $key layer center;set end -1e30;set prev_width 0
+  foreach r [lsort -real -index 0 [dict get $ot_mesh_groups $key]] {
+   lassign $r lo hi width
+   if {$lo>$end && $lo-$end <= $ot_pg_maxgap*$dbu} {
+    set half [expr {min($width,$prev_width)/2.0}]
+    set aa [expr {round($center-$half)}];set cc [expr {round($center+$half)}]
+    if {$layer eq "M9"} {set rect [list $aa $end $cc $lo]} else {set rect [list $end $aa $lo $cc]}
+    set blocked 0
+    if {$ot_mesh_name eq "VDD"} {foreach q $outer {if {[llength [ot_intersect $rect $q]]} {set blocked 1;break}}}
+    if {!$blocked} {odb::dbSBox_create $ot_mesh_sw [[ord::get_db_tech] findLayer $layer] {*}$rect STRIPE;incr ot_net_stitches}
+   }
+   if {$hi>$end} {set prev_width $width;set end $hi}
+  }
+ }
+ puts "OT_PG_SEAM_STITCHES $ot_mesh_name $ot_net_stitches"
+ incr ot_mesh_count $ot_net_stitches
+}
+puts "OT_PG_CORE_SEAM_STITCHES $ot_mesh_count"
+'''
+
 def make(P, plan_dir, pg, window, out, pitch):
     core_grid={g['layer']:g for g in pg['grid']}
     division=round(core_grid['M8']['pitch_um']/pitch)
@@ -81,15 +116,15 @@ def make(P, plan_dir, pg, window, out, pitch):
         if a[0]<a[2] and a[1]<a[3]:phy.append(dict(name=r['name'],rect_um=a,nets=['VDDPHY','VSS'],grid=phy_grid))
     if not phy:raise ValueError('window contains no PHY')
     die=dict(outline_um=[W,H],pg=dict(grid=pg['grid'],domains=phy))
-    blocks=[];masters={};loads=[]
-    for reg in G.regions(die):
+    blocks=[];masters={};loads=[];region_instances={}
+    for regnum,reg in enumerate(G.regions(die)):
         a,b,c,d=reg['rect_um'];nx=max(1,round((c-a)/86.4));ny=max(1,round((d-b)/86.4));bw,bh=(c-a)/nx,(d-b)/ny
         master=masters.setdefault((round(bw,4),round(bh,4)),f'irblk{len(masters)}')
         for ix in range(nx):
             for iy in range(ny):
                 xx,yy=a+ix*bw,b+iy*bh;rect=[xx+x0,yy+y0,xx+bw+x0,yy+bh+y0]
                 pw=sum(dens*I._ov(rect,rr)for rr,dens in model['loads'])*1e-6
-                name=f'u_b{len(blocks)}';blocks.append((name,master,xx,yy,pw,reg['nets'][0]))
+                name=f'u_b{len(blocks)}';blocks.append((name,master,xx,yy,pw,reg['nets'][0]));region_instances.setdefault(regnum,[]).append(name)
                 for net,j in [(reg['nets'][0],0),('VSS',1)]:
                     pins=[];q=4.128+j*(.288+.096)
                     while q+.144<bw:
@@ -108,23 +143,29 @@ def make(P, plan_dir, pg, window, out, pitch):
         lef += [f'END {master}']
     lef += ['END LIBRARY'];(out/'psm/irblk.lef').write_text('\n'.join(lef)+'\n')
     (out/'psm/psm.v').write_text('module irwin ();\n'+''.join(f'{m} {n} ();\n'for n,m,*_ in blocks)+'endmodule\n')
-    (out/'psm/pdn.tcl').write_text(G.pdn_tcl(die,loads))
+    pdn=G.pdn_tcl(die,loads).replace("add_pdn_stripe -grid ","add_pdn_stripe -extend_to_boundary -grid ")
+    for k,insts in region_instances.items():
+        pdn+=f'define_pdn_grid -name pins_{k} -voltage_domains {{ot_pg_{k}}} -macro -instances {{{" ".join("^"+n+"$"for n in insts)}}} -orient {{R0 R180 MX MY}} -halo {{0 0 0 0}}\n'
+        pdn+=f'add_pdn_connect -grid pins_{k} -layers {{M7 M8}}\n'
+    (out/'psm/pdn.tcl').write_text(pdn)
     (out/'psm/isolate.tcl').write_text(isolation_tcl(phy))
+    (out/'psm/stitch.tcl').write_text(stitch_tcl(pg['grid']))
     bumps=[('VDDPHY'if n=='VDD'and any(q['rect_um'][0]<=x-x0<=q['rect_um'][2]and q['rect_um'][1]<=y-y0<=q['rect_um'][3]for q in phy)else n,round(x-x0,3),round(y-y0,3))for n,x,y in I.pg_bumps(P,D.io_windows(P,plan_dir),pitch=pg['bump_pitch_um'])if x0<x<x1 and y0<y<y1]
     t=D.bumps_tcl(P,bumps).replace('foreach net_name {VDD VSS}','foreach net_name {VDD VSS VDDPHY}')
     # Legacy helper labels every secondary supply GROUND. Preserve true supply type.
     import re
     t=re.sub(r'(dbBTerm_create \[\$block findNet VDDPHY\].*?\$bt setSigType )GROUND',r'\1POWER',t)
+    t='set block [ord::get_db_block]\nforeach name {VDD VDDPHY VSS} {set bt [$block findBTerm $name];if {$bt ne "NULL"} {odb::dbBTerm_destroy $bt}}\n'+t
     (out/'psm/bumps.tcl').write_text(t)
     t=['set t0 [clock seconds]',f'read_lef {D.TECH_LEF}',f'read_lef {D.SC_LEF}','read_lef /work/psm/irblk.lef',f'foreach f [glob {D.PLAT}/lib/NLDM/*RVT_TT_nldm*.lib*] {{read_liberty $f}}','read_verilog /work/psm/psm.v','link_design irwin',f'initialize_floorplan -die_area {{0 0 {W:g} {H:g}}} -core_area {{0 0 {W:g} {H:g}}} -site asap7sc7p5t','source /work/psm/tracks.tcl','set dbu [[ord::get_db_tech] getDbUnitsPerMicron]','proc pl {n x y} {global dbu;set i [[ord::get_db_block] findInst $n];$i setOrient R0;$i setLocation [expr {round($x*$dbu)}] [expr {round($y*$dbu)}];$i setPlacementStatus FIRM}']
     t += [f'pl {n} {x:.4f} {y:.4f}'for n,m,x,y,pw,net in blocks]
-    t += ['source /work/psm/pdn.tcl','pdngen','source /work/psm/isolate.tcl','ot_pg_connect_pins','source /work/psm/bumps.tcl',f'source {D.PLAT}/setRC.tcl','write_db /work/psm/pdn_bumps.odb']
+    t += ['source /work/psm/pdn.tcl','pdngen','source /work/psm/isolate.tcl','source /work/psm/stitch.tcl','source /work/psm/bumps.tcl',f'source {D.PLAT}/setRC.tcl','write_db /work/psm/pdn_bumps.odb']
     t += [f'set_pdnsim_inst_power -inst {n} -power {pw:.8f}'for n,m,x,y,pw,net in blocks if pw>0]
     t += ['foreach n {VDD VDDPHY VSS} {check_power_grid -net $n;puts "OT_PG_CHECK_OK $n"}','foreach n {VDD VDDPHY} {set_pdnsim_net_voltage -net $n -voltage 0.7;puts "OT_ANALYZE_NET $n";analyze_power_grid -net $n -error_file /work/psm/psm_${n}.rpt -voltage_file /work/psm/ir_${n}.csv;puts "OT_PSM_OK $n"}','puts "OT_T psm [expr {[clock seconds]-$t0}]"','puts OT_DONE']
     (out/'psm/psm.tcl').write_text('\n'.join(t)+'\n');(out/'psm/tracks.tcl').write_text(D.coarse_tracks(P,.72))
     (out/'run_psm.sh').write_text(D.run_sh('psm',32,8,'/usr/bin/time -v openroad -no_init -threads 8 -exit /work/psm/psm.tcl > /work/psm/psm.log 2>&1'))
     os.chmod(out/'run_psm.sh',0o755)
-    meta=dict(window=window['window'],window_um=window['window_um'],die=die,bumps=bumps,load_blocks=len(blocks),power_w=round(sum(b[4]for b in blocks),6),phy_grid=phy_grid,subdivision=division,scope='separate PHY-local grid; original bump positions and load densities unchanged; open window boundaries; no plan adoption')
+    meta=dict(window=window['window'],window_um=window['window_um'],die=die,bumps=bumps,load_blocks=len(blocks),power_w=round(sum(b[4]for b in blocks),6),phy_grid=phy_grid,subdivision=division,contacts='native per-domain macro PG grid',scope='separate PHY-local grid; original bump positions and load densities unchanged; open window boundaries; no plan adoption')
     (out/'domains.json').write_text(json.dumps(meta,indent=1)+'\n');return meta
 
 def main():
