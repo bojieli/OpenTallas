@@ -59,7 +59,7 @@
   "root_reported_engine_cycles": 510,
   "negative_controls": {
     "no_start": "CAUGHT: both runs start0/root_done0/word0/fault1",
-    "wrong_slot": "CAUGHT: both runs words0/root_done0/error1/fault1"
+    "wrong_slot": "CAUGHT: both runs error1/fault1; cold run writes1 and completes root, loaded run writes0/root_done0"
   },
   "scope": "actual five physical FS programme to native VM bank; hub52 ABI absent; no global token price, G5 or physical timing qualification",
   "price_scope": "nonzero measured +6 mission and +8 VM-bank completion vs named native baseline; global model adoption requires same selected source/leg binding"
