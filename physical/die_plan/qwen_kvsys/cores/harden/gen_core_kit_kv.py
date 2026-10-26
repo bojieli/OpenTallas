@@ -453,9 +453,12 @@ ASTK_ZONES = (("zn0", r"^u_u_strip_u_strip_g_zn_0_u_zn[./]", 0.000, 0.606, 0.494
               ("zn3", r"^u_u_strip_u_strip_g_zn_3_u_zn[./]", 0.000, 0.212, 0.494, 0.594),
               ("ctl", r"^u_u_strip_u_strip_u_ctl[./]", 0.000, 0.000, 1.000, 0.200))
 ASTK_TAP_RE = r"^(u_u_strip_u_strip_g_zn_[0-9]_u_zn)[./]"
+# PATH-KV-ASTK7 10-25 (ASTK5 probe: 84% of the slew pins = N-face qo/tc chains pulled into the ctl S band): face-owned
+# ctl logic is no ctl zone member; with the FIRM face flops as "free" anchors (zone_members.tcl) it stays unfenced.
+ASTK_FREE_RE = (r"^u_u_strip_u_strip_u_ctl[./]g_tc_faces[./]",)
 
 
-def astk_zone_fences(kd, cfg, w, h, m, face_taps=False):
+def astk_zone_fences(kd, cfg, w, h, m, face_taps=False, balance_levels=True):
     """GPL zone regions (zone_fence.tcl / zone_fence_release.tcl) + one clock tap per zone, the rest (ctl, strap, fault)
     on one more tap (astk_zone_taps.tcl with OT_LANE_RE = the zone instance prefix); CTS -balance_levels."""
     for f in ("zone_fence.tcl", "zone_fence_release.tcl", "zone_members.tcl", "astk_zone_taps.tcl") + (("astk_face_taps.tcl",) if face_taps else ()):
@@ -465,7 +468,8 @@ def astk_zone_fences(kd, cfg, w, h, m, face_taps=False):
     for nm, rx, fx0, fy0, fx1, fy1 in ASTK_ZONES:
         spec.append(f"  {nm} {{{rx}}} {x0 + fx0 * cw:.2f} {y0 + fy0 * ch:.2f} {x0 + fx1 * cw:.2f} {y0 + fy1 * ch:.2f}")
     (kd / "zone_pre_gpl.tcl").write_text("source /work/face_flops.tcl\nset ::ot_zone_spec {\n" + "\n".join(spec)
-                                         + "\n}\nsource /work/zone_fence.tcl\n")
+                                         + "\n}\nset ::ot_zone_free {" + " ".join("{%s}" % r for r in ASTK_FREE_RE)
+                                         + "}\nsource /work/zone_fence.tcl\n")
     (kd / "zone_pre_dpl.tcl").write_text("source /work/face_flops_release.tcl\nsource /work/zone_fence_release.tcl\n")
     (kd / "zone_pre_cts.tcl").write_text("source /work/max_fanout.tcl\nset ::env(OT_LANE_RE) {" + ASTK_TAP_RE
                                          + "}\nsource /work/" + ("astk_face_taps.tcl" if face_taps else "astk_zone_taps.tcl") + "\n")
@@ -486,14 +490,19 @@ def astk_zone_fences(kd, cfg, w, h, m, face_taps=False):
     # fences are released; mid-GPL repair creates unowned cells outside the zones.
     out.append("export GPL_TIMING_DRIVEN = 0")
     # PATH-KV-ASTK4 (GEOM-REVIEW-2 14:46: CTS1 excess = tree DEPTH, 6 levels under each tap): larger leaf clusters
-    out.append("export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels"
+    # PATH-KV-ASTK7 10-25: -balance_levels pads every shallow tap tree (face pin-register chunks, <= 500 sinks) with
+    # delay buffers to the depth of the 26k-sink zone trees -> landing-register insertion TT 294 / FF 239 vs the
+    # 250 / 202.5 contract (ASTK5 probe: delaybuf_6/7 on the tap_7 branch).  --no-astk-balance-levels: tap trees keep
+    # their own depth; related-pair skew + CPPR (owner MSCTS rule) is checked at sign-off.
+    cts = "-sink_clustering_enable -repair_clock_nets" + (" -balance_levels" if balance_levels else "")
+    out.append("export CTS_ARGS = " + cts
                + (" -sink_clustering_size 30 -sink_clustering_max_diameter 60" if face_taps else ""))
     (kd / "astk_zone_delta.json").write_text(json.dumps(dict(
         cause="GEOM 10:05 FAIL kv3_astk W2: zones fragmented (zn_1 2 islands, zn_2 2), adder skew 29 ps from one zone on 2 leaf regions",
         regions={nm: [round(x0 + a * cw, 2), round(y0 + b * ch, 2), round(x0 + c * cw, 2), round(y0 + d * ch, 2)]
                  for nm, _, a, b, c, d in ASTK_ZONES},
         region_kind="INCLUSIVE GPL guide, released before DPL", taps="one per zone (zn_0..3) + rest (ctl/strap/fault)",
-        cts_args="-sink_clustering_enable -repair_clock_nets -balance_levels", added_cycles=0), indent=1) + "\n")
+        cts_args=cts, free_unfenced=list(ASTK_FREE_RE) + ["FIRM face flops + cells voting from them"], added_cycles=0), indent=1) + "\n")
     return out
 
 
@@ -540,6 +549,9 @@ def main():
                     help="PATH-KV-ASTK2 10-25 (GEOM 10:05): 4 contiguous zn zone GPL regions (2x2 over the upper core) + ctl "
                          "S band (zone_fence.tcl, released before DPL) and one regional clock tap per zone + ctl "
                          "(astk_zone_taps.tcl, CTS -balance_levels); needs --astk-write-decode")
+    ap.add_argument("--astk-balance-levels", action=argparse.BooleanOptionalAction, default=True,
+                    help="with --astk-zone-fences: CTS -balance_levels across the tap trees (default, ASTK2..6); "
+                         "--no-astk-balance-levels = PATH-KV-ASTK7 (landing regs to the 250/202.5 insertion contract)")
     ap.add_argument("--astk-storage-enable", action="store_true",
                     help="ASTK6 kept row-bank storage enables,32loads/output,+256FF/master/0cycles; needs --astk-path4")
     ap.add_argument("--astk-path4", action="store_true",
@@ -1052,7 +1064,7 @@ def main():
     if a.astk_zone_fences:
         if not (mod == "kv3_astk" or mod.startswith("kv3_astk_")) or not a.astk_write_decode:
             raise SystemExit("--astk-zone-fences needs a kv3_astk core + --astk-write-decode")
-        cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM, face_taps=a.astk_face_taps)
+        cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM, face_taps=a.astk_face_taps, balance_levels=a.astk_balance_levels)
     elif a.astk_face_taps:
         raise SystemExit("--astk-face-taps needs --astk-zone-fences")
     if a.astk_storage_enable:
