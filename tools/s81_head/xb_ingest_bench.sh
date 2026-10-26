@@ -29,4 +29,7 @@ for mut in 0 1 2 3; do
   esac
  fi
 done
+verilator --binary --timing -j 2 -O1 -Wno-fatal --top-module tb_s81hd_ctl -GMUT=0 -GTAGGED=0 --Mdir obj_untagged rtl/*.sv rtl/*.v > build_untagged.log 2>&1
+obj_untagged/Vtb_s81hd_ctl > run_untagged.log 2>&1
+grep -q 'PASS hd_ctl' run_untagged.log
 echo PASS-real-controller-XB-ingest-index-identity-retirement-mutants
