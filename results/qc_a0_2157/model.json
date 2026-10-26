@@ -1,0 +1,50 @@
+{
+  "status": "PROPOSED, NOT SELECTED, physical NOT RUN",
+  "source": "rtl/physical/ot_qwen_tile_lsl_sync_fault.sv",
+  "reference": "rtl/physical/ot_qwen_tile_lsl.sv",
+  "profile": {
+    "G4_ROOTS": 1,
+    "REGROOT_MODE": 3,
+    "FP1_define": false
+  },
+  "leaf_params": {
+    "G": 4,
+    "NPL": 2,
+    "IL": 8,
+    "MUL_LAT": 8,
+    "ACC_LAT": 7,
+    "TREE_LAT": 7,
+    "LRST": 3,
+    "ANR": 1,
+    "TMUT": 0
+  },
+  "added_cycles": {
+    "production_data": 0,
+    "reset_boot": 1,
+    "fault_observation": 1
+  },
+  "added_state_bits_per_lsl": 10,
+  "lsl_per_core": 8,
+  "cores": {
+    "qfd_tile_nk_a0c": 720,
+    "qfd_tile_nl_a0c": 48
+  },
+  "lsl_instances": 6144,
+  "added_state_bits_die": 61440,
+  "parent_types": [
+    "cbf_q00",
+    "cbf_q00_s2",
+    "cbf_q01",
+    "cbf_q01_s2",
+    "cbf_q11",
+    "cbn_q00",
+    "cbn_q01",
+    "cbn_q11",
+    "cbx_q10"
+  ],
+  "die_clock_ps": 833,
+  "boundary_bits_per_cycle": "unchanged",
+  "macs_per_cycle": "unchanged actual lane-slice body",
+  "throughput": "unchanged after explicit START guard; no new rate claim",
+  "physical_blocker": "original noFP1 combinational fault outputs documented native-failing; original LSL physical view absent; new synchronous successor requires owner ruling and new hardening, never relabel archived FP1 view"
+}

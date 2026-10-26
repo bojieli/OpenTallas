@@ -1,0 +1,5 @@
+LSL_SYNC PASS data_checks=19979 shifted_fault_checks=19979 nonzero_data=18912 nonzero_fault=12941 data_edges_added=0 fault_edges_added=1 boot_edges_added=1
+- tb_lsl_sync.sv:19: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.391 s; speed 102.392 us/s
+- Verilator: cpu 0.391 s on 1 threads; allocated 8 MB
