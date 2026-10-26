@@ -3,7 +3,7 @@
 
     python3 tools/dsrom_qelem_cl/qxpq_cgr_lec.py GATE_ROOT GOLD_ROOT OUT [--yosys Y]
         GATE_ROOT: tree with the new rtl/ (elaborated with CGR = 8);  GOLD_ROOT: tree with the reference rtl/ (CGR absent/0)
-        exit 0 EQUIVALENT, 1 NOT EQUIVALENT / transform refused, 3 tool error;  OUT/lec_cgr.json = verdict
+        exit 0 EQUIVALENT, 1 transform refused, 2 UNPROVEN (equiv_* left compare points), 3 tool error;  OUT/lec_cgr.json = verdict
 
 Why a separate flow: tools/die_plan/lec.py stops UNPROVEN on any ICG (clock gates are not modelled) and this change
 moves ONLY clock nets: every flop keeps its next-state function, its clock moves from gclk (= ICG(clk, u_z)) to
@@ -99,6 +99,20 @@ def cg_to_enable(js, name, out):
                     pc["clk"] = [ck]; pc["ce_in"] = [and2(cn, en, pc["ce_in"][0])]; st["roms"] += 1
                 else:
                     sys.stderr.write(f"REFUSED {name}: gate {gname} output reaches {t} {cn}.{p}[{i}]\n"); sys.exit(1)
+    # ROM black boxes -> the same stub on both sides (equiv_induct has no model for a black box): every input pin bit
+    # becomes a primary output lec_bbi_<inst>_<pin> (compare point), every output pin bit a primary input
+    # lec_bbo_<inst>_<pin> (shared free input, matched by name)
+    for cn, c in list(m["cells"].items()):
+        if not c["type"].startswith("ot_rom_"):
+            continue
+        tag = "".join(ch if ch.isalnum() else "_" for ch in cn)
+        for p, bits in c["connections"].items():
+            if c["port_directions"][p] == "input":
+                m["ports"][f"lec_bbi_{tag}_{p}"] = {"direction": "output", "bits": list(bits)}
+            else:
+                m["ports"][f"lec_bbo_{tag}_{p}"] = {"direction": "input", "bits": list(bits)}
+        del m["cells"][cn]
+        st["rom_stubs"] = st.get("rom_stubs", 0) + 1
     for o, (cn, ck, en) in gates.items():
         for pn, p in m["ports"].items():
             if o in p["bits"]:
@@ -139,13 +153,20 @@ def main():
     r = subprocess.run([a.yosys, "-l", log, "-p", scr], stdout=subprocess.DEVNULL)
     txt = open(log).read()
     summ = [l.strip() for l in txt.splitlines() if "Found" in l and "$equiv" in l or "unproven" in l.lower()][-6:]
-    verdict = "EQUIVALENT" if r.returncode == 0 else ("NOT EQUIVALENT" if "unproven $equiv" in txt.lower() else "TOOL ERROR")
+    errs = [l for l in txt.splitlines() if l.startswith("ERROR:")]
+    if r.returncode == 0:
+        verdict = "EQUIVALENT"
+    elif errs and "equiv_status" in errs[-1] or errs and "unproven $equiv" in errs[-1]:
+        verdict = "UNPROVEN"            # equiv_* could not prove some compare points (listed in equiv.log)
+    else:
+        verdict = "TOOL ERROR"
+    summ += errs[-1:]
     res = {"schema": "opentallas.lec_cgr.v1", "verdict": verdict, "gold": a.gold_root, "gate": a.gate_root,
            "params": PARAMS, "gate_extra": {"CGR": 8}, "gold_cg": gst, "gate_cg": tst, "equiv_summary": summ,
            "seconds": round(time.time() - t0)}
     json.dump(res, open(os.path.join(a.out, "lec_cgr.json"), "w"), indent=1)
     print(json.dumps(res, indent=1))
-    sys.exit({"EQUIVALENT": 0, "NOT EQUIVALENT": 1}.get(verdict, 3))
+    sys.exit({"EQUIVALENT": 0, "UNPROVEN": 2}.get(verdict, 3))
 
 
 if __name__ == "__main__":
