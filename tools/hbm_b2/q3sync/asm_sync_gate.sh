@@ -3,6 +3,8 @@
 # Elaboration gate for the actual five-core q3 producer assembly with the q3 SYNC_INPUT profile adopted.
 # Rule 3: refuses a dirty tracked tree; inputs are repo-relative at HEAD; __q3sync copies + the adopted assembly are
 # regenerated at HEAD into <OUT> (gen/, ot_hbm_q3_producer_native__q3sync.sv).
+# LINT_FLAGS (default strict: -Werror-SELRANGE -Werror-WIDTH, which stops at the legacy HDC WIDTHTRUNC debt before full
+# elaboration); LINT_FLAGS="-Werror-SELRANGE -Wno-WIDTH" elaborates the whole assembly.
 set -u
 OUT=$1; MODE=$2
 WT=$(git rev-parse --show-toplevel) || exit 2
@@ -48,11 +50,12 @@ mac=$(python3 -c "
 import json;c=json.load(open('$CEN'));s=[]
 [s.append(m) for k in c['core_filelists'] for m in c['core_filelists'][k]['macros'] if m not in s]
 print(' '.join(s))")
+LF=${LINT_FLAGS:--Werror-SELRANGE -Werror-WIDTH}
 log=$OUT/lint_$MODE.log
 echo "# $(date) host=$(hostname) commit=$(git rev-parse HEAD) mode=$MODE top=$top" > $log
-echo "# $V --lint-only -Wno-fatal -Werror-SELRANGE -Werror-WIDTH -Wno-TIMESCALEMOD --error-limit 1000000 --top-module $top <files> <macros>" >> $log
+echo "# $V --lint-only -Wno-fatal $LF -Wno-TIMESCALEMOD --error-limit 1000000 --top-module $top <files> <macros>" >> $log
 echo "# files: $(echo $files $mac | wc -w)" >> $log
-/usr/bin/time -v $V --lint-only -Wno-fatal -Werror-SELRANGE -Werror-WIDTH -Wno-TIMESCALEMOD --error-limit 1000000 \
+/usr/bin/time -v $V --lint-only -Wno-fatal $LF -Wno-TIMESCALEMOD --error-limit 1000000 \
    --Mdir $OUT/obj_$MODE --top-module $top $files $mac >> $log 2>&1
 echo "# rc=$? $(date)" >> $log
 rm -rf $OUT/obj_$MODE
