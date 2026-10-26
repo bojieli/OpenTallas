@@ -22,15 +22,18 @@ D = Path(__file__).resolve().parent
 YOSYS = os.environ.get("YOSYS", os.path.expanduser("~/.local/opentallas-tools/bin/yosys"))
 
 
+TOPF, TOP = "lec_top.sv", "lv_top"
+
+
 def read_cmds(fe, files):
-    stubs, top = D / "lec_stubs.v", D / "lec_top.sv"
+    stubs, top = D / "lec_stubs.v", D / TOPF
     if fe == "verilog":
         c = ["verilog_defaults -add -DSYNTHESIS", f"read_verilog -sv {stubs}"]
         c += [f"read_verilog -defer -sv {f}" for f in files] + [f"read_verilog -defer -sv {top}"]
-        c += ["hierarchy -check -top lv_top"]
+        c += [f"hierarchy -check -top {TOP}"]
     else:
-        c = [f"read_slang --keep-hierarchy --compat=vcs --ignore-assertions -DSYNTHESIS --top lv_top {stubs} "
-             + " ".join(map(str, files)) + f" {top}", "setattr -unset init", "hierarchy -check -top lv_top"]
+        c = [f"read_slang --keep-hierarchy --compat=vcs --ignore-assertions -DSYNTHESIS --top {TOP} {stubs} "
+             + " ".join(map(str, files)) + f" {top}", "setattr -unset init", f"hierarchy -check -top {TOP}"]
     return c + ["proc"]
 
 
@@ -48,7 +51,10 @@ def base(name):
 
 
 def main():
+    global TARGETS, TOPF, TOP
     a = sys.argv[1:]
+    if "--top" in a:      # --top FILE:MODULE:TARGET[,TARGET..] (another wrapper in this directory)
+        i = a.index("--top"); TOPF, TOP, tg = a[i + 1].split(":"); TARGETS = tg.split(","); del a[i:i + 2]
     fes = ["verilog", "slang"]
     if "--fe" in a:
         i = a.index("--fe"); fes = a[i + 1].split(","); del a[i:i + 2]
@@ -58,7 +64,7 @@ def main():
     lst = (D / "rtl_list.txt").read_text().split()
     files = [new_root / f for f in lst] + [work / "old" / f for f in lst]
     ver = subprocess.run([YOSYS, "-V"], capture_output=True, text=True).stdout.strip()
-    res = {"yosys": ver, "old_sha": old, "frontends": {}}
+    res = {"yosys": ver, "old_sha": old, "wrapper": f"{TOPF}:{TOP}", "frontends": {}}
     rc_all = 0
     for fe in fes:
         w = work / fe; w.mkdir(exist_ok=True)
@@ -83,7 +89,7 @@ def main():
                 if o in olds:
                     pairs.append((o, n))
             if fe == "slang":   # slang names each instance's module <M>$<instance path>: pair u_old.X <-> u_new.X
-                pairs = [(o, o.replace(t + "_old$lv_top.u_old.", t + "$lv_top.u_new.", 1)) for o in olds]
+                pairs = [(o, o.replace(t + f"_old${TOP}.u_old", t + f"${TOP}.u_new", 1)) for o in olds]
                 pairs = [(o, n) for o, n in pairs if n in news]
             if not pairs:     # hashed names: pair in elaboration order (same parameter sets, same order)
                 pairs = list(zip(sorted(olds), sorted(news))) if len(olds) == len(news) else []
