@@ -56,11 +56,12 @@ def model(plan_path):
                     fullhead_issue_authority='unresolved; consume compiled native/head START contract'),
         blockers=[
           'hd_ctl: real stage/context admission, x command origin, rank-argmax merge/token formation missing; xstore now implemented separately',
-          'hd_mesh: 64-bit static lane lacks record/valid/phase definition; safe8_ntf rx515 includes channel-board bit while plan carries514',
+          'hd_mesh: historical real HSF0 BEST has81 live bits including user10+position21, so64-bit lane needs explicit multi-beat framing; safe8_ntf rx515 includes channel-board bit while plan carries514',
           'hd_host: real dsdv_hostb_stage_hbc1104-bit ring/context/status interface is not a drop-in276-bit endpoint; 553-bit record needs explicit N3 codec or279-bit N2 lane',
           'hd_lep0N: provider named dsdv_slice_lepw_mu.LP is nested historical source; exact current source extraction and input contracts required',
           'tile position ROW0/TEN must be mapped from current264-slot/253-active plan, not copied from old253-tile17-SerDes top',
           'physical SerDes PMA boundary must remain explicit and status live'],
+        historical_controller_component="results/arch/s81_head_source_1025/hsf0_component.json",
         wholehead_implementation_allowed=False)
 
 if __name__ == '__main__':
