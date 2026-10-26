@@ -59,8 +59,8 @@ def main():
     for macro,suffix in sorted(m.items()):
         name=a.frame+suffix+'.viamap.hex';image=a.images/name
         data=image.read_bytes();words=data.decode().splitlines()
-        if len(words)!=4096 or any(not re.fullmatch('[0-9a-fA-F]{144}',w) for w in words):
-            raise ValueError('invalid 4096x72 via-map shape: '+str(image))
+        if len(words)!=512 or any(not re.fullmatch('[0-9a-fA-F]{144}',w) for w in words):
+            raise ValueError('invalid 512x576 via-map encoding for 4096x72 ROM: '+str(image))
         rows.append(dict(original_cell=a.frame+'.'+a.band_instance+'.'+macro,
                          image=name,image_sha256=hashlib.sha256(data).hexdigest()))
     record=dict(schema='opentallas.s81.frame_cfg_image_identity.v1',verdict='PASS_NAMESPACE_IDENTITY',
