@@ -22,7 +22,18 @@ def main():
     print('REBUILD_INTERNAL',','.join(types),flush=True)
     report['internal_unroutable']=B.internal_stations(p,a.out,types,log)
     print('REBUILD_ACTUAL_FT',flush=True)
-    try:report['ft_repair']=HBS.repair(p,log=lambda m:print(m,flush=True),only_types=types)
+    progress={'last':None,'completed':[],'failures':[]}
+    def note(message):
+        print(message,flush=True)
+        prefix='HBM actual-bit FT type '
+        if message.startswith(prefix) and ' FAIL:' not in message:
+            if progress['last'] is not None:
+                progress['completed'].append(progress['last'])
+                tmp=a.out/'checkpoint.tmp.json';tmp.write_text(json.dumps(p)+'\n');tmp.replace(a.out/'checkpoint.json')
+                (a.out/'checkpoint_progress.json').write_text(json.dumps(progress,indent=1)+'\n')
+            progress['last']=message[len(prefix):]
+        elif message.startswith(prefix) and ' FAIL:' in message:progress['failures'].append(message)
+    try:report['ft_repair']=HBS.repair(p,log=note,only_types=types)
     except HBS.RepairFailure as e:report['ft_repair']=e.report
     print('REBUILD_RESET',flush=True);BN.reset_wavefront(p,log)
     before=S.Plan(old,a.src/'die_plan.json');after=S.Plan(p,a.out/'die_plan.json');p['latency']['lanes']={lid:after.lane_latency(lid) for lid in after.lanes}
@@ -31,4 +42,6 @@ def main():
     report['log']=log
     (a.out/'die_plan.json').write_text(json.dumps(p,indent=1)+'\n');(a.out/'repair_report.json').write_text(json.dumps(report,indent=1,default=str)+'\n');print('REPAIR_COMPLETE',json.dumps({'internal_unroutable':report['internal_unroutable'],'ft_failures':report['ft_repair'].get('type_failures'),'lane_delta':report['lane_cycle_delta']}),flush=True)
 
-if __name__=='__main__':main()
+    return int(bool(report['internal_unroutable']) or report['ft_repair'].get('verdict')=='FAIL')
+
+if __name__=='__main__':raise SystemExit(main())
