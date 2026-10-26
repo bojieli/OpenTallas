@@ -791,3 +791,5 @@ CODEX: 2026-10-25 17:13 KV takeover resumed. Existing PC5/ASTK5/m6 jobs collecte
 CODEX: 2026-10-25 17:34 PDT main6de9fd7815 pushed/hub current: exact native libraries, complete signoff bundles, explicit FF taps, source_bits, PHY tap, cross-side LEC and canary ownership/capacity helpers. Focused checks PASS; no new physical signoff. All lanes active in coord/codex-*-1713-inventory.md.
 
 CODEX: 2026-10-25 17:41 PDT mainb610b5a5c9 current/pushed after F2/HBM/admission batch3eaf and native KV timing/multi-root helper batch. Focused38+22PASS, gate guardPASS, live inputs preserved. HEAD128realROM outputsPASS/model119cycles earlier; QC441 contractSTA and missingcontrols remain explicitFAIL/NOTRUN, NLfresh child qualification assigned.
+
+CODEX: 2026-10-25 17:42 PDT QC focusedD3HOOKsourceREADY7365c870a3 (4tools/currentmain/6testsPASS), unadoptedplanseparate. ExactCBN515FTcorner+22reset/run causesisolated; core-freebboxcontrolroutesstaticSAMEDEPTH max380PASS all4types, FTresitingstagecountsunchangedmax395.55; pendingcandidategeometry/G2.
