@@ -181,3 +181,15 @@ PENDING-DELTA D-QC-IOHOLD40 qwen_compute coll_ftm,coll_core,coll_ftc
  HBM PHY: OK (8657 um shore vs 7.48 mm needed, 55 um, PG 45%).
 PENDING-DELTA D-S81-PHY s81 serdes__t1,serdes__t2,serdes__t3,serdes__t4,serdes__t12,serdes__t13,serdes__t14,serdes__t15,serdes__t16
 [COORD 2026-10-26 01:01 PDT] D-S81-PHY APPROVED and folded into the D-S81-B2 batch: re-size the SerDes windows to the published N7 macro (3.36 mm2, 3.3 mm shoreline x 1.0 mm, on the die edge); one micro-bump technology (relabel the 150 um sites as C4 escape or re-derive at 45 um); ground bump per high-speed signal. The VDDPHY PDNSim re-runs at the published 4.37 W/macro on WS0, WS3 and one 2.41 mm2 window. The die power report must state whether PHY is included. Values are published ASSUMPTIONS (owner 10-26), not measured.
+
+PENDING-DELTA D-QC-SCROOT qwen_compute slw_sc_v1,slw_sc_v1r
+- 2026-10-26 01:07 PDT PATH-QC evaluation of COORD 00:59 (3), slw_sc_v1 unique root reset partition. VERDICT: reset-plan-consistent, so it is ADDED to the QC re-freeze batch.
+- Cause: gen_phys.root_async_reset requires the root type to be unique. wf_solve on plan 1d335f9d9 puts the root at sl_W0_sc, because the die rst_n pin (15616.8, 13130.6) lies inside it. Its type slw_sc_v1 has 3 instances (sl_W0/W2/W4_sc). One shared kit would therefore carry the arst_n -> u_rst_root false path into two partitions whose reset input is a TIMED neighbour rst_o, which is an illegal waiver.
+- Fix: new type slw_sc_v1r = a clone of slw_sc_v1 (same module, outline, pins, buses, ft slots), used only by sl_W0_sc. Moving the root instead is not viable: the nearest unique-type soft partition (sl_W5_sc) is 12.2 mm from the die root.
+- Measured with tools/die_plan schema + reset_tree.wf_solve, trial plan in /tmp/wfroot2.py on epyc1:
+  - validate 0 errors; root sl_W0_sc unchanged; unreachable 0.
+  - root_async_reset: slw_sc_v1r True; slw_sc_v1/v2/v3 False, so there is exactly one exception.
+  - est release: max 147 cycles unchanged; W0_sc 6; W2_sc 51 -> 50 and W4_sc 85 -> 84 (no root stages in the non-root instances).
+- Cost: +1 kit/sign-off type and 0 added cycles. TYPE-REDUCE note: this split is forced by the owner reset rule and cannot be merged back.
+- Owner PATH-QC. KITS-WAVE kits slw_sc_v1 (2 instances) + slw_sc_v1r after the batch lands.
+- COORD 00:59 (2) CB ID straps and (4) vmr_s6kc: acknowledged. PATH-QC picks them up next, CB straps first (plan delta + LEC), then the vmr s6 regen, as capacity frees (2 sub-agents busy: N59, FE-REACH).
