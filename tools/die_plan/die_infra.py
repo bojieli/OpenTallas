@@ -22,6 +22,10 @@ signal GRT sees the exact leftover capacity.  Opt-in; die_trial.py / die_clock_m
     die_infra.py report  --pre D [--grt G ...] [--clock MESH] [--sites S.json] --out R.json
                                                              # (6) GRT overflow, skew TT/FF, IR, clock power, island
                                                              # area per type, leftover M8/M9
+    die_infra.py sites   PLAN --out D [--mesh MESH] [--tracks D/preroute.json] [--pg D/pg.json] [--m89] [--bays B]
+                                                             # INFRA-SITE SUFFICIENCY gate (infra_sites.py): corridor
+                                                             # bay gaps <= reach, cut use, island via-stack porosity,
+                                                             # bay/island fill + power, H-tree snap to islands
 
 Pre-route geometry model (one list, three consumers):
   PG    die PG stripes (die.pg.grid or the sized pg.json grid), full-die STRIPE shapes on M8 (H) / M9 (V).
@@ -615,6 +619,28 @@ def cmd_report(a):
     return 0
 
 
+# ---------------------------------------------------------------------------------------------------------- sites
+def cmd_sites(a):
+    """INFRA-SITE SUFFICIENCY gate (opt-in, read-only): infra_sites.run -> D/infra_sites.json + summary + tables;
+    exit 1 unless every check PASSes (fail-closed: a check without data is NOT RUN, never PASS)."""
+    import infra_sites as IS
+    P = load_plan(a.plan)
+    bays = json.loads(Path(a.bays).read_text()) if a.bays else None
+    rep = IS.run(P, mesh_dir=a.mesh, tracks_file=a.tracks, pg_file=a.pg, m89=a.m89, bays=bays, reach=a.reach,
+                 detour=a.detour_um, core_obs_top=a.core_obs_top, stack_util=a.stack_util,
+                 lower_pg_frac=a.lower_pg_frac, island_w_mm2=a.island_w_mm2, via_imax_ma=a.via_imax_ma,
+                 clock_reach=a.clock_reach, reset_reach=a.reset_reach, with_reset=not a.no_reset)
+    IS.write(rep, a.out)
+    if a.render:
+        IS.render(P, rep, str(Path(a.out) / "infra_sites.png"))
+        for i, w in enumerate(a.window or []):
+            IS.render(P, rep, str(Path(a.out) / f"infra_sites_zoom{i}.png"), window=[float(v) for v in w.split(",")])
+    s = rep["summary"]
+    print(json.dumps({k: s[k] for k in ("verdict", "checks", "corridors", "corridors_fail", "cores_needing_in_core_bay",
+                                        "cuts_over", "stack_limit_per_gcell", "island_worst")}, indent=1, default=str))
+    return 0 if s["verdict"] == "PASS" else 1
+
+
 # --------------------------------------------------------------------------------------------------------- render
 def cmd_render(a):
     """the frozen pre-routes from preroute.def: partitions (grey), hard cores / keep-outs (light), PG (VDD orange /
@@ -748,8 +774,28 @@ def main(argv=None):
     v.add_argument("--out")
     v.add_argument("--dpi", type=int, default=200)
     v.add_argument("--pg-full", action="store_true")
+    st = sub.add_parser("sites")
+    st.add_argument("plan")
+    st.add_argument("--out", required=True)
+    st.add_argument("--mesh", help="die_clock_mesh build dir (mesh.json/place.json/clock_report.json)")
+    st.add_argument("--tracks", help="freeze preroute.json (tracks_taken -> leftover M8/M9)")
+    st.add_argument("--pg", help="sized pg.json (else the plan die.pg.grid)")
+    st.add_argument("--m89", action="store_true", help="count leftover M8/M9 tracks in the cut check")
+    st.add_argument("--bays", help="JSON {core module: [[x0,y0,x1,y1] core-local in-core bays]} (what-if)")
+    st.add_argument("--reach", type=float)
+    st.add_argument("--detour-um", type=float, default=405.0)
+    st.add_argument("--core-obs-top", default="M5")
+    st.add_argument("--stack-util", type=float, default=0.5)
+    st.add_argument("--lower-pg-frac", type=float, default=0.25)
+    st.add_argument("--island-w-mm2", type=float, default=2.0)
+    st.add_argument("--via-imax-ma", type=float, default=0.05)
+    st.add_argument("--clock-reach", type=float)
+    st.add_argument("--reset-reach", type=float, default=1000.0)
+    st.add_argument("--no-reset", action="store_true")
+    st.add_argument("--render", action="store_true")
+    st.add_argument("--window", action="append", help="x0,y0,x1,y1 zoom render (repeatable)")
     a = ap.parse_args(argv)
-    return dict(pg=cmd_pg, reset=cmd_reset, clockkit=cmd_clockkit, trim=cmd_trim, freeze=cmd_freeze, grt=cmd_grt,
+    return dict(sites=cmd_sites, pg=cmd_pg, reset=cmd_reset, clockkit=cmd_clockkit, trim=cmd_trim, freeze=cmd_freeze, grt=cmd_grt,
                 report=cmd_report, render=cmd_render)[a.cmd](a)
 
 
