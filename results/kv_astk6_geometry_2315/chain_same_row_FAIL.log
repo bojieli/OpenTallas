@@ -1,0 +1,6 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_FACE_OUTPUT_INVERTERS selected=571 moved=1136 missing=6 report=/work/face_output_inverters.tsv
+Error: test_inv.tcl, 2 no legal same-row INV site near face FF: output2392 u_u_strip_u_strip_u_ctl.g_tc_faces.u_qo_face/_0823_ output2382 output2336 u_u_strip_u_strip_u_ctl.g_tc_faces.u_qo_face/_0872_ output2328
