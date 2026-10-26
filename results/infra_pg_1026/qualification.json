@@ -1,0 +1,15 @@
+{
+ "scope": "earlier perimeter-supplied IR coupons are diagnostic only",
+ "supersedes_acceptance_of": [
+  "core_centre/result.json",
+  "io_ucie_kv_u_ucie_kv/result.json"
+ ],
+ "reason": "pdngen auto boundary PG BTerms remained as extra supply sources",
+ "corrected_bump_only_mv": {
+  "core": 52.2,
+  "ucie": 102.0
+ },
+ "budget_mv": 35,
+ "verdict": "FAIL",
+ "original_files_retained": true
+}

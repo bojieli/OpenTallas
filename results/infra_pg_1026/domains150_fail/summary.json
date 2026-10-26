@@ -1,0 +1,14 @@
+{
+ "connectivity": {
+  "VDD": "PASS",
+  "VDDPHY": "PASS",
+  "VSS": "PASS"
+ },
+ "ir_mv": {
+  "VDD": 82.3,
+  "VDDPHY": 54.2
+ },
+ "budget_mv": 35,
+ "verdict": "FAIL",
+ "scope": "open-edge200ummarginseparatePHYwindow at150umC4; core/groundseamstitchesactual228/1400; not dieIRqualification"
+}

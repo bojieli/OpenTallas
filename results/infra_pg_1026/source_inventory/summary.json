@@ -1,0 +1,13 @@
+{
+ "before_total": 107,
+ "after_total": 104,
+ "preserved_intended_bumps": 104,
+ "exact_names_nets_sigtypes_and_all_box_geometry_equal": true,
+ "removed_names": [
+  "VDD",
+  "VDDPHY",
+  "VSS"
+ ],
+ "source_rows_sha256": "345b685987fa0056678c7ae3313772bebf8f4d1d6ba1ffb77039ba9d396ebf9d",
+ "scope": "native ODB inventory only; no IR re-run; clean bump-only baseline IR52.2/102mV FAIL35 remains"
+}

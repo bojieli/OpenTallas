@@ -1,0 +1,52 @@
+{
+ "die": "qwen_compute",
+ "ir_budget_mv": 35.0,
+ "window": "io_ucie_kv_u_ucie_kv",
+ "window_um": [
+  0.0,
+  9037.44,
+  976.32,
+  10221.12
+ ],
+ "area_mm2": 1.156,
+ "grid": [
+  {
+   "layer": "M8",
+   "width_um": 0.48,
+   "pitch_um": 2.88,
+   "offset_um": 1.44,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 0.48,
+   "pitch_um": 1.728,
+   "offset_um": 0.864,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  }
+ ],
+ "power_w": 2.7784,
+ "load_blocks": 154,
+ "bumps": 104,
+ "bumps_vdd": 52,
+ "est_regions_mv": {
+  "io_ucie_kv_u_ucie_kv": 106.608,
+  "core": 57.914
+ },
+ "est_worst_mv": 106.608,
+ "est_detail": {
+  "local_mv": 34.473,
+  "coarse_max_mv": 23.441,
+  "rx_ohm_sq": 2.0274,
+  "ry_ohm_sq": 1.281,
+  "nodes": 208
+ },
+ "scope": "window PDNSim: window edges open (no feed from outside), window-local bumps; the estimate above is the same model on the same domain",
+ "plan": "/srv/opentallas-scratch2/claude/codex-aux-pg-1026/code/physical/die_plan/qwen_compute/die_plan_b12.json"
+}
