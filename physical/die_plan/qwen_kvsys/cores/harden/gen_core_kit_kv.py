@@ -1028,8 +1028,8 @@ def main():
             listed_not_changed={k: fr["n_" + k] for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out")},
             proof="equiv_make/equiv_simple -seq 2/equiv_induct/equiv_status -assert: post PASS, emitted .v PASS, mutant FAIL (caught)"), indent=1) + "\n")
     if a.ectlk_face_ports:
-        if mod != "qkd_ectlk":
-            raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
+        if not (mod == "qkd_ectlk" or re.fullmatch(r"qkd_ectlk_q[0-3]", mod)):   # CORES-KITS/KVX 10-26: + the four quarter cores (same leaves)
+            raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk / qkd_ectlk_q0..q3")
         from ectlk_face_ports import apply_kit as ectlk_apply
         ectlk_apply(kd / "rtl")
         (kd / "ectlk_face_delta.json").write_text(json.dumps(dict(added_schedule_cycles=0,
