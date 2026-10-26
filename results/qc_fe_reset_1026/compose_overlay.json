@@ -1,0 +1,31 @@
+{
+  "asbuilt_substitute_inst_append": [
+    {
+      "inst": "dvs_(?:W[0-5]|E[0-4])[.]u_core[.]u_sub[.]u_fup",
+      "module": "qfd_dv_s6_fup_reset_local",
+      "reason": "Exact full-FUP variant: private two-stage delivered-reset chain per AGU/CHU/CMD physical control group; 0 data/boot cycles"
+    }
+  ],
+  "route_synth_keep_modules_append": [
+    "qfd_dv_s6_rst2_local"
+  ],
+  "per_type": {
+    "slw_fe_v1": "results/qc_fe_reset_1026/geometry/slw_fe_v1.json",
+    "sle_fe_v1": "results/qc_fe_reset_1026/geometry/sle_fe_v1.json",
+    "sle_fe_v2": "results/qc_fe_reset_1026/geometry/sle_fe_v2.json"
+  },
+  "hold": {
+    "slw_fe_v2": "NOT BUILT: generate trial placement and actual connection dump, then fup_reset_groups.py; never borrow sites from another type"
+  },
+  "unchanged": {
+    "sle_fe_v3": "As-built master qfd_dv_s6_fup_e5 has no reset/control state in actual snapshot; original master and generated E5 variant remain byte-identical"
+  },
+  "uarch_delta": {
+    "extra_live_reset_FFs_per_full_FUP": 6,
+    "added_data_cycles": 0,
+    "added_reset_cycles": 0,
+    "clock_ps": 833
+  },
+  "validation": "20,000 cycles,120,000 sampling points each checking opt-in and opt-out against original master; between-edge reset bursts and first release edges; mutant10502 differences firstcycle4",
+  "next": "One QC infra-first event; strict bind with exact source variant, fresh LEC and place/reach census; no CTS or route before independent geometry verdict"
+}
