@@ -1,0 +1,201 @@
+{
+  "mapped_sha256": "3423d4c055fbf45904665e2bc5442e94e17d6753d9ab3bad1d0c168ac89df451",
+  "standard_cells": 64205,
+  "ff": 16592,
+  "ff_clock_nets": {
+    "ck": 16592
+  },
+  "hard_instances": [
+    {
+      "type": "ot_qwen_tile_node",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_ndh.u_node",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_romleaf",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_romleaf",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_romleaf",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_romleaf",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_romleaf",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_romleaf",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_romleaf",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_romleaf",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_romleaf",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_romleaf",
+      "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_lsl_rawfault_m3",
+      "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_lsl_rawfault_m3",
+      "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_lsl_rawfault_m3",
+      "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_lsl_rawfault_m3",
+      "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh.u_native_rawleaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_lsl_rawfault_m3",
+      "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_lsl_rawfault_m3",
+      "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_lsl_rawfault_m3",
+      "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh.u_native_rawleaf",
+      "clock": {
+        "clk": "ck"
+      }
+    },
+    {
+      "type": "ot_qwen_tile_lsl_rawfault_m3",
+      "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh.u_native_rawleaf",
+      "clock": {
+        "clk": "ck"
+      }
+    }
+  ],
+  "types": {
+    "INVx1_ASAP7_75t_R": 13107,
+    "BUFx2_ASAP7_75t_R": 12865,
+    "NAND2x1_ASAP7_75t_R": 1821,
+    "OR2x2_ASAP7_75t_R": 1191,
+    "AND4x1_ASAP7_75t_R": 45,
+    "AND2x2_ASAP7_75t_R": 1341,
+    "AND3x1_ASAP7_75t_R": 399,
+    "OR3x1_ASAP7_75t_R": 1197,
+    "NOR2x1_ASAP7_75t_R": 2457,
+    "AO21x1_ASAP7_75t_R": 2193,
+    "OA21x2_ASAP7_75t_R": 783,
+    "OA22x2_ASAP7_75t_R": 26,
+    "OA211x2_ASAP7_75t_R": 285,
+    "AOI21x1_ASAP7_75t_R": 238,
+    "XNOR2x2_ASAP7_75t_R": 502,
+    "AO32x1_ASAP7_75t_R": 85,
+    "AO22x1_ASAP7_75t_R": 55,
+    "AO221x1_ASAP7_75t_R": 83,
+    "AOI211x1_ASAP7_75t_R": 20,
+    "NOR3x1_ASAP7_75t_R": 3,
+    "BUFx3_ASAP7_75t_R": 24,
+    "INVx2_ASAP7_75t_R": 9,
+    "OAI21x1_ASAP7_75t_R": 205,
+    "BUFx4f_ASAP7_75t_R": 4,
+    "NOR2x2_ASAP7_75t_R": 10,
+    "BUFx6f_ASAP7_75t_R": 9,
+    "OR4x1_ASAP7_75t_R": 101,
+    "OA221x2_ASAP7_75t_R": 3,
+    "AOI221x1_ASAP7_75t_R": 4,
+    "AOI22x1_ASAP7_75t_R": 9,
+    "AO21x2_ASAP7_75t_R": 7,
+    "AND4x2_ASAP7_75t_R": 1,
+    "AND2x4_ASAP7_75t_R": 3,
+    "OR5x1_ASAP7_75t_R": 17,
+    "AND5x1_ASAP7_75t_R": 13,
+    "OA222x2_ASAP7_75t_R": 32,
+    "NAND3x1_ASAP7_75t_R": 7,
+    "OR4x2_ASAP7_75t_R": 2,
+    "AO211x2_ASAP7_75t_R": 1,
+    "XOR2x2_ASAP7_75t_R": 51,
+    "OAI22x1_ASAP7_75t_R": 28,
+    "XNOR2x1_ASAP7_75t_R": 4,
+    "AO31x2_ASAP7_75t_R": 10,
+    "BUFx4_ASAP7_75t_R": 1,
+    "AND5x2_ASAP7_75t_R": 1,
+    "OA31x2_ASAP7_75t_R": 2,
+    "OR2x4_ASAP7_75t_R": 1,
+    "AO222x2_ASAP7_75t_R": 1,
+    "FAx1_ASAP7_75t_R": 942,
+    "HAxp5_ASAP7_75t_R": 1157,
+    "TIEHIx1_ASAP7_75t_R": 17,
+    "TIELOx1_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 16503,
+    "DFFASRHQNx1_ASAP7_75t_R": 89,
+    "INVx3_ASAP7_75t_R": 6240
+  },
+  "status": "ACTUAL source synthesis census; no LEF/lib/CTS insertion credit"
+}
