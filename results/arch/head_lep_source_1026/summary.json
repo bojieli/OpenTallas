@@ -1,0 +1,79 @@
+{
+  "status": "SOURCE COMPONENT PASS; physical/whole-head gates open",
+  "source": "real production IDX/MU landing/four safe8+3-edge lane landing composition",
+  "current_layer_masters_changed": false,
+  "tested_module_sha256": {
+    "ot_sram_oldread_wreg_nr": "92eb9d2499f8bce508ae465ed0917b6917899301b7663b97480d74aeb9116479",
+    "dsdv_mu_land_head_nr": "dc0a07da74baf4ed1d943f87e6fbd4f7961fd6e920a42bd6f4ec707d5aac7e97",
+    "ot_sram_showahead_1r1w_head_nr": "b9739531eeb6bdbb3baeeee6785f116a0730c9d76c0435b45c206da84d6e4e37"
+  },
+  "oldread": {
+    "cycles": 2052,
+    "rows": 512,
+    "forwarding_mutant": 820
+  },
+  "rx": {
+    "cycles": 2052,
+    "depth": 12,
+    "forwarding_mutant": 167
+  },
+  "mu_landing": {
+    "messages": 3,
+    "replay_beats": 240,
+    "checks": 565,
+    "wrong_address_mutant": 240
+  },
+  "closure": {
+    "files": 25,
+    "specialized_modules": 132,
+    "active_repair_macros": 0
+  },
+  "new_macros": {
+    "ot_sram_1r1w_128x256_m1_r0c0": {
+      "outline_um": [
+        91.8,
+        39.432
+      ],
+      "area_um2": 3619.8576000000003,
+      "tt_clkq_ps": 367.08113323359345,
+      "ff_clkq_ps": 306.7676161355603,
+      "track_alignment": true
+    },
+    "ot_sram_1r1w_32x128_m1_r0c0": {
+      "outline_um": [
+        51.432,
+        20.808
+      ],
+      "area_um2": 1070.197056,
+      "tt_clkq_ps": 269.7405976100083,
+      "ff_clkq_ps": 217.52126944264396,
+      "track_alignment": true
+    }
+  },
+  "added_memory_cycles": 0,
+  "native_source_ages": {
+    "ro_mu_input_stage": 1,
+    "lane_K_to_N": 3,
+    "lane_N_to_K": 3,
+    "whole_head_delta": "NOT COMPOSED; no inherited head calendar claim"
+  },
+  "plan_candidate": {
+    "g0c_errors": 0,
+    "g0c_warnings": 6,
+    "types_clean": "16/16",
+    "fault_return_cycles": 2,
+    "data_lanes_unchanged": true,
+    "canonical_plan_changed": false
+  },
+  "initial_staging_failure": {
+    "errors": 10,
+    "cause": "trial file outside plan directory lost relative cores/* pin tables",
+    "disposition": "fresh final trial kept inside plan directory; initial failed report retained in runroot"
+  },
+  "not_run": [
+    "physical macro placement/trial",
+    "route/STA/signoff",
+    "whole-head strict bind",
+    "HBC/START/H4 source scheduling composition"
+  ]
+}

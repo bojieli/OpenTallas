@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS_COMPONENT",
+  "source_commit": "5a371dbc0d",
+  "reference_commit": "04718b43a55f742397eebf564a20adaa3e0bacd6",
+  "positions": 2,
+  "reference_slices_per_position": 8248,
+  "user": 777,
+  "full_result_bits": 512,
+  "merge_to_flit_edges": [
+    3,
+    3
+  ],
+  "result_high_user_mutant": "CAUGHT_FIRST_RESULT",
+  "dropped_LEP_fault_mutant": "CAUGHT_STICKY_BIT10",
+  "whole_head": false,
+  "physical_gates": "NOT_RUN",
+  "added_cycles_vs_reference": 0
+}
