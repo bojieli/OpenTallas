@@ -39,10 +39,11 @@ def ends(net,rev,active=None):
    if t2.getMTerm().getName() in ('CLK','CK','CP'):continue
    if t2.getIoType()==('INPUT' if rev else 'OUTPUT'):r.update(ends(t2.getNet(),rev,active))
  active.remove(key);cache[key]=frozenset(r);return cache[key]
+all_registers=len(sys.argv)>3 and sys.argv[3]=="--all"
 targets={}
 for i in seq.values():
  n=i.getName()
- if not (re.search(r'(\.u_qb\.f_dd|\.u_svc\.dr_o|\.u_pd[13]_|\.u_qb\.f_lcv)',n) or '.g_w[4].g_stn.u_s1/' in n.replace('\\','')):continue
+ if not all_registers and not (re.search(r'(\.u_qb\.f_dd|\.u_svc\.dr_o|\.u_pd[13]_|\.u_qb\.f_lcv)',n) or '.g_w[4].g_stn.u_s1/' in n.replace('\\','')):continue
  d=i.findITerm('D')
  if d is None:continue
  sources=ends(d.getNet(),True);sinks=set()
@@ -50,4 +51,7 @@ for i in seq.values():
   if t.getIoType()=='OUTPUT' and t.getSigType() not in ('POWER','GROUND','CLOCK'):sinks.update(ends(t.getNet(),False))
  targets[n]={'src':sorted(sources),'dst':sorted(sinks)}
 print('N59_CONES',len(targets),'targets',sum(len(x['src'])+len(x['dst']) for x in targets.values()),'endpoint edges')
-Path(sys.argv[2]).write_text(json.dumps(dict(positions=positions,macros=boxes,targets=targets)))
+Path(sys.argv[2]).write_text(json.dumps(dict(positions=positions,macros=boxes,targets=targets,all_registers=all_registers,registers=[i.getName() for i in seq.values()])))
+from collections import Counter
+bins=Counter((int(positions[i.getName()][0]//10)*10+5,int(positions[i.getName()][1]//10)*10+5) for i in seq.values())
+Path(sys.argv[2]+'.clock_bins.json').write_text(json.dumps(dict(bin_um=10,bins=[[x,y,n] for (x,y),n in sorted(bins.items())])))

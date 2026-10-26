@@ -938,7 +938,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
         cfg += ["export OT_TAP_GRT_PRE = 1", "export OT_PINREG_PAD = 1"]
-    if any(Path(f).name == "qfd_native59_qbank.sv" for f in srcs):
+    if t["module"] == "qfd_qc_native59_part" and any(Path(f).name == "qfd_native59_qbank.sv" for f in srcs):
         # N59 physical publications need distinct driver cells, not just kept
         # wire aliases.  Convert processes and copy keep onto their drivers
         # before synth's first opt_merge can collapse the replicas.

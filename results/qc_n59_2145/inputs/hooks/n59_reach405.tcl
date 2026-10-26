@@ -1,7 +1,10 @@
 # N59 P3c zero-cycle placement anchors; current QC batch1 E-face dr_o window.
 # Centres from complete-fanin/fanout geometry model; post-DPL graph is the gate.
+global n59r_blk n59r_dbu n59r_names n59r_norm n59r_alias_count
+set n59r_alias_count 0
 set n59r_blk [ord::get_db_block]
 set n59r_dbu [$n59r_blk getDbUnitsPerMicron]
+source /work/n59_anchor_alias.tcl
 set n59r_names {}
 set n59r_entries {
  {{u_bound.u_core.u_qb.f_dd\[0\]$_DFF_P_} 770.580000 400.140000}
@@ -2235,14 +2238,15 @@ set n59r_entries {
 foreach row $n59r_entries {
  lassign $row name x y
  set inst [$n59r_blk findInst $name]
- if {$inst eq "NULL"} {error "N59_REACH405 missing physical anchor $name"}
+ if {$inst eq "NULL"} {set inst [n59r_resolve_alias $name]}
  set m [$inst getMaster]
  if {[$m isBlock]} {error "N59_REACH405 refuses macro $name"}
  $inst setPlacementStatus PLACED
  $inst setLocation [expr {round($x*$n59r_dbu-[$m getWidth]/2.0)}] [expr {round($y*$n59r_dbu-[$m getHeight]/2.0)}]
  $inst setPlacementStatus FIRM
- lappend n59r_names $name
+ lappend n59r_names [$inst getName]
 }
 source /work/cf/anchor_row_packing.tcl
 ot_anchor_pack::repair $n59r_blk $n59r_names
 puts "N59_REACH405 anchored [llength $n59r_names] FFs; actual405um post-DPL gate still required"
+puts "N59_REACH405 exact final-delay-state aliases $n59r_alias_count"
