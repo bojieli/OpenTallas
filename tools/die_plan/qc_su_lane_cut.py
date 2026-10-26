@@ -40,7 +40,7 @@ def concat(bits):
     return '{' + ', '.join(f'{n}[{b}]' if w > 1 else n for n, b, w in reversed(bits)) + '}'
 
 
-def cut(source, lane, module=None):
+def cut(source, lane, module=None, memory_alignment=None):
     module = module or f'qfd_qc_su_lane_w_l{lane}'
     if len(re.findall(r'\bendmodule\b', source)) != 1:
         raise ValueError('expected one bound partition module')
@@ -51,6 +51,11 @@ def cut(source, lane, module=None):
     chosen = [m for m in all_leaves if int(m['lane']) == lane]
     if {m['kind'] for m in chosen} != KINDS or len(chosen) != 5:
         raise ValueError(f'lane {lane}: expected exactly five as-built leaves, found {[m["kind"] for m in chosen]}')
+    head = next(m for m in chosen if m['kind'] == 'head')
+    alignment = re.search(r'\.MEMORY_ALIGNMENT\((\d+)\)', head['body'])
+    alignment = int(alignment[1]) if alignment else None
+    if memory_alignment is not None and alignment != memory_alignment:
+        raise ValueError(f'lane {lane}: bound MEMORY_ALIGNMENT={alignment}, required {memory_alignment}; regenerate the canonical bind')
     body = '\n'.join(m['body'] for m in chosen)
     selected = refs(body, widths)
     remainder = source
@@ -83,6 +88,7 @@ def cut(source, lane, module=None):
     frame = WIRE.sub(lambda m: '' if m[2] in private else m[0], frame)
     report = dict(schema='opentallas.qc_su_lane_cut.v1', lane=lane, module=module,
                   source_sha256=hashlib.sha256(source.encode()).hexdigest(), added_cycles=0,
+                  memory_alignment=alignment,
                   leaves=[dict(instance=m['inst'], module=m['module']) for m in chosen],
                   inputs=[dict(name=n, bit=b) for n,b,_ in ib],
                   outputs=[dict(name=n, bit=b) for n,b,_ in ob],
@@ -97,8 +103,9 @@ def main():
     p.add_argument('--lane', type=int, required=True)
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--module')
+    p.add_argument('--memory-alignment', type=int, help='fail closed unless the bound lane head has this exact parameter (production QCL contract:3)')
     a = p.parse_args()
-    rtl, frame, report = cut(a.source.read_text(), a.lane, a.module)
+    rtl, frame, report = cut(a.source.read_text(), a.lane, a.module, a.memory_alignment)
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / (report['module'] + '.sv')).write_text(rtl)
     (a.out / 'frame.sv').write_text(frame)
