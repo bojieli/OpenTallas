@@ -1942,6 +1942,14 @@ def alias_arrays(L, log, words=4, work=None):
                             cands.append(mp)
             if not cands:
                 continue
+            if len(cands) == 1:
+                # No alternative layout exists; simulation cannot change the
+                # winner. Every compare point still reaches inductive proof.
+                apply(cands[0])
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); only possible layout (proof pending)")
+                continue
             # A unique element-driver winner selects exactly the mapping the
             # scored path below would select, independently of every simulation
             # score. Avoid rebuilding/simulating the whole design for each

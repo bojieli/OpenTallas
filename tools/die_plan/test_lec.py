@@ -960,3 +960,16 @@ def test_alias_array_missing_or_unusable_driver_evidence_keeps_simulation_fallba
                       matched=[],gonly=gold,tonly=gate,hyp={},galias={k:[gate[0]] for k in gold},build=need_scoring)
     monkeypatch.setattr(lec,"slang_elements",lambda path:metadata)
     with pytest.raises(RuntimeError,match="fallback simulation reached"):lec.alias_arrays(L,[],work=tmp_path)
+
+
+def test_alias_array_only_possible_layout_does_not_score_whole_design(monkeypatch,tmp_path):
+    from types import SimpleNamespace
+    gold=[f"ff:u.q[{i}]" for i in range(4)]
+    gate=[f"ff:u.SX[{i}]" for i in range(4)]
+    def no_build(**kwargs):raise AssertionError("one layout has no simulation choice")
+    L=SimpleNamespace(gp=dict.fromkeys(gold,0),tp=dict(zip(gate,range(10,14))),gc={},tc={},
+                      matched=[],gonly=gold,tonly=gate,hyp={},galias={k:[gate[0]] for k in gold},build=no_build)
+    monkeypatch.setattr(lec,"slang_elements",lambda path:{})
+    log=[];lec.alias_arrays(L,log,work=tmp_path)
+    assert L.tp==dict(zip(gold,range(10,14))) and L.hyp=={}
+    assert "only possible layout" in log[-1] and "proof pending" in log[-1]
