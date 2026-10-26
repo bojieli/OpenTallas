@@ -27,10 +27,21 @@ def main():
         for tn in r['types']:
             if q['partition_types'][tn]['outline_um']!=p['partition_types'][tn]['outline_um']:
                 raise ValueError(f'{src}: incompatible outline {tn}')
-            p['partition_types'][tn]=q['partition_types'][tn]
+            target=p['partition_types'][tn]; repaired=q['partition_types'][tn]
+            # A repair may predate the canonical interface publisher. Transfer
+            # station geometry only; keep current pins and core OBS contracts.
+            target['internal_stations']=repaired.get('internal_stations',[])
+            slots={s['name']:s for s in target.get('ft_slots',[])}
+            for sl in repaired.get('ft_slots',[]):
+                if sl['name'] not in slots:raise ValueError(f'{tn}: unknown repaired slot')
+                for key in ('stations','regs_um','bit_site_cell_um','bit_sites_um'):
+                    if key in sl:slots[sl['name']][key]=sl[key]
+                    else:slots[sl['name']].pop(key,None)
         used.update(r['types'])
         report['repairs'].append({'source':str(src),'sha256':hashlib.sha256((src/'die_plan.json').read_bytes()).hexdigest(),'types':r['types'],'ft_checked':r['ft_repair']['checked'],'ft_added':len(r['ft_repair']['added'])})
     after=S.Plan(p)
+    unresolved=[pid for pid,pr in after.ports.items() if any(k not in pr for k in ('face','window_um','layers'))]
+    if unresolved:raise ValueError(f'unresolved canonical ports: {unresolved}')
     p['latency']['lanes']={lid:after.lane_latency(lid) for lid in after.lanes}
     report['lane_cycle_delta_from_base']={lid:p['latency']['lanes'][lid]['cycles']-before.lane_latency(lid)['cycles'] for lid in after.lanes if p['latency']['lanes'][lid]['cycles']!=before.lane_latency(lid)['cycles']}
     report['internal_type_max']={tn:max([len(s['regs_um']) for s in p['partition_types'][tn].get('internal_stations',[])]+[0]) for tn in sorted(used)}
