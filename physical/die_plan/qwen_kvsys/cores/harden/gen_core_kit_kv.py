@@ -757,8 +757,8 @@ def main():
             bound=["ctl st", "zn_1..3 zc[1:0]"], landing="one kept 2-b register (strap_q)", sdc="set_false_path -from [get_ports strap_*]",
             added_cycles=0, settle="+1 edge after power-up (quasi-static)"), indent=1) + "\n")
     if a.ectlk_face_ports:
-        if mod != "qkd_ectlk":
-            raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
+        if not (mod == "qkd_ectlk" or re.fullmatch(r"qkd_ectlk_q[0-3]", mod)):   # CORES-KITS/KVX 10-26: + the four quarter cores (same leaves)
+            raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk / qkd_ectlk_q0..q3")
         from ectlk_face_ports import apply_kit as ectlk_apply
         ectlk_apply(kd / "rtl")
         (kd / "ectlk_face_delta.json").write_text(json.dumps(dict(added_schedule_cycles=0,
