@@ -515,6 +515,26 @@ def core_reset_hierarchy_candidates(cells, members, target, modules):
             (cells[ci].path == target["inst"] or cells[ci].path.endswith(suffix))]
 
 
+def wavefront_cells_text(driver=False):
+    """Copy physical reset cells verbatim, including their synthesis attributes.
+
+    Dropping module ``keep`` deleted unused, geometrically required tap chains
+    during synthesis (sle_fe_v1 lost29 of56 control flops).
+    """
+    import gen_rtl
+    names = ["ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"]
+    if driver:
+        names += ["ot_dp_rrelay_drive", "ot_dp_rgate_drive"]
+    out = []
+    for name in names:
+        m = re.search(r"((?:\(\*[^\n]*\*\)\n)*module " + re.escape(name) +
+                      r"\b.*?\nendmodule\n)", gen_rtl.CELLS, re.S)
+        if not m:
+            raise BindError(f"canonical reset cell {name} missing from gen_rtl.CELLS")
+        out.append(m.group(1))
+    return "\n".join(out)
+
+
 class Binder:
     def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
@@ -2377,9 +2397,7 @@ class Binder:
             import reset_tree as RT
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
-            for name in ("ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"):
-                m = re.search(r"module " + name + r"\b.*?\nendmodule", gen_rtl.CELLS, re.S)
-                cells += "\n(* keep_hierarchy *)\n" + m.group(0) + "\n"
+            cells += "\n" + wavefront_cells_text(driver=bool(P.reset.get("relay_driver")))
             W = RT.wf_plan(P)
             missing = set(W["parts"]) - set(self.members)
             if missing:
