@@ -491,6 +491,28 @@ def xfin_pins(path, size, old_outline=None):
         groups = {}
         for p in ps:
             groups.setdefault(re.sub(r"\[\d+\]$", "", p["name"]), []).append(p)
+        spans = sorted((min(p[along] for p in gp), max(p[along] for p in gp)) for gp in groups.values())
+        if any(b0 <= a1 for (_, a1), (b0, _) in zip(spans, spans[1:])):
+            # S81-CORE-LAT-R6 10-26: INTERLEAVED bus groups (l0r W face: wr_bd / r_d / wr_ad bits alternate at 0.192) cannot
+            # be shifted as blocks -- the block shift + end clamp stacked 321 pins on 146 sites (GRT-0080 abort).  Re-spread
+            # pin by pin instead: order along the face kept, each pin at its scaled position on the M4/M5 track phase
+            # (0.048-um multiples), the face's original minimum pitch kept, clamped inside [0.5, s_new - 0.5].
+            o = sorted(ps, key=lambda p: (p[along], p["name"]))
+            gap = min([b[along] - a[along] for a, b in zip(o, o[1:]) if b[along] - a[along] > 1e-6] or [0.192])
+            T = 0.048
+            pos = [p[along] + round(p[along] * (sc - 1) / T) * T for p in o]
+            for i in range(1, len(pos)):
+                if pos[i] < pos[i - 1] + gap - 1e-6:
+                    pos[i] = pos[i - 1] + math.ceil((pos[i - 1] + gap - pos[i] - 1e-6) / T) * T
+            for i in range(len(pos) - 1, -1, -1):
+                lim = s_new - 0.5 if i == len(pos) - 1 else pos[i + 1] - gap
+                if pos[i] > lim + 1e-6:
+                    pos[i] -= math.ceil((pos[i] - lim - 1e-6) / T) * T
+            if pos and pos[0] < 0.5 - 1e-6:
+                raise ValueError(f"face {f}: {len(o)} pins at pitch {gap} do not fit {s_new} um")
+            for p, a in zip(o, pos):
+                p[along] = round(a, 4)
+            groups = {}
         prev_end = None
         for g, gp in sorted(groups.items(), key=lambda kv: min(p[along] for p in kv[1])):
             a0 = min(p[along] for p in gp)
