@@ -201,10 +201,9 @@ module qkd_host_native_engine #(
     reg  [15:0] gw_d [0:4];
     reg         gw_v [0:4];
     reg         gw_end [0:4];
-    integer gi;
     always @* begin
         gw_t[0] = qi_t; gw_g[0] = qi_g; gw_d[0] = qi_d; gw_v[0] = qi_v; gw_end[0] = 1'b0;
-        for (gi = 0; gi < 4; gi = gi + 1) begin
+        for (integer gi = 0; gi < 4; gi = gi + 1) begin
             gw_t[gi+1] = gw_t[gi]; gw_g[gi+1] = gw_g[gi]; gw_d[gi+1] = gw_d[gi] + 16'd16;
             gw_v[gi+1] = gw_v[gi]; gw_end[gi+1] = gw_end[gi];
             if (gw_d[gi] + 16'd16 >= q_hd) begin
@@ -252,21 +251,20 @@ module qkd_host_native_engine #(
     reg [127:0] o_w;
     reg [15:0]  o_by;
     reg [3:0]   o_t, o_b;
-    integer ob, oh;
     always @* begin
         q_sec = 256'd0; o_w = 128'd0; o_by = 0; o_t = 0; o_b = 0;
         if (!qo_v) begin
             // K tile sector s: words d = 2s, 2s+1; lane l = position l.  Every lane
             // reads its word holding d = 2s, 2s+1 and gives two bytes
             o_b = {qo_s[2:0], 1'b0};
-            for (ob = 0; ob < 16; ob = ob + 1) begin
+            for (integer ob = 0; ob < 16; ob = ob + 1) begin
                 o_w = bk[bw_idx(qo_slot, ob[3:0], hw_word(qo_g, o_lhd, {qo_s[14:0], 1'b0}))];
                 q_sec[ob*8 +: 8] = o_lane[ob] ? o_w[o_b*8 +: 8] : 8'd0;
                 q_sec[(16+ob)*8 +: 8] = o_lane[ob] ? o_w[(o_b+1)*8 +: 8] : 8'd0;
             end
         end else begin
             // V block sector j: bytes 32 j .. 32 j + 31 of [t][d]: two 16-byte words
-            for (oh = 0; oh < 2; oh = oh + 1) begin
+            for (integer oh = 0; oh < 2; oh = oh + 1) begin
                 o_by = {qo_s[10:0], 5'd0} + oh * 16;
                 o_t = o_by >> o_lhd;
                 o_w = bv[bw_idx(qo_slot, o_t, hw_word(qo_g, o_lhd, o_by & (o_hd - 16'd1)))];
@@ -488,7 +486,7 @@ module qkd_host_native_engine #(
 
             // ---- QKV input: the beat's granules into the slot's lane banks
             if (q_beat && QPIPE == 0) begin
-                for (gi = 0; gi < 4; gi = gi + 1)
+                for (integer gi = 0; gi < 4; gi = gi + 1)
                     if (g_use[gi]) begin
                         for (bi = 0; bi < 16; bi = bi + 1) g_word[bi*8 +: 8] = cv[gi*16 + bi];
                         if (!gw_v[gi]) bk[bw_idx(qi_slot, gw_t[gi][3:0], hw_word(gw_g[gi], q_lhd, gw_d[gi]))] <= g_word;
@@ -898,11 +896,10 @@ module qkd_host_native_engine #(
         end
         // ---- E2: sector assembly into the output FIFO (4 entries; credit-issued)
         reg  [255:0]  sec;
-        integer l;
         always @* begin
             sec = 256'd0;
             if (!e1_isv) begin
-                for (l = 0; l < 16; l = l + 1) begin
+                for (integer l = 0; l < 16; l = l + 1) begin
                     sec[l*8 +: 8]      = e1_lane[l] ? e1_kb[l][7:0]  : 8'd0;
                     sec[(16+l)*8 +: 8] = e1_lane[l] ? e1_kb[l][15:8] : 8'd0;
                 end
