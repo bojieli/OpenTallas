@@ -63,7 +63,7 @@ def recipe_from_census(core, census, profile_dir, root=REPO):
     receipt = dict(name='q3sync', generator=GEN_REL, helper_list=LIST_REL,
                    source_commit=census['source_commit'], core=core,
                    modules_in_qualified_closure=32, data_cycle_delta=0,
-                   reset='synchronous control reset on the existing rst_n pin',
+                   reset='synchronous reset on existing reset pins; no reset logic removed',
                    source_files={}, generated_files={}, macros={})
     for item in selected:
         rel = item['source']
