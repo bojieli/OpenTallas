@@ -1,0 +1,2628 @@
+{
+  "kind": "HEAD8_SYMBOLIC_SOURCE_CONTRACT",
+  "parts": {
+    "ctl": {
+      "type": "hd_ctl",
+      "role": "mission",
+      "reset_release": 47,
+      "mission_release": "max(47, S+47)",
+      "control_release": "max(47, S+47)",
+      "start_offset": 47
+    },
+    "host": {
+      "type": "hd_host",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "lep0N": {
+      "type": "hd_lep0N",
+      "role": "mission",
+      "reset_release": 46,
+      "mission_release": "max(46, S+46)",
+      "control_release": "max(46, S+46)",
+      "start_offset": 46
+    },
+    "lk_EN0": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 59,
+      "mission_release": "max(59, S+59)",
+      "control_release": "max(59, S+59)",
+      "start_offset": 59
+    },
+    "lk_EN1": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 66,
+      "mission_release": "max(66, S+66)",
+      "control_release": "max(66, S+66)",
+      "start_offset": 66
+    },
+    "lk_ES0": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 53,
+      "mission_release": "max(53, S+53)",
+      "control_release": "max(53, S+53)",
+      "start_offset": 53
+    },
+    "lk_ES1": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 64,
+      "mission_release": "max(64, S+64)",
+      "control_release": "max(64, S+64)",
+      "start_offset": 64
+    },
+    "lk_HOST0": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 46,
+      "mission_release": "max(46, S+46)",
+      "control_release": "max(46, S+46)",
+      "start_offset": 46
+    },
+    "lk_HOST1": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 46,
+      "mission_release": "max(46, S+46)",
+      "control_release": "max(46, S+46)",
+      "start_offset": 46
+    },
+    "lk_WN0": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 58,
+      "mission_release": "max(58, S+58)",
+      "control_release": "max(58, S+58)",
+      "start_offset": 58
+    },
+    "lk_WN1": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 58,
+      "mission_release": "max(58, S+58)",
+      "control_release": "max(58, S+58)",
+      "start_offset": 58
+    },
+    "lk_WN2": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 66,
+      "mission_release": "max(66, S+66)",
+      "control_release": "max(66, S+66)",
+      "start_offset": 66
+    },
+    "lk_WN3": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 58,
+      "mission_release": "max(58, S+58)",
+      "control_release": "max(58, S+58)",
+      "start_offset": 58
+    },
+    "lk_WS0": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 53,
+      "mission_release": "max(53, S+53)",
+      "control_release": "max(53, S+53)",
+      "start_offset": 53
+    },
+    "lk_WS1": {
+      "type": "hd_serdes",
+      "role": "mission",
+      "reset_release": 64,
+      "mission_release": "max(64, S+64)",
+      "control_release": "max(64, S+64)",
+      "start_offset": 64
+    },
+    "mesh0S": {
+      "type": "hd_mesh",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "mesh7N": {
+      "type": "hd_mesh",
+      "role": "mission",
+      "reset_release": 48,
+      "mission_release": "max(48, S+48)",
+      "control_release": "max(48, S+48)",
+      "start_offset": 48
+    },
+    "mesh7S": {
+      "type": "hd_mesh",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "nst1": {
+      "type": "hd_st_turn",
+      "role": "mission",
+      "reset_release": 63,
+      "mission_release": "max(63, S+63)",
+      "control_release": "max(63, S+63)",
+      "start_offset": 63
+    },
+    "nst10": {
+      "type": "hd_st_turn",
+      "role": "mission",
+      "reset_release": 63,
+      "mission_release": "max(63, S+63)",
+      "control_release": "max(63, S+63)",
+      "start_offset": 63
+    },
+    "nst2": {
+      "type": "hd_st_str",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "nst3": {
+      "type": "hd_st_n3",
+      "role": "mission",
+      "reset_release": 48,
+      "mission_release": "max(48, S+48)",
+      "control_release": "max(48, S+48)",
+      "start_offset": 48
+    },
+    "nst4": {
+      "type": "hd_st_n4",
+      "role": "mission",
+      "reset_release": 47,
+      "mission_release": "max(47, S+47)",
+      "control_release": "max(47, S+47)",
+      "start_offset": 47
+    },
+    "nst7": {
+      "type": "hd_st_m",
+      "role": "mission",
+      "reset_release": 48,
+      "mission_release": "max(48, S+48)",
+      "control_release": "max(48, S+48)",
+      "start_offset": 48
+    },
+    "nst9": {
+      "type": "hd_st_str",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "sp0": {
+      "type": "hd_spn",
+      "role": "mission",
+      "reset_release": 57,
+      "mission_release": "max(57, S+57)",
+      "control_release": "max(57, S+57)",
+      "start_offset": 57
+    },
+    "sp1": {
+      "type": "hd_spn",
+      "role": "mission",
+      "reset_release": 67,
+      "mission_release": "max(67, S+67)",
+      "control_release": "max(67, S+67)",
+      "start_offset": 67
+    },
+    "sp2": {
+      "type": "hd_spn",
+      "role": "mission",
+      "reset_release": 77,
+      "mission_release": "max(77, S+77)",
+      "control_release": "max(77, S+77)",
+      "start_offset": 77
+    },
+    "sp3": {
+      "type": "hd_spn",
+      "role": "mission",
+      "reset_release": 10,
+      "mission_release": "max(10, S+10)",
+      "control_release": "max(10, S+10)",
+      "start_offset": 10
+    },
+    "sp4": {
+      "type": "hd_spn",
+      "role": "mission",
+      "reset_release": 20,
+      "mission_release": "max(20, S+20)",
+      "control_release": "max(20, S+20)",
+      "start_offset": 20
+    },
+    "sp5": {
+      "type": "hd_spn_end",
+      "role": "mission",
+      "reset_release": 29,
+      "mission_release": "max(29, S+29)",
+      "control_release": "max(29, S+29)",
+      "start_offset": 29
+    },
+    "sst1": {
+      "type": "hd_st_turn",
+      "role": "mission",
+      "reset_release": 61,
+      "mission_release": "max(61, S+61)",
+      "control_release": "max(61, S+61)",
+      "start_offset": 61
+    },
+    "sst10": {
+      "type": "hd_st_turn",
+      "role": "mission",
+      "reset_release": 61,
+      "mission_release": "max(61, S+61)",
+      "control_release": "max(61, S+61)",
+      "start_offset": 61
+    },
+    "sst2": {
+      "type": "hd_st_str",
+      "role": "mission",
+      "reset_release": 57,
+      "mission_release": "max(57, S+57)",
+      "control_release": "max(57, S+57)",
+      "start_offset": 57
+    },
+    "sst4": {
+      "type": "hd_st_m",
+      "role": "mission",
+      "reset_release": 42,
+      "mission_release": "max(42, S+42)",
+      "control_release": "max(42, S+42)",
+      "start_offset": 42
+    },
+    "sst5": {
+      "type": "hd_st_k5",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "sst7": {
+      "type": "hd_st_m",
+      "role": "mission",
+      "reset_release": 42,
+      "mission_release": "max(42, S+42)",
+      "control_release": "max(42, S+42)",
+      "start_offset": 42
+    },
+    "sst9": {
+      "type": "hd_st_str",
+      "role": "mission",
+      "reset_release": 57,
+      "mission_release": "max(57, S+57)",
+      "control_release": "max(57, S+57)",
+      "start_offset": 57
+    },
+    "tE0b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE0b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE0b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "tE0b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE0b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE0b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tE0b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tE0b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE0b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE0b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE0b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tE0o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE0o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE0o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 80,
+      "mission_release": "max(80, S+80)",
+      "control_release": "max(80, S+80)",
+      "start_offset": 80
+    },
+    "tE0o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE0o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tE0o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tE0o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE0o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE0o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE0o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tE0o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "tE1b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tE1b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tE1b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tE1b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tE1b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE1b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE1b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tE1b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tE1b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE1b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE1b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE1o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tE1o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tE1o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "tE1o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE1o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE1o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tE1o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tE1o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE1o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE1o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE1o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tE2b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 15,
+      "mission_release": "max(15, S+15)",
+      "control_release": "max(15, S+15)",
+      "start_offset": 15
+    },
+    "tE2b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 20,
+      "mission_release": "max(20, S+20)",
+      "control_release": "max(20, S+20)",
+      "start_offset": 20
+    },
+    "tE2b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE2b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tE2b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tE2b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE2b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE2b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tE2b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tE2b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE2b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE2o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 20,
+      "mission_release": "max(20, S+20)",
+      "control_release": "max(20, S+20)",
+      "start_offset": 20
+    },
+    "tE2o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tE2o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tE2o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tE2o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE2o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE2o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tE2o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tE2o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE2o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE2o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE3b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 15,
+      "mission_release": "max(15, S+15)",
+      "control_release": "max(15, S+15)",
+      "start_offset": 15
+    },
+    "tE3b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 20,
+      "mission_release": "max(20, S+20)",
+      "control_release": "max(20, S+20)",
+      "start_offset": 20
+    },
+    "tE3b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE3b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tE3b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tE3b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE3b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE3b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tE3b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tE3b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE3b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE3o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 20,
+      "mission_release": "max(20, S+20)",
+      "control_release": "max(20, S+20)",
+      "start_offset": 20
+    },
+    "tE3o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tE3o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tE3o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tE3o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE3o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE3o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tE3o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tE3o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE3o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE3o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE4b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tE4b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tE4b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "tE4b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE4b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE4b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tE4b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tE4b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE4b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE4b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE4b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tE4o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tE4o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tE4o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 80,
+      "mission_release": "max(80, S+80)",
+      "control_release": "max(80, S+80)",
+      "start_offset": 80
+    },
+    "tE4o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tE4o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tE4o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tE4o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE4o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE4o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE4o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tE4o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "tE5b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 34,
+      "mission_release": "max(34, S+34)",
+      "control_release": "max(34, S+34)",
+      "start_offset": 34
+    },
+    "tE5b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 39,
+      "mission_release": "max(39, S+39)",
+      "control_release": "max(39, S+39)",
+      "start_offset": 39
+    },
+    "tE5b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 71,
+      "mission_release": "max(71, S+71)",
+      "control_release": "max(71, S+71)",
+      "start_offset": 71
+    },
+    "tE5b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 44,
+      "mission_release": "max(44, S+44)",
+      "control_release": "max(44, S+44)",
+      "start_offset": 44
+    },
+    "tE5b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 47,
+      "mission_release": "max(47, S+47)",
+      "control_release": "max(47, S+47)",
+      "start_offset": 47
+    },
+    "tE5b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 52,
+      "mission_release": "max(52, S+52)",
+      "control_release": "max(52, S+52)",
+      "start_offset": 52
+    },
+    "tE5b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tE5b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE5b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 62,
+      "mission_release": "max(62, S+62)",
+      "control_release": "max(62, S+62)",
+      "start_offset": 62
+    },
+    "tE5b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 66,
+      "mission_release": "max(66, S+66)",
+      "control_release": "max(66, S+66)",
+      "start_offset": 66
+    },
+    "tE5b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 66,
+      "mission_release": "max(66, S+66)",
+      "control_release": "max(66, S+66)",
+      "start_offset": 66
+    },
+    "tE5o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 39,
+      "mission_release": "max(39, S+39)",
+      "control_release": "max(39, S+39)",
+      "start_offset": 39
+    },
+    "tE5o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 44,
+      "mission_release": "max(44, S+44)",
+      "control_release": "max(44, S+44)",
+      "start_offset": 44
+    },
+    "tE5o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 76,
+      "mission_release": "max(76, S+76)",
+      "control_release": "max(76, S+76)",
+      "start_offset": 76
+    },
+    "tE5o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 49,
+      "mission_release": "max(49, S+49)",
+      "control_release": "max(49, S+49)",
+      "start_offset": 49
+    },
+    "tE5o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 52,
+      "mission_release": "max(52, S+52)",
+      "control_release": "max(52, S+52)",
+      "start_offset": 52
+    },
+    "tE5o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 57,
+      "mission_release": "max(57, S+57)",
+      "control_release": "max(57, S+57)",
+      "start_offset": 57
+    },
+    "tE5o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tE5o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tE5o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 67,
+      "mission_release": "max(67, S+67)",
+      "control_release": "max(67, S+67)",
+      "start_offset": 67
+    },
+    "tE5o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 71,
+      "mission_release": "max(71, S+71)",
+      "control_release": "max(71, S+71)",
+      "start_offset": 71
+    },
+    "tE5o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 71,
+      "mission_release": "max(71, S+71)",
+      "control_release": "max(71, S+71)",
+      "start_offset": 71
+    },
+    "tW0b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW0b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW0b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "tW0b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW0b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW0b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tW0b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tW0b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW0b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW0b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW0b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tW0o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW0o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW0o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 80,
+      "mission_release": "max(80, S+80)",
+      "control_release": "max(80, S+80)",
+      "start_offset": 80
+    },
+    "tW0o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW0o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tW0o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tW0o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW0o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW0o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW0o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tW0o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "tW1b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tW1b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tW1b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tW1b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tW1b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW1b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW1b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tW1b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tW1b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW1b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW1b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW1o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tW1o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tW1o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "tW1o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW1o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW1o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tW1o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tW1o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW1o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW1o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW1o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tW2b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 15,
+      "mission_release": "max(15, S+15)",
+      "control_release": "max(15, S+15)",
+      "start_offset": 15
+    },
+    "tW2b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 20,
+      "mission_release": "max(20, S+20)",
+      "control_release": "max(20, S+20)",
+      "start_offset": 20
+    },
+    "tW2b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW2b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tW2b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tW2b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW2b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW2b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tW2b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tW2b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW2b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW2o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 20,
+      "mission_release": "max(20, S+20)",
+      "control_release": "max(20, S+20)",
+      "start_offset": 20
+    },
+    "tW2o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tW2o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tW2o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tW2o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW2o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW2o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tW2o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tW2o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW2o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW2o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW3b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 15,
+      "mission_release": "max(15, S+15)",
+      "control_release": "max(15, S+15)",
+      "start_offset": 15
+    },
+    "tW3b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 20,
+      "mission_release": "max(20, S+20)",
+      "control_release": "max(20, S+20)",
+      "start_offset": 20
+    },
+    "tW3b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW3b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tW3b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tW3b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW3b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW3b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tW3b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tW3b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW3b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW3o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 20,
+      "mission_release": "max(20, S+20)",
+      "control_release": "max(20, S+20)",
+      "start_offset": 20
+    },
+    "tW3o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tW3o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tW3o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tW3o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW3o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW3o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tW3o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tW3o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW3o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW3o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW4b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 25,
+      "mission_release": "max(25, S+25)",
+      "control_release": "max(25, S+25)",
+      "start_offset": 25
+    },
+    "tW4b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tW4b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "tW4b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW4b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW4b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tW4b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tW4b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW4b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW4b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW4b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tW4o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 30,
+      "mission_release": "max(30, S+30)",
+      "control_release": "max(30, S+30)",
+      "start_offset": 30
+    },
+    "tW4o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 35,
+      "mission_release": "max(35, S+35)",
+      "control_release": "max(35, S+35)",
+      "start_offset": 35
+    },
+    "tW4o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 80,
+      "mission_release": "max(80, S+80)",
+      "control_release": "max(80, S+80)",
+      "start_offset": 80
+    },
+    "tW4o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 40,
+      "mission_release": "max(40, S+40)",
+      "control_release": "max(40, S+40)",
+      "start_offset": 40
+    },
+    "tW4o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 45,
+      "mission_release": "max(45, S+45)",
+      "control_release": "max(45, S+45)",
+      "start_offset": 45
+    },
+    "tW4o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 50,
+      "mission_release": "max(50, S+50)",
+      "control_release": "max(50, S+50)",
+      "start_offset": 50
+    },
+    "tW4o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW4o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW4o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW4o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 70,
+      "mission_release": "max(70, S+70)",
+      "control_release": "max(70, S+70)",
+      "start_offset": 70
+    },
+    "tW4o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "tW5b0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 34,
+      "mission_release": "max(34, S+34)",
+      "control_release": "max(34, S+34)",
+      "start_offset": 34
+    },
+    "tW5b1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 39,
+      "mission_release": "max(39, S+39)",
+      "control_release": "max(39, S+39)",
+      "start_offset": 39
+    },
+    "tW5b10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 71,
+      "mission_release": "max(71, S+71)",
+      "control_release": "max(71, S+71)",
+      "start_offset": 71
+    },
+    "tW5b2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 44,
+      "mission_release": "max(44, S+44)",
+      "control_release": "max(44, S+44)",
+      "start_offset": 44
+    },
+    "tW5b3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 47,
+      "mission_release": "max(47, S+47)",
+      "control_release": "max(47, S+47)",
+      "start_offset": 47
+    },
+    "tW5b4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 52,
+      "mission_release": "max(52, S+52)",
+      "control_release": "max(52, S+52)",
+      "start_offset": 52
+    },
+    "tW5b5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 55,
+      "mission_release": "max(55, S+55)",
+      "control_release": "max(55, S+55)",
+      "start_offset": 55
+    },
+    "tW5b6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW5b7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 62,
+      "mission_release": "max(62, S+62)",
+      "control_release": "max(62, S+62)",
+      "start_offset": 62
+    },
+    "tW5b8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 66,
+      "mission_release": "max(66, S+66)",
+      "control_release": "max(66, S+66)",
+      "start_offset": 66
+    },
+    "tW5b9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 66,
+      "mission_release": "max(66, S+66)",
+      "control_release": "max(66, S+66)",
+      "start_offset": 66
+    },
+    "tW5o0": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 39,
+      "mission_release": "max(39, S+39)",
+      "control_release": "max(39, S+39)",
+      "start_offset": 39
+    },
+    "tW5o1": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 44,
+      "mission_release": "max(44, S+44)",
+      "control_release": "max(44, S+44)",
+      "start_offset": 44
+    },
+    "tW5o10": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 76,
+      "mission_release": "max(76, S+76)",
+      "control_release": "max(76, S+76)",
+      "start_offset": 76
+    },
+    "tW5o2": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 49,
+      "mission_release": "max(49, S+49)",
+      "control_release": "max(49, S+49)",
+      "start_offset": 49
+    },
+    "tW5o3": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 52,
+      "mission_release": "max(52, S+52)",
+      "control_release": "max(52, S+52)",
+      "start_offset": 52
+    },
+    "tW5o4": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 57,
+      "mission_release": "max(57, S+57)",
+      "control_release": "max(57, S+57)",
+      "start_offset": 57
+    },
+    "tW5o5": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 60,
+      "mission_release": "max(60, S+60)",
+      "control_release": "max(60, S+60)",
+      "start_offset": 60
+    },
+    "tW5o6": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 65,
+      "mission_release": "max(65, S+65)",
+      "control_release": "max(65, S+65)",
+      "start_offset": 65
+    },
+    "tW5o7": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 67,
+      "mission_release": "max(67, S+67)",
+      "control_release": "max(67, S+67)",
+      "start_offset": 67
+    },
+    "tW5o8": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 71,
+      "mission_release": "max(71, S+71)",
+      "control_release": "max(71, S+71)",
+      "start_offset": 71
+    },
+    "tW5o9": {
+      "type": "hd_tile",
+      "role": "mission",
+      "reset_release": 71,
+      "mission_release": "max(71, S+71)",
+      "control_release": "max(71, S+71)",
+      "start_offset": 71
+    },
+    "turnE0a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 79,
+      "mission_release": "max(79, S+79)",
+      "control_release": "max(79, S+79)",
+      "start_offset": 79
+    },
+    "turnE0b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 78,
+      "mission_release": "max(78, S+78)",
+      "control_release": "max(78, S+78)",
+      "start_offset": 78
+    },
+    "turnE1a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 74,
+      "mission_release": "max(74, S+74)",
+      "control_release": "max(74, S+74)",
+      "start_offset": 74
+    },
+    "turnE1b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 73,
+      "mission_release": "max(73, S+73)",
+      "control_release": "max(73, S+73)",
+      "start_offset": 73
+    },
+    "turnE2a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 69,
+      "mission_release": "max(69, S+69)",
+      "control_release": "max(69, S+69)",
+      "start_offset": 69
+    },
+    "turnE2b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 68,
+      "mission_release": "max(68, S+68)",
+      "control_release": "max(68, S+68)",
+      "start_offset": 68
+    },
+    "turnE3a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 69,
+      "mission_release": "max(69, S+69)",
+      "control_release": "max(69, S+69)",
+      "start_offset": 69
+    },
+    "turnE3b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 68,
+      "mission_release": "max(68, S+68)",
+      "control_release": "max(68, S+68)",
+      "start_offset": 68
+    },
+    "turnE4a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 79,
+      "mission_release": "max(79, S+79)",
+      "control_release": "max(79, S+79)",
+      "start_offset": 79
+    },
+    "turnE4b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 78,
+      "mission_release": "max(78, S+78)",
+      "control_release": "max(78, S+78)",
+      "start_offset": 78
+    },
+    "turnE5a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "turnE5b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 74,
+      "mission_release": "max(74, S+74)",
+      "control_release": "max(74, S+74)",
+      "start_offset": 74
+    },
+    "turnW0a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 79,
+      "mission_release": "max(79, S+79)",
+      "control_release": "max(79, S+79)",
+      "start_offset": 79
+    },
+    "turnW0b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 78,
+      "mission_release": "max(78, S+78)",
+      "control_release": "max(78, S+78)",
+      "start_offset": 78
+    },
+    "turnW1a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 74,
+      "mission_release": "max(74, S+74)",
+      "control_release": "max(74, S+74)",
+      "start_offset": 74
+    },
+    "turnW1b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 73,
+      "mission_release": "max(73, S+73)",
+      "control_release": "max(73, S+73)",
+      "start_offset": 73
+    },
+    "turnW2a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 69,
+      "mission_release": "max(69, S+69)",
+      "control_release": "max(69, S+69)",
+      "start_offset": 69
+    },
+    "turnW2b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 68,
+      "mission_release": "max(68, S+68)",
+      "control_release": "max(68, S+68)",
+      "start_offset": 68
+    },
+    "turnW3a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 69,
+      "mission_release": "max(69, S+69)",
+      "control_release": "max(69, S+69)",
+      "start_offset": 69
+    },
+    "turnW3b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 68,
+      "mission_release": "max(68, S+68)",
+      "control_release": "max(68, S+68)",
+      "start_offset": 68
+    },
+    "turnW4a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 79,
+      "mission_release": "max(79, S+79)",
+      "control_release": "max(79, S+79)",
+      "start_offset": 79
+    },
+    "turnW4b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 78,
+      "mission_release": "max(78, S+78)",
+      "control_release": "max(78, S+78)",
+      "start_offset": 78
+    },
+    "turnW5a": {
+      "type": "hd_turn_a",
+      "role": "mission",
+      "reset_release": 75,
+      "mission_release": "max(75, S+75)",
+      "control_release": "max(75, S+75)",
+      "start_offset": 75
+    },
+    "turnW5b": {
+      "type": "hd_turn_b",
+      "role": "mission",
+      "reset_release": 74,
+      "mission_release": "max(74, S+74)",
+      "control_release": "max(74, S+74)",
+      "start_offset": 74
+    }
+  },
+  "die_START_edge": null,
+  "die_START_edge_status": "UNRESOLVED: actual selected controller/host boot completion must drive S",
+  "required_BOOT_roles": "No role inferred from a type name; bootstrap needs a real mission-admission input",
+  "element_GO": {
+    "pin_capture_after_delivered_reset": 3,
+    "command_accept_after_delivered_reset": 4,
+    "activation_word_a_after_GO_pin": "6+a",
+    "relationship_to_die_START": "separate command; no alias"
+  },
+  "adoption": "BLOCKED pending actual provider/source composition, boot S/roles, geometry/clock gates",
+  "steady_state_cycles_added_by_contract": 0,
+  "inputs": {
+    "/srv/opentallas-scratch2/claude/codex-head8-fixedclk-2144/candidate/die_plan.json": "560405a9ffd5a2a5dd6e28a826d40453db252960e68b77c3834e30b2fd2c2fa4",
+    "/srv/opentallas-scratch2/claude/codex-head8-fixedclk-2144/candidate/reset_start_offsets.json": "81971467075204ba65a76e0504cedd8f997bc25c25c40a0c026193d7d53a47e3"
+  }
+}
