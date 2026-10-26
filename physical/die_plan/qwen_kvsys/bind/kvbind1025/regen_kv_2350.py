@@ -3,7 +3,8 @@ hook of the bind of record.  It composes the three KV parameter rules, each in i
 again (the 2144 recipe pointed param_regen at the age-bounds hook alone and dropped kv_regen.py, leaving the bound top
 with the as-built ECTL RESPONSE_LAT / QK_ISSUE_AGE and AHUB AP_OFS / FR_OFS):
 
-  1 kv_regen.py              ECTL RESPONSE_LAT / QK_ISSUE_AGE, AHUB AP_OFS / FR_OFS from the BOUND lane depths (10-23)
+  1 kv_regen.py              ECTL RESPONSE_LAT / QK_ISSUE_AGE (max(34, RL + 11)), AHUB AP_OFS / FR_OFS, SEQ KVN_A0
+                             (KV-P6 18:09; added TOK-QK-KVCHK 10-26) from the BOUND lane depths (10-23)
   2 regen_agebounds_2144.py  PV FIRST_INPUT_AGE 255 / vport RT 63 capacity bounds (PATH-KV decision 10-25 21:21)
   3 the QC<->KV pair calendar image TXDP on the KV d2d leaf (qkd_d2d_static*, inst d2d_kv / u_d2d), read from the
     committed pair image record pair_image_txdp.json (both dies bind the SAME image).  The value is

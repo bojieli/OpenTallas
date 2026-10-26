@@ -1,0 +1,426 @@
+{
+ "schema": "opentallas.die_plan.regen_constants.v1",
+ "die": "qwen_kvsys",
+ "bound": "physical/die_plan/qwen_kvsys/bind/kvbind1025/b19",
+ "bound_sha": null,
+ "generator": "tools/die_plan/regen_constants.py",
+ "bind_hook": null,
+ "verdict": {
+  "OK": 31,
+  "ERROR": 2,
+  "PENDING": 3
+ },
+ "constants": {
+  "RESPONSE_LAT": {
+   "value": 12,
+   "kind": "rtl",
+   "formula": "8 (landing seg) + D(krq) + D(krs); one value on every ECTL frame (type parameter)",
+   "status": "OK",
+   "inputs": {
+    "frames": 32,
+    "round_trips": [
+     12
+    ]
+   },
+   "group": "ectl",
+   "rtl": {
+    "inst": "(^|\\.)ectl_\\w+$",
+    "param": "RESPONSE_LAT"
+   },
+   "bind_applied": "not in param_regen.json (as-built value kept by the bind, or no hook)"
+  },
+  "QK_ISSUE_AGE": {
+   "value": 34,
+   "kind": "rtl",
+   "formula": "max(34, RESPONSE_LAT + 11) (static_qk_calendar write-before-read; 34 = attn calendar QK_CONSUME floor, KV owner choice KV-P6 18:09)",
+   "status": "OK",
+   "inputs": {
+    "RESPONSE_LAT": 12
+   },
+   "group": "ectl",
+   "rtl": {
+    "inst": "(^|\\.)ectl_\\w+$",
+    "param": "QK_ISSUE_AGE"
+   },
+   "bind_applied": "not in param_regen.json (as-built value kept by the bind, or no hook)"
+  },
+  "ROW_RETURN_LAT": {
+   "value": 19,
+   "kind": "rtl-derived",
+   "formula": "RESPONSE_LAT + 7 (localparam inside qkd_ectl3_kiss_st)",
+   "status": "OK",
+   "group": "ectl"
+  },
+  "QK_ROW_LATENCY": {
+   "value": 14,
+   "kind": "compiler",
+   "formula": "row_latency_for_calendar = RESPONSE_LAT + 2 (KV-P6-BOOT qk_row_latency)",
+   "status": "OK",
+   "group": "ectl"
+  },
+  "QK_D_QK": {
+   "value": 0,
+   "kind": "compiler",
+   "formula": "kv_qkh_safe32.calendar_d_qk: D_QK = QK_ISSUE_AGE - 34 (+ data edges); must be >= 0",
+   "status": "OK",
+   "group": "ectl"
+  },
+  "ahub.__rule__": {
+   "value": null,
+   "kind": "rule",
+   "status": "ERROR",
+   "formula": "as-built AP_OFS not in param_regen.json (bind without the KV hook)",
+   "group": "ahub"
+  },
+  "pv.__rule__": {
+   "value": null,
+   "kind": "rule",
+   "status": "ERROR",
+   "formula": "as-built TRUNK_D/FLAG_D not in param_regen.json",
+   "group": "pv"
+  },
+  "VPORT_RT": {
+   "value": null,
+   "kind": "boot",
+   "status": "PENDING",
+   "formula": "no vport vq/rsp crossing on this bind",
+   "group": "vport"
+  },
+  "KVN_A0": {
+   "value": 28,
+   "kind": "rtl",
+   "formula": "KVN_A0_asb + Delta(d2d kvn_word_valid -> seq core) - Delta(d2d att_rx_v -> kvs_attn) (KV-P6 18:09: age a starts at the attention programme request, triggered by att_rx)",
+   "status": "OK",
+   "inputs": {
+    "asbuilt": 32,
+    "kvn": [
+     14,
+     55
+    ],
+    "att_rx": [
+     11,
+     56
+    ]
+   },
+   "group": "prog",
+   "rtl": {
+    "inst": "seq__u_core$",
+    "param": "KVN_A0"
+   },
+   "bind_applied": "not in param_regen.json (as-built value kept by the bind, or no hook)"
+  },
+  "D2D_AGES": {
+   "value": {
+    "programme_start": [
+     50
+    ],
+    "d2d_to_attention_rx": [
+     56
+    ],
+    "d2d_to_writer": [
+     56
+    ],
+    "d2d_to_seq_kvn": [
+     55
+    ],
+    "attention_tx": [
+     55
+    ]
+   },
+   "kind": "boot",
+   "formula": "landed depth d2d_kv/dcal -> kvs_ctl / kvs_attn / seq core, attn tx -> d2d_kv (kv_boot_v36.py DIE_TABLE inputs)",
+   "status": "OK",
+   "group": "prog"
+  },
+  "HROOT_DOWN_RET": {
+   "value": {
+    "WS": [
+     11,
+     12
+    ],
+    "WN": [
+     14,
+     12
+    ],
+    "ES": [
+     12,
+     12
+    ],
+    "EN": [
+     14,
+     12
+    ]
+   },
+   "kind": "boot",
+   "formula": "kvs_ctl.o_hroot_s -> hroot / hroot.o_ctl -> kvs_ctl landed (emb_fill / writer_die)",
+   "status": "OK",
+   "group": "prog"
+  },
+  "XDIE_SEAM_K": {
+   "value": "56,56,54,54,54,55,55",
+   "kind": "compiler",
+   "formula": "d2d_link_calendar --die-stages KV half (KV-P6-BOOT KST) = as-built seam + Delta",
+   "status": "OK",
+   "inputs": {
+    "KS_RXV": [
+     56
+    ],
+    "KS_RXP": [
+     56
+    ],
+    "KS_TXS": [
+     54
+    ],
+    "KS_TXK": [
+     54
+    ],
+    "KS_TXB": [
+     54
+    ],
+    "SK_TXV": [
+     55
+    ],
+    "SK_TXP": [
+     55
+    ]
+   },
+   "group": "xdie"
+  },
+  "D2D_TXDP_K": {
+   "value": [
+    113,
+    4,
+    3,
+    3
+   ],
+   "kind": "rtl",
+   "formula": "[KS_TXS + KV_CODEC(2) + SK_TXP, 2 + host, 1, 1] + PINREG_EXT (d2d_link_calendar producer_txd); the compute die must bind the same pair image",
+   "status": "OK",
+   "inputs": {
+    "KS_RXV": 56,
+    "KS_RXP": 56,
+    "KS_TXS": 54,
+    "KS_TXK": 54,
+    "KS_TXB": 54,
+    "SK_TXV": 55,
+    "SK_TXP": 55
+   },
+   "group": "xdie",
+   "rtl": {
+    "inst": "d2d_kv$|u_d2d",
+    "param": "TXDP"
+   },
+   "sv_literal": "32'h03030471",
+   "bind_applied": "not in param_regen.json (as-built value kept by the bind, or no hook)"
+  },
+  "D2D_KV_TX_LAT": {
+   "value": 113,
+   "kind": "compiler",
+   "formula": "shared QC<->KV pair image KV TX latency = TXDP K[0] = KS_TXS + KV_CODEC + SK_TXP + PR pin flops, from the KV bound top; BOTH dies bind the same pair image (QC emits it with --peer)",
+   "status": "OK",
+   "inputs": {
+    "KS_TXS": 54,
+    "SK_TXP": 55,
+    "asbuilt": 22
+   },
+   "group": "xdie",
+   "note": "moved 22 -> 113 vs as-built: re-bind the pair image on both dies"
+  },
+  "PC_CORE_CLOCK": {
+   "value": null,
+   "kind": "rtl",
+   "status": "PENDING",
+   "formula": "bound RTL not in BIND_DIR (bus_groups-only copy): the PC masters' CORE_CLOCK cannot be read; run on the bind output dir with rtl/ + asbuilt_sources.json",
+   "group": "pc833"
+  },
+  "PC_HBM_RL": {
+   "value": 29,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 29",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_CCDL": {
+   "value": 4,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 4",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_FAW": {
+   "value": 19,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 19",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RAS": {
+   "value": 35,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 35",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RCD": {
+   "value": 24,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 24",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RCDW": {
+   "value": 13,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 13",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_REFI": {
+   "value": 4680,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 4680",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_REFIPB": {
+   "value": 144,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 144",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RFC": {
+   "value": 421,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 421",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RFCPB": {
+   "value": 241,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 241",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RP": {
+   "value": 20,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 20",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RRDL": {
+   "value": 5,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 5",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RRDS": {
+   "value": 4,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 4",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RREFD": {
+   "value": 10,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 10",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RTP": {
+   "value": 8,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 8",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_RTW": {
+   "value": 13,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 13",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_WRR": {
+   "value": 35,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 35",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_T_WTR": {
+   "value": 18,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 18",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_WDONE": {
+   "value": 19,
+   "kind": "compiler",
+   "formula": "RTL CORE_CLOCK=1 formula (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv, rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) = PATH-KV-PC833 reprice 19",
+   "status": "OK",
+   "group": "pc833",
+   "note": "die profile not uniform: 833 values shown"
+  },
+  "PC_PHASE_TICKS": {
+   "value": [
+    625,
+    625
+   ],
+   "kind": "compiler",
+   "formula": "kv_static_programme CORE_U/HBM_U (625/625 = OT_KV_CONTROLLER_CORE=1 one clock tree; 625/768 legacy)",
+   "status": "OK",
+   "inputs": {
+    "controller_ps": 833,
+    "rtl_sha": {
+     "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "3d0a73a1cfc3ef44",
+     "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "c4fbd6573eec3307",
+     "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv": "34c4856ba8bcd3bb"
+    }
+   },
+   "group": "pc833"
+  },
+  "PC_IMAGE_PROFILE": {
+   "value": "common833",
+   "kind": "boot",
+   "formula": "compiled boot image controller profile must equal the bound die's (an 833 image on a legacy PC master, or the reverse, lands HBM returns at the wrong edges)",
+   "status": "PENDING",
+   "inputs": {
+    "image": "results/rtl/kv_img_mu833_b19r_1025",
+    "records": {
+     "static.json ticks": 1,
+     "RECIPE run_mu833.sh (exports OT_KV_CONTROLLER_CORE=1)": 1
+    },
+    "bound": null
+   },
+   "group": "pc833",
+   "note": "image {'static.json ticks': 1, 'RECIPE run_mu833.sh (exports OT_KV_CONTROLLER_CORE=1)': 1} vs bound die profile mixed / unread"
+  }
+ },
+ "recipes": {
+  "kv_boot_image": "S=<scratch>/boot BG=physical/die_plan/qwen_kvsys/bind/kvbind1025/b19/bus_groups.json.gz KST=56,56,54,54,54,55,55 bash physical/die_plan/qwen_kvsys/boot_v36/run.sh   # KV-P6-BOOT generator (claude/kv-p6-boot-1023)"
+ }
+}
