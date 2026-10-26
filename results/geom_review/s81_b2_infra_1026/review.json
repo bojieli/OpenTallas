@@ -1,0 +1,13 @@
+{
+  "plan_sha256": "aef178ea9db1a34ca459a039c1f3103e63d6d8d7a529c605c848511491d3c34f",
+  "picture": "results/geom_review/s81_b2_infra_1026/plan.png",
+  "review_scope": "B2 C/E+D+A25 plan geometry and infra source preparation; no route authorized by this record",
+  "verdict": "FAIL",
+  "findings": [
+    "Regular fabric and central slice dataflow remain local; dense slice-to-service seam columns are visible but the M5-cap signal trial converged to overflow0 with a50-iteration budget.",
+    "Existing top/bottom SerDes windows fail published N7 macro dimensions; lower-left WS3 is narrow and vertical, and several horizontal windows are shallow. Published-size PHY re-layout is required before final die route/freeze.",
+    "Clock taps are shown as the old regular grid, not an accepted regional-mesh infrastructure. Mesh islands, skew and actual PG continuity remain to be designed and reviewed.",
+    "Reset-only generator passes0 long hops, max378um and0 unreachable; source preparation/reset extraction can continue without route/STA."
+  ],
+  "next": "Resolve PHY perimeter geometry and integrate shared infrastructure-first PG/clock/reset; re-render revised design before route/STA."
+}
