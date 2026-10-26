@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Actual historical controller, independent extracted RESULT landing, live full user identity.
+# Actual historical controller, indexed XB ingestion, live full user identity and retirement.
 # Invoke inside ot-run with the repository staged. Outputs are immutable.
 set -euo pipefail
 ROOT=${OT_SOURCE_ROOT:-$(git -C "$(dirname "$(readlink -f "$0")")" rev-parse --show-toplevel)}
