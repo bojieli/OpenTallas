@@ -12,14 +12,12 @@ constant candidates: `cfg_i[0]=0`, `cfg_second_off[0]=1`, `first[0]=1`, and
 `second[0]=1`. Configuration equations establish the first two; SENT initialization
 and capture establish the latter two. Every constant and proposed register pair
 is proved together by the canonical simultaneous induction, with no state
-constraints. The actual retained snapshot passes all 1292 obligations.
+constraints. The final retained snapshot passes all 1340 obligations with the complete slot codec identities below.
 
 The exact 16-word IDS and VALUES maps are candidates selected from actual
 comparison cones. All 1024 bit pairs are checked inductively. They fail when both
 the history constraints and the four source constants are omitted; they are not
-standalone hints. Eight slot identities, `slot[k][1] == slot[k][84]`, follow from
-the 86-bit decoder layout and independently pass without either history or the
-four constants. `--emit-hints FILE` writes the complete canonical untrusted-hint
+standalone hints. The complete slot codec identities follow from the86-bit decoder layout: region=0; tag bit1 equals valid for even original elements and0 for odd; tag bit2 equals valid for the first two elements and0 for the last two. These correlations are needed among matched FFs as well as gold-only replicas. The initial eight `slot[k][1] == slot[k][84]` identities alone were true but insufficient. All96 candidate slot identities (48new beyond previously proved identities) are independently checked together with the whole profile. `--emit-hints FILE` writes the complete canonical untrusted-hint
 JSON only after the whole joint proof passes. The normal LEC hint consumer still
 reproves these hints; the JSON is not a waiver.
 
@@ -47,13 +45,18 @@ old success status cannot survive an early failure. A failed or undecided requir
 obligation stops the run; a nonempty actual comparison containing any difference
 or undecided result returns 2 and writes `UNPROVEN`.
 
-Collected actual comparison with the earlier proved history profile: 13207
-proved, 2 differences, 4 undecided. All four remaining solver points (final-slot
-bits 11, 97, 183, 269) subsequently pass exact XOR-aware SAT using the existing
-matching `pycryptosat` installation. The scoped union is 13211/13213 actual
-points proved; entry bits 1 and 87 remain different at the abstract cuts and
-have not been established reachable. True slot-valid identities do not close
-those two consumers. Simple slot constants, slot-to-second aliases, next-entry
-valid masking, and unproved buffer-format assumptions were rejected and retained
-as negative evidence. This remains a partial ROOT diagnosis, not a canonical
-EQUIVALENT or physical signoff receipt.
+Final retained-snapshot result with `--ordinary-correspondence` and the existing
+matching XOR-aware SAT solver: **1340/1340 joint obligations proved, followed by
+13213/13213 actual comparison points proved,0different,0undecided**. The driver
+writes diagnostic `EQUIVALENT`, without changing a kit's canonical `lec.json`.
+The emitted complete hints remain untrusted and the canonical consumer must
+reprove them when used with a new source model.
+
+No current-state constraints or SRAM/buffer-output format restrictions were used.
+The final two entry bits1/87 required the real decoded SLOT tag/valid correlations;
+all memory black-box outputs and read-buffer data stayed free. The incomplete
+history-only actual run13207P/2D/4U, the exact four XOR-SAT closures, malformed
+cutpoint witnesses, and rejected slot constants, slot-to-second aliases, valid
+masking, and buffer-format assumptions remain preserved as negative/partial
+records. They are superseded by the clean final ordinary proof, not relabeled.
+This is logic equivalence on the retained AIG snapshots, not physical signoff.

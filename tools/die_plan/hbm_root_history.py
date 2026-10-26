@@ -82,9 +82,15 @@ def profile(model, original):
             for bit in range(32):
                 model.hyp[('gate',PRE+f'_{register}_[{bit}]')] = (
                     'eq','gold',PRE+f'u.{family}[{word}][{bit}]',0)
+    # dec_el encodes ~s_[1:0] only in valid elements; all region bits are zero.
+    # These same-slot tag/valid correlations are needed even among matched FFs.
     for register in range(70917,70925):
-        model.hyp[('gold',PRE+f'_{register}_[1]')] = (
-            'eq','gold',PRE+f'_{register}_[84]',0)
+        for word in range(4):
+            for bit,one in ((1,not (word & 1)),(2,word < 2),(85,False)):
+                key = PRE+f'_{register}_[{86*word+bit}]'
+                valid = PRE+f'_{register}_[{86*word+84}]'
+                side = 'both' if key in model.tp else 'gold'
+                model.hyp[(side,key)] = ('eq','gold',valid,0) if one else ('const',0)
     constraints = [
         ('gold',[PRE+'_70908_[2]',PRE+'_70893_[0]'],[[0,0],[0,1],[1,1]]),
         ('gold',[PRE+'u.busy',PRE+'_70893_[0]',PRE+'_70860_[0]'],
