@@ -23,7 +23,7 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def compile_inputs(die, fixtures):
+def compile_inputs(die, fixtures, entry_engram_inputs=None):
     fixtures = Path(fixtures)
     files = json.loads((fixtures / 'files.json').read_text())
     source = {}
@@ -38,6 +38,12 @@ def compile_inputs(die, fixtures):
         return np.frombuffer(path.read_bytes(), dtype=np.dtype(spec['dtype'])).reshape(spec['shape'])
 
     h = read('io/h_in.bin')
+    if entry_engram_inputs is not None:
+        import entry_engram
+        h = entry_engram.entry_h(fixtures, entry_engram_inputs)
+        manifest = Path(entry_engram_inputs) / 'inputs.json'
+        source['entry_engram'] = dict(manifest_sha256=sha(manifest),
+                                     producer='checkpoint rows/scales/wkv + genuine layer inputs')
     pre = read('io/pre_in.bin')
     gains = read('weights/attn_norm.bin')
     if h.dtype != np.dtype('float32') or h.shape != (4, 5120):
@@ -108,11 +114,13 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--tree', type=Path, required=True)
     ap.add_argument('--fixtures', type=Path, required=True)
+    ap.add_argument('--entry-engram-inputs', type=Path,
+                    help='Checkpoint-derived Engram inputs: reconstruct attention-entry H before native row packing')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
     if a.out.exists():
         raise ValueError('preserve existing entry artifact; select a fresh --out')
-    data = compile_inputs(D.Die(a.tree), a.fixtures)
+    data = compile_inputs(D.Die(a.tree), a.fixtures, a.entry_engram_inputs)
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(data, indent=1)+'\n')
     print('ENTRY_INPUT_ROWS', data['row_count'], 'PARTIAL: native programme landing/adoption and collective calendar remain unbound')
