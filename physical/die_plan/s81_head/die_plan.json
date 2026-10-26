@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die (253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). PDN (OWNER 10-24 decision 7): die.pg.domains = one VDDPHY supply + dedicated bump rows per SerDes window (12); the core VDD/VSS M8/M9 grid does not feed the PHY. TODO (TRIAL/PDN): head PSM / IR with the VDDPHY domains. Reset (decision 2): reset.release pipelined (tools/die_plan/reset_tree.py).",
+ "note": "S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die (253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). PDN (OWNER 10-24 decision 7): die.pg.domains = one VDDPHY supply + dedicated bump rows per SerDes window (12); the core VDD/VSS M8/M9 grid does not feed the PHY. TODO (TRIAL/PDN): head PSM / IR with the VDDPHY domains. Reset (decision 13): reset.release wavefront (tools/die_plan/reset_tree.py).",
  "die": {
   "name": "s81_head",
   "label": "DeepSeek ROM S81 release head die (LM head / argmax / MTP / host)",
@@ -10,7 +10,7 @@
    17556.48
   ],
   "period_ps": 833,
-  "reach_um": 1500.0,
+  "reach_um": 405.0,
   "rep_um": 450.0,
   "grid_um": 8.64,
   "layer_budget": {
@@ -21,13 +21,8 @@
    ],
    "die_use": [
     "clock_spine",
-    "pg",
-    "ft_reserved"
-   ],
-   "cut_avail": {
-    "M8": 0.6,
-    "M9": 0.6
-   }
+    "pg"
+   ]
   },
   "pg": {
    "partition_pg_max": "M7",
@@ -17531,7 +17526,7 @@
   "sync_stages": 2,
   "data_reset": false,
   "epoch_bit": true,
-  "release": "pipelined"
+  "release": "wavefront"
  },
  "census": {
   "none": "top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the bottom-up H10 die chain used a different block split and FAILED STA); census follows the first bind (G3)"
