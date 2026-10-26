@@ -42,7 +42,7 @@ Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574f
 ## DIE s81 · S81 (DeepSeek ROM layer die) · rev main · B2 batch
 - [ ] S81.B2 One plan event D-S81-B2: A25 + stations v4 + PHY pins + leaf pins + eng SRAM r0c0 + FT alignment/corridors + D-S81-PHY + infra-first · PATH-S81 · RUNNING · gate: lateral jog <5M bit-um → GRT0 → skew
 - [ ] S81.GRT Die GRT0 · PATH-S81 · PASS SIGNAL DIAGNOSTIC · B5(A25+C+D+E,M5tplcaps) configured50iterations overflow0, converged10; freeze still waits real PHY geometry + infra → S81.B2
-- [ ] S81.PHY 14 SerDes windows at published N7 macro size · PATH-S81 / COORD · BLOCKED · rows 0/19 hold 43.3 mm, need 44.9-48.2 mm (01:41) → may need owner decision (die area / lanes)
+- [ ] S81.PHY 14 SerDes windows at published N7 macro size · PATH-S81 · RUNNING · zero-area 14/14 fit = B2 option d (gunit/bk_sel moved), G0C PASS 210/210 (05:0x); gunit/bk_sel internals FAIL STRUCTURAL (GEOM-15) → re-plan in D-S81-B2; fallback W strip +25 mm2
 - [ ] S81.CLK Clock skew · INFRA-FIRST · NOT RUN · → S81.GRT
 - [ ] S81.BIND Strict bind on main · TOK-DS · PASS on 877cfdeb2 (0 tied, 10,352 straps) → re-run after S81.B2
 - [ ] S81.STA Die STA on real views · DIE-PROTO · WAITS · → S81.GRT, → S81.CLK, → S81.TILES
