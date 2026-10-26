@@ -162,5 +162,18 @@
   "suffix": "tpl_f6",
   "core_margin": 2.16,
   "macro_if_flops": true
+ },
+ "dsfd_su_t_rxsf": {
+  "ref_tile": "physical/ref_tile/s81su_rxsf_ref",
+  "suffix": "k26",
+  "slang": true,
+  "memory_max_bits": 131072,
+  "hold_ff_margin": 5,
+  "pins_view": {
+   "pins_file": "inputs/core_pins/dsfd_su_t_rxsf_c.json",
+   "lef": "physical/die_plan/s81/cores/rx/lef/dsfd_su_t_rxsf_c.lef",
+   "why": "S81-CORES3/RT re-pin a48c12e3e (W/E spread, ck at W data-face middle), GEOM-REVIEW-3 06:59 PASS-COND on rxsf_w; plan binding via S81-PLAN2 regen (COORD 07:17)"
+  },
+  "_why": "CORES-KITS/S81-RXSF 10-26: successor of rxsf_w (autopilot c48fe31df9f2, TT -58.59 m_u2 s2_sh->y, FF -2.73 i_x vclk basis): RTL U2RC 1 (0 cycles, tools/s81_slice/rxsf_rcut_eq.sh), modern flow per-corner vclk (plan TT 250 / FF 202.5), F2 RCX RC"
  }
 }

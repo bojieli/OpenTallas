@@ -285,7 +285,12 @@ endmodule
 
 // RA lane FRONT leaf: x -> exp(-|x|) Horner -> u = t / (t + 2) -> u^2 (ot_hdc_v41x_softplus_s up to T_U2, the same
 // units), max(x, 0) carried to T_U2; seam outputs registered.  Flat lane time t = this leaf's input-flop time t.
-module ot_s81_su_rxsf #(parameter integer PCUT = 1, parameter integer TFTZ = 0) (
+// U2RC 1 (CORES-KITS/S81-RXSF 2026-10-26, dsfd_su_t_rxsf only): m_u2 runs RCUT 1 (its round / pack stage split from the
+// subnormal shift / select, +1 stage inside the multiplier) and its round / pack logic loads the o_u2 face register
+// directly (y_n; fault_n into o_f), so the multiplier's own y / fault registers and the old o_u2 <= u2 delay register
+// are one register: o_u2 / o_f / every output keep their cycle (0 cycles at the leaf boundary, lockstep bench
+// tools/s81_slice/rxsf_rcut_eq.sh vs U2RC 0).  U2RC 0 (default) = the unchanged leaf.
+module ot_s81_su_rxsf #(parameter integer PCUT = 1, parameter integer TFTZ = 0, parameter integer U2RC = 0) (
     input  wire        clk, rst_in,
     input  wire        i_v,
     input  wire [31:0] i_x,
@@ -305,11 +310,13 @@ module ot_s81_su_rxsf #(parameter integer PCUT = 1, parameter integer TFTZ = 0) 
     ot_hdc_vline #(.D(T_U2)) u_v (.clk(clk), .rst_n(rst_n), .v(v_q), .vd(vd));
     wire [31:0] p_pre, u, u2, u_d, mx_d;
     wire [8:0]  n_pre;
-    wire f_exp, f_div, f_u2;
+    wire f_exp, f_div, f_u2, f_u2n;
+    wire [31:0] u2n;
     ot_hdc_v41x_exp_s #(.PCUT(PCUT), .TFTZ(TFTZ)) u_exp (.clk(clk), .rst_n(rst_n), .v(v_q), .x({1'b1, x_q[30:0]}), .y(), .vo(),
                              .p_pre(p_pre), .n_pre(n_pre), .fault(f_exp));
     ot_hdc_v41x_spdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_PN]), .p(p_pre), .n(n_pre), .y(u), .vo(), .fault(f_div));
-    ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT)) m_u2 (.clk(clk), .rst_n(rst_n), .v(vd[T_U]), .a(u), .b(u), .y(u2), .fault(f_u2));
+    ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT), .RCUT(U2RC)) m_u2 (.clk(clk), .rst_n(rst_n), .v(vd[T_U]), .a(u),
+                             .b(u), .y(u2), .fault(f_u2), .y_n(u2n), .fault_n(f_u2n));
     ot_hdc_delay #(.W(32), .D(T_U2 - T_U)) d_u (clk, rst_n, u, u_d);
     reg  [31:0] mx;
     wire x_nan = (x_q[30:23] == 8'hFF) && (x_q[22:0] != 23'd0);
@@ -317,8 +324,8 @@ module ot_s81_su_rxsf #(parameter integer PCUT = 1, parameter integer TFTZ = 0) 
     ot_hdc_delay #(.W(32), .D(T_U2 - 1)) d_mx (clk, rst_n, mx, mx_d);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin o_v <= 1'b0; o_f <= 1'b0; end
-        else begin o_v <= vd[T_U2]; o_f <= f_exp | f_div | f_u2; end
-    always @(posedge clk) begin o_u <= u_d; o_u2 <= u2; o_mx <= mx_d; end
+        else begin o_v <= vd[T_U2]; o_f <= f_exp | f_div | (U2RC ? f_u2n : f_u2); end
+    always @(posedge clk) begin o_u <= u_d; o_u2 <= U2RC ? u2n : u2; o_mx <= mx_d; end
 endmodule
 
 // RA lane BACK leaf: Horner in u^2 -> l = 2 u p -> sp = max(x, 0) + l -> r = sqrt(sp) (ot_hdc_v41x_softplus_s from
@@ -580,7 +587,10 @@ module dsfd_su_t_rxsf (
     assign o_u = u_w[30:0]; assign o_u2 = u2_w[30:0];
     // S81-CORES2/RV 2026-10-25 (GEOM FAIL 04:38, TT -6.19 on u_exp.m_t s2_sh -> y): TFTZ 1 drops t's dead subnormal
     // encode (shift + round + zero test) from m_t's last stage; 0 cycles, outputs identical (tools/s81_slice/rxsf_ftz_eq.sh).
-    ot_s81_su_rxsf #(.PCUT(1), .TFTZ(1)) u_f (.clk(ck), .rst_in(rst), .i_v(i_v), .i_x(i_x), .o_v(o_v), .o_u(u_w), .o_u2(u2_w),
+    // CORES-KITS/S81-RXSF 2026-10-26 (GEOM-REVIEW-2 10-25 08:12, rxsf_w TT -58.59 on m_u2 s2_sh -> y): U2RC 1 splits
+    // m_u2's last stage (shift / select | round / pack) and retimes the o_u2 face register onto the round / pack logic;
+    // 0 cycles at every port, outputs identical (tools/s81_slice/rxsf_rcut_eq.sh).
+    ot_s81_su_rxsf #(.PCUT(1), .TFTZ(1), .U2RC(1)) u_f (.clk(ck), .rst_in(rst), .i_v(i_v), .i_x(i_x), .o_v(o_v), .o_u(u_w), .o_u2(u2_w),
         .o_mx(o_mx), .o_f(o_f));
 endmodule
 module dsfd_su_t_rxsb (

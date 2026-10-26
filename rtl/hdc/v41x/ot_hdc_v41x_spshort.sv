@@ -299,14 +299,24 @@ endmodule
 // result: ot_hdc_v41x_exp_s's t feeds n = rint(t) alone, and every |t| < 0.5 (te < 126) gives n = 0 and no fault, so
 // t = +0 and t = any subnormal (or the rounded-up 2^-126) are indistinguishable at exp_s's outputs (lockstep bench
 // tools/s81_slice/rxsf_ftz_eq.sh).  FTZ 0 (default) is the unchanged unit.
-module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1, parameter integer CUT = 1, parameter integer FTZ = 0) (
+// RCUT 1 (CORES-KITS/S81-RXSF 2026-10-26, dsfd_su_t_rxsf m_u2 only; GEOM-REVIEW-2 10-25 08:12: TT -58.59 on
+// m_u2 s2_sh -> y, ~31 levels in one stage): stage 3 is split at the select point -- the subnormal right shift
+// (s2_sh barrel), the round / sticky masks and the normal / subnormal select are registered (s3_*), the round
+// increment, carry, field, pack and zero test run in stage 4.  LATENCY + 1.  y_n / fault_n are the next state of the
+// y / fault registers (same cycle as y's D input): a consumer that already re-registers y as a face register takes
+// y_n into that register instead, so the +1 stage replaces its pure delay register (0 cycles at its boundary).
+// RCUT 0 (default): y_n / fault_n are still the D inputs of y / fault; the unit is unchanged.
+module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1, parameter integer CUT = 1, parameter integer FTZ = 0,
+                            parameter integer RCUT = 0) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
     input  wire [31:0] a,
     input  wire [31:0] b,
     output reg  [31:0] y,
-    output reg         fault
+    output reg         fault,
+    output wire [31:0] y_n,
+    output wire        fault_n
 );
     // -- stage 1 (ot_hdc_fp32_mul_fast) --
     wire [7:0]  a_field = a[30:23];
@@ -399,34 +409,60 @@ module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1, parameter integer CUT 
     wire s_rb = |(s2_prod & s2_mr);
     wire s_st = |(s2_prod & s2_ms);
     wire use_sub = is_sub && (FTZ == 0);           // FTZ: the subnormal branch is never encoded (flushed below)
-`ifdef OT_RXSF_MUT_FTZ
-    wire ftz_hit = FTZ != 0 && (is_sub || fl < 12'sd0);   // negative control: also flushes 2^-126 <= |t| < 1 (observable)
-`else
-    wire ftz_hit = is_sub;
-`endif
     wire [23:0] main = use_sub ? s_main : n_main;
     wire rb = use_sub ? s_rb : n_rb;
     wire st = use_sub ? s_st : n_st;
+    // RCUT 1: register the selected mantissa / round / sticky bits (stage 3 -> stage 4); RCUT 0: wires (unchanged unit)
+    wire        r_v, r_byp, r_nf, r_sign, r_is_sub, r_rb, r_st;
+    wire [23:0] r_main;
+    wire [11:0] r_flw;
+    wire signed [11:0] r_fl = r_flw;
+    generate
+        if (RCUT) begin : g_rcut
+            reg        s3_v, s3_byp, s3_nf, s3_sign, s3_is_sub, s3_rb, s3_st;
+            reg [23:0] s3_main;
+            reg signed [11:0] s3_fl;
+            always @(posedge clk or negedge rst_n) if (!rst_n) s3_v <= 1'b0; else s3_v <= s2_v;
+            always @(posedge clk) begin
+                s3_byp <= s2_byp; s3_nf <= s2_nf; s3_sign <= s2_sign; s3_is_sub <= is_sub;
+                s3_main <= main; s3_rb <= rb; s3_st <= st; s3_fl <= fl;
+            end
+`ifdef OT_RXSF_MUT_RCUT
+            // negative control (rxsf_rcut_eq.sh mut): the round bit bypasses the new stage-3 register (one cycle early)
+            assign {r_v, r_byp, r_nf, r_sign, r_is_sub, r_main, r_rb, r_st, r_flw} =
+                   {s3_v, s3_byp, s3_nf, s3_sign, s3_is_sub, s3_main, rb, s3_st, s3_fl};
+`else
+            assign {r_v, r_byp, r_nf, r_sign, r_is_sub, r_main, r_rb, r_st, r_flw} =
+                   {s3_v, s3_byp, s3_nf, s3_sign, s3_is_sub, s3_main, s3_rb, s3_st, s3_fl};
+`endif
+        end else begin : g_rnone
+            assign {r_v, r_byp, r_nf, r_sign, r_is_sub, r_main, r_rb, r_st, r_flw} =
+                   {s2_v, s2_byp, s2_nf, s2_sign, is_sub, main, rb, st, fl};
+        end
+    endgenerate
+`ifdef OT_RXSF_MUT_FTZ
+    wire ftz_hit = FTZ != 0 && (r_is_sub || r_fl < 12'sd0);   // negative control: also flushes 2^-126 <= |t| < 1 (observable)
+`else
+    wire ftz_hit = r_is_sub;
+`endif
     wire [23:0] rnd;
     wire rnd_c;
-    ot_hdc_inc_k #(.W(24)) u_rnd (.a(main), .inc(rb && (st || main[0])), .y(rnd), .co(rnd_c));
-    wire carry = !is_sub && rnd_c;
+    ot_hdc_inc_k #(.W(24)) u_rnd (.a(r_main), .inc(r_rb && (r_st || r_main[0])), .y(rnd), .co(rnd_c));
+    wire carry = !r_is_sub && rnd_c;
     wire [23:0] man = carry ? {1'b1, rnd[23:1]} : rnd;
-    wire signed [11:0] floor_ = fl + {11'd0, carry};
-    wire over = !is_sub && (floor_ > (DOUBLE ? 12'sd126 : 12'sd127));
+    wire signed [11:0] floor_ = r_fl + {11'd0, carry};
+    wire over = !r_is_sub && (floor_ > (DOUBLE ? 12'sd126 : 12'sd127));
     wire [7:0] field = floor_[7:0] + (DOUBLE ? 8'd128 : 8'd127);
-    wire sub_carry = is_sub && rnd[23];
-    wire [31:0] code = !is_sub ? {s2_sign, field, man[22:0]} :
-                       DOUBLE ? {s2_sign, 6'd0, rnd, 1'b0} :
-                       (sub_carry ? {s2_sign, 8'h01, 23'd0} : {s2_sign, 8'h00, rnd[22:0]});
+    wire sub_carry = r_is_sub && rnd[23];
+    wire [31:0] code = !r_is_sub ? {r_sign, field, man[22:0]} :
+                       DOUBLE ? {r_sign, 6'd0, rnd, 1'b0} :
+                       (sub_carry ? {r_sign, 8'h01, 23'd0} : {r_sign, 8'h00, rnd[22:0]});
+    assign y_n = r_byp ? 32'd0 : over ? 32'd0 : (FTZ != 0) ? (ftz_hit ? 32'd0 : code) :   // normal: field >= 1, code != 0
+                 ((code[30:0] == 31'd0) ? 32'd0 : code);
+    assign fault_n = r_byp ? (r_v && r_nf) : over ? r_v : 1'b0;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; fault <= 1'b0; end
-        else begin
-            if (s2_byp) begin y <= 32'd0; fault <= s2_v && s2_nf; end
-            else if (over) begin y <= 32'd0; fault <= s2_v; end
-            else if (FTZ != 0) begin y <= ftz_hit ? 32'd0 : code; fault <= 1'b0; end   // normal: field >= 1, code != 0
-            else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; fault <= 1'b0; end
-        end
+        else begin y <= y_n; fault <= fault_n; end
     end
 endmodule
 

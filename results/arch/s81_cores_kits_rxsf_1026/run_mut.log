@@ -1,0 +1,14 @@
+MISMATCH cyc=14 armed=11 ref v0 f0 u3f000200 u23e800400 mx00000000 r45000000 bv0 bf0 | new v0 f0 u3f000200 u23e800401 mx00000000 r45000000 bv0 bf0
+MISMATCH cyc=26 armed=23 ref v0 f0 u3eaaaaab u23de38e3a mx00000000 r00000000 bv0 bf0 | new v0 f0 u3eaaaaab u23de38e39 mx00000000 r00000000 bv0 bf0
+MISMATCH cyc=72 armed=69 ref v0 f0 u3eaaaaab u23de38e3a mx00000000 r3f8629ae bv0 bf0 | new v0 f0 u3eaaaaab u23de38e39 mx00000000 r3f8629ae bv0 bf0
+MISMATCH cyc=74 armed=71 ref v1 f0 u3e283b0a u23cdd1b15 mx3f6efb08 r3f8629af bv0 bf0 | new v1 f0 u3e283b0a u23cdd1b16 mx3f6efb08 r3f8629af bv0 bf0
+MISMATCH cyc=82 armed=79 ref v1 f0 u3bd84de9 u23836c391 mx408a4398 r3f876f81 bv0 bf0 | new v1 f0 u3bd84de9 u23836c390 mx408a4398 r3f876f81 bv0 bf0
+MISMATCH cyc=84 armed=81 ref v1 f0 u00599b43 u200000000 mx4d2cb368 r3f9abec0 bv0 bf0 | new v1 f0 u00599b43 u200000001 mx4d2cb368 r3f9abec0 bv0 bf0
+MISMATCH cyc=87 armed=84 ref v1 f0 u3eaaaaab u23de38e3a mx00000000 r3f8629ae bv0 bf0 | new v1 f0 u3eaaaaab u23de38e39 mx00000000 r3f8629ae bv0 bf0
+MISMATCH cyc=89 armed=86 ref v1 f0 u3e83bf08 u23d879a21 mx3ebbcf11 r3f55224d bv0 bf0 | new v1 f0 u3e83bf08 u23d879a22 mx3ebbcf11 r3f55224d bv0 bf0
+RXSFRCUT inputs=300000 rxsf_outputs=266937 rxsb_outputs=266767 u2_subnormal=5249 u2_zero=89932 faults=21224 resets=3 mismatches=149428
+FAIL rxsf U2RC lockstep
+- rtl/dsrom_sys/s81_suhc/test/tb_rxsf_rcut_eq.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 601us; walltime 17.155 s; speed 35.023 us/s
+- Verilator: cpu 17.151 s on 1 threads; allocated 11 MB

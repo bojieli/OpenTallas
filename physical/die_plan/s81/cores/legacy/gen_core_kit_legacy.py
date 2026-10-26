@@ -594,6 +594,15 @@ def main():
                   pins_file=rec["lef_contract"])
     else:
         ptype, hc = plan_core(plan, rec.get("plan_module", a.module), rec.get("plan_pins_file"))
+        if rec.get("pins_view"):
+            # CORES-KITS/S81-RXSF 10-26: a reviewed re-pin that is merged as an INPUT (inputs/core_pins/<m>_c.json + its
+            # LEF) but not yet bound in die_plan.json (S81-PLAN2 regen pending): the kit takes that pin view; outline and
+            # plan type stay the plan's, the module must match, and freeze.json records the view + why.  The result
+            # binds only after the plan regen names the same pins file (GEOM-REVIEW-3 06:59 condition (a)).
+            pv = rec["pins_view"]
+            pj = json.load(open(S81 / pv["pins_file"]))
+            assert pj["module"] == hc["module"] and pj["lef"] == pv["lef"], (pj["module"], pj["lef"], pv)
+            hc = dict(hc, pins_file=pv["pins_file"], lef=pv["lef"], pins_view_why=pv["why"])
     spec_src = rec.get("spec_git")       # "<rev>:<path>" for a kit spec that is only in history (sources from the tree)
     spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
     mod = spec["top"]
@@ -982,6 +991,7 @@ def main():
               **({"child_of": hc["child_of"], "child_count": hc["child_count"], "drop_sources": sorted(drop),
                    "pin_expand": rec.get("pin_expand", {})}
                  if hc.get("child_of") else {}),
+              **({"pins_view_why": hc["pins_view_why"]} if hc.get("pins_view_why") else {}),
               pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else S81 / hc["pins_file"]), pins=len(pins), plan_lef=hc["lef"],
               clocks=clks, resets=rsts,
               recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),

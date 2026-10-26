@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.s81.rtl_fix.v1",
+ "core": "dsfd_su_t_rxsf",
+ "replicas": 75,
+ "cause": "rxsf_w (autopilot c48fe31df9f2) TT setup -58.59 ps / 30 EP: u_f.m_u2 (ot_hdc_fp32_mul_x2, u^2) stage 3 = s2_sh subnormal barrel shift + select + round increment + carry + field + pack + zero test (~31 levels, 824 ps) in one 833-ps stage (GEOM-REVIEW-2 2026-10-25 08:12)",
+ "fix": "ot_hdc_fp32_mul_x2 RCUT 1: stage 3 split at the select point (shift, round/sticky masks and normal/subnormal select registered in s3_*; round, carry, pack and zero test in stage 4, +1 stage inside the multiplier); new outputs y_n / fault_n = next state of y / fault. ot_s81_su_rxsf U2RC 1: m_u2 RCUT 1 with o_u2 <= y_n and o_f <= f_exp | f_div | fault_n, so the old o_u2 <= u2 pure delay register becomes the multiplier's stage-4 register (retiming). Only dsfd_su_t_rxsf sets U2RC 1; RCUT / U2RC default 0 = unchanged unit (the bench covers the RCUT 0 path through rxsb m_l).",
+ "latency_change_cycles": 0,
+ "interface": "unchanged: every port of dsfd_su_t_rxsf (o_v, o_u, o_u2, o_mx, o_f) keeps its cycle; rxsb, cluster T_U2 and die_plan latency untouched",
+ "bench": "tools/s81_slice/rxsf_rcut_eq.sh + rtl/dsrom_sys/s81_suhc/test/tb_rxsf_rcut_eq.sv (Verilator via ot-run on epyc1): new dsfd_su_t_rxsf + dsfd_su_t_rxsb vs the REF_REV e0d486853 cores renamed __ref; o_v/o_f of both leaves every edge, rxsf data every edge outside the reset window, rxsb o_r every valid edge and every edge after flush; 300k inputs, 3 mid-run resets",
+ "bench_base": "PASS 0 mismatches (266937 rxsf outputs, 266767 rxsb outputs, 5249 subnormal u^2, 89932 zero u^2, 21224 fault edges)",
+ "bench_mutant": "OT_RXSF_MUT_RCUT (candidate only: round bit bypasses the new s3 register) FAIL 149428 mismatches = caught",
+ "reset_window_note": "during rst low and <=4 edges after it the old o_u2 showed the reset y (0) while the new o_u2 shows stage-3 data; o_v = 0 there (data don't-care); rxsb o_r with o_v = 0 differs until its pipeline flushes that data",
+ "kit": "epyc1:/srv/opentallas-scratch2/claude/cores-kits/s81/kits/dsfd_su_t_rxsf_k26 (gen_core_kit_legacy.py --module dsfd_su_t_rxsf, modern flow, pins_view inputs/core_pins/dsfd_su_t_rxsf_c.json re-pin, vclk TT 250 / FF 202.5)"
+}

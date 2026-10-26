@@ -1,0 +1,6 @@
+RXSFRCUT inputs=300000 rxsf_outputs=266937 rxsb_outputs=266767 u2_subnormal=5249 u2_zero=89932 faults=21224 resets=3 mismatches=0
+PASS rxsf U2RC lockstep (o_v/o_f every edge, all data outputs every edge outside reset, rxsf + rxsb lane)
+- rtl/dsrom_sys/s81_suhc/test/tb_rxsf_rcut_eq.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 601us; walltime 17.552 s; speed 34.230 us/s
+- Verilator: cpu 17.550 s on 1 threads; allocated 11 MB
