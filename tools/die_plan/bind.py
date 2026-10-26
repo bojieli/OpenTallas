@@ -2473,7 +2473,7 @@ class Binder:
         top_text = self.emit_top()
         if getattr(self, "clock_landings", None):
             try:
-                top_text = self.clock_landings.top_rtl(top_text)
+                top_text = self.clock_landings.top_rtl(top_text, {tn:t["module"] for tn,t in self.types.items()})
             except ValueError as exc:
                 raise BindError(str(exc)) from exc
             (out.parent / "bind_clock_landings.json").write_text(
