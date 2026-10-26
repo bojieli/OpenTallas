@@ -10,6 +10,7 @@ def main():
  rel=Path('physical/die_plan/qwen_compute/bind/asbuilt_meth_fixed_su.json');ab=json.loads((ROOT/rel).read_text());probe=dict(ab)
  for k in ('land_align','land_r8','land_r8_extra','param_regen'):probe.pop(k,None)
  ab['prefer']=list(ab.get('prefer',[]))+['rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv','rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_romleaf_rr.sv','rtl/qwen_dv/qfd_dv_slice2.sv'];probe['prefer']=ab['prefer']
+ ab['dissolve']=list(ab['dissolve'])+['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1'];probe['dissolve']=ab['dissolve'];probe['type_canon']=True
  selected={ROOT/rel,ROOT/'physical/die_plan/qwen_compute/plan_notes.json',ROOT/'results/token_pass/qc_cb16_phase_2209/run_bind.sh'};idx=E.module_index(ab.get('rtl_roots',[]),ab.get('files',[]),ROOT)
  with tempfile.TemporaryDirectory() as temp:
   temp=Path(temp);scan=dict(ab);scan['netlist']=[]
