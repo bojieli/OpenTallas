@@ -1,0 +1,18 @@
+{
+  "scope": "Actual six residual compare cones plus three newly-proposed induction relations; no RTL change or standard receipt replacement",
+  "source_hcore_sha256": "eafc9c83190a0845ec442f59004d996db7d514b8c896615955e29cf1f83edc50",
+  "native_netlist_sha256": "0890ad6feceab83e0b3429f62a756778a6bf2abc85b19632d1ee727310920813",
+  "actual_proof_input": "/srv/opentallas-scratch2/claude/codex-token-1309/hcore_timed_immutable",
+  "input_sha256": {
+    "gold.aig": "67289d32a80b17ee02ee56a98628cd960c7f8049f291e229c1171a9b44495fa6",
+    "gate.aig": "82a9bab14a8c761af38be8473b04d526691bf832272481ddbe1d90dd55a4f351",
+    "gold.map": "af5b61b4f830f33155984a5781540fee8bde5338a7f77724fa3f268be2423f90",
+    "gate.map": "1860c90e59fb4453fe59430465b1d98082d0b518e3b22448cf18f828ea17ef0d",
+    "hyp.json": "80df6f2ed5e748f8b72ba75539468e75a8c030552902c12aa13c59dbaff3f4dc"
+  },
+  "relation": "k=7,23,31: gate g_ske[k].u_d.g_reg.r#t[2][143] == gold r[23][17], inversion0; D24/W18 slab mapping [d//8][(d%8)*18+bit]",
+  "positive": "six compare and three new induction outputs all structurally0, no inputs/ANDs remain",
+  "negative": "opposite polarity: new induction outputs all constant1; three compare outputs constant1; remaining three nonconstant",
+  "context": "Previous terminal hypothesis set is already inductive; added three equalities restrict its free-input space, so its established obligations remain valid. Exact legacytool relayout+renamed preprocessing must precede loading hyp.json. Initial missing-preprocessing KeyErrors retained in runroot, not RTL failures.",
+  "next": "TOKEN generic owner current150 exactcrossclosure has independently proved ALL30562 current fullpoints+induction; official receipt ownedTOKEN before native placement."
+}

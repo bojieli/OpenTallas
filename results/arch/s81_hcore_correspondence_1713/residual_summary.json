@@ -1,0 +1,56 @@
+[
+  {
+    "tag": "residual_pair",
+    "inputs": 0,
+    "ands": 0,
+    "outputs": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "keys": [
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[23].g_m6.u_m.u_cut0.g_reg.r[0][0]",
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[23].u_df.g_reg.r[0]",
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[31].g_m6.u_m.u_cut0.g_reg.r[0][0]",
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[31].u_df.g_reg.r[0]",
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[7].g_m6.u_m.u_cut0.g_reg.r[0][0]",
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[7].u_df.g_reg.r[0]",
+      "hyp:gate:ff:u_dut.u_h.g_ske[7].u_d.g_reg.r#t[2][143]",
+      "hyp:gate:ff:u_dut.u_h.g_ske[23].u_d.g_reg.r#t[2][143]",
+      "hyp:gate:ff:u_dut.u_h.g_ske[31].u_d.g_reg.r#t[2][143]"
+    ]
+  },
+  {
+    "tag": "wrong_polarity",
+    "inputs": 6,
+    "ands": 15,
+    "outputs": [
+      1,
+      31,
+      1,
+      37,
+      1,
+      43,
+      1,
+      1,
+      1
+    ],
+    "keys": [
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[23].g_m6.u_m.u_cut0.g_reg.r[0][0]",
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[23].u_df.g_reg.r[0]",
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[31].g_m6.u_m.u_cut0.g_reg.r[0][0]",
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[31].u_df.g_reg.r[0]",
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[7].g_m6.u_m.u_cut0.g_reg.r[0][0]",
+      "ff:u_dut.u_h.g_h[0].u_hdp.g_m[7].u_df.g_reg.r[0]",
+      "hyp:gate:ff:u_dut.u_h.g_ske[7].u_d.g_reg.r#t[2][143]",
+      "hyp:gate:ff:u_dut.u_h.g_ske[23].u_d.g_reg.r#t[2][143]",
+      "hyp:gate:ff:u_dut.u_h.g_ske[31].u_d.g_reg.r#t[2][143]"
+    ]
+  }
+]

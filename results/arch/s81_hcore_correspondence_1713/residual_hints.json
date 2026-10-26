@@ -1,0 +1,32 @@
+[
+  [
+    "gate",
+    "ff:u_dut.u_h.g_ske[7].u_d.g_reg.r#t[2][143]",
+    [
+      "eq",
+      "gold",
+      "ff:u_dut.u_h.g_ske[7].u_d.g_reg.r[23][17]",
+      0
+    ]
+  ],
+  [
+    "gate",
+    "ff:u_dut.u_h.g_ske[23].u_d.g_reg.r#t[2][143]",
+    [
+      "eq",
+      "gold",
+      "ff:u_dut.u_h.g_ske[23].u_d.g_reg.r[23][17]",
+      0
+    ]
+  ],
+  [
+    "gate",
+    "ff:u_dut.u_h.g_ske[31].u_d.g_reg.r#t[2][143]",
+    [
+      "eq",
+      "gold",
+      "ff:u_dut.u_h.g_ske[31].u_d.g_reg.r[23][17]",
+      0
+    ]
+  ]
+]
