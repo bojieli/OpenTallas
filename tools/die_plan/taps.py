@@ -291,6 +291,50 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
         leaves = [q for k, q in enumerate(leaves) if k not in (i, j)] + [m]
 
 
+def explicit_taps(P, tn):
+    """Fixed planned local clock endpoints, with full actual sink-budget checks.
+
+    Materializing a density-derived table breaks control-relay/tap coordinate
+    feedback. No endpoint is moved, added, dropped or silently re-legalized.
+    The normal density CTS/load/balance recipe still applies to these ports.
+    """
+    import schema
+    ck=P.types[tn].get("clock",{})
+    table=[p for p in ck.get("taps",[]) if p.get("kind")!="core"]
+    if not table:
+        raise ValueError(f"{tn}: explicit tap table is empty")
+    names=[p["name"] for p in table]
+    expected=["clk"]+[f"clk_t{i}" for i in range(1,len(table))]
+    if names!=expected:
+        raise ValueError(f"{tn}: explicit local tap names/order must be {expected}")
+    out=[];taken=[(x,y) for _,x,y,_ in schema.core_taps(P,tn)]
+    for p in table:
+        x,y=map(float,p["xy"])
+        # Frozen density coordinates are rounded to 4 decimals. Check the
+        # same halo/spacing geometry directly; binary 8.64-8.64 subtraction
+        # must not trigger a fresh legalizer move (t43 gap 8.639999999999986).
+        eps=1e-8
+        clear=schema.TAP_CLEAR_UM
+        typ=P.types[tn];w,h=typ["outline_um"]
+        boxes=list(schema.placed_macro_boxes(typ,halo=clear).values())
+        boxes += [(a-clear,b-clear,c+clear,d+clear) for a,b,c,d in ck.get("keepouts_um",[])]
+        legal=(clear-eps<=x<=w-clear+eps and clear-eps<=y<=h-clear+eps
+               and not any(abs(x-a)<clear-eps and abs(y-b)<clear-eps for a,b in taken)
+               and not any(a+eps<x<c-eps and b+eps<y<d-eps for a,b,c,d in boxes))
+        if not legal:
+            raise ValueError("{}: explicit tap {} violates outline/halo/tap spacing".format(tn,p["name"]))
+        out.append((p["name"],x,y));taken.append((x,y))
+    sinks=sink_sites(P,tn)
+    cap=int(ck.get("tap_max_sinks",1500));radius=float(ck.get("tap_radius_um",200.))
+    if cap<=0 or radius<=0:
+        raise ValueError(f"{tn}: explicit tap radius/capacity must be positive")
+    load,far,_=assign(out,sinks,cap,radius,max_distance_um=radius)
+    for i,(n,r) in enumerate(zip(load,far)):
+        if n>cap or r>radius+1e-6 or n==0:
+            raise ValueError(f"{tn}: explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, empty={n==0}")
+    return [(name,x,y,n,r) for (name,x,y),n,r in zip(out,load,far)]
+
+
 def density_taps(P, tn, control=True):
     """OWNER decision 5 (10-24, industry multi-source CTS): partition clock taps placed by SINK DENSITY.
 
