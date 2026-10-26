@@ -1,0 +1,32 @@
+{
+  "verdict": "STOPPED_MODEL_INELIGIBLE",
+  "reason": "Actual HC core plan pins include M6/M7 and coregen --sigmax auto routes through M7; these G2 coupons assumed M5 OBS. No actual bank density receipt is admissible. Preserve all diagnostic outputs. Revised real corridors must be reviewed before any new bank routing.",
+  "owned_containers": [
+    {
+      "container": "079dfde40796",
+      "name": "/proto-part_q_b011-3445504",
+      "source": "/srv/opentallas-scratch2/claude/codex-hbm-2144/coupon/band_capacity/part_q_b011"
+    },
+    {
+      "container": "0e24cc585022",
+      "name": "/proto-part_q_b001-3444470",
+      "source": "/srv/opentallas-scratch2/claude/codex-hbm-2144/coupon/band_capacity/part_q_b001"
+    },
+    {
+      "container": "5090f52ce18a",
+      "name": "/proto-part_q_b011-3158511",
+      "source": "/srv/opentallas-scratch2/claude/codex-hbm-2144/coupon/proto/part_q_b011"
+    },
+    {
+      "container": "ca6db32f19e2",
+      "name": "/proto-part_q_b001-3158300",
+      "source": "/srv/opentallas-scratch2/claude/codex-hbm-2144/coupon/proto/part_q_b001"
+    }
+  ],
+  "owned_units": [
+    "oth-ubuntu-3158248-1792991235",
+    "oth-ubuntu-3158251-1792991235",
+    "oth-ubuntu-3442762-1792991572",
+    "oth-ubuntu-3442776-1792991572"
+  ]
+}
