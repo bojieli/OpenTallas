@@ -803,6 +803,7 @@ module qkd_host_native_engine #(
                 reg  [4:0]   wk_a, wv_a;
                 reg  [127:0] wk_d, wv_d;
                 integer w2;
+                integer w2d;  // data-block loop variable (one integer in both clocked blocks = multi-driven for Yosys check -assert)
                 always @(posedge clk_bank[gb/8] or negedge rst_n)
                     if (!rst_n) begin wk_v <= 1'b0; wv_v <= 1'b0; end
                     else begin
@@ -813,10 +814,10 @@ module qkd_host_native_engine #(
                             end
                     end
                 always @(posedge clk_bank[gb/8]) if (i1_v)
-                    for (w2 = 0; w2 < 4; w2 = w2 + 1)
-                        if (i1_use[w2] && wbank[w2] == GB) begin
-                            if (!i1_isv[w2]) begin wk_a <= {i1_slot, i1_lane[w2]}; wk_d <= i1_code[w2]; end
-                            else             begin wv_a <= {i1_slot, i1_lane[w2]}; wv_d <= i1_code[w2]; end
+                    for (w2d = 0; w2d < 4; w2d = w2d + 1)
+                        if (i1_use[w2d] && wbank[w2d] == GB) begin
+                            if (!i1_isv[w2d]) begin wk_a <= {i1_slot, i1_lane[w2d]}; wk_d <= i1_code[w2d]; end
+                            else             begin wv_a <= {i1_slot, i1_lane[w2d]}; wv_d <= i1_code[w2d]; end
                         end
                 assign wk_any[gb] = wk_v; assign wv_any[gb] = wv_v;
                 // K: bank gb holds lane 9 (gb - kw) mod 16 of the drained word (9 is its own inverse mod 16)
