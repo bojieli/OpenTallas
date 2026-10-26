@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-qc-fe-reset-1026/fup_reset_groups.py", line 163, in <module>
+    if __name__ == '__main__': main()
+                               ~~~~^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-fe-reset-1026/fup_reset_groups.py", line 155, in main
+    report, rows = candidate(a.conn, a.type)
+                   ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-fe-reset-1026/fup_reset_groups.py", line 64, in candidate
+    raise ValueError(f'{type_name}: expected one full-FUP rst stage, got {len(first)}; inspect actual master')
+ValueError: sle_fe_v3: expected one full-FUP rst stage, got 0; inspect actual master

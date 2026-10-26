@@ -1,0 +1,159 @@
+{
+  "type": "sle_fe_v1",
+  "source": "/srv/opentallas-scratch2/claude/codex-qc-fe-reset-1026/conn_sle_fe_v1.tsv",
+  "verdict": "PASS-COND PLACE CANDIDATE ONLY",
+  "master": "qfd_dv_s6_fup",
+  "variant": "qfd_dv_s6_fup_reset_local",
+  "root": {
+    "name": "u_bound.u_rrl_18.q$_DFF_P_",
+    "xy_um": [
+      154.602,
+      501.66
+    ]
+  },
+  "groups": {
+    "agu": {
+      "cells": [
+        "u_bound.u_core.agu_q[0]$_DFF_PN0_",
+        "u_bound.u_core.agu_q[1]$_DFF_PN0_",
+        "u_bound.u_core.agu_q[2]$_DFF_PN0_",
+        "u_bound.u_core.agu_q[3]$_DFF_PN0_",
+        "u_bound.u_core.agu_q[4]$_DFF_PN0_",
+        "u_bound.u_core.agu_q[5]$_DFF_PN0_",
+        "u_bound.u_core.agu_q[6]$_DFF_PN0_",
+        "u_bound.u_core.agu_q[7]$_DFF_PN0_",
+        "u_bound.u_core.agu_q[8]$_DFF_PN0_",
+        "u_bound.u_core.agu_q[9]$_DFF_PN0_"
+      ],
+      "centre_um": [
+        284.1345,
+        398.6685
+      ],
+      "stage1_um": [
+        215.36825,
+        450.16425000000004
+      ],
+      "stage2_um": [
+        276.1345,
+        398.6685
+      ],
+      "root_to_stage1_um": 112.26199999999997,
+      "stage1_to_stage2_um": 112.26200000000006,
+      "stage2_to_controls_max_um": 10.349000000000046,
+      "max_hop_um": 112.26200000000006
+    },
+    "chu": {
+      "cells": [
+        "u_bound.u_core.chu_q[1094]$_DFF_PN0_",
+        "u_bound.u_core.chu_q[547]$_DFF_PN0_"
+      ],
+      "centre_um": [
+        284.82300000000004,
+        550.26
+      ],
+      "stage1_um": [
+        215.71250000000003,
+        525.96
+      ],
+      "stage2_um": [
+        276.82300000000004,
+        550.26
+      ],
+      "root_to_stage1_um": 85.41050000000004,
+      "stage1_to_stage2_um": 85.41049999999996,
+      "stage2_to_controls_max_um": 22.930999999999983,
+      "max_hop_um": 85.41050000000004
+    },
+    "cmd": {
+      "cells": [
+        "u_bound.u_core.cmd_o[0]$_DFF_PN0_"
+      ],
+      "centre_um": [
+        284.95799999999997,
+        565.65
+      ],
+      "stage1_um": [
+        215.77999999999997,
+        533.655
+      ],
+      "stage2_um": [
+        276.95799999999997,
+        565.65
+      ],
+      "root_to_stage1_um": 93.17299999999992,
+      "stage1_to_stage2_um": 93.173,
+      "stage2_to_controls_max_um": 8.000000000000057,
+      "max_hop_um": 93.173
+    }
+  },
+  "anchors": [
+    [
+      "^u_bound\\.u_core\\.g_local_reset\\.u_agu\\.rs1\\$_DFF",
+      215.36825,
+      450.16425000000004
+    ],
+    [
+      "^u_bound\\.u_core\\.g_local_reset\\.u_agu\\.(?:rs2|rst)\\$_DFF",
+      276.1345,
+      398.6685
+    ],
+    [
+      "^u_bound\\.u_core\\.g_local_reset\\.u_chu\\.rs1\\$_DFF",
+      215.71250000000003,
+      525.96
+    ],
+    [
+      "^u_bound\\.u_core\\.g_local_reset\\.u_chu\\.(?:rs2|rst)\\$_DFF",
+      276.82300000000004,
+      550.26
+    ],
+    [
+      "^u_bound\\.u_core\\.g_local_reset\\.u_cmd\\.rs1\\$_DFF",
+      215.77999999999997,
+      533.655
+    ],
+    [
+      "^u_bound\\.u_core\\.g_local_reset\\.u_cmd\\.(?:rs2|rst)\\$_DFF",
+      276.95799999999997,
+      565.65
+    ]
+  ],
+  "clock_sink_sites_um_append": [
+    [
+      215.36825,
+      450.16425000000004,
+      1
+    ],
+    [
+      276.1345,
+      398.6685,
+      1
+    ],
+    [
+      215.71250000000003,
+      525.96,
+      1
+    ],
+    [
+      276.82300000000004,
+      550.26,
+      1
+    ],
+    [
+      215.77999999999997,
+      533.655,
+      1
+    ],
+    [
+      276.95799999999997,
+      565.65,
+      1
+    ]
+  ],
+  "synth_keep_modules_append": [
+    "qfd_dv_s6_rst2_local"
+  ],
+  "added_data_cycles": 0,
+  "added_reset_cycles": 0,
+  "required": "post-DPL all data/reset arcs <=405um; clock/timing/route NOT RUN"
+}
