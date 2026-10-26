@@ -1524,6 +1524,7 @@ class Binder:
         for k, d in list(self.sinks.items()):
             nd = fix(k[0], k[1], d)
             if nd != d:
+                self.__dict__.setdefault('_inner_original', {}).setdefault(k, d)
                 self.sinks[k] = nd
         miss = [w[1]["id"] for k, w in want.items() if k not in hit]
         for i in miss[:30]:
@@ -1813,6 +1814,11 @@ class Binder:
             out[i] = (self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)) if d[0] == "x" else 0
         return out
 
+    def timing_depths(self, path, port):
+        """Structured original/landed depths including explicit INNER changes; depth() keeps its old API."""
+        import bind_timing
+        return bind_timing.timing_depths(self, path, port)
+
     def cell_index(self):
         if not hasattr(self, "_cidx"):
             self._cidx = {c.path: i for i, c in enumerate(self.F.cells)}
@@ -1910,13 +1916,19 @@ class Binder:
             replicas.append(dict(source=f"{path}.{spn}", source_bits=ranges(b for b, _ in bl), asbuilt_stages=st,
                                  sink_parts=list(ps), bound_depths=depth,
                                  equal=len({x for v in depth.values() for x in v}) == 1))
-        return dict(schema="opentallas.die_plan.bus_groups.v1", die=self.plan["die"]["name"],
+        out = dict(schema="opentallas.die_plan.bus_groups.v1", die=self.plan["die"]["name"],
                     note=self.bus_groups.__doc__.split("\n\n")[0],
                     summary=dict(landing_groups=len(groups),
                                  landing_misaligned_by_lanes=sum(1 for g in groups if not g["aligned_by_lanes"]),
                                  landing_misaligned_after_pads=sum(1 for g in groups if not g["aligned_landed"]),
                                  replica_sets=len(replicas), replica_unequal=sum(1 for r in replicas if not r["equal"])),
                     landing=groups, replica=replicas)
+        import bind_timing
+        internal = bind_timing.changed_inner_groups(self)
+        if internal:
+            out['internal'] = internal
+            out['summary']['internal_changed_edges'] = len(internal)
+        return out
 
     def _rel_desc(self, p, d, inst_vals, where, nm=None):
         k = d[0]
