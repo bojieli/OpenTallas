@@ -141,3 +141,5 @@ CODEX took over on own sparse hub codex/infra-0719@e40d36e922. Root integrating 
 
 ## CODEX notes 2026-10-25 21:47 PDT
 CODEX took over shared flow on codex/shared-flow-2144. READY 2b221730d on real hub epyc1: per-reference-die flow matching in canary_gate + trigger; foreign KV/HBM generator changes cannot hold frozen QC/head rows. Shared/own-die changes remain blocking, unknown mappings conservative. Focused gate+trigger26 PASS incl positive/negative controls, isolated trigger import PASS. Root merges; no route/RTL/clock contract change.
+
+CODEX 2026-10-25 21:50 PDT: scope follow-up READY codex/shared-flow-2144@1bca870e8 (hub ref imported): compare canaries.json only on each reference physical vehicle; memory/golden/foreign refs do not change its flow; generator/runner/shared watch changes remain blocking. Exclude test-only files.29 focused PASS, no constraints/RTL/route changes.
