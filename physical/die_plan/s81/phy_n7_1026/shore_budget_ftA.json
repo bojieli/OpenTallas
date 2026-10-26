@@ -1,0 +1,476 @@
+{
+ "die_outline_um": [
+  31950.72,
+  24744.96
+ ],
+ "shore_low_um": 3078,
+ "shore_central_um": 3318,
+ "depth_low_um": 937,
+ "guard_um": 63.64,
+ "edges": {
+  "S": {
+   "fixed_non_serdes": [
+    {
+     "part": "iqf",
+     "type": "iqf__t1",
+     "span_um": [
+      10203.84,
+      11646.72
+     ]
+    },
+    {
+     "part": "phy_hbm",
+     "type": "phy__t1",
+     "span_um": [
+      11646.72,
+      20304.0
+     ]
+    },
+    {
+     "part": "eng",
+     "type": "eng__t1",
+     "span_um": [
+      20304.0,
+      21746.88
+     ]
+    },
+    {
+     "part": "s_7S_x10",
+     "type": "slice_station__t23",
+     "span_um": [
+      21746.88,
+      23189.76
+     ]
+    }
+   ],
+   "segments": [
+    {
+     "segment_um": [
+      103.68,
+      10203.84
+     ],
+     "length_um": 10100.2,
+     "serdes": [
+      "lk_WS2",
+      "lk_WS1",
+      "lk_WS0",
+      "lk_WS3"
+     ],
+     "per_link_um": 2525.0,
+     "need_low_um": 12821.1,
+     "need_central_um": 13781.1,
+     "need_low_with_junction_um": 13721.1,
+     "fits_low": false,
+     "fits_low_with_junction": false,
+     "fits_central": false,
+     "max_links_low": 3,
+     "max_links_low_with_junction": 2
+    },
+    {
+     "segment_um": [
+      23189.76,
+      31847.04
+     ],
+     "length_um": 8657.3,
+     "serdes": [
+      "lk_ES0",
+      "lk_ES1"
+     ],
+     "per_link_um": 4328.6,
+     "need_low_um": 6410.6,
+     "need_central_um": 6890.6,
+     "need_low_with_junction_um": 7310.6,
+     "fits_low": true,
+     "fits_low_with_junction": true,
+     "fits_central": true,
+     "max_links_low": 2,
+     "max_links_low_with_junction": 2
+    }
+   ],
+   "serdes": 6
+  },
+  "N": {
+   "fixed_non_serdes": [
+    {
+     "part": "gunit",
+     "type": "gunit__t1",
+     "span_um": [
+      13089.6,
+      15975.36
+     ]
+    },
+    {
+     "part": "bk_sel",
+     "type": "bk_sel__t2",
+     "span_um": [
+      15975.36,
+      20304.0
+     ]
+    }
+   ],
+   "segments": [
+    {
+     "segment_um": [
+      103.68,
+      13089.6
+     ],
+     "length_um": 12985.9,
+     "serdes": [
+      "lk_WN2",
+      "lk_WN1",
+      "lk_WN0",
+      "lk_WN3"
+     ],
+     "per_link_um": 3246.5,
+     "need_low_um": 12821.1,
+     "need_central_um": 13781.1,
+     "need_low_with_junction_um": 13721.1,
+     "fits_low": true,
+     "fits_low_with_junction": false,
+     "fits_central": false,
+     "max_links_low": 4,
+     "max_links_low_with_junction": 3
+    },
+    {
+     "segment_um": [
+      20304.0,
+      31847.04
+     ],
+     "length_um": 11543.0,
+     "serdes": [
+      "lk_EN2",
+      "lk_EN0",
+      "lk_EN1",
+      "lk_EN3"
+     ],
+     "per_link_um": 2885.8,
+     "need_low_um": 12821.1,
+     "need_central_um": 13781.1,
+     "need_low_with_junction_um": 13721.1,
+     "fits_low": false,
+     "fits_low_with_junction": false,
+     "fits_central": false,
+     "max_links_low": 3,
+     "max_links_low_with_junction": 3
+    }
+   ],
+   "serdes": 8
+  },
+  "W": {
+   "fixed_non_serdes": [
+    {
+     "part": "fW0_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      1330.56,
+      2557.44
+     ]
+    },
+    {
+     "part": "fW0_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      2557.44,
+      3784.32
+     ]
+    },
+    {
+     "part": "fW0_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      3784.32,
+      5011.2
+     ]
+    },
+    {
+     "part": "fW1_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      5011.2,
+      6238.08
+     ]
+    },
+    {
+     "part": "fW1_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      6238.08,
+      7464.96
+     ]
+    },
+    {
+     "part": "fW1_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      7464.96,
+      8691.84
+     ]
+    },
+    {
+     "part": "fW2_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      8691.84,
+      9918.72
+     ]
+    },
+    {
+     "part": "fW2_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      9918.72,
+      11145.6
+     ]
+    },
+    {
+     "part": "fW2_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      11145.6,
+      12372.48
+     ]
+    },
+    {
+     "part": "fW3_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      12372.48,
+      13599.36
+     ]
+    },
+    {
+     "part": "fW3_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      13599.36,
+      14826.24
+     ]
+    },
+    {
+     "part": "fW3_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      14826.24,
+      16053.12
+     ]
+    },
+    {
+     "part": "fW4_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      16053.12,
+      17280.0
+     ]
+    },
+    {
+     "part": "fW4_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      17280.0,
+      18506.88
+     ]
+    },
+    {
+     "part": "fW4_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      18506.88,
+      19733.76
+     ]
+    },
+    {
+     "part": "fW5_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      19733.76,
+      20960.64
+     ]
+    },
+    {
+     "part": "fW5_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      20960.64,
+      22187.52
+     ]
+    },
+    {
+     "part": "fW5_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      22187.52,
+      23414.4
+     ]
+    }
+   ],
+   "segments": [],
+   "serdes": 0
+  },
+  "E": {
+   "fixed_non_serdes": [
+    {
+     "part": "fE0_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      1330.56,
+      2557.44
+     ]
+    },
+    {
+     "part": "fE0_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      2557.44,
+      3784.32
+     ]
+    },
+    {
+     "part": "fE0_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      3784.32,
+      5011.2
+     ]
+    },
+    {
+     "part": "fE1_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      5011.2,
+      6238.08
+     ]
+    },
+    {
+     "part": "fE1_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      6238.08,
+      7464.96
+     ]
+    },
+    {
+     "part": "fE1_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      7464.96,
+      8691.84
+     ]
+    },
+    {
+     "part": "fE2_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      8691.84,
+      9918.72
+     ]
+    },
+    {
+     "part": "fE2_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      9918.72,
+      11145.6
+     ]
+    },
+    {
+     "part": "fE2_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      11145.6,
+      12372.48
+     ]
+    },
+    {
+     "part": "fE3_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      12372.48,
+      13599.36
+     ]
+    },
+    {
+     "part": "fE3_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      13599.36,
+      14826.24
+     ]
+    },
+    {
+     "part": "fE3_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      14826.24,
+      16053.12
+     ]
+    },
+    {
+     "part": "fE4_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      16053.12,
+      17280.0
+     ]
+    },
+    {
+     "part": "fE4_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      17280.0,
+      18506.88
+     ]
+    },
+    {
+     "part": "fE4_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      18506.88,
+      19733.76
+     ]
+    },
+    {
+     "part": "fE5_p6_b2",
+     "type": "col_h9_r2__t1",
+     "span_um": [
+      19733.76,
+      20960.64
+     ]
+    },
+    {
+     "part": "fE5_p6_b1",
+     "type": "col_h9_r1__t1",
+     "span_um": [
+      20960.64,
+      22187.52
+     ]
+    },
+    {
+     "part": "fE5_p6_b0",
+     "type": "col_h9_r0_p6__t1",
+     "span_um": [
+      22187.52,
+      23414.4
+     ]
+    }
+   ],
+   "segments": [],
+   "serdes": 0
+  }
+ },
+ "notes": [],
+ "depth": {
+  "row_um": 1226.88,
+  "max_core_strip_um": 289.9,
+  "max_ft_links_under_macro": 1,
+  "note": "a SerDes partition carrying k other links' coll pairs under its macro needs ~k x 230 um of core strip; lk_WN0 (t3, k=2) has 516 um -> 711-um macro, lk_WS0 (t15, k=2+) 482 um"
+ },
+ "total": {
+  "serdes": 14,
+  "segment_length_um": 43286.4,
+  "need_low_um": 44873.9,
+  "need_central_um": 48233.9,
+  "fits_low": false,
+  "max_links_low": 12,
+  "max_links_low_with_junction": 10
+ }
+}

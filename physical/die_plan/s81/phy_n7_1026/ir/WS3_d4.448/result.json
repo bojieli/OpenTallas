@@ -1,0 +1,39 @@
+{
+  "peak_rss_gb": 3.9,
+  "wall_s": 208.8,
+  "marks_s": {
+    "pdngen": 3,
+    "bumps": 3,
+    "psm": 207
+  },
+  "worst_ir_drop_mv": 83.0,
+  "avg_ir_drop_mv": 15.4,
+  "worst_voltage": 0.617,
+  "avg_voltage": 0.685,
+  "status": "OK",
+  "pg_check": [
+    [
+      "OK",
+      "VDDPHY"
+    ],
+    [
+      "OK",
+      "VSS"
+    ]
+  ],
+  "errors": [],
+  "domain": "phy_lk_WS3",
+  "die": "s81",
+  "density_w_mm2": 4.448,
+  "power_w": 4.3701,
+  "supply": "VDDPHY",
+  "bumps": 392,
+  "assumptions": [
+    "Uniform PHY density sweep; actual PHY power not yet supplied",
+    "Standalone domain with shared VSS; coupled core-ground loading excluded",
+    "Declared PG bump rows are dedicated; package/PHY signal-map collision check pending"
+  ],
+  "scope": "standalone declared PHY domain",
+  "verdict": "PASS",
+  "load_pin_max_drop_mv": 82.992
+}

@@ -1,0 +1,352 @@
+{
+ "plan": "../srv/opentallas-scratch2/claude/path-s81-ftA/phy/src/physical/die_plan/s81/die_plan.json",
+ "assumptions": "phy_assumptions_bea83f.json",
+ "die_outline_um": [
+  31950.72,
+  24744.96
+ ],
+ "serdes_windows": 14,
+ "serdes": [
+  {
+   "io": "io_lk_WS0_u_phy",
+   "side": "S",
+   "macro_um": [
+    5938.84,
+    103.68,
+    8697.32,
+    585.55
+   ],
+   "area_mm2": 1.329,
+   "shore_um": 2758.5,
+   "depth_um": 481.9,
+   "sites": 54,
+   "signals": 26,
+   "findings": [
+    "AREA 1.33 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 2758 x 482 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_WS1_u_phy",
+   "side": "S",
+   "macro_um": [
+    3053.08,
+    103.68,
+    5811.56,
+    585.55
+   ],
+   "area_mm2": 1.329,
+   "shore_um": 2758.5,
+   "depth_um": 481.9,
+   "sites": 54,
+   "signals": 26,
+   "findings": [
+    "AREA 1.33 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 2758 x 482 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_WN0_u_phy",
+   "side": "N",
+   "macro_um": [
+    5938.84,
+    23930.36,
+    8547.32,
+    24641.28
+   ],
+   "area_mm2": 1.854,
+   "shore_um": 2608.5,
+   "depth_um": 710.9,
+   "sites": 68,
+   "signals": 26,
+   "findings": [
+    "AREA 1.85 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 2608 x 711 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_WN1_u_phy",
+   "side": "N",
+   "macro_um": [
+    3053.08,
+    23716.8,
+    5661.56,
+    24641.28
+   ],
+   "area_mm2": 2.411,
+   "shore_um": 2608.5,
+   "depth_um": 924.5,
+   "sites": 102,
+   "signals": 26,
+   "findings": [
+    "AREA 2.41 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 2608 x 924 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_WN2_u_phy",
+   "side": "N",
+   "macro_um": [
+    167.32,
+    23716.8,
+    2775.8,
+    24641.28
+   ],
+   "area_mm2": 2.411,
+   "shore_um": 2608.5,
+   "depth_um": 924.5,
+   "sites": 93,
+   "signals": 26,
+   "findings": [
+    "AREA 2.41 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 2608 x 924 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_WN3_u_phy",
+   "side": "N",
+   "macro_um": [
+    9728.69,
+    23478.04,
+    11583.08,
+    24641.28
+   ],
+   "area_mm2": 2.157,
+   "shore_um": 1854.4,
+   "depth_um": 1163.2,
+   "sites": 84,
+   "signals": 26,
+   "findings": [
+    "AREA 2.16 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 1854 x 1163 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_ES0_u_phy",
+   "side": "S",
+   "macro_um": [
+    23189.76,
+    103.68,
+    26075.52,
+    1330.56
+   ],
+   "area_mm2": 3.54,
+   "shore_um": 2885.8,
+   "depth_um": 1226.9,
+   "sites": 152,
+   "signals": 26,
+   "findings": [
+    "SHAPE 2886 x 1227 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "NO_MACRO: die.pg.domains has no phy_macro_um (VDDPHY domain = whole window)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_ES1_u_phy",
+   "side": "S",
+   "macro_um": [
+    26289.16,
+    103.68,
+    28897.64,
+    1028.16
+   ],
+   "area_mm2": 2.411,
+   "shore_um": 2608.5,
+   "depth_um": 924.5,
+   "sites": 102,
+   "signals": 26,
+   "findings": [
+    "AREA 2.41 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 2608 x 924 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_EN0_u_phy",
+   "side": "N",
+   "macro_um": [
+    23253.4,
+    24159.41,
+    26011.88,
+    24641.28
+   ],
+   "area_mm2": 1.329,
+   "shore_um": 2758.5,
+   "depth_um": 481.9,
+   "sites": 54,
+   "signals": 26,
+   "findings": [
+    "AREA 1.33 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 2758 x 482 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_EN1_u_phy",
+   "side": "N",
+   "macro_um": [
+    26139.16,
+    24159.41,
+    28897.64,
+    24641.28
+   ],
+   "area_mm2": 1.329,
+   "shore_um": 2758.5,
+   "depth_um": 481.9,
+   "sites": 54,
+   "signals": 26,
+   "findings": [
+    "AREA 1.33 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 2758 x 482 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_WS2_u_phy",
+   "side": "S",
+   "macro_um": [
+    167.32,
+    103.68,
+    2775.8,
+    1028.16
+   ],
+   "area_mm2": 2.411,
+   "shore_um": 2608.5,
+   "depth_um": 924.5,
+   "sites": 93,
+   "signals": 26,
+   "findings": [
+    "AREA 2.41 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 2608 x 924 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_WS3_u_phy",
+   "side": "S",
+   "macro_um": [
+    9841.01,
+    103.68,
+    10203.84,
+    2343.8
+   ],
+   "area_mm2": 0.813,
+   "shore_um": 362.8,
+   "depth_um": 2240.1,
+   "sites": 28,
+   "signals": 26,
+   "findings": [
+    "AREA 0.81 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 363 x 2240 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "SITES 28 < 52 (26 signals + >= 1 ground each)",
+    "NO_MACRO: die.pg.domains has no phy_macro_um (VDDPHY domain = whole window)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_EN2_u_phy",
+   "side": "N",
+   "macro_um": [
+    20367.64,
+    23478.04,
+    22035.6,
+    24641.28
+   ],
+   "area_mm2": 1.94,
+   "shore_um": 1668.0,
+   "depth_um": 1163.2,
+   "sites": 77,
+   "signals": 26,
+   "findings": [
+    "AREA 1.94 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 1668 x 1163 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  },
+  {
+   "io": "io_lk_EN3_u_phy",
+   "side": "N",
+   "macro_um": [
+    29174.92,
+    23716.8,
+    31783.4,
+    24641.28
+   ],
+   "area_mm2": 2.411,
+   "shore_um": 2608.5,
+   "depth_um": 924.5,
+   "sites": 96,
+   "signals": 26,
+   "findings": [
+    "AREA 2.41 < 2.89 mm2 (published N7 low; central 3.36)",
+    "SHAPE 2608 x 924 um (shore x depth) fits neither 1 row (>= 3078 x 937) nor a 2x3 fold (>= 1539 x 1874)",
+    "PITCH_MIX: signal sites 150 um vs PG rows 45 um in the same rect (one bump technology per die face)"
+   ],
+   "verdict": "MISMATCH"
+  }
+ ],
+ "hbm": {
+  "io": "io_phy_hbm_u_phy_hbm",
+  "shore_um": 8657.3,
+  "need_shore_um": 7481.2,
+  "sites": 3454,
+  "signals": 1900,
+  "pg_share": 0.45,
+  "pitch_um": 55.0,
+  "verdict": "OK"
+ },
+ "ir_scaled": {
+  "lk_WS0": {
+   "trial_power_w": 0.2361,
+   "trial_worst_mv": 2.55,
+   "published_power_w": 4.37,
+   "linear_worst_mv": 47.2,
+   "pct_of_vnom": 6.74,
+   "note": "linear scaling of the standalone PDNSim result; a re-run at the published power is owed"
+  },
+  "lk_WS3": {
+   "trial_power_w": 0.2052,
+   "trial_worst_mv": 2.74,
+   "published_power_w": 4.37,
+   "linear_worst_mv": 58.4,
+   "pct_of_vnom": 8.34,
+   "note": "linear scaling of the standalone PDNSim result; a re-run at the published power is owed"
+  }
+ },
+ "power": {
+  "per_macro_w": 4.37,
+  "range_w": [
+   2.76,
+   5.04
+  ],
+  "all_windows_w": 61.2,
+  "rank_die_10_macros_w": 43.7,
+  "copy_ab_die_12_macros_w": 52.4,
+  "release_rack_die_w": 84.1,
+  "note": "RELEASE_RACK 2.4 charges 16 x 84.1 W die (old 10-04 report) PLUS 160 SerDes macros x 4.37 W; whether the 84.1 W includes the PHY is unknown (possible double count, its open item 2); the IR trial used 0.15 W/mm2 = 0.21-0.24 W per window, ~18x below the published macro power"
+ },
+ "counts": {
+  "mismatch": 14,
+  "ok": 0,
+  "note": 0
+ }
+}

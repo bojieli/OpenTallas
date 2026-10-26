@@ -1,0 +1,66 @@
+{
+  "plan": "/srv/opentallas-scratch2/claude/path-s81-ftA/phy/src/physical/die_plan/s81/die_plan.json",
+  "die": "s81",
+  "name": "phy_lk_WS0",
+  "window_um": [
+    0.0,
+    0.0,
+    2885.76,
+    545.508
+  ],
+  "area_mm2": 1.574,
+  "density_w_mm2": 2.776,
+  "power_w": 4.37,
+  "load_blocks": 198,
+  "block_um": [
+    87.447,
+    90.918
+  ],
+  "bumps": 610,
+  "bumps_vdd": 305,
+  "io_in_window": [],
+  "plan_sha256": "9340d444bd699861580b7fc00cdb5b387fc4a3a27437d17e2a36707e9a12a283",
+  "domain": "phy_lk_WS0",
+  "domain_rect_um": [
+    5875.2,
+    103.68,
+    8760.96,
+    649.188
+  ],
+  "supply": "VDDPHY",
+  "ground": "VSS",
+  "bump_pitch_um": 45.0,
+  "bump_rect_um": [
+    5938.84,
+    103.68,
+    8697.32,
+    585.548
+  ],
+  "grid": [
+    {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+        "VDDPHY",
+        "VSS"
+      ]
+    },
+    {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+        "VDDPHY",
+        "VSS"
+      ]
+    }
+  ],
+  "assumptions": [
+    "Uniform PHY density sweep; actual PHY power not yet supplied",
+    "Standalone domain with shared VSS; coupled core-ground loading excluded",
+    "Declared PG bump rows are dedicated; package/PHY signal-map collision check pending"
+  ]
+}
