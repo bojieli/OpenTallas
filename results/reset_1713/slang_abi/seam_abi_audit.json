@@ -1,0 +1,739 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/path-s81-f2/f2/asbuilt.json",
+  "modules": {
+    "ot_pl_seam_r_plq": {
+      "ports": {
+        "ck": 1,
+        "rsi": 3,
+        "d": 63,
+        "o": 63
+      },
+      "attrs": {
+        "hdlname": "ot_pl_seam_r_plq",
+        "src": "asbuilt_lib_stubs.sv:5455.8",
+        "blackbox": "00000000000000000000000000000001"
+      }
+    },
+    "ot_pl_seam_w_pl": {
+      "ports": {
+        "ck": 1,
+        "rsi": 1,
+        "i": 15,
+        "q": 15
+      },
+      "attrs": {
+        "hdlname": "ot_pl_seam_w_pl",
+        "src": "asbuilt_lib_stubs.sv:5417.8",
+        "blackbox": "00000000000000000000000000000001"
+      }
+    },
+    "ot_pl_seam_w_plr": {
+      "ports": {
+        "ck": 1,
+        "rsi": 12,
+        "rse": 1,
+        "ir": 283,
+        "q": 283
+      },
+      "attrs": {
+        "hdlname": "ot_pl_seam_w_plr",
+        "src": "asbuilt_lib_stubs.sv:5475.8",
+        "blackbox": "00000000000000000000000000000001"
+      }
+    }
+  },
+  "cell_profiles": {
+    "ot_pl_seam_w_plr": [
+      {
+        "params": {
+          "CHUNKS": 12,
+          "CHUNK_BITS": 24,
+          "RSREG": 1,
+          "W": 283
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        },
+        "count": 144
+      },
+      {
+        "params": {
+          "CHUNKS": 12,
+          "CHUNK_BITS": 24,
+          "RSREG": 1,
+          "W": 266
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        },
+        "count": 144
+      },
+      {
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "RSREG": 0,
+          "W": 66
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        },
+        "count": 156
+      },
+      {
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "RSREG": 0,
+          "W": 2
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        },
+        "count": 36
+      },
+      {
+        "params": {
+          "CHUNKS": 23,
+          "CHUNK_BITS": 24,
+          "RSREG": 1,
+          "W": 536
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        },
+        "count": 132
+      },
+      {
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "RSREG": 0,
+          "W": 63
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        },
+        "count": 240
+      },
+      {
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "RSREG": 1,
+          "W": 63
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        },
+        "count": 132
+      },
+      {
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "RSREG": 0,
+          "W": 15
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        },
+        "count": 120
+      }
+    ],
+    "ot_pl_seam_r_plq": [
+      {
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 66
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        },
+        "count": 360
+      },
+      {
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 2
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        },
+        "count": 204
+      },
+      {
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 63
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        },
+        "count": 456
+      },
+      {
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 1
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        },
+        "count": 156
+      },
+      {
+        "params": {
+          "CHUNKS": 12,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 283
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        },
+        "count": 144
+      },
+      {
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 15
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        },
+        "count": 144
+      },
+      {
+        "params": {
+          "CHUNKS": 12,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 266
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        },
+        "count": 144
+      },
+      {
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 54
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        },
+        "count": 12
+      },
+      {
+        "params": {
+          "CHUNKS": 2,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 38
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        },
+        "count": 12
+      },
+      {
+        "params": {
+          "CHUNKS": 23,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 536
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        },
+        "count": 144
+      }
+    ],
+    "ot_pl_seam_w_pl": [
+      {
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "W": 15
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        },
+        "count": 24
+      },
+      {
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "W": 54
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        },
+        "count": 12
+      },
+      {
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "W": 2
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        },
+        "count": 168
+      },
+      {
+        "params": {
+          "CHUNKS": 2,
+          "CHUNK_BITS": 24,
+          "W": 38
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        },
+        "count": 12
+      },
+      {
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "W": 1
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        },
+        "count": 156
+      },
+      {
+        "params": {
+          "CHUNKS": 23,
+          "CHUNK_BITS": 24,
+          "W": 536
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        },
+        "count": 12
+      },
+      {
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "W": 66
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        },
+        "count": 204
+      },
+      {
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "W": 63
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        },
+        "count": 84
+      }
+    ]
+  },
+  "examples": {
+    "ot_pl_seam_w_plr": [
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_0_w",
+        "params": {
+          "CHUNKS": 12,
+          "CHUNK_BITS": 24,
+          "RSREG": 1,
+          "W": 283
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_1_w",
+        "params": {
+          "CHUNKS": 12,
+          "CHUNK_BITS": 24,
+          "RSREG": 1,
+          "W": 266
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_26_w",
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "RSREG": 0,
+          "W": 66
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r1$dv_die.u_f_0L01.u_r1",
+        "cell": "u_lpl_12_w",
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "RSREG": 0,
+          "W": 2
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r1$dv_die.u_f_0L01.u_r1",
+        "cell": "u_lpl_17_w",
+        "params": {
+          "CHUNKS": 23,
+          "CHUNK_BITS": 24,
+          "RSREG": 1,
+          "W": 536
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r1$dv_die.u_f_0L01.u_r1",
+        "cell": "u_lpl_2_w",
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "RSREG": 0,
+          "W": 63
+        },
+        "ports": {
+          "ck": 1,
+          "ir": 283,
+          "q": 283,
+          "rse": 1,
+          "rsi": 12
+        }
+      }
+    ],
+    "ot_pl_seam_r_plq": [
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_11_r",
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 66
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_12_r",
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 2
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_2_r",
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 63
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_5_r",
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 1
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r1$dv_die.u_f_0L01.u_r1",
+        "cell": "u_lpl_0_r",
+        "params": {
+          "CHUNKS": 12,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 283
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r1$dv_die.u_f_0L01.u_r1",
+        "cell": "u_lpl_18_r",
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "K": 2,
+          "W": 15
+        },
+        "ports": {
+          "ck": 1,
+          "d": 63,
+          "o": 63,
+          "rsi": 3
+        }
+      }
+    ],
+    "ot_pl_seam_w_pl": [
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_18_w",
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "W": 15
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_20_w",
+        "params": {
+          "CHUNKS": 3,
+          "CHUNK_BITS": 24,
+          "W": 54
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_21_w",
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "W": 2
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_24_w",
+        "params": {
+          "CHUNKS": 2,
+          "CHUNK_BITS": 24,
+          "W": 38
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_25_w",
+        "params": {
+          "CHUNKS": 1,
+          "CHUNK_BITS": 24,
+          "W": 1
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        }
+      },
+      {
+        "parent": "col_h10_l4_lp_r0$dv_die.u_f_0L01.u_r0",
+        "cell": "u_lpl_32_w",
+        "params": {
+          "CHUNKS": 23,
+          "CHUNK_BITS": 24,
+          "W": 536
+        },
+        "ports": {
+          "ck": 1,
+          "i": 15,
+          "q": 15,
+          "rsi": 1
+        }
+      }
+    ]
+  }
+}

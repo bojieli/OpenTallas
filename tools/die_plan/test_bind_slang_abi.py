@@ -103,3 +103,33 @@ endmodule
     subprocess.run(['iverilog','-g2012','-s','tb','-o',str(tmp_path/'sim'),str(simleaf),str(top),str(tmp_path/'bound.sv'),str(tmp_path/'tb.sv')],check=True,capture_output=True,text=True)
     run=subprocess.run(['vvp',str(tmp_path/'sim')],check=True,capture_output=True,text=True)
     assert 'ABI_LOCKSTEP_PASS checks189 mutant_hits189' in run.stdout
+
+
+def test_actual_seam_headers_preserve_width_and_reset_chunks(tmp_path,monkeypatch):
+    exe=shutil.which('yosys')
+    if not exe:pytest.skip('native Yosys/Slang unavailable')
+    monkeypatch.setenv('OT_BIND_YOSYS',exe)
+    source=Path(__file__).resolve().parents[2]/'rtl/common/landed_parent/ot_pl_seam.sv'
+    if not source.is_file():pytest.skip('actual seam source not checked out')
+    top=tmp_path/'top.sv'
+    top.write_text("""module top(input ck,input [535:0]d,input [22:0]rs,output [535:0]r0,r1,w0,w1,p0,p1);
+    ot_pl_seam_r_plq #(.W(63),.K(2)) u_r0(.ck(ck),.rsi(rs[2:0]),.d(d[62:0]),.o(r0[62:0]));
+    ot_pl_seam_r_plq #(.W(536),.K(2)) u_r1(.ck(ck),.rsi(rs),.d(d),.o(r1));
+    ot_pl_seam_w_plr #(.W(2),.RSREG(0)) u_w0(.ck(ck),.rsi(rs[0]),.rse(rs[0]),.ir(d[1:0]),.q(w0[1:0]));
+    ot_pl_seam_w_plr #(.W(283),.RSREG(1)) u_w1(.ck(ck),.rsi(rs[11:0]),.rse(rs[0]),.ir(d[282:0]),.q(w1[282:0]));
+    ot_pl_seam_w_pl #(.W(15)) u_p0(.ck(ck),.rsi(rs[0]),.i(d[14:0]),.q(p0[14:0]));
+    ot_pl_seam_w_pl #(.W(536)) u_p1(.ck(ck),.rsi(rs),.i(d),.q(p1));
+    endmodule""")
+    names=['ot_pl_seam_r_plq','ot_pl_seam_w_plr','ot_pl_seam_w_pl']
+    ab={'top':'top','frontend':'slang','netlist':[str(top)],'files':[str(source)],'rtl_roots':[],
+        'slang_parameterized_blackboxes':names}
+    E.elab(ab,tmp_path,tmp_path/'after',mem_gb=4)
+    j=json.loads((tmp_path/'after/asbuilt.json').read_text());cells=j['modules']['top']['cells']
+    expected={'u_r0':(63,3),'u_r1':(536,23),'u_w0':(2,1),'u_w1':(283,12),'u_p0':(15,1),'u_p1':(536,23)}
+    for n,(w,chunks) in expected.items():
+        c=cells[n];assert E._pval(c['parameters']['W'])[1]==w
+        assert E._pval(c['parameters']['CHUNKS'])[1]==chunks
+        assert len(c['connections']['rsi'])==chunks
+        out='o' if n.startswith('u_r') else 'q'
+        assert len(c['connections'][out])==w
+        assert not j['modules'][c['type']].get('cells')
