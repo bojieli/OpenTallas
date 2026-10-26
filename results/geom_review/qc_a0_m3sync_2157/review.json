@@ -1,0 +1,22 @@
+{
+  "reviewer": "Codex",
+  "scope": "UNSELECTED MODE3/G4_ROOTS1 parent geometry proposal using new syncfault LSL child",
+  "picture": "results/qc_a0_2157/parent_plan/a0_parent_geometry.png",
+  "verdict": "PASS-COND planning/source only; no P&R authorization",
+  "findings": [
+    "Viewed both before/after parent NK/NL images. Mirrored ROM columns face inward to a56.592um halo-clear central corridor; vertical row channels remain open.",
+    "v8 template has two pairs of LSL5.4um halos overlapping because middle andleft columns abut. Move only LSL4/5 x200.448->211.248; halos then abut legally at10.8um macro separation, middle-right actualgap24.624um.",
+    "One preexisting clock pin touches a right LSL halo in each template. Move it x440.656->441.0 and move affected middle-column clock pins out of the shifted halo; all new physical pin rectangles outside child halos.",
+    "No parent outline or data-face pin moves. 42NK/41NL candidate clock declarations match private pin table; this is not qualification of the actual native RR39/35 bridge.",
+    "Wide ROM bus central corridor is reserved geometrically only; actual MODE3 per-bit reach, station sites, PG/NDR/via capacity and congestion must be measured on current-source placement. The historical MODE9R6 endpoint model is not transferred.",
+    "New LSL view absent and labeled PLANNED; ROM andNKnode views are historical and need current source/reset/policy and per-corner endpoint clock qualification. No historical FFclock or insertion mean is credited to the budget.",
+    "Regular row channels admit continuous PG planning, but actual PDN straps/native pin access are not present in this source image; final PG/clock alignment and actual sink tree review must precede execution."
+  ],
+  "next": [
+    "OWNER fault/boot contract decision; source remains unreferenced pending it",
+    "New synchronous LSL hardening with465signal/2power planned pins,99.792x140.4budget, native data/fault+reset gates and TT/FF833 SIGNED",
+    "Current-source ROM/node qualification plus real per-corner clock metadata",
+    "Actual MODE3 parent placement, per-bit reach and load/cohort census, render/review, combined signal+clock GRT0 then real-hard-child CPPR/STA"
+  ],
+  "route_permission": false
+}

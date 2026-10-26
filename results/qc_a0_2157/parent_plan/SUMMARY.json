@@ -1,0 +1,203 @@
+{
+  "nk": {
+    "before": {
+      "macro_overlaps": [],
+      "halo_clearance_failures": [
+        [
+          "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+          "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh"
+        ],
+        [
+          "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+          "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh"
+        ]
+      ],
+      "clock_taps_in_halos": [
+        [
+          "ck_t29",
+          "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh"
+        ]
+      ],
+      "outside_outline": []
+    },
+    "after": {
+      "macro_overlaps": [],
+      "halo_clearance_failures": [],
+      "clock_taps_in_halos": [],
+      "outside_outline": []
+    },
+    "moves": [
+      {
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+        "from": [
+          200.448,
+          834.432
+        ],
+        "to": [
+          211.248,
+          834.432
+        ],
+        "why": "10.8um = two5.4um halos between back-to-back LSL columns"
+      },
+      {
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "from": [
+          200.448,
+          994.944
+        ],
+        "to": [
+          211.248,
+          994.944
+        ],
+        "why": "10.8um = two5.4um halos between back-to-back LSL columns"
+      },
+      {
+        "pin": "ck_t29",
+        "from": [
+          440.656,
+          785.296
+        ],
+        "to": [
+          441.0,
+          785.296
+        ],
+        "why": "outside right LSL halo, pin-box clearance0.102um"
+      },
+      {
+        "pin": "ck_t31",
+        "from": [
+          311.696,
+          856.464
+        ],
+        "to": [
+          316.672,
+          856.464
+        ],
+        "why": "keep clock pin outside moved middle LSL halo; exact source sink radius still owed"
+      },
+      {
+        "pin": "ck_t34",
+        "from": [
+          311.568,
+          972.112
+        ],
+        "to": [
+          316.672,
+          972.112
+        ],
+        "why": "keep clock pin outside moved middle LSL halo; exact source sink radius still owed"
+      },
+      {
+        "pin": "ck_t37",
+        "from": [
+          309.456,
+          1059.6
+        ],
+        "to": [
+          316.672,
+          1059.6
+        ],
+        "why": "keep clock pin outside moved middle LSL halo; exact source sink radius still owed"
+      }
+    ],
+    "missing_views": [
+      "ot_qwen_tile_lsl_sync_fault: new physical view absent",
+      "ROMleaf: historical TT/FF views require current source/reset/policy requalification; actual endpoint CK metadata needed",
+      "NK node: historical nb1 view requires current source/reset/policy and native per-corner clock qualification"
+    ]
+  },
+  "nl": {
+    "before": {
+      "macro_overlaps": [],
+      "halo_clearance_failures": [
+        [
+          "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+          "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh"
+        ],
+        [
+          "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+          "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh"
+        ]
+      ],
+      "clock_taps_in_halos": [
+        [
+          "ck_t27",
+          "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh"
+        ]
+      ],
+      "outside_outline": []
+    },
+    "after": {
+      "macro_overlaps": [],
+      "halo_clearance_failures": [],
+      "clock_taps_in_halos": [],
+      "outside_outline": []
+    },
+    "moves": [
+      {
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+        "from": [
+          200.448,
+          834.432
+        ],
+        "to": [
+          211.248,
+          834.432
+        ],
+        "why": "10.8um = two5.4um halos between back-to-back LSL columns"
+      },
+      {
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "from": [
+          200.448,
+          994.944
+        ],
+        "to": [
+          211.248,
+          994.944
+        ],
+        "why": "10.8um = two5.4um halos between back-to-back LSL columns"
+      },
+      {
+        "pin": "ck_t27",
+        "from": [
+          440.656,
+          808.272
+        ],
+        "to": [
+          441.0,
+          808.272
+        ],
+        "why": "outside right LSL halo, pin-box clearance0.102um"
+      },
+      {
+        "pin": "ck_t32",
+        "from": [
+          313.68,
+          961.872
+        ],
+        "to": [
+          316.672,
+          961.872
+        ],
+        "why": "keep clock pin outside moved middle LSL halo; exact source sink radius still owed"
+      },
+      {
+        "pin": "ck_t35",
+        "from": [
+          314.896,
+          1112.272
+        ],
+        "to": [
+          316.672,
+          1112.272
+        ],
+        "why": "keep clock pin outside moved middle LSL halo; exact source sink radius still owed"
+      }
+    ],
+    "missing_views": [
+      "ot_qwen_tile_lsl_sync_fault: new physical view absent",
+      "ROMleaf: historical TT/FF views require current source/reset/policy requalification; actual endpoint CK metadata needed"
+    ]
+  }
+}
