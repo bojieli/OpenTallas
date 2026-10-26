@@ -6,3 +6,7 @@
 - PROTO-KITS: 26 B1 withdraw request20:19 already superseded; auditing actual queue before mutation. Station successors belong S81 KITS-SPARE, head kit physical belongs S81.
 - GEOM-REVIEW: last swept20:12; 46 FAIL replies diagnosed superseded/clock structural, 5 UNREQUESTED remain (HBM3, S81core1,TKM1), no unanswered requested review. Audit these queue rows and withdraw only proven superseded; next new QC clock review before GRT.
 - TRIAL generic: TRIAL-S81/HBM/QK current design jobs owned physical subgroups; older trials historical. No obsolete SS or lost epyc3 rerun launched.
+
+2026-10-25 21:56 PDT: actual QC NDR GRT0 collected; model-only padded wire/30koverlappingcells root-caused; legal-site TT/FFlive, geometric-fold fallback child active; nofalsefreeze.
+
+2026-10-25 22:16 PDT: inheritedQCSTAcollectedoldbudgetFAIL(+555.274TT/-73.026FF,pair119/110.22); stationawaret53prototype17268FAILlocalizedFT1mouth,S81A18executingfix. ActualclockGRT0qualifiedmixedRCNOTRUN/toolAPIrootcause; physicalfoldhelperownsconverter+structuralfallback. Sourcecodex/dieproto-2145@c623f99d8.
