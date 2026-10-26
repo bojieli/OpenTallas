@@ -1092,5 +1092,10 @@
   },
   "component_qualification": "results/arch/s81_hcore_native_profile_1309/record.json",
   "compiler_gate": "Actual-program last load -> first IV guard must include +1 sender stage; +2 core readiness must be included in boot/start. Component PASS is not G5."
- }
+ },
+ "collect_memories": true,
+ "native_glue_types": [
+  "$mem_v2"
+ ],
+ "native_glue_note": "TOK-SCHED 10-25: v3c strict bind EMIT u_s_3N.u_slice.lf[2].u_lf.u_vp.\\$1004 \\$memrd_v2 in a dissolved parent; Codex 861bf4f4f1/c4c5f11e99 opt-in native backend keeps the inferred array (memory_collect only, no memory_map/async2sync/opt)"
 }
