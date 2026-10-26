@@ -789,3 +789,5 @@ CODEX: 2026-10-25 14:15 PDT HANDOFF to Claude on explicit RESET: main05f9f5c690 
 CODEX: 2026-10-25 17:13 KV takeover resumed. Existing PC5/ASTK5/m6 jobs collected live, no duplicates; parent repairs13 native physical-type structural splits, TOKEN actualHOST/currentimage, KITS concreteCORE PG. Inventory codex-kv-1713-inventory.md; work until explicitRESET.
 
 CODEX: 2026-10-25 17:34 PDT main6de9fd7815 pushed/hub current: exact native libraries, complete signoff bundles, explicit FF taps, source_bits, PHY tap, cross-side LEC and canary ownership/capacity helpers. Focused checks PASS; no new physical signoff. All lanes active in coord/codex-*-1713-inventory.md.
+
+CODEX: 2026-10-25 17:41 PDT mainb610b5a5c9 current/pushed after F2/HBM/admission batch3eaf and native KV timing/multi-root helper batch. Focused38+22PASS, gate guardPASS, live inputs preserved. HEAD128realROM outputsPASS/model119cycles earlier; QC441 contractSTA and missingcontrols remain explicitFAIL/NOTRUN, NLfresh child qualification assigned.
