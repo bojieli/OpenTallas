@@ -1,0 +1,68 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+OT_STD_INSTS 142
+OT_PIN_SNAP moved 35 max_nm 24
+[INFO GRT-0020] Min routing layer: M8
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0088] Layer M9      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 3780
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 94
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal          0             0          0.00%
+M5         Vertical            0             0          0.00%
+M6         Horizontal          0             0          0.00%
+M7         Vertical            0             0          0.00%
+M8         Horizontal    2037184       1222003          40.02%
+M9         Vertical      1642220        984603          40.04%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 1586
+[INFO GRT-0198] Via related Steiner nodes: 0
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 2229
+[INFO GRT-0112] Final usage 3D: 14433
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4                   0             0            0.00%             0 /  0 /  0
+M5                   0             0            0.00%             0 /  0 /  0
+M6                   0             0            0.00%             0 /  0 /  0
+M7                   0             0            0.00%             0 /  0 /  0
+M8             1222003          3082            0.25%             0 /  0 /  0
+M9              984603          4664            0.47%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          2206606          7746            0.35%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 26384 um
+[INFO GRT-0014] Routed nets: 83
+[INFO GRT-0303] Global routing runtime = 00:00:00
+OT_GCELL 180 x 152 pitch_nm 10800
+OT_T grt 405 ms
+EXIT 0
