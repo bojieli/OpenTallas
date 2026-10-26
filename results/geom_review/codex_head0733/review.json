@@ -1,0 +1,10 @@
+{
+  "picture": "results/geom_review/codex_head0733/review.png",
+  "verdict": "PASS-COND CTS-ONLY",
+  "findings": [
+    "Viewed actual c3q placement: two ROMs leave a clear 23um W/E centre channel. Four quadrant nodes are outside the ROM rectangles with >17um side clearance.",
+    "Wide datapaths remain beside ROMs; NW sink count 2953 vs8200..8955 in other quadrants explains why shared global cluster size created44vs123..129 leaves. V4 uses ceil(actual sinks/128) per quadrant in separate CTS sessions, deterministic before measurement.",
+    "No clock-node, macro outline, data port, data pipeline or core RTL changes. Core reset input is restored, dedicated FT reset is a polarity-preserving BUF with +0 added cycles; skip declared FT ports in face-flop cloning.",
+    "No GRT/DRT/sign-off authorization: master-plan slice, dedicated FT timing, full reach census and parent binding still required."
+  ]
+}
