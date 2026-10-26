@@ -37,3 +37,8 @@ def test_profile_fields_obey_production_clock_schema():
     errors=[]
     schema._check(M.PROFILE,clock_schema,"clock",errors)
     assert errors==[]
+
+
+def test_profile_covers_registered_control_pins():
+    # LC1: START/reset pin registers at the E face must not ride a data tap 500 um away
+    assert M.PROFILE['control_sinks'] is True
