@@ -61,7 +61,11 @@ DIES = [("s81", "s81", "s81"), ("s81_head", "s81_head", "s81_head"), ("qwen_comp
         ("qwen_kvsys", "qwen_kvsys", "qwen_kvsys"), ("hbm", "hbm_arch/B2n", "B2n")]
 CANONICAL_SPLIT = "physical/die_plan/hbm/cores/harden/canonical_ports_split.json"   # HBM split piece -> RTL master
 STATES = ["PLAN-STRUCTURAL", "NEEDS-KIT", "KIT-PLACED", "GEOM-REQ", "ROUTING", "REVIEW", "FIX", "WAIT-PARENT",
-          "SIGNED-UNVERSIONED", "SIGNED"]
+          "SIGNED-UNVERSIONED", "SIGNED", "GENERATED"]
+# generated memory macros (tools/mem_compiler: ROM/SRAM compilers, owner 2026-10-25 ROM-MACRO): one content-independent
+# LEF/Liberty/behavioural view per shape, built by the generator, never kitted or routed -- ROM content is per-instance
+# via-map data (rom_gen.py personalise / verify), so a macro is never a design to harden
+GENERATED_MACRO = re.compile(r"^physical/asap7_memory_macros(?:_v2)?/")
 PROV_RULE = "v1"     # release tree cache whose records carry src_commit + flow_tag ('versioned'), closure order rule 3
 UNOWNED_S = 60 * 60
 OWNER_WINDOW_S = 24 * 3600
@@ -85,6 +89,7 @@ NEXT = {
     "WAIT-PARENT": "matching actual parent seam receipt required; preserve physical views",
     "SIGNED-UNVERSIONED": "sign-off record lacks src commit + flow tag (closure order rule 3): re-run sign-off at a flow tag",
     "SIGNED": "-",
+    "GENERATED": "- (generated macro view; per-content check = tools/mem_compiler/rom_gen.py verify)",
 }
 
 
@@ -99,6 +104,8 @@ def parse_ts(line):
 
 
 def default_owner(die, kind, item):
+    if kind == "macro":
+        return "ROM-MACRO"
     if die == "s81":
         return "S81-CORES" if kind == "core" else "S81-PLAN"
     if die == "s81_head":
@@ -240,8 +247,9 @@ def plan_items(die, plan, pins=None, masters=None, bound=None):
             ps = pin_sig(pins.get(h.get("pins_file"))) if h.get("pins_file") else None
             outl = "x".join(f"{float(x):g}" for x in (h.get("outline_um") or []))
             key = (masters.get(m, m), outl, ps[1]) if ps else (m, "", "")
-            d = cores.setdefault(key, dict(modules=set(), replicas=0, pin_ids=set()))
+            d = cores.setdefault(key, dict(modules=set(), replicas=0, pin_ids=set(), generated=True))
             d["modules"].add(m)
+            d["generated"] = d["generated"] and bool(GENERATED_MACRO.match(h.get("lef") or ""))
             d["replicas"] += ninst.get(k, 0) if (plan or {}).get("partitions") else 1
             if ps:
                 d["pin_ids"].add(ps[0])
@@ -256,8 +264,9 @@ def plan_items(die, plan, pins=None, masters=None, bound=None):
         ambig = any(n_of[m] > 1 for m in ms)
         sha = min((x for x in d["pin_ids"] if re.fullmatch(r"[0-9a-f]{12}", x)), default="")
         item = f"{rep}_{sha}" if (n_of[rep] > 1 and sha) else rep
-        out.append(dict(die=die, item=item, kind="core", module=rep, members=ms, modules=ms, replicas=d["replicas"],
-                        pin_ids=d["pin_ids"], ambiguous=ambig, design="core:" + "|".join(key)))
+        out.append(dict(die=die, item=item, kind="macro" if d["generated"] else "core", module=rep, members=ms,
+                        modules=ms, replicas=d["replicas"], pin_ids=d["pin_ids"], ambiguous=ambig,
+                        design="core:" + "|".join(key)))
     return out
 
 
@@ -566,7 +575,9 @@ def build(inp, now=None):
             ev, state, why = None, None, ""
             skey = next((x for x in [it["item"], it["module"]] + list(it.get("members") or []) + list(it.get("modules") or [])
                          if x in struct), None)
-            if k in signed:
+            if it["kind"] == "macro":
+                state, why = "GENERATED", f"generated memory macro view ({it['module']}; tools/mem_compiler)"
+            elif k in signed:
                 state, why = "SIGNED", signed[k]
             elif k in unversioned and not live_route:
                 state, why = "SIGNED-UNVERSIONED", unversioned[k]
@@ -618,7 +629,7 @@ def build(inp, now=None):
             rows.append(dict(die=die, item=it["item"], kind=it["kind"], state=state, owner=owner, live_job=live,
                              last_activity=age, next_step=nxt, default_owner=dflt, evidence=(why or "").replace("\t", " ")[:200],
                              replicas=it.get("replicas", ""), members=_members(it), _last=last))
-            if state != "SIGNED" and not e["live"] and (not last or now - last > UNOWNED_S):
+            if state not in ("SIGNED", "GENERATED") and not e["live"] and (not last or now - last > UNOWNED_S):
                 unowned.setdefault((die, dflt), []).append((last, it["item"], state, owner))
 
     for (die, owner), lst in sorted(unowned.items()):
@@ -648,9 +659,12 @@ def summary(rows, unowned, inp):
         c = {s: sum(1 for r in rs if r["state"] == s) for s in STATES}
         un = sum(len(v) for (d, _), v in unowned.items() if d == die)
         nt = sum(1 for r in rs if r["kind"] == "type")
+        nm = sum(1 for r in rs if r["kind"] == "macro")
         rep = sum(int(r["replicas"] or 0) for r in rs if r["kind"] == "core")
+        mrep = sum(int(r["replicas"] or 0) for r in rs if r["kind"] == "macro")
         out.append(f"#   {die:13s} {len(rs):4d}: " + " ".join(f"{s} {c[s]}" for s in STATES if c[s]) + f" | UNOWNED {un}"
-                   f" | types {nt} cores {len(rs) - nt} (placed core replicas {rep})")
+                   f" | types {nt} cores {len(rs) - nt - nm} (placed core replicas {rep})"
+                   + (f" generated macros {nm} (placed {mrep})" if nm else ""))
     return out
 
 
