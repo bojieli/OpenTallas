@@ -13,8 +13,8 @@ import schema as S
 from gen_phys import type_pins
 from tools.die_trial.legal_sites import RowAllocator
 
-REACH=379.0  # reserve 2*12 um cell displacement plus data-pin offsets below405
-RADIUS=12.0
+REACH=323.0  # reserve 2*40um cell displacement plus data-pin offsets below405
+RADIUS=40.0
 CELL=np.array([1.404,.27])
 
 
@@ -119,9 +119,15 @@ def main():
             col=round((c['origin_um'][0]-8.64)/233.28)
             c['origin_um'][0]=[14.592,256.512,498.432][col]
             c['origin_um'][1]=round(c['origin_um'][1]+17.28,6)
-    for tn in a.types.split(','):rep[tn]=repair_type(raw,tn)
+    shutil.copytree(a.src,a.out)
+    try:
+        for tn in a.types.split(','):rep[tn]=repair_type(raw,tn)
+    except Exception as error:
+        (a.out/'failed_partial_plan.json').write_text(json.dumps(raw,indent=1)+'\n')
+        (a.out/'perbit_m5_failure.json').write_text(json.dumps(dict(verdict='FAIL',reason=str(error),completed_types=rep,not_release_ready=True),indent=1)+'\n')
+        raise
     model=S.Plan(raw);raw['latency']['lanes']={lid:model.lane_latency(lid) for lid in model.lanes}
     delta={lid:model.lane_latency(lid)['cycles']-before.lane_latency(lid)['cycles'] for lid in model.lanes if model.lane_latency(lid)['cycles']!=before.lane_latency(lid)['cycles']}
-    shutil.copytree(a.src,a.out);(a.out/'die_plan.json').write_text(json.dumps(raw,indent=1)+'\n');(a.out/'perbit_m5_report.json').write_text(json.dumps(dict(types=rep,lane_cycle_delta=delta,scope='geometry proposal; internal station/reset/clock rebuild and review required'),indent=1)+'\n')
+    (a.out/'die_plan.json').write_text(json.dumps(raw,indent=1)+'\n');(a.out/'perbit_m5_report.json').write_text(json.dumps(dict(types=rep,lane_cycle_delta=delta,scope='geometry proposal; internal station/reset/clock rebuild and review required'),indent=1)+'\n')
     print('COMPLETE',json.dumps(delta),flush=True)
 if __name__=='__main__':main()
