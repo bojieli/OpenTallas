@@ -62,7 +62,16 @@ def path_for(a,b,targets):
 def repair_type(raw,tn):
     _NEIGHBORS.clear()
     t=raw['partition_types'][tn];w,h=t['outline_um']
-    for c in t.get('hard_cores',[]):
+    cores=t.get('hard_cores',[])
+    for c in cores:
+        x,y=c['origin_um'];cw,ch=c['outline_um']
+        if min(x,y)<-1e-6 or x+cw>w+1e-6 or y+ch>h+1e-6:
+            raise ValueError(f'{tn}/{c["inst"]}: core outside unchanged outline')
+        for d in cores:
+            if d is c:continue
+            u,v=d['origin_um'];dw,dh=d['outline_um']
+            if min(x+cw,u+dw)>max(x,u)+1e-6 and min(y+ch,v+dh)>max(y,v)+1e-6:
+                raise ValueError(f'{tn}: overlap {c["inst"]}/{d["inst"]}')
         if int(c.get('obs_max','M7')[1:])>5:raise ValueError(tn+': wire-over-core requires M5 ceiling')
     boxes=list(S.placed_macro_boxes(t,halo=8.64).values())
     # Full footprints must clear the halo, not merely cell centres.
@@ -152,7 +161,7 @@ def main():
             c['origin_um'][1]=round(c['origin_um'][1]+17.28,6)
         if 'q_b110' in a.types.split(','):
             cores=sorted(raw['partition_types']['q_b110']['hard_cores'],key=lambda c:c['origin_um'][1])
-            for c,y in zip(cores,[77.76,449.28,820.8,1192.32]):c['origin_um'][1]=y
+            for c,y in zip(cores,[60.48,432.0,803.52,1175.04]):c['origin_um'][1]=y
     if a.su_corridors:
         for tn in a.types.split(','):
             if tn in ('q_su21','q_su31'):
@@ -164,7 +173,7 @@ def main():
             elif tn=='q_su30':
                 for c in raw['partition_types'][tn]['hard_cores']:
                     if c['outline_um'][0]<700:continue
-                    x,y=c['origin_um'];c['origin_um'][0]=x+(51.84 if x in(803.52,1270.08) else 0)
+                    x,y=c['origin_um'];c['origin_um'][0]=x+(17.28 if x in(803.52,1270.08) else 0)
                     c['origin_um'][1]=34.56 if y<400 else 803.52
     shutil.copytree(a.src,a.out)
     try:
