@@ -1,0 +1,386 @@
+{
+ "plan": "physical/die_plan/s81_head/die_plan.json",
+ "plan_sha256": "4e6aaa8183d5fb2d5e7f2e268b4b5746aac641c0f174c82f7db7e462e42e268a",
+ "die": "s81_head",
+ "outline_um": [
+  17521.92,
+  17556.48
+ ],
+ "area_mm2": 307.62,
+ "parts": 326,
+ "types": 16,
+ "ports": 428,
+ "lanes": 328,
+ "image": "openroad/orfs:latest",
+ "abstracts": {
+  "hd_ctl": {
+   "source": "plan abstract",
+   "pins": 7254,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_host": {
+   "source": "plan abstract",
+   "pins": 3130,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_lep0N": {
+   "source": "plan abstract",
+   "pins": 7234,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_mesh": {
+   "source": "plan abstract",
+   "pins": 2186,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_serdes": {
+   "source": "plan abstract",
+   "pins": 1028,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_spn": {
+   "source": "plan abstract",
+   "pins": 6156,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_spn_end": {
+   "source": "plan abstract",
+   "pins": 5024,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_st_k5": {
+   "source": "plan abstract",
+   "pins": 2316,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_st_m": {
+   "source": "plan abstract",
+   "pins": 260,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_st_n3": {
+   "source": "plan abstract",
+   "pins": 4112,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_st_n4": {
+   "source": "plan abstract",
+   "pins": 4112,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_st_str": {
+   "source": "plan abstract",
+   "pins": 2056,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_st_turn": {
+   "source": "plan abstract",
+   "pins": 2056,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_tile": {
+   "source": "plan abstract",
+   "pins": 1132,
+   "cores": 5,
+   "cores_with_view": 5,
+   "core_area_um2": 480752.6,
+   "core_top_layers": [
+    "M7"
+   ]
+  },
+  "hd_turn_a": {
+   "source": "plan abstract",
+   "pins": 1132,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  },
+  "hd_turn_b": {
+   "source": "plan abstract",
+   "pins": 1132,
+   "cores": 0,
+   "cores_with_view": 0,
+   "core_area_um2": 0,
+   "core_top_layers": []
+  }
+ },
+ "closed_views": 0,
+ "hard_cores": 1320,
+ "hard_cores_with_view": 1320,
+ "die_io": [
+  {
+   "name": "io_lk_WN2_u_phy",
+   "part": "lk_WN2",
+   "iface": "serdes",
+   "rect_um": [
+    103.68,
+    16439.56,
+    2989.44,
+    17452.8
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": false
+  },
+  {
+   "name": "io_lk_WN1_u_phy",
+   "part": "lk_WN1",
+   "iface": "serdes",
+   "rect_um": [
+    2989.44,
+    16439.56,
+    5875.2,
+    17452.8
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": false
+  },
+  {
+   "name": "io_lk_WN0_u_phy",
+   "part": "lk_WN0",
+   "iface": "serdes",
+   "rect_um": [
+    5875.2,
+    16439.56,
+    8760.96,
+    17452.8
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": false
+  },
+  {
+   "name": "io_lk_WN3_u_phy",
+   "part": "lk_WN3",
+   "iface": "serdes",
+   "rect_um": [
+    8760.96,
+    16439.56,
+    11646.72,
+    17452.8
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": false
+  },
+  {
+   "name": "io_lk_EN0_u_phy",
+   "part": "lk_EN0",
+   "iface": "serdes",
+   "rect_um": [
+    11646.72,
+    16439.56,
+    14532.48,
+    17452.8
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": false
+  },
+  {
+   "name": "io_lk_EN1_u_phy",
+   "part": "lk_EN1",
+   "iface": "serdes",
+   "rect_um": [
+    14532.48,
+    16439.56,
+    17418.24,
+    17452.8
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": false
+  },
+  {
+   "name": "io_lk_WS1_u_phy",
+   "part": "lk_WS1",
+   "iface": "serdes",
+   "rect_um": [
+    103.68,
+    103.68,
+    2989.44,
+    1116.92
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": false
+  },
+  {
+   "name": "io_lk_WS0_u_phy",
+   "part": "lk_WS0",
+   "iface": "serdes",
+   "rect_um": [
+    2989.44,
+    103.68,
+    5875.2,
+    1116.92
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": false
+  },
+  {
+   "name": "io_lk_HOST0_u_phy",
+   "part": "lk_HOST0",
+   "iface": "serdes",
+   "rect_um": [
+    5875.2,
+    103.68,
+    8760.96,
+    1116.92
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": true
+  },
+  {
+   "name": "io_lk_HOST1_u_phy",
+   "part": "lk_HOST1",
+   "iface": "serdes",
+   "rect_um": [
+    8760.96,
+    103.68,
+    11646.72,
+    1116.92
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": true
+  },
+  {
+   "name": "io_lk_ES0_u_phy",
+   "part": "lk_ES0",
+   "iface": "serdes",
+   "rect_um": [
+    11646.72,
+    103.68,
+    14532.48,
+    1116.92
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": false
+  },
+  {
+   "name": "io_lk_ES1_u_phy",
+   "part": "lk_ES1",
+   "iface": "serdes",
+   "rect_um": [
+    14532.48,
+    103.68,
+    17418.24,
+    1116.92
+   ],
+   "sites": 114,
+   "signals": 26,
+   "host": false
+  }
+ ],
+ "clock_tree": {
+  "leaf_um": 600.0,
+  "rep_um": 450.0,
+  "buffer": "BUFx24_ASAP7_75t_R",
+  "wire_r_kohm_um": 0.0043358024999999994,
+  "wire_c_ff_um": 0.10824363000000001,
+  "tap_load_ff": 3.0,
+  "nodes": 2031,
+  "leaves": 1012,
+  "repeaters": 726,
+  "taps": 3824,
+  "wire_um": 1858146.2,
+  "levels": 10
+ },
+ "grt": {
+  "ft_bits": 33640,
+  "ft_slot_instances": 100,
+  "reset_taps": 326,
+  "adjust": {
+   "M4": 0.75,
+   "M5": 0.75,
+   "M6": 0.75,
+   "M7": 0.75,
+   "M8": 1.0,
+   "M9": 1.0
+  },
+  "coarse_m123_um": 0.72,
+  "clock_reserve_rects": 9678,
+  "pg_stripes": 8118,
+  "abutted_seam_bits": 213050,
+  "channel_ports": 0
+ },
+ "psm": {
+  "density_w_mm2": 0.15,
+  "total_w": 44.0,
+  "bumps": 11628,
+  "bumps_vdd": 5814,
+  "bump_pitch_um": 150.0,
+  "io_windows": 12,
+  "pg": [
+   {
+    "layer": "M8",
+    "width_um": 0.48,
+    "pitch_um": 8.64,
+    "offset_um": 4.32,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   },
+   {
+    "layer": "M9",
+    "width_um": 0.48,
+    "pitch_um": 8.64,
+    "offset_um": 4.32,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   }
+  ]
+ },
+ "sta": {
+  "standin_flops": 426100,
+  "seam_bits": 213050
+ }
+}

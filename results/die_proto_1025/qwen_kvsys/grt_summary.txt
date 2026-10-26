@@ -1,0 +1,33 @@
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   380909776      94893390          75.09%
+M5         Vertical     378669737      94295138          75.10%
+M6         Horizontal   353334129      88128802          75.06%
+M7         Vertical     394170484      97821875          75.18%
+---------------------------------------------------------------
+
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4            94893390       5826863            6.14%             0 /  0 /  0
+M5            94295138       4299935            4.56%             0 /  0 /  0
+M6            88128802       9408880           10.68%             0 /  0 /  0
+M7            97821875       8463254            8.65%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        375139205       27998932            7.46%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 310713256 um
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:53.70
+	Maximum resident set size (kbytes): 6081304
+EXIT 0
+image openroad/orfs:latest sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 host key-cardinal start 2026-10-25T06:45:48-07:00
+end 2026-10-25T06:49:42-07:00 exit 0

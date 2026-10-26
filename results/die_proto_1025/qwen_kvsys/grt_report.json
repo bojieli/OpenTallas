@@ -1,0 +1,65 @@
+{
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 94893390,
+   "demand": 5826863,
+   "usage_pct": 6.14,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 94295138,
+   "demand": 4299935,
+   "usage_pct": 4.56,
+   "overflow": 0
+  },
+  "M6": {
+   "resource": 88128802,
+   "demand": 9408880,
+   "usage_pct": 10.68,
+   "overflow": 0
+  },
+  "M7": {
+   "resource": 97821875,
+   "demand": 8463254,
+   "usage_pct": 8.65,
+   "overflow": 0
+  }
+ },
+ "total_overflow": 0,
+ "wirelength_um": 310713256.0,
+ "errors": [],
+ "pin_access_warnings": 0,
+ "pin_access_no_ap": {},
+ "pin_access_done": false,
+ "reach": {},
+ "done": true,
+ "peak_rss_gb": 5.8,
+ "wall_s": 233.7,
+ "marks_s": {
+  "floorplan": 8,
+  "placed": 8,
+  "obs": 8,
+  "grt": 233,
+  "guides": 233
+ },
+ "grid_lines": [],
+ "exit": "0"
+}
