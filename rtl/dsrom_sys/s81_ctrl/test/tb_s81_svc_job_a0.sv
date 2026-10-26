@@ -9,6 +9,7 @@ ot_s81_svc_job_a0 #(.MUT(MUT)) d(.ck(ck),.rs_n(rn),.j_cmd(jc),.j_dn(db),.q(q),.c
 integer checks=0,errors=0,done=0,passed=0,clean_done=0,k,j,seed=SEED;reg[511:0] word;
 always @(posedge ck) begin
  if(rn&&qa[0])passed=passed+1;
+ if(rn&&qa!==qb)begin errors=errors+1;if(errors<4)$display("QUERY_CONSUME_MISMATCH cycle%0d",checks);end
  #0.1;
  if(rn)begin
  checks=checks+1;

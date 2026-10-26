@@ -1,0 +1,8 @@
+MISMATCH cycle11 dn0/0
+MISMATCH cycle26 dn0/0
+MISMATCH cycle41 dn0/0
+SVC_JOB_A0 FAIL checks2067 errors1086 done67 passed64
+- rtl/dsrom_sys/s81_ctrl/test/tb_s81_svc_job_a0.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.003 s; speed 1.424 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB
