@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.kv.core_latency_whatif.v1",
+ "lane": "KV-CORE-LAT-HEAD 2026-10-26",
+ "basis": "CTS-only what-ifs on copies of GEOM-reviewed placements (m6 e0/e2/e6, e1f, pv3); TT NLDM, kit setRC_rcx placement RC, source latency zeroed; pinflops = regs with a port in their data fan-in/fan-out. Diagnostic, never routed; NOT evidence for sign-off (no master-plan slice, entry emulated).",
+ "root_cause": "clock pin = first-listed plan clock pin (kv_core_rtl.py) on the core EDGE/CORNER (heads N-face x~3-13 um; pv_pair N-face): long entry wire + repeater + root ~80-94 ps before the H-tree root; lane/group taps (head_lane_taps.tcl, pv_pair_taps.tcl) add a tap stage and TritonCTS latency balancing pads every tap to the deepest one (head6: 4 delay buffers ~92 ps on every lane, TT 368-388).",
+ "variants_TT_pinflop_mean_ps": {
+  "v1 rest-split taps (1525/60um)": {"e0": 302.6, "e1": 290.0, "e2": 325.6, "e6": 315.2},
+  "v3 all-groups split taps (500/60um)": {"e0": 320.0, "e1": 305.6, "e2": 319.4, "e6": 317.8},
+  "v4 all-groups split taps (300/40um)": {"e0": 329.1, "e1": 317.3, "e2": 328.9, "e6": 324.5},
+  "v5 12.8 structure: centre clock entry + ONE symmetric TritonCTS H-tree, no taps": {"e0": 244.6, "e1": 242.2, "e2": 239.0, "e6": 239.1, "kv3_pv_pair": 228.7},
+  "pv_pair pv3 as reviewed (16 taps)": 292.5, "pv_pair 125 chunk taps": 285.9
+ },
+ "conclusion": "more taps = deeper top tree + more balancing pads (worse). 12.8 centre entry + one symmetric H-tree lands heads at 239-245 TT (spread 13-20 ps, 0 delay buffers, path depth 7-8 for all four types) and pv_pair at 228.7 (5 balance delay buffers between the SRAM-CLK subtree and the register tree; centre-to-corner ~285 um > 200 um => 12.8b internal H-tree with islands needed for pv_pair).",
+ "needs": "KV master plan (12.7/12.8a) clock-entry island at the core centre for kv3_head_eighth_e0..e7 (108,108) and kv3_pv_pair (190.08,95.04); kit PRE_CTS = max_fanout only, CTS_ARGS -sink_clustering_enable -repair_clock_nets (no head_lane_taps / pv_pair_taps). Routed-RC TT/FF + related-pair CPPR re-check owed (lane taps were introduced for FF hold CPPR, GEOM-REVIEW-4)."
+}
