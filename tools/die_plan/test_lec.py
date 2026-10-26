@@ -764,3 +764,34 @@ def test_gate_side_cohort_representative_not_constant_differs(tmp_path, monkeypa
     lec.correspond(L, tmp_path, 100, [])
     m, _ = L.build(with_compare=True, with_hyp=True)
     assert _sim_prove(m)["ff:u_dut.oA"] == "differs"
+
+
+def test_kept_wire_alias_copies_preserve_distinct_flops(tmp_path):
+    keep=tmp_path/'gold.keep'
+    keep.write_text("lec_top/u_dut.copy0"+chr(10)+"lec_top/u_dut.copy1"+chr(10))
+    alias=keep.with_suffix('.aliases.json')
+    for count in (1,2):
+        g,gm=_seq(tmp_path,'wiregold',['d'],['copy0','copy1'],
+                  lambda m,x:{'copy0':x['d'],'copy1':x['d']})
+        t,tm=_seq(tmp_path,'wiregate',['d'],['port'+str(i) for i in range(count)],
+                  lambda m,x:{'port'+str(i):x['d'] for i in range(count)})
+        L=lec.Lec(g,gm,t,tm)
+        # Each kept copy's Q also drives an output alias. Neither spelling is
+        # used as the gold AIG key; the mapped gate uses the output spelling.
+        alias.write_text(json.dumps({'modules':{lec.WRAP:{'netnames':{
+            'u_dut.copy0':{'bits':[10]},'u_dut.port0':{'bits':[10]},
+            'u_dut.copy1':{'bits':[11]},'u_dut.port1':{'bits':[11]}}}}}))
+        assert bool(lec.kept_registers(L,keep)[1]) == (count<2)
+        if count==2:
+            # Corrupt alias wiring must not re-use port0 for both copies.
+            d=json.loads(alias.read_text());d['modules'][lec.WRAP]['netnames']['u_dut.copy1']['bits']=[10]
+            alias.write_text(json.dumps(d))
+            assert lec.kept_registers(L,keep)[1]
+    alias.unlink()
+    assert lec.kept_registers(L,keep)[1]
+
+
+def test_gold_records_kept_wire_aliases():
+    s=lec.gold_script({'VERILOG_FILES':'a.v','DESIGN_NAME':'t'},'/k','verilog',[],'s.v','w.v','f.v','/o/gold')
+    assert 'write_json /o/gold.aliases.json' in s
+    assert s.index('write_json') < s.index('memory -nomap')

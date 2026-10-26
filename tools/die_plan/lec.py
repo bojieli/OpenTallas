@@ -252,6 +252,7 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out):
           # strided selects expand to 31M cells (77 GB) in techmap; with them 263k cells, 1.2 GB
           "opt_expr -keepdc", "opt_clean", "wreduce -keepdc", "peepopt", "opt_clean", "wreduce -keepdc", "opt_clean",
           "flatten -noscopeinfo", "opt_clean", f"select -write {out}.keep w:* a:lec_keep %i",
+          "select -clear", f"write_json {out}.aliases.json",
           # -nordff: memory_dff would merge an address / data register into a synchronous read port, and memory_map
           # then re-creates it as an anonymous '$...$rdreg' flop that no key point names (kv3_astk zn sd[k]: the
           # zq[5:2] address register became 4 unnamed gold latches, so every oa bit was UNPROVEN); the reference keeps
@@ -1518,6 +1519,63 @@ def drop_failed(L, bad):
         L.hyp.pop(("both" if sd == "bothg" else sd, k), None)
 
 
+
+def kept_wire_alias_copies(L, declared, aliases_file):
+    """Recognize RTL Q-wire aliases while requiring one distinct gate FF per kept bit.
+
+    The JSON is captured before register mapping from the same golden assembly.
+    An alias is wiring identity, not merely an equal-value replica hypothesis.
+    """
+    p = Path(aliases_file)
+    if not p.is_file():
+        return set()
+    nets = json.loads(p.read_text())["modules"][WRAP]["netnames"]
+    bit_names, wire_bits = collections.defaultdict(set), {}
+    for name, net in nets.items():
+        name = GENBLK.sub("", name.replace("\\", "").replace(" ", ""))
+        bits, offset = net["bits"], int(net.get("offset", 0))
+        for i, bit in enumerate(bits):
+            if not isinstance(bit, int):
+                continue
+            ix = offset + (len(bits)-1-i if net.get("upto", 0) else i)
+            names = {"ff:" + name + "[" + str(ix) + "]"}
+            if len(bits) == 1 and offset == 0:
+                names.add("ff:" + name)
+            for n in names:
+                wire_bits[n] = bit
+            bit_names[bit].update(names)
+    old_names = {v:k for k,v in (a.split("->",1) for a in L.aliased)}
+    gate, renamed = set(L.tp), collections.defaultdict(set)
+    for (side,c),h in L.hyp.items():
+        if side == "gate" and h[0] == "eq" and h[1] == "gold":
+            renamed[h[2]].add(c)
+    candidates = {}
+    for k in declared:
+        if L.hyp.get(("gold",k), ("",))[0] == "const":
+            continue
+        old = old_names.get(k,k)
+        choices = set(bit_names.get(wire_bits.get(old), ())) & gate
+        if k in gate:
+            choices.add(k)
+        choices.update(renamed[k])
+        candidates[k] = choices
+    assigned = {}
+    def assign(k, seen):
+        for c in sorted(candidates[k]):
+            if c in seen:
+                continue
+            seen.add(c)
+            if c not in assigned or assign(assigned[c], seen):
+                assigned[c] = k
+                return True
+        return False
+    # All kept demands participate, including the already name-matched ones.
+    # This prevents an alias from reusing a gate flop already counted elsewhere.
+    if all(assign(k,set()) for k in sorted(candidates, key=lambda k:len(candidates[k]))):
+        return set(candidates)
+    return set()
+
+
 def kept_registers(L, keep_file):
     """Kept-register check (fail-closed, PATH-KV-PC3 10-25): every RTL register bit the design declares kept --
     a (* keep *) register or a flop inside a keep_hierarchy cell (pin flops, placement replicas) -- must be a flop of
@@ -1551,6 +1609,7 @@ def kept_registers(L, keep_file):
         if m and m.group(1) in relaid:
             gold_rel[m.group(1)] += 1
     renamed = {h[2] for (sd, c), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[2] in L.gp}
+    alias_copies = kept_wire_alias_copies(L, declared, Path(keep_file).with_suffix(".aliases.json"))
     missing, const = [], []
     for k in sorted(declared):
         if k in gate or k in renamed:
@@ -1562,7 +1621,8 @@ def kept_registers(L, keep_file):
         if h and h[0] == "const":
             const.append(k)
             continue
-        missing.append(k)
+        if k not in alias_copies:
+            missing.append(k)
     return sorted(declared), missing, const
 
 
