@@ -31,12 +31,20 @@ if [ "$PROFILE" = closing_allq ]; then
   : "${OT_SVC_ALLQ:=1}" "${OT_SVC_SMT:=1}"
   export OT_SVC_ALLQ OT_SVC_SMT
 fi
+compile_pids=()
 for L in $LAYERS; do
   base=${L%%:*}; mode=${L#*:}; [ "$mode" = "$L" ] && mode=su
   args=(--layer $base --out $O/prog_${base}_$mode --die-src $T --svc-timing-profile "$PROFILE")
   [ -d $F/$base ] && args+=(--fixtures $F/$base)
   if [ "$mode" = mu ]; then args+=(--mu-cal $O/mu_cal.json --mu-ctx); fi
   ( /usr/bin/time -v -o $O/cc_${base}_$mode.time python3 tools/s81_dv/dv_layer_compile.py "${args[@]}" > $O/cc_${base}_$mode.log 2> $O/cc_${base}_$mode.err
-    echo "CC $L rc $? $(tail -n 2 $O/cc_${base}_$mode.log | head -1 | cut -c1-200)" ) &
+    cc_status=$?
+    echo "CC $L rc $cc_status $(tail -n 2 $O/cc_${base}_$mode.log | head -1 | cut -c1-200)"
+    exit "$cc_status" ) &
+  compile_pids+=("$!")
 done
-wait
+compile_status=0
+for compile_pid in "${compile_pids[@]}"; do
+  wait "$compile_pid" || compile_status=1
+done
+exit "$compile_status"
