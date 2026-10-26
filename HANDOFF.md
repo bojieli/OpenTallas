@@ -1055,3 +1055,5 @@ CODEX: 2026-10-26 02:48 PDT S81 engine structural re-pin candidate now0/20451 en
 CODEX: 2026-10-26 02:53 PDT KV actualwidth minimallegalization9503cells bodyoverlaps2210->0 +50itGRT0; root-onlyCPPR FAIL102/91 diagnosed, measured endpointcompensation trialpost live codex-kv-mesh-1026/post_trim0.log,0datacycles.
 
 CODEX: 2026-10-26 02:55 PDT S81 legacy: L1c independent PASS-COND queued6a3ab1a7d74e; L0 structural compact fixes182 reach failures to0/max131um (empty-bin review pending); TX current-default lint tool assertion fixed URGENT4232113a8, actualTX+5controlsPASS; XRT3 LEC confirmed24GB memcg OOM, fresh64GB AIG reuse live.
+
+CODEX: 2026-10-26 02:57 PDT KVX closedECTLKplacementgeometry q0/q1/q3 pinp90~8um/0reach>405 via southSRAMcorridors+vectorcontrol/clamp fixes; d6d3e08a3URGENTREADY,970fe2fa6artifacts; rootapprovedq0CTSonlyrow9ef481c5237c. PV16rootstructuralclocktrial dc6ea0fad queued0689dfc706be; resetminstillUNQUALIFIED.
