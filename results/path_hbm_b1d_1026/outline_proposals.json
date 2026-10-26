@@ -1,0 +1,161 @@
+{
+ "_note": "HBM-CORE-LAT task3 PLAN-DELTA PROPOSAL (not applied; plan 7aaba41c). Outline from synthesized logic: std/(core-macro_halo) <=0.6, sides on the 8.64 lattice, macros packed as a grid with 4.32 halo, pin perimeter checked vs plan pin count. Numbers UNCHECKED (12.9f): synth area from hbm-face runs_synth (no re-synth), fill = estimate, not a placement.",
+ "proposals": [
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes0_3",
+   "outline_now_um": [
+    760.32,
+    725.76
+   ],
+   "outline_proposed_um": [
+    432.0,
+    406.08
+   ],
+   "area_now_um2": 551810,
+   "area_proposed_um2": 175427,
+   "std_area_um2": 34380,
+   "macros": 24,
+   "macro_um": [
+    94.824,
+    41.064
+   ],
+   "macro_grid": [
+    4,
+    6
+   ],
+   "est_fill_of_free_now": 0.08,
+   "est_fill_of_free_proposed": 0.57,
+   "plan_pins": 3789,
+   "synth_src": "/srv/opentallas-scratch2/claude/hbm-face/runs_synth/ot_hbm_su_static_pgslice_lg__lanes0_3_edae47abf4e2 (intel1)",
+   "note": "4x6 SRAM grid 396.6x272.3 um; pins W1164/E1320 on 406 um faces need <=0.30 um pitch (now 0.53-0.58), N712/S593 on 432 um need <=0.61; -68% area"
+  },
+  {
+   "module": "ot_hgi_sfu_programme_store_r10",
+   "outline_now_um": [
+    574.56,
+    738.72
+   ],
+   "outline_proposed_um": [
+    535.68,
+    682.56
+   ],
+   "area_now_um2": 424439,
+   "area_proposed_um2": 365634,
+   "std_area_um2": 10008,
+   "macros": 44,
+   "macro_um": [
+    96.552,
+    69.66
+   ],
+   "macro_grid": [
+    5,
+    9
+   ],
+   "est_fill_of_free_now": 0.118,
+   "est_fill_of_free_proposed": 0.373,
+   "plan_pins": 2904,
+   "synth_src": "epyc1 codex-hbm-face/runs_synth/ot_hgi_sfu_programme_store_r10_b0729904377c.20261025024448",
+   "note": "macro-dominated (44x 512x256 SRAM = 296k um2): 5x9 grid 504.4x665.8; W 2278 pins on 683 um face need 0.29 um pitch = current W pitch 0.288 (tight; keep >=0.288 or move some to N/S); -14% area"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__side_softplus",
+   "outline_now_um": [
+    440.64,
+    457.92
+   ],
+   "outline_proposed_um": [
+    190.08,
+    190.08
+   ],
+   "area_now_um2": 201778,
+   "area_proposed_um2": 36130,
+   "std_area_um2": 18411,
+   "macros": 0,
+   "macro_um": [
+    0,
+    0
+   ],
+   "macro_grid": null,
+   "est_fill_of_free_now": 0.095,
+   "est_fill_of_free_proposed": 0.559,
+   "plan_pins": 70,
+   "synth_src": "/srv/opentallas-scratch2/claude/hbm-face/runs_synth/ot_hbm_su_static_pgslice_lg__side_softplus_7c274b52e5df (intel1)",
+   "note": "no macros, 70 pins; -82% area; same slot family as side_rest"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__side_rest",
+   "outline_now_um": [
+    440.64,
+    457.92
+   ],
+   "outline_proposed_um": [
+    181.44,
+    181.44
+   ],
+   "area_now_um2": 201778,
+   "area_proposed_um2": 32920,
+   "std_area_um2": 16221,
+   "macros": 0,
+   "macro_um": [
+    0,
+    0
+   ],
+   "macro_grid": null,
+   "est_fill_of_free_now": 0.084,
+   "est_fill_of_free_proposed": 0.543,
+   "plan_pins": 110,
+   "synth_src": "/srv/opentallas-scratch2/claude/hbm-face/runs_synth/ot_hbm_su_static_pgslice_lg__side_rest_1bbe3488b9c4 (intel1)",
+   "note": "no macros, 110 pins; -84% area; if the plan wants one slot shape for both side types use 190.08x190.08"
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "outline_now_um": [
+    250.56,
+    449.28
+   ],
+   "outline_proposed_um": [
+    250.56,
+    449.28
+   ],
+   "area_now_um2": 112572,
+   "area_proposed_um2": 112572,
+   "std_area_um2": 6109,
+   "macros": 0,
+   "macro_um": [
+    0,
+    0
+   ],
+   "macro_grid": null,
+   "est_fill_of_free_now": 0.057,
+   "est_fill_of_free_proposed": 0.057,
+   "plan_pins": 7237,
+   "synth_src": "/srv/opentallas-scratch2/claude/hbm-face/runs_synth/ot_hbm_su_static_cxport_ij_q_cbed03b3f6ce (intel1; older pins sha)",
+   "note": "NO SHRINK: PIN-LIMITED. S face (2501) and E face (2049) are already at the 0.048 um M5/M4 track pitch; 7237 pins need >=1390 um perimeter at 0.192 (4-track) pitch. Low fill is inherent; a shrink needs fewer/narrower ports (RTL/plan) or pins above M5 (ceiling rule), not an outline change"
+  },
+  {
+   "module": "ot_hgi_coll_gq_land",
+   "outline_now_um": [
+    142.56,
+    207.36
+   ],
+   "outline_proposed_um": [
+    142.56,
+    207.36
+   ],
+   "area_now_um2": 29561,
+   "area_proposed_um2": 29561,
+   "std_area_um2": 6018,
+   "macros": 0,
+   "macro_um": [
+    0,
+    0
+   ],
+   "macro_grid": null,
+   "est_fill_of_free_now": 0.226,
+   "est_fill_of_free_proposed": 0.226,
+   "plan_pins": 3880,
+   "synth_src": "/srv/opentallas-scratch2/claude/hbm-face/runs_synth/ot_hgi_coll_gq_land_4d3dd24bd7bf (intel1; older pins sha)",
+   "note": "NO SHRINK: PIN-LIMITED. All four faces at 0.048 um track pitch (N615/S829 M5, E1218/W1218 M4); est fill 0.21 is inherent to the 3880-pin port list"
+  }
+ ]
+}
