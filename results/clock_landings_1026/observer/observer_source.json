@@ -1,0 +1,8 @@
+{
+  "scope": "Exact source input-capture/sticky-fault/admission cut; record-port programming is a frontier, not full-controller proof.",
+  "sources": {
+    "rtl/qwen_split/qfd_sys_face_lctx3_wrapped.sv": "b25c0bdd8ad7f14fe0f5fac605fb87e441c6ce2bbae793b46d685b3973cf8b40",
+    "rtl/qwen_split/qfd_sys_face_lctx3_core.sv": "e5ffb716604dbb212cc9bcc80db796a25e5ce7b8538dd78a656bc5810c5c9ff8"
+  },
+  "gated_instance": "    qfd_sys_face_lctx3_wrapped u_sys_face (\n        .obs_fault(((old_fault) | cland_up_fault)),\n        .seq_cfg_image_ready(((old_ready) & cland_up_ready))\n    );\n"
+}
