@@ -1,0 +1,670 @@
+{
+ "schema": "opentallas.s81.selected_manifest_resolution.v1",
+ "source_commit": "10822e3ed",
+ "input_netlist": "physical/die_plan/s81/bind/inputs/die_b178.v",
+ "input_sha256": "e01f50f52ff66042a1388c79f4cb2843dcd6171ef3941298e47efd825370d8a6",
+ "manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+ "explicit_child_files": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv"
+ ],
+ "verdict": "PASS_SOURCE_SELECTION",
+ "count": 16,
+ "slices": {
+  "u_s_0S": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_0S",
+   "die_master": "ot_s81sl_slice_lepw_mab_tp_mu_72",
+   "wrapper_chain": [
+    "ot_s81sl_slice_lepw_mab_tp_mu_72",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_e6",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_tp_mu_72.sv": "df060515198e412d051a5f19ddb188a7f2e816fffd37eb56dc94dbbc5a247f77",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv": "38399616e10125726bc3f645e9a6028eb7ccae3a06a4b0c9db93a683d54e80ca",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv": "483557d65447ed7ff6763331c5d42bf139574fd9bd651ed4e6a87556e68a0b9a"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_lepw_mab_tp_mu_72": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_tp_mu_72.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_e6": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_0N": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_0N",
+   "die_master": "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72",
+   "wrapper_chain": [
+    "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_e6",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lepw_mab_hbc_prod_mu_72.sv": "5ceedc0a46179da5fc358f1798eeb3237b0f1736bfd45e48e21e4d10299bb17e",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv": "38399616e10125726bc3f645e9a6028eb7ccae3a06a4b0c9db93a683d54e80ca",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv": "483557d65447ed7ff6763331c5d42bf139574fd9bd651ed4e6a87556e68a0b9a"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lepw_mab_hbc_prod_mu_72.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_e6": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_1S": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_1S",
+   "die_master": "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+   "wrapper_chain": [
+    "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_w3"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_w3",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv": "854fecaf29785a39b5d1a72f38db35cf24559b925091967860c1398945510fdd",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv": "9ea89d68e21ec99d0bbcc095d264ac4fb2af4f9a06172e46f2fad3ce8bdc759b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv": "24935f7cddc07eb9738a67657b1731801ba0b126089ab0d9294e3e9c3a08bc76"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_c1x_k8_cap5r_w_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_w3": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_1N": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_1N",
+   "die_master": "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+   "wrapper_chain": [
+    "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_w3"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_w3",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv": "854fecaf29785a39b5d1a72f38db35cf24559b925091967860c1398945510fdd",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv": "9ea89d68e21ec99d0bbcc095d264ac4fb2af4f9a06172e46f2fad3ce8bdc759b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv": "24935f7cddc07eb9738a67657b1731801ba0b126089ab0d9294e3e9c3a08bc76"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_c1x_k8_cap5r_w_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_w3": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_2S": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_2S",
+   "die_master": "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+   "wrapper_chain": [
+    "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_e6",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_e6.sv": "718869f690cc1056666d3290b2082c6a3cf261bb0198a86e451efceade8ae056",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv": "38399616e10125726bc3f645e9a6028eb7ccae3a06a4b0c9db93a683d54e80ca",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv": "483557d65447ed7ff6763331c5d42bf139574fd9bd651ed4e6a87556e68a0b9a"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_c1x_k8_cap5r_w_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_e6.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_e6": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_2N": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_2N",
+   "die_master": "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+   "wrapper_chain": [
+    "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_e6",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_e6.sv": "718869f690cc1056666d3290b2082c6a3cf261bb0198a86e451efceade8ae056",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv": "38399616e10125726bc3f645e9a6028eb7ccae3a06a4b0c9db93a683d54e80ca",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv": "483557d65447ed7ff6763331c5d42bf139574fd9bd651ed4e6a87556e68a0b9a"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_c1x_k8_cap5r_w_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_e6.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_e6": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_3S": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_3S",
+   "die_master": "ot_s81sl_slice_iq_w3",
+   "wrapper_chain": [
+    "ot_s81sl_slice_iq_w3",
+    "ot_s81sl_slice_w3"
+   ],
+   "xg": "ot_s81sl_xg",
+   "ring": "ot_s81sl_rstop",
+   "streamer": "ot_s81sl_xs",
+   "capture": "ot_s81sl_capc2_w3",
+   "xr": "ot_s81sl_xrt3",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": 1,
+   "streamer_added_capture_edges": 0,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_slice_w3.sv": "d5068303ec5c49da63e4978fb8753ad78549532f6c83bc2779c7e2f48293aa7b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xg.sv": "140f9a5508b4fb44a4755f2b8add34efc5d839a088e9064e406ed34453afb5b6",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv": "dcce7f019522c98a8377fe42d39a9b1ad9eb8a2dcd8a5464c244e9c4375ff4c7",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv": "8b885d8021621ae9196b9dbd09a39ec265ce827a5d905db7c36a2f94c74b3dea",
+    "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_capc2_w3.sv": "5f577d5f72fee3606e07e8d18c0cfe9b6cb382b3ddb71fc4b5728b3b397dd10f"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_iq_w3": "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_slice_w3.sv",
+    "ot_s81sl_slice_w3": "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_slice_w3.sv",
+    "ot_s81sl_xrt3": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xg": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xg.sv",
+    "ot_s81sl_xs": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+    "ot_s81sl_rstop": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+    "ot_s81sl_capc2_w3": "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_capc2_w3.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_3N": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_3N",
+   "die_master": "ot_s81sl_slice_sukv_raw512_w3",
+   "wrapper_chain": [
+    "ot_s81sl_slice_sukv_raw512_w3",
+    "ot_s81sl_slice_w3"
+   ],
+   "xg": "ot_s81sl_xg",
+   "ring": "ot_s81sl_rstop",
+   "streamer": "ot_s81sl_xs",
+   "capture": "ot_s81sl_capc2_w3",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": 0,
+   "streamer_added_capture_edges": 0,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_slice_w3.sv": "d5068303ec5c49da63e4978fb8753ad78549532f6c83bc2779c7e2f48293aa7b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xg.sv": "140f9a5508b4fb44a4755f2b8add34efc5d839a088e9064e406ed34453afb5b6",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv": "dcce7f019522c98a8377fe42d39a9b1ad9eb8a2dcd8a5464c244e9c4375ff4c7",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv": "8b885d8021621ae9196b9dbd09a39ec265ce827a5d905db7c36a2f94c74b3dea",
+    "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_capc2_w3.sv": "5f577d5f72fee3606e07e8d18c0cfe9b6cb382b3ddb71fc4b5728b3b397dd10f"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_sukv_raw512_w3": "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_slice_w3.sv",
+    "ot_s81sl_slice_w3": "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_slice_w3.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xg": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xg.sv",
+    "ot_s81sl_xs": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+    "ot_s81sl_rstop": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+    "ot_s81sl_capc2_w3": "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_capc2_w3.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_4S": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_4S",
+   "die_master": "ot_s81sl_slice_c3x_k8_cap5r_w_w3",
+   "wrapper_chain": [
+    "ot_s81sl_slice_c3x_k8_cap5r_w_w3",
+    "ot_s81sl_slice_c3x_k8_cap5r_lp_w3"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_w3",
+   "xr": "ot_s81sl_xrt3",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_w_w3.sv": "b04e550c4d8e90df4f0e9b1e1f03d3055a2c0e476ba4876361c3c8a4b07e5bcf",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_lp_w3.sv": "fa332274f0eebe2a11f3e2409fd0e866fc5b98cb13ac1e07cad6027a916a85c8",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv": "24935f7cddc07eb9738a67657b1731801ba0b126089ab0d9294e3e9c3a08bc76"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_c3x_k8_cap5r_w_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_w_w3.sv",
+    "ot_s81sl_slice_c3x_k8_cap5r_lp_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_lp_w3.sv",
+    "ot_s81sl_xrt3": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_w3": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_4N": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_4N",
+   "die_master": "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+   "wrapper_chain": [
+    "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_w3"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_w3",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv": "854fecaf29785a39b5d1a72f38db35cf24559b925091967860c1398945510fdd",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv": "9ea89d68e21ec99d0bbcc095d264ac4fb2af4f9a06172e46f2fad3ce8bdc759b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv": "24935f7cddc07eb9738a67657b1731801ba0b126089ab0d9294e3e9c3a08bc76"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_c1x_k8_cap5r_w_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_w3": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_5S": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_5S",
+   "die_master": "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+   "wrapper_chain": [
+    "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_e6",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_e6.sv": "718869f690cc1056666d3290b2082c6a3cf261bb0198a86e451efceade8ae056",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv": "38399616e10125726bc3f645e9a6028eb7ccae3a06a4b0c9db93a683d54e80ca",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv": "483557d65447ed7ff6763331c5d42bf139574fd9bd651ed4e6a87556e68a0b9a"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_c1x_k8_cap5r_w_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_e6.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_e6": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_5N": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_5N",
+   "die_master": "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+   "wrapper_chain": [
+    "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_e6",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_e6.sv": "718869f690cc1056666d3290b2082c6a3cf261bb0198a86e451efceade8ae056",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv": "38399616e10125726bc3f645e9a6028eb7ccae3a06a4b0c9db93a683d54e80ca",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv": "483557d65447ed7ff6763331c5d42bf139574fd9bd651ed4e6a87556e68a0b9a"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_c1x_k8_cap5r_w_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_e6.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_e6": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_6S": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_6S",
+   "die_master": "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+   "wrapper_chain": [
+    "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_w3"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_w3",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv": "854fecaf29785a39b5d1a72f38db35cf24559b925091967860c1398945510fdd",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv": "9ea89d68e21ec99d0bbcc095d264ac4fb2af4f9a06172e46f2fad3ce8bdc759b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv": "24935f7cddc07eb9738a67657b1731801ba0b126089ab0d9294e3e9c3a08bc76"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_c1x_k8_cap5r_w_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_w3": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_6N": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_6N",
+   "die_master": "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+   "wrapper_chain": [
+    "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_w3"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_w3",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv": "854fecaf29785a39b5d1a72f38db35cf24559b925091967860c1398945510fdd",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv": "9ea89d68e21ec99d0bbcc095d264ac4fb2af4f9a06172e46f2fad3ce8bdc759b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv": "24935f7cddc07eb9738a67657b1731801ba0b126089ab0d9294e3e9c3a08bc76"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_c1x_k8_cap5r_w_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_w3": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_w3": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_7S": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_7S",
+   "die_master": "ot_s81sl_slice_lepe_nh_mu_72",
+   "wrapper_chain": [
+    "ot_s81sl_slice_lepe_nh_mu_72",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_e6",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lepe_nh_mu_72.sv": "a262c6d4c02b135ec90973e5e82858c22a8e5628d0f084267aa10810f9bbfa91",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv": "38399616e10125726bc3f645e9a6028eb7ccae3a06a4b0c9db93a683d54e80ca",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv": "483557d65447ed7ff6763331c5d42bf139574fd9bd651ed4e6a87556e68a0b9a"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_lepe_nh_mu_72": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lepe_nh_mu_72.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_e6": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  },
+  "u_s_7N": {
+   "schema": "opentallas.s81.selected_slice_source.v1",
+   "slice": "u_s_7N",
+   "die_master": "ot_s81sl_slice_lepe_mab_tp_mu_72",
+   "wrapper_chain": [
+    "ot_s81sl_slice_lepe_mab_tp_mu_72",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6"
+   ],
+   "xg": "ot_s81sl_xgt_xo",
+   "ring": "ot_s81sl_rstopt_xo",
+   "streamer": "ot_s81sl_xs4",
+   "capture": "ot_s81sl_capc5r_e6",
+   "xr": "ot_s81sl_xrt1",
+   "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "selected_hb": null,
+   "streamer_added_capture_edges": 1,
+   "source_sha256": {
+    "physical/die_plan/s81/bind/asbuilt_b178_coll.json": "fd35a4945849c7c71c4a60bd5dfe17085be217ff34cfb5ee48501a4b0f969748",
+    "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_mab_tp_mu_72.sv": "2079a524d93271886c12d34f0cfc9afdd8c8ff08a04a8368769460af6745b502",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv": "38399616e10125726bc3f645e9a6028eb7ccae3a06a4b0c9db93a683d54e80ca",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv": "483557d65447ed7ff6763331c5d42bf139574fd9bd651ed4e6a87556e68a0b9a"
+   },
+   "source_root": ".",
+   "explicit_source_root": true,
+   "physical_binding_qualified": false,
+   "selected_asbuilt_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll.json",
+   "resolved_module_sources": {
+    "ot_s81sl_slice_lepe_mab_tp_mu_72": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_mab_tp_mu_72.sv",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+    "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+    "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "ot_s81sl_capc5r_e6": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv"
+   },
+   "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+  }
+ },
+ "qualification": "SOURCE RESOLUTION ONLY; no native compiler calendar/whole-token/physical claim"
+}
