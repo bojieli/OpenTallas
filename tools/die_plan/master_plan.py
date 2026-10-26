@@ -185,6 +185,76 @@ def core_entry(h, entries):
     return (snap(w / 2), snap(hh / 2)), "centre"
 
 
+
+def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5):
+    """Check one real native clock pin and its declared tap against the proposed entry.
+
+    A proposed centre is not evidence of a native pin. Do not choose among two
+    core taps, or silently overwrite duplicate names in a dictionary.
+    """
+    inst = h["inst"]
+    row = dict(inst=inst, module=h["module"], entry_um=list(proposed), issues=[])
+    candidates = [tp for tp in taps if tp.get("name") in (inst, inst+".ck", inst+".clk")
+                  or (tp.get("kind") == "core" and tp.get("name", "").startswith(inst+"."))]
+    if len(candidates) != 1:
+        row["issues"].append("ambiguous plan core clock taps" if candidates else "no plan clock tap")
+    tp = candidates[0] if len(candidates) == 1 else None
+    pins = list(h.get("pins") or [])
+    if h.get("pins_file"):
+        name = Path(h["pins_file"])
+        base = Path(P.path).parent if P.path else Path.cwd()
+        choices = [name] if name.is_absolute() else [base/name, Path(__file__).resolve().parents[2]/name]
+        try:
+            path = next((p for p in choices if p.is_file()), choices[0])
+            data = json.loads(path.read_text())
+            pins.extend(data.get("pins", []) if isinstance(data, dict) else data)
+            row["pins_file"] = str(path)
+        except (OSError, ValueError, TypeError) as ex:
+            row["issues"].append(f"unreadable native pin metadata: {ex}")
+    port = tp["name"][len(inst)+1:] if tp and tp["name"] != inst else None
+    native = set()
+    wanted = {port} if port else {"ck", "clk"}
+    for pin in pins:
+        if not isinstance(pin, dict):
+            row["issues"].append("invalid native pin metadata row")
+            continue
+        name = pin.get("name")
+        if name not in wanted:
+            continue
+        xy = pin.get("xy", [pin.get("x"), pin.get("y")])
+        try:
+            xy = tuple(float(v) for v in xy)
+            if len(xy) != 2 or not all(math.isfinite(v) for v in xy):
+                raise ValueError("invalid native coordinate")
+            native.add((name, xy))
+        except (TypeError, ValueError):
+            row["issues"].append("invalid native clock pin coordinate")
+    if len(native) != 1:
+        row["issues"].append("ambiguous native clock pins" if native else "missing native core clock-pin metadata")
+    else:
+        name, xy = next(iter(native))
+        row.update(native_pin=name, native_core_um=list(xy))
+        d = abs(xy[0]-proposed[0])+abs(xy[1]-proposed[1])
+        row["native_to_entry_um"] = r3(d)
+        if d > tolerance:
+            row["issues"].append("native clock pin differs from proposed entry")
+        if tp:
+            placed = dict(h, origin_um=[a+b for a,b in zip(h["origin_um"],h.get("track_offset_um",[0,0]))])
+            cl = type_to_core_pt(placed, tp["xy"])
+            dn = abs(cl[0]-xy[0])+abs(cl[1]-xy[1])
+            de = abs(cl[0]-proposed[0])+abs(cl[1]-proposed[1])
+            row.update(plan_tap=tp["name"], pin_core_um=[r3(v) for v in cl],
+                       tap_to_native_um=r3(dn), off_um=r3(de))
+            if dn > tolerance:
+                row["issues"].append("plan clock tap differs from native clock pin")
+            if de > tolerance:
+                row["issues"].append("plan clock tap differs from proposed entry")
+    row["verdict"] = "FAIL" if row["issues"] else "PASS"
+    if row["issues"]:
+        row["issue"] = "; ".join(row["issues"])
+    return row
+
+
 def entry_island(xy, side=8.64):
     """lattice-aligned island rect (8.64 square, edges on the 4.32 PG lattice) containing the entry point."""
     x0 = math.floor(xy[0] / LAT) * LAT
@@ -1225,8 +1295,6 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
 
     # ---- lot fit + 12.8 core gates
     lot_fail, entry_fail, restructure = [], [], []
-    taps_by_type = {tn: {tp["name"]: tp for tp in (t.get("clock") or {}).get("taps", [])}
-                    for tn, t in P.types.items()}
     early = defaultdict(int)
     early_rows = []
     for tn, t in P.types.items():
@@ -1245,16 +1313,9 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             e = entry[h["module"]]
             if not rect_inside(e["island"], (0, 0) + tuple(h["outline_um"])):
                 lot_fail.append(dict(type=tn, inst=h["inst"], issue="entry island outside core"))
-            tp = taps_by_type[tn].get(f"{h['inst']}.ck")
-            if tp is None:
-                entry_fail.append(dict(type=tn, inst=h["inst"], module=h["module"], issue="no plan clock tap",
-                                       entry_um=e["xy"]))
-            else:
-                cl = type_to_core_pt(h, tp["xy"])
-                dxy = abs(cl[0] - e["xy"][0]) + abs(cl[1] - e["xy"][1])
-                if dxy > entry_tol:
-                    entry_fail.append(dict(type=tn, inst=h["inst"], module=h["module"],
-                                           pin_core_um=[r3(cl[0]), r3(cl[1])], entry_um=e["xy"], off_um=r3(dxy)))
+            checked = core_clock_entry_check(P, h, (t.get("clock") or {}).get("taps", []), e["xy"], entry_tol)
+            if checked["verdict"] != "PASS":
+                entry_fail.append(dict(type=tn, **checked))
         for tp in (t.get("clock") or {}).get("taps", []):
             ins = float(tp.get("insertion_ps", common))
             if abs(ins - common) > 1e-6:
