@@ -14,7 +14,7 @@ def pg_bad(x):return any(abs(x-(o+round((x-o)/4.32)*4.32))<.096-1e-6 for o in (2
 def line(bus,bits,face,start):
  out=[];v=tr(start)
  for bit in bits:
-  while face=='S' and (pg_bad(v) or abs(v-177.132)<1.0):v=round(v+.048,6)
+  while face=='S' and (pg_bad(v) or (bus!='ck' and abs(v-177.132)<1.0)):v=round(v+.048,6)
   out.append(dict(bus=bus,bit=bit,layer='M5' if face=='S' else 'M4',x=v if face=='S' else W-.042,y=.042 if face=='S' else v,face=face))
   v=round(v+.192,6)
  return out
