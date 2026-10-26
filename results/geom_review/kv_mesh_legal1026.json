@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND TRIAL ROUTE",
+  "source": "exact m3264b2/r1 9503 cells",
+  "images": [
+    "/srv/opentallas-scratch/claude/codex-kv-mesh-1026/legal0/review.png",
+    "/srv/opentallas-scratch/claude/codex-kv-mesh-1026/legal0/driver_review.png"
+  ],
+  "findings": [
+    "ActualLEF1.62x.27 driver bodies now abut without overlap; complete actual-body census0pairs vs2210 original.",
+    "2171 cell positions change <=1.62um. No cell, net, tap or logical tree changes. Driver groups stay on same straps; displaced stub cells move only along same straps. Hard macro clearance checked at all body corners with0.6um margin.",
+    "Whole die retains original H-tree/mesh and short stub pattern; macro channels and existing PG unchanged. No new long hop from smalllegalization moves.",
+    "Clock islands must be recomposed in ONEKVbatch after actual routed skew result. Current infra fixedroute/PG and PVcellcount changes remain independent release gates."
+  ],
+  "next": "Combined50iterationGRT and actualTT/FF routedrelated-pair <=80ps. No freeze or SIGNEDclaim."
+}
