@@ -11,7 +11,8 @@ for view in views['view_list']:
  mod=view['module'];sv=a.masters/(mod+'.sv');receipt=json.loads((a.masters/(mod+'_receipt.json')).read_text());assert hashlib.sha256(sv.read_bytes()).hexdigest()==receipt['verilog_sha256'],mod;receipts[mod]=receipt
  virtual='native_hc128/'+mod+'.sv';overrides[virtual]=str(sv.resolve());rec=dict(top=mod,files=[virtual],params={},defines=[],source_commit=receipt['source_commit'],source='Current exact native W128 cut; complete emitted module closure; zero face-shell cycles',macros=[])
  if 'pair' in mod:
-  rec.update(macros=['ot_sram_1r1w_1024x256_m2_r2c2','ot_sram_1r1w_128x256_m1_r2c2'],macro_place_halo_um=4.32,macro_placement=[dict(inst='u_c.u_b.g_w\\[1\\].u_m',macro='ot_sram_1r1w_1024x256_m2_r2c2',xy_um=[21.6,4.32],orient='R180'),dict(inst='u_c.u_b.g_x\\[0\\].u_m',macro='ot_sram_1r1w_128x256_m1_r2c2',xy_um=[21.6,129.6],orient='MY'),dict(inst='u_c.u_b.g_w\\[0\\].u_m',macro='ot_sram_1r1w_1024x256_m2_r2c2',xy_um=[21.6,179.28],orient='MY')])
+  # One M5 PDN pitch lower leaves 4.296 um between X/W0 halos; y=129.6 overlaps by 0.024 um.
+  rec.update(macros=['ot_sram_1r1w_1024x256_m2_r2c2','ot_sram_1r1w_128x256_m1_r2c2'],macro_place_halo_um=4.32,macro_placement=[dict(inst='u_c.u_b.g_w\\[1\\].u_m',macro='ot_sram_1r1w_1024x256_m2_r2c2',xy_um=[21.6,4.32],orient='R180'),dict(inst='u_c.u_b.g_x\\[0\\].u_m',macro='ot_sram_1r1w_128x256_m1_r2c2',xy_um=[21.6,125.28],orient='MY'),dict(inst='u_c.u_b.g_w\\[0\\].u_m',macro='ot_sram_1r1w_1024x256_m2_r2c2',xy_um=[21.6,179.28],orient='MY')])
  recipes[mod]=rec
 if '--view' not in rest:raise SystemExit('--view required; see native128/views.json')
 selected=next(v for v in views['view_list'] if v['view']==rest[rest.index('--view')+1]);mod=selected['module'];receipt=receipts[mod]
