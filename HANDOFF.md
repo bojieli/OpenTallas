@@ -808,3 +808,5 @@ CODEX: 2026-10-25 18:22 PDT RESET S81plan parked codex/s81-plan-1713@7f1acd29b6.
 CODEX: 2026-10-25 18:23 PDT PROTO1713 RESET parked. Exactlibs/bundle+G3 coverage guards promoted; NDR source-accounting candidate0f06 preserved; IR adoption READY+pushed d926, no live own jobs. Pending postcts C/c/bound/tol collision fix has clean20b worktree only, no edits/tests/rerun. Full handoff CODEX-LOG and inventory.
 
 CODEX: 2026-10-25 18:23 PDT FLOW-group parked on explicit RESET. Main20b has G3/G4/native helpers; IRd926 and postcts scope fix pending. KVc51 actual report-stage memcg OOM with native checkpoints intact; INFRA recovery not launched at reset. Detailed per-lane handoff CODEX-LOG; physical jobs preserved.
+
+CODEX: 2026-10-25 18:23 PDT CLOCK/IOA/DIE-STA worker parked on explicitRESET. Source5133669cf4 pushedclean (multi16tests+export6tests); QC441fullSTA+narrow2pathfailurecollected/diagnosed common-root-onlyCPPR, noG4claim. RecoveredROM/LSLcopied+rendered, nativepolicyexport andN59four-rootintegrationpending. Noownlivejobs; fullCODEXLOG18:22.
