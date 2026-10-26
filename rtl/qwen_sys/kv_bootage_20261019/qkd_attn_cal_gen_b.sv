@@ -164,7 +164,7 @@ module qkd_attn_cal_gen_b #(
   f9<=f8;e9<=e8;
   r9<={1'b0,k_rl-((MUT==4)?16'd1:16'd0)}-{1'b0,pv8};                          // stretched R (bit 16: does not fit)
   p09<=16'(po0_8);
-  cal9<={STRETCH?k_rl-((MUT==4)?16'd1:16'd0)-pv8:16'(po0_8),16'(po1_8),16'(po0_8),pv8,hp8,hr8,hz8,hl8,z8,lmax8,exp8};
+  cal9<={STRETCH?k_rl-((MUT==4)?16'd1:16'd0)-pv8:{4'd0,po0_8},16'(po1_8),16'(po0_8),pv8,hp8,hr8,hz8,hl8,z8,lmax8,exp8};
   tx9<=STRETCH?16'(TXF):pv8+lk8;en9<=STRETCH?16'(TXF+34+STATUS_DELAY):pv8+le8+16'(STATUS_DELAY);
  end
  // ---- S10: held result ----

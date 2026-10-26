@@ -486,14 +486,14 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
             for (integer h = 1; h <= 3; h = h + 1)
                 for (integer r = 0; r < 2; r = r + 1) begin
                     k = le_k[S_KQ + 2*h - 3]; i = flit_i(k, r); sq = srcq(q_id, k[0], h);
-                    s = {base_q[sq][15:13], base_q[sq][12:0] + 13'(i) + ((MUT == 3) ? 13'd1 : 13'd0)};
+                    s = {base_q[sq][15:13], base_q[sq][12:0] + {2'd0, i} + ((MUT == 3) ? 13'd1 : 13'd0)}; // YOSYS-CONCAT 10-26: zero-extend by concat, no cast inside the concat member (rtl_lint YC1)
                     ln_en[(h-1)*2 + r] <= le_v[S_KQ + 2*h - 3] && fv(k, r);
                     ln_bk[(h-1)*2 + r] <= 8'd1 << s[2:0]; ln_s[(h-1)*2 + r] <= s;
                     ln_sq[(h-1)*2 + r] <= sq; ln_d[(h-1)*2 + r] <= k[0];
                 end
             for (integer r = 0; r < 2; r = r + 1) begin
                 k = le_k[23]; i = flit_i(k, r);
-                s = {base_q[q_id][15:13], base_q[q_id][12:0] + 13'(i)};
+                s = {base_q[q_id][15:13], base_q[q_id][12:0] + {2'd0, i}};
                 ln_en[6 + r] <= g_self && MUT != 4 && le_v[23] && fv(k, r);
                 ln_bk[6 + r] <= 8'd1 << s[2:0]; ln_s[6 + r] <= s;
             end
