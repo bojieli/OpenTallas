@@ -23,7 +23,7 @@ def install(recipe:Path,profile:Path,out:Path):
     alias=out/'qfd_d2d_cal_seq_ovl_rope_rom64.sv';alias.write_text(source)
     extra=[rel(alias),rel(rtl/'ot_qwen_d2d_ovl_seq_image64.sv'),rel(rtl/'ot_qwen_d2d_cal_seq_image64.sv'),rel(ROOT/f'physical/asap7_memory_macros_v2/{P.NAME}/{P.NAME}_bb.v')]
     for k in ('files','prefer','portbind_prefer'):
-        if isinstance(r.get(k),list):r[k]=[s for s in r[k] if not s.endswith('/qfd_d2d_cal_seq_ovl_rope.sv')]
+        if isinstance(r.get(k),list):r[k]=[s for s in r[k] if not re.search(r'/qfd_d2d_cal_seq_ovl_rope(?:_rom64)?\.sv$',s)]
     for k in ('files','prefer'):r[k]=list(dict.fromkeys(r.get(k,[])+extra))
     if r.get('map_file'):r['map_file']=os.path.relpath((recipe.parent/r['map_file']).resolve(),out)
     r['base']=os.path.relpath(ROOT,out)
