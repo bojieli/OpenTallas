@@ -1,4 +1,6 @@
 import importlib.util
+import json
+import os
 import subprocess
 import tempfile
 import unittest
@@ -8,6 +10,25 @@ spec=importlib.util.spec_from_file_location('isolated_trigger',Path(__file__).wi
 T=importlib.util.module_from_spec(spec);spec.loader.exec_module(T)
 
 class Isolation(unittest.TestCase):
+    def test_uncollected_transient_does_not_expire_after_twelve_hours(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); run=root/"hbm_old";run.mkdir()
+            (run/"canary_meta.json").write_text(json.dumps({"spec":{"die":"hbm"},"client_unit":"flow-canary-hbm-old"}))
+            now=1000000;os.utime(run,(now-T.LIVE_S-3600,now-T.LIVE_S-3600))
+            self.assertEqual(T.live_dies(root,now),{"hbm"})
+            # A collected terminal verdict allows the next revision, regardless of age.
+            (run/"canary.json").write_text("{}")
+            self.assertEqual(T.live_dies(root,now),set())
+
+    def test_legacy_metadata_keeps_age_fallback(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);run=root/"legacy";run.mkdir()
+            (run/"canary_meta.json").write_text(json.dumps({"spec":{"die":"s81"}}))
+            now=1000000;os.utime(run,(now-T.LIVE_S-1,now-T.LIVE_S-1))
+            self.assertEqual(T.live_dies(root,now),set())
+            os.utime(run,(now-10,now-10))
+            self.assertEqual(T.live_dies(root,now),{"s81"})
+
     def test_slow_s81_does_not_hold_completed_dies(self):
         old=T.git
         try:

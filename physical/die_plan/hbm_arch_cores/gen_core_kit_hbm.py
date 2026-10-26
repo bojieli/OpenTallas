@@ -706,12 +706,13 @@ def main():
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **{k: v for k, v in lctx.items() if k not in ("insertion_ff_ps", "insertion_basis")})
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
-    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "signoff.py", "pair_skew.tcl",
-              "lec.py", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl"):
+    for f in ("face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
+              "lec.py", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "pinreg_measure.tcl"):
         shutil.copyfile(TOOL / f, kd / f)
     (kd / "core_grt_pre.tcl").write_text("source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n")
     (kd / "core_grt_post.tcl").write_text("if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq \"ff\"} { ot_vclk_bind tt }\n")
-    shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
+    # Keep the standalone runtime complete, including sender-min qualification and clock helpers.
+    subprocess.run([sys.executable, "-I", str(TOOL / "signoff.py"), "bundle", str(kd)], check=True)
     # HBM-KITS-B2 10-25: replicated (* keep *) registers (ot_rst_relay region copies, ...) need the ORFS
     # SYNTH_CANONICALIZE_TCL hook physical/common_flow/ot_keep_regs.tcl: keep on the WIRE alone does not stop opt_merge
     # folding the copies into one flop (sfustore_hw B2n: relay_q[1..3] merged -> one reset flop for 4 SRAM regions,
