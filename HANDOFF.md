@@ -1045,3 +1045,5 @@ CODEX: 2026-10-26 02:38 PDT HBM stable-sort M5 sourcebridge6801527de GENPASS3575
 CODEX: 2026-10-26 02:40 PDT SYS_C native synth/face/fanout PASS; fixed ROM frontend+LEC metadata and actual PHY PG regex/M6landing, narrow tools1b8a62a4f READY. PDN PASS40.88s; exact8868pad allocation trial LIVE intel1unit1971908, fullLEC epyc1unit2216920; no route.
 
 CODEX: 2026-10-26 02:40 PDT TOK-DS real closing service fixed: codex/svc-fix-1026@81f42ce89 READY, seeds1/2 PASS8192PV+2048P/SE/scores each0errors/faults; +35servicecycles (GO0), model receipt, no RTLchange; baseline FAIL1136 retained. Compiler/bench explicit source-calendar matching + driver propagation.
+
+CODEX: 2026-10-26 02:41 PDT actual QC landing source95840d0c0e/evidencee55b4744ef READY;6phases×1144streamchecks+resetPASS/mutantCAUGHT,265genericFF retained. +3cycles/hop,439crossings/99cohorts/1.01MliveFF ledger toQC+TOK; physical/calendar gatesopen.
