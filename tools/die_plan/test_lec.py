@@ -1015,3 +1015,47 @@ def test_alias_array_missing_or_unusable_driver_evidence_keeps_simulation_fallba
                       matched=[],gonly=gold,tonly=gate,hyp={},galias={k:[gate[0]] for k in gold},build=need_scoring)
     monkeypatch.setattr(lec,"slang_elements",lambda path:metadata)
     with pytest.raises(RuntimeError,match="fallback simulation reached"):lec.alias_arrays(L,[],work=tmp_path)
+
+
+@pytest.mark.parametrize('mutant', [None, 'invert_d', 'swap_alias'])
+def test_json_q_alias_keeps_next_state_proof_and_catches_mutants(tmp_path, mutant):
+    # ASTK sd-row enable: slang keeps private en[], gate names the same flops
+    # after public we[]. write_aiger's map contains neither Q-wire alias.
+    g, gm = _seq(tmp_path, 'json_gold', ['d0', 'd1'], ['en[0]', 'en[1]', 'o'],
+                 lambda m, l: {'en[0]': l['d0'], 'en[1]': l['d1'],
+                               'o': m.XOR(l['en[0]'], l['en[1]'])})
+    t, tm = _seq(tmp_path, 'json_gate', ['d0', 'd1'], ['we[0]', 'we[1]', 'o'],
+                 lambda m, l: {'we[0]': l['d0'] ^ (mutant == 'invert_d'), 'we[1]': l['d1'],
+                               'o': m.XOR(l['we[0]'], l['we[1]'])})
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'lec_top': {'netnames': {
+        'u_dut.en': {'bits': [10, 11]},
+        'u_dut.we': {'bits': [11, 10] if mutant == 'swap_alias' else [10, 11]}}}}}))
+    L = lec.Lec(g, gm, t, tm)
+    assert lec.json_alias_keys(L, [], work=tmp_path) == 2
+    m, _ = L.build(with_compare=True, with_hyp=False)
+    # Exhaust every assignment of inputs and current state, including illegal
+    # states: aliases do not remove a D comparison or add any assumption.
+    count = 1 << m.ni
+    mask = (1 << count) - 1
+    val = [0] * (m.ni + len(m.ands) // 2 + 1)
+    for v in range(1, m.ni + 1):
+        val[v] = sum(1 << s for s in range(count) if s & (1 << (v - 1)))
+    for k in range(len(m.ands) // 2):
+        a, b = m.ands[2*k:2*k+2]
+        val[m.ni+k+1] = lec.lit_val(val, mask, a) & lec.lit_val(val, mask, b)
+    failures = [n for n, o in zip(m.onames, m.outs) if lec.lit_val(val, mask, o)]
+    assert bool(failures) == bool(mutant)
+
+
+def test_json_q_alias_rejects_ambiguous_and_constant_candidates(tmp_path):
+    class L:
+        hyp = {}
+        gp = {'ff:u.a[0]': 2, 'ff:u.b[0]': 4, 'ff:u.const[0]': 6}
+        tp = {'ff:u.y[0]': 2, 'ff:u.z[0]': 4}
+        tc = dict(tp)
+        gonly = sorted(gp)
+        tonly = sorted(tp)
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'top': {'netnames': {
+        'u.a': {'bits': [10]}, 'u.b': {'bits': [10]}, 'u.y': {'bits': [10]},
+        'u.const': {'bits': ['0']}, 'u.z': {'bits': ['0']}}}}}))
+    assert lec.json_alias_keys(L, [], work=tmp_path) == 0
