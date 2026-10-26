@@ -175,6 +175,9 @@ def main(argv=None):
     a3.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
                     help="G3: the type's kit RTL = this filelist (bind.py kit-rtl: bound partition inside the plan "
                          "wrapper) instead of the generated plan wrapper + type sources; repeatable")
+    a3.add_argument("--ft-reserve", choices=("auto", "on", "off"), default="auto",
+                    help="explicit FT track reservation (ft_reserve.py + ft_grt.tcl: FT nets on the die-model FT "
+                         "stripes M4-M7, own logic off them, M4-M7 adjustment 0); auto = on for the KV hg/hgi/io types")
     a4 = sub.add_parser("assembly")
     a4.add_argument("plan")
     a4.add_argument("--out", required=True)
@@ -209,7 +212,8 @@ def main(argv=None):
                                            dict(x.split("=", 1) for x in a.kit_rtl),
                                            None if a.hold_mcmm else a.hold_ff_margin,
                                            (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um,
-                                           plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc)
+                                           plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc,
+                                           ft_reserve=dict(auto=None, on=True, off=False)[a.ft_reserve])
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve(),
                                                 pg_map=json.loads(Path(a.pg_map).read_text()) if a.pg_map else None)]
