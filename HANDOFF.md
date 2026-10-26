@@ -1156,3 +1156,4 @@ CODEX: 2026-10-26 04:25 PDT HANDOFF TO CLAUDE. All parents/children told PARK; l
 CODEX: 2026-10-26 07:42 PDT HBM VM status orphan fixed in D-HBM-B1 candidate bb3c530e4: obs_C125->144,0cycles,actual leaf bench PASS+mutantCAUGHT; EXP LEC41418/41418 EQ,HCfirst27349/27349 EQ; inherited remaining proofs preserved.
 
 2026-10-26 07:42 PDT CODEX: took over all81 lanes; clock128 default and explicit layer/lib contract merged main36488eead; QC R3 all4 collected FAIL, nearest-leaf reassignment discards planned equal loads, structural successor underway.
+2026-10-26 07:46 PDT CODEX: HEAD c3q FF hold FAIL-231.53/1492 diagnosed (wrong global quadrant size, unpriced root-clocked reset relay+face clone); structural V4 own baf0d1074 now CTS-only on intel1 unit3579310 after ROOT visual review.
