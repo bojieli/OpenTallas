@@ -1,5 +1,6 @@
 # Diagnostic only: native placement/PDN/all cells, route only data-pin landing nets.
 # inputs /work/{3_place.odb,3_place.sdc,ot_face_flops.txt,pin_controls.tcl}
+set_thread_count 8
 set P /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM
 foreach l [glob $P/asap7sc7p5t_*RVT_TT_*.lib*] {
   if {![string match *FAKE* $l]} { read_liberty $l }
@@ -54,8 +55,11 @@ foreach bt [$pa_block getBTerms] {
 }
 if {$pa_count != $pa_expected_ports} { error "data pin count $pa_count != expected $pa_expected_ports" }
 puts "PIN_ACCESS_PROBE ports $pa_count native_cells [llength [$pa_block getInsts]] nets [dict size $pa_nets]"
-set_routing_layers -signal M2-M7
-foreach L {M2 M3 M4 M5 M6 M7} { set_global_routing_layer_adjustment $L 0.4 }
+if {![info exists pa_signal_top] || ![regexp {^M([2-7])$} $pa_signal_top -> top]} {
+  error "pin_controls.tcl must declare the actual kit's pa_signal_top (M2..M7)"
+}
+set_routing_layers -signal M2-$pa_signal_top
+for {set layer 2} {$layer <= $top} {incr layer} { set_global_routing_layer_adjustment M$layer 0.4 }
 set_nets_to_route [dict keys $pa_nets]
 set begin [clock seconds]
 global_route -congestion_iterations 50 -allow_congestion -verbose -congestion_report_file /work/congestion.rpt
@@ -63,5 +67,5 @@ puts "OT_GRT_S [expr {[clock seconds]-$begin}]"
 # Current OpenROAD rejects the legacy layer flags even though help lists
 # them; set_routing_layers above supplies the routed layer contract.
 pin_access
-puts "PIN_ACCESS_PROBE_DONE ports $pa_count nets [dict size $pa_nets] capacity_reservation 0.4 original_capacity_utilization_upper_bound 0.6_if_zero_overflow"
+puts "PIN_ACCESS_PROBE_DONE ports $pa_count nets [dict size $pa_nets] signal_top $pa_signal_top capacity_reservation 0.4 original_capacity_utilization_upper_bound 0.6_if_zero_overflow"
 puts OT_DONE
