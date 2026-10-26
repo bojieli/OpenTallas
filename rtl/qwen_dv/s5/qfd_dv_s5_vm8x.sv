@@ -421,13 +421,9 @@ module qfd_dv_s8x_crh (
     qfd_dv_s8x_kff #(.W(1), .ID(7302)) u_twcw (.ck(ck), .d(ptw_we && ptw_kind == 2'd1), .q(twc_crw));
     wire [511:0] cr_rd;
     generate for (bk = 0; bk < 2; bk = bk + 1) begin : g_crb
-        // QC-SU-F4-2 (COORD RULING QC-SU-F4 14:15): column-aspect generated view (mux1 x 2 banks, M5 N/S pin faces, no rotation;
-        // physical/asap7_memory_macros_v2_col).  Same 1R1W 1024x256 function (bench 0/148375 mismatch vs m2).  Repair pins
-        // rr_en/rr_addr/cr_en/cr_sel = DECLARED NO-REPAIR TIE (COORD 10-25 dead-inputs/no-repair ruling: SRAM repair -> r0c0 view),
-        // rr_addr widens 18 -> 20 bits on this view (2 spare rows x 10 address bits), still tied 0.
-        ot_sram_1r1w_1024x256_m1b2_r2c2_ns u_m (.clk(ck), .r_ce_in(pcr_re[0] && pcr_addr[3] == bk[0]), .r_addr_in(pcr_addr[4 +: 10]),
+        ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(ck), .r_ce_in(pcr_re[0] && pcr_addr[3] == bk[0]), .r_addr_in(pcr_addr[4 +: 10]),
             .rd_out(cr_rd[bk*256 +: 256]), .w_ce_in(twc_crw), .w_addr_in(twc_a), .wd_in(twc_d[256*bk +: 256]),
-            .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(20'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     wire c1_bank;
     qfd_dv_s8x_kff #(.W(1), .ID(3400)) u_c1 (.ck(ck), .d(pcr_addr[3]), .q(c1_bank));

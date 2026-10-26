@@ -1,0 +1,23 @@
+# QC-PLAN-F4A narrowed-swap LEC (vmr): origin/main m2 view vs column view, SRAMs as shared observation stubs. MIF=0.
+# Gold/gate SRAM instances keep their names; SRAM inputs are named nets (proven), SRAM rd_out = cut points (unprovable
+# free variables by construction, listed). MIF=0 (canonical).
+read_verilog -sv -DSYNTHESIS /lec/old_suffixed.sv
+read_verilog -sv /lec/stub_ot_sram_1r1w_1024x256_m2_r2c2.v /lec/stub_ot_sram_1r1w_1024x256_m1b2_r2c2_ns.v /lec/bb_128.v /lec/bb_256.v
+hierarchy -top qfd_dv_s8x_vmr_o
+setattr -mod -unset keep_hierarchy; proc; flatten; opt_clean; memory -nomap; opt -fast
+rename qfd_dv_s8x_vmr_o gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS /lec/new.sv
+read_verilog -sv /lec/stub_ot_sram_1r1w_1024x256_m2_r2c2.v /lec/stub_ot_sram_1r1w_1024x256_m1b2_r2c2_ns.v /lec/bb_128.v /lec/bb_256.v
+hierarchy -top qfd_dv_s8x_vmr
+setattr -mod -unset keep_hierarchy; proc; flatten; opt_clean; memory -nomap; opt -fast
+rename qfd_dv_s8x_vmr gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+async2sync
+equiv_simple -seq 2
+equiv_induct -seq 4
+equiv_status

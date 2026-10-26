@@ -1,0 +1,31 @@
+{
+ "check": "G1_macro_pin_on_track",
+ "geo": "results/qc_plan_f4a/geo/rp1_f4s.geo.json",
+ "macros": [
+  {
+   "inst": "g_crb\\[0\\].u_m",
+   "cell": "ot_sram_1r1w_1024x256_m1b2_r2c2_ns",
+   "origin": [
+    17.904,
+    38.88
+   ],
+   "orient": "MY",
+   "pins_checked": 831,
+   "off_track": 0,
+   "first": []
+  },
+  {
+   "inst": "g_crb\\[1\\].u_m",
+   "cell": "ot_sram_1r1w_1024x256_m1b2_r2c2_ns",
+   "origin": [
+    136.08,
+    38.88
+   ],
+   "orient": "R0",
+   "pins_checked": 831,
+   "off_track": 0,
+   "first": []
+  }
+ ],
+ "verdict": "PASS"
+}

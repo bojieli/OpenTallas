@@ -1,8 +1,8 @@
 {
  "die": "qwen_compute",
  "verdict": "FAIL",
- "plan_sha256": "baab5f69891e6b183b5bcfbd06dfa670f9df5f3e5b736c67ce587bdc7721d001",
- "master_plan_sha256": "83e592f1191d58e63adcd41eb932d6369bc0535b839fc893c3298448a1f5780d",
+ "plan_sha256": "c30fcf2bfb87d7d5d84d0f213f5b2562c4127a76167a16094f886f9fb8631146",
+ "master_plan_sha256": "fbbfefd01945955617c11c3879f35826bf1cb3672fe73240a6c08406e097ef20",
  "gates": {
   "reach_gap": {
    "verdict": "PASS",
@@ -3887,16 +3887,16 @@
       216.0
      ],
      "entry_um": [
-      125.292,
+      125.28,
       108.0
      ],
-     "farthest_corner_um": 233.292,
+     "farthest_corner_um": 233.28,
      "uses": 18,
      "lane": "QC-SU-LAT",
      "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
      "in_core_islands": {
       "grid": null,
-      "source": "QC-PLAN-F4A f4_g4c G4-strict L1 islands (vmr_f4a_g4c.json sha dacaf0278b1b)",
+      "source": "QC-PLAN-F4A f4_g4c G4-strict L1 islands (vmr_f4s_g4c.json sha 956527e0353b)",
       "max_entry_um": 195.48,
       "entry_maze_um": {
        "min": 195.48,
@@ -3978,13 +3978,13 @@
        },
        {
         "centre_um": [
-         95.04,
+         90.72,
          198.72
         ],
         "rect_um": [
-         90.72,
+         86.4,
          194.4,
-         99.36,
+         95.04,
          203.04
         ],
         "load_frac": 0.1094,
@@ -4000,16 +4000,16 @@
       216.0
      ],
      "entry_um": [
-      125.292,
+      125.28,
       108.0
      ],
-     "farthest_corner_um": 233.292,
+     "farthest_corner_um": 233.28,
      "uses": 6,
      "lane": "QC-SU-LAT",
      "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
      "in_core_islands": {
       "grid": null,
-      "source": "QC-PLAN-F4A f4_g4c G4-strict L1 islands (rp1_f4a_g4c.json sha d3ddbf98b19a)",
+      "source": "QC-PLAN-F4A f4_g4c G4-strict L1 islands (rp1_f4s_g4c.json sha 8bcd1223f1d0)",
       "max_entry_um": 194.4,
       "entry_maze_um": {
        "min": 194.4,
@@ -4091,13 +4091,13 @@
        },
        {
         "centre_um": [
-         95.04,
+         90.72,
          198.72
         ],
         "rect_um": [
-         90.72,
+         86.4,
          194.4,
-         99.36,
+         95.04,
          203.04
         ],
         "load_frac": 0.1875,
@@ -5372,11 +5372,11 @@
     {
      "module": "qfd_dv_s8x_vmr",
      "entry_um": [
-      125.292,
+      125.28,
       108.0
      ],
-     "farthest_um": 233.292,
-     "pred_TT_ps": 197.2,
+     "farthest_um": 233.28,
+     "pred_TT_ps": 197.1,
      "pred_FF_ps": 157.7,
      "target_TT_ps": 250.0,
      "tol_ps": 20.0
@@ -5384,11 +5384,11 @@
     {
      "module": "qfd_dv_s8_crh_rp1",
      "entry_um": [
-      125.292,
+      125.28,
       108.0
      ],
-     "farthest_um": 233.292,
-     "pred_TT_ps": 197.2,
+     "farthest_um": 233.28,
+     "pred_TT_ps": 197.1,
      "pred_FF_ps": 157.7,
      "target_TT_ps": 250.0,
      "tol_ps": 20.0
@@ -16350,28 +16350,29 @@
    },
    "core_lattice": {
     "x": {
-     "pitch_um": 38.88,
-     "on_lattice": false,
+     "pitch_um": 43.2,
+     "on_lattice": true,
      "lines": 168,
      "span_um": [
       1788.48,
       30991.68
      ],
      "irregular": [
-      47.52,
       51.84,
+      56.16,
+      77.76,
       82.08,
-      86.4,
       90.72,
       103.68,
-      133.92,
+      146.88,
       151.2,
+      272.16,
       276.48,
       419.04,
       449.28,
-      462.24
+      457.92
      ],
-     "n_irregular": 12,
+     "n_irregular": 13,
      "leaf_pitch_um": null,
      "leaf_cover": null,
      "half_leaf_node_on_centre": null,
@@ -16789,13 +16790,13 @@
     "tree_node": {
      "n": 8190,
      "max_um": null,
-     "mean_um": 177.094,
+     "mean_um": 177.092,
      "displaced": 8190
     },
     "mesh_driver": {
      "n": 4096,
      "max_um": null,
-     "mean_um": 208.338,
+     "mean_um": 208.336,
      "displaced": 4096
     }
    },
@@ -17084,8 +17085,8 @@
    "nodes_off_island": 0,
    "node_roles": {
     "die_node": 150,
-    "tree_leaf": 1138,
-    "clock_entry": 48
+    "tree_leaf": 1137,
+    "clock_entry": 49
    },
    "path_len_um": {
     "min": 25189.92,

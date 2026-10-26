@@ -56,9 +56,12 @@ module qfd_dv_s8_crh_rp1 #(parameter integer MIF = 0) (
             qfd_dv_s8x_kff #(.W(10), .ID(7340 + bk)) u_wa (.ck(ck), .d(twc_a), .q(m_wa));
             qfd_dv_s8x_kff #(.W(256), .ID(7350 + bk)) u_wd (.ck(ck), .d(twc_d[256*bk +: 256]), .q(m_wd));
         end
-        ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(ck), .r_ce_in(m_rce), .r_addr_in(m_ra),
+        // QC-PLAN-F4A (COORD RULING QC-PLAN-F4A (2): column-SRAM swap limited to vmr + crh_rp1; qfd_dv_s8x_crh keeps m2).
+        // Column-aspect generated view (mux1 x 2 banks, M5 N/S pin faces; physical/asap7_memory_macros_v2_col), same 1R1W
+        // 1024x256 function.  Repair pins = DECLARED NO-REPAIR TIE (COORD 10-25); rr_addr 20 bits on this view, tied 0.
+        ot_sram_1r1w_1024x256_m1b2_r2c2_ns u_m (.clk(ck), .r_ce_in(m_rce), .r_addr_in(m_ra),
             .rd_out(cr_rd[bk*256 +: 256]), .w_ce_in(m_we), .w_addr_in(m_wa), .wd_in(m_wd),
-            .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(20'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     // bank / lane offsets of the read the SRAMs latch this edge (MIF=1: one cycle later, from a delayed copy)
     wire [24:0] rsel_n;

@@ -177,12 +177,21 @@ def part_blockers(P, part, islands):
 
 
 def core_entry(h, entries):
-    """core-local clock entry of a hard core (12.8a): --entries[module].xy else the centre on the 4.32 lattice."""
+    """core-local clock entry of a hard core (12.8a), derived from the CURRENT outline (COORD RULING QC-PLAN-F4A (3)).
+
+    Default = the centre of the current outline on the 4.32 lattice.  An --entries[module] record that declares the
+    outline it was derived for ("outline_um") is used only while that outline is still the core's current outline; a
+    record bound to another outline is STALE and falls back to the current centre (so an outline change can never keep
+    an old entry).  Records without "outline_um" keep the legacy meaning (xy used as given)."""
     e = (entries or {}).get(h["module"]) or {}
     w, hh = h["outline_um"]
+    centre = (snap(w / 2), snap(hh / 2))
     if "xy" in e:
+        bound = e.get("outline_um")
+        if bound is not None and (abs(float(bound[0]) - w) > 1e-6 or abs(float(bound[1]) - hh) > 1e-6):
+            return centre, f"centre (entries xy {list(e['xy'])} STALE: bound to outline {list(bound)} != current {[w, hh]})"
         return tuple(float(v) for v in e["xy"]), e.get("source", "entries")
-    return (snap(w / 2), snap(hh / 2)), "centre"
+    return centre, "centre"
 
 
 

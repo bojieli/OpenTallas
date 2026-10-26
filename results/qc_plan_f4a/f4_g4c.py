@@ -559,6 +559,22 @@ band["in_band_12_3"] = (230 <= band["TT_mean"] <= 270 and band["TT_window"] <= 2
                         and band["FF_early_window"] <= 20)
 band["with_prog_residual_TT"] = round(band["TT_mean"] - 16.6, 2)
 rep["band"] = band
+# G1 macro-pin track check (COORD RULING QC-PLAN-F4A (1)): every macro signal pin centre on its layer's kit track
+# (M5 x / M4 y, offset 0.012 pitch 0.048), orientation from the floorplan meta (GEO.json); missing meta = FAIL
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import macro_tracks as MT  # noqa: E402
+_g1 = []
+try:
+    _meta = json.loads(Path(geo + ".json").read_text())
+    for _n, _cell, _box, _o, _ck in _meta["macros"]:
+        _sz, _pins = MT.lef_pins(Path(sramdir) / _cell / (_cell + ".lef"))
+        _bad = MT.check(_sz, _pins, _box[0], _box[1], _o)
+        _g1.append(dict(inst=_n, cell=_cell, origin=[round(_box[0], 4), round(_box[1], 4)], orient=_o,
+                        pins_checked=sum(1 for q in _pins if q[1] in MT.TRK), off_track=len(_bad), first=_bad[:3]))
+    _g1v = "PASS" if _g1 and all(m["off_track"] == 0 for m in _g1) else "FAIL"
+except (OSError, KeyError, ValueError, StopIteration) as _e:
+    _g1v, _g1 = "FAIL", [dict(error=repr(_e))]
+rep["gates"] = dict(G1_macro_pin_track=dict(verdict=_g1v, macros=_g1), **rep["gates"])
 rep["verdict"] = "PASS" if all(v["verdict"] == "PASS" for v in rep["gates"].values()) else "FAIL"
 Path(outp + ".json").write_text(json.dumps(rep, indent=1))
 with open(outp + ".tcl", "w") as fo:       # mscts_h spec (uf_asbuilt format): every plan cell incl. waypoint repeaters, FIRM

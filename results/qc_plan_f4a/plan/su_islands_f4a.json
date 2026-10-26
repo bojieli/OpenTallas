@@ -194,11 +194,11 @@
   "verdict": "PASS"
  },
  "qfd_dv_s8_crh_rp1": {
-  "method": "QC-PLAN-F4A f4_g4c G4-strict L1 islands (rp1_f4a_g4c.json sha d3ddbf98b19a)",
+  "method": "QC-PLAN-F4A f4_g4c G4-strict L1 islands (rp1_f4s_g4c.json sha 8bcd1223f1d0)",
   "k": 6,
   "max_entry_um": 194.4,
   "entry_um": [
-   125.292,
+   125.28,
    108.0
   ],
   "sinks": 2208,
@@ -283,13 +283,13 @@
    },
    {
     "centre_um": [
-     95.04,
+     90.72,
      198.72
     ],
     "rect_um": [
-     90.72,
+     86.4,
      194.4,
-     99.36,
+     95.04,
      203.04
     ],
     "entry_maze_um": 194.4,
@@ -298,11 +298,11 @@
   ]
  },
  "qfd_dv_s8x_vmr": {
-  "method": "QC-PLAN-F4A f4_g4c G4-strict L1 islands (vmr_f4a_g4c.json sha dacaf0278b1b)",
+  "method": "QC-PLAN-F4A f4_g4c G4-strict L1 islands (vmr_f4s_g4c.json sha 956527e0353b)",
   "k": 6,
   "max_entry_um": 195.48,
   "entry_um": [
-   125.292,
+   125.28,
    108.0
   ],
   "sinks": 3757,
@@ -387,13 +387,13 @@
    },
    {
     "centre_um": [
-     95.04,
+     90.72,
      198.72
     ],
     "rect_um": [
-     90.72,
+     86.4,
      194.4,
-     99.36,
+     95.04,
      203.04
     ],
     "entry_maze_um": 195.48,

@@ -12,7 +12,7 @@ tree_balance FAIL -> FAIL
 core_insertion_model FAIL -> FAIL 
 die_pair_skew_model FAIL -> FAIL 
 tree_commensurate PASS -> PASS 
-clock_sites FAIL -> FAIL {'declared_islands': (14321, 14417), 'tree_nodes_off_island': (8189, 8190)}
+clock_sites FAIL -> FAIL {'tree_nodes_off_island': (8189, 8190), 'declared_islands': (14321, 14417)}
 island_lattice FAIL -> FAIL 
 tree_on_islands FAIL -> FAIL {'leg_repeater_gap_fails': (454, 448)}
 tree_lattice PASS -> PASS 

@@ -12,8 +12,11 @@ su_c partition types:
   * track_offset_um [0.012, 0.012] (as D-QC-SU1713 prog/btab): every M4/M5 pin on the parent 0.048/0.024 lattice, asserted;
   * the core ck tap moves to origin + ck; tap insertion = the 12.3 common target 250 TT / 202.5 FF (built to it, no
     per-core budget); the old 395.7/349 measured budgets are retired with the old outline;
-  * companion master-plan inputs: entries (vmr/rp1 entry = ck) and core islands (F4A g4c L1 islands incl. the re-sited
-    NW island) -- every other module record byte-identical.
+  * companion master-plan inputs: entries and core islands (F4A g4c L1 islands incl. the re-sited NW island, trees on
+    the track-snapped geo results/qc_plan_f4a/geo/*_f4s.geo, COORD RULING QC-PLAN-F4A (1)) -- every other module record
+    byte-identical.  RULING (3): the entry = the centre of the CURRENT outline (125.28, 108), recorded bound to that
+    outline (entries[mod].outline_um, master_plan.core_entry refuses a record bound to another outline); the physical ck
+    pin / tap sits on the nearest M5 track (125.292, 0.012 from the entry, inside the 0.5-um entry check).
 Partition outlines / buses / ft / partition clock entry / all other types and top-level keys asserted unchanged.
 usage: apply_qc_f4a_1026.py PLAN_IN PLAN_OUT ENTRIES_IN ENTRIES_OUT ISLANDS_IN ISLANDS_OUT VMR_G4C.json RP1_G4C.json
 """
@@ -28,7 +31,9 @@ import gen_core_kit_qc as G  # noqa: E402  (lef_contract / face_of: the kit gene
 PLAN_SHA = "e4829ce26d222eac5fb51ab34454e28d0174585995bc0e837fc7e29d660f48d2"
 OLD, NEW = [259.2, 276.48], [250.56, 216.0]
 WWIN = (156.68, 210.68)                      # f4.py: wy1 = core top - 1.0 = 210.68, window = top 54 um
-CK = (125.292, 108.0)                        # F4A entry (125.28, 108) on the M5 track (0.012 + 0.048 k)
+CK = (125.292, 108.0)                        # ck pin: F4A entry (125.28, 108) on the M5 track (0.012 + 0.048 k)
+ENTRY = (125.28, 108.0)                      # RULING (3): entry = centre of the current outline NEW (4.32 lattice)
+assert ENTRY == (round(round(NEW[0] / 2 / 4.32) * 4.32, 4), round(round(NEW[1] / 2 / 4.32) * 4.32, 4))
 TOFF = [0.012, 0.012]
 MODS = {"qfd_dv_s8x_vmr": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr/qfd_dv_s8x_vmr.lef",
         "qfd_dv_s8_crh_rp1": "physical/ref_tile/qfd_dv_s8_crh_rp1/views/qfd_dv_s8_crh_rp1/qfd_dv_s8_crh_rp1.lef"}
@@ -114,7 +119,7 @@ def main(pin_, pout, ein, eout, iin, iout, gvmr, grp1):
                     tp["xy"] = [round(o[0] + TOFF[0] + CK[0], 4), round(o[1] + TOFF[1] + CK[1], 4)]
                     tp["insertion_ps"], tp["insertion_ff_ps"] = 250.0, 202.5
                     tp["budget_owner"] = ("12.3 common target (F4A core built to it; plan prediction results/qc_plan_f4a/"
-                                          f"{TAG[h['module']]}_f4a_g4c.json, UNCHECKED)")
+                                          f"{TAG[h['module']]}_f4s_g4c.json, UNCHECKED)")
                     n += 1
             assert n == 1, (tn, h["inst"])
             rep["changed"].append(dict(type=tn, inst=h["inst"], module=h["module"], origin_um=o, old_outline_um=OLD,
@@ -140,11 +145,12 @@ def main(pin_, pout, ein, eout, iin, iout, gvmr, grp1):
     for mod, gj in (("qfd_dv_s8x_vmr", gvmr), ("qfd_dv_s8_crh_rp1", grp1)):
         g = json.loads(Path(gj).read_text())
         assert g["verdict"] == "PASS" and g["clear_route"]["verdict"] == "PASS" and g["band"]["in_band_12_3"], gj
-        ent[mod] = dict(xy=list(CK), source=f"QC-PLAN-F4A: F4A centre entry (f4.py) on the M5 track; {Path(gj).name}")
+        ent[mod] = dict(xy=list(ENTRY), outline_um=list(NEW), ck_pin_um=list(CK),
+                        source=f"QC-PLAN-F4A RULING (3): centre of the current outline {NEW}; {Path(gj).name}")
         leaves = list(g["leaf_avg_with_trunk"]["TT"])
         T = g["levels"]["T_um"]
         isl[mod] = dict(method=f"QC-PLAN-F4A f4_g4c G4-strict L1 islands ({Path(gj).name} sha {sha(gj)[:12]})",
-                        k=g["k"], max_entry_um=T["T1"], entry_um=list(CK), sinks=g["n_sinks"], sampled=g["n_sinks"],
+                        k=g["k"], max_entry_um=T["T1"], entry_um=list(ENTRY), sinks=g["n_sinks"], sampled=g["n_sinks"],
                         entry_maze_um=dict(min=T["T1"], max=T["T1"]),
                         leaf_reach_um=round(T["T1"] + T["T2"] + T["T3"], 2),
                         equal_path_um=round(T["T1"] + T["T2"] + T["T3"], 2), verdict="PASS",
