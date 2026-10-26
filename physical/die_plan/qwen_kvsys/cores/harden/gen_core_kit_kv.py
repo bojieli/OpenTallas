@@ -454,7 +454,7 @@ ASTK_ZONES = (("zn0", r"^u_u_strip_u_strip_g_zn_0_u_zn[./]", 0.000, 0.606, 0.494
               ("ctl", r"^u_u_strip_u_strip_u_ctl[./]", 0.000, 0.000, 1.000, 0.200))
 ASTK_TAP_RE = r"^(u_u_strip_u_strip_g_zn_[0-9]_u_zn)[./]"
 # PATH-KV-ASTK7 10-25 (ASTK5 probe: 84% of the slew pins = N-face qo/tc chains pulled into the ctl S band): face-owned
-# ctl logic is no ctl zone member; with the FIRM face flops as "free" anchors (zone_members.tcl) it stays unfenced.
+# ctl logic is no ctl zone member; it votes with the FIRM face flops, which are anchors in the zone box at their face.
 ASTK_FREE_RE = (r"^u_u_strip_u_strip_u_ctl[./]g_tc_faces[./]",)
 
 
@@ -502,7 +502,7 @@ def astk_zone_fences(kd, cfg, w, h, m, face_taps=False, balance_levels=True):
         regions={nm: [round(x0 + a * cw, 2), round(y0 + b * ch, 2), round(x0 + c * cw, 2), round(y0 + d * ch, 2)]
                  for nm, _, a, b, c, d in ASTK_ZONES},
         region_kind="INCLUSIVE GPL guide, released before DPL", taps="one per zone (zn_0..3) + rest (ctl/strap/fault)",
-        cts_args=cts, free_unfenced=list(ASTK_FREE_RE) + ["FIRM face flops + cells voting from them"], added_cycles=0), indent=1) + "\n")
+        cts_args=cts, face_owned_voted=list(ASTK_FREE_RE), anchors="FIRM face flops vote for the zone box at their location", added_cycles=0), indent=1) + "\n")
     return out
 
 
