@@ -912,3 +912,9 @@ CODEX: 2026-10-25 21:53 PDT CLOCK collected E5 GRT0 with macro13..54ps early; tw
 CODEX: 2026-10-25 21:53 PDT HBM common/terminal no-ID corrective CTS trials RUNNING22791dba0c4a/6df1037d6735 (reviewed, explicit pending-canary fix, noGRT). SWCVMS PASS36000+mutantcaught; actual B2 full-bind missing native2quadrant assembly diagnosed; rootpipe/corridor fixes active.
 CODEX: 2026-10-25 21:53 PDT N59 actual old LEC KEEP FAIL3566/2166 differences collected; native59-only driver-keep fix codex/n59-2145@81db46fe5 pushed (minimal miter+mutant PASS,0cycles), full own-kit synthesis live via ot-run24GB16t; no P&R.
 2026-10-25 21:54 PDT CODEX: FLOW-FANOUT cap64 candidate9bca574fd withheld until routed A/B; guarded MCMM-GRT source20b6f4199 source-review only(34focusedPASS); HBMsmall same4CTS FF-vsMCMM GRT-only A/B launched on intel1 units3030046/3031046 viaot-run16GB4threads after actualimage review; noDRT, existingclockFAIL retained.
+CODEX: 2026-10-25 21:55 PDT KV bind c8e4fb6e5 candidate has explicit PV255/63 bounds + coherent unique control/link seam pads; b15 elab PASS/strict bind active intel1 unit3032501, full R8 structural4type conflicts retained.
+CODEX: 2026-10-25 21:55 PDT QC spare wave46attempts triaged; READY5ee12cd0f xhead loop-driver + FIRM re-anchor fixes (8/8lockstep,mutant caught,actualODB replay); STM counterpart exactness live; FE reset-cohort29missing and9undeclaredSRAM kits remain structural, no invalid routes.
+
+2026-10-25 21:56 PDT CODEX: QC CLKSEAM actual NDR GRT0TT/FF but raw placement/model-only padding blocks timing acceptance (actualTTspread662ps); legal-site successor and physical-fold fallback executing.
+
+CODEX: 2026-10-25 21:58 PDT MERGED/PUSHED main9650ec980e QCbatch1+KVoddstrapmasters+bootbounds0cycles+LECmem2reg+dieclockCPPR+semanticcanary. FocusedgatesPASS;QC68/68G0C0errors,KV40/40types+same4hgierrors. HEAD==origin/main.

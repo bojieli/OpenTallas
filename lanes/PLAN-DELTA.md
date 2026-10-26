@@ -41,3 +41,8 @@ PENDING-DELTA D-S81-FT-A8 s81 dsdv_slice_c1x_C__t1,dsdv_slice_c1x_C__t10,dsdv_sl
 [COORD 2026-10-25 21:25 PDT] D-QC-CLKSEAM: APPROVED for QC batch 1b. The QC die clock profile becomes --ndr 4w --wide-levels 6: seam pair skew 114.8/99.9 -> 57.0/50.0 ps, 0 pairs > 80. This is a routing rule on the die clock with no geometry change, so the frozen tile interfaces stand.
  Condition: DIE-PROTO checks the wide-wire RC on the routed die clock together with the batch-1 GRT0 re-run.
  The 20 ps balance target is judged by die STA with CPPR on real views. Any residual that fails STA gets the shallower/mesh top-level as a structural fix then, not now.
+
+MERGED-DELTA TR2-KV
+MERGED-DELTA D-QC-SU1713
+MERGED-DELTA D-QC-N59-1C
+CODEX 2026-10-25 21:58 PDT main9650ec980e incorporates reviewedQCbatch1 andqualifiedKVodd-headmasters;newkitresultsowedfrommergedsource.

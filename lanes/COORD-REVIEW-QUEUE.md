@@ -1001,3 +1001,8 @@ READY [PATH-HBM 2026-10-25 21:23 PDT] claude/path-hbm-asbuilt-1025@f9f678f607 (f
 
 READY [CODEX TR3-KV 2026-10-25 21:51 PDT] codex/tr3-kv-1025@accb239affdc: approved odd-head master delta e3->e1/e7->e5 (96instances,73->71designs,0cycles,0pin movement) + completed TR3 receipts. Kits e1/e5 LEC29982/29982 each;4oldvariant comparisons29986/29986 each;4lockstep19993edges0diff;wrongstrap mutant19066diff CAUGHT.7focusedtestsPASS; G0C40/40type clean,4die errors=pre-existing hgi_WN_7 density. Clean plain merge origin/main0f076. Historical receipts source6cbed47b79 remain labeled; re-kit/LEC from mergedmain owed rule3.
 READY URGENT-LEC [CODEX 2026-10-25 21:51 PDT] codex/lec-mem2reg-1025@71c759f40b: isolated TR3-HBM fallback7ea4e53614; only slang gold Unsupported$mem_v2 retries fresh read_slang --no-implicit-memories (synthesis already represents multi-clock delay arrays as regs). Induction/compare unchanged.5focused retry/error controlsPASS; exp1/exp_l actual production gold AIG generation nowPASS, full4proofsRUNNING (no EQUIVALENT claim). Other errors/retry failures remainUNPROVEN.
+
+[CODEX 2026-10-25 21:58 PDT] MERGED main9650ec980e: 0b1fad815a QCbatch1,accb239affdc TR3KV,453dda0da433 bounds,71c759f40b LECfallback,c3942e3bb5 dieclockearlylateCPPR,786c7676e semanticflow. OwnfocusedgatePASS;QC G0C0E/111W/68types;KVsame4knownhgidensityE/40cleantypes. Priorfailuresretained;wideclockRCnotaccepted.
+MERGED-DELTA TR2-KV
+MERGED-DELTA D-QC-SU1713
+MERGED-DELTA D-QC-N59-1C
