@@ -65,7 +65,12 @@ MAX_MOVE_UM = 250.0             # COORD 23:53: driver-site moves within 250 um
 NDR = {"4w": dict(width=0.16, space=0.08, rf=0.25, cf=1.3), "8w": dict(width=0.32, space=0.08, rf=0.125, cf=1.6)}
 VDD = {"TT": 0.70, "FF": 0.77}
 SITE_X, ROW_Y = 0.054, 0.27
-BUF_W = 1.35                    # BUFx24 width (um) for side-by-side parallel drivers (ASAP7 BUFx24 25 x 0.054)
+# Actual current ORFS asap7sc7p5t_28_R_1x_220121a.lef SIZE, not the obsolete 25-site estimate.
+# Parallel drivers use the full physical width; every buffer has the same 0.27-um row height.
+BUF_WIDTHS = {f"BUFx{k}_ASAP7_75t_R": w for k, w in
+              {"2": .270, "3": .324, "4": .378, "4f": .432, "5": .432, "6f": .540,
+               "8": .648, "10": .756, "12": .864, "12f": .972, "16f": 1.188, "24": 1.620}.items()}
+BUF_W = BUF_WIDTHS[BUF]
 
 
 def snap(x, q):
@@ -128,8 +133,16 @@ def strap_bounds(g, xs, ys, axis):
     return (xs[g["i0"]], xs[g["i1"] - 1]) if axis == 0 else (ys[g["j0"]], ys[g["j1"] - 1])
 
 
-def reserve_cell(K, name, c, width=BUF_W):
+def cell_width(c):
+    lib = c.get("lib", BUF)
+    if lib not in BUF_WIDTHS:
+        raise ValueError(f"clock cell geometry is unknown for {lib}")
+    return BUF_WIDTHS[lib]
+
+
+def reserve_cell(K, name, c, width=None):
     """Occupancy is a physical keepout, including clock cells already placed during this build."""
+    width = cell_width(c) if width is None else width
     r = (c["x"], c["y"], c["x"] + width, c["y"] + ROW_Y, "clock:" + name)
     for i in range(int(r[0] // K.b), int(r[2] // K.b) + 1):
         for j in range(int(r[1] // K.b), int(r[3] // K.b) + 1):
@@ -141,7 +154,8 @@ def placement_overlaps(cells):
     buckets, out = defaultdict(list), []
     for n, c in cells.items():
         x, y = c["x"], c["y"]
-        keys = [(i, j) for i in range(int(x // 4), int((x + BUF_W) // 4) + 1)
+        width = cell_width(c)
+        keys = [(i, j) for i in range(int(x // 4), int((x + width) // 4) + 1)
                 for j in range(int(y // 1), int((y + ROW_Y) // 1) + 1)]
         seen = set()
         for key in keys:
@@ -150,7 +164,7 @@ def placement_overlaps(cells):
                     continue
                 seen.add(old)
                 v = cells[old]
-                if min(x + BUF_W, v["x"] + BUF_W) - max(x, v["x"]) > 1e-5 and \
+                if min(x + width, v["x"] + cell_width(v)) - max(x, v["x"]) > 1e-5 and \
                    min(y + ROW_Y, v["y"] + ROW_Y) - max(y, v["y"]) > 1e-5:
                     out.append([old, n])
             buckets[key].append(n)
