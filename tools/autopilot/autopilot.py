@@ -280,10 +280,10 @@ def validate_row(r):
         return "cells not a number (expected std cells required)"
     if c > CELL_CAP:
         return f"cells {int(c)} > {CELL_CAP} (OpenROAD cap per run)"
-    if r["goal"] not in ("", "auto", "route", "finish", "cts"):
-        return "goal must be route|finish|auto|cts"
-    if r["goal"] == "cts" and not r["runner"]:
-        return "cts diagnostic goal requires an explicit CTS-only runner"
+    if r["goal"] not in ("", "auto", "route", "finish", "cts", "grt"):
+        return "goal must be route|finish|auto|cts|grt"
+    if r["goal"] in ("cts", "grt") and not r["runner"]:
+        return f"{r['goal']} diagnostic goal requires an explicit {r['goal'].upper()}-only runner"
     if r["threads"] and not r["threads"].isdigit():
         return "threads not an integer"
     if r["runner"] and not r["runner"].startswith("/"):
@@ -479,6 +479,11 @@ out["grt_overflow"] = int(tot[-1]) if tot else None
 out["goal"] = goal
 cts = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "4_cts.odb")) if os.path.getmtime(p) >= since]
 if cts: out["cts_odb"] = max(cts, key=os.path.getmtime)
+grt = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "5_1_grt.odb")) if os.path.getmtime(p) >= since]
+if grt: out["grt_odb"] = max(grt, key=os.path.getmtime)
+route = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "*.odb"))
+         if re.match(r"^(?:5_route|5_2_route|5_3_fillcell|6_[0-9A-Za-z_]+)\.odb$", os.path.basename(p))]
+if route: out["route_odb"] = max(route, key=os.path.getmtime)
 done()
 '''
 
@@ -575,6 +580,8 @@ def classify(c, client):
     """pure function: (classify-probe result, client outcome) -> (class, kind, reasons)
     class: SIGNED | NEAR-MISS | STRUCTURAL | CRASH ; kind refines it (infra / tool / ...)"""
     so = c.get("signoff")
+    if c.get("goal") == "grt" and (so or c.get("route_odb")):
+        return "STRUCTURAL", "diagnostic-overrun", "GRT-only runner produced detailed-route/signoff output; no release scope"
     if so:
         if so.get("verdict") == "LOCAL_PASS_NEEDS_PARENT" and so.get("local_verdict") == "SIGNED":
             return "WAIT-PARENT", "parent-receipt-pending", "; ".join(so.get("reasons") or []) or "matching actual parent seam receipt required"
@@ -614,6 +621,11 @@ def classify(c, client):
         return "CRASH", "infra-lost", client.get("msg", "ot-run NOT COMPLETED")
     if c.get("oom") or client.get("exit") in (137, 143):
         return "CRASH", "infra-oom", c.get("oom") or f"exit {client.get('exit')}"
+    if client.get("exit") == 0 and c.get("goal") == "grt" and c.get("grt_odb"):
+        if c.get("grt_overflow") not in (None, 0):
+            return "STRUCTURAL", "grt-overflow", f"GRT-only overflow {c['grt_overflow']}"
+        return "GRT-DONE", "grt-only", (f"GRT-only diagnostic finished: {c['grt_odb']}; overflow {c.get('grt_overflow')} "
+                                        "-- no sign-off scope; collect routed-RC timing/clock and review before DRT")
     if client.get("exit") == 0 and c.get("goal") == "cts" and c.get("cts_odb"):
         return "CTS-DONE", "cts-only", (f"CTS-only diagnostic finished: {c['cts_odb']} -- no sign-off scope; collect "
                                         "placement / clock / reset images and review before the next scope")
@@ -758,7 +770,7 @@ def runner_goal(goal, p):
     (sign-off only on finish/post) -> 'flow exit 0 but no signoff.json'; elemB_cv / s81sl_vq ran GOAL=finish = ORFS
     'make finish' = GDS merge of macro LEFs without GDS -> crash after the route.  cts stays cts."""
     sg = p.get("signoff_goals") or []
-    if goal == "cts" or not sg:
+    if goal in ("cts", "grt") or not sg:
         return goal
     if goal == "finish" and p.get("gds_gap") and "route" in sg and p.get("route_runs_finish"):
         return "route"
@@ -951,7 +963,7 @@ def closure_hold(r):
     """(status, why) that keeps a row from being submitted, or (None, '')"""
     if r.get("mode") in ("trial", "adopt", "withdraw"):
         return None, ""
-    why = "" if r.get("goal") == "cts" else path_gate_hold(r)   # a CTS-only diagnostic is a trial build
+    why = "" if r.get("goal") in ("cts", "grt") else path_gate_hold(r)   # scope-only diagnostics are trial builds
     if why:
         return "WAIT-PATH-GATE", why
     why = plan_delta_hold(r)
@@ -1224,7 +1236,7 @@ def admit_new(st, rows):
                "enqueue a fresh kit" if p.get("routed") or p.get("signoff_dirs") else
                f"kit carries {'+'.join(p['fail_marks'])} from an earlier run; enqueue a fresh kit"
                if p.get("fail_marks") else "no run_kit*.sh runner found" if not p.get("runner") else "")
-        if not why and p.get("signoff_missing") and r.get("goal") != "cts":
+        if not why and p.get("signoff_missing") and r.get("goal") not in ("cts", "grt"):
             why = (f"kit signoff.py lacks {', '.join(p['signoff_missing'])} (sign-off would crash after the route); "
                    "stage the whole bundle: tools/die_plan/signoff.py copy_signoff_bundle(kit)")
         if r["mode"] == "adopt":
@@ -1240,7 +1252,7 @@ def admit_new(st, rows):
             continue
         j["runner"] = p["runner"]
         j.pop("hold_why", None)
-        trial_why = ("mode trial" if r["mode"] == "trial" else "goal cts (diagnostic)" if r.get("goal") == "cts"
+        trial_why = ("mode trial" if r["mode"] == "trial" else f"goal {r.get('goal')} (diagnostic)" if r.get("goal") in ("cts", "grt")
                      else path_gate_hold(r))
         if trial_why:
             j["trial"] = trial_why                        # rule 1: never recorded as a sign-off
@@ -1345,11 +1357,11 @@ def finish(st, j, c, client):
 
 def after_class(st, j):
     cls = j["status"]
-    if cls == "CTS-DONE":
+    if cls in ("CTS-DONE", "GRT-DONE"):
         j["delete_pending"] = False
         tsv_append("trial.tsv", j["id"], [j["die"], j["type"], j["src"], ssh_host(j.get("probe") or j["host"]), j["kit"],
-                                          "CTS-DONE", "", "", j.get("reasons", "")[:300], j.get("lane", "")])
-        log(f"CTS-DONE {j['id']} {j['die']}/{j['type']}: {j.get('reasons', '')[:200]}; checkpoint kept, trial.tsv")
+                                          cls, "", "", j.get("reasons", "")[:300], j.get("lane", "")])
+        log(f"{cls} {j['id']} {j['die']}/{j['type']}: {j.get('reasons', '')[:200]}; checkpoint kept, trial.tsv")
         return
     if cls == "SIGNED":
         trial = j.get("trial") or path_gate_hold(j)
