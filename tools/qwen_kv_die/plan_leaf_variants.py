@@ -118,7 +118,7 @@ VARIANTS = [
     # TILE level (KV-P3b-TILE 10-23): the as-built die masters.  qkd_kvs_pc_h comes from ..._n32_pj_nc32.sv (gen_source_ports
     # @ e33504a6f); its module text is byte-identical to the one in ..._n32_pj.sv used here.  qkd_kvs_grp_h_r2c is the mapped
     # structural copy (kv_grp_safe5.py) of qkd_kvs_grp_h_r2 (qkd_kvs_grp_r2.sv) whose u_core is qkd_kvs_grp_h of ..._n32_pj.sv.
-    dict(name='qkd_kvs_pc_h_head_p', src=TILE_SRC, module='qkd_kvs_pc_h',
+    dict(name='qkd_kvs_pc_h_head_p', src='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv', module='qkd_kvs_pc_h',
          die='qkd_kvs_pc_h.pc__pc (0) + pc__fi (chain head kvpc_*_0)', param=[('pc__pc', 'PC')], head=['pc__fi'],
          children=[dict(inst='u_pc', module='qkd_static_kv_pc_path_fan_nc_b', new='qkd_static_kv_pc_path_fan_nc_b_head_p',
                         params={'PC': 'PC', 'CORE_CLOCK': '1'}, drop={'pc': 'PC', 'fi': 'pc__fi'})],

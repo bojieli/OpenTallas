@@ -142,6 +142,13 @@ def tap_points(P, tn):
     cks = [(x, y) for _, x, y in S.tap_grid(P, tn)] + [(x, y) for _, x, y, _ in S.core_taps(P, tn)]
     ck = list(cks[0])
     rs = list(t.get("reset", {}).get("tap_um", ck))
+    if (t.get("hard") and t.get("reset", {}).get("tap_um") is not None
+            and t.get("clock", {}).get("tap_um") is not None
+            and any(c.get("lef") and c.get("origin_um") is not None for c in t.get("contents", []))):
+        # These are native hard-macro terminal coordinates, not movable buffer
+        # sites. Distinct legal LEF pins can be192nm apart; the soft1um collision
+        # heuristic and partition-layer snapping must not move either terminal.
+        return [tuple(map(float, ck)), tuple(map(float, rs))]
     if any(abs(rs[0] - a) < 1.0 and abs(rs[1] - b) < 1.0 for a, b in cks):
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
         if t.get("hard_cores"):     # S81-P8 10-23: the reset tap also sits in a channel, off the clock taps

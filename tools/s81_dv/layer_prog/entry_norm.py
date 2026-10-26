@@ -117,7 +117,11 @@ def main():
     source = p.add_mutually_exclusive_group(required=True)
     source.add_argument('--tree', type=Path, help='compiler tree with bind9/plan/land model')
     source.add_argument('--die-v', type=Path, help='actual materialized die.v; read only SIDs/source/clock pins')
+    source.add_argument('--bound', type=Path, help='Current strict bound out/; no legacy geometry is read')
+    p.add_argument('--bound-inventory', type=Path, help='Logical source inventory for --bound')
     p.add_argument('--fixtures', type=Path, required=True)
+    p.add_argument('--entry-engram-inputs', type=Path,
+                   help='Checkpoint-derived Engram inputs for native attention-entry H residency')
     p.add_argument('--inference-config', type=Path, required=True,
                    help='exact fixture-pinned model config; use norm_eps, not hc_eps')
     p.add_argument('--first-issue', type=int, default=20)
@@ -125,8 +129,16 @@ def main():
     a = p.parse_args()
     if a.out.exists():
         raise ValueError('preserve previous immutable programme; use fresh output')
-    die = PinDie(a.die_v) if a.die_v else D.Die(a.tree)
-    entry = compile_inputs(die, a.fixtures)
+    if a.bound:
+        if not a.bound_inventory:
+            p.error('--bound requires --bound-inventory')
+        from bound_die import BoundDie
+        die = BoundDie(a.bound, a.bound_inventory)
+    else:
+        if a.bound_inventory:
+            p.error('--bound-inventory requires --bound')
+        die = PinDie(a.die_v) if a.die_v else D.Die(a.tree)
+    entry = compile_inputs(die, a.fixtures, a.entry_engram_inputs)
     config_sha = hashlib.sha256(a.inference_config.read_bytes()).hexdigest()
     meta = json.loads((a.fixtures/'meta.json').read_text())
     config_key = 'compiler/models/deepseek-v4.1-flash/inference_config.json'

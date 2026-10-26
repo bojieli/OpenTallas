@@ -1,0 +1,21 @@
+{
+ "kit": "KV ASTK early-face-root checkpoint",
+ "kit_hash": "priorfreeze e277c056f284182c + hook83b641e06",
+ "request": "CODEX-KV-ASTK-EARLY-1026",
+ "scope": "GRT-only clock/FF repair trial after current-flow regeneration",
+ "image": "/srv/opentallas-scratch/claude/codex-aux-geom-1026/kv_astk_clock_topology.png",
+ "verdict": "PASS-COND",
+ "findings": [
+  "Viewed corrected W-mid ck0.096,90.696 to nearbyface_root6.36,91.4,regional interior and boundary taps; clock branches cover sink regions with short localspokes, no macro walls.",
+  "Actual propagated pairTT57.75/FF49.67 over214482pairs crosscheck0; face clocksTT246/251/255 andFF198/204/207 meet cornercontract \u00b120.",
+  "TTsetup-1.324 is ctl.start->z_done_r ~19combcell carry/comparepath with243.368 launch/230.794 capture; FFboundary-15.473 stillFAIL before normalFF-frame GRTrepair."
+ ],
+ "conditions": [
+  "Regenerate exact structural hook/current flow before any physical advance; composed old checkpoint is explicitly noncanonical.",
+  "Complete full r2r reach census before GRT (wholeoutline bound371.52<405 is supporting geometry, not the requested census record).",
+  "Trial GRT only; preserve failedsetup/hold records and require normal actualTT>=0/FF>=0/pair80/DRV gates before DRT or SIGNED."
+ ],
+ "schema": "opentallas.geom_review.v1",
+ "reviewer": "CODEX auxiliary independent review",
+ "reviewed": "2026-10-26 02:39 PDT"
+}

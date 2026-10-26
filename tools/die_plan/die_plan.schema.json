@@ -2574,6 +2574,69 @@
        "type": "string",
        "pattern": "^[0-9a-f]{64}$"
       },
+      "regions_depth": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "regions": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "k",
+         "tag",
+         "i0",
+         "i1",
+         "j0",
+         "j1",
+         "box_um"
+        ],
+        "properties": {
+         "k": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "tag": {
+          "type": "string",
+          "pattern": "^h[01]*$"
+         },
+         "i0": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "i1": {
+          "type": "integer",
+          "minimum": 1
+         },
+         "j0": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "j1": {
+          "type": "integer",
+          "minimum": 1
+         },
+         "box_um": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+         },
+         "strap_box_um": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+         }
+        }
+       }
+      },
       "cells": {
        "type": "integer",
        "minimum": 1

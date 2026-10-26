@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.lec.target.v1",
+ "verdict": "EQUIVALENT",
+ "source_commit": "6483d030dd348e29496ebeee38c0ec332737055c",
+ "method": "all outputs and all untrusted seed/new correspondence hypotheses proved in one AIG miter; actual ABC swept result has every output literal zero",
+ "obligations": 41911,
+ "proved": 41911,
+ "nonzero": 0,
+ "solver_artifact_sha256": "f25be9af2b7f0ce1769f037d12c5fe0f18e134a87f8e1683021b9c70c67c98cc",
+ "original_job_report": "FAIL TypeError only in elapsed-time serialization after terminal proof bad0; failure retained, recovered receipt is new",
+ "original_source_provenance": "old cohort source commit unknown; no current physical/source release claim",
+ "tool_sha256": "d133024ace835987a38702a417c01f5dbd126810720175411a03d0ff1aa8235b",
+ "inputs_sha256": {
+  "gold.map": "a27b01797132032f577ba71930190fa5041a70e14e13a51bb50d46361e86d741",
+  "gate.aig": "7df54e9f468d8d0b863260481ec023b3e61d10a6418fe87db60c2e3ca4c52f72",
+  "hyp.json": "a0abf53bcdf3a85479850babf4f53737f2c71f8bc19ec7c9db78d01e02d7bfe2",
+  "gold.aliases.json": "b203f5b9b4372e01ce45ef9f12b8ab57e98ca141bd0e567235fbb9484c2a52ff",
+  "gate.map": "7feb2b2207ecbe5491f6207025f5bc670915246659ef4354c0bddcc026a437d3",
+  "gold.aig": "fa0337c28d9a2bf72c2005e482b8f5a4fea1d8d9a5f1ffa5675880a5674cb8bc"
+ },
+ "original_miter_sha256": "7b03d95cf7c3c8e2bc71caf4ad36ef30d241b312603d5357eaaed925a28dd8f9",
+ "all_input_paths": "immutable old cohort AIG/map/hyp/aliases; target tool uses these as arguments and re-proves every proposed relation",
+ "old_keep_result": "2003/2003 in original failed record; no new full CLI KEEP/current-release verdict claimed"
+}

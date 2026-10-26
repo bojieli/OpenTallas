@@ -161,3 +161,50 @@ def test_pair_image_kv_tx_latency(tmp_path):
     asb = RC.run("qwen_kvsys", b)
     assert _v(asb, "D2D_KV_TX_LAT") == 22 and _v(asb, "D2D_TXDP_K") == [22, 4, 3, 3]
     assert _v(RC.run("qwen_compute", FX / "qc12", peer=b), "D2D_KV_TX_LAT") == 22
+
+
+def test_composed_ahub_uses_endpoint_ports(tmp_path):
+    """Physical ASTK source names change after composition; the AHUB pin identity stays exact."""
+    d = tmp_path / 'composed'
+    d.mkdir()
+    groups = []
+    for k, (st, old, new) in enumerate(zip(('WS', 'WN', 'ES', 'EN'), (19, 19, 22, 20), (16, 16, 14, 14))):
+        groups.append(dict(sink='ahub', src_part='outer', sink_part='hub_C', members=[dict(
+            source=f'native_composite_hub_outer_astk_{st}.u_strip_u_strip_u_ctl__ap', sink_port=f'ap{k}',
+            asbuilt_stages=old, bound_stages=new, landed_stages=new, lane=f'L{k}', sink_bits=[[0, 0]])]))
+    for side, lag in (("w", 10), ("e", 7)):
+        groups.append(dict(sink=f"seq__g_fan_{side}", src_part="hub_C", sink_part="hub_C", members=[dict(
+            source=f"seq__u_core.f_aqm_{side}", sink_port="aqm", asbuilt_stages=0,
+            bound_stages=lag, landed_stages=lag, lane="Lfan", sink_bits=[[0, 0]])]))
+    for k, st in enumerate(("WS", "WN", "ES", "EN")):
+        groups.append(dict(sink=f"native_composite_astk_{st}", src_part="hub_C", sink_part="outer", members=[dict(
+            source=f"ahub.am{k}", sink_port="am", asbuilt_stages=2,
+            bound_stages=7, landed_stages=7, lane=f"Lam{k}", sink_bits=[[0, 0]])]))
+    (d / 'bus_groups.json').write_text(json.dumps(dict(landing=groups)))
+    (d / 'param_regen.json').write_text(json.dumps(dict(changed=[dict(inst='ahub', param='AP_OFS',
+        asbuilt="64'hffddffdeffdcffdc", bound="64'hffd7ffd6ffd9ffd9")], record={})))
+    (d / 'rtl').mkdir()
+    (d / 'rtl' / 'hub.sv').write_text('module h; qkd_ahub_static_dw #(.FR_OFS(-7)) u_ahub (); endmodule')
+    b = RC.Bound(d)
+    o = RC.Out('qwen_kvsys', b)
+    RC.kv_ahub(o)
+    assert o.c['AP_OFS']['value'] == [-39, -39, -42, -41]
+    assert o.c['FR_OFS']['value'] == -7
+    assert o.c['AM_LAG_DELTA']['value'] == dict(WS=-5, WN=-5, ES=-2, EN=-2)
+    # A real extra stage on one AP port changes exactly that stack's required offset.
+    groups[2]['members'][0]['landed_stages'] += 1
+    (d / 'bus_groups.json').write_text(json.dumps(dict(landing=groups)))
+    o = RC.Out('qwen_kvsys', RC.Bound(d))
+    RC.kv_ahub(o)
+    assert o.c['AP_OFS']['value'] == [-39, -39, -41, -41]
+
+
+def test_unchanged_param_still_read_with_unrelated_hook_changes(tmp_path):
+    d = tmp_path / 'bound'
+    d.mkdir()
+    (d / 'bus_groups.json').write_text(json.dumps(dict(landing=[])))
+    (d / 'param_regen.json').write_text(json.dumps(dict(changed=[dict(inst='ectl', param='RESPONSE_LAT', asbuilt='80', bound=12)])))
+    (d / 'rtl').mkdir()
+    (d / 'rtl' / 'pv.sv').write_text('module h; ot_qwen_tp8_pv_wide_ctl_tbf #(.TRUNK_D(54), .FLAG_D(58)) u_pvS_u_ctl (); endmodule')
+    b = RC.Bound(d)
+    assert b.asbuilt_param(r'pvw_\d__u_ctl$', 'TRUNK_D', module=r'ot_qwen_tp8_pv_wide_ctl_tbf') == '54'

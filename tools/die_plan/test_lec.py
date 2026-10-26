@@ -78,6 +78,30 @@ def test_slang_elements_reads_the_element_layout_from_driver_cells(tmp_path):
     assert lec.slang_elements(tmp_path / "missing.json") == {}
 
 
+def test_slang_element_keys_pair_relay_last_stage_with_its_output_name(tmp_path):
+    # ot_qkh_relay W=2 D=2 (`reg [1:0] r [0:1]; assign q = r[1]`): gold slang flat r[0..3], element 1 at r[0..1];
+    # gate keeps the first stage relaid (r#t[0][b]) and names the last stage after the output (q[b]) -- PATH-KV e1f
+    j = {"modules": {"lec_top": {
+        "netnames": {"u_dut.u_r.r": {"hide_name": 0, "bits": [10, 11, 20, 21]}},
+        "cells": {"$flatten\\u_dut.u_r.$driver$r[0]": {"type": "$dff", "connections": {"Q": [20, 21]}},
+                  "$flatten\\u_dut.u_r.$driver$r[1]": {"type": "$dff", "connections": {"Q": [10, 11]}}}}}}
+    (tmp_path / "gold.aliases.json").write_text(json.dumps(j))
+
+    class _L:
+        pass
+    L = _L()
+    L.hyp = {}
+    L.gp = {f"ff:u_dut.u_r.r[{f}]": f for f in range(4)}
+    L.tp = {"ff:u_dut.u_r.r#t[0][0]": 0, "ff:u_dut.u_r.r#t[0][1]": 1, "ff:u_dut.u_r.q[0]": 2, "ff:u_dut.u_r.q[1]": 3}
+    L.tc = {}
+    L.matched, L.gonly, L.tonly = [], sorted(L.gp), sorted(L.tp)
+    log = []
+    assert lec.slang_element_keys(L, log, work=tmp_path) == 4
+    # element 0 (gold r[2..3]) <- relaid first stage; element 1 = last stage (gold r[0..1]) <- q
+    assert L.tp == {"ff:u_dut.u_r.r[2]": 0, "ff:u_dut.u_r.r[3]": 1, "ff:u_dut.u_r.r[0]": 2, "ff:u_dut.u_r.r[1]": 3}
+    assert L.gonly == [] and L.tonly == []
+
+
 def test_merged_copy_pairs_with_its_own_name_shape():
     c = ["ff:u.g_ctl[1].u_c.g_c[0].f[0]", "ff:u.g_ctl[0].u_c.g_c[0].f[1]", "ff:u.g_ctl[0].u_c.g_c[0].f[0]"]
     assert lec.closest("ff:u.g_ctl[0].u_c.g_c[10].f[0]", c)[0] == "ff:u.g_ctl[0].u_c.g_c[0].f[0]"
@@ -903,3 +927,202 @@ def test_cyclic_hypotheses_drop_one_and_reprove(tmp_path, monkeypatch):
     m, _ = L.build(with_compare=True, with_hyp=True)
     assert [d for d, _ in L.cycle_dropped] == [("both", "ff:u_dut.q")] and ("both", "ff:u_dut.p") in L.hyp
     assert set(_exact_prove(m).values()) == {"proved"}
+
+
+def test_rejected_register_pair_has_a_bounded_retry_count(tmp_path, monkeypatch):
+    """A rejected mapping must stop being proposed after aliases have settled.
+
+    The prover deliberately rejects the otherwise plausible tiny mapping, as a
+    real mismatched or non-inductive state relation would be rejected. Distinct
+    proposal mechanisms may each try it twice; the ordinary next-state proposer
+    must not keep retrying it in all 24 adding rounds.
+    """
+    L = _design(tmp_path, merged=True)
+    attempts = []
+
+    def reject_relation(m, *args, **kwargs):
+        names = [n for n in m.onames if n.startswith('hyp:')]
+        attempts.extend(names)
+        return {n: 'differs' for n in m.onames}
+
+    monkeypatch.setattr(lec, 'prove', reject_relation)
+    lec.correspond(L, tmp_path, 100, [], rounds=24, sim_iters=1)
+    assert len(attempts) <= 6, attempts
+    assert not L.hyp  # rejecting a relation never turns it into an assumption
+
+
+def test_scalar_unpacked_array_alias_needs_function_correspondence(tmp_path, monkeypatch):
+    # Slang wire cf[0:4] aliases head0.cf_o to flat cf[3], head2.cf_o to cf[1].
+    # Gate synthesis names the same physical flops cf[1] and cf[3]. A blind alias
+    # rename swaps the two state points, making the following cfi registers differ.
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    def design(name, mutant=False):
+        p = tmp_path / (name + ".aig")
+        gate = name.startswith("gate")
+        nxt = [2, 4 if not mutant else 3, 6, 8]
+        p.write_bytes(("aig 6 2 4 0 0\n" + "".join(f"{x}\n" for x in nxt)).encode())
+        names = ["cf[1]", "cf[3]"] if gate else ["h0.cf_o", "h2.cf_o"]
+        names += ["h1.cfi_p", "h3.cfi_p"]
+        mp = {"input": {0: [("d0", 0)], 1: [("d1", 0)]}, "output": {},
+              "latch": {i: [(f"u.{n}$_DFF_P_.lecq", 0)] for i,n in enumerate(names)}}
+        if not gate:
+            mp["latch"][0].append(("u.cf", 3))
+            mp["latch"][1].append(("u.cf", 1))
+        return lec.read_aig(p), mp
+    g, gm = design("gold")
+    for mut in (False, True):
+        t, tm = design("gate" + str(mut), mut)
+        L = lec.Lec(g, gm, t, tm)
+        assert "ff:u.h0.cf_o" in L.gonly and "ff:u.h2.cf_o" in L.gonly
+        lec.correspond(L, tmp_path, 100, [])
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        verdicts = set(_sim_prove(m).values())
+        assert ("differs" in verdicts) == mut
+        if not mut:
+            assert verdicts == {"proved"}
+
+
+@pytest.mark.parametrize("reverse", [False, True])
+def test_alias_array_unique_driver_layout_avoids_whole_design_simulation(monkeypatch, tmp_path, reverse):
+    # Flat gold q[0:3] vs gate SX[0:1][0:1]. Element-driver metadata names
+    # one unique layout; arbitrary simulation scores cannot change that choice.
+    from types import SimpleNamespace
+    gold = [f"ff:u.q[{i}]" for i in range(4)]
+    gate = [f"ff:u.SX[{i}][{j}]" for i in range(2) for j in range(2)]
+    def no_build(**kwargs):
+        raise AssertionError("unique structural layout must not build a simulation miter")
+    L = SimpleNamespace(gp=dict.fromkeys(gold, 0), tp=dict(zip(gate, range(10,14))),
+                        gc={}, tc={}, matched=[], gonly=gold, tonly=gate, hyp={},
+                        galias={k:[gate[0]] for k in gold}, build=no_build)
+    expected = {gold[i]:gate[(3-i)//2*2+i%2] if reverse else gate[i] for i in range(4)}
+    metadata = {k:t[len("ff:u.SX"):] for k,t in expected.items()}
+    monkeypatch.setattr(lec, "slang_elements", lambda path:metadata)
+    log=[];lec.alias_arrays(L,log,work=tmp_path)
+    assert L.tp == {k:10+gate.index(t) for k,t in expected.items()}
+    assert L.matched == sorted(gold) and not L.gonly and not L.tonly
+    assert L.hyp == {}  # no unproved correspondence hypothesis was accepted
+    assert "proof pending" in log[-1]
+
+
+@pytest.mark.parametrize("metadata", [{}, {"ff:u.q[0]":"[9][0]"},
+    {"ff:u.q[0]":"[0][0]", "ff:u.q[3]":"[0][1]"}])
+def test_alias_array_missing_or_unusable_driver_evidence_keeps_simulation_fallback(monkeypatch,tmp_path,metadata):
+    from types import SimpleNamespace
+    gold=[f"ff:u.q[{i}]" for i in range(4)]
+    gate=[f"ff:u.SX[{i}][{j}]" for i in range(2) for j in range(2)]
+    def need_scoring(**kwargs):raise RuntimeError("fallback simulation reached")
+    L=SimpleNamespace(gp=dict.fromkeys(gold,0),tp=dict(zip(gate,range(10,14))),gc={},tc={},
+                      matched=[],gonly=gold,tonly=gate,hyp={},galias={k:[gate[0]] for k in gold},build=need_scoring)
+    monkeypatch.setattr(lec,"slang_elements",lambda path:metadata)
+    with pytest.raises(RuntimeError,match="fallback simulation reached"):lec.alias_arrays(L,[],work=tmp_path)
+
+
+def test_scoped_scalar_array_driver_names_prevent_accidental_matches(tmp_path):
+    """A gate retaining only middle elements must use semantic, not flat, indices.
+
+    Gold's flat rv[0:3] represents original rv[4:1]. Gate retains original
+    rv[2:3], so old matching paired the wrong states. The wrong gate input
+    mutant must still differ after metadata normalization.
+    """
+    aliases = {'modules': {'lec_top': {
+        'netnames': {'u_dut.g_line.rv': {'hide_name': 0, 'bits': [14, 13, 12, 11]}},
+        'cells': {f'$flatten\\u_dut.$driver$g_line.rv[{i}]':
+                  {'type': '$aldff', 'connections': {'Q': [10+i]}} for i in range(1, 5)}
+    }}}
+    f = tmp_path/'gold.aliases.json'
+    f.write_text(json.dumps(aliases))
+    em = lec.slang_elements(f)
+    assert em == {f'ff:u_dut.g_line.rv[{flat}]': f'[{4-flat}]' for flat in range(4)}
+    gm = {'input': {i: [(f'd{i+1}', 0)] for i in range(4)},
+          'latch': {i: [(f'u_dut.g_line.rv[{i}]$_DFF_P_.lecq', 0)] for i in range(4)}, 'output': {}}
+    tm = {'input': gm['input'], 'latch': {
+        0: [('u_dut.g_line.rv[2]$_DFF_P_.lecq',0)],
+        1: [('u_dut.g_line.rv[3]$_DFF_P_.lecq',0)]}, 'output': {}}
+    g = tmp_path/'g.aig'
+    g.write_bytes(b'aig 8 4 4 0 0\n8\n6\n4\n2\n')
+    for mutant in (False, True):
+        t = tmp_path/'t.aig'
+        t.write_bytes(f'aig 6 4 2 0 0\n{2 if mutant else 4}\n6\n'.encode())
+        L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+        before,_ = L.build(with_compare=True,with_hyp=False)
+        assert 'differs' in _sim_prove(before).values()
+        assert lec.normalize_gold_elements(L,em,[]) == 3
+        after,_ = L.build(with_compare=True,with_hyp=True)
+        st = _sim_prove(after)
+        assert ('differs' in st.values()) == mutant
+        assert set(L.matched) >= {'ff:u_dut.g_line.rv[2]', 'ff:u_dut.g_line.rv[3]'}
+
+
+@pytest.mark.parametrize('mutant', [None, 'invert_d', 'swap_alias'])
+def test_json_q_alias_keeps_next_state_proof_and_catches_mutants(tmp_path, mutant):
+    # ASTK sd-row enable: slang keeps private en[], gate names the same flops
+    # after public we[]. write_aiger's map contains neither Q-wire alias.
+    g, gm = _seq(tmp_path, 'json_gold', ['d0', 'd1'], ['en[0]', 'en[1]', 'o'],
+                 lambda m, l: {'en[0]': l['d0'], 'en[1]': l['d1'],
+                               'o': m.XOR(l['en[0]'], l['en[1]'])})
+    t, tm = _seq(tmp_path, 'json_gate', ['d0', 'd1'], ['we[0]', 'we[1]', 'o'],
+                 lambda m, l: {'we[0]': l['d0'] ^ (mutant == 'invert_d'), 'we[1]': l['d1'],
+                               'o': m.XOR(l['we[0]'], l['we[1]'])})
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'lec_top': {'netnames': {
+        'u_dut.en': {'bits': [10, 11]},
+        'u_dut.we': {'bits': [11, 10] if mutant == 'swap_alias' else [10, 11]}}}}}))
+    L = lec.Lec(g, gm, t, tm)
+    assert lec.json_alias_keys(L, [], work=tmp_path) == (0 if mutant == "swap_alias" else 2)
+    m, _ = L.build(with_compare=True, with_hyp=False)
+    # Exhaust every assignment of inputs and current state, including illegal
+    # states: aliases do not remove a D comparison or add any assumption.
+    count = 1 << m.ni
+    mask = (1 << count) - 1
+    val = [0] * (m.ni + len(m.ands) // 2 + 1)
+    for v in range(1, m.ni + 1):
+        val[v] = sum(1 << s for s in range(count) if s & (1 << (v - 1)))
+    for k in range(len(m.ands) // 2):
+        a, b = m.ands[2*k:2*k+2]
+        val[m.ni+k+1] = lec.lit_val(val, mask, a) & lec.lit_val(val, mask, b)
+    failures = [n for n, o in zip(m.onames, m.outs) if lec.lit_val(val, mask, o)]
+    assert bool(failures) == bool(mutant)
+
+
+def test_json_q_alias_rejects_ambiguous_and_constant_candidates(tmp_path):
+    class L:
+        hyp = {}
+        gp = {'ff:u.a[0]': 2, 'ff:u.b[0]': 4, 'ff:u.const[0]': 6}
+        tp = {'ff:u.y[0]': 2, 'ff:u.z[0]': 4}
+        tc = dict(tp)
+        gonly = sorted(gp)
+        tonly = sorted(tp)
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'top': {'netnames': {
+        'u.a': {'bits': [10]}, 'u.b': {'bits': [10]}, 'u.y': {'bits': [10]},
+        'u.const': {'bits': ['0']}, 'u.z': {'bits': ['0']}}}}}))
+    assert lec.json_alias_keys(L, [], work=tmp_path) == 0
+
+
+def test_json_q_alias_rejects_scalar_unpacked_vector_slices(tmp_path):
+    # Slang flattened cf[0:4] reverses the gate element index convention.
+    # Its individual bit identity is insufficient evidence to rename cf[1]
+    # to h2.cf_o; scalar and full-vector aliases must be left to correspondence.
+    from types import SimpleNamespace
+    L = SimpleNamespace(hyp={}, gp={'ff:u.h0.cf_o': 2, 'ff:u.h2.cf_o': 4},
+        tp={'ff:u.cf[1]': 2, 'ff:u.cf[3]': 4}, tc={},
+        gonly=['ff:u.h0.cf_o', 'ff:u.h2.cf_o'], tonly=['ff:u.cf[1]', 'ff:u.cf[3]'])
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'top': {'netnames': {
+        'u.cf': {'bits': [20, 21, 22, 23, 24]},
+        'u.h0.cf_o': {'bits': [23]}, 'u.h2.cf_o': {'bits': [21]}}}}}))
+    before = dict(L.tp)
+    assert lec.json_alias_keys(L, [], work=tmp_path) == 0
+    assert L.tp == before
+
+
+def test_relay_keying_preserves_main_scalar_element_normalization(tmp_path, monkeypatch):
+    # The gate retaining index4 makes the original flat gold0..3 array relaid.
+    # Main restores actual gold1..4 names first; relay matching must use those
+    # restored indices rather than applying the old flattened layout again.
+    from types import SimpleNamespace
+    raw = {f'ff:u.rv[{i}]': f'[{4-i}]' for i in range(4)}
+    L = SimpleNamespace(hyp={}, gp={k:i for i,k in enumerate(raw)}, gc={k:i for i,k in enumerate(raw)},
+                        tp={'ff:u.rv#t[4]': 40}, tc={'ff:u.rv#t[4]': 41}, galias={})
+    lec.normalize_gold_elements(L, raw, [])
+    monkeypatch.setattr(lec, 'slang_elements', lambda path: raw)
+    assert lec.slang_element_keys(L, [], work=tmp_path) == 1
+    assert L.tp == {'ff:u.rv[4]': 40}
+    assert L.tc == {'ff:u.rv[4]': 41}

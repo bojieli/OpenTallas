@@ -28,7 +28,10 @@ def script(kit, mount='/work'):
         raise ValueError('VERILOG_TOP_PARAMS needs name/value pairs')
     if any(not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_$]*', name) for name in params[::2]):
         raise ValueError('VERILOG_TOP_PARAMS contains an invalid parameter name')
-    parameter_args = ''.join(f' -chparam {name} {value}' for name, value in zip(params[::2], params[1::2]))
+    parameter_args = ''.join(f' -set {name} {value}' for name, value in zip(params[::2], params[1::2]))
+    # Standalone chparam derives/replaces the top once. hierarchy -chparam can
+    # re-add a deferred module under its existing name (Yosys rtlil.cc assertion).
+    parameter_commands = [f'chparam{parameter_args} {top[0]}'] if params else []
     libs, seen = [], set()
     for p in sorted((kit / 'macros').glob('*.lib*'), key=lambda p: ('_tt.lib' not in p.name, p.name)):
         key = re.sub(r'_(tt|ff|ss)\.lib(?:\.gz)?$|\.lib(?:\.gz)?$', '', p.name)
@@ -42,15 +45,12 @@ def script(kit, mount='/work'):
                      # with (FLOW-CANARY 10-25: without it 'initial if(P<1) $fatal' guards fired on the default
                      # parameters -- qkd_static_k_issuer RESPONSE_LAT=0 -- and failed every KV head kit's lint);
                      # -noautowire still rejects implicit nets under -defer (checked on the orfs:asap7lock yosys).
-                     # Native blackbox headers carry legal metadata parameters absent
-                     # from Liberty (ROM VIAMAP/INSTANCE). Replace the Liberty port
-                     # model eagerly; deferring the BB leaves its parameterless
-                     # Liberty module selected at hierarchy. Logic stays deferred.
+                     # Native headers preserve content-only ROM parameters omitted by Liberty.
                      [('read_verilog -lib -overwrite -sv -noautowire '
                        if re.search(r'_bb\.(?:v|sv)$', s) else
                        'read_verilog -defer -sv -noautowire ') +
                       ' '.join(includes + [s]) for s in sources] +
-                     [f'hierarchy -check -top {top[0]}{parameter_args}', 'proc', 'check -assert']) + '\n'
+                     parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc', 'check -assert']) + '\n'
 
 
 def run(kit, yosys='yosys'):

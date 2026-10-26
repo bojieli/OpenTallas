@@ -23,7 +23,7 @@ mkdir -p $O; cd $T
 if [[ " $STEPS " == *" compile "* ]]; then
   [ -e $P ] && { echo "GAPS $Y: $P exists (fresh dirs only)"; exit 3; }
   /usr/bin/time -v -o $O/cc_$Y.time python3 tools/s81_dv/dv_layer_compile.py --layer $Y --out $P --die-src $W/tree_fc31 \
-    --fixtures $S/stw-s81d-tok/layers/fix/$Y --entry-norm-check ${NORM_MODE:-smoke} > $O/cc_$Y.log 2> $O/cc_$Y.err || { echo "GAPS $Y compile FAIL"; tail -3 $O/cc_$Y.err; exit 1; }
+    --fixtures $S/stw-s81d-tok/layers/fix/$Y --svc-timing-profile legacy_fg3 --entry-norm-check ${NORM_MODE:-smoke} > $O/cc_$Y.log 2> $O/cc_$Y.err || { echo "GAPS $Y compile FAIL"; tail -3 $O/cc_$Y.err; exit 1; }
 fi
 if [[ " $STEPS " == *" base "* || " $STEPS " == *" mut_in "* ]]; then
   [ -x $C/out_$CUT/obj/sim ] || { echo "GAPS $Y NOT RUN: no $C/out_$CUT/obj/sim"; exit 3; }

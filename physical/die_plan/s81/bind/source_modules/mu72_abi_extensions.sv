@@ -14,11 +14,11 @@ module ot_s81_mu72_lnland_nst #(parameter integer MUT = 0) (
     output wire         n_rxv,   input  wire [2:0]   n_flt
 );
     wire [555:0] kn_i = {k_li_r, k_rxv, k_lo_v, k_lo_d}, kn_o;
-    wire [556:0] nk_i = {n_flt, n_lo_r, n_li_v, n_li_d}, nk_o;
+    wire [557:0] nk_i = {n_flt, n_lo_r, n_li_v, n_li_d}, nk_o;
     ot_s81_mu72_land #(.W(556)) u_kn (.ck_w(ck_k), .ck_r(ck_n), .rs_w(rs_k), .rs_r(rs_n), .i(kn_i), .o(kn_o));
-    ot_s81_mu72_land #(.W(557)) u_nk (.ck_w(ck_n), .ck_r(ck_k), .rs_w(rs_n), .rs_r(rs_k), .i(nk_i), .o(nk_o));
+    ot_s81_mu72_land #(.W(558)) u_nk (.ck_w(ck_n), .ck_r(ck_k), .rs_w(rs_n), .rs_r(rs_k), .i(nk_i), .o(nk_o));
     wire [555:0] kn = (MUT == 1) ? kn_i : (MUT == 3) ? {kn_i[555], kn_o[554:0]} : kn_o;
-    wire [556:0] nk = (MUT == 2) ? nk_i : nk_o;
+    wire [557:0] nk = (MUT == 2) ? nk_i : nk_o;
     assign {n_li_r, n_rxv, n_lo_v, n_lo_d} = kn;
     assign {k_flt, k_lo_r, k_li_v, k_li_d} = nk;
 endmodule

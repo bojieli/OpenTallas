@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.hbm.hc128.drst_4state.v1",
+  "verdict": "PASS",
+  "scope": "3000-cycle four-state multiplier+8-lane leaf valid-masked comparison including active reset pulse; finite simulation, not unbounded proof",
+  "checks": {
+    "gate": {
+      "verdict": "PASS",
+      "cycles": 3000,
+      "mul_valid_compares": 2012,
+      "leaf_valid_compares": 1964,
+      "failures": 0,
+      "rc": 0
+    },
+    "MUT_NORST": {
+      "verdict": "CAUGHT",
+      "cycles": 3000,
+      "mul_valid_compares": 2012,
+      "leaf_valid_compares": 1964,
+      "failures": 9,
+      "rc": 0
+    },
+    "MUT_DATA": {
+      "verdict": "CAUGHT",
+      "cycles": 3000,
+      "mul_valid_compares": 2012,
+      "leaf_valid_compares": 1964,
+      "failures": 803,
+      "rc": 0
+    }
+  }
+}
