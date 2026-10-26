@@ -194,6 +194,80 @@ def summarize_early(rows):
             for k, v in sorted(by.items())}
 
 
+# ------------------------------------------------------------------------------------------------ plan errors / sites
+class PlanError(Exception):
+    """CLOCK-128-R2: the plan cannot host the 12.8 clock structure (fail closed).  rows = [dict(kind, name, ...)];
+    cmd_build writes them to <out>/plan_errors.json and exits 2.  Kinds: empty_tree_net, unplaced, no_plan_site,
+    site_taken, pg_snap."""
+
+    def __init__(self, rows):
+        self.rows = list(rows)
+        kinds = defaultdict(int)
+        for r in self.rows:
+            kinds[r["kind"]] += 1
+        super().__init__(f"{len(self.rows)} plan error(s): " + ", ".join(f"{k} {v}" for k, v in sorted(kinds.items())))
+
+
+SITE_SNAP_UM = 0.5         # COORD 11:26: the only move allowed between a lattice point and its plan site (PG-track snap)
+SITES_SCHEMA = "ot_clock_sites/1"
+
+
+class SiteIndex:
+    """reserved die-frame lattice island sites from the master-plan slices (12.2a1 pushdown cells inside partitions).
+    take(p) returns the nearest unused site within snap_um of the lattice point p (Manhattan) and marks it used;
+    otherwise (None, nearest distance, nearest site) -- the caller records a plan error, never slides."""
+
+    def __init__(self, sites, snap_um=SITE_SNAP_UM, B=200.0):
+        self.snap, self.B, self.used = float(snap_um), B, {}
+        self.sites = list(sites)
+        self.bins = defaultdict(list)
+        for k, s in enumerate(self.sites):
+            self.bins[(int(s["xy_um"][0] // B), int(s["xy_um"][1] // B))].append(k)
+
+    def nearest(self, p, free=True):
+        i, j = int(p[0] // self.B), int(p[1] // self.B)
+        best = (float("inf"), None)
+        for di in (-1, 0, 1):
+            for dj in (-1, 0, 1):
+                for k in self.bins.get((i + di, j + dj), []):
+                    if free and k in self.used:
+                        continue
+                    s = self.sites[k]["xy_um"]
+                    d = abs(s[0] - p[0]) + abs(s[1] - p[1])
+                    if d < best[0]:
+                        best = (d, k)
+        return best
+
+    def take(self, p, who):
+        d, k = self.nearest(p)
+        if k is not None and d <= self.snap + 1e-9:
+            self.used[k] = who
+            return self.sites[k], d, None
+        d_any, k_any = self.nearest(p, free=False)
+        err = dict(lattice_um=[round(p[0], 4), round(p[1], 4)],
+                   nearest_um=None if k is None else round(d, 4),
+                   nearest_site=None if k is None else self.sites[k]["name"])
+        if k_any is not None and d_any <= self.snap + 1e-9:   # the right site exists but another cell already took it
+            err.update(kind="site_taken", site=self.sites[k_any]["name"], taken_by=self.used.get(k_any))
+        else:
+            err.update(kind="no_plan_site", detail=f"no reserved plan site within {self.snap} um")
+        return None, d, err
+
+
+def load_plan_sites(path, plan_sha256=None):
+    """read an ot_clock_sites/1 file (die frame; clock_plan_sites.py writes it from the master-plan slices).  The
+    file must name the same plan (sha256) as the build."""
+    import json
+    raw = json.loads(Path(path).read_text())
+    if raw.get("schema") != SITES_SCHEMA:
+        raise ValueError(f"{path}: schema {raw.get('schema')!r} is not {SITES_SCHEMA}")
+    if plan_sha256 and raw.get("plan_sha256") and raw["plan_sha256"] != plan_sha256:
+        raise ValueError(f"{path}: sites were cut from plan {raw['plan_sha256'][:12]}, build plan is {plan_sha256[:12]}")
+    if not raw.get("sites"):
+        raise ValueError(f"{path}: no sites")
+    return raw
+
+
 # ------------------------------------------------------------------------------------------------ fixed wires
 def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM):
     """every tree net (root, H-tree legs/nodes/leaves, split tails, stubs) as a fixed comb pre-route: one trunk on the
@@ -206,6 +280,9 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM):
         if p.startswith("port:"):
             return root if p == "port:root" else txy[p[5:]]
         return _centre(cells, p, buf_w, row_y)
+    empty = [n["name"] for n in nets if not n["loads"]]
+    if empty:   # CLOCK-128-R2: the build prunes dead branches by construction; a loadless net here is a plan error
+        raise PlanError([dict(kind="empty_tree_net", name=x, detail="tree net without loads") for x in empty])
     out = []
     for n in nets:
         D = xy(n["drv"])
