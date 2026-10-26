@@ -1,0 +1,107 @@
+{
+  "status": "PLANNING candidate; no bind/STA/signoff adoption",
+  "pins": 2690,
+  "moved": 364,
+  "parent_data_census": [
+    {
+      "core_port": "pci",
+      "bus": "unit_i0",
+      "bits": 264,
+      "max_hop_um": 290.388,
+      "over405": 0
+    },
+    {
+      "core_port": "rco",
+      "bus": "unit_o0",
+      "bits": 39,
+      "max_hop_um": 231.598,
+      "over405": 0
+    },
+    {
+      "core_port": "f_ks",
+      "bus": "unit_i1",
+      "bits": 53,
+      "max_hop_um": 207.79,
+      "over405": 0
+    },
+    {
+      "core_port": "vi_s",
+      "bus": "xtier_i0",
+      "bits": 276,
+      "max_hop_um": 209.504,
+      "over405": 0
+    },
+    {
+      "core_port": "vo_s",
+      "bus": "xtier_o0",
+      "bits": 276,
+      "max_hop_um": 361.59,
+      "over405": 0
+    },
+    {
+      "core_port": "vo_n",
+      "bus": "xtier_o1",
+      "bits": 276,
+      "max_hop_um": 366.966,
+      "over405": 0
+    },
+    {
+      "core_port": "vi_n",
+      "bus": "xtier_i1",
+      "bits": 276,
+      "max_hop_um": 319.382,
+      "over405": 0
+    }
+  ],
+  "old_station_counts": {
+    "bus:unit_i0": 2,
+    "bus:unit_o0": 1
+  },
+  "new_station_counts": {
+    "bus:unit_i0": 2,
+    "bus:unit_o0": 1,
+    "bus:unit_i1": 1,
+    "bus:xtier_i0": 1
+  },
+  "cycle_delta": {
+    "core_RTL": 0,
+    "parent_xtier_i0": 1,
+    "parent_unit_i1": 1,
+    "geometry_added_cycles": 2,
+    "geometry_added_bit_cycles": 329,
+    "historical_unpriced_PCI_cycles": 2,
+    "historical_unpriced_RCO_cycles": 1,
+    "total_fixed_cycles_vs_raw_plan": 5
+  },
+  "priced_lanes": [
+    {
+      "lane": "unit__svc_14__eng",
+      "bus": "unit_i0",
+      "old_fixed": 0,
+      "new_fixed": 2
+    },
+    {
+      "lane": "unit__eng__svc_14",
+      "bus": "unit_o0",
+      "old_fixed": 0,
+      "new_fixed": 1
+    },
+    {
+      "lane": "unit__seqhost__eng",
+      "bus": "unit_i1",
+      "old_fixed": 0,
+      "new_fixed": 1
+    },
+    {
+      "lane": "xtier__s_6S_C__eng",
+      "bus": "xtier_i0",
+      "old_fixed": 0,
+      "new_fixed": 1
+    }
+  ],
+  "wrapper_mapping": "dsdv_eng_rr_split: pci={pci[267:5],pci[0]}; rco={rco_e[38:32],PCBASE[29:26],rco_e[31:0]}; other buses bit-identical",
+  "remaining": [
+    "Materialize all five parent stages in bound RTL (PCI2/RCO1 historical physical, FKS1/VI_S1 new), lockstep/mutant, and price against the previously unpriced raw calendar.",
+    "R5 engine core placement/route/signoff remains owned PATH-S81/head_eng; candidate LEF is not a signed view."
+  ]
+}
