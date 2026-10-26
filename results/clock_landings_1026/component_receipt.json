@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.clock_landing_component.v1",
+ "verdict": "PASS",
+ "qualification": "component digital exactness only; no physical release",
+ "base_commit": "9210b7c6df",
+ "compiled_source_sha256": {
+  "rtl/common/ot_dp_clk_landing.sv": "fcef846d88b46a74635c622e9914235b8eac8c3659ae03da2e4ac118305186d2",
+  "rtl/common/ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85",
+  "rtl/test/meso/tb_dp_clk_landing.sv": "54ded91119ecb7bac4a89327c2dee704809e32ae50bf701cafaac9dcc41f3720",
+  "rtl/test/meso/tb_dp_clk_landing.cpp": "ba5cd86d0a443c8783c2e9d58d07f71917d31c363ee0b6b345d90342bcc9ea00"
+ },
+ "period_ps": 833,
+ "source_register": true,
+ "receiver_boundary_register": true,
+ "phase_ps": [
+  0,
+  83,
+  208,
+  416,
+  625,
+  750
+ ],
+ "stream_checks_per_phase": 1144,
+ "mismatches": 0,
+ "midstream_reset": true,
+ "wrong_pointer_mutant": "CAUGHT",
+ "source_to_receiver_periods_zero_phase": 4,
+ "original_source_to_receiver_periods": 1,
+ "added_periods_nominal": 3,
+ "ring_guards": "no fault on nominal phases; sticky fault on mutant",
+ "physical_gate": "NOT RUN",
+ "bound_die_gate": "NOT RUN",
+ "startup": "raw wavefront reset trains ring before START; <=21cycles after raw release; writer free-running through local reset",
+ "synthesis": {
+  "ring_dff_bits": 265,
+  "cells": 3,
+  "verdict": "PASS",
+  "qualification": "generic synthesis survival only; no mapped physical gate",
+  "job": "oth-ubuntu-3322833-1793007450"
+ },
+ "jobs": [
+  "oth-ubuntu-3183157-1793007285",
+  "oth-ubuntu-2869563-1793006951"
+ ],
+ "failure_diagnoses": [
+  "first generic synthesis collector looked only top hierarchy and falsely counted0; kept landing module contains real storage; recursive count corrects diagnostic, original failed logs preserved"
+ ],
+ "source_commit": "95840d0c0e"
+}
