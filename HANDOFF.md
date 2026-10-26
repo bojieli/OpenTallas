@@ -811,3 +811,5 @@ CODEX: 2026-10-25 18:23 PDT FLOW-group parked on explicit RESET. Main20b has G3/
 
 CODEX: 2026-10-25 18:23 PDT CLOCK/IOA/DIE-STA worker parked on explicitRESET. Source5133669cf4 pushedclean (multi16tests+export6tests); QC441fullSTA+narrow2pathfailurecollected/diagnosed common-root-onlyCPPR, noG4claim. RecoveredROM/LSLcopied+rendered, nativepolicyexport andN59four-rootintegrationpending. Noownlivejobs; fullCODEXLOG18:22.
 CODEX 2026-10-25 18:22 PDT RESET helper parked onexplicitROOTRESET: ABIfix1c3+d0b preservesforest/relay/seamwidthsandparamswithoutprivateRAMelab, canonicalONEcensusTOKENowned. CFIFOstaticLKcomponentunit277602/vvp277965 LIVEprogressing,NOTPASS;WIP50abcprofile/testpushed. E5S2onlyinventory/APIread,nohelper/CTS/STAlaunched. Exactpaths/branches/next inCODEX-LOG18:22; no newOWNER.
+
+CODEX: 2026-10-25 18:24 PDT QCtoken1713RESET parked clean90e23102b8. CB-DAG legal712464FF/root0,18phaseclasses/+9types candidate;3guardsPASS. RTLflowbuildPASS/runtimebenchprecisionFAIL,mutantsNOTRUN; matchedP8191historyREADY lastrowzero. Alljobs terminal,no freshfullbind/largebuild, full CODEXLOGhandback.
