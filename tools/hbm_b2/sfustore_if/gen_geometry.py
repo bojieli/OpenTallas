@@ -86,7 +86,7 @@ def main():
         ax.add_patch(Rectangle((0,0),W,H,fill=False,color='black'))
         for b,m in enumerate(macros):
             x,y=m['origin_um'];ax.add_patch(Rectangle((x-4.32,y-1),mw+8.64,mh+2,fill=False,edgecolor='#aaa',linestyle=':'))
-            ax.add_patch(Rectangle((x,y),mw,mh,facecolor='#cad2c5',edgecolor='#52796f'));ax.text(x+mw/2,y+mh/2,f'bank {b}',ha='center',va='center',fontsize=7)
+            ax.add_patch(Rectangle((x,y),mw,mh,facecolor='#cad2c5',edgecolor='#52796f'));ax.text(x+mw/2,y+mh/2,f'bank {b}',ha='center',va='center',fontsize=7,clip_on=True)
         for prefix,col in colors.items():
             rs=[r for r in anchors if r['register'].split('.u_bank.')[1].startswith(prefix)]
             ax.scatter([r['center_um'][0] for r in rs],[r['center_um'][1] for r in rs],s=1.3,c=col,label=prefix)
