@@ -51,7 +51,7 @@ def resolve_consumer(tn,t,consumer,part,names,pins_cache,base,explicit_map):
  if orient in ('MX','R180'):y=h-y
  return [x+hc['origin_um'][0],y+hc['origin_um'][1]],dict(actual=actual,canonical=local,core=hc['inst'],pin=pinbase,bit=consumer['bit'])
 
-def target_last(source,consumers,budget,al):
+def target_last(source,consumers,budget,al,depth):
  us=[p[0]+p[1] for p in consumers];vs=[p[0]-p[1] for p in consumers]
  ul,uh=max(x-budget for x in us),min(x+budget for x in us);vl,vh=max(x-budget for x in vs),min(x+budget for x in vs)
  if ul>uh or vl>vh:raise ValueError('consumer fanout has no common <=403um landing diamond')
@@ -60,7 +60,24 @@ def target_last(source,consumers,budget,al):
   q=al.project(((a+b)/2,(a-b)/2))
   if all(md(q,p)<=budget+1e-6 for p in consumers):candidates.append(q)
  if not candidates:raise ValueError('no macro-free projected common consumer diamond')
- return min(candidates,key=lambda p:md(p,source))
+ return min(candidates,key=lambda p:(max([md(p,source)/depth]+[md(p,q) for q in consumers]),md(p,source)))
+
+def expand_clusters(manifest,proposal,raw):
+ """Model-only exact consumer replication: preserve every original bank depth."""
+ m=copy.deepcopy(manifest);area={};extra=0
+ for r in proposal['rows']:
+  info=m['types'][r['type']];bank=info['banks'].pop(r['bank']);assert bank['depth']==r['depth']
+  flat=[i for g in r['groups'] for i in g];assert sorted(flat)==list(range(len(bank['consumers'])))
+  for j,g in enumerate(r['groups']):
+   name=r['bank'] if j==0 else r['bank']+'__rep'+str(j)
+   b=copy.deepcopy(bank);b['consumers']=[bank['consumers'][i] for i in g];b['stage_ids']=[f'{name}/g_stage[{i}].u_ff' for i in range(b['depth'])];info['banks'][name]=b
+  delta=bank['depth']*(len(r['groups'])-1);extra+=delta*len(info['parts']);area[r['type']]=area.get(r['type'],0)+delta
+ m['total_ff']+=extra
+ impact={}
+ for tn,n in area.items():
+  w,h=raw['partition_types'][tn]['outline_um'];impact[tn]=dict(extra_ff_per_instance=n,extra_inv_per_instance=n,mapped_cell_area_um2=n*.3645,allocated_envelope_area_um2=n*1.404*.27,partition_area_um2=w*h,delta_fill=n*.3645/(w*h),parts=m['types'][tn]['parts'])
+ m['replication_model']=dict(scope='MODEL_ONLY; no RTL emission or physical qualification',baseline_ff=manifest['total_ff'],extra_ff=extra,types=impact)
+ return m
 
 def allocate(raw,manifest,names,plan_path,explicit_map):
  P=S.Plan(raw,plan_path);result=[];pin_cache={};counts={};budget=403.;cell=(1.404,.27)
@@ -84,7 +101,7 @@ def allocate(raw,manifest,names,plan_path,explicit_map):
     for consumer in entry['consumers']:
      point,trace=resolve_consumer(tn,t,consumer,part,names,pin_cache,Path(plan_path).parent,explicit_map);ends.append(point);mapping.append(trace)
     if not ends:raise ValueError('bank has no actual consumers')
-    final=target_last(source,ends,budget,al);depth=int(entry['depth'])
+    depth=int(entry['depth']);final=target_last(source,ends,budget,al,depth)
     if md(source,final)>depth*budget:raise ValueError('priced bank depth cannot span source/consumer reach')
     seg=[source,(final[0],source[1]),final];length=sum(md(a,b) for a,b in zip(seg,seg[1:]));points=[]
     for j in range(depth):
@@ -106,9 +123,12 @@ def allocate(raw,manifest,names,plan_path,explicit_map):
  return dict(schema='opentallas.native_landing_bank_sites.v1',scope='ONEcombinedKVcandidate; static allocation only, no physical qualification',conservative_endpoint_budget_um=budget,actual_gate_um=405,total_emitted_ff=manifest['total_ff'],
   allocated_ff=sum(r['ff_count']*len(r['parts']) for r in result if r['status']=='ALLOCATED_CANDIDATE'),unresolved_ff=sum(r['ff_count']*len(r['parts']) for r in result if r['status']=='UNRESOLVED'),types=counts,banks=result)
 if __name__=='__main__':
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('plan');p.add_argument('manifest');p.add_argument('names');p.add_argument('recipe');p.add_argument('--out',required=True);a=p.parse_args();r=json.load(open(a.recipe));explicit={}
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('plan');p.add_argument('manifest');p.add_argument('names');p.add_argument('recipe');p.add_argument('--out',required=True);p.add_argument('--clusters');a=p.parse_args();r=json.load(open(a.recipe));explicit={}
  if r.get('map_file'):
   mf=(Path(a.recipe).resolve().parent/r['map_file']).resolve();explicit.update(json.load(open(mf)).get('parts',{}))
- explicit.update(r.get('map',{}).get('parts',{}));out=allocate(json.load(open(a.plan)),json.load(open(a.manifest)),json.load(open(a.names)),Path(a.plan),explicit)
+ explicit.update(r.get('map',{}).get('parts',{}));raw=json.load(open(a.plan));manifest=json.load(open(a.manifest))
+ if a.clusters:manifest=expand_clusters(manifest,json.load(open(a.clusters)),raw)
+ out=allocate(raw,manifest,json.load(open(a.names)),Path(a.plan),explicit)
+ if a.clusters:out['replication_model']=manifest['replication_model']
  with open(a.out,'w') as f:json.dump(out,f,indent=1);f.write('\n')
  print(json.dumps({k:v for k,v in out.items() if k not in ['types','banks']}))
