@@ -1,12 +1,16 @@
 set C $::env(C)
 foreach f [lsort [glob /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_${C}_*.lib*]] {read_liberty $f}
-read_db /work/run/results/asap7/kl_ot_dsrom_su_hcpost_lane_pr_v1b/base/4_cts.odb
+set cf [open /work/config.mk];set ct [read $cf];close $cf
+if {![regexp -line {^export DESIGN_NICKNAME = (\S+)$} $ct -> nickname]} {error "missing kit nickname"}
+set R /work/run/results/asap7/$nickname/base
+set TAG [expr {[info exists ::env(OT_SHIFT_STAGE)]?$::env(OT_SHIFT_STAGE):"cts"}]
+if {[info exists ::env(ODB)]} {read_db $::env(ODB)} else {read_db $R/4_cts.odb}
 read_sdc /work/constraint.sdc
 if {$C eq "FF"} {set_clock_latency -source 202.5 [get_clocks vclk]}
 set_propagated_clock [get_clocks clk]
 set sta_recovery_removal_checks_enabled 1
 source /work/setRC_rcx.tcl
-estimate_parasitics -placement
+if {$TAG eq "postgrt"} {estimate_parasitics -global_routing} else {estimate_parasitics -placement}
 set B [ord::get_db_block]
 set U [$B getDbUnitsPerMicron]
 set fd [open /work/shift_clock_groups.tsv];set lines [split [read $fd] \n];close $fd
@@ -28,7 +32,7 @@ proc h_sinks {net} {
  }
  return [lsort -unique $out]
 }
-set fd [open /work/shift_actual_${C}.tsv w]
+set fd [open /work/shift_actual_${TAG}_${C}.tsv w]
 puts $fd "group\tname\tx_um\ty_um\tck_ps"
 set ng 0;set nf 0;set maxspan 0
 set fclock [dict create]
@@ -52,8 +56,8 @@ dict for {g names} $expect {
 close $fd
 puts "HCPL_SHIFT OWNERSHIP_PASS $C groups $ng FF $nf maxspan $maxspan allFF [dict size $fclock]"
 puts "HCPL_SHIFT TIMING $C setup [expr {[sta::worst_slack_cmd max]*1e12}] nsetup [sta::endpoint_violation_count max] hold [expr {[sta::worst_slack_cmd min]*1e12}] nhold [sta::endpoint_violation_count min]"
-report_checks -path_delay min -group_path_count 10 -format full_clock_expanded > /work/shift_hold_${C}.rpt
-report_checks -path_delay max -group_path_count 5 -format full_clock_expanded > /work/shift_setup_${C}.rpt
+report_checks -path_delay min -group_path_count 10 -format full_clock_expanded > /work/shift_hold_${TAG}_${C}.rpt
+report_checks -path_delay max -group_path_count 5 -format full_clock_expanded > /work/shift_setup_${TAG}_${C}.rpt
 
 set shift_dp {}
 foreach p [all_registers -data_pins] {
@@ -64,4 +68,4 @@ foreach p [all_registers -data_pins] {
 set pp [find_timing_paths -to $shift_dp -path_delay min -group_path_count 1]
 if {[llength $pp]!=1} {error "HCPL_SHIFT no real delay-chain timing path"}
 puts "HCPL_SHIFT DELAY_CHAIN_MIN $C slack_ps [get_property [lindex $pp 0] slack] data_pins [llength $shift_dp]"
-report_checks -to $shift_dp -path_delay min -group_path_count 5 -format full_clock_expanded > /work/delay_chain_hold_${C}.rpt
+report_checks -to $shift_dp -path_delay min -group_path_count 5 -format full_clock_expanded > /work/delay_chain_hold_${TAG}_${C}.rpt

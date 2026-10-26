@@ -25,5 +25,11 @@
     "delay_data_pins": 608
   },
   "findings": "Actual32clockbuffers legally placed; complete zero-logic chains stay on own local clockbranch. Macro-free, no PDN/pin changes, no longgroupedge beyond39.42um. Remaining globalhold failures need normal freshFF-only repair and TT recheck, then GRTgeometry/timing; route forbidden until explicit gate+review. No RTL/publiccycle change.",
-  "audit_units": "OpenSTA arrival_max_rise property already in ps; initial erroneously multiplied clock-only logs preserved as *.units_bug.log; corrected logs used here. sta::worst_slack_cmd converted from seconds correctly."
+  "audit_units": "OpenSTA arrival_max_rise property already in ps; initial erroneously multiplied clock-only logs preserved as *.units_bug.log; corrected logs used here. sta::worst_slack_cmd converted from seconds correctly.",
+  "independent_review": {
+    "reviewer": "Codex S81 physical coordinator /root/s81_physical",
+    "verdict": "PASS-COND fresh FF-only placement repair -> independent TT check -> one GRT diagnostic, no route",
+    "findings": "Actual PNG viewed: macro-free dense central groups, balanced local roots max39.42um, FFarrivaluniform188-195ps; all32ownership/nonclustercontrolinventory accounted.",
+    "stops": "No mixed-scene helper; stop TT<0 or FFdoesnotclose; no arbitraryholdbudget expansion."
+  }
 }
