@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "request": "CODEX-E5-R5-BANK6-CTS",
+ "reviewer": "CODEX root independent review",
+ "verdict": "PASS-COND",
+ "scope": "CTS-only diagnostic",
+ "source": "codex/e5-clock-1026@f5e702e18b",
+ "image": "results/e5_clock_r5_1026/planning/r5_spine_bank6.png",
+ "findings": [
+  "Backbone follows available corridors and avoids SRAM bodies; local taps distributed; max edge116.5um",
+  "Preserve17-stage absolute insertion and unchanged IO constraints in report; no padding/hold repair or implied full clock pass"
+ ],
+ "next": "Collect actual TT/FF related-pair skew/PG, then structural next step"
+}

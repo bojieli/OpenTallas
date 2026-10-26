@@ -275,56 +275,71 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
             v=sorted(bins[k_],key=lambda t:(t['xy'][1],t['xy'][0],t['name'])); n_=math.ceil(len(v)/hub)
             for i in range(n_): hubs.append(v[i*len(v)//n_:(i+1)*len(v)//n_])
         ym=(ys_[0]+ys_[-1])/2; rows={}
+        xs_=[x*u for x in spine.get('xs',[])] or [sx]
         for grp in hubs:
             c0=cent(grp); best=None
-            for y in ys_:
-                if macro_h(y,sx,c0[0]): continue
-                d=abs(c0[0]-sx)+abs(c0[1]-y); v_=(d+abs(y-ym),d,y)
-                if best is None or v_<best: best=v_
+            for xx in xs_:
+                for y in ys_:
+                    if macro_h(y,xx,c0[0]): continue
+                    d=abs(c0[0]-xx)+abs(c0[1]-y); v_=(d+abs(y-c0[1])*0.1 if spine.get('xs') else d+abs(y-ym),d,xx,y)
+                    if best is None or v_<best: best=v_
             if best is None:
                 raise ValueError("spine has no declared horizontal channel to a tap hub")
-            rows.setdefault(best[2],[]).append(grp)
-        clusters.append(dict(id=0,level=1,point=[sx,ym],taps=[t['name'] for t in g['taps']],legs=[]))
+            rows.setdefault((best[2],best[3]),[]).append(grp)
+        clusters.append(dict(id=0,level=1,point=[sx,ys_[0] if spine.get('xs') else ym],taps=[t['name'] for t in g['taps']],legs=[]))
         # Opt-in two-level backbone: midpoint -> half midpoint -> channel.
         # The old single midpoint drove every rib island (23 BUFx24 inputs
         # in E5), while its long ribs could cross the left ROM column. Keep
         # equal logical depth, and cap each channel island independently.
         parents = {}; parent_specs = {}
         specs=[]
-        for y in sorted(rows):
-            grps=sorted(rows[y],key=lambda grp:cent(grp)[0]); m_=math.ceil(len(grps)/cap)
+        for xx,y in sorted(rows):
+            grps=sorted(rows[(xx,y)],key=lambda grp:cent(grp)[0]); m_=math.ceil(len(grps)/cap)
             for j in range(m_):
-                specs.append((y,grps[j*len(grps)//m_:(j+1)*len(grps)//m_]))
+                specs.append((xx,y,grps[j*len(grps)//m_:(j+1)*len(grps)//m_]))
         bank_fanout = int(spine.get('bank_fanout', 0))
         halves = bool(spine.get('halves', False)) or bank_fanout > 0
         if bank_fanout:
             if bank_fanout < 2:
                 raise ValueError('spine bank fanout must be at least two')
-            nb = math.ceil(len(specs)/bank_fanout)
-            if nb > bank_fanout:
-                raise ValueError('two-level spine fanout cap needs a deeper backbone')
-            for j in range(nb):
-                ids = list(range(j*len(specs)//nb,(j+1)*len(specs)//nb))
-                ybank = sum(specs[i][0] for i in ids)/len(ids)
-                cid = len(clusters)
-                ts = [t['name'] for i in ids for grp in specs[i][1] for t in grp]
-                clusters.append(dict(id=cid,level=2,point=[sx,ybank],taps=ts,legs=[]))
-                link(0,cid,1)
-                for i in ids: parent_specs[i]=cid
+            if spine.get('xs'):
+                bank_ids=[]
+                for xx in sorted({q[0] for q in specs}):
+                    ids=[i for i,q in enumerate(specs) if q[0]==xx]
+                    for j in range(0,len(ids),bank_fanout):bank_ids.append(ids[j:j+bank_fanout])
+                if len(bank_ids)>bank_fanout: raise ValueError('side spine needs a deeper root')
+                for ids in bank_ids:
+                    xbank=specs[ids[0]][0];ybank=ys_[0]
+                    cid=len(clusters)
+                    ts=[t['name'] for i in ids for grp in specs[i][2] for t in grp]
+                    clusters.append(dict(id=cid,level=2,point=[xbank,ybank],taps=ts,legs=[]))
+                    link(0,cid,1)
+                    for i in ids:parent_specs[i]=cid
+            else:
+                nb = math.ceil(len(specs)/bank_fanout)
+                if nb > bank_fanout: raise ValueError('two-level spine fanout cap needs a deeper backbone')
+                for j in range(nb):
+                    ids=list(range(j*len(specs)//nb,(j+1)*len(specs)//nb))
+                    ybank=sum(specs[i][1] for i in ids)/len(ids)
+                    cid=len(clusters)
+                    ts=[t['name'] for i in ids for grp in specs[i][2] for t in grp]
+                    clusters.append(dict(id=cid,level=2,point=[sx,ybank],taps=ts,legs=[]))
+                    link(0,cid,1)
+                    for i in ids:parent_specs[i]=cid
         elif halves:
             for side in (False, True):
-                ys_side = [y for y in sorted(rows) if (y >= ym) == side]
+                ys_side = [yy for xx,yy in sorted(rows) if (yy >= ym) == side]
                 if not ys_side:
                     continue
                 yhalf = (min(ys_side) + max(ys_side)) / 2
                 cid = len(clusters)
-                ts = [t['name'] for y in ys_side for grp in rows[y] for t in grp]
+                ts = [t['name'] for y in ys_side for grp in rows[(sx,y)] for t in grp]
                 clusters.append(dict(id=cid,level=2,point=[sx,yhalf],taps=ts,legs=[]))
                 link(0,cid,1)
                 for y in ys_side: parents[y]=cid
-        for i,(y,sub) in enumerate(specs):
+        for i,(xx,y,sub) in enumerate(specs):
             sid=len(clusters); sl=3 if halves else 2
-            clusters.append(dict(id=sid,level=sl,point=[sx,y],taps=[t['name'] for grp in sub for t in grp],legs=[]))
+            clusters.append(dict(id=sid,level=sl,point=[xx,y],taps=[t['name'] for grp in sub for t in grp],legs=[]))
             pid=parent_specs[i] if bank_fanout else parents[y] if halves else 0
             link(pid,sid,sl-1)
             for grp in sub:
@@ -380,6 +395,16 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
     tapxy={t['name']:t['xy'] for t in g['taps']}
     router=corridor_router(corridor_helper) if avoid_macros else None
     obstacles=[cc[1:5] for cc in g['cells'] if cc[5]]
+    if spine and spine.get('xs'):
+        bridges=[]
+        for r in obstacles:
+            for q in obstacles:
+                x0,x1=max(r[0],q[0]),min(r[2],q[2]);y0,y1=r[3],q[1]
+                if x1-x0 < g['width'] or not 0 < y1-y0 < 12*u: continue
+                fits=any(ry>=y0 and ry+rh<=y1 and min(rx+sw*ns,x1)-max(rx,x0)>=g['width'] for rx,ry,sw,rh,ns,_ in g['rows'])
+                if not fits: bridges.append([x0,y0,x1,y1])
+        obstacles+=bridges
+        obstacles=[[r[0]-4.32*u,r[1]-4.32*u,r[2]+4.32*u,r[3]+4.32*u] for r in obstacles]
     for L in legs:
         L['A']=list(g['root']) if L['parent'] is None else clusters[L['parent']]['point']
         L['C']=clusters[L['child'][1]]['point'] if L['child'][0]=='cluster' else tapxy[L['child'][1]]
@@ -731,7 +756,7 @@ def main():
                     spatial_2d=env.get('OT_DTSH_SPATIAL_2D','')=='1',avoid_macros=env.get('OT_DTSH_AVOID_MACROS','')=='1',
                     corridor_helper=env.get('OT_DTSH_CORRIDOR_HELPER'),even_stages=env.get('OT_DTSH_EVEN_STAGES','')=='1',
                     medoid_level=int(env.get('OT_DTSH_HTREE_MEDOID_LEVEL','0')),
-                    spine=dict(x=float(env.get('OT_DTSH_SPINE_X','0')),ys=[float(v) for v in env.get('OT_DTSH_SPINE_YS','').split(',') if v],
+                    spine=dict(x=float(env.get('OT_DTSH_SPINE_X','0')),xs=[float(v) for v in env.get('OT_DTSH_SPINE_XS','').split(',') if v],ys=[float(v) for v in env.get('OT_DTSH_SPINE_YS','').split(',') if v],
                                hub=int(env.get('OT_DTSH_SPINE_HUB','8')),ribcap=int(env.get('OT_DTSH_SPINE_RIBCAP','12')),
                                halves=env.get('OT_DTSH_SPINE_HALVES','')=='1',bank_fanout=int(env.get('OT_DTSH_SPINE_BANK_FANOUT','0'))) if env.get('OT_DTSH_TOPOLOGY')=='spine' else None)
     else:
