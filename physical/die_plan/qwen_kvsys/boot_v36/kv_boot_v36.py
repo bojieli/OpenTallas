@@ -234,6 +234,13 @@ def prep(a):
     for tag, P, rtab, k_rt in (('asbuilt', P_asb, rs, 80), ('bound', P_bnd, rs_bnd, None), ('bound_padded', P_pad, rs_bnd, None)):
         natural = max(8 + P[f'krq_{st}_{g}'] + P[f'krs_{st}_{g}'] for st in STACKS for g in range(8))
         ages = derive_ages(P, rtab, k_rt or natural)
+        if a.pv_result_calendar and tag != 'asbuilt':
+            cal = json.loads(Path(a.pv_result_calendar).read_text())
+            extra = cal.get('result_cycles_added')
+            if cal.get('schema') != 'opentallas.kv.pv_landed_calendar.v1' or type(extra) is not int or extra < 0 or cal.get('first_input_age_cycles_added') != 0 or cal.get('arithmetic_cycles_added') != 0:
+                raise ValueError('PV result calendar must preserve the input/arithmetic age contracts')
+            ages['pv']['RESULT_TRUNK_EXTRA'] = extra
+            ages['pv']['result_calendar'] = cal
         (out / f'die_ages_{tag}.json').write_text(json.dumps(ages, indent=1) + '\n')
         qk = ages['qk']['QK_ISSUE_AGE']
         img = boot_words(ages['schedule'], qk)
@@ -290,7 +297,7 @@ def compile_(a):
     if die_cfg is not None and image_words.get(10)!=96:raise ValueError('compiled native bundle dropped DIECFG target 10')
     rep = P.write(r, Path(a.out))
     keep = dict(status=rep['status'], profile={k: pr[k] for k in ('start_relays', 'att', 'rx', 'writer', 'kvn', 'groups', 'qk_age',
-                                                                  'qk_row_latency', 'v_rl', 'd_rl', 'd_qk', 'f_dly')},
+                                                                  'qk_row_latency', 'v_rl', 'd_rl', 'pv_result_extra', 'd_qk', 'f_dly')},
                 link=r['link'], leads={k: v for k, v in r['leads'].items() if k != 'law'},
                 writer=dict(slots=r['writer']['slots'], stop=r['writer']['stop']), writer_die=r['writer_die'],
                 emb_fill=r['emb_fill'], ownership=r['ownership']['words'][:3],
@@ -318,6 +325,7 @@ if __name__ == '__main__':
     p.add_argument('--model', required=True)
     p.add_argument('--groups', required=True)
     p.add_argument('--out', required=True)
+    p.add_argument('--pv-result-calendar', type=Path, help='explicit landed result-trunk calendar; input ages stay unchanged')
     c = sp.add_parser('compile')
     c.add_argument('--ages', required=True)
     c.add_argument('--rs', required=True)
