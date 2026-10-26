@@ -18,7 +18,7 @@ s=s.replace('ot_hbm_su_static_kind2_lat4_leaf1_physical','ot_hbm_su_static_full_
 s=(p/'tb_su_static_lane_leaf.sv').read_text().replace('always #5 clk=~clk;', 'always #0.4165 clk=~clk;')
 # Same compiled 64 fixed issues in every baseline class. High QID is VM identity,
 # while the physical source explicitly selects FULL arithmetic independently.
-s=s.replace('`timescale 1ns/1ps','`timescale 1ns/1fs')
+s=s.replace('`timescale 1ns/1ps','`timescale 1ns/1fs').replace('#1;', '#0.05;')
 (out/'tb.sv').write_text(s)
 PY
 S=rtl/hbm_accel/generic/adapters/static_su
