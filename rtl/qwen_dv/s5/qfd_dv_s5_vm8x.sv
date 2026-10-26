@@ -37,7 +37,7 @@ endmodule
 // registers (r_ce with the bank and write-collision decode in front, r_addr), anchored at each bank's pin edge; the write
 // path gets a shared relay stage in front of the per-bank g_mw landings, so MIF=1 is exactly MIF=0 delayed by one cycle
 // on q (read +1, VM write +1, read/write collision order unchanged); fault unchanged.
-module qfd_dv_s8x_vmr #(parameter integer MUT = 0, parameter integer MIF = 0) (
+module qfd_dv_s8x_vmr #(parameter integer MUT = 0, parameter integer MIF = 0, parameter integer MIF0_LOCAL_HALF = 0) (
     input  wire            ck,
     input  wire            rst_n,
     // read port (W face)
@@ -219,17 +219,52 @@ module qfd_dv_s8x_vmr #(parameter integer MUT = 0, parameter integer MIF = 0) (
         wire [255:0] wm;
         for (gs = 0; gs < 8; gs = gs + 1) begin : g_m assign wm[32*gs +: 32] = {32{mms[bk][gs]}}; end
         wire m_rce; wire [9:0] m_ra;
-        if (MIF == 0) begin : g_rd
+        if (MIF == 0 && MIF0_LOCAL_HALF != 0) begin : g_rd_local_half
+            // Same original request edge: commute bank/collision decode into
+            // private rising captures, then land at the SRAM on the falling edge.
+            // rwe/rrow before this edge are the mwe/mrow for the following interval.
+            wire early_collision;
+`ifdef OT_QC_VMR0_MUT_COLL
+            assign early_collision = 1'b0;
+`else
+            assign early_collision = rwe[bk] && rrow[bk] == addr[4 +: 10];
+`endif
+            wire rise_ce; wire [9:0] rise_addr;
+            qfd_dv_s8x_kff #(.W(1), .ID(6600 + bk)) u_ce (.ck(ck),
+                .d(re[0] && addr[3] == bk[0] && !early_collision), .q(rise_ce));
+            qfd_dv_s8x_kff #(.W(10), .ID(6610 + bk)) u_addr (.ck(ck), .d(addr[4 +: 10]), .q(rise_addr));
+`ifdef OT_QC_VMR0_MUT_EDGE
+            assign m_rce = !rise_ce;
+`else
+            qfd_dv_s8x_kffn #(.W(1), .ID(6620 + bk)) u_ce_f (.ck(ck), .d(rise_ce), .q(m_rce));
+`endif
+            qfd_dv_s8x_kffn #(.W(10), .ID(6630 + bk)) u_addr_f (.ck(ck), .d(rise_addr), .q(m_ra));
+        end else if (MIF == 0) begin : g_rd
             assign m_rce = pa_re[0] && pa_addr[3] == bk[0] && !coll_u; assign m_ra = pa_addr[4 +: 10];
         end else begin : g_rr
             qfd_dv_s8x_kff #(.W(1), .ID(6500 + bk)) u_rce (.ck(ck), .d(pa_re[0] && pa_addr[3] == bk[0] && !coll_u), .q(m_rce));
             qfd_dv_s8x_kff #(.W(10), .ID(6510 + bk)) u_ra (.ck(ck), .d(pa_addr[4 +: 10]), .q(m_ra));
         end
+        wire [255:0] landed_wd; wire [9:0] landed_wa;
+        wire landed_we; wire [7:0] landed_ms;
+        if (MIF == 0 && MIF0_LOCAL_HALF != 0) begin : g_wr_local_half
+            qfd_dv_s8x_kffn #(.W(256), .ID(6640 + bk)) u_data (.ck(ck), .d(mwd[bk]), .q(landed_wd));
+            qfd_dv_s8x_kffn #(.W(10), .ID(6650 + bk)) u_addr (.ck(ck), .d(mrow[bk]), .q(landed_wa));
+            qfd_dv_s8x_kffn #(.W(1), .ID(6660 + bk)) u_enable (.ck(ck), .d(mwe[bk]), .q(landed_we));
+            qfd_dv_s8x_kffn #(.W(8), .ID(6670 + bk)) u_mask (.ck(ck), .d(mms[bk]), .q(landed_ms));
+        end else begin : g_wr_direct
+            assign landed_wd=mwd[bk]; assign landed_wa=mrow[bk];
+            assign landed_we=mwe[bk]; assign landed_ms=mms[bk];
+        end
+        wire [255:0] landed_wm;
+        for (gs=0;gs<8;gs=gs+1) begin : g_landed_mask
+            assign landed_wm[32*gs +: 32]={32{landed_ms[gs]}};
+        end
         ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(ck),
             .r_ce_in(m_rce),
             .r_addr_in(m_ra),
             .rd_out(vm_rd[bk*256 +: 256]),
-            .w_ce_in(mwe[bk]), .w_addr_in(mrow[bk]), .wd_in(mwd[bk]), .w_mask_in(wm),
+            .w_ce_in(landed_we), .w_addr_in(landed_wa), .wd_in(landed_wd), .w_mask_in(landed_wm),
             .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     // bank / lane offsets of the read the SRAMs latch this edge (MIF=1: one cycle later, from a delayed copy)
