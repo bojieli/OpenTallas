@@ -39,3 +39,13 @@ shape: for example a W=1 relay cell refers to the module whose i/o ports are
 W=276. The fix evaluates the interface at each instance's existing parameters;
 it does not repair an observed lost-N schedule defect. Pad/valid-delay/reset
 specialization additionally makes that contract explicit.
+
+The completed dimension census compares 4,072 instantiated parameterizations
+against the selected source interface headers and actual cell overrides.
+`prior_width_mismatches.json` finds ten wrong-width masters, all included in the
+fourteen explicit specializations. In addition to the relay/delay cases, these
+are chunk landing W/R, vector-reset landing W/R, MU72 landing, and FRS (fault
+input imported width1 while authored NL requires2/3/4). The four redundant
+specializations preserve identical interfaces. Three macro-dependent headers
+(vq/vs/vsw) were unresolved by the header parser and are listed explicitly;
+this census does not qualify those ports or replace strict binding.
