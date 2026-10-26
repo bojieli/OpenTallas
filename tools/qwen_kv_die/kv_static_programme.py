@@ -931,7 +931,7 @@ def die_retirement_contract(rx_cmd, tx_first, tx_end, service_end, token_period)
 
 
 # ---- the compile -------------------------------------------------------------------------------------------------------
-def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None, retirement_contract=None, status_delay=None):
+def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None, retirement_contract=None, status_delay=None, die_cfg_ages=False):
     r16 = attn_r16()
     if status_delay is None:     # KV-BIND4: the bound r16 tile's STATUS_DELAY (213) is a die fact, not an option
         status_delay = r16['status_delay']
@@ -1186,7 +1186,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
         layer_words, own = mu['layer'], mu['ownership']
         images[0] = dict(target=1, program=layer_words, descriptors=[])
         images[2] = dict(target=3, program=own, descriptors=[])
-    bundle = PTF.encode_boot_bundle(epoch, images, mu=MU)
+    bundle = PTF.encode_boot_bundle(epoch, images, mu=MU, die_cfg_ages=die_cfg_ages)
     if int(bundle['images'][-1]['digest'], 16) != digest:
         raise ValueError('HOST ISA image digest differs from the layer programme LP_DIGEST')
     die_rs = os.environ.get('OT_KV_EMB_FILL_RELAYS')      # KV-CAL15: the plan's relay_stages.json (case_kv/)
