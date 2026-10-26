@@ -56,12 +56,53 @@ def sha256(p: Path) -> str:
 # ------------------------------------------------------------------------------------------------ QC carve (xt1)
 # vendored from STEWARD-TOKh bound_carve.py (10-23), plus --clusters near (far cluster dropped, its lanes idle)
 INST = re.compile(r'^\s*(\w+)\s*(#\(.*\))?\s+(\w+)\s*\($')
-CONN = re.compile(r'^\s*\.(\w+)\((\w*)\),?$')
+CONN = re.compile(r"^\s*\.(\w+)\(([\w\[\]:']*)\),?$")
 WIRE = re.compile(r'^\s*wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*;\s*(//\s*lane\s+(\S+))?')
 PORT = re.compile(r'^\s*(input|output)\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)')
 EVENT = {'tt_ctlm__cmd_cmd_wi': ('cmd0', 116), 'tt_ctlm__hr_hr_wi': ('hr0', 453), 'tt_ctlm__tl_st_wi': ('swi', 1088)}
 SLOT = {(0, 0): 0, (0, 1): 2, (0, 2): 8, (0, 3): 10, (1, 0): 1, (1, 1): 3, (1, 2): 9, (1, 3): 11,
         (2, 0): 4, (2, 1): 6, (2, 2): 12, (2, 3): 14, (3, 0): 5, (3, 1): 7, (3, 2): 13, (3, 3): 15}
+
+
+# Bind parent ID ports are explicit quasi-static straps. Never treat their literal
+# values as open signal nets, and never silently drop a non-strap constant input.
+KNOWN_LITERAL = re.compile(r"([0-9]+)'([bBdDhH])([0-9a-fA-F_]+)")
+
+
+def known_literal(expr):
+    m = KNOWN_LITERAL.fullmatch(expr)
+    if not m:
+        raise ValueError(f'expected a known sized literal: {expr}')
+    width = int(m[1])
+    try:
+        value = int(m[3].replace('_', ''), {'b': 2, 'd': 10, 'h': 16}[m[2].lower()])
+    except ValueError:
+        raise ValueError(f'invalid literal digits: {expr}') from None
+    if width <= 0 or value >= 1 << width:
+        raise ValueError(f'literal does not fit its declared width: {expr}')
+    return width, value
+
+
+def strap_literal(port, expr, direction):
+    if "'" not in expr:
+        return False
+    known_literal(expr)
+    legacy_id = re.fullmatch(r'S_u_t_[0-3]_[0-3]_tile_id', port)
+    if direction != 'input' or not (port.startswith('strap_') or legacy_id):
+        raise ValueError(f'constant on non-strap input/output {port}: {expr}')
+    return True
+
+
+def tile_identity(inst, row, column):
+    """Read the exact source ID through either emitted parent-strap spelling."""
+    suffix = f'u_t_{row}_{column}_tile_id'
+    values = [(p, n) for p, n in inst['conns'] if p in ('S_' + suffix, 'strap_' + suffix)]
+    if len(values) != 1:
+        raise ValueError(f'{inst["name"]}.{suffix}: expected exactly one source tile strap, got {values}')
+    width, value = known_literal(values[0][1])
+    if width != 16:
+        raise ValueError(f'{inst["name"]}.{suffix}: source tile ID width {width} != 16')
+    return value
 
 
 def parse_top(p: Path):
@@ -192,7 +233,7 @@ def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
     reset_contract = qc_reset_contract(top, keep)
     start = reset_contract.get('start')
     pins = {'rst_n'} | ({start['die_pin']} if start else set())
-    drv, rd = {}, {}
+    drv, rd, literal_straps = {}, {}, []
     for i in keep:
         pd = ports_of(rtl, i['module'])
         for p, n in i['conns']:
@@ -201,6 +242,9 @@ def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
             dirn = pd.get(p)
             if not dirn:
                 raise SystemExit(f'carve: {i["name"]}.{p} not a port of {i["module"]}')
+            if strap_literal(p, n, dirn):
+                literal_straps.append(dict(instance=i['name'], port=p, literal=n))
+                continue
             (drv if dirn == 'output' else rd).setdefault(n, []).append((i['name'], p))
     clocks = sorted({n for n in rd if n.startswith('clk_')})
     ext = sorted(n for n in rd if n not in drv and n not in clocks and n not in pins)
@@ -222,7 +266,7 @@ def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
         L.append("    reg ep = 1'b0;  // epoch bit of the bench-driven lane ends (the driver boundary flop loads ea = rst_n)")
         L.append('    always @(posedge ck) ep <= rst_n;')
     L += [wires[n]['decl'] for n in used]
-    rep = dict(seeds=[i['name'] for i in keep], clusters=clusters, clocks=clocks, event_lanes={}, zero_lanes=[], reset=reset_contract)
+    rep = dict(seeds=[i['name'] for i in keep], clusters=clusters, clocks=clocks, event_lanes={}, zero_lanes=[], literal_straps=literal_straps, reset=reset_contract)
     for n in ext:
         w, lane = wires[n]['width'], wires[n]['lane']
         if n in reset_contract['boundary_prefixes']:
