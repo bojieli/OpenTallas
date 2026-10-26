@@ -7,11 +7,11 @@ D=${1:?fresh output};[ ! -e "$D" ] || { echo 'OUTPUT EXISTS refuse';exit 2; };mk
 git rev-parse HEAD > "$D/source_commit.txt"
 CARGS=(--write "${WRITE_INSTR:-606}" --start "${START_INSTR:-88}" --capture "${CAPTURE_INSTR:-95}" --sink "${SINK_INSTR:-96}" --slot "${SLOT_INSTR:-98}" --halt "${HALT_INSTR:-624}")
 python3 tools/hbm_b2/q3stageb/topk_rows.py "$D/prog" --done "${DONE_INSTR:-615}" "${CARGS[@]}"
-python3 - "$D" > "$D/gen.log" 2>&1 <<PYGEN
+python3 - "$D" > "$D/gen.log" 2>&1 <<'PYGEN'
 import importlib.util,sys,pathlib
-p=pathlib.Path(physical/die_plan/hbm/q3sync_kits/build_kit.py).resolve()
-s=importlib.util.spec_from_file_location(fresh_vmface_profile,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
-m.materialize(body,sys.argv[1],vm_face_contract=True)
+p=pathlib.Path('physical/die_plan/hbm/q3sync_kits/build_kit.py').resolve()
+s=importlib.util.spec_from_file_location('fresh_vmface_profile',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+m.materialize('body',sys.argv[1],vm_face_contract=True)
 PYGEN
 FACE_SOURCES=$D/face_sources
 python3 tools/hbm_b2/q3sync/emit_face_sources.py --api-root "$WT" --profile-dir "$D" --views "$PLAN_VIEWS" --common-clock-dir results/clock/q3_vmface_1026 --core body --core edge --core vm --core reduce --core ring_ag --out "$FACE_SOURCES" > "$D/face_emit.log"
