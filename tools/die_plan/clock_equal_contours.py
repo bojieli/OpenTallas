@@ -59,13 +59,20 @@ def equalize(plan,source,out,max_legs=3):
         c=T.cells[name];c['physical_prior_kind']=c['kind'];c['physical_prior_level']=c.get('level')
         c['kind']='rep';c['level']=0 if depth(name)<=wide_through else 99
     def site(raw,controls):
-        ix,iy=round(raw[0]/sx),round(raw[1]/sy);x,y=ix*sx,iy*sy
-        if x<1 or y<1 or x+width>P.W-1 or y+.27>P.H-1:return None
-        err=max(abs(abs(x-q[0])+abs(y-q[1])-r) for q,r in controls)
-        if err>.3:return None
-        if any((iy,j) in occupied for j in range(ix,ix+ns)):return None
-        if any(K.hit(u,v) for u,v in [(x,y),(x+width,y),(x,y+.27),(x+width,y+.27),(x+width/2,y+.135)]):return None
-        return (round(x,6),round(y,6),iy,err),{(iy,j) for j in range(ix,ix+ns)}
+        bx,by=round(raw[0]/sx),round(raw[1]/sy)
+        # Native row quantization is the only permitted contour error. A
+        # nearby occupied exact intersection may use its adjacent row only
+        # while BOTH individual legs remain within0.3um of the common radius.
+        offsets=sorted([(dx,dy) for dx in range(-5,6) for dy in [-1,0,1]],key=lambda d:abs(d[0])*sx+abs(d[1])*sy)
+        for dx,dy in offsets:
+            ix,iy=bx+dx,by+dy;x,y=ix*sx,iy*sy
+            if x<1 or y<1 or x+width>P.W-1 or y+.27>P.H-1:continue
+            err=max(abs(abs(x-q[0])+abs(y-q[1])-r) for q,r in controls)
+            if err>.300001:continue
+            if any((iy,j) in occupied for j in range(ix,ix+ns)):continue
+            if any(K.hit(u,v) for u,v in [(x,y),(x+width,y),(x,y+.27),(x+width,y+.27),(x+width/2,y+.135)]):continue
+            return (round(x,6),round(y,6),iy,err),{(iy,j) for j in range(ix,ix+ns)}
+        return None
     def circle(a,r,b):
         us={i*8.64 for i in range(math.floor(r/8.64)+1)}|{r,abs(a[0]-b[0]),r-abs(a[1]-b[1])}
         for d in [.27,.54,.81,1.08,1.62,2.16,3.24]:us.update([d,r-d])

@@ -3,8 +3,9 @@
 
 Scope: die_clock's BUFx24_ASAP7_75t_R cells (M1 terminals) and M9 top ports.
 The native exporter records the pin-access resistors but excludes terminal-node
-ground caps. Infer each missing half-cap from its resistor and the SAME uniform
-4W/8W RC estimate, retaining the native via resistance. Fail on other masters,
+ground caps. Infer each missing half-cap from its native resistor and the SAME cap-profile estimate, retaining the
+native via resistance. STANDARD layer R is used: native NDR width credit is
+already applied and must not be divided a second time. Fail on other masters,
 missing/disconnected resistors, or a restored CAP sum inconsistent with D_NET.
 """
 import argparse
