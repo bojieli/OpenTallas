@@ -606,7 +606,7 @@ def bumps_tcl(P, bumps, size=4.0):
 
 
 # --------------------------------------------------------------------------------------------------------- STA kit
-def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
+def standin_netlist(P, tn, hold_contract=True, clock_contract=True, also=()):
     """budget stand-in of a partition type for die_sta.py: one face flop per pin bit next to its pin, clocked from the
     nearest plan clock tap (no internal logic: the partition's internal paths are its own G3 closure).  hold_contract:
     every input bit reaches its face flop through the boundary-hold contract cell (die_sta.bhold_cell(tol)): the port
@@ -616,7 +616,17 @@ def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
     insertion, gen_phys.insertion_binding) and the face flops hang on its output, never on the port; face flops take
     the nearest TYPE tap (pin registers sit on the type grid taps), early core taps (clk_c<k>) drive only their
     contract cell at the core's insertion (the hard core's own tree).  Without it (legacy) every face flop's CLK
-    loads the port directly and core taps clock face flops too."""
+    loads the port directly and core taps clock face flops too.
+    Reset / START ports (reset_ports): exactly the ports gen_rtl.die_top connects on an instance of the type -- arst_n,
+    the wavefront rst_o_<k>, START start_i / start_o_<k> -- with the same names and directions.  On a delivered-reset
+    plan (pipelined / wavefront: arst_n is a SYNCHRONOUS pin, OWNER RESET RULE 10-24) every reset / START input gets a
+    face flop (through the boundary-hold contract cell when hold_contract) and every reset / START output is driven
+    by a face flop QN, each on the nearest type tap to its plan pin site -- the same budget as a data pin, so the
+    neighbour rst_o -> arst_n / start_o -> start_i seams are timed instead of left unlinked.
+    also: the other plan types instantiated under the SAME module name (variant types; the die top links every one of
+    their instances to this one definition): the stand-in is the port union -- a bus bit / reset port only another type
+    has gets its face flop at that type's pin site on tn's taps (same outline frame).  Refuses a direction conflict or
+    a type whose clock tap ports differ (its instances would not link)."""
     t = P.types[tn]
     pins = gen_phys.type_pins(P, tn)
     bits = defaultdict(int)
@@ -633,7 +643,30 @@ def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
 
     def near(x, y):
         return min(flop_taps, key=lambda q: abs(q[1] - x) + abs(q[2] - y))[0]
-    ports = [f"  input {n};" for n in tapn] + ["  input arst_n;"]
+    rins, routs = reset_ports(P, tn)
+    have = {(b, i) for b, i, *_ in pins}
+    for on in also:
+        ot = P.types[on]
+        if ot["module"] != t["module"]:
+            raise ValueError(f"stand-in {t['module']}: type {on} is module {ot['module']}")
+        if [n for n, *_ in gen_phys.clock_pins(P, on) + gen_phys.core_tap_pins(P, on)] != tapn:
+            raise ValueError(f"stand-in {t['module']}: types {tn} / {on} differ in clock tap ports")
+        od = {b["name"]: b["dir"] for b in ot.get("buses", [])}
+        for sl in ot.get("ft_slots", []) or []:
+            od[sl["name"] + "_i"], od[sl["name"] + "_o"] = "in", "out"
+        for b, d in od.items():
+            if dirs.setdefault(b, d) != d:
+                raise ValueError(f"stand-in {t['module']}: bus {b} is {dirs[b]} in {tn}, {d} in {on}")
+        for pin in gen_phys.type_pins(P, on):
+            if (pin[0], pin[1]) not in have:
+                have.add((pin[0], pin[1]))
+                pins.append(pin)
+                bits[pin[0]] = max(bits[pin[0]], pin[1] + 1)
+        ri, ro = reset_ports(P, on)
+        rins += [r for r in ri if r[0] not in {q[0] for q in rins}]
+        routs += [r for r in ro if r[0] not in {q[0] for q in routs}]
+    ports = [f"  input {n};" for n in tapn] + [f"  input {n};" for n, *_ in rins] + \
+        [f"  output {n};" for n, *_ in routs]
     for b in sorted(bits):
         ports.append(f"  {'input' if dirs.get(b) == 'in' else 'output'} [{bits[b] - 1}:0] {b};")
     ckn, ckcells, ckwires = {n: n for n in tapn}, [], []
@@ -661,12 +694,62 @@ def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
         else:
             cells.append(f"  {FLOP} f{k} (.CLK({ck}), .D(1'b0), .QN({bus}[{bit}]));")
         k += 1
-    names = tapn + ["arst_n"] + sorted(bits)
+    for n, x, y, flop in rins:
+        if not flop:
+            continue                                  # legacy asynchronous arst_n: released inside the partition
+        ck = ckn[near(x, y)]
+        if hold_contract:
+            cells.append(f"  {bh} h{k} (.A({n}), .Y(d{k}));\n  {FLOP} f{k} (.CLK({ck}), .D(d{k}), .QN(q{k}));")
+        else:
+            cells.append(f"  {FLOP} f{k} (.CLK({ck}), .D({n}), .QN(q{k}));")
+        k += 1
+    for n, x, y in routs:
+        cells.append(f"  {FLOP} f{k} (.CLK({ckn[near(x, y)]}), .D(1'b0), .QN({n}));")
+        k += 1
+    names = tapn + [n for n, *_ in rins] + [n for n, *_ in routs] + sorted(bits)
     v = [f"module {t['module']} ({', '.join(names)});"] + ports + ckwires
     v += [f"  wire q{i};" for i in range(k) if f".QN(q{i})" in cells[i]]
     v += [f"  wire d{i};" for i in range(k) if f".Y(d{i})" in cells[i]]
     v += ckcells + cells + ["endmodule"]
     return "\n".join(v) + "\n", k
+
+
+def standin_groups(P):
+    """{module: [plan types instantiated under it]} (sorted): variant types sharing a module get ONE union stand-in
+    (writing one per type let the last type overwrite the others, whose extra ports then failed to link)."""
+    g = defaultdict(list)
+    for tn, t in sorted(P.types.items()):
+        g[t["module"]].append(tn)
+    return dict(sorted(g.items()))
+
+
+def reset_ports(P, tn):
+    """the reset / START ports gen_rtl.die_top connects on every instance of type tn, with their type-frame pin sites:
+    ([(name, x, y, face_flop)] inputs, [(name, x, y)] outputs).  arst_n always; on a wavefront plan the type's
+    registered reset outs rst_o_<k> (reset_tree.out_pins); on a START-broadcast plan start_i (every soft partition the
+    die top feeds, reset_tree.wf_die_start) and start_o_<k> (reset_tree.start_out_pins).  face_flop: the input is a
+    synchronous seam (delivered reset: pipelined / wavefront plan)."""
+    import reset_tree as RT
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    soft = not t.get("hard")
+
+    def site(f):
+        try:
+            return tuple(f(P, tn))[:2]
+        except Exception:                             # hard type without a reset tap: its centre
+            return (w / 2.0, h / 2.0)
+    sync = RT.delivered(P)
+    ain = site(RT.in_pin) if RT.wavefront(P) and soft else site(RT.reset_pin)
+    rins, routs = [("arst_n",) + ain + (sync,)], []
+    if RT.wavefront(P):
+        routs += [(n, x, y) for n, x, y in RT.out_pins(P, tn)]
+        if RT.start_broadcast(P):
+            fed = RT.wf_die_start(P)[1]
+            if any(p["type"] == tn and n in fed for n, p in P.parts.items()):
+                rins.append(("start_i",) + site(RT.start_in_pin) + (True,))
+            routs += [(n, x, y) for n, x, y in RT.start_out_pins(P, tn)]
+    return rins, routs
 
 
 _STANDIN_IN = re.compile(r"^(\s*)(" + re.escape(FLOP) + r") f(\d+) \(\.CLK\(([^)]*)\), \.D\(([^)']+)\), \.QN\(q\3\)\);\s*$")
@@ -802,12 +885,12 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                                          "/work/psm/psm.tcl > /work/psm/psm.log 2>&1"))
     # sta stand-ins
     nff = 0
-    for tn, t in sorted(P.types.items()):
-        d = out / "sta" / "parts" / t["module"]
+    for mod, tns in standin_groups(P).items():
+        d = out / "sta" / "parts" / mod
         d.mkdir(parents=True, exist_ok=True)
-        v, k = standin_netlist(P, tn)
+        v, k = standin_netlist(P, tns[0], also=tns[1:])
         (d / "6_final.v").write_text(v)
-        nff += k * sum(1 for p in P.parts.values() if p["type"] == tn)
+        nff += k * sum(1 for p in P.parts.values() if p["type"] in tns)
     v = gen_rtl.die_top(P, gen_rtl.bus_epochs(P), {})
     plain = "\n".join(re.sub(r"^endmodule\s*:.*$", "endmodule", ln) for ln in v.splitlines() if not ln.startswith("`"))
     (out / "sta" / "die_top.v").write_text(plain + "\n")
@@ -1308,14 +1391,14 @@ def main(argv=None):
     j.add_argument("--no-clock-contract", action="store_true", help="legacy: face flops load the tap port directly")
     a = ap.parse_args(argv)
     if a.cmd == "standins":
-        P = S.Plan(S.load(a.plan))
+        P = S.Plan(S.load(a.plan), Path(a.plan))     # plan-relative sidecars, as write_kit
         tot = {}
-        for tn, t in sorted(P.types.items()):
-            d = Path(a.out) / t["module"]
+        for mod, tns in standin_groups(P).items():
+            d = Path(a.out) / mod
             d.mkdir(parents=True, exist_ok=True)
-            v, k = standin_netlist(P, tn, clock_contract=not a.no_clock_contract)
+            v, k = standin_netlist(P, tns[0], clock_contract=not a.no_clock_contract, also=tns[1:])
             (d / "6_final.v").write_text(v)
-            tot[t["module"]] = k
+            tot[mod] = k
         print(json.dumps(dict(types=len(tot), face_flops=sum(tot.values()),
                               clock_contract=not a.no_clock_contract), indent=1))
         return 0
