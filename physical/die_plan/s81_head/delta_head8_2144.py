@@ -27,11 +27,17 @@ TYPES = ST + ('hd_spn', 'hd_spn_end')
 
 
 def controls(tree):
-    if tree['entry'] == 'sync':
-        raise ValueError('root sync inventory needs its real weighted census')
     if not tree.get('start'):
         raise ValueError('START is absent')
-    rows = [('u_rst_in', tree['root'], 'reset_entry'), ('u_run_in', tree['start_in'], 'start_entry')]
+    if tree['entry'] == 'sync':
+        # The actual gen_rtl.CELLS ot_dp_rsync_s2/s3 has N p bits.
+        ns = int(tree['sync_stages'])
+        if ns not in (2, 3) or tree.get('lock'):
+            raise ValueError('root lock/unknown sync needs an explicit weighted census')
+        rows = [(f'u_rst_root.p[{i}]', tree['root'], 'reset_sync') for i in range(ns)]
+        rows += [(f'u_run_root.p[{i}]', tree['start_in'], 'start_sync') for i in range(ns)]
+    else:
+        rows = [('u_rst_in', tree['root'], 'reset_entry'), ('u_run_in', tree['start_in'], 'start_entry')]
     rows += [(r['name'], r['xy'], r.get('role', 'reset')) for r in R.start_relays(tree)]
     if len({r[0] for r in rows}) != len(rows):
         raise ValueError('duplicate control alias')
@@ -39,7 +45,7 @@ def controls(tree):
     return [[x, y, n] for (x, y), n in sorted(cnt.items())], dict(Counter(role for _, _, role in rows))
 
 
-def propose(raw):
+def propose(raw, checkpoint=None):
     base = copy.deepcopy(raw)
     before = S.Plan(base)
     reset_before = R.wf_plan(before)
@@ -50,6 +56,11 @@ def propose(raw):
     for tn in TYPES:
         ck = candidate['partition_types'][tn]['clock']
         ck.update(tap_mode='density', tap_target_sinks=600, tap_max_sinks=1500, tap_radius_um=150.)
+    if checkpoint:
+        checkpoint.mkdir(parents=True, exist_ok=True)
+        (checkpoint / 'candidate_geometry.json').write_text(json.dumps(candidate, separators=(',', ':')) + '\n')
+        (checkpoint / 'geometry_ledger.json').write_text(json.dumps(knee, indent=1) + '\n')
+    print('HEAD8 geometry done; entering joint RESET/START clock census', flush=True)
     previous = None
     seen = set()
     control_report = {}
@@ -57,6 +68,7 @@ def propose(raw):
         plan = S.Plan(candidate)
         trees = {tn: R.for_type(plan, tn) for tn in TYPES}
         rows = {tn: controls(trees[tn]) for tn in TYPES}
+        print('HEAD8 control census round', iteration + 1, {tn: sum(r[2] for r in rows[tn][0]) for tn in TYPES}, flush=True)
         key = tuple((tn, tuple(tuple(x) for x in rows[tn][0])) for tn in TYPES)
         if key == previous:
             for tn, (sites, roles) in rows.items():
@@ -81,6 +93,10 @@ def propose(raw):
         newpins = {(b, i): (f, x, y, layer) for b, i, f, x, y, layer in type_pins(after, tn)}
         interface[tn] = dict(outline_unchanged=ty['outline_um'] == base['partition_types'][tn]['outline_um'],
                              old_clock_taps=len(S.tap_grid(before, tn)), new_clock_taps=len(S.tap_grid(after, tn)),
+                             old_clock_tap_coordinates=S.tap_grid(before, tn), new_clock_tap_coordinates=S.tap_grid(after, tn),
+                             reset_in_before=R.reset_pin(before, tn), reset_in_after=R.reset_pin(after, tn),
+                             reset_out_before=R.out_pins(before, tn), reset_out_after=R.out_pins(after, tn),
+                             start_in_after=R.start_in_pin(after, tn), start_out_after=R.start_out_pins(after, tn),
                              logical_bus_pin_changes=[list(k) for k in sorted(set(oldpins) | set(newpins)) if oldpins.get(k) != newpins.get(k)],
                              reset_depth_before=reset_before['types'][tn]['depth_K'], reset_depth_after=reset_after['types'][tn]['depth_K'],
                              release_after_pin_before=reset_before['types'][tn]['release_after_pin'], release_after_pin_after=reset_after['types'][tn]['release_after_pin'],
@@ -102,7 +118,7 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('plan'); ap.add_argument('--out', required=True); ap.add_argument('--ledger', required=True)
     args = ap.parse_args()
-    candidate, report, offsets = propose(json.loads(Path(args.plan).read_text()))
+    candidate, report, offsets = propose(json.loads(Path(args.plan).read_text()), Path(args.out))
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     (out / 'die_plan.json').write_text(json.dumps(candidate, separators=(',', ':')) + '\n')
     (out / 'reset_start_offsets.json').write_text(json.dumps(offsets, indent=1) + '\n')
