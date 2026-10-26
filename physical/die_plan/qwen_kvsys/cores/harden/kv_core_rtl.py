@@ -314,6 +314,14 @@ def build_core(B, t, hc, pins_file, straps=()):
     for k, v in lb.items():
         if v['boundary']:
             nets[v['root']].append(k)
+    # CORES-KITS/KVX 10-26: a scalar pins-file pin ('fault', 'clk') names a 1-bit leaf port that the kv41 boundary
+    # keys as bit 0; match it as bit 0 here and give the port its scalar name back below (was: stale_in (None) +
+    # out (0) = "mixes directions", and an added 'ck' beside the unused scalar 'clk')
+    scalar = {p[0] for p in pins if p[1] is None and (p[0], 0) in by_pin
+              and not any(q[0] == p[0] and q[1] not in (None, 0) for q in by_pin) and (p[0], 0) not in pins}
+    if scalar:
+        pins = type(pins)(((b, 0) if (b in scalar and i is None) else (b, i)) for b, i in pins) if not isinstance(pins, dict) \
+            else {((b, 0) if (b in scalar and i is None) else (b, i)): v for (b, i), v in pins.items()}
     rep = dict(pins_file=str(pins_file), pins=len(pins), kv41_boundary_pins=len(by_pin),
                stale=[], added=[], clk_unused=[], out_alias=[], straps=[])
     pin_class = OrderedDict()               # (base, bit) -> class
@@ -421,6 +429,15 @@ def build_core(B, t, hc, pins_file, straps=()):
                 pin_class[(base, len(cb) - 1 - i)] = 'strap'
                 part_conn[(base, len(cb) - 1 - i)] = cb[i]
             rep['straps'].append(dict(pin=base, width=len(cb), param=name, value=s_value(B, tok)))
+    if scalar:
+        sc = lambda pk: (pk[0], None) if (pk[0] in scalar and pk[1] == 0) else pk
+        for d in (pin_class, part_conn, out_assign):
+            items = list(d.items()); d.clear(); d.update((sc(k), v) for k, v in items)
+        for k, v in list(leaf_src.items()):
+            if v[0] == 'pin':
+                leaf_src[k] = ('pin',) + sc(tuple(v[1:]))
+        pins = type(pins)(sc(p) for p in pins) if not isinstance(pins, dict) else {sc(k): v for k, v in pins.items()}
+        rep['scalar_pins'] = sorted(scalar)
     # ports
     ports = OrderedDict()
     order = {}
