@@ -7,8 +7,9 @@ Face pin registers (u_bin_/u_bout_/u_ft*), ports and macro pins are fixed.  Mode
 Reset (v3): every reset pin arc (load register <-> its reset driver register, geometry 'reset_cones') joins the graph and
 the 405-um census, so the split rst_cp_* copies (ot_rst_copies) sit at the minimax centre of their own loads + tap relay.
 Usage: anchor_joint3.py all_geometry.json ot_macro_pin_flops.txt OUT_PREFIX [old_reach405.tcl]"""
-import json,re,sys
+import json,re,sys,os
 from collections import Counter,defaultdict
+LIMIT=float(os.environ.get('N59_REACH_UM','405'))
 geo,mpf_file,out=sys.argv[1:4];old_tcl=sys.argv[4] if len(sys.argv)>4 else None
 p=json.load(open(geo));pos={k:list(v) for k,v in p['positions'].items()};P0=p['positions'];T=p['targets'];M=p['macros']
 norm=lambda n:n.replace('\\','')
@@ -33,7 +34,7 @@ for s,t in T.items():
     for b in t['dst']:nb[s].add(b)
 for e,ld in RA:nb[e].add(ld);nb[ld].add(e)
 d=lambda a,b:abs(pos[a][0]-pos[b][0])+abs(pos[a][1]-pos[b][1])
-bad=lambda:[(a,s) for s,t in T.items() for a in t['src'] if a in pos and d(s,a)>405]+[(e,ld) for e,ld in RA if d(e,ld)>405]
+bad=lambda:[(a,s) for s,t in T.items() for a in t['src'] if a in pos and d(s,a)>LIMIT]+[(e,ld) for e,ld in RA if d(e,ld)>LIMIT]
 inmac=lambda x,y:any(x0-2<x<x1+2 and y0-2<y<y1+2 for x0,y0,x1,y1 in M)
 def best_free(x,y,ns):
     cost=lambda X,Y:max(abs(X-pos[q][0])+abs(Y-pos[q][1]) for q in ns)
@@ -82,7 +83,7 @@ for r in sorted(mov,key=lambda r:(int(pos[r][0]//10),int(pos[r][1]//10),r)):
             X=min(max(x0+rad*math.cos(2*math.pi*k/max(8,rad)),5.0),772.0);Y=min(max(y0+rad*math.sin(2*math.pi*k/max(8,rad)),1.0),517.0)
             nbk=(int(X//10),int(Y//10))
             if occ[nbk]>=CAP or inmac(X,Y):continue
-            if ns and max(abs(X-pos[q][0])+abs(Y-pos[q][1]) for q in ns)>400:continue
+            if ns and max(abs(X-pos[q][0])+abs(Y-pos[q][1]) for q in ns)>min(400,LIMIT-5):continue
             occ[bk]-=1;occ[nbk]+=1;pos[r]=[X,Y];spread+=1;done=True;break
         if done:break
     if not done:unspread+=1
@@ -95,7 +96,7 @@ summ=dict(scope='MODEL ONLY (neighbours at the kit netlist post-DPL sites); post
  max_anchors_per_10um_bin=max(bins.values()) if bins else 0,bins_over_150=sum(v>150 for v in bins.values()),
  max_move_um=round(max([abs(pos[r][0]-orig[r][0])+abs(pos[r][1]-orig[r][1]) for r in mov] or [0]),1),
  remaining=[dict(n=n,src=k[0],snk=k[1]) for k,n in rem.most_common()],families=Counter(fam(r) for r in mov).most_common())
-summ['spread_moved']=spread;summ['spread_failed']=unspread;summ['bin_cap']=CAP;summ['reset_arcs']=len(RA);summ['reset_copy_drivers']=len(RST);summ['reset_over405_after']=sum(1 for e,ld in RA if d(e,ld)>405)
+summ['spread_moved']=spread;summ['spread_failed']=unspread;summ['bin_cap']=CAP;summ['reset_arcs']=len(RA);summ['reset_copy_drivers']=len(RST);summ['reset_over405_after']=sum(1 for e,ld in RA if d(e,ld)>LIMIT)
 json.dump(summ,open(out+'.summary.json','w'),indent=1)
 with open(out+'.tcl','w') as f:
     for r in sorted(mov):f.write(' {{%s} %.6f %.6f}\n'%(r,pos[r][0],pos[r][1]))
