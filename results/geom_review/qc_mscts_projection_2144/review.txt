@@ -15,3 +15,13 @@ actual RC is mandatory before adoption. Original prog_half checkpoint remains
 untouched; native falling-edge phase STA remains owned by QC physical.
 Own job: intel1:/srv/opentallas-scratch2/claude/codex-qc-projection-2144/kit.
 Geometry unit3319407-1792992247 EXIT0; GRT project_grt.sh via ot-run20GB/8t.
+ACTUAL NATIVE0 RESULT 22:51 PDT: clock-window prototype PASS, TT19.7/FF15.7
+(limit20),TTsetup+184.634ps,slew/cap0. Actual savedODB gcell map has0overflow
+across1,127,736 layer/cell checks with positive routedusage. One-padBUF4+0data
+cycles. Native0 uses the peer's explicit ROUTING_LAYER_ADJUSTMENT0.0. Initial
+custom script wrongly used generic0.25; that separate diagnostic finishedFAIL
+359overflow/350cells,TTsetup-584.61,slew208,windowFAIL. It is no qualification
+record. Corrected native0 outputs are isolated and preserve the original kit.
+SPEF unavailable because GRT has no RCX extraction data; actual ODB+guides saved.
+No SIGNED,full related-pair or native falling-edge final STA claim here; QC
+physical owns edge-specific follow-through on the saved new graph.

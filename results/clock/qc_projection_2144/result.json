@@ -1,0 +1,48 @@
+{
+  "verdict": "PASS_CLOCK_WINDOW_PROTOTYPE",
+  "scope": "single BUF4 projection on existing QC PROG native mixed-edge SRAMIF prototype; not SIGNED or whole-die G3/G5",
+  "helper_commit": "4635676f6",
+  "run": "intel1:/srv/opentallas-scratch2/claude/codex-qc-projection-2144/native0",
+  "clock_ps": 833,
+  "uncertainty_setup_hold_ps": [
+    60,
+    25
+  ],
+  "window_limit_ps": 20,
+  "window_tt_ps": 19.7,
+  "window_ff_ps": 15.7,
+  "tt_setup_ps": 184.63419755811648,
+  "slew_violations": 0,
+  "cap_violations": 0,
+  "gcell_layer_checks": 1127736,
+  "gcell_overflow": 0,
+  "gcell_overflow_cells": 0,
+  "routing_capacity_reduction": 0.0,
+  "original_routing_capacity_reduction": 0.0,
+  "rc_scale": [
+    0.8,
+    0.9
+  ],
+  "signal_layers": "M2-M5",
+  "clock_layers": "M4-M5",
+  "added_data_cycles": 0,
+  "added_cells": {
+    "BUFx4_ASAP7_75t_R": 1
+  },
+  "geometry_audit": {
+    "existing_cells_unchanged": 24635,
+    "nonclock_ff_pins_unchanged": 10510
+  },
+  "new_odb_sha256": "7298d5ee21990fd86e563099334957511e7758c36fcd2adf9e76c9452955204a",
+  "spef": "NOT PRODUCED: GRT parasitics have no RCX extraction data; ODB + route guides saved for native phase STA",
+  "native_phase_and_pair_check": "Owned by QC physical; not claimed here. DFFL actual edge-specific checks still required.",
+  "wrong_capacity_diagnostic": {
+    "routing_capacity_reduction": 0.25,
+    "verdict": "FAIL_DIAGNOSTIC_WRONG_FRAME_NO_GATE_CREDIT",
+    "overflow": 359,
+    "overflow_cells": 350,
+    "tt_setup_ps": -584.6112506358846,
+    "slew_violations": 208,
+    "reason": "Initial custom script copied generic0.25, mismatching actual peer profile0.0. Kept separate, never overwrote original failure; corrected exact native capacity runs in isolated native0 directory."
+  }
+}
