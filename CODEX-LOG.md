@@ -3142,3 +3142,5 @@ PV remaining explicit OPEN:
 
 OWNER?
 None new. Existing STATIC_REFRESH1 adoption policy remains open; defaulttiming833 correctness requiresnoownerdecision. Resume physicalwork only underClaude; CODEX parked.
+
+KV-CORES RESET final INFRA receipt: ASTK5 row9c1dca017848 is WAIT-CANARY, unit=None/client_log=None, NOT LAUNCHED. Canonical die=qwen_kvsys correction succeeded; exact corrective binding accepted. Normal18:22tick held solely for 15min busyguard `container False, logs12min old`; preserved normal18:32timer may admit. No manualticks/newjobs fromCODEX/INFRA. Claude owns this approved pending row.
