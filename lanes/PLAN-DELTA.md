@@ -200,3 +200,8 @@ PENDING-DELTA D-QC-SCROOT qwen_compute slw_sc_v1,slw_sc_v1r
 - OPEN before the freeze gate:
   (1) the batch's own die GRT0 + skew re-run (CLOCK-MESH measured main's 40-type it5; the partition geometry is the same, but run it on 5665cd3386);
   (2) strict bind of the batch still blocked on the sys_c SYS3 source projection (L747 fixed_cycles 5 vs bound 8, see 00:1x line).
+[COORD 2026-10-26 01:13 PDT] PATH-KV calls:
+(1) ASTK face clock: STRUCTURAL. Root the face taps separately (own sub-root), keep the 250/202.5 contract, no relaxation. The 9172 hold buffers are a symptom.
+(2) KVN_A0 32 vs 28: the committed producer is the source of truth. Use the regenerated 28 if strict bind + verify pass; add the hook rule so it is not hand-set.
+(3) The die_clock_mesh.py constant tag "D-QC-CLKMESH" becomes a --delta-id arg (CLOCK-MESH lane).
+(4) The KV batch 5665cd3386 waits for the sys_c SYS3 station count (5) from codex/kv-sysc-g3-1025; the successor PATH-KV finishes it if Codex has not.
