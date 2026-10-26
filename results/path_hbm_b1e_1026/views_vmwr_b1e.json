@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.hbm_arch.core_views.v1",
+ "plan": "/srv/opentallas-scratch2/claude/path-hbm/b1e_1026/plan_b1e/die_plan.json",
+ "plan_sha256": "43fb3b14fcd98ac746a2bbd1e697307a30f81e9873362e99dc181ac3cc272e64",
+ "view_list": [
+  {
+   "view": "ot_hbm_sm_vm_wr_q_t_lanes4@cd68026ca8dc",
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "outline_um": [
+    142.56,
+    388.8
+   ],
+   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x388.8__q_hub_u_smw_Q.json",
+   "pins_sha256": "cd68026ca8dc13e28ac486d5e64547329c8fb6454808dd9109cf5d76c08b3823",
+   "pins": 3673,
+   "instances": [
+    "q_hub_nw.u_smw_Q",
+    "q_hub_ne.u_smw_Q"
+   ],
+   "placed": 2,
+   "tables_for_module": 1,
+   "canonical_type": null,
+   "recipe_keys": [],
+   "blockers": [],
+   "family": "SMSVC",
+   "layers": {
+    "M4": 2015,
+    "M5": 1658
+   },
+   "b2n_views": [
+    [
+     "ot_hbm_sm_vm_wr_q_t_lanes4@c732439590f8",
+     [
+      142.56,
+      388.8
+     ]
+    ]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+q_b 298 {'x': (56, 11, None, None), 'y': (44, 17, None, None)}
+q_sm 256 {'x': (32, 2, 734.4, 0.906), 'y': (8, 2, 10558.08, 1.0)}
+q_hub 161 {'x': (130, 45, None, None), 'y': (54, 25, None, None)}
+q_su 128 {'x': (54, 13, None, None), 'y': (15, 11, None, None)}
+root 46 {'x': (16, 9, None, None), 'y': (17, 7, None, None)}
+q_spb 8 {'x': (6, 2, 15588.72, 1.0), 'y': (3, 1, 4337.28, 1.0)}
+q_spt 4 {'x': (4, 1, 14964.48, 1.0), 'y': (1, None, None, None)}
+NW_io 3 {'x': (3, 1, 82.08, 1.0), 'y': (3, 1, 1261.44, 1.0)}
+vsN 2 None
+NE_io 2 None
+drop ['q_hub_nw', 'q_hub_ne'] 747 {'x': (169, 43, None, None), 'y': (83, 43, None, None)}
+drop ['q_hub_nw', 'q_hub_ne', 'q_su', 'q_b'] 321 {'x': (62, 21, None, None), 'y': (32, 20, None, None)}
+cores 908
+all {'x': {'pitch_um': 12.96, 'lines': 284, 'n_irregular': 71, 'leaf_pitch_um': None, 'leaf_cover': None}, 'y': {'pitch_um': 8.64, 'lines': 134, 'n_irregular': 52, 'leaf_pitch_um': None, 'leaf_cover': None}}
+no_hub {'x': {'pitch_um': 12.96, 'lines': 169, 'n_irregular': 43, 'leaf_pitch_um': None, 'leaf_cover': None}, 'y': {'pitch_um': 10.368, 'lines': 83, 'n_irregular': 43, 'leaf_pitch_um': None, 'leaf_cover': None}}
+sm only {'x': {'pitch_um': 734.4, 'lines': 32, 'n_irregular': 2, 'leaf_pitch_um': 734.4, 'leaf_cover': 0.906}, 'y': {'pitch_um': 1123.2, 'lines': 8, 'n_irregular': 2, 'leaf_pitch_um': 10558.08, 'leaf_cover': 1.0}}
+rest {'x': {'pitch_um': 12.96, 'lines': 140, 'n_irregular': 41, 'leaf_pitch_um': None, 'leaf_cover': None}, 'y': {'pitch_um': 10.368, 'lines': 75, 'n_irregular': 39, 'leaf_pitch_um': None, 'leaf_cover': None}}
