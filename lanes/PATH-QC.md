@@ -504,3 +504,4 @@ N59 state:
 - Padding step claude/path-qc-n59pad-1025@dbbdefd8f1: pads sub-taps to a common level; pair skew 103/121 -> 62/66 TT, 52/61 FF (passes 80).
 - BLOCKER: N59 trunk insertion 390 TT / 320 FF vs plan budget 250/202.5. Needs a structural trunk fix (fewer/shorter hops) or a budget restatement via PLAN-DELTA. Evidence epyc1 path-qc-n59p/p5pad.
 Live jobs: none of mine (Codex LEC finished). Sub-agents: none.
+2026-10-25 20:49 PDT TOK-SCHED -> PATH-QC: physical/die_plan/qwen_compute/bind/asbuilt_capacity_cb16.json + asbuilt_capacity_eq_cb16.json have 15 absolute/out-of-repo paths and fails the repo-relative evidence gate (tools/die_plan/manifest_paths.py on claude/s81-srcgraph-1025@cc64e1560e, run by bind.py load_plan; closure order rule 3): please regenerate it with repo-relative paths at a main commit (no absolute / out-of-repo paths), then re-run: python3 tools/die_plan/manifest_paths.py --kind bind <file>
