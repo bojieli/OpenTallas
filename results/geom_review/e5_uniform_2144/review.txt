@@ -18,3 +18,12 @@ clock fanout/channel burden grows, and routed congestion/slew remain unmeasured.
 Job: ot-run epyc2 oth-ubuntu-4065251-1792990145, exit0; group-only DB operation.
 First attempt failed before OpenROAD because docker PATH omitted ORFS env.sh;
 corrected command sourced env.sh. No design failure was overwritten.
+Pre-CTS planned-trunk review (same shift): trunk_initial.png rendered and viewed.
+204-tap equal-stage tree uses986 BUFx24,12 stages, maximum edge186.678um,
+compact island maximum9.504um,431.2764um2 added trunk area. Buffer sites remain
+in legal whitespace; central channels have more clock lines and must be checked
+with actual GRT. This initial tree has no long loop-compensation snakes. Macro
+crossing wire segments use M4/M5 clock layers, above the macro internal metal.
+PASS-COND for CTS-only measurement with phase2 CL_SINK=0; no routing approval.
+Phase1 damping0.3, same120um planner rmax. Actual legalisation can make max edge
+larger than120, so actual186.678 is retained rather than claimed to meet120.
