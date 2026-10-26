@@ -20,3 +20,12 @@ are restored to their authored values; comparison with the prior collapsed
 bound graph is still required before using its timing in a token schedule.
 The full source ELAB/strict-bind diagnostic is running under full/ in that run
 root. This component gate is not a full strict-bind or token pass.
+
+Followup: source/census inspection found ten more affected instantiated masters.
+`prior_census.json` records their v10 interfaces: all have empty parameters;
+24,590 pad instances therefore lose N, reset/landing/MU widths share the first
+shape, and valid delays lose D. The manifest also specializes these ten masters.
+`transport_run.py` checks twenty actual-master instances, every port dimension,
+and every explicit parameter: PASS20. Omitting specialization is caught at
+chunk-w input width1 instead280. These are restored source semantics, not
+additional pipeline stages. The legacy collapsed graph cannot be a token oracle.
