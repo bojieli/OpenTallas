@@ -1,0 +1,320 @@
+{
+ "schema": "opentallas.die_plan.regen_constants.v1",
+ "die": "qwen_kvsys",
+ "bound": "/srv/opentallas-scratch2/claude/codex-kv-bind-bank-2144/b19",
+ "bound_sha": "2cfa2428ed4abeae",
+ "generator": "tools/die_plan/regen_constants.py",
+ "bind_hook": "physical/die_plan/qwen_kvsys/bind/kvbind1025/regen_agebounds_2144.py",
+ "verdict": {
+  "MISMATCH": 4,
+  "OK": 7,
+  "ERROR": 3,
+  "WARN": 2
+ },
+ "constants": {
+  "RESPONSE_LAT": {
+   "value": 12,
+   "kind": "rtl",
+   "formula": "8 (landing seg) + D(krq) + D(krs); one value on every ECTL frame (type parameter)",
+   "status": "MISMATCH",
+   "inputs": {
+    "frames": 32,
+    "round_trips": [
+     12
+    ]
+   },
+   "group": "ectl",
+   "rtl": {
+    "inst": "(^|\\.)ectl_\\w+$",
+    "param": "RESPONSE_LAT"
+   },
+   "bind_applied": "not in param_regen.json (as-built value kept by the bind, or no hook)",
+   "rtl_bound": {
+    "module": "qkd_ectl3_kiss_st\\w*",
+    "param": "RESPONSE_LAT",
+    "instances": 1,
+    "values": [
+     "80"
+    ]
+   },
+   "mismatch": "bound RTL RESPONSE_LAT=['80'] on 1/1 qkd_ectl3_kiss_st\\w* instances, regen 12"
+  },
+  "QK_ISSUE_AGE": {
+   "value": 34,
+   "kind": "rtl",
+   "formula": "max(34, RESPONSE_LAT + 11) (static_qk_calendar write-before-read; 34 = attn calendar QK_CONSUME floor, KV owner choice KV-P6 18:09)",
+   "status": "MISMATCH",
+   "inputs": {
+    "RESPONSE_LAT": 12
+   },
+   "group": "ectl",
+   "rtl": {
+    "inst": "(^|\\.)ectl_\\w+$",
+    "param": "QK_ISSUE_AGE"
+   },
+   "bind_applied": "not in param_regen.json (as-built value kept by the bind, or no hook)",
+   "rtl_bound": {
+    "module": "qkd_ectl3_kiss_st\\w*",
+    "param": "QK_ISSUE_AGE",
+    "instances": 1,
+    "values": [
+     "91"
+    ]
+   },
+   "mismatch": "bound RTL QK_ISSUE_AGE=['91'] on 1/1 qkd_ectl3_kiss_st\\w* instances, regen 34"
+  },
+  "ROW_RETURN_LAT": {
+   "value": 19,
+   "kind": "rtl-derived",
+   "formula": "RESPONSE_LAT + 7 (localparam inside qkd_ectl3_kiss_st)",
+   "status": "OK",
+   "group": "ectl"
+  },
+  "QK_ROW_LATENCY": {
+   "value": 14,
+   "kind": "compiler",
+   "formula": "row_latency_for_calendar = RESPONSE_LAT + 2 (KV-P6-BOOT qk_row_latency)",
+   "status": "OK",
+   "group": "ectl"
+  },
+  "QK_D_QK": {
+   "value": 0,
+   "kind": "compiler",
+   "formula": "kv_qkh_safe32.calendar_d_qk: D_QK = QK_ISSUE_AGE - 34 (+ data edges); must be >= 0",
+   "status": "OK",
+   "group": "ectl"
+  },
+  "ahub.__rule__": {
+   "value": null,
+   "kind": "rule",
+   "status": "ERROR",
+   "formula": "as-built AP_OFS not in param_regen.json (bind without the KV hook)",
+   "group": "ahub"
+  },
+  "pv.__rule__": {
+   "value": null,
+   "kind": "rule",
+   "status": "ERROR",
+   "formula": "as-built TRUNK_D/FLAG_D not in param_regen.json",
+   "group": "pv"
+  },
+  "VPORT_RT": {
+   "value": {
+    "vport_EN_0": 47,
+    "vport_EN_1": 48,
+    "vport_EN_2": 49,
+    "vport_EN_3": 50,
+    "vport_ES_0": 47,
+    "vport_ES_1": 48,
+    "vport_ES_2": 49,
+    "vport_ES_3": 50,
+    "vport_WN_0": 48,
+    "vport_WN_1": 47,
+    "vport_WN_2": 44,
+    "vport_WN_3": 46,
+    "vport_WS_0": 48,
+    "vport_WS_1": 47,
+    "vport_WS_2": 43,
+    "vport_WS_3": 46
+   },
+   "kind": "boot",
+   "formula": "9 + max_g(D(vq_g) + D(rs_g)) (<= 31)",
+   "status": "ERROR",
+   "group": "vport"
+  },
+  "VPORT_DQ": {
+   "value": {
+    "vport_EN_0": 25,
+    "vport_EN_1": 9,
+    "vport_EN_2": 16,
+    "vport_EN_3": 1,
+    "vport_ES_0": 25,
+    "vport_ES_1": 9,
+    "vport_ES_2": 16,
+    "vport_ES_3": 0,
+    "vport_WN_0": 24,
+    "vport_WN_1": 7,
+    "vport_WN_2": 21,
+    "vport_WN_3": 1,
+    "vport_WS_0": 24,
+    "vport_WS_1": 7,
+    "vport_WS_2": 22,
+    "vport_WS_3": 0
+   },
+   "kind": "boot",
+   "formula": "max_q(W_q + RT_q) - (W_p + RT_p) (<= 15, else W-lane pads)",
+   "status": "WARN",
+   "group": "vport",
+   "note": "DQ > 15 on ['vport_EN_0', 'vport_EN_2', 'vport_ES_0', 'vport_ES_2', 'vport_WN_0', 'vport_WN_2', 'vport_WS_0', 'vport_WS_2']: W request pads"
+  },
+  "CFG_FIA": {
+   "value": 113,
+   "kind": "boot",
+   "formula": "4 + max_p(W_p + RT_p) + 1 (KV-P5 rule)",
+   "status": "WARN",
+   "group": "vport",
+   "note": "KV-P6-BOOT: the boot generator RL = 4 + WP + O + DQ + RT (adds O) and the PV entry-pad table sets cfg_fia; the compiled boot image (KV_BOOT recipe) is authoritative for cfg_fia / DQ"
+  },
+  "KVN_A0": {
+   "value": 28,
+   "kind": "rtl",
+   "formula": "KVN_A0_asb + Delta(d2d kvn_word_valid -> seq core) - Delta(d2d att_rx_v -> kvs_attn) (KV-P6 18:09: age a starts at the attention programme request, triggered by att_rx)",
+   "status": "MISMATCH",
+   "inputs": {
+    "asbuilt": 32,
+    "kvn": [
+     14,
+     55
+    ],
+    "att_rx": [
+     11,
+     56
+    ]
+   },
+   "group": "prog",
+   "rtl": {
+    "inst": "seq__u_core$",
+    "param": "KVN_A0"
+   },
+   "bind_applied": "not in param_regen.json (as-built value kept by the bind, or no hook)",
+   "rtl_bound": {
+    "module": "qkd_seq_core_static_s\\w*",
+    "param": "KVN_A0",
+    "instances": 1,
+    "values": [
+     "32"
+    ]
+   },
+   "mismatch": "bound RTL KVN_A0=['32'] on 1/1 qkd_seq_core_static_s\\w* instances, regen 28"
+  },
+  "D2D_AGES": {
+   "value": {
+    "programme_start": [
+     50
+    ],
+    "d2d_to_attention_rx": [
+     56
+    ],
+    "d2d_to_writer": [
+     56
+    ],
+    "d2d_to_seq_kvn": [
+     55
+    ],
+    "attention_tx": [
+     55
+    ]
+   },
+   "kind": "boot",
+   "formula": "landed depth d2d_kv/dcal -> kvs_ctl / kvs_attn / seq core, attn tx -> d2d_kv (kv_boot_v36.py DIE_TABLE inputs)",
+   "status": "OK",
+   "group": "prog"
+  },
+  "HROOT_DOWN_RET": {
+   "value": {
+    "WS": [
+     11,
+     12
+    ],
+    "WN": [
+     14,
+     12
+    ],
+    "ES": [
+     12,
+     12
+    ],
+    "EN": [
+     14,
+     12
+    ]
+   },
+   "kind": "boot",
+   "formula": "kvs_ctl.o_hroot_s -> hroot / hroot.o_ctl -> kvs_ctl landed (emb_fill / writer_die)",
+   "status": "OK",
+   "group": "prog"
+  },
+  "XDIE_SEAM_K": {
+   "value": "56,56,54,54,54,55,55",
+   "kind": "compiler",
+   "formula": "d2d_link_calendar --die-stages KV half (KV-P6-BOOT KST) = as-built seam + Delta",
+   "status": "OK",
+   "inputs": {
+    "KS_RXV": [
+     56
+    ],
+    "KS_RXP": [
+     56
+    ],
+    "KS_TXS": [
+     54
+    ],
+    "KS_TXK": [
+     54
+    ],
+    "KS_TXB": [
+     54
+    ],
+    "SK_TXV": [
+     55
+    ],
+    "SK_TXP": [
+     55
+    ]
+   },
+   "group": "xdie"
+  },
+  "D2D_TXDP_K": {
+   "value": [
+    113,
+    4,
+    3,
+    3
+   ],
+   "kind": "rtl",
+   "formula": "[KS_TXS + KV_CODEC(2) + SK_TXP, 2 + host, 1, 1] + PINREG_EXT (d2d_link_calendar producer_txd); the compute die must bind the same pair image",
+   "status": "MISMATCH",
+   "inputs": {
+    "KS_RXV": 56,
+    "KS_RXP": 56,
+    "KS_TXS": 54,
+    "KS_TXK": 54,
+    "KS_TXB": 54,
+    "SK_TXV": 55,
+    "SK_TXP": 55
+   },
+   "group": "xdie",
+   "rtl": {
+    "inst": "d2d_kv$|u_d2d",
+    "param": "TXDP"
+   },
+   "sv_literal": "32'h03030471",
+   "bind_applied": "not in param_regen.json (as-built value kept by the bind, or no hook)",
+   "rtl_bound": {
+    "module": "qkd_d2d_static\\w*",
+    "param": "TXDP",
+    "instances": 1,
+    "values": [
+     "50529302"
+    ]
+   },
+   "mismatch": "bound RTL TXDP=['50529302'] on 1/1 qkd_d2d_static\\w* instances, regen 50529393"
+  },
+  "D2D_KV_TX_LAT": {
+   "value": 113,
+   "kind": "compiler",
+   "formula": "shared QC<->KV pair image KV TX latency = TXDP K[0] = KS_TXS + KV_CODEC + SK_TXP + PR pin flops, from the KV bound top; BOTH dies bind the same pair image (QC emits it with --peer)",
+   "status": "OK",
+   "inputs": {
+    "KS_TXS": 54,
+    "SK_TXP": 55,
+    "asbuilt": 22
+   },
+   "group": "xdie",
+   "note": "moved 22 -> 113 vs as-built: re-bind the pair image on both dies"
+  }
+ },
+ "recipes": {
+  "kv_boot_image": "S=<scratch>/boot BG=/srv/opentallas-scratch2/claude/codex-kv-bind-bank-2144/b19/bus_groups.json KST=56,56,54,54,54,55,55 bash physical/die_plan/qwen_kvsys/boot_v36/run.sh   # KV-P6-BOOT generator (claude/kv-p6-boot-1023)"
+ }
+}

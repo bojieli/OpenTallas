@@ -1,0 +1,18 @@
+[MISMATCH] ectl       RESPONSE_LAT           12  !! bound RTL RESPONSE_LAT=['80'] on 1/1 qkd_ectl3_kiss_st\w* instances, regen 12
+[MISMATCH] ectl       QK_ISSUE_AGE           34  !! bound RTL QK_ISSUE_AGE=['91'] on 1/1 qkd_ectl3_kiss_st\w* instances, regen 34
+[OK      ] ectl       ROW_RETURN_LAT         19
+[OK      ] ectl       QK_ROW_LATENCY         14
+[OK      ] ectl       QK_D_QK                0
+[ERROR   ] ahub       ahub.__rule__          null  (as-built AP_OFS not in param_regen.json (bind without the KV hook))
+[ERROR   ] pv         pv.__rule__            null  (as-built TRUNK_D/FLAG_D not in param_regen.json)
+[ERROR   ] vport      VPORT_RT               {"vport_EN_0": 47, "vport_EN_1": 48, "vport_EN_2": 49, "vport_EN_3": 50, "vport_ES_0": 47, "vport_ES  (9 + max_g(D(vq_g) + D(rs_g)) (<= 31))
+[WARN    ] vport      VPORT_DQ               {"vport_EN_0": 25, "vport_EN_1": 9, "vport_EN_2": 16, "vport_EN_3": 1, "vport_ES_0": 25, "vport_ES_1
+[WARN    ] vport      CFG_FIA                113
+[MISMATCH] prog       KVN_A0                 28  !! bound RTL KVN_A0=['32'] on 1/1 qkd_seq_core_static_s\w* instances, regen 28
+[OK      ] prog       D2D_AGES               {"programme_start": [50], "d2d_to_attention_rx": [56], "d2d_to_writer": [56], "d2d_to_seq_kvn": [55]
+[OK      ] prog       HROOT_DOWN_RET         {"WS": [11, 12], "WN": [14, 12], "ES": [12, 12], "EN": [14, 12]}
+[OK      ] xdie       XDIE_SEAM_K            "56,56,54,54,54,55,55"
+[MISMATCH] xdie       D2D_TXDP_K             "32'h03030471"  !! bound RTL TXDP=['50529302'] on 1/1 qkd_d2d_static\w* instances, regen 50529393
+[OK      ] xdie       D2D_KV_TX_LAT          113
+REGEN_CONSTANTS qwen_kvsys FAIL {'MISMATCH': 4, 'OK': 7, 'ERROR': 3, 'WARN': 2}
+rc=1
