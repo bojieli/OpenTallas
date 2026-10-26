@@ -184,11 +184,11 @@ def main():
                     x,y=c['origin_um']
                     if tn=='q_su21':c['origin_um'][0]=25.92 if x<400 else 864.0
                     else:c['origin_um'][0]=x+(86.4 if x>400 else 0)
-                    c['origin_um'][1]=34.56 if y<400 else 803.52
+                    c['origin_um'][1]=34.56 if y<400 else (786.24 if tn=='q_su31' else 803.52)
             elif tn=='q_su30':
                 for c in raw['partition_types'][tn]['hard_cores']:
                     if c['outline_um'][0]<700:continue
-                    x,y=c['origin_um'];c['origin_um'][0]=x+(17.28 if x in(803.52,1270.08) else 0)
+                    x,y=c['origin_um'];c['origin_um'][0]=x+(17.28 if x in(803.52,1270.08) else 0)-(69.12 if y>400 else 0)
                     c['origin_um'][1]=34.56 if y<400 else 803.52
     shutil.copytree(a.src,a.out)
     try:
