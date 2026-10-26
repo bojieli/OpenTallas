@@ -132,7 +132,8 @@ def main():
                    source_commit=subprocess.check_output(['git','-C',str(REPO),'rev-parse','HEAD'],text=True).strip(),
                    status='TRIAL PLACE ONLY; fresh geometry/CTS and parent IO receipt required')
     (kd / 'source.json').write_text(json.dumps(receipt,indent=2)+'\n')
-    shutil.copyfile(HERE/'place.sh',kd/'place.sh')
+    for f in ('place.sh','cts.sh','cts_probe.tcl','clock_pg.tcl','dump.tcl','collect.sh','hops.tcl'):
+        shutil.copyfile(HERE/f,kd/f)
     print(json.dumps(receipt))
 
 if __name__ == '__main__':

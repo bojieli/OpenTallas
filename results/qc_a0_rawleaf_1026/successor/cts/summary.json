@@ -1,0 +1,51 @@
+{
+  "status": "CTS trial only; GRT/DRT NOT RUN",
+  "kit": "intel2:/srv/opentallas-scratch2/claude/codex-qc-a0-1026/kitC",
+  "checkpoint": "run/results/asap7/lsl_rawfault_m3/base/4_cts_pg.odb",
+  "FF": 12030,
+  "clock_buffers": 567,
+  "clock_PG_bad": 0,
+  "FF_PG_bad": 0,
+  "pin_flops": 504,
+  "pin_flop_max_um": 8.949,
+  "latency_pin_mean_ps": {
+    "TT": 171.23431782142856,
+    "FF": 139.0864383115078
+  },
+  "latency_range_ps": {
+    "TT": [
+      166.026749,
+      177.260742
+    ],
+    "FF": [
+      133.7444,
+      144.847382
+    ]
+  },
+  "related_pair_max_ps": {
+    "TT": 15.77,
+    "FF": 14.42
+  },
+  "local_setup_TT_ps": 151.591,
+  "local_hold_FF_ps": -55.283661,
+  "hold_endpoints_FF": 301,
+  "hold_paths_by_family": {
+    "scalar_input": {
+      "paths": 9,
+      "wns_ps": -55.283661
+    },
+    "internal": {
+      "paths": 293,
+      "wns_ps": -6.398021
+    },
+    "vector_input": {
+      "paths": 0
+    },
+    "output_sender40": {
+      "paths": 0
+    }
+  },
+  "basis": "Placement RC calibrated setRC_rcx; generated IO40 context, per-corner local IO reference at actual504-pin mean. Parent timing/IO receipt required; NOT SIGNOFF",
+  "cycles_added": 0,
+  "PG_fix": "CTS inserted567 clockbuffers without PG connections (DNT0); explicitly connected1134 PGterminals in a separate checkpoint. Original failed checkpoint retained; no placement or signal-net changes."
+}

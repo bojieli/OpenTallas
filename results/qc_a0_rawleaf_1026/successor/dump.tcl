@@ -1,11 +1,23 @@
 read_db $::env(ODB)
 set b [ord::get_db_block]
 set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
-set f [open /work/placed_inst.tsv w]
-set ff 0; set pg_bad 0
+set prefix /work/
+if {[info exists ::env(OUT_PREFIX)]} {set prefix $::env(OUT_PREFIX)}
+set f [open ${prefix}placed_inst.tsv w]
+set ff 0; set pg_bad 0; set clock_bufs 0; set clock_pg_bad 0
 foreach i [$b getInsts] {
  set m [$i getMaster]; set r [$i getBBox]
  puts $f "[$i getName]\t[$m getName]\t[expr {double([$r xMin])/$dbu}]\t[expr {double([$r yMin])/$dbu}]\t[expr {double([$r xMax])/$dbu}]\t[expr {double([$r yMax])/$dbu}]"
+ if {[string match clkbuf* [$i getName]]} {
+  incr clock_bufs
+  foreach t [$i getITerms] {
+   set st [[$t getMTerm] getSigType]
+   if {$st ni {POWER GROUND}} continue
+   set n [$t getNet]
+   if {$n eq "NULL" || $n eq ""} {incr clock_pg_bad; continue}
+   if {[$n getName] ne [expr {$st eq "POWER" ? "VDD" : "VSS"}]} {incr clock_pg_bad}
+  }
+ }
  if {![string match DFF* [$m getName]]} continue
  incr ff
  foreach t [$i getITerms] {
@@ -18,13 +30,13 @@ foreach i [$b getInsts] {
  }
 }
 close $f
-set f [open /work/placed_pin.tsv w]
+set f [open ${prefix}placed_pin.tsv w]
 foreach p [$b getBTerms] {
  set r [$p getBBox]
  puts $f "[$p getName]\t[$p getIoType]\t[expr {double([$r xMin]+[$r xMax])/(2*$dbu)}]\t[expr {double([$r yMin]+[$r yMax])/(2*$dbu)}]"
 }
 close $f
-set f [open /work/port_flops.tsv w]
+set f [open ${prefix}port_flops.tsv w]
 set far 0; set missing 0; set got 0; set maxd 0
 foreach p [$b getBTerms] {
  set pn [$p getName]
@@ -66,5 +78,7 @@ close $f
 puts "A0_PORT_GEOM got $got expected 504 missing $missing far_gt20 $far max_um $maxd"
 if {$got != 504 || $missing || $far} {error "port-flop geometry audit failed"}
 puts "A0_FF_PG ff $ff expected 12030 pg_bad $pg_bad"
+puts "A0_CLOCK_PG buffers $clock_bufs pg_bad $clock_pg_bad"
+if {$clock_pg_bad} {error "CTS buffer PG audit failed"}
 if {$ff != 12030 || $pg_bad != 0} {error "FF/PG audit failed"}
 exit

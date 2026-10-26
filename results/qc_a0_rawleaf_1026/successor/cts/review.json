@@ -1,0 +1,5 @@
+{
+  "image": "results/qc_a0_rawleaf_1026/successor/cts/clock.png",
+  "verdict": "PASS-COND GRT TRIAL REQUEST; canary hold unchanged",
+  "findings": "Viewed actual TT/FF clock-arrival heatmaps with567 CTS buffer sites: root atE62.988, buffer sites distributed overdiearea, no stray/illegal-looking branches or clocks over macros (nonepresent); common southcorner is about+6ps, total range11ps. Einput and Nflag cohorts within1ps ofallmean, related-pairmax15.77TT/14.42FF. PGfailurecaught: newCTSclockbuffers had1134 unconnectedPGpins (DNT0), fixedexplicitly in separate4_cts_pg checkpoint and reaudited0bad; originalretained. FF12030, all504pinflopsmax8.949 remain. TTsetup+151.591 proves remappedadderdelayfix. FFhold is scalarlegacy -40 family9paths -55.28 plus293 smallinternalpaths -6.398; no vectorinput orsender40output failures. Standard oneFFGRT hold repair trial is next; no ECO sweep/rootpad/waiver. Parent actualcorelatency and IOreceipt remain required."
+}

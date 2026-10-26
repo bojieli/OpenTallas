@@ -3,7 +3,7 @@ set c $::env(CORNER)
 foreach l [glob /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/*RVT_${c}_nldm*.lib*] {
  if {![string match *FAKE* $l]} {read_liberty $l}
 }
-read_db /work/run/results/asap7/lsl_rawfault_m3/base/4_cts.odb
+read_db /work/run/results/asap7/lsl_rawfault_m3/base/4_cts_pg.odb
 read_sdc /work/constraint.sdc
 set_propagated_clock [all_clocks]
 source /work/setRC_rcx.tcl
@@ -48,7 +48,22 @@ sta::worst_slack_cmd min
 report_worst_slack -max -digits 3
 report_worst_slack -min -digits 3
 puts "A0CTS_VIOL $c setup [sta::endpoint_violation_count max] hold [sta::endpoint_violation_count min]"
+set groups [dict create]
+foreach path [find_timing_paths -path_delay min -group_path_count 2000 -endpoint_path_count 1 -slack_max 0 -sort_by_slack] {
+ set s [get_full_name [get_property $path startpoint]]
+ set e [get_full_name [get_property $path endpoint]]
+ set v [get_property $path slack]
+ set g internal
+ if {$s in {rst_n v_d first_d}} {set g scalar_input}
+ if {[regexp {^(w_d|x_d|split_d)\[} $s]} {set g vector_input}
+ if {[regexp {^(t_out|fault_q)\[} $e]} {set g output_sender40}
+ dict incr groups "$g.count"
+ if {![dict exists $groups "$g.wns"] || $v < [dict get $groups "$g.wns"]} {
+  dict set groups "$g.wns" $v;dict set groups "$g.start" $s;dict set groups "$g.end" $e
+ }
+}
+puts "A0CTS_HOLD_FAMILIES $c $groups"
 report_checks -path_delay max -group_path_count 2 -digits 3 -fields {input_pin}
 report_checks -path_delay min -group_path_count 2 -digits 3 -fields {input_pin}
-source /work/pair_skew.tcl
+if {![info exists ::env(OT_SKIP_PAIR)]} {source /work/pair_skew.tcl}
 exit
