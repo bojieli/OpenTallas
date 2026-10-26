@@ -1,0 +1,1555 @@
+{
+ "schema": "opentallas.die_plan.bind.v1",
+ "die": "qwen_compute",
+ "top": "qfd_die",
+ "cells": {
+  "leaf": 3313,
+  "glue": 187,
+  "transport": 58878,
+  "source": 6,
+  "reducer": 490
+ },
+ "dissolved": 158,
+ "partitions": 377,
+ "types": {
+  "cbf_q00": {
+   "instances": 6,
+   "module": "qfd_qc_cb_f_q00__cbf_q00",
+   "leaves": 9,
+   "params": 0,
+   "straps": 9,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbf_q00_na00d15": {
+   "instances": 17,
+   "module": "qfd_qc_cb_f_q00_na00d15",
+   "leaves": 9,
+   "params": 0,
+   "straps": 9,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbf_q00_s2": {
+   "instances": 1,
+   "module": "qfd_qc_cb_f_q00__cbf_q00_s2",
+   "leaves": 9,
+   "params": 0,
+   "straps": 9,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbf_q01": {
+   "instances": 6,
+   "module": "qfd_qc_cb_f_q01__cbf_q01",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 1,
+   "in_buses": 3
+  },
+  "cbf_q01_nb12d10": {
+   "instances": 17,
+   "module": "qfd_qc_cb_f_q01_nb12d10",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 1,
+   "in_buses": 3
+  },
+  "cbf_q01_s2": {
+   "instances": 1,
+   "module": "qfd_qc_cb_f_q01__cbf_q01_s2",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 1,
+   "in_buses": 3
+  },
+  "cbf_q11": {
+   "instances": 6,
+   "module": "qfd_qc_cb_f_q11",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 2,
+   "in_buses": 4
+  },
+  "cbf_q11_na22d3": {
+   "instances": 18,
+   "module": "qfd_qc_cb_f_q11_na22d3",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 2,
+   "in_buses": 4
+  },
+  "cbn_q00": {
+   "instances": 6,
+   "module": "qfd_qc_cb_n_q00",
+   "leaves": 9,
+   "params": 0,
+   "straps": 9,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbn_q00_xb00d1_xb10d0_na00d15": {
+   "instances": 6,
+   "module": "qfd_qc_cb_n_q00_xb00d1_xb10d0_na00d15",
+   "leaves": 9,
+   "params": 0,
+   "straps": 9,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbn_q00_xb10d0_na00d15": {
+   "instances": 12,
+   "module": "qfd_qc_cb_n_q00_xb10d0_na00d15",
+   "leaves": 9,
+   "params": 0,
+   "straps": 9,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbn_q01": {
+   "instances": 6,
+   "module": "qfd_qc_cb_n_q01",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 3,
+   "in_buses": 3
+  },
+  "cbn_q01_nb12d10": {
+   "instances": 18,
+   "module": "qfd_qc_cb_n_q01_nb12d10",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 3,
+   "in_buses": 3
+  },
+  "cbn_q11": {
+   "instances": 6,
+   "module": "qfd_qc_cb_n_q11",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbn_q11_na22d3": {
+   "instances": 18,
+   "module": "qfd_qc_cb_n_q11_na22d3",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbx_q10": {
+   "instances": 36,
+   "module": "qfd_qc_cb_x_q10",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "cbx_q10_xb30d1": {
+   "instances": 6,
+   "module": "qfd_qc_cb_x_q10_xb30d1",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "cbx_q10_xb30d2": {
+   "instances": 6,
+   "module": "qfd_qc_cb_x_q10_xb30d2",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "coll_core": {
+   "instances": 1,
+   "module": "qfd_qc_coll_core_part",
+   "leaves": 13,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 14,
+   "in_buses": 19
+  },
+  "coll_ft": {
+   "instances": 3,
+   "module": "qfd_qc_coll_ft_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "coll_ftc": {
+   "instances": 1,
+   "module": "qfd_qc_coll_ftc_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "coll_ftm": {
+   "instances": 1,
+   "module": "qfd_qc_coll_ftm_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "coll_ftn": {
+   "instances": 1,
+   "module": "qfd_qc_coll_ftn_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "coll_n": {
+   "instances": 1,
+   "module": "qfd_qc_coll_n_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 4
+  },
+  "coll_s": {
+   "instances": 1,
+   "module": "qfd_qc_coll_s_part",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 8,
+   "in_buses": 8
+  },
+  "coll_ucie": {
+   "instances": 1,
+   "module": "qfd_qc_coll_ucie_part",
+   "leaves": 3,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "glue": {
+   "instances": 1,
+   "module": "qfd_qc_glue_part",
+   "leaves": 7,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 35,
+   "in_buses": 34
+  },
+  "native59": {
+   "instances": 1,
+   "module": "qfd_qc_native59_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 16,
+   "in_buses": 34
+  },
+  "phy_serdes": {
+   "instances": 2,
+   "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "phy_serdes_b": {
+   "instances": 1,
+   "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "phy_ucie_kv": {
+   "instances": 1,
+   "module": "ot_qkvd_ucie_x64_phy_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 3
+  },
+  "sle_ctl": {
+   "instances": 3,
+   "module": "qfd_qc_sle_ctl",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 14,
+   "in_buses": 16
+  },
+  "sle_ctl_r8p01": {
+   "instances": 3,
+   "module": "qfd_qc_sle_ctl_r8p01",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 14,
+   "in_buses": 16
+  },
+  "sle_ctl_r8p02": {
+   "instances": 3,
+   "module": "qfd_qc_sle_ctl_r8p02",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 14,
+   "in_buses": 16
+  },
+  "sle_ctl_r8p03": {
+   "instances": 3,
+   "module": "qfd_qc_sle_ctl_r8p03",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 14,
+   "in_buses": 16
+  },
+  "sle_fe_v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_fe__sle_fe_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 17,
+   "in_buses": 18
+  },
+  "sle_fe_v2": {
+   "instances": 2,
+   "module": "qfd_qc_sle_fe__sle_fe_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 18,
+   "in_buses": 18
+  },
+  "sle_fe_v3": {
+   "instances": 1,
+   "module": "qfd_qc_sle_fe__sle_fe_v3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 8
+  },
+  "sle_fw_v1": {
+   "instances": 1,
+   "module": "qfd_qc_sle_fw__sle_fw_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 21,
+   "in_buses": 20
+  },
+  "sle_fw_v1_e2": {
+   "instances": 1,
+   "module": "qfd_qc_sle_fw_e2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 21,
+   "in_buses": 20
+  },
+  "sle_fw_v1_r8p01": {
+   "instances": 1,
+   "module": "qfd_qc_sle_fw_r8p01",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 21,
+   "in_buses": 20
+  },
+  "sle_fw_v2": {
+   "instances": 2,
+   "module": "qfd_qc_sle_fw__sle_fw_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 19,
+   "in_buses": 19
+  },
+  "sle_fw_v3": {
+   "instances": 1,
+   "module": "qfd_qc_sle_fw__sle_fw_v3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 19,
+   "in_buses": 17
+  },
+  "sle_hc0": {
+   "instances": 6,
+   "module": "qfd_qc_sle_hc0",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "sle_hc1": {
+   "instances": 6,
+   "module": "qfd_qc_sle_hc1",
+   "leaves": 10,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 4
+  },
+  "sle_hc2": {
+   "instances": 6,
+   "module": "qfd_qc_sle_hc2",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 2
+  },
+  "sle_sc_v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_sc__sle_sc_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 7
+  },
+  "sle_sc_v2": {
+   "instances": 2,
+   "module": "qfd_qc_sle_sc__sle_sc_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 7
+  },
+  "sle_sc_v3": {
+   "instances": 1,
+   "module": "qfd_qc_sle_sc__sle_sc_v3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 5
+  },
+  "sle_st_a_v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_st_a__sle_st_a_v1",
+   "leaves": 6,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 6
+  },
+  "sle_st_a_v2": {
+   "instances": 3,
+   "module": "qfd_qc_sle_st_a__sle_st_a_v2",
+   "leaves": 6,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 5
+  },
+  "sle_st_b_v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_st_b__sle_st_b_v1",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 4
+  },
+  "sle_st_b_v2": {
+   "instances": 3,
+   "module": "qfd_qc_sle_st_b__sle_st_b_v2",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 3
+  },
+  "sle_stm_v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_stm__sle_stm_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 8
+  },
+  "sle_stm_v2": {
+   "instances": 2,
+   "module": "qfd_qc_sle_stm__sle_stm_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 8
+  },
+  "sle_stm_v3": {
+   "instances": 1,
+   "module": "qfd_qc_sle_stm__sle_stm_v3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 6
+  },
+  "sle_su_c": {
+   "instances": 6,
+   "module": "qfd_qc_sle_su_c",
+   "leaves": 62,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 8
+  },
+  "sle_su_l0": {
+   "instances": 6,
+   "module": "qfd_qc_sle_su_l0",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 2
+  },
+  "sle_su_l1": {
+   "instances": 6,
+   "module": "qfd_qc_sle_su_l1",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 3
+  },
+  "slw_fe_v1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_fe__slw_fe_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 17,
+   "in_buses": 18
+  },
+  "slw_fe_v2": {
+   "instances": 3,
+   "module": "qfd_qc_slw_fe__slw_fe_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 18,
+   "in_buses": 18
+  },
+  "slw_fw_v1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_fw__slw_fw_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 21,
+   "in_buses": 20
+  },
+  "slw_fw_v2": {
+   "instances": 2,
+   "module": "qfd_qc_slw_fw__slw_fw_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 19,
+   "in_buses": 19
+  },
+  "slw_fw_v3": {
+   "instances": 1,
+   "module": "qfd_qc_slw_fw__slw_fw_v3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 20,
+   "in_buses": 18
+  },
+  "slw_hc0": {
+   "instances": 6,
+   "module": "qfd_qc_slw_hc0",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "slw_hc1": {
+   "instances": 6,
+   "module": "qfd_qc_slw_hc1",
+   "leaves": 10,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 4
+  },
+  "slw_hc2": {
+   "instances": 6,
+   "module": "qfd_qc_slw_hc2",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 2
+  },
+  "slw_hc3": {
+   "instances": 12,
+   "module": "qfd_qc_slw_hc3",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 1
+  },
+  "slw_sc_v1": {
+   "instances": 2,
+   "module": "qfd_qc_slw_sc__slw_sc_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 7
+  },
+  "slw_sc_v1r": {
+   "instances": 1,
+   "module": "qfd_qc_slw_sc__slw_sc_v1r",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 7
+  },
+  "slw_sc_v2": {
+   "instances": 2,
+   "module": "qfd_qc_slw_sc__slw_sc_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 7
+  },
+  "slw_sc_v3": {
+   "instances": 1,
+   "module": "qfd_qc_slw_sc__slw_sc_v3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 6
+  },
+  "slw_st_a_v1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_st_a__slw_st_a_v1",
+   "leaves": 6,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 6
+  },
+  "slw_st_a_v2": {
+   "instances": 3,
+   "module": "qfd_qc_slw_st_a__slw_st_a_v2",
+   "leaves": 6,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 5
+  },
+  "slw_st_b_v1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_st_b__slw_st_b_v1",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 4
+  },
+  "slw_st_b_v2": {
+   "instances": 3,
+   "module": "qfd_qc_slw_st_b__slw_st_b_v2",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 3
+  },
+  "slw_stm_v1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_stm__slw_stm_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 8
+  },
+  "slw_stm_v2": {
+   "instances": 2,
+   "module": "qfd_qc_slw_stm__slw_stm_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 8
+  },
+  "slw_stm_v3": {
+   "instances": 1,
+   "module": "qfd_qc_slw_stm__slw_stm_v3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 8
+  },
+  "slw_su_c": {
+   "instances": 6,
+   "module": "qfd_qc_slw_su_c",
+   "leaves": 62,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 8
+  },
+  "slw_su_l0": {
+   "instances": 6,
+   "module": "qfd_qc_slw_su_l0",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 2
+  },
+  "slw_su_l1": {
+   "instances": 6,
+   "module": "qfd_qc_slw_su_l1",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 3
+  },
+  "tt_ctlm": {
+   "instances": 1,
+   "module": "qfd_qc_tt_ctlm_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 26,
+   "in_buses": 11
+  }
+ },
+ "load_bits": {
+  "strap": 11568,
+  "crossing": 880792,
+  "clock": 32410,
+  "reset": 2780,
+  "intra_kept_stages": 819900,
+  "intra": 1998567,
+  "or_input": 2
+ },
+ "crossings": 1921,
+ "crossing_bits": 790393,
+ "lanes": {
+  "planned": 1921,
+  "carrying": 1921,
+  "unused": 0,
+  "unused_examples": [],
+  "lane_bits": 790393,
+  "unplanned_bits": 0,
+  "unplanned_pairs": {},
+  "unplanned_bit_list": [],
+  "reset_spine_bits": {},
+  "landing_alignment": {
+   "groups": 9050,
+   "padded_groups": 2513,
+   "padded_bits": 247214,
+   "pad_flops": 1252399,
+   "max_pad": 16,
+   "mode": "r8",
+   "table": "/srv/opentallas-scratch2/claude/wt/codex-qc-phase-1026/physical/die_plan/qwen_compute/bind/phase1026/r8.json",
+   "table_sha": "54d36690a96ce2cd",
+   "table_summary": {
+    "members": 9050,
+    "classes": 1491,
+    "replica_links": 609,
+    "padded_members": 2345,
+    "padded_bits": 161365,
+    "pad_flops": 631354,
+    "max_pad": 12,
+    "max_depth_before": 34,
+    "max_depth_after": 34,
+    "max_offset_before": 14,
+    "max_offset_after": 14,
+    "binder_landed_max": 34,
+    "landed_bundles": 0,
+    "landed_over_margin": 0
+   },
+   "members": 9050,
+   "stale": 0,
+   "uncovered": 0,
+   "excluded_bits": 6879,
+   "r8_excluded": [
+    {
+     "id": "io_collective.u_io.g_face[2].u_face.phy_rx_valid[0:0]<-io_serdes.rx_v@13",
+     "table_pad": 1,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.g_face[2].u_face.phy_up[0:0]<-io_serdes.tx_up@13",
+     "table_pad": 1,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.g_face[4].u_face.phy_rx_valid[0:0]<-io_serdes_2.rx_v@10",
+     "table_pad": 1,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.g_face[4].u_face.phy_up[0:0]<-io_serdes_2.tx_up@10",
+     "table_pad": 1,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.u_collective.sr2_rec[0:0]<-io_collective.u_io.g_face[4].u_face.rx_data@5",
+     "table_pad": 5,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.u_collective.sr2_rec[1:545]<-io_collective.u_io.g_face[4].u_face.rx_data@5",
+     "table_pad": 5,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.u_collective.sr2_valid[0:0]<-io_collective.u_io.g_face[4].u_face.rx_valid@5",
+     "table_pad": 5,
+     "applied": 0
+    }
+   ],
+   "async_bits": 1,
+   "table_exempt": [],
+   "table_bus": "part",
+   "table_replica": "all",
+   "renamed_cells": 0,
+   "gone_pad0": [],
+   "extra_tables": [
+    {
+     "table": "/srv/opentallas-scratch2/claude/wt/codex-qc-phase-1026/physical/die_plan/qwen_compute/bind/phase1026/dag.json",
+     "sha": "c64c3a142697510f",
+     "replaced": 168,
+     "added": 0,
+     "inner": 0
+    }
+   ],
+   "inner": {
+    "members": 0,
+    "self_noop": 0,
+    "matched": 0,
+    "changed_bits": 0,
+    "stale": 0,
+    "dly_sets_before": 1658,
+    "dly_sets_after": 1658
+   }
+  },
+  "ft_hops": 1072,
+  "forwarded_bits": 12651,
+  "forwarding_partitions": {
+   "sl_E0_ctl": 1051,
+   "sl_E1_ctl": 1051,
+   "sl_E2_ctl": 1051,
+   "sl_E3_ctl": 1051,
+   "sl_E4_ctl": 1051,
+   "sl_E5_ctl": 1051,
+   "sl_W0_ctl": 1051,
+   "sl_W1_ctl": 1051,
+   "sl_W2_ctl": 1051,
+   "sl_W3_ctl": 1051,
+   "sl_W4_ctl": 1051,
+   "sl_W5_ctl": 1051,
+   "coll_core": 39
+  },
+  "forwarded_pairs": {
+   "coll_n->glue": 13,
+   "coll_s->glue": 26,
+   "sl_E0_stm->sl_E0_st_a": 1051,
+   "sl_E1_stm->sl_E1_st_a": 1051,
+   "sl_E2_stm->sl_E2_st_a": 1051,
+   "sl_E3_stm->sl_E3_st_a": 1051,
+   "sl_E4_stm->sl_E4_st_a": 1051,
+   "sl_E5_stm->sl_E5_st_a": 1051,
+   "sl_W0_stm->sl_W0_st_a": 1051,
+   "sl_W1_stm->sl_W1_st_a": 1051,
+   "sl_W2_stm->sl_W2_st_a": 1051,
+   "sl_W3_stm->sl_W3_st_a": 1051,
+   "sl_W4_stm->sl_W4_st_a": 1051,
+   "sl_W5_stm->sl_W5_st_a": 1051
+  }
+ },
+ "unmapped": 0,
+ "open_outputs": 2454,
+ "open_output_examples": [
+  "c16_E0_0.u_t_0_0.tie_hi",
+  "c16_E0_0.u_t_3_3.tie_lo",
+  "c16_E0_1.u_t_0_0.tie_hi",
+  "c16_E0_1.u_t_3_3.tie_lo",
+  "c16_E0_2.u_t_0_0.tie_hi",
+  "c16_E0_2.u_t_3_3.tie_lo",
+  "c16_E0_3.u_t_0_0.tie_hi",
+  "c16_E0_3.u_t_3_3.tie_lo",
+  "c16_E1_0.u_t_0_0.tie_hi",
+  "c16_E1_0.u_t_3_3.tie_lo",
+  "c16_E1_1.u_t_0_0.tie_hi",
+  "c16_E1_1.u_t_3_3.tie_lo",
+  "c16_E1_2.u_t_0_0.tie_hi",
+  "c16_E1_2.u_t_3_3.tie_lo",
+  "c16_E1_3.u_t_0_0.tie_hi",
+  "c16_E1_3.u_t_3_3.tie_lo",
+  "c16_E2_0.u_t_0_0.tie_hi",
+  "c16_E2_0.u_t_3_3.tie_lo",
+  "c16_E2_1.u_t_0_0.tie_hi",
+  "c16_E2_1.u_t_3_3.tie_lo",
+  "c16_E2_2.u_t_0_0.tie_hi",
+  "c16_E2_2.u_t_3_3.tie_lo",
+  "c16_E2_3.u_t_0_0.tie_hi",
+  "c16_E2_3.u_t_3_3.tie_lo",
+  "c16_E3_0.u_t_0_0.tie_hi",
+  "c16_E3_0.u_t_3_3.tie_lo",
+  "c16_E3_1.u_t_0_0.tie_hi",
+  "c16_E3_1.u_t_3_3.tie_lo",
+  "c16_E3_2.u_t_0_0.tie_hi",
+  "c16_E3_2.u_t_3_3.tie_lo",
+  "c16_E3_3.u_t_0_0.tie_hi",
+  "c16_E3_3.u_t_3_3.tie_lo",
+  "c16_E4_0.u_t_0_0.tie_hi",
+  "c16_E4_0.u_t_3_3.tie_lo",
+  "c16_E4_1.u_t_0_0.tie_hi",
+  "c16_E4_1.u_t_3_3.tie_lo",
+  "c16_E4_2.u_t_0_0.tie_hi",
+  "c16_E4_2.u_t_3_3.tie_lo",
+  "c16_E4_3.u_t_0_0.tie_hi",
+  "c16_E4_3.u_t_3_3.tie_lo",
+  "c16_E5_0.u_t_0_0.tie_hi",
+  "c16_E5_0.u_t_3_3.tie_lo",
+  "c16_E5_1.u_t_0_0.tie_hi",
+  "c16_E5_1.u_t_3_3.tie_lo",
+  "c16_E5_2.u_t_0_0.tie_hi",
+  "c16_E5_2.u_t_3_3.tie_lo",
+  "c16_E5_3.u_t_0_0.tie_hi",
+  "c16_E5_3.u_t_3_3.tie_lo",
+  "c16_W0_0.u_t_0_0.tie_hi",
+  "c16_W0_0.u_t_3_3.tie_lo"
+ ],
+ "proof": {
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 11568,
+  "plan_driven": 0
+ },
+ "errors": [],
+ "n_errors": 0,
+ "warnings": [
+  "TYPE_CANON sle_ctl_r8p01: sl_E5_ctl->sl_E1_ctl (1 renamed)",
+  "TYPE_CANON sle_ctl_r8p03: sl_W5_ctl->sl_W1_ctl (1 renamed)"
+ ],
+ "registered_pins": {
+  "io_serdes": {
+   "type": "phy_serdes",
+   "core": "u_io_serdes_1",
+   "module": "ot_qfd_serdes_112g_x12_phy_s597",
+   "libs": [
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    }
+   ],
+   "stations_removed": 5,
+   "station_bits_removed": 1202
+  },
+  "io_serdes_1": {
+   "type": "phy_serdes",
+   "core": "u_io_serdes_1",
+   "module": "ot_qfd_serdes_112g_x12_phy_s597",
+   "libs": [
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    }
+   ],
+   "stations_removed": 5,
+   "station_bits_removed": 1202
+  },
+  "io_serdes_2": {
+   "type": "phy_serdes_b",
+   "core": "u_io_serdes_2",
+   "module": "ot_qfd_serdes_112g_x12_phy_s597",
+   "libs": [
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    }
+   ],
+   "stations_removed": 5,
+   "station_bits_removed": 1202
+  },
+  "ucie_kv": {
+   "type": "phy_ucie_kv",
+   "core": "u_ucie_kv",
+   "module": "ot_qkvd_ucie_x64_phy",
+   "libs": [
+    {
+     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_ff.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_ss.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    }
+   ],
+   "stations_removed": 6,
+   "station_bits_removed": 1176
+  }
+ },
+ "files": [
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/bind_cells.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_f_q00__cbf_q00.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_f_q00_na00d15.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_f_q00__cbf_q00_s2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_f_q01__cbf_q01.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_f_q01_nb12d10.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_f_q01__cbf_q01_s2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_f_q11.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_f_q11_na22d3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_n_q00.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_n_q00_xb00d1_xb10d0_na00d15.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_n_q00_xb10d0_na00d15.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_n_q01.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_n_q01_nb12d10.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_n_q11.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_n_q11_na22d3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_x_q10.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_x_q10_xb30d1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_cb_x_q10_xb30d2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_coll_core_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_coll_ft_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_coll_ftc_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_coll_ftm_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_coll_ftn_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_coll_n_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_coll_s_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_coll_ucie_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_glue_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_native59_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/ot_qfd_serdes_112g_x12_phy_s597__phy_serdes.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/ot_qkvd_ucie_x64_phy_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_ctl.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_ctl_r8p01.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_ctl_r8p02.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_ctl_r8p03.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_fe__sle_fe_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_fe__sle_fe_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_fe__sle_fe_v3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_fw__sle_fw_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_fw_e2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_fw_r8p01.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_fw__sle_fw_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_fw__sle_fw_v3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_hc0.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_hc1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_hc2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_sc__sle_sc_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_sc__sle_sc_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_sc__sle_sc_v3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_st_a__sle_st_a_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_st_a__sle_st_a_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_st_b__sle_st_b_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_st_b__sle_st_b_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_stm__sle_stm_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_stm__sle_stm_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_stm__sle_stm_v3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_su_c.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_e_l0.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_e_l1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_e_l2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_e_l3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_su_l0.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_e_l4.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_e_l5.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_e_l6.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_e_l7.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_sle_su_l1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_fe__slw_fe_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_fe__slw_fe_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_fw__slw_fw_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_fw__slw_fw_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_fw__slw_fw_v3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_hc0.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_hc1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_hc2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_hc3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_sc__slw_sc_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_sc__slw_sc_v1r.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_sc__slw_sc_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_sc__slw_sc_v3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_st_a__slw_st_a_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_st_a__slw_st_a_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_st_b__slw_st_b_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_st_b__slw_st_b_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_stm__slw_stm_v1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_stm__slw_stm_v2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_stm__slw_stm_v3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_su_c.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_w_l0.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_w_l1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_w_l2.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_w_l3.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_su_l0.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_w_l4.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_w_l5.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_w_l6.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_su_lane_w_l7.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_slw_su_l1.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qfd_qc_tt_ctlm_part.sv",
+  "/srv/opentallas-scratch2/claude/codex-qc-phase-1026/final1/rtl/qwen_compute_bound_top.sv"
+ ],
+ "findings": [
+  "MODULE_RENAME phy_serdes: plan module ot_qfd_serdes_112g_x12_phy_s597 -> ot_qfd_serdes_112g_x12_phy_s597__phy_serdes (shared by phy_serdes,phy_serdes_b)",
+  "MODULE_RENAME phy_serdes_b: plan module ot_qfd_serdes_112g_x12_phy_s597 -> ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b (shared by phy_serdes,phy_serdes_b)",
+  "MODULE_RENAME phy_ucie_kv: plan module ot_qkvd_ucie_x64_phy -> ot_qkvd_ucie_x64_phy_part (name of a leaf master)",
+  "MODULE_RENAME cbf_q00: plan module qfd_qc_cb_f_q00 -> qfd_qc_cb_f_q00__cbf_q00 (shared by cbf_q00,cbf_q00_s2)",
+  "MODULE_RENAME cbf_q00_s2: plan module qfd_qc_cb_f_q00 -> qfd_qc_cb_f_q00__cbf_q00_s2 (shared by cbf_q00,cbf_q00_s2)",
+  "MODULE_RENAME cbf_q01: plan module qfd_qc_cb_f_q01 -> qfd_qc_cb_f_q01__cbf_q01 (shared by cbf_q01,cbf_q01_s2)",
+  "MODULE_RENAME cbf_q01_s2: plan module qfd_qc_cb_f_q01 -> qfd_qc_cb_f_q01__cbf_q01_s2 (shared by cbf_q01,cbf_q01_s2)",
+  "MODULE_RENAME sle_fe_v1: plan module qfd_qc_sle_fe -> qfd_qc_sle_fe__sle_fe_v1 (shared by sle_fe_v1,sle_fe_v2,sle_fe_v3)",
+  "MODULE_RENAME sle_fe_v2: plan module qfd_qc_sle_fe -> qfd_qc_sle_fe__sle_fe_v2 (shared by sle_fe_v1,sle_fe_v2,sle_fe_v3)",
+  "MODULE_RENAME sle_fe_v3: plan module qfd_qc_sle_fe -> qfd_qc_sle_fe__sle_fe_v3 (shared by sle_fe_v1,sle_fe_v2,sle_fe_v3)",
+  "MODULE_RENAME sle_fw_v1: plan module qfd_qc_sle_fw -> qfd_qc_sle_fw__sle_fw_v1 (shared by sle_fw_v1,sle_fw_v2,sle_fw_v3)",
+  "MODULE_RENAME sle_fw_v2: plan module qfd_qc_sle_fw -> qfd_qc_sle_fw__sle_fw_v2 (shared by sle_fw_v1,sle_fw_v2,sle_fw_v3)",
+  "MODULE_RENAME sle_fw_v3: plan module qfd_qc_sle_fw -> qfd_qc_sle_fw__sle_fw_v3 (shared by sle_fw_v1,sle_fw_v2,sle_fw_v3)",
+  "MODULE_RENAME sle_sc_v1: plan module qfd_qc_sle_sc -> qfd_qc_sle_sc__sle_sc_v1 (shared by sle_sc_v1,sle_sc_v2,sle_sc_v3)",
+  "MODULE_RENAME sle_sc_v2: plan module qfd_qc_sle_sc -> qfd_qc_sle_sc__sle_sc_v2 (shared by sle_sc_v1,sle_sc_v2,sle_sc_v3)",
+  "MODULE_RENAME sle_sc_v3: plan module qfd_qc_sle_sc -> qfd_qc_sle_sc__sle_sc_v3 (shared by sle_sc_v1,sle_sc_v2,sle_sc_v3)",
+  "MODULE_RENAME sle_st_a_v1: plan module qfd_qc_sle_st_a -> qfd_qc_sle_st_a__sle_st_a_v1 (shared by sle_st_a_v1,sle_st_a_v2)",
+  "MODULE_RENAME sle_st_a_v2: plan module qfd_qc_sle_st_a -> qfd_qc_sle_st_a__sle_st_a_v2 (shared by sle_st_a_v1,sle_st_a_v2)",
+  "MODULE_RENAME sle_st_b_v1: plan module qfd_qc_sle_st_b -> qfd_qc_sle_st_b__sle_st_b_v1 (shared by sle_st_b_v1,sle_st_b_v2)",
+  "MODULE_RENAME sle_st_b_v2: plan module qfd_qc_sle_st_b -> qfd_qc_sle_st_b__sle_st_b_v2 (shared by sle_st_b_v1,sle_st_b_v2)",
+  "MODULE_RENAME sle_stm_v1: plan module qfd_qc_sle_stm -> qfd_qc_sle_stm__sle_stm_v1 (shared by sle_stm_v1,sle_stm_v2,sle_stm_v3)",
+  "MODULE_RENAME sle_stm_v2: plan module qfd_qc_sle_stm -> qfd_qc_sle_stm__sle_stm_v2 (shared by sle_stm_v1,sle_stm_v2,sle_stm_v3)",
+  "MODULE_RENAME sle_stm_v3: plan module qfd_qc_sle_stm -> qfd_qc_sle_stm__sle_stm_v3 (shared by sle_stm_v1,sle_stm_v2,sle_stm_v3)",
+  "MODULE_RENAME slw_fe_v1: plan module qfd_qc_slw_fe -> qfd_qc_slw_fe__slw_fe_v1 (shared by slw_fe_v1,slw_fe_v2)",
+  "MODULE_RENAME slw_fe_v2: plan module qfd_qc_slw_fe -> qfd_qc_slw_fe__slw_fe_v2 (shared by slw_fe_v1,slw_fe_v2)",
+  "MODULE_RENAME slw_fw_v1: plan module qfd_qc_slw_fw -> qfd_qc_slw_fw__slw_fw_v1 (shared by slw_fw_v1,slw_fw_v2,slw_fw_v3)",
+  "MODULE_RENAME slw_fw_v2: plan module qfd_qc_slw_fw -> qfd_qc_slw_fw__slw_fw_v2 (shared by slw_fw_v1,slw_fw_v2,slw_fw_v3)",
+  "MODULE_RENAME slw_fw_v3: plan module qfd_qc_slw_fw -> qfd_qc_slw_fw__slw_fw_v3 (shared by slw_fw_v1,slw_fw_v2,slw_fw_v3)",
+  "MODULE_RENAME slw_sc_v1: plan module qfd_qc_slw_sc -> qfd_qc_slw_sc__slw_sc_v1 (shared by slw_sc_v1,slw_sc_v1r,slw_sc_v2,slw_sc_v3)",
+  "MODULE_RENAME slw_sc_v1r: plan module qfd_qc_slw_sc -> qfd_qc_slw_sc__slw_sc_v1r (shared by slw_sc_v1,slw_sc_v1r,slw_sc_v2,slw_sc_v3)",
+  "MODULE_RENAME slw_sc_v2: plan module qfd_qc_slw_sc -> qfd_qc_slw_sc__slw_sc_v2 (shared by slw_sc_v1,slw_sc_v1r,slw_sc_v2,slw_sc_v3)",
+  "MODULE_RENAME slw_sc_v3: plan module qfd_qc_slw_sc -> qfd_qc_slw_sc__slw_sc_v3 (shared by slw_sc_v1,slw_sc_v1r,slw_sc_v2,slw_sc_v3)",
+  "MODULE_RENAME slw_st_a_v1: plan module qfd_qc_slw_st_a -> qfd_qc_slw_st_a__slw_st_a_v1 (shared by slw_st_a_v1,slw_st_a_v2)",
+  "MODULE_RENAME slw_st_a_v2: plan module qfd_qc_slw_st_a -> qfd_qc_slw_st_a__slw_st_a_v2 (shared by slw_st_a_v1,slw_st_a_v2)",
+  "MODULE_RENAME slw_st_b_v1: plan module qfd_qc_slw_st_b -> qfd_qc_slw_st_b__slw_st_b_v1 (shared by slw_st_b_v1,slw_st_b_v2)",
+  "MODULE_RENAME slw_st_b_v2: plan module qfd_qc_slw_st_b -> qfd_qc_slw_st_b__slw_st_b_v2 (shared by slw_st_b_v1,slw_st_b_v2)",
+  "MODULE_RENAME slw_stm_v1: plan module qfd_qc_slw_stm -> qfd_qc_slw_stm__slw_stm_v1 (shared by slw_stm_v1,slw_stm_v2,slw_stm_v3)",
+  "MODULE_RENAME slw_stm_v2: plan module qfd_qc_slw_stm -> qfd_qc_slw_stm__slw_stm_v2 (shared by slw_stm_v1,slw_stm_v2,slw_stm_v3)",
+  "MODULE_RENAME slw_stm_v3: plan module qfd_qc_slw_stm -> qfd_qc_slw_stm__slw_stm_v3 (shared by slw_stm_v1,slw_stm_v2,slw_stm_v3)"
+ ],
+ "extra_lib": [],
+ "parent_variants": [
+  {
+   "inst": "dvs_E1.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_E3.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_E5.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_e5",
+   "dropped_literal_bits": 2755,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W1.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W3.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W5.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_w5",
+   "dropped_literal_bits": 562,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  }
+ ],
+ "variants": {
+  "instances": 0,
+  "removed_input_bits": {},
+  "list": []
+ },
+ "type_splits": [],
+ "type_canon_merged": [
+  {
+   "type": "sle_ctl_r8p01",
+   "inst": "sl_E5_ctl",
+   "ref": "sl_E1_ctl",
+   "renamed": 1
+  },
+  {
+   "type": "sle_ctl_r8p03",
+   "inst": "sl_W5_ctl",
+   "ref": "sl_W1_ctl",
+   "renamed": 1
+  }
+ ],
+ "param_regen": {
+  "file": "physical/die_plan/qwen_compute/bind/coll_regen.py",
+  "changed": [
+   {
+    "inst": "io_collective.u_io.u_collective",
+    "param": "LS",
+    "asbuilt": "376",
+    "bound": 407
+   },
+   {
+    "inst": "d2d_rom",
+    "param": "TXDP",
+    "asbuilt": "0",
+    "bound": "32'h0a010308"
+   },
+   {
+    "inst": "io_collective.u_io.g_face[2].u_face",
+    "param": "PHY",
+    "asbuilt": "339",
+    "bound": 362
+   },
+   {
+    "inst": "io_collective.u_io.g_face[2].u_face",
+    "param": "L",
+    "asbuilt": "376",
+    "bound": 407
+   },
+   {
+    "inst": "io_collective.u_io.g_face[2].u_face",
+    "param": "R",
+    "asbuilt": "0",
+    "bound": 11
+   },
+   {
+    "inst": "io_collective.u_io.g_face[2].u_face",
+    "param": "PEER_R",
+    "asbuilt": "5",
+    "bound": 11
+   },
+   {
+    "inst": "io_collective.u_io.g_face[3].u_face",
+    "param": "PHY",
+    "asbuilt": "339",
+    "bound": 343
+   },
+   {
+    "inst": "io_collective.u_io.g_face[3].u_face",
+    "param": "L",
+    "asbuilt": "376",
+    "bound": 407
+   },
+   {
+    "inst": "io_collective.u_io.g_face[3].u_face",
+    "param": "R",
+    "asbuilt": "0",
+    "bound": 11
+   },
+   {
+    "inst": "io_collective.u_io.g_face[3].u_face",
+    "param": "PEER_R",
+    "asbuilt": "0",
+    "bound": 11
+   },
+   {
+    "inst": "io_collective.u_io.g_face[4].u_face",
+    "param": "PHY",
+    "asbuilt": "339",
+    "bound": 362
+   },
+   {
+    "inst": "io_collective.u_io.g_face[4].u_face",
+    "param": "L",
+    "asbuilt": "376",
+    "bound": 407
+   },
+   {
+    "inst": "io_collective.u_io.g_face[4].u_face",
+    "param": "R",
+    "asbuilt": "5",
+    "bound": 11
+   },
+   {
+    "inst": "io_collective.u_io.g_face[4].u_face",
+    "param": "PEER_R",
+    "asbuilt": "0",
+    "bound": 11
+   }
+  ],
+  "record": {
+   "rule": "The bound top dissolves qfd_collective_static_io_production: the SerDes legs (face phy_tx -> io_serdes_j tx_flit,\nio_serdes_j rx_flit -> face phy_rx) and the core<->face relays (u_collective sx_j -> face tx_*, face rx_* ->\nu_collective sr_j) become plan lanes of new depth, so the as-built LS / PHY / R parameters no longer match.  Rule\n(tools/qwen_split/lane_groups.py collective_calendar, as STEWARD-TOKh tp8 used it on the bound top):\n  TX_j = face[2+j].phy_tx -> io_serdes_j  depth,  RX_j = io_serdes_j -> face[2+j].phy_rx depth (flit == valid == up)\n  RS_j = u_collective sx_j -> face[2+j] depth == face[2+j] rx -> u_collective sr_j depth (one relay depth per port)\n  LX_j = TX(peer j) + RX_j,  LS = max_j KC + KW + 17 + PS + LX_j + RS_j + RS_peer(j)\nFaces f=2..4: PHY = PS + LX_j, L = LS, R = RS_j, PEER_R = RS_peer(j); u_collective: LS.  UCIe faces 0/1 (RU) are\nchecked unchanged.  The ports used here are excluded from land_align (asbuilt.land_align_exclude): their timing is\ncarried by these parameters, not by as-built relative offsets.",
+   "D2D_TXDP_C": "32'h0a010308",
+   "D2D_SEAM_C": {
+    "CS_TXS": 2,
+    "CS_RXV": 2,
+    "CS_RXP": 2,
+    "CS_X3S": 3,
+    "SC_TX": 2,
+    "SC_X3": 2
+   },
+   "TX": [
+    2,
+    2,
+    21
+   ],
+   "RX": [
+    2,
+    2,
+    21
+   ],
+   "RS": [
+    11,
+    11,
+    11
+   ],
+   "RU": 0,
+   "LX": [
+    23,
+    4,
+    23
+   ],
+   "LS": 407,
+   "calendar": {
+    "rule": "L_j = KC + KW + 17 + PS + LX_j + R_j + R_peer(j); LS = max_j L_j; LU = KC + KW + 17 + PU + 2 RU",
+    "KC": 4,
+    "KW": 2,
+    "PS": 339,
+    "PU": 20,
+    "RU": 0,
+    "RS": [
+     11,
+     11,
+     11
+    ],
+    "ports": {
+     "0": {
+      "LX": 23,
+      "R": 11,
+      "R_peer": 11,
+      "L_min": 407
+     },
+     "1": {
+      "LX": 4,
+      "R": 11,
+      "R_peer": 11,
+      "L_min": 388
+     },
+     "2": {
+      "LX": 23,
+      "R": 11,
+      "R_peer": 11,
+      "L_min": 407
+     }
+    },
+    "LS": 407,
+    "LU": 43,
+    "binding_port": 0,
+    "rtl_default_LS": 376,
+    "delta_vs_default": 31
+   },
+   "bench_args": "--relays 0 11 11 11 --lanes 2 2 21 2 2 21 --lx 23 4 23",
+   "ucie_face_params": {
+    "FW": 546,
+    "L": 376,
+    "PEER_R": 5,
+    "PHY": 339,
+    "PLAND": 0,
+    "PLD": 2,
+    "PLK": 1,
+    "R": 0,
+    "SAFE": 0,
+    "TOK_REG": 0,
+    "UP_SYNC": 0
+   }
+  }
+ },
+ "rewires": {
+  "file": "physical/die_plan/qwen_compute/plan_rewires_treq.json",
+  "bits": {
+   "opened outputs": 1,
+   "treq (template-less, beside)": 108,
+   "treq dropped": 0
+  }
+ },
+ "tied_by_port": {},
+ "bump_ports": [
+  {
+   "die_port": "ucie_kv_link_v",
+   "dir": "output",
+   "width": 1,
+   "partition": "ucie_kv",
+   "leaf": "ucie_kv.u_core",
+   "pin": "link_v",
+   "part_port": "bump_core_link_v"
+  },
+  {
+   "die_port": "ucie_kv_link_flit",
+   "dir": "output",
+   "width": 583,
+   "partition": "ucie_kv",
+   "leaf": "ucie_kv.u_core",
+   "pin": "link_flit",
+   "part_port": "bump_core_link_flit"
+  },
+  {
+   "die_port": "ucie_kv_far_v",
+   "dir": "input",
+   "width": 1,
+   "partition": "ucie_kv",
+   "leaf": "ucie_kv.u_core",
+   "pin": "far_v",
+   "part_port": "bump_core_far_v"
+  },
+  {
+   "die_port": "ucie_kv_far_flit",
+   "dir": "input",
+   "width": 583,
+   "partition": "ucie_kv",
+   "leaf": "ucie_kv.u_core",
+   "pin": "far_flit",
+   "part_port": "bump_core_far_flit"
+  }
+ ],
+ "bus_groups": {
+  "landing_groups": 2051,
+  "landing_misaligned_by_lanes": 49,
+  "landing_misaligned_after_pads": 3,
+  "replica_sets": 609,
+  "replica_unequal": 0
+ }
+}
