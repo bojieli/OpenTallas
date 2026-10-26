@@ -3,10 +3,10 @@
 import argparse,copy,json
 from pathlib import Path
 
-def apply(plan,report,table):
+def apply(plan,report,table,allowed=None):
     out=copy.deepcopy(plan);parts={p['name']:p for p in out['partitions']};rows=[]
     splits={s['type']:s for s in report.get('type_splits',[])}
-    if set(splits)-{'sle_ctl','sle_fw_v1'}:raise ValueError(f'unexpected support split families: {sorted(splits)}')
+    if set(splits)-set(allowed if allowed is not None else ('sle_ctl','sle_fw_v1')):raise ValueError(f'unexpected support split families: {sorted(splits)}')
     def profile(part):
         return tuple(sorted((m['sink'].split('.',1)[1],m['sink_port'],tuple(map(tuple,m['sink_bits'])),m['pad']) for m in table['members'] if m['sink_part']==part and m['pad']))
     for family,split in sorted(splits.items()):
