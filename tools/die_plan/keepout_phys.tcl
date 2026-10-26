@@ -15,8 +15,11 @@ proc ot_clear_keepout_physical {block rects tag} {
     foreach r $rects {
       lassign $r a c d e
       if {$x0<$d && $x1>$a && $y0<$e && $y1>$c} {
-        foreach it [$i getITerms] {
-          if {[$it isInputSignal] || [$it isOutputSignal]} {error "keepout physical cell has signal pins: $name"}
+        foreach mt [$m getMTerms] {
+          set sig [$mt getSigType]
+          if {$sig ne "POWER" && $sig ne "GROUND"} {
+            error "keepout physical cell has non-PG pin: $name/[$mt getName] ($sig)"
+          }
         }
         odb::dbInst_destroy $i
         incr removed
