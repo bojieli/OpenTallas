@@ -306,6 +306,14 @@ proc ::ot_dtsh::cts {args} {
     }
     lappend keep $arg
   }
+  # OT_DTSH_LOCAL=none (opt-in, CLOCK-RESET E5-EQ 10-25): equal-depth local trees by construction --
+  # every density tap is ONE leaf driver for its (small, count-banded) sink group, so no TritonCTS
+  # local tree and no local repair: every sink sees exactly the same number of buffer levels.
+  if {[info exists ::env(OT_DTSH_LOCAL)] && $::env(OT_DTSH_LOCAL) eq "none"} {
+    set result 1
+    bind_new_pg
+    puts "OT_DTSH LOCAL none: [llength $nets] density taps drive their sinks directly (no local CTS/repair)"
+  } else {
   set result [cts_orig {*}$keep -clk_nets [join $nets " "]]
   # New trunk cells are PG-connected before any RC estimation. Only local roots
   # may receive wire/slew repair; global repair_clock_nets would touch the trunk.
@@ -319,6 +327,7 @@ proc ::ot_dtsh::cts {args} {
     rsz::repair_net_cmd [sta::db_net_to_sta $net] $max_wire 0 0
   }
   bind_new_pg
+  }
   if {[info exists ::env(OT_DTSH_MACRO_COLEAF)] && $::env(OT_DTSH_MACRO_COLEAF) eq "1"} {
     source /work/macro_clock_coleaf.tcl
     ::ot_macro_coleaf::apply /work/macro_clock_coleaf.tsv
