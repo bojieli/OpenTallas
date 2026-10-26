@@ -1,5 +1,6 @@
 """Native backend helpers preserve memory state and X part-select behavior."""
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -41,7 +42,7 @@ endmodule
     cells=json.loads((tmp_path/"gold.json").read_text())["modules"]["gold"]["cells"]
     memory=next(c for c in cells.values() if c["type"]=="$mem_v2")
     shift=next(c for c in cells.values() if c["type"]=="$shiftx")
-    native=NativeGlue(tmp_path/"helpers", ["$mem_v2","$shiftx"])
+    native=NativeGlue(os.path.relpath(tmp_path/"helpers", Path.cwd()), ["$mem_v2","$shiftx"])
     def cell(c):
         return NS(ytype=c["type"], yparams=c["parameters"], dirs=c["port_directions"],
                   ports=c["connections"])

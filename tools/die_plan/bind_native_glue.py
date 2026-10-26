@@ -20,7 +20,7 @@ class NativeGlue:
         if not isinstance(enabled, list) or any(t not in SUPPORTED for t in enabled):
             raise NativeGlueError("native_glue_types must name only $mem_v2 or $shiftx")
         self.enabled = set(enabled)
-        self.directory = Path(directory)
+        self.directory = Path(directory).resolve()
         self.files = []
         self.cache = {}
 
