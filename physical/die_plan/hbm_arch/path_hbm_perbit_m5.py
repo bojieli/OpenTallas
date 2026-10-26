@@ -13,47 +13,80 @@ import schema as S
 from gen_phys import type_pins
 from tools.die_trial.legal_sites import RowAllocator
 
-REACH=323.0  # reserve 2*40um cell displacement plus data-pin offsets below405
+REACH=323.0  # target-graph step; actual allocated adjacent legs are independently capped at403um
 RADIUS=80.0
 CELL=np.array([1.404,.27])
 _NEIGHBORS={}
 AGGRESSIVE=False
+_TARGET_INDEX=None
+
+
+class TargetIndex:
+    """Spatial buckets only prune the search; exact Manhattan distance decides."""
+    def __init__(self,points,radius):
+        self.points=points;self.radius=radius;self.groups={};self.ny=1
+        if not len(points):return
+        bins=np.floor(points/radius).astype(np.int64);self.ny=int(bins[:,1].max())+1
+        keys=bins[:,0]*self.ny+bins[:,1];order=np.argsort(keys,kind='stable');ordered=keys[order]
+        starts=np.r_[0,np.flatnonzero(ordered[1:]!=ordered[:-1])+1,len(order)]
+        for lo,hi in zip(starts,starts[1:]):self.groups[int(ordered[lo])]=order[lo:hi]
+    def query(self,point):
+        x,y=map(float,point);r=self.radius;pieces=[]
+        for bx in range(math.floor((x-r)/r),math.floor((x+r)/r)+1):
+            if bx<0:continue
+            for by in range(math.floor((y-r)/r),math.floor((y+r)/r)+1):
+                if not 0<=by<self.ny:continue
+                ids=self.groups.get(bx*self.ny+by)
+                if ids is not None:pieces.append(ids)
+        if not pieces:return np.empty(0,dtype=np.int64)
+        ids=np.concatenate(pieces);ids=ids[np.abs(self.points[ids]-point).sum(axis=1)<=r]
+        return np.sort(ids)
+
+
+def target_index(targets):
+    global _TARGET_INDEX
+    if _TARGET_INDEX is None or _TARGET_INDEX.points is not targets or _TARGET_INDEX.radius!=REACH:
+        _TARGET_INDEX=TargetIndex(targets,REACH);_NEIGHBORS.clear()
+    return _TARGET_INDEX
+
 
 def neighbors(targets,node):
-    if node not in _NEIGHBORS:
-        _NEIGHBORS[node]=np.flatnonzero(np.abs(targets-targets[node]).sum(axis=1)<=REACH).astype(np.int32)
+    index=target_index(targets)
+    if node not in _NEIGHBORS:_NEIGHBORS[node]=index.query(targets[node]).astype(np.int32)
     return _NEIGHBORS[node]
 
 
-
 def path_for(a,b,targets):
-    """Shortest target chain, exact BFS with a direct-goal shortcut."""
+    """Same exact graph/search order with bounded spatial candidate queries."""
     if np.abs(a-b).sum()<=REACH:return []
-    first=np.abs(targets-a).sum(axis=1);last=np.abs(targets-b).sum(axis=1)
-    starts=np.flatnonzero(first<=REACH)
+    index=target_index(targets);starts=index.query(a);goals=index.query(b)
     if not len(starts):raise ValueError('no legal cell corridor within reach of input bit')
-    common=starts[last[starts]<=REACH]
-    if len(common):return [int(common[np.argmin(first[common]+last[common]+.001*np.abs(targets[common]-(a+b)/2).sum(axis=1))])]
-    # Greedy toward capture is normally enough when wires may cross M5 cores.
+    if not len(goals):raise ValueError('no legal cell corridor within reach of output bit')
+    first=np.abs(targets[starts]-a).sum(axis=1);last=np.abs(targets[starts]-b).sum(axis=1)
+    common=starts[last<=REACH]
+    if len(common):
+        score=np.abs(targets[common]-a).sum(axis=1)+np.abs(targets[common]-b).sum(axis=1)+.001*np.abs(targets[common]-(a+b)/2).sum(axis=1)
+        return [int(common[np.argmin(score)])]
     desired=a+(b-a)*min(.75*REACH/float(np.abs(b-a).sum()),1.0)
-    node=int(starts[np.argmin(last[starts] if AGGRESSIVE else np.abs(targets[starts]-desired).sum(axis=1))]);path=[node];seen={node}
+    node=int(starts[np.argmin(last if AGGRESSIVE else np.abs(targets[starts]-desired).sum(axis=1))]);path=[node];seen={node}
     while True:
-        ids=neighbors(targets,node)
-        ids=ids[last[ids]<last[node]-1e-6]
+        remaining=float(np.abs(targets[node]-b).sum());ids=neighbors(targets,node)
+        last=np.abs(targets[ids]-b).sum(axis=1);keep=last<remaining-1e-6;ids=ids[keep];last=last[keep]
         if not len(ids):break
-        desired=targets[node]+(b-targets[node])*min(.75*REACH/float(last[node]),1.0)
-        node=int(ids[np.argmin(last[ids] if AGGRESSIVE else np.abs(targets[ids]-desired).sum(axis=1))]);path.append(node)
-        if last[node]<=REACH:return path
+        desired=targets[node]+(b-targets[node])*min(.75*REACH/remaining,1.0)
+        chosen=int(np.argmin(last if AGGRESSIVE else np.abs(targets[ids]-desired).sum(axis=1)))
+        node=int(ids[chosen]);path.append(node)
+        if last[chosen]<=REACH:return path
         if node in seen:break
         seen.add(node)
-    parent=np.full(len(targets),-2,dtype=int);parent[starts]=-1
+    parent=np.full(len(targets),-2,dtype=int);parent[starts]=-1;goalset=set(map(int,goals))
     queue=collections.deque(map(int,starts));end=None
     while queue:
         node=queue.popleft()
-        if last[node]<=REACH:end=node;break
-        ids=neighbors(targets,node)
-        ids=ids[parent[ids]==-2]
-        ids=ids[np.argsort(last[ids])];parent[ids]=node;queue.extend(map(int,ids))
+        if node in goalset:end=node;break
+        ids=neighbors(targets,node);ids=ids[parent[ids]==-2]
+        last=np.abs(targets[ids]-b).sum(axis=1);ids=ids[np.argsort(last)]
+        parent[ids]=node;queue.extend(map(int,ids))
     if end is None:raise ValueError('no reach-bounded per-bit cell corridor')
     out=[]
     while end>=0:out.append(int(end));end=parent[end]
@@ -118,14 +151,14 @@ def repair_type(raw,tn):
         # target neighbourhood. Added stages get real cells, never aliases.
         for k,path in enumerate(paths):
             if not path:
-                ids=np.flatnonzero((np.abs(targets-a[k]).sum(axis=1)<=REACH)&(np.abs(targets-b[k]).sum(axis=1)<=REACH))
+                ids=target_index(targets).query(a[k]);ids=ids[np.abs(targets[ids]-b[k]).sum(axis=1)<=REACH]
                 if not len(ids):raise ValueError(tn+'/'+name+': no site to preserve existing pipeline depth')
                 path.append(int(ids[np.argmin(np.abs(targets[ids]-(a[k]+b[k])/2).sum(axis=1))]))
             while len(path)<count:
                 chain=[a[k],*[targets[i] for i in path],b[k]]
                 edge=max(range(len(chain)-1),key=lambda j:float(np.abs(chain[j+1]-chain[j]).sum()))
                 left,right=chain[edge],chain[edge+1]
-                ids=np.flatnonzero((np.abs(targets-left).sum(axis=1)<=REACH)&(np.abs(targets-right).sum(axis=1)<=REACH))
+                ids=target_index(targets).query(left);ids=ids[np.abs(targets[ids]-right).sum(axis=1)<=REACH]
                 if not len(ids):raise ValueError(tn+'/'+name+': cannot preserve static depth at legal cell sites')
                 target=int(ids[np.argmin(np.abs(targets[ids]-(left+right)/2).sum(axis=1))])
                 path.insert(edge,target)
