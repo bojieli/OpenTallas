@@ -1,0 +1,54 @@
+{
+ "scope": "GEOMETRY CANDIDATE ONLY; actual synthesized FF association/placement and clock stage pending",
+ "outline_um": [
+  311.04,
+  354.24
+ ],
+ "macro_outline_um": [
+  94.824,
+  41.064
+ ],
+ "macro_instances": 16,
+ "macro_halo_um": [
+  4.32,
+  1.0
+ ],
+ "active_macro_pins_per_bank": 782,
+ "anchors": 12512,
+ "max_pin_to_FF_center_um": 9.867,
+ "FF_assumed_outline_um": [
+  2.16,
+  0.27
+ ],
+ "max_center_distance_plus_cell_um": 11.082,
+ "usable_channels_um": [
+  34.56,
+  30.456000000000003,
+  39.096
+ ],
+ "lane_pin_count": {
+  "0": 114,
+  "1": 114,
+  "2": 114,
+  "3": 114,
+  "4": 114,
+  "5": 114,
+  "6": 114,
+  "7": 114,
+  "8": 114,
+  "9": 114,
+  "10": 114,
+  "11": 114,
+  "12": 114,
+  "13": 114,
+  "14": 114,
+  "15": 114
+ },
+ "added_data_cycles": 0,
+ "added_FF_per_tile": 11264,
+ "plan_delta": "ONE common master + pin table for both B2 hub placements; parent per-bit remap/reach and fresh clock review required",
+ "source_commit": "bff2909cedce3e23e445484f29ecb48a4054e5a0",
+ "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+ "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf",
+ "old_pin_sha256": "f4c4041231a54f7e91a020d11269d99eaa0ee60fde1bbd758befe2e059dbf2cc"
+}

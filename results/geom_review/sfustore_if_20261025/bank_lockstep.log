@@ -1,0 +1,6 @@
+SFUSTORE_IF checks=6704 errors=0 mask=507 data=823 addr=6173 reset=5
+SFUSTORE_IF PASS
+- /srv/opentallas-scratch2/claude/codex-hbm-sfustore-2225/source/tools/hbm_b2/sfustore_if/tb_sfustore_if.sv:37: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 67us; walltime 0.036 s; speed 1.882 ms/s
+- Verilator: cpu 0.036 s on 1 threads; allocated 7 MB

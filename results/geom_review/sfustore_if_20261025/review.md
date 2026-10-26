@@ -1,0 +1,9 @@
+SFU sfustore F6 structural successor, opt-in source only
+
+Reviewed geometry.png: one shared 311.04 x354.24um master,16 real128x256 SRAMs in2x8, R0 orientation retained. W/middle/E usable channels34.56/30.456/39.096um after4.32um horizontal halos. Public lane groups move coherently to their bank's outer face; common clock/reset remain south. The exact real LEF live pins map to12512 distinct2.16x.27um FF target envelopes, max pin-to-center9.867um and conservative cell bound11.082um. No per-instance replica variants.
+
+Bank lockstep6704edges0differences; mask/data/address/reset mutants all caught. Hard-macro netlist legacy119FF vs candidate823FF: +704/bank,+11264/tile. The generic mapped pin gate proves782 distinct actual sequential endpoints for782 live macro pins. SRAM capacity,64B/cycle read and write, writecommit edge n+1 and readoutput edge n+3 unchanged; no added data cycles. Real mapped-library cell area remains pending. Outline cost+6121.2672um2/master.
+
+Verdict: source/anchor candidate READY; P&R/STA HOLD. The rendered anchors meet the local F6 distance target but do not establish whole-kit routing. In particular, the256-to32 postcapture read mux must be factored/placed by macro face so only selected data crosses around macro OBS; the2.136um north/south gaps are not automatically adequate for128-bit raw buses. Actual FF master sizes, mappedFF anchoring, placement legality, clock tap density/balanced insertion, PDN continuity and parent per-bit remap/reach require fresh actual-kit review. anchors.tcl fails closed on merged/missing FFs, excess master size, missing rows or incomplete12512 coverage; it is not a clock-stage override.
+
+This succeeds old row215523605ae8 at source/geometry candidate scope only. The old failed F6 result is retained. Legacy RTL/default recipes remain unchanged. Parent must adopt one common master/pin-table batch for both hub placements before any native physical claim.
