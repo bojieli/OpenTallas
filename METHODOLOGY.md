@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4.2, 2026-10-26 ~08:1x; v4.1 ~08:0x; v4 ~07:3x; v3 ~07:0x; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4.2, 2026-10-26 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -278,7 +278,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   (owner 10-26). Early-tap branches are RETIRED (12.8): diagnostic evidence only, never a closure path.
 - 12.4 GATES (all dies, die_infra.py).
   a. Freeze = die GRT0 incl. clock (>= 50 it) AND related-pair skew <= 80 ps TT+FF (CPPR, routed RC).
-  b. CPPR (OWNER 10-26 ~07:3x, 12.8): the GATE number credits CPPR only to the last common H-tree/tree node (region root for same-mesh pairs);
+  b. CPPR (OWNER 10-26 06:07, 12.8): the GATE number credits CPPR only to the last common H-tree/tree node (region root for same-mesh pairs);
      no credit at the mesh node. The mesh-node-credited number (COORD 10-26 early ruling) is INFO only.
   c. Site sufficiency: max gap between legal station/repeater sites along each die net corridor <= 405 um; corridor track use <= 0.6;
      via-field porosity + per-gcell pin-stack limit on every M8/M9 -> bay drop and every island stack; bay fill <= 60 %; mesh-driver
@@ -296,13 +296,13 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-24 B#12: all signals <= M7, M8/M9 = clock/reset/PG. SUPERSEDED 10-26 for die-top nets only.
   - 10-25 proposal of over-tile ft (type count) withdrawn: no measured failure. Lesson: no layer change without a measured failure.
   - 10-26 01:1x OWNER D-INFRA-FIRST: PG/clock/reset first, die signals on M4-M7 + leftover M8/M9 = CURRENT (12.1).
-  - 10-26 ~06:3x OWNER: common core clock-latency target + in-core islands on all dies, rebuilt in parallel = CURRENT (12.2a, 12.3).
-  - 10-26 ~07:0x OWNER: master plan first (city-planning model, 12.7) on all dies; leftover M8/M9 stays free for the router, entry via planned M7 pins = CURRENT.
-  - 10-26 ~07:3x OWNER: root-cause clock structure, no tweaks (12.8): plan-defined centre clock entry + structured core trees; early taps, stub trims, clock ECOs, mesh-node CPPR credit banned as closure means = CURRENT.
-  - 10-26 ~08:0x OWNER: 12.8 d1 plan-computed per-tap sizing before build ALLOWED (post-measurement values banned); core split = last resort after internal H-tree = CURRENT.
-  - 10-26 ~08:1x OWNER: 12.9 execution rules (one owner per die clock/plan, QC critical path, rule freeze, predict-before-build, per-die flow releases, independent number check) = CURRENT.
+  - 10-26 05:38 OWNER: common core clock-latency target + in-core islands on all dies, rebuilt in parallel = CURRENT (12.2a, 12.3).
+  - 10-26 05:58 OWNER: master plan first (city-planning model, 12.7) on all dies; leftover M8/M9 stays free for the router, entry via planned M7 pins = CURRENT.
+  - 10-26 06:07 OWNER: root-cause clock structure, no tweaks (12.8): plan-defined centre clock entry + structured core trees; early taps, stub trims, clock ECOs, mesh-node CPPR credit banned as closure means = CURRENT.
+  - 10-26 06:11 OWNER: 12.8 d1 plan-computed per-tap sizing before build ALLOWED (post-measurement values banned); core split = last resort after internal H-tree = CURRENT.
+  - 10-26 06:15 OWNER: 12.9 execution rules (one owner per die clock/plan, QC critical path, rule freeze, predict-before-build, per-die flow releases, independent number check) = CURRENT.
 
-- 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 ~07:0x, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
+- 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 05:58, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
   on-ramps (entry pins) -> only then buildings (partitions / hard cores). Nothing is carved into a finished block afterwards.
   a. ONE MASTER PLAN PER DIE, produced by one shared tool (die_infra.py master-plan mode) for all five dies:
@@ -327,7 +327,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   f. ORDER: QC first (all 68 types held), then S81-HEAD, S81, KV, HBM in parallel lanes on the same tool; running core rebuilds and
      early-tap work feed in. In-flight trials may finish, but sign-off kits must carry a master-plan slice.
 
-- 12.8 ROOT-CAUSE CLOCK STRUCTURE, NO TWEAKS (OWNER 2026-10-26 ~07:3x, "fix the root cause and structurally redesign. do not use tweaks and tricks").
+- 12.8 ROOT-CAUSE CLOCK STRUCTURE, NO TWEAKS (OWNER 2026-10-26 06:07, "fix the root cause and structurally redesign. do not use tweaks and tricks").
   Root cause: hard cores were closed bottom-up before the die clock plan existed -> clock pins on edges/corners, each core its own latency,
   die compensating afterwards. Structural rule for ALL dies:
   a. The master plan (12.7) defines, per hard-core type, the CLOCK ENTRY (a clock/reset island at/near the core's geometric centre, M9->M5 stack)
@@ -335,19 +335,19 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   b. Inside every core the clock is a STRUCTURED tree from that entry: symmetric (H-tree/fishbone) trunk to equal-load leaf clusters, stage
      count fixed by geometry, same structure for every instance of the type. A core whose longest entry-to-sink distance exceeds ~200 um, or
      that cannot meet 250 +-20 TT with a centre entry, is restructured -- FIRST an internal H-tree with in-core islands; splitting into smaller
-     cores is the LAST resort (adds types and links; OWNER 10-26 ~08:0x) -- never padded/trimmed into range.
+     cores is the LAST resort (adds types and links; OWNER 10-26 06:11) -- never padded/trimmed into range.
   c. Shallow cores reach the target with a designed fixed trunk delay at the entry (same cell chain per type), not per-sink padding.
   d. The die clock is balanced by construction: H-tree snapped to the partition lattice, equal-length branches, equal load per tap (density
      taps), regional meshes with landed seams. NOT allowed as closure means: early-tap offsets/branches, per-tap stub trims or useful-skew
      offsets, post-CTS ECO padding/buffer swaps on the clock, mesh-node CPPR credit, gate-number relaxations.
-  d1. (OWNER 10-26 ~08:0x) ALLOWED as design: per-tap driver/stub sizing COMPUTED BY THE PLAN TOOL from plan geometry and loads BEFORE any
+  d1. (OWNER 10-26 06:11) ALLOWED as design: per-tap driver/stub sizing COMPUTED BY THE PLAN TOOL from plan geometry and loads BEFORE any
      block is built, deterministic, recorded and frozen with the plan. BANNED: any value chosen after a measurement (trims, offsets, ECOs).
      A measured miss goes back to the structure/plan model (12.8e), then the plan is re-frozen as one PLAN-DELTA.
   e. A measured failure goes back to the structure (plan or core architecture), recorded with its root cause before any rebuild.
   f. Existing results obtained with the banned means (QC early-tap 154/143, any stub-trimmed mesh result incl. KV c3t 63.95/54.71) are
      re-measured on the 12.8 structure with the 12.4b gate number before they count.
 
-- 12.9 EXECUTION RULES (OWNER 2026-10-26 ~08:1x, "yes, go with them").
+- 12.9 EXECUTION RULES (OWNER 2026-10-26 06:15, "yes, go with them").
   a. ONE OWNER per die clock and ONE per die plan (table lanes/OWNERS-DIE.md); no other lane edits that die's clock/plan; shared tools have one
      tool owner each (die_clock_mesh.py = CLOCK-128; master-plan mode = MASTER-PLAN; pg/clock/reset modes of die_infra.py = INFRA-FIRST).
   b. QC = critical path, end to end: 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> die GRT0 -> skew gate -> die STA (real
