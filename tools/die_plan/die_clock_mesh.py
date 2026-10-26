@@ -214,6 +214,55 @@ def floorplan_holes(P, fp):
     return holes, cores
 
 
+def floorplan_islands(P, fp):
+    """in-core INFRA ISLAND via windows (HBM-CORE-LAT core_infra_islands.json, METHODOLOGY 12.2a/12.7): die-frame
+    rects (x0, y0, x1, y1, '<part>/<inst>') of every window of every hard-core instance whose master has an ISLAND."""
+    path = fp.get("island_windows")
+    if not path:
+        return []
+    isl = json.loads(Path(path).read_text())["islands"]
+    out = []
+    for n, p in P.parts.items():
+        for hc in P.types[p["type"]].get("hard_cores", []) or []:
+            g = isl.get(hc.get("module"))
+            if not g or g.get("action") != "ISLAND":
+                continue
+            x0, y0 = hc["origin_um"]
+            for w in g["windows_um"]:
+                a, b = P.to_die(n, (x0 + w[0], y0 + w[1])), P.to_die(n, (x0 + w[2], y0 + w[3]))
+                out.append((min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1]), f"{n}/{hc['inst']}"))
+    return out
+
+
+def core_latency_target(fp):
+    """METHODOLOGY 12.3 / 12.8: --clock-floorplan core_latency_target_ps {"TT": 250, "FF": 202.5, "tol_ps": 40}: every hard-core
+    clock pin gets the ONE die latency (declared insertion = target), so the die delivers every core tap with ZERO early offset."""
+    t = (fp or {}).get("core_latency_target_ps")
+    return dict(t) if t else None
+
+
+def island_site(wins, core, x, y, max_move, jog_max, spans):
+    """nearest island window of `core` for the intersection (x, y): the driver pair sits at the window centre and
+    joins the strap through a perpendicular jog (M8 jog to an M9 strap, M9 jog to an M8 strap).  spans(axis) gives
+    the strap extent.  Returns (cell_xy, foot_xy, axis, slide_um, jog_um) or None."""
+    best = None
+    for w in wins:
+        if w[4] != core:
+            continue
+        cx, cy = (w[0] + w[2]) / 2, (w[1] + w[3]) / 2
+        for axis in (0, 1):     # 0: on the M8 strap (y fixed): slide x, jog in y; 1: on the M9 strap: slide y, jog x
+            sp = spans(axis)
+            if sp is None:
+                continue
+            slide, jog = (abs(cx - x), abs(cy - y)) if axis == 0 else (abs(cy - y), abs(cx - x))
+            foot = (cx, y) if axis == 0 else (x, cy)
+            if not sp[0] <= foot[axis] <= sp[1] or slide > max_move or jog > jog_max:
+                continue
+            if best is None or slide + jog < best[3] + best[4]:
+                best = ((cx, cy), foot, axis, slide, jog)
+    return best
+
+
 def in_rect(r, x, y, m=0.0):
     return r[0] - m <= x <= r[2] + m and r[1] - m <= y <= r[3] + m
 
@@ -263,8 +312,10 @@ def placement_overlaps(cells):
     return out
 
 
-def hard_keepout_violations(P, cells):
-    """Check actual cell bodies, including split repeaters, against every hard/PHY clock keepout."""
+def hard_keepout_violations(P, cells, islands=None):
+    """Check actual cell bodies, including split repeaters, against every hard/PHY clock keepout.  islands (12.2a /
+    12.7, --clock-floorplan island_windows): a clock DRIVER body wholly inside a declared in-core island window of
+    that very core is legal (the core is built with the island)."""
     K = DC.KeepIndex(DC.keepouts(P), die=(P.W, P.H))
     bad = []
     for name, c in cells.items():
@@ -280,6 +331,9 @@ def hard_keepout_violations(P, cells):
                         continue
                     seen.add(tuple(r))
                     if x0 < r[2] and x1 > r[0] and y0 < r[3] and y1 > r[1]:
+                        if islands and c.get("kind") == "drv" and any(
+                                w[4] == r[4] and w[0] <= x0 and x1 <= w[2] and w[1] <= y0 and y1 <= w[3] for w in islands):
+                            continue
                         bad.append(dict(cell=name, keepout=r[4], rect_um=[x0, y0, x1, y1], keepout_um=list(r[:4])))
     return bad
 
@@ -652,6 +706,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         xs, R_fp = floorplan_regions(fp, W, H, ny)
         nx = len(xs)
         holes, cores = floorplan_holes(P, fp)
+        islands = floorplan_islands(P, fp)
     axis_snap = None
     if pg_shapes is not None:
         if track_profile is None:
@@ -730,6 +785,19 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
                 if q is not None and (best is None or d < best[1]):
                     best = (q, d, axis)
+            if best is None and fp is not None and islands:
+                core = next((c[4] for c in cores if in_rect(c, x, y)), None)
+                isl = island_site(islands, core, x, y, max_move, float(fp.get("island_jog_max_um", 60.0)),
+                                  lambda ax_: span(ax_, j if ax_ == 0 else i, g)) if core else None
+                if isl is not None:
+                    (cx, cy), foot, axis, sl, jg = isl
+                    names = [cell(f"ckm_d_{i}_{j}_{k}", cx + (k - (m - 1) / 2) * BUF_W, cy, "drv", i=i, j=j, **rk)
+                             for k in range(m)]
+                    out["drivers"][f"{i}_{j}"] = dict(i=i, j=j, ideal=[x, y], site=[round(foot[0], 3), round(foot[1], 3)],
+                                                      cell_site=[round(cx, 3), round(cy, 3)], island=core,
+                                                      move_um=round(sl, 2), jog_um=round(jg, 2),
+                                                      strap="M8" if axis == 0 else "M9", cells=names, **rk)
+                    continue
             if best is None:
                 hc = next((c[4] for c in cores if in_rect(c, x, y)), None) if fp is not None else None
                 if hc is None and fp is not None and fp.get("io_macro_drivers") == "drop":
@@ -861,6 +929,12 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     # --- stubs: every partition tap
     taps = DC.plan_taps(P)
     early_c = DC.plan_tap_early(P)
+    clt = core_latency_target(fp)
+    if clt:   # 12.3: ONE die core latency at every hard-core clock pin -> every core tap's declared insertion = target, offset 0
+        out["meta"]["core_latency_target"] = dict(clt, core_taps_zeroed=sum(1 for t in taps if t[4]),
+                                                  plan_early_max_ps=round(max([t[4] for t in taps] or [0]), 2))
+        early_c = {k_: {c_: 0.0 for c_ in v_} for k_, v_ in early_c.items()}
+        taps = [(pa, po, x_, y_, 0.0) for pa, po, x_, y_, _e in taps]
     tap_rows = []
     import numpy as np
     xa, ya = np.array(xs), np.array(ys)
@@ -881,7 +955,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         sb = cell(f"ckm_s_{len(tap_rows)}", fq[0], fq[1], "stub", **rk)
         nets.append(dict(name=f"ckm_w_{sb}", drv=sb, loads=["port:" + tp], level=99))
         tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], early_ps=early,
-                             early_corner_ps=early_c.get((part, port)), stub=sb, **rk, foot=[round(fq[0], 3),
+                             early_corner_ps=early_c.get((part, port)), core=(part, port) in early_c, stub=sb, **rk, foot=[round(fq[0], 3),
                              round(fq[1], 3)], strap=("M8", j) if axis == 0 else ("M9", i), slide_um=round(fd, 2),
                              stub_um=round(abs(fq[0] - x) + abs(fq[1] - y), 2)))
     out["taps"] = tap_rows
@@ -890,7 +964,10 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                                                cell, out, both_l=fp is not None)
     overlaps = placement_overlaps(cells)
     out["clock_cell_overlaps"] = overlaps
-    out["clock_hard_keepout_violations"] = hard_keepout_violations(P, cells)
+    out["clock_hard_keepout_violations"] = hard_keepout_violations(P, cells, islands if fp is not None else None)
+    if fp is not None and islands:
+        out["island_windows"] = [list(w) for w in islands]
+        out["meta"]["island_drivers"] = sum(1 for d in out["drivers"].values() if d.get("island"))
     if reserve_sites:
         out["meta"]["reserve_cell_sites"] = True
     out["meta"].update(cells=len(cells), drivers=len(out["drivers"]), bufx24_drivers=sum(len(d["cells"]) for d in
@@ -910,9 +987,67 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                        if fp is None else round(sum(s_[1] - s_[0] for s_ in out["strap_spans"].values() if s_) / 1e3, 2),
                        stub_wire_mm=round(sum(t["stub_um"] for t in tap_rows) / 1e3, 2))
     if fp is not None:
+        sh = fp.get("shield_net")
+        tree_mm = 0.0
+        txy = {t["port"]: t["xy"] for t in tap_rows}
+        for n in nets:
+            if n["drv"].startswith("port:"):
+                continue
+            a = cells[n["drv"]]
+            for ld in n["loads"]:
+                b = (txy[ld[5:]] if ld.startswith("port:") else
+                     (cells[ld]["x"], cells[ld]["y"]))
+                tree_mm += (abs(a["x"] - b[0]) + abs(a["y"] - b[1])) / 1e3
+        out["meta"]["clock_shield"] = dict(
+            net=sh, straps_shielded=sum(1 for v in out["strap_spans"].values() if v) if sh else 0,
+            jogs_shielded=sum(1 for d in out["drivers"].values() if d.get("jog_um")) if sh else 0,
+            grt_routed_tree_nets=sum(1 for n in nets if not n["drv"].startswith("port:")), grt_routed_tree_mm=round(tree_mm, 1),
+            complete=False, open="12.7a/b: H-tree legs, split tails and stubs are still GRT-routed signal-style nets with "
+                                 "no PG shield; shielding is complete only for mesh straps + island jogs")
         out["meta"]["pruned_branches"] = len(out.get("pruned_branches", []))
         out["meta"]["strap_spans_removed"] = sum(1 for v in out["strap_spans"].values() if not v)
     return cells, nets, ports, out
+
+
+def mesh_crossings(hsp, vsp):
+    """(x, y) of every crossing of a clipped M8 strap (y, (xlo, xhi)) with a clipped M9 strap (x, (ylo, yhi))."""
+    return [(x, y) for y, (xlo, xhi) in hsp for x, (ylo, yhi) in vsp if xlo <= x <= xhi and ylo <= y <= yhi]
+
+
+def strap_components(hsp, vsp):
+    """connected components of the strap graph (straps = nodes, crossings = edges); 1 = the mesh is one net."""
+    n = len(hsp) + len(vsp)
+    par = list(range(n))
+
+    def f(i):
+        while par[i] != i:
+            par[i] = par[par[i]]
+            i = par[i]
+        return i
+    for a_, (y, (xlo, xhi)) in enumerate(hsp):
+        for b_, (x, (ylo, yhi)) in enumerate(vsp):
+            if xlo <= x <= xhi and ylo <= y <= yhi:
+                par[f(a_)] = f(len(hsp) + b_)
+    return len({f(i) for i in range(n)})
+
+
+def mesh_connected(M, d=None):
+    """{region k: bool}: region k's mesh is ONE connected net in the emitted geometry: strap graph has one component
+    and every real crossing carries an emitted VIA89 (meta.mesh_vias from combo --mesh-vias), counted in the routed
+    DB (OT_MESH_VIAS in combo_<corner>.log, min over corners) when d is given."""
+    vias = M["meta"].get("mesh_vias") or {}
+    db = {}
+    for lg in sorted(Path(d).glob("combo_*.log")) if d else []:
+        for m_ in re.finditer(r"^OT_MESH_VIAS (\S+) (\d+)", lg.read_text(errors="replace"), re.M):
+            db[m_.group(1)] = min(db.get(m_.group(1), 1 << 60), int(m_.group(2)))
+    out = {}
+    for g in M["meta"].get("regions") or []:
+        v = vias.get(str(g["k"])) or {}
+        ok = bool(v) and v.get("components") == 1 and v.get("vias", 0) > 0
+        if d is not None:
+            ok = ok and db.get(mesh_net(g["k"]), 0) >= v.get("vias", 1 << 60)
+        out[g["k"]] = bool(ok)
+    return out
 
 
 def mesh_net(region):
@@ -1113,7 +1248,7 @@ def cmd_combo(a):
         plan_file = getattr(a, "plan", None) or M["meta"].get("plan")
         if not plan_file or not Path(plan_file).is_file():
             raise SystemExit("die_clock_mesh combo: needs --plan (or the original pinned plan) for actual hard-keepout census")
-        bad = hard_keepout_violations(S.Plan(S.load(plan_file)), cells)
+        bad = hard_keepout_violations(S.Plan(S.load(plan_file)), cells, [tuple(w) for w in M.get("island_windows", [])])
         if bad:
             raise SystemExit(f"die_clock_mesh combo: {len(bad)} clock-cell bodies overlap hard/PHY keepouts: {bad[:3]}")
     if M["meta"].get("pg_aware"):
@@ -1158,6 +1293,7 @@ def cmd_combo(a):
     # the strap footprint (+ NDR spacing) is also a routing obstruction: GRT does not derate special wires
     hs = hw + nd["space"]
     regs = M["meta"].get("regions") or [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))]
+    vias_meta = {}
     for g in regs:      # one special net per clock region (the whole strap grid without --regions)
         rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
         xlo, xhi = strap_bounds(g, xs, ys, 0)
@@ -1170,18 +1306,67 @@ def cmd_combo(a):
             hsp, vsp = [v for v in hsp if v[1]], [v for v in vsp if v[1]]
         else:
             hsp, vsp = [(y, (xlo, xhi)) for y in ry], [(x, (ylo, yhi)) for x in rx]
+        shield = (M["meta"].get("clock_floorplan") or {}).get("shield_net")
+        ob = hw + 2 * nd["space"] + nd["width"] if shield else hs    # shields: no signal within the shield spacing
         for y, (xlo, xhi) in hsp:
-            L.append(f"odb::dbObstruction_create $blk $l8 [um {xlo - hs:.4f}] [um {y - hs:.4f}] [um {xhi + hs:.4f}] "
-                     f"[um {y + hs:.4f}]")
+            L.append(f"odb::dbObstruction_create $blk $l8 [um {xlo - ob:.4f}] [um {y - ob:.4f}] [um {xhi + ob:.4f}] "
+                     f"[um {y + ob:.4f}]")
         for x, (ylo, yhi) in vsp:
-            L.append(f"odb::dbObstruction_create $blk $l9 [um {x - hs:.4f}] [um {ylo - hs:.4f}] [um {x + hs:.4f}] "
-                     f"[um {yhi + hs:.4f}]")
+            L.append(f"odb::dbObstruction_create $blk $l9 [um {x - ob:.4f}] [um {ylo - ob:.4f}] [um {x + ob:.4f}] "
+                     f"[um {yhi + ob:.4f}]")
         for y, (xlo, xhi) in hsp:
             L.append(f"odb::dbSBox_create $sw $l8 [um {xlo - hw:.4f}] [um {y - hw:.4f}] [um {xhi + hw:.4f}] "
                      f"[um {y + hw:.4f}] STRIPE")
         for x, (ylo, yhi) in vsp:
             L.append(f"odb::dbSBox_create $sw $l9 [um {x - hw:.4f}] [um {ylo - hw:.4f}] [um {x + hw:.4f}] "
                      f"[um {yhi + hw:.4f}] STRIPE")
+        # island drivers (12.2a): perpendicular jog from the window to the strap, on this region's mesh net
+        jogs = [dv for dv in M.get("drivers", {}).values() if dv.get("jog_um") and dv.get("region") == g["k"]]
+        if getattr(a, "mesh_vias", False):   # the mesh is ONE connected net in the DB: VIA89 at every real strap crossing
+            xv = mesh_crossings(hsp, vsp)
+            xv += [tuple(dv["site"]) for dv in jogs]            # jog foot on its strap (M8 jog -> M9 strap or M9 jog -> M8)
+            L += ["set v89 [$tech findVia VIA89]", "if {$v89 == \"NULL\"} { error \"tech via VIA89 missing\" }"]
+            L += [f"odb::dbSBox_create $sw $v89 [um {x_:.4f}] [um {y_:.4f}] STRIPE" for x_, y_ in xv]
+            L += ["set nv 0; foreach b [$sw getWires] { if {[$b isVia]} { incr nv } }",
+                  f"puts \"OT_MESH_VIAS {mesh_net(g['k'])} $nv\""]
+            vias_meta[str(g["k"])] = dict(vias=len(xv), components=strap_components(hsp, vsp))
+        jo = hw + 2 * nd["space"] + nd["width"] if (M["meta"].get("clock_floorplan") or {}).get("shield_net") else hs
+        for dv in jogs:
+            (fx, fy), (cx, cy) = dv["site"], dv["cell_site"]
+            lay, a0, b0, a1, b1 = (("$l8", min(fx, cx), cy, max(fx, cx), cy) if dv["strap"] == "M9" else
+                                   ("$l9", cx, min(fy, cy), cx, max(fy, cy)))
+            L.append(f"odb::dbObstruction_create $blk {lay} [um {a0 - jo:.4f}] [um {b0 - jo:.4f}] [um {a1 + jo:.4f}] "
+                     f"[um {b1 + jo:.4f}]")
+            if dv["strap"] == "M9":   # M8 jog in x at the window row
+                L.append(f"odb::dbSBox_create $sw $l8 [um {min(fx, cx) - hw:.4f}] [um {cy - hw:.4f}] "
+                         f"[um {max(fx, cx) + hw:.4f}] [um {cy + hw:.4f}] STRIPE")
+            else:
+                L.append(f"odb::dbSBox_create $sw $l9 [um {cx - hw:.4f}] [um {min(fy, cy) - hw:.4f}] "
+                         f"[um {cx + hw:.4f}] [um {max(fy, cy) + hw:.4f}] STRIPE")
+        if shield:   # 12.7a: a PG stripe on both sides of every clock strap and jog, one NDR space away
+            off = hw + nd["space"] + nd["width"] / 2
+            L += [f"set pn [$blk findNet {shield}]",
+                  f"if {{$pn eq \"NULL\"}} {{ set pn [odb::dbNet_create $blk {shield}] }}",
+                  "$pn setSpecial", "$pn setSigType GROUND", "set psw [odb::dbSWire_create $pn ROUTED]"]
+            segs = [("M8", xlo, y, xhi, y) for y, (xlo, xhi) in hsp] + [("M9", x, ylo, x, yhi) for x, (ylo, yhi) in vsp]
+            for dv in jogs:
+                (fx, fy), (cx, cy) = dv["site"], dv["cell_site"]
+                segs.append(("M8", min(fx, cx), cy, max(fx, cx), cy) if dv["strap"] == "M9" else
+                            ("M9", cx, min(fy, cy), cx, max(fy, cy)))
+            sw2 = nd["width"] / 2
+            for lay, a0, b0, a1, b1 in segs:
+                for sgn in (-1, 1):
+                    if lay == "M8":
+                        yy = b0 + sgn * off
+                        L.append(f"odb::dbSBox_create $psw $l8 [um {a0 - hw:.4f}] [um {yy - sw2:.4f}] [um {a1 + hw:.4f}] "
+                                 f"[um {yy + sw2:.4f}] STRIPE")
+                    else:
+                        xx = a0 + sgn * off
+                        L.append(f"odb::dbSBox_create $psw $l9 [um {xx - sw2:.4f}] [um {b0 - hw:.4f}] [um {xx + sw2:.4f}] "
+                                 f"[um {b1 + hw:.4f}] STRIPE")
+    if getattr(a, "mesh_vias", False):
+        M["meta"]["mesh_vias"] = vias_meta
+        (d / "mesh.json").write_text(json.dumps(M) + "\n")
     clock_nets = [n["name"] for n in data["nets"]]
     L += [f"puts \"OT_MESH regions {len(regs)} straps {sum((g['i1'] - g['i0']) + (g['j1'] - g['j0']) for g in regs)}\"",
           "create_clock -name dck -period 833.000 [get_ports root]",
@@ -1387,8 +1572,10 @@ def cmd_mesh(a):
     for key, dv in drv_at:
         k = node(key)
         kk = len(caps)
-        caps.append(0.0)
-        edges.append((kk, k, via))
+        jg = dv.get("jog_um", 0.0)     # island driver: perpendicular jog from the window to the strap foot
+        jl = RC["M8" if dv["strap"] == "M9" else "M9"]
+        caps.append(jl[1] * jg)
+        edges.append((kk, k, via + jl[0] * jg))
         late = [D[c][0] for c in dv["cells"] if c in D]
         early = [D[c][1] for c in dv["cells"] if c in D]
         slw = [D[c][2] for c in dv["cells"] if c in D]
@@ -1633,20 +1820,78 @@ def cmd_report(a):
             f = line.split()
             arr[f[1]] = (float(f[2]), float(f[3]), float(f[4]))   # T port late early slew
         raw_late = {p: v[0] for p, v in arr.items()}
-        late, early, core_offsets = sink_arrivals(M, arr, corner, DC.plan_tap_early(P))
+        zero_early = bool(M["meta"].get("core_latency_target"))   # 12.3: offsets are zero by design, not looked up
+        late, early, core_offsets = sink_arrivals(M, arr, corner, {} if zero_early else DC.plan_tap_early(P))
         slew = {p: v[2] for p, v in arr.items()}
 
-        def dmg(pa, pb):
-            # A region mesh mixes every driver in its subtree. A nearby driver is not a common clock path:
-            # only the region root is shared by ALL contributors (D-INFRA-FIRST regional-clock contract).
+        Mz_ = json.loads((d / f"mesh_{corner}.json").read_text())
+        srng = {s_["port"]: s_["late"] - s_["early"] for s_ in Mz_["stubs"].values()}
+        mesh_ok = mesh_connected(M, d) if regd else {}
+
+        def root_rng(pa):
             c = M["meta"]["regions"][reg[pa]]["tag"] if regd else "h"
             while c not in rng and len(c) > 1:
                 c = c[:-1]
-            return DC.pair_clock_damage(late[pa], early[pa], late[pb], early[pb], rng.get(c, 0.0))["max_damage_ps"]
+            return rng.get(c, 0.0)
+
+        def dmg(pa, pb, mesh=False):
+            # GATE (METHODOLOGY 12.4b, OWNER 10-26 ~07:3x / 12.8): CPPR credited ONLY to the last common tree node --
+            # the region root for same-mesh pairs.  mesh=True: the mesh-node-credited number, INFO only.
+            cr = root_rng(pa)
+            if mesh and regd and reg[pa] == reg[pb] and pa in srng and pb in srng:
+                cr = max(cr, min(srng[pa], srng[pb]))
+            return DC.pair_clock_damage(late[pa], early[pa], late[pb], early[pb], cr)["max_damage_ps"]
+        allp = list(seam_in) + [(i[0], i[1]) for i in intra]
         sk = [dmg(x[0], x[1]) for x in seam_in]
         ik = [dmg(x[0], x[1]) for x in intra]
-        worst = sorted(((dmg(x[0], x[1]), x[0], x[1]) for x in list(seam_in) + [(i[0], i[1]) for i in intra]),
-                       reverse=True)[:10]
+        mk = [dmg(x[0], x[1], mesh=True) for x in allp]
+        worst = sorted(((dmg(x[0], x[1]), x[0], x[1]) for x in allp), reverse=True)[:10]
+        # 12.8e structural decomposition of every gate pair: nominal late offset (tree imbalance to the region's mesh
+        # + mesh->stub spread + stub) and the uncredited early/late range below the region root
+        tapof = {t["port"]: t for t in M["taps"]}
+
+        def decomp(pa, pb):
+            dm = dmg(pa, pb)
+            nom = abs(late[pa] - late[pb])
+            sa, sb = Mz_["stubs"].get(tapof[pa]["stub"], {}), Mz_["stubs"].get(tapof[pb]["stub"], {})
+            mesh_nom = abs(sa.get("late", 0.0) - sb.get("late", 0.0)) if sa and sb else None
+            return dict(damage_ps=round(dm, 2), nominal_late_offset_ps=round(nom, 2),
+                        mesh_stub_in_offset_ps=None if mesh_nom is None else round(mesh_nom, 2),
+                        stub_offset_ps=None if mesh_nom is None else round(nom - mesh_nom, 2),
+                        uncredited_range_ps=round(dm - nom, 2), root_credit_ps=round(root_rng(pa), 2),
+                        region=reg[pa], parts=[tapof[pa]["part"], tapof[pb]["part"]],
+                        core_tap=[bool(tapof[pa].get("core")), bool(tapof[pb].get("core"))])
+        over = [(x[0], x[1]) for x in allp if dmg(x[0], x[1]) > DC.GATE_PS]
+        by_reg = defaultdict(lambda: [0, 0.0])
+        for x in over:
+            r_ = by_reg[str(reg[x[0]])]
+            r_[0] += 1
+            r_[1] = max(r_[1], dmg(x[0], x[1]))
+        mspread = {}
+        for v_ in Mz_["stubs"].values():
+            k_ = str(reg.get(v_["port"]))
+            lo_, hi_ = mspread.get(k_, (1e18, -1e18))
+            mspread[k_] = (min(lo_, v_["late"]), max(hi_, v_["late"]))
+        tspread = {}
+        for p_, v_ in late.items():
+            k_ = str(reg.get(p_))
+            lo_, hi_ = tspread.get(k_, (1e18, -1e18))
+            tspread[k_] = (min(lo_, v_), max(hi_, v_))
+        clt = M["meta"].get("core_latency_target") or {}
+        info = dict(gate_cppr_rule="12.4b: last common tree node (region root for same-mesh pairs)",
+                    mesh_node_credit_INFO_related_pair_max_ps=round(max(mk), 2),
+                    mesh_node_credit_INFO_pairs_over_80=sum(1 for v in mk if v > 80),
+                    mesh_connected={str(k_): v_ for k_, v_ in mesh_ok.items()},
+                    region_root_range_ps={str(g["k"]): round(rng.get(g["tag"], rng.get(g["tag"][:-1], 0.0)), 2)
+                                          for g in M["meta"].get("regions") or []},
+                    intra_mesh_stub_in_spread_ps={k_: round(v_[1] - v_[0], 2) for k_, v_ in sorted(mspread.items())},
+                    tap_late_spread_ps={k_: round(v_[1] - v_[0], 2) for k_, v_ in sorted(tspread.items())},
+                    mesh_stub_in_range_ps=[round(min(srng.values()), 2), round(max(srng.values()), 2)] if srng else None,
+                    pairs_over_80_by_region={k_: dict(n=v_[0], max_ps=round(v_[1], 2)) for k_, v_ in sorted(by_reg.items())},
+                    core_latency=dict(target=clt, tolerance_note="core pin->sink insertion tolerance (+-tol) is NOT in this "
+                                      "die number; a pair of two core-pin taps can spend up to 2*tol of skew inside the cores")
+                    if clt else None,
+                    worst_decomposition=[decomp(x, y) for _, x, y in worst])
         # landed seams: the region-to-region clock offset at the landing (no CPPR above the root; nominal pair offset
         # and early/late damage both reported) against the landing window
         lk = [(DC.pair_clock_damage(late[x[0]], early[x[0]], late[x[1]], early[x[1]], rng.get("h", 0.0))["max_damage_ps"],
@@ -1671,7 +1916,7 @@ def cmd_report(a):
             verdict="PASS" if max(sk + ik) <= DC.GATE_PS else "FAIL",
             tap_slew_max_ps=round(max(slew.values()), 2), mesh_stub_in_slew_max_ps=Mz["stub_in_slew_max_ps"],
             tree_slew_max_ps=round(max(v[2] for v in Nn.values()), 2), mesh_cap_pF=Mz["mesh_cap_pF"],
-            worst=[[round(w, 2), x, y] for w, x, y in worst])
+            worst=[[round(w, 2), x, y] for w, x, y in worst], **info)
     # clock power: C V^2 f over every die clock wire + pin (mesh from the transient, tree/stub wire from length)
     nd = NDR[M["meta"]["ndr"]]
     cw = (DC.LAYER_RC["M8"][1] + DC.LAYER_RC["M9"][1]) / 2 * nd["cf"]
@@ -1792,6 +2037,8 @@ def main(argv=None):
     c.add_argument("dir")
     c.add_argument("--kit", required=True)
     c.add_argument("--plan", help="pinned physical plan for the all-clock-cell hard-keepout census")
+    c.add_argument("--mesh-vias", action="store_true",
+                   help="emit VIA89 at every real (clipped) mesh strap crossing + island jog foot; mesh = one DB net")
     m = sub.add_parser("mesh")
     m.add_argument("dir")
     m.add_argument("--corner", default="TT")
