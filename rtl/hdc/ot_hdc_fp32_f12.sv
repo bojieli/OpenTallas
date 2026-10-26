@@ -36,6 +36,22 @@
 // Needs rtl/hdc/ot_hdc_fastfp.sv (ot_hdc_lzc32, ot_hdc_mul24_rows) and rtl/hdc/ot_hdc_prefix.sv.
 // ---------------------------------------------------------------------------
 
+// The adder's swap select (|b| > |a|) as a keep_hierarchy leaf.  With -DOT_F12_SWAP_REP and cut 0 open (CUTS bit 0 = 0, e.g.
+// the LAT-4 adder) the select is built four times, one copy per swap-mux group (sign + exponent + man[6:0] / man[23:7] /
+// small[13:0] / small[27:14], <= 17 mux selects each) -- driver replication instead of one 61-load net.  The hierarchy
+// stops opt_merge / ABC from folding the identical copies back together (plain logic copies are merged).  Measured
+// (S81 attn_hcore EH, 4_cts TT 833 ps): the single select fanned out through three serial BUFx2 (fanout cap 24,
+// 52.8 + 66.7 + 71.0 = 190 ps), every one of the 13 TT setup violators (WNS -29.1 ps) ran through it.
+// Function unchanged (same Boolean select in every copy); no cycle change.
+(* keep_hierarchy *)
+module ot_hdc_f12_swsel (input wire f_eq, input wire f_lt, input wire frac_c, output wire sw);
+`ifdef OT_F12_SWAP_REP_MUT
+    assign sw = f_eq ? frac_c : f_lt;              // negative control only: wrong polarity on equal fields
+`else
+    assign sw = f_eq ? !frac_c : f_lt;             // = !(f_eq ? frac_c : !f_lt) = !cmp_c
+`endif
+endmodule
+
 // a W-bit bundle with its valid bit (bit W-1), registered when CUT = 1 (the valid reset to 0), else a wire
 module ot_hdc_f12_cut #(parameter integer W = 2, parameter integer CUT = 0) (
     input  wire clk, input wire rst_n, input wire [W-1:0] d, output wire [W-1:0] q
@@ -148,9 +164,29 @@ module ot_hdc_fp32_add_f12 #(
     wire [27:0] small_b = jam28f(x_bman, x_dab[4:0], g0[1]);
     localparam integer W1 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 28;
     wire [W1-1:0] q1;
+`ifdef OT_F12_SWAP_REP
+    // per-group swap selects (see ot_hdc_f12_swsel); with cut 0 closed the select is already a register (x_swap)
+    wire [3:0] sw_g;
+    genvar gsw;
+    generate if (K0 == 0) begin : g_swr
+        for (gsw = 0; gsw < 4; gsw = gsw + 1) begin : g_s
+            ot_hdc_f12_swsel u_sw (.f_eq(g6[4]), .f_lt(g6[3]), .frac_c(frac_c), .sw(sw_g[gsw]));
+        end
+    end else begin : g_swq
+        assign sw_g = {4{x_swap}};
+    end endgenerate
+    wire [23:0] sw_man = {x_bman[23:7], x_bman[6:0]} & {{17{sw_g[1]}}, {7{sw_g[0]}}}
+                       | {x_aman[23:7], x_aman[6:0]} & {{17{!sw_g[1]}}, {7{!sw_g[0]}}};
+    wire [27:0] sw_small = {small_a[27:14], small_a[13:0]} & {{14{sw_g[3]}}, {14{sw_g[2]}}}
+                         | {small_b[27:14], small_b[13:0]} & {{14{!sw_g[3]}}, {14{!sw_g[2]}}};
+    ot_hdc_f12_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rst_n),
+        .d({x_v, x_byp, x_sub, sw_g[0] ? x_bs : x_as, x_err, x_code, sw_g[0] ? x_bexp : x_aexp,
+            sw_man, sw_small}), .q(q1));
+`else
     ot_hdc_f12_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rst_n),
         .d({x_v, x_byp, x_sub, x_swap ? x_bs : x_as, x_err, x_code, x_swap ? x_bexp : x_aexp,
             x_swap ? x_bman : x_aman, x_swap ? small_a : small_b}), .q(q1));
+`endif
     wire        s1_v, s1_byp, s1_sub, s1_sign;
     wire [1:0]  s1_err;
     wire [31:0] s1_code;
