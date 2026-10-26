@@ -717,6 +717,37 @@ def spread_pins(bay, n, limit, start=0):
 
 
 # ------------------------------------------------------------------------------------------------------ clock gates
+def road_clock_conflicts(roads, clock_rects, spacing, bucket_um=500.0):
+    """Count intersecting road/clock pairs with a spatial index; geometry/counts unchanged.
+
+    The prior all-pairs loop costs billions of comparisons on HBM. Index the
+    spacing-expanded clock rectangles, deduplicate candidates per road, and
+    retain the exact rect_overlap predicate (including touching-edge policy).
+    """
+    buckets = defaultdict(list)
+    rects = []
+    def cells(r):
+        for x in range(math.floor(r[0] / bucket_um), math.floor(r[2] / bucket_um) + 1):
+            for y in range(math.floor(r[1] / bucket_um), math.floor(r[3] / bucket_um) + 1):
+                yield x, y
+    for _, layer, x0, y0, x1, y1, *_ in clock_rects:
+        if layer not in spacing:
+            continue
+        d = spacing[layer]
+        r = (x0 - d, y0 - d, x1 + d, y1 + d)
+        idx = len(rects)
+        rects.append(r)
+        for x, y in cells(r):
+            buckets[(layer, x, y)].append(idx)
+    hits = 0
+    for layer, road in roads:
+        candidates = set()
+        for x, y in cells(road):
+            candidates.update(buckets.get((layer, x, y), ()))
+        hits += sum(rect_overlap(road, rects[i]) for i in candidates)
+    return hits
+
+
 def clock_shield(P, pg_grid, clock_rects, ndr_space=0.08, roads=(), sample=40):
     """every clock rect on M8/M9: PG stripe both sides, gap < ndr_space + w_min + s_min (no signal track fits)."""
     import bisect
@@ -758,11 +789,7 @@ def clock_shield(P, pg_grid, clock_rects, ndr_space=0.08, roads=(), sample=40):
                 worst.append(dict(net=net, layer=L, rect_um=[r3(v) for v in (x0, y0, x1, y1)],
                                   gap_lo_um=r3(g_lo) if math.isfinite(g_lo) else None,
                                   gap_hi_um=r3(g_hi) if math.isfinite(g_hi) else None))
-    road_hits = 0
-    for L, r in roads:
-        for net, CL, x0, y0, x1, y1, _w in clock_rects:
-            if CL == L and rect_overlap(r, (x0 - fit[L], y0 - fit[L], x1 + fit[L], y1 + fit[L])):
-                road_hits += 1
+    road_hits = road_clock_conflicts(roads, clock_rects, fit)
     verdict = "PASS" if n and ok == n and not road_hits and not short else ("NOT RUN" if not n else "FAIL")
     return dict(verdict=verdict, clock_rects=n, shielded=ok, unshielded=n - ok, open_sides=sides_open,
                 pg_overlaps=short, road_band_conflicts=road_hits, fit_gap_um=fit,

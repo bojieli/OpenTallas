@@ -256,3 +256,22 @@ def test_pushdown_slice_ports_and_sizing(tmp_path):
     assert {p["name"] for p in pd["ft_ports"]} == {"mp_isl0_ck_i", "mp_isl0_ck_o", "mp_isl0_rst_i", "mp_isl0_rst_o"}
     assert pd["driver"]["cell"].startswith("BUF") and pd["driver"]["rc_ps"] <= MP.RC_BUDGET_PS
     assert MP.size_driver(2000.0, 0)["parallel"] >= 1 and MP.size_driver(10.0, 0)["cell"].startswith("BUFx4")
+
+
+def test_clock_conflict_spatial_index_matches_all_pairs():
+    import random
+    import master_plan as M
+    rng = random.Random(128)
+    clocks, roads = [], []
+    for i in range(140):
+        x, y = rng.uniform(-100, 1500), rng.uniform(-100, 1500)
+        w, h = rng.choice([(1200, .2), (.2, 1200), (25, 30)])
+        clocks.append((str(i), rng.choice(["M8", "M9"]), x, y, x+w, y+h, .2))
+    for i in range(170):
+        x, y = rng.uniform(-100, 1500), rng.uniform(-100, 1500)
+        roads.append((rng.choice(["M7", "M8", "M9"]), (x, y, x+80, y+50)))
+    spacing = {"M8": .16, "M9": .16}
+    expected = sum(M.rect_overlap(r, (x0-spacing[L], y0-spacing[L], x1+spacing[L], y1+spacing[L]))
+                   for L, r in roads for _, C, x0, y0, x1, y1, _ in clocks if L == C)
+    assert M.road_clock_conflicts(roads, clocks, spacing) == expected
+    assert M.road_clock_conflicts(roads, clocks, spacing, bucket_um=73) == expected
