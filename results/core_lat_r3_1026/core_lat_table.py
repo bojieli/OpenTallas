@@ -22,6 +22,12 @@ HEAD_REF = "origin/main:physical/die_plan/s81_head/die_plan.json"
 MEASURED = {
     "dsdv_gunit_l4": dict(tt=259.69, ff=208.55, rc="GRT", label="CHECKED (NUMBER-CHECK 06:59)",
                           what="cl26rt centre M5 pin + 4x1 count-split H-tree, 0 pads; all-reg mean (pinreg 261.39/210.27)"),
+    "dsdv_gunit_l0": dict(tt=294.74, ff=240.52, rc="GRT", label="UNCHECKED",
+                          what="r3rt42 centre M5 pin + 4x2 count H-tree, OT_RT_WIN 1e6 (measure-only) -> 0 pads, flow-20261025-b-s81 + "
+                               "loop-index fix 2b9f7617e; placement RC taps 242-262; GRT (own global_route M2-M5) all-reg 263.7-319.0; "
+                               "4x1 variant 299.90/247.81. HIGH: GRT adds ~+45 over placement RC (l4 +26) -> trunk RC root cause"),
+    "dsdv_gunit_l2": dict(tt=297.51, ff=243.92, rc="GRT", label="UNCHECKED",
+                          what="r3rt42 same recipe, 0 pads; placement taps 250-263; GRT all-reg 252.1-319.1. HIGH"),
     "dsdv_gunit_l1": dict(tt=None, ff=None, rc="-", label="NO NUMBER",
                           what="cl26rt died FAIL_PREFLOOR kit LEC (old kit lec.py) 06:49"),
     "ot_s81sl_eg": dict(tt=None, ff=None, rc="-", label="NO NUMBER",

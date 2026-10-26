@@ -7,8 +7,8 @@
 | S81 | dsdv_bksel_q | 4 | 648x648 | 648 | DIE_TREE_IN | 559-604 | 453-490 | HIGH | 256/198 | - | - |
 | S81 | ot_s81sl_xrt3 | 2 | 207.36x164.16 | 186 | CENTRE_TREE | 556-651 | 458-535 | HIGH | 252/196 | - | - |
 | S81 | dsdv_gunit_l5 | 1 | 345.6x302.4 | 324 | DIE_TREE_IN | 371-512 | 305-430 | HIGH | 256/198 | - | - |
-| S81 | dsdv_gunit_l0 | 1 | 345.6x172.8 | 259 | CENTRE_HTREE | 251-320 | 203-268 | HIGH | 243/193 | - | - |
-| S81 | dsdv_gunit_l2 | 1 | 345.6x172.8 | 259 | CENTRE_HTREE | 245-305 | 197-254 | HIGH | 243/193 | - | - |
+| S81 | dsdv_gunit_l0 | 1 | 345.6x172.8 | 259 | CENTRE_HTREE | 251-320 | 203-268 | HIGH | 243/193 | 295/241 (GRT, UNCHECKED) | HIGH |
+| S81 | dsdv_gunit_l2 | 1 | 345.6x172.8 | 259 | CENTRE_HTREE | 245-305 | 197-254 | HIGH | 243/193 | 298/244 (GRT, UNCHECKED) | HIGH |
 | S81 | dsdv_idx_tx_n32 | 1 | 626.4x561.6 | 596 | DIE_TREE_IN | 728-858 | 582-704 | HIGH | 245/189 | - | - |
 | S81 | dsdv_bksel_c | 1 | 388.8x172.8 | 281 | CENTRE_HTREE | 330-399 | 269-333 | HIGH | 237/190 | - | - |
 | S81 | dsdv_bk_g | 1 | 216x172.8 | 194 | CENTRE_TREE | 288-367 | 233-302 | HIGH | 260/202 | - | - |
@@ -56,6 +56,8 @@
 
 Measured-trial notes:
 - dsdv_gunit_l4: cl26rt centre M5 pin + 4x1 count-split H-tree, 0 pads; all-reg mean (pinreg 261.39/210.27) [CHECKED (NUMBER-CHECK 06:59)]
+- dsdv_gunit_l0: r3rt42 centre M5 pin + 4x2 count H-tree, OT_RT_WIN 1e6 (measure-only) -> 0 pads, flow-20261025-b-s81 + loop-index fix 2b9f7617e; placement RC taps 242-262; GRT (own global_route M2-M5) all-reg 263.7-319.0; 4x1 variant 299.90/247.81. HIGH: GRT adds ~+45 over placement RC (l4 +26) -> trunk RC root cause [UNCHECKED]
+- dsdv_gunit_l2: r3rt42 same recipe, 0 pads; placement taps 250-263; GRT all-reg 252.1-319.1. HIGH [UNCHECKED]
 - dsdv_gunit_l1: cl26rt died FAIL_PREFLOOR kit LEC (old kit lec.py) 06:49 [NO NUMBER]
 - ot_s81sl_eg: cl26rt stopped after synth at the 06:4x park (no CTS) [NO NUMBER]
 - ot_s81hd_elemA_cv: Codex v4q r2 quadrant H-tree (4 TritonCTS quadrants), quadrant means TT 336.7-355.2 / FF 274.0-290.2; root cause non-NDR trunk + 70-sink leaves (lanes/HEAD-CORE-LAT 08:16); GEOM-REVIEW: V4Q FAIL STRUCTURAL for adoption -- NW quadrant 2,953 sinks vs ~8,500 others, ~25% outline empty -> fix in the PLAN (rebalance quadrant sink loads / outline from logic), not per-quadrant CTS settings [UNCHECKED]
