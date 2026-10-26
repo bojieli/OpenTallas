@@ -1649,6 +1649,46 @@ def kept_wire_alias_copies(L, declared, aliases_file):
     return set()
 
 
+RRS_COPY = re.compile(r"^(ff:.*?)ot_rrs__([A-Za-z0-9_]+)__c(\d+)$")
+
+
+def kept_reset_copies(L, declared):
+    """Kept reset-relay copy bits that physical/common_flow/ot_rst_copies.py re-pointed (QC-LEC-3 10-26, N59: 664 of
+    680 'missing' kept bits were these).  The pass proves the N bits of a family wire WN identical, adds one alias wire
+    \\ot_rrs__<tag>__c<k> per copy bit k (tag = WN with non [A-Za-z0-9_] -> '_', last 60 characters) and moves loads
+    onto it; synthesis then names copy k's flop after that alias.  The copy is still a flop of its own, under a
+    deterministic new name.  A declared gold bit WN[k] counts as present only when exactly one gate family
+    <prefix>ot_rrs__<tag>__c* matches WN's sanitised name under the same hierarchy prefix, that family is claimed by
+    no other gold register, and its copy indices equal the declared bit indices of WN one for one (fail-closed:
+    a folded copy leaves a hole, a truncated-tag collision matches twice)."""
+    fams = collections.defaultdict(dict)
+    for k in L.tp:
+        m = RRS_COPY.match(k)
+        if m:
+            fams[(m.group(1), m.group(2))][int(m.group(3))] = k
+    if not fams:
+        return set()
+    bits = collections.defaultdict(dict)
+    for k in declared:
+        m = IDXK.match(k)
+        if m:
+            bits[m.group(1)][int(m.group(2))] = k
+    claim = collections.defaultdict(list)
+    for base in bits:
+        for pre, tag in fams:
+            if base.startswith(pre) and re.sub(r"[^A-Za-z0-9_]", "_", base[len(pre):])[-60:] == tag:
+                claim[(pre, tag)].append(base)
+    by_base = collections.defaultdict(list)
+    for fam, bases in claim.items():
+        if len(bases) == 1:
+            by_base[bases[0]].append(fam)
+    present = set()
+    for base, fl in by_base.items():
+        if len(fl) == 1 and set(fams[fl[0]]) == set(bits[base]):
+            present.update(bits[base].values())
+    return present
+
+
 def kept_registers(L, keep_file):
     """Kept-register check (fail-closed, PATH-KV-PC3 10-25): every RTL register bit the design declares kept --
     a (* keep *) register or a flop inside a keep_hierarchy cell (pin flops, placement replicas) -- must be a flop of
@@ -1683,6 +1723,7 @@ def kept_registers(L, keep_file):
             gold_rel[m.group(1)] += 1
     renamed = {h[2] for (sd, c), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[2] in L.gp}
     alias_copies = kept_wire_alias_copies(L, declared, Path(keep_file).with_suffix(".aliases.json"))
+    reset_copies = kept_reset_copies(L, declared)
     missing, const = [], []
     for k in sorted(declared):
         if k in gate or k in renamed:
@@ -1693,7 +1734,7 @@ def kept_registers(L, keep_file):
         if proved_state_constant(L,"gold",k) is not None:
             const.append(k)
             continue
-        if k not in alias_copies:
+        if k not in alias_copies and k not in reset_copies:
             missing.append(k)
     return sorted(declared), missing, const
 
