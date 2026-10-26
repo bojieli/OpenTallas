@@ -1,0 +1,25 @@
+MISMATCH cyc 19 vi_addr_w
+MISMATCH cyc 19 vi_addr_n
+MISMATCH cyc 20 vi_addr_w
+MISMATCH cyc 20 vi_addr_n
+MISMATCH cyc 25 vi_addr_w
+MISMATCH cyc 25 vi_addr_n
+MISMATCH cyc 39 vi_addr_w
+MISMATCH cyc 39 vi_addr_n
+MISMATCH cyc 42 vi_addr_w
+MISMATCH cyc 42 vi_addr_n
+MISMATCH cyc 47 vi_addr_w
+MISMATCH cyc 47 vi_addr_n
+MISMATCH cyc 49 vi_addr_w
+MISMATCH cyc 49 vi_addr_n
+MISMATCH cyc 53 vi_addr_w
+MISMATCH cyc 53 vi_addr_n
+MISMATCH cyc 55 vi_addr_w
+MISMATCH cyc 55 vi_addr_n
+MISMATCH cyc 59 vi_addr_w
+MISMATCH cyc 59 vi_addr_n
+LOCKSTEP FAIL seed=2 dens=6 cycles=4000 errors=6566 nonzero_out_cycles=3982
+- /srv/opentallas-scratch2/claude/tok-hbm-suv/sfuv_r2/tb_sfu.sv:172: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 87.453 s; speed 91.489 ns/s
+- Verilator: cpu 87.442 s on 1 threads; allocated 271 MB
