@@ -101,8 +101,12 @@ def core_obs(t):
         w, hh = h["outline_um"]
         if h.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
             w, hh = hh, w
-        top = lef_top_layer(h.get("lef"))
-        out.append((x0, y0, x0 + w, y0 + hh, top or h.get("obs_max", "M5"), h.get("module", "?"), top is not None))
+        view_top = lef_top_layer(h.get("lef"))
+        # A declared route ceiling remains an obstruction even when no routed
+        # LEF exists. A lower parent/default/abstract may not free those layers.
+        claimed = [L for L in (view_top, h.get("obs_max")) if L]
+        top = max(claimed, key=lambda L: int(L[1:])) if claimed else "M5"
+        out.append((x0, y0, x0 + w, y0 + hh, top, h.get("module", "?"), view_top is not None))
     return out
 
 
