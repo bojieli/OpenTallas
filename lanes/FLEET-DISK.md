@@ -39,3 +39,6 @@ Merged to main 1ed91ad4ca + 6281884e3d (census resync); ~/.local/bin/ot-run re-i
 Background inherited epyc1 cleanup PID1823050 still progressing, not interrupted. epyc1 /26%, scratch2 84%/559GB ->64%/1.2TB at02:40; all workers above scratch floor (epyc2 minimum130GB). No new destructive cleanup started by CODEX. Existing worker movers need no intervention.
 
 2026-10-25 02:46 PDT CODEX: epyc2 NEW admissions HELD by root order for measured scratch depletion103GB->83GB/2min after fleet fill; live jobs untouched. All lane leaders notified use --stage/other4. Remove only this held_hosts line once safe measured growth headroom returns.
+
+## CODEX notes 2026-10-25 21:48 PDT
+CODEX remaining-lanes takeover: Migration tool DONE; INFRA2 current fleet owner. Jobs: Inherited movers only, no new destructive cleanup. Next: shared_flow/INFRA monitors real4host scratch admission. Failure disposition: Old epyc2 hold and5host notes historical; epyc3 retired per owner.

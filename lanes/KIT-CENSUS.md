@@ -171,3 +171,6 @@ Historical census DONE; operational recipe findings retained (hold margin0..5; e
 
 ## CODEX PARKED 2026-10-25 03:35 PDT
 Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER? recorded under Handoff to Claude 2026-10-25 03:35 PDT — GEOM/PROTO/toolchain in CODEX-LOG.md. Prototype strict SU channel job live; point SU done/uncollected. No main merges by this agent.
+
+## CODEX notes 2026-10-25 21:48 PDT
+CODEX remaining-lanes takeover: Historical census DONE. Jobs: None. Next: Use current preflight/clock/geometry flow fixes; no duplicate census. Failure disposition: Original2% yield traced to hold loops/RTL boundary/geometry; owned shared_flow + physical.

@@ -16,3 +16,6 @@ Record: results/arch/elastic_seam_1024/ (README verdict, analyze.py -> sizing.js
 - Unpriced residual idea: rate-aware "sparse landing" for low-duty buses (needs duty measurement + consumer don't-care proof; ceiling <=0.011% die).
 ## OWNER?
 (none)
+
+## CODEX notes 2026-10-25 21:48 PDT
+CODEX remaining-lanes takeover: DONE REJECT main8e69517bf2. Jobs: None. Next: No action; fixed plan-side padding retained. Failure disposition: Elastic overhead2.9x/5.2x with0cycle gain rejected.

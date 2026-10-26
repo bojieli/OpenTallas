@@ -152,3 +152,6 @@ Standalone approved checker fc4d5fa9c supplied to KV cores and CLOCK/CP1 runner 
 
 ## CODEX PARKED 2026-10-25 03:35 PDT
 Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER? recorded under Handoff to Claude 2026-10-25 03:35 PDT — GEOM/PROTO/toolchain in CODEX-LOG.md. Prototype strict SU channel job live; point SU done/uncollected. No main merges by this agent.
+
+## CODEX notes 2026-10-25 21:48 PDT
+CODEX remaining-lanes takeover: Source csa31 fix + source-local waiver work completed in prior pushes. Jobs: Old redo paths absent/PIDs gone already collected. Next: Current lane generators carry gates; actual offending new RTL owned physical. Failure disposition: No new selected-range bug; no old redo duplicate.

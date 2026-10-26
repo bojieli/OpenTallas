@@ -81,3 +81,6 @@ NEXT:
 ## PARKED 2026-10-25 21:09 PDT
 Branches: claude/rom-macro-1025@211186de1 (READY, allowlist), claude/rom-gate-flow-1025@0b6be8e6d (READY-AT-FLOW-TAG, D-ROM-1 hook). Worktree localhost /home/ubuntu/scratch/rom-macro-1025 (sparse; remove after merge). No live jobs. Scratch: epyc1 /srv/opentallas-scratch2/claude/rom-macro-1025/{gate,dcal}, localhost /home/ubuntu/scratch/rom-macro-dcal.
 NEXT: (1) COORD merge allowlist READY; FLOW-CANARY carries the gate hook in the next flow tag. (2) PATH-KV/TYPE-REDUCE-2 pick D-ROM-3b (drop dead dcal images; START/PERIOD/SEG to a 64x32 generated ROM or boot words) -> one dcal design. (3) COORD: QC-side calendar images are declared logic per D-ROM-2 but are compiled schedule content; consider D-ROM-3b for QC too. (4) content tools -> rom_gen personalise manifests (from step 1 NEXT 4).
+
+## CODEX notes 2026-10-25 21:48 PDT
+CODEX remaining-lanes takeover: Allowlist211186de1 merged; D-ROM-3 deadKV images proof DONE. Jobs: No inherited jobs. Next: shared_flow owns gate hook at next tag; token/physical own approved KV/QC calendar ROM batch. Failure disposition: QC images LIVE and need real generated ROM; declarations hash compiled content.

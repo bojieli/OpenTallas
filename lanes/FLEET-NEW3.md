@@ -17,3 +17,6 @@ OWNER?
 
 ## CODEX notes 2026-10-25 02:40 PDT
 Current live5-host fleet PASS; epyc1 restored after /run/user incident without user@ restart, all5 admit. Legacy old-nvme OWNER? above is CLOSED/OVERTAKEN by owner wipe07:03 (BRIEFING decision10); no recovery or formatting task remains. Native launcher localhost selftest PASS.
+
+## CODEX notes 2026-10-25 21:48 PDT
+CODEX remaining-lanes takeover: DONE tools/live fleet; epyc3 retired later. Jobs: None. Next: Use live epyc1/intel1/intel2/epyc2 only. Failure disposition: Old-nvme recovery OWNER question CLOSED by owner wipe.
