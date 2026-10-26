@@ -49,11 +49,11 @@ def main():
   elif isinstance(x,list):
    for v in x:yield from strings(v)
   elif isinstance(x,str):yield x
- plan=ROOT/'physical/die_plan/qwen_compute/die_plan.json'
- for value in strings(json.loads(plan.read_text())):
-  if '/' not in value or len(value)>255 or value.startswith('/') or any(c.isspace() for c in value):continue
-  for p in (ROOT/value,plan.parent/value):
-   if p.is_file():selected.add(p);break
+ for plan in (ROOT/'physical/die_plan/qwen_compute/die_plan.json',ROOT/'physical/die_plan/qwen_compute/die_plan_base_2209.json'):
+  for value in strings(json.loads(plan.read_text())):
+   if '/' not in value or len(value)>255 or value.startswith('/') or any(c.isspace() for c in value):continue
+   for p in (ROOT/value,plan.parent/value):
+    if p.is_file():selected.add(p);break
  for path in selected:
   dest=out/path.relative_to(ROOT);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(path,dest)
  shutil.copytree(ROOT/'tools/die_plan',out/'tools/die_plan')
