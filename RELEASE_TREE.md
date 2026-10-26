@@ -50,10 +50,10 @@ Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574f
   - [ ] S81.TILES Tile sign-offs · PATH-S81 / CORES-KITS · RUNNING · 4/171 types, 16/52 hard cores signed
 
 ## DIE hbm · HBM B2n (next release) · plan D-HBM-B1 (5fa3c6e64838)
-- [ ] HBM.B1 Plan event: all hard cores M5 ceiling (COORD approved, owner M5 rule) + spu1 band + b002/b011 FT bands + 107 G0 lower-row errors + q_su11 tap + infra-first · PATH-HBM · RUNNING
-- [ ] HBM.GRT Die GRT0 · PATH-HBM · FAIL as declared 1.73M; all cores at M5 → 0 @50 it → HBM.B1
-- [ ] HBM.CLK Mesh clock + skew · PATH-HBM · NOT RUN · → HBM.B1
-- [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · recovered native generator: CUT0/clock967PASS, format literals64→0 via exact local BF16 formatter; W128 actual demands exceed oldW64plan, 98unreadoutputs under diagnosis
+- [ ] HBM.B1 Plan event (native b1n4 39b34ade; G0C 36 core-face open) + 12.7 master plan (corridors/bays/M7 entry/PG/shield gates) + CORE-LAT strips + 250 ps zero-early · PATH-HBM · RUNNING · src claude/hbm-b1-event-1026
+- [ ] HBM.GRT Die GRT0 · PATH-HBM · PASS DIAGNOSTIC incl clock (r7 combo 50 it TT/FF overflow 0, native plan) → HBM.B1 freeze
+- [ ] HBM.CLK Mesh clock + skew · PATH-HBM · FAIL 980/800 ps related-pair (912 early-offset core taps) → rerun zero-early 250 + strip driver sites
+- [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
 - [ ] HBM.STA Die STA on real views · DIE-PROTO · WAITS · → HBM.GRT
 
 ## TOKEN · Token-pass gate per design
