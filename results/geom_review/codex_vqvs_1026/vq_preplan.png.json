@@ -1,0 +1,110 @@
+{
+ "kit": "ot_s81sl_vq_tpl_f6",
+ "kit_hash": "3da2783116e6fa67",
+ "outline_um": [
+  172.8,
+  129.6
+ ],
+ "pins": 702,
+ "faces": {
+  "N": {
+   "pins": 299,
+   "max_per_um": 2.0,
+   "mean_per_um": 1.73,
+   "layers": {
+    "M5": 299
+   },
+   "span": [
+    4.62,
+    168.2
+   ],
+   "groups": [
+    "clk",
+    "fault",
+    "k",
+    "m_b",
+    "m_i",
+    "m_q",
+    "m_v",
+    "rst_n",
+    "sid",
+    "xf",
+    "xf_s",
+    "xf_v"
+   ]
+  },
+  "S": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  },
+  "W": {
+   "pins": 132,
+   "max_per_um": 1.5,
+   "mean_per_um": 1.02,
+   "layers": {
+    "M4": 132
+   },
+   "span": [
+    4.81,
+    124.81
+   ],
+   "groups": [
+    "y",
+    "y_i",
+    "y_v"
+   ]
+  },
+  "E": {
+   "pins": 271,
+   "max_per_um": 2.5,
+   "mean_per_um": 2.09,
+   "layers": {
+    "M4": 271
+   },
+   "span": [
+    4.52,
+    125.1
+   ],
+   "groups": [
+    "u",
+    "u_i",
+    "u_v",
+    "um_b",
+    "um_i",
+    "um_q",
+    "um_v"
+   ]
+  }
+ },
+ "macros": [
+  {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    55.296,
+    2.16
+   ],
+   "size": [
+    94.824,
+    41.064
+   ],
+   "row_halo": 4.32,
+   "clear_um": {
+    "W": 55.3,
+    "E": 22.68,
+    "S": 2.16,
+    "N": 86.38
+   }
+  }
+ ],
+ "clock_pin": {
+  "name": "clk",
+  "x": 85.836,
+  "y": 129.558,
+  "face": "N",
+  "layer": "M5"
+ }
+}

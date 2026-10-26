@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Fresh canaried-flow VQ pre-placement only; actual placement/r2r/clock review required before CTS/route",
+  "picture": "/srv/opentallas-scratch/claude/wt/codex-vqvs-1026/results/geom_review/codex_vqvs_1026/vq_preplan.png",
+  "source": "877cfdeb2815",
+  "kit": "3da2783116e6fa67",
+  "findings": [
+    "Single SRAM on south boundary; no south signal pins, wide 86um north channel and 22.7um east channel, no interior macro wall",
+    "702 pins with face densities N2/W1.5/E2.5 per um well below routing track capacity",
+    "Clock/reset enter north center; current fixed clock assumptions still require actual RCX measurement",
+    "M5 PDN stripe sequence continuous through logic channels; south macro is edge-abutted, zero south halo clipped intentionally outside die",
+    "Existing VQ F6 macro interface recipe preserved; no added cycles"
+  ]
+}
