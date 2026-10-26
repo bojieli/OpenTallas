@@ -1,0 +1,77 @@
+{
+  "scope": "Actual frozen bound-source wrapper adaptation only; not new full-current strict bind/token pass",
+  "types": {
+    "sle_fw_v1": {
+      "bound_module": "qfd_qc_sle_fw__sle_fw_v1",
+      "plan_buses_unbound": [],
+      "spare_out_bits": [],
+      "narrow_buses": [],
+      "bound_only_ports": null
+    },
+    "sle_fw_v2": {
+      "bound_module": "qfd_qc_sle_fw__sle_fw_v2",
+      "plan_buses_unbound": [],
+      "spare_out_bits": [],
+      "narrow_buses": [],
+      "bound_only_ports": null
+    },
+    "sle_fw_v3": {
+      "bound_module": "qfd_qc_sle_fw__sle_fw_v3",
+      "plan_buses_unbound": [],
+      "spare_out_bits": [],
+      "narrow_buses": [],
+      "bound_only_ports": null
+    },
+    "sle_st_a_v1": {
+      "bound_module": "qfd_qc_sle_st_a__sle_st_a_v1",
+      "plan_buses_unbound": [],
+      "spare_out_bits": [],
+      "narrow_buses": [],
+      "bound_only_ports": null
+    },
+    "sle_st_a_v2": {
+      "bound_module": "qfd_qc_sle_st_a__sle_st_a_v2",
+      "plan_buses_unbound": [],
+      "spare_out_bits": [],
+      "narrow_buses": [],
+      "bound_only_ports": null
+    },
+    "slw_fw_v1": {
+      "bound_module": "qfd_qc_slw_fw__slw_fw_v1",
+      "plan_buses_unbound": [],
+      "spare_out_bits": [],
+      "narrow_buses": [],
+      "bound_only_ports": null
+    },
+    "slw_fw_v2": {
+      "bound_module": "qfd_qc_slw_fw__slw_fw_v2",
+      "plan_buses_unbound": [],
+      "spare_out_bits": [],
+      "narrow_buses": [],
+      "bound_only_ports": null
+    },
+    "slw_fw_v3": {
+      "bound_module": "qfd_qc_slw_fw__slw_fw_v3",
+      "plan_buses_unbound": [],
+      "spare_out_bits": [],
+      "narrow_buses": [],
+      "bound_only_ports": null
+    },
+    "slw_st_a_v1": {
+      "bound_module": "qfd_qc_slw_st_a__slw_st_a_v1",
+      "plan_buses_unbound": [],
+      "spare_out_bits": [],
+      "narrow_buses": [],
+      "bound_only_ports": null
+    },
+    "slw_st_a_v2": {
+      "bound_module": "qfd_qc_slw_st_a__slw_st_a_v2",
+      "plan_buses_unbound": [],
+      "spare_out_bits": [],
+      "narrow_buses": [],
+      "bound_only_ports": null
+    }
+  },
+  "verdict": "PASS10/10 zero unbound/spare",
+  "initial_failures": "Missing asbuilt CLI override and sparse canonical reset library corrected; old logs retained"
+}
