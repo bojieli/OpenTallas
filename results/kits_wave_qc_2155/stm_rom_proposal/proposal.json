@@ -1,0 +1,470 @@
+{
+  "status": "PROPOSED_NOT_ADOPTED",
+  "id": "D-QC-STM-ROM-INVENTORY",
+  "contents_append": {
+    "sle_stm_v1": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      }
+    ],
+    "sle_stm_v2": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      }
+    ],
+    "sle_stm_v3": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      }
+    ],
+    "slw_stm_v1": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          164.16,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      }
+    ],
+    "slw_stm_v2": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      }
+    ],
+    "slw_stm_v3": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          414.72
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          155.52,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "status": "reuse",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "origin_um": [
+          345.6,
+          708.48
+        ],
+        "orient": "R0",
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "note": "PROPOSED actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles"
+      }
+    ]
+  },
+  "per_type": {
+    "sle_stm_v1": {
+      "macro_count": 4,
+      "ft_station_points_reserved": 15559,
+      "area_um2": 30682.301184,
+      "halo_um": 5.4
+    },
+    "sle_stm_v2": {
+      "macro_count": 4,
+      "ft_station_points_reserved": 15041,
+      "area_um2": 30682.301184,
+      "halo_um": 5.4
+    },
+    "sle_stm_v3": {
+      "macro_count": 4,
+      "ft_station_points_reserved": 12827,
+      "area_um2": 30682.301184,
+      "halo_um": 5.4
+    },
+    "slw_stm_v1": {
+      "macro_count": 4,
+      "ft_station_points_reserved": 15047,
+      "area_um2": 30682.301184,
+      "halo_um": 5.4
+    },
+    "slw_stm_v2": {
+      "macro_count": 4,
+      "ft_station_points_reserved": 14529,
+      "area_um2": 30682.301184,
+      "halo_um": 5.4
+    },
+    "slw_stm_v3": {
+      "macro_count": 4,
+      "ft_station_points_reserved": 14431,
+      "area_um2": 30682.301184,
+      "halo_um": 5.4
+    }
+  },
+  "master_macros": 24,
+  "die_macros": 72,
+  "latency_delta_cycles": 0,
+  "external_contracts": "unchanged",
+  "actual_elaboration_census": "pending; current source qfd_dv_s6_stm.u_tload -> qfd_dv_slice_tload.u_ld ->four concrete ROMm0..m3",
+  "next": "actual elaboration count; render/review; conditional internal batchapproval; G0C/G2/die signal+clock GRT0 before route"
+}

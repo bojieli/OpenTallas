@@ -1,0 +1,30 @@
+{
+ "q_b100": {
+  "verdict": "GEOMETRY PASS",
+  "slots": 10,
+  "distinct_ff_cells": 12849,
+  "max_paired_bit_hop_um": 348.57,
+  "station_delta": {
+   "L70x1": 1,
+   "L100x1": 1
+  },
+  "outline": "unchanged",
+  "facepins": "bit/xy/layer identical",
+  "halo_collisions": 0,
+  "ff_collisions": 0
+ },
+ "q_b110": {
+  "verdict": "GEOMETRY PASS",
+  "slots": 6,
+  "distinct_ff_cells": 3153,
+  "max_paired_bit_hop_um": 333.18,
+  "station_delta": {
+   "L48x9": 1,
+   "L53x3": 1
+  },
+  "outline": "unchanged",
+  "facepins": "bit/xy/layer identical",
+  "halo_collisions": 0,
+  "ff_collisions": 0
+ }
+}

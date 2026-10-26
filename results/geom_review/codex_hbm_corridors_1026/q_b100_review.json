@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "q_b100 geometry proposal only; no route approval",
+  "picture": "q_b100.png",
+  "source": "codex/hbm-plan-1026@9549b6342",
+  "input": "epyc1:/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/bank_perbit_r3/failed_partial_plan.json (q_b100 completed before q_b110 failed)",
+  "findings": [
+    "The three core columns have continuous narrow relay strips; explicit bit ribbons occupy those strips rather than collapsing the495um face bus to one centroid.",
+    "All16 cores retain their sizes; outline734.4x1555.2um and all face windows/bit names remain unchanged. Core origins move on the common M4/M5 track lattice.",
+    "Ten FT slots have real row-legal cell sites; maximum paired-bit centre hop348.57um. L70 andL100 each add one station, with mirrored lanes charged too.",
+    "Horizontal wires cross core footprints only on the freeM6/M7 above the approvedM5 core ceiling.",
+    "The figure shows no halo intrusion or macro wall in the new vertical relay strips. Clock/reset/internal-core station positions need regeneration after core moves; PG/clock islands and channel capacity remain unmeasured."
+  ],
+  "conditions": [
+    "Rebuild internal stations, reset and core clock taps from moved cores.",
+    "Reserve infra-first PG/clock/reset geometry before any signal route.",
+    "Compose with reconciled native HC widths elsewhere in the sameB1 plan event.",
+    "Run full paired-bit and cell-overlap census on the composed artifact; review then>=50iteration GRT andTT/FF clock gate."
+  ]
+}

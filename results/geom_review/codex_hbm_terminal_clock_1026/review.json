@@ -1,0 +1,13 @@
+{
+  "verdict": "FAIL",
+  "scope": "inherited v6 terminal clock structural diagnosis; no new P&R approval",
+  "picture": "clock.png",
+  "source": "epyc1:/srv/opentallas-scratch2/claude/codex-hbm-2144/tkm_terminal_port_v6/run/results/asap7/hbc_ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap/base",
+  "findings": [
+    "No macro barriers in this tile; trunk crossings are local, max planned hop110.16um",
+    "Tap inputs already balanced TT3.55/FF3.32ps; balancing the source trunk alone does not balance the local trees",
+    "Tap4 sink TT488.112/FF382.323ps while tap1TT421.314/FF330.360ps; six fast siblings saturate detour capacity",
+    "Local CTS latency and trunk stage count require a structural rebalance before rerouting; no added latency cycles"
+  ],
+  "next": "Rebuild equal-stage local trees with bounded sink loads, then use a shallower shared trunk; remeasure routed RC before clock acceptance"
+}

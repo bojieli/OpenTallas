@@ -1,0 +1,771 @@
+{
+ "schema": "opentallas.die_plan.g2.v1",
+ "verdict": "PASS",
+ "source": "codex/kits-wave-qc-2155@d4ae52687",
+ "scope": "all9 affected types exact aligned-v2 macros + actual FT geometry, no fullcell macroIF/STA claim",
+ "probes": {
+  "sle_st_a_v1": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 17336955,
+     "demand": 1828547,
+     "usage_pct": 10.55,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 19431511,
+     "demand": 4639254,
+     "usage_pct": 23.87,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 14561727,
+     "demand": 200750,
+     "usage_pct": 1.38,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 14573821,
+     "demand": 558686,
+     "usage_pct": 3.83,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 10243820,
+     "demand": 98754,
+     "usage_pct": 0.96,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 10251368,
+     "demand": 574716,
+     "usage_pct": 5.61,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 4533589.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "kind": "g2-partition",
+   "die": "qwen_compute",
+   "type": "sle_st_a_v1",
+   "instance": "sl_E0_st_a",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "pins": 10599,
+   "flops": 18125,
+   "leaf_blockages": 24,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 4,
+    "max_hop_um": 392.057,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 13962,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  },
+  "sle_st_a_v2": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 17337910,
+     "demand": 1617346,
+     "usage_pct": 9.33,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 19432390,
+     "demand": 4390579,
+     "usage_pct": 22.59,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 14561614,
+     "demand": 162024,
+     "usage_pct": 1.11,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 14574542,
+     "demand": 622064,
+     "usage_pct": 4.27,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 10243820,
+     "demand": 118885,
+     "usage_pct": 1.16,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 10251368,
+     "demand": 755940,
+     "usage_pct": 7.37,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 4400073.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "kind": "g2-partition",
+   "die": "qwen_compute",
+   "type": "sle_st_a_v2",
+   "instance": "sl_E1_st_a",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "pins": 10340,
+   "flops": 17329,
+   "leaf_blockages": 24,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 4,
+    "max_hop_um": 392.057,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 13445,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  },
+  "slw_st_a_v1": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 17337155,
+     "demand": 1816624,
+     "usage_pct": 10.48,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 19432390,
+     "demand": 4637057,
+     "usage_pct": 23.86,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 14561447,
+     "demand": 199413,
+     "usage_pct": 1.37,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 14574542,
+     "demand": 570490,
+     "usage_pct": 3.91,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 10243820,
+     "demand": 111647,
+     "usage_pct": 1.09,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 10251368,
+     "demand": 556739,
+     "usage_pct": 5.43,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 4528703.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "kind": "g2-partition",
+   "die": "qwen_compute",
+   "type": "slw_st_a_v1",
+   "instance": "sl_W4_st_a",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "pins": 10599,
+   "flops": 18089,
+   "leaf_blockages": 24,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 4,
+    "max_hop_um": 392.057,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 13962,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  },
+  "slw_st_a_v2": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 17337928,
+     "demand": 1617574,
+     "usage_pct": 9.33,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 19432390,
+     "demand": 4391669,
+     "usage_pct": 22.6,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 14561614,
+     "demand": 161820,
+     "usage_pct": 1.11,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 14574542,
+     "demand": 618729,
+     "usage_pct": 4.25,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 10243820,
+     "demand": 119396,
+     "usage_pct": 1.17,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 10251368,
+     "demand": 757469,
+     "usage_pct": 7.39,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 4399949.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "kind": "g2-partition",
+   "die": "qwen_compute",
+   "type": "slw_st_a_v2",
+   "instance": "sl_W5_st_a",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "pins": 10340,
+   "flops": 17313,
+   "leaf_blockages": 24,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 4,
+    "max_hop_um": 392.057,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 13445,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  },
+  "sle_st_b_v1": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 17678334,
+     "demand": 616174,
+     "usage_pct": 3.49,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 19807942,
+     "demand": 4119837,
+     "usage_pct": 20.8,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 14845014,
+     "demand": 230458,
+     "usage_pct": 1.55,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 14856236,
+     "demand": 718257,
+     "usage_pct": 4.83,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 10243820,
+     "demand": 121890,
+     "usage_pct": 1.19,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 10251368,
+     "demand": 409960,
+     "usage_pct": 4.0,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 3567200.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "kind": "g2-partition",
+   "die": "qwen_compute",
+   "type": "sle_st_b_v1",
+   "instance": "sl_E0_st_b",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "pins": 8154,
+   "flops": 12859,
+   "leaf_blockages": 20,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 4,
+    "max_hop_um": 360.915,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 10813,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  },
+  "sle_st_b_v2": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 17678580,
+     "demand": 550556,
+     "usage_pct": 3.11,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 19808382,
+     "demand": 4025409,
+     "usage_pct": 20.32,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 14844958,
+     "demand": 213115,
+     "usage_pct": 1.44,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 14856476,
+     "demand": 730698,
+     "usage_pct": 4.92,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 10243820,
+     "demand": 108328,
+     "usage_pct": 1.06,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 10251368,
+     "demand": 489602,
+     "usage_pct": 4.78,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 3510551.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "kind": "g2-partition",
+   "die": "qwen_compute",
+   "type": "sle_st_b_v2",
+   "instance": "sl_E1_st_b",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "pins": 7895,
+   "flops": 12600,
+   "leaf_blockages": 20,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 4,
+    "max_hop_um": 358.593,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 10813,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  },
+  "slw_st_b_v1": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 17678258,
+     "demand": 598523,
+     "usage_pct": 3.39,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 19807442,
+     "demand": 4116368,
+     "usage_pct": 20.78,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 14845014,
+     "demand": 233789,
+     "usage_pct": 1.57,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 14855906,
+     "demand": 723683,
+     "usage_pct": 4.87,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 10243820,
+     "demand": 120895,
+     "usage_pct": 1.18,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 10251368,
+     "demand": 410904,
+     "usage_pct": 4.01,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 3560539.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "kind": "g2-partition",
+   "die": "qwen_compute",
+   "type": "slw_st_b_v1",
+   "instance": "sl_W4_st_b",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "pins": 8154,
+   "flops": 12861,
+   "leaf_blockages": 20,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 4,
+    "max_hop_um": 360.807,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 10813,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  },
+  "slw_st_b_v2": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 17677975,
+     "demand": 573111,
+     "usage_pct": 3.24,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 19806470,
+     "demand": 4128651,
+     "usage_pct": 20.84,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 14844591,
+     "demand": 219305,
+     "usage_pct": 1.48,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 14855092,
+     "demand": 704489,
+     "usage_pct": 4.74,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 10243820,
+     "demand": 118678,
+     "usage_pct": 1.16,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 10251368,
+     "demand": 412537,
+     "usage_pct": 4.02,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 3533106.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "kind": "g2-partition",
+   "die": "qwen_compute",
+   "type": "slw_st_b_v2",
+   "instance": "sl_W5_st_b",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "pins": 7895,
+   "flops": 12584,
+   "leaf_blockages": 20,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 4,
+    "max_hop_um": 343.705,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 10813,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  },
+  "coll_n": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 8963661,
+     "demand": 1048,
+     "usage_pct": 0.01,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 10030722,
+     "demand": 1529,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 7524949,
+     "demand": 1174,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 7523386,
+     "demand": 9532,
+     "usage_pct": 0.13,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 7603804,
+     "demand": 319,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 7603804,
+     "demand": 9479,
+     "usage_pct": 0.12,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 16158.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "kind": "g2-partition",
+   "die": "qwen_compute",
+   "type": "coll_n",
+   "instance": "coll_n",
+   "outline_um": [
+    786.24,
+    786.24
+   ],
+   "pins": 2314,
+   "flops": 2322,
+   "leaf_blockages": 7,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 0,
+    "max_hop_um": 0.0,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  }
+ }
+}

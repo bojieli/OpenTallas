@@ -1,0 +1,39 @@
+{
+ "args": {
+  "plan": "/srv/opentallas-scratch2/claude/wt/die-proto-2325/physical/die_plan/qwen_compute/die_plan.json",
+  "tree": "/srv/opentallas-scratch2/claude/die-proto-2325/clk/v1_reg/tree.json",
+  "out": "/srv/opentallas-scratch2/claude/die-proto-2325/mesh/p1000_m2.json",
+  "tools": "/srv/opentallas-scratch2/claude/wt/die-proto-2325/tools/die_plan",
+  "pitch": 1000.0,
+  "m": 2.0,
+  "rdrv": 0.12,
+  "slew": 40.0,
+  "spread": 0.0,
+  "grad": 0.0,
+  "ndr": "4w",
+  "seg": 100.0,
+  "tapc": 3.0,
+  "stubbuf": false,
+  "seed": 1
+ },
+ "mesh_lines": [
+  31,
+  26
+ ],
+ "drivers": 806,
+ "bufx24": 1612.0,
+ "nodes": 33331,
+ "mesh_cap_pF": 374.8,
+ "mesh_wire_mm": 1555.0,
+ "tap_delay_ps": [
+  8.14,
+  181.85
+ ],
+ "tap_skew_ps": 173.71,
+ "seam_pairs": 3391,
+ "seam_max_ps": 105.86,
+ "seam_p99_ps": 80.43,
+ "intra_pairs": 13878,
+ "intra_max_ps": 129.74,
+ "unresolved": 0
+}

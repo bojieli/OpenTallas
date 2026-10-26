@@ -1,0 +1,436 @@
+{
+  "status": "APPROVED_EXPLICIT_INTERFACE_BATCH_PENDING_COORDINATOR_MERGE",
+  "id": "D-QC-DEAD-FAULT",
+  "removed_buses": {
+    "slw_st_a_v2": "flt_o",
+    "slw_fw_v3": "flt_st_a_i",
+    "slw_st_a_v1": "flt_o",
+    "slw_fw_v1": "flt_st_a_i",
+    "slw_fw_v2": "flt_st_a_i",
+    "sle_st_a_v1": "flt_o",
+    "sle_fw_v1": "flt_st_a_i",
+    "sle_st_a_v2": "flt_o",
+    "sle_fw_v2": "flt_st_a_i",
+    "sle_fw_v3": "flt_st_a_i"
+  },
+  "removed_lanes": [
+    {
+      "id": "sl_W5_st_a__flt",
+      "ports": [
+        "sl_W5_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_W4_st_a__flt",
+      "ports": [
+        "sl_W4_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_W3_st_a__flt",
+      "ports": [
+        "sl_W3_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_W2_st_a__flt",
+      "ports": [
+        "sl_W2_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_W1_st_a__flt",
+      "ports": [
+        "sl_W1_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_W0_st_a__flt",
+      "ports": [
+        "sl_W0_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_E0_st_a__flt",
+      "ports": [
+        "sl_E0_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_E1_st_a__flt",
+      "ports": [
+        "sl_E1_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_E2_st_a__flt",
+      "ports": [
+        "sl_E2_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_E3_st_a__flt",
+      "ports": [
+        "sl_E3_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_E4_st_a__flt",
+      "ports": [
+        "sl_E4_st_a__flt__0"
+      ]
+    },
+    {
+      "id": "sl_E5_st_a__flt",
+      "ports": [
+        "sl_E5_st_a__flt__0"
+      ]
+    }
+  ],
+  "removed_ports": [
+    {
+      "id": "sl_W5_st_a__flt__0",
+      "src": {
+        "part": "sl_W5_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_W5_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_W4_st_a__flt__0",
+      "src": {
+        "part": "sl_W4_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_W4_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_W3_st_a__flt__0",
+      "src": {
+        "part": "sl_W3_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_W3_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_W2_st_a__flt__0",
+      "src": {
+        "part": "sl_W2_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_W2_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_W1_st_a__flt__0",
+      "src": {
+        "part": "sl_W1_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_W1_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_W0_st_a__flt__0",
+      "src": {
+        "part": "sl_W0_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_W0_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_E0_st_a__flt__0",
+      "src": {
+        "part": "sl_E0_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_E0_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_E1_st_a__flt__0",
+      "src": {
+        "part": "sl_E1_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_E1_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_E2_st_a__flt__0",
+      "src": {
+        "part": "sl_E2_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_E2_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_E3_st_a__flt__0",
+      "src": {
+        "part": "sl_E3_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_E3_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_E4_st_a__flt__0",
+      "src": {
+        "part": "sl_E4_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_E4_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    },
+    {
+      "id": "sl_E5_st_a__flt__0",
+      "src": {
+        "part": "sl_E5_st_a",
+        "bus": "flt_o"
+      },
+      "dst": {
+        "part": "sl_E5_fw",
+        "bus": "flt_st_a_i"
+      },
+      "width": 1,
+      "kind": "ctl"
+    }
+  ],
+  "obsolete_plan_ages_removed": {
+    "sl_W5_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_W5_ST_A__FLT"
+    },
+    "sl_W4_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_W4_ST_A__FLT"
+    },
+    "sl_W3_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_W3_ST_A__FLT"
+    },
+    "sl_W2_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_W2_ST_A__FLT"
+    },
+    "sl_W1_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_W1_ST_A__FLT"
+    },
+    "sl_W0_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_W0_ST_A__FLT"
+    },
+    "sl_E0_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_E0_ST_A__FLT"
+    },
+    "sl_E1_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_E1_ST_A__FLT"
+    },
+    "sl_E2_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_E2_ST_A__FLT"
+    },
+    "sl_E3_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_E3_ST_A__FLT"
+    },
+    "sl_E4_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_E4_ST_A__FLT"
+    },
+    "sl_E5_st_a__flt": {
+      "cycles": 2,
+      "stations": 0,
+      "boundary": 2,
+      "faces": 1,
+      "fixed": 0,
+      "natural": 2,
+      "pad": 0,
+      "param": "LAT_SL_E5_ST_A__FLT"
+    }
+  },
+  "physical_effect": "48 endpoint pins and24 phantom wire bits removed across12slice pairs; no actual bound logic",
+  "added_hardware_cycles": 0,
+  "token_model": "Do not subtract obsolete constant-only lane ages from functional schedule; existing actual fault path remains STM -> FW",
+  "invariants": {
+    "slw_st_a_v2": {
+      "remaining_data_pins_identical": true,
+      "clock_reset_pins_identical": true,
+      "reset_tree_identical": true
+    },
+    "slw_fw_v3": {
+      "remaining_data_pins_identical": true,
+      "clock_reset_pins_identical": true,
+      "reset_tree_identical": true
+    },
+    "slw_st_a_v1": {
+      "remaining_data_pins_identical": true,
+      "clock_reset_pins_identical": true,
+      "reset_tree_identical": true
+    },
+    "slw_fw_v1": {
+      "remaining_data_pins_identical": true,
+      "clock_reset_pins_identical": true,
+      "reset_tree_identical": true
+    },
+    "slw_fw_v2": {
+      "remaining_data_pins_identical": true,
+      "clock_reset_pins_identical": true,
+      "reset_tree_identical": true
+    },
+    "sle_st_a_v1": {
+      "remaining_data_pins_identical": true,
+      "clock_reset_pins_identical": true,
+      "reset_tree_identical": true
+    },
+    "sle_fw_v1": {
+      "remaining_data_pins_identical": true,
+      "clock_reset_pins_identical": true,
+      "reset_tree_identical": true
+    },
+    "sle_st_a_v2": {
+      "remaining_data_pins_identical": true,
+      "clock_reset_pins_identical": true,
+      "reset_tree_identical": true
+    },
+    "sle_fw_v2": {
+      "remaining_data_pins_identical": true,
+      "clock_reset_pins_identical": true,
+      "reset_tree_identical": true
+    },
+    "sle_fw_v3": {
+      "remaining_data_pins_identical": true,
+      "clock_reset_pins_identical": true,
+      "reset_tree_identical": true
+    }
+  },
+  "schema_errors": [],
+  "evidence": "All4 ST-a kit_rtl.json plan_buses_unbound flt_o/spare_out_bits2; actual wrappers assign flt_o=2d0. All6FW kit_rtl.json plan_buses_unbound flt_st_a_i; bound modules lack that input. Real STM->FW fault link retained.",
+  "approval": "ROOT via QC parent 2026-10-25; owner8 permits dropping constant outputs, exact12pair48pin24wirebit impact",
+  "current_G0C": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 111,
+    "types_clean": "68/68",
+    "report": "results/kits_wave_qc_2155/dead_fault/g0c/g0_report.json"
+  },
+  "review": "results/geom_review/qc_kits_2155/review.json; port_delta.png viewed"
+}

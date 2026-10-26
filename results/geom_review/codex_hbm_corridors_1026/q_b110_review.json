@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "q_b110 relay geometry only; P&R remains held",
+  "picture": "q_b110.png",
+  "source": "codex/hbm-plan-1026@d0c1e9dec",
+  "input": "epyc1:/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/q_b110_corridors_r5/die_plan.json",
+  "findings": [
+    "Existing bottom whitespace lets four388.8x345.6um SFU cores move to y60.48/432/803.52/1175.04. All25.92um inter-core gaps retain8.64um free after halos; the top rail has25.92um free after halo.",
+    "Outline414.72x1555.2um and every face pin name/xy/layer remain identical. No neighboring width is borrowed.",
+    "All6 slots use3153 distinct actual FF sites. Census: no halo or FF collision, maximum paired-bit hop333.18um. L48 andL53 each add one cycle, including mirrors.",
+    "Wide ribbons use the top rail and the upper inter-core row; lower core rows remain unobstructed by relay cells. M6/M7 wire passage relies on the approvedM5 core ceiling.",
+    "Clock taps, internal relays and reset geometry must follow the moved SFU cores; infrastructure-first PG/clock/reset reservations remain pending."
+  ],
+  "conditions": [
+    "Compose and regenerate auxiliary geometry; retain declared face and cycle deltas.",
+    "Reconcile native HC width changes elsewhere before full-die gates.",
+    "Route only after infrastructure-first reservation and independent review; measure GRT>=50iterations andTT/FF clock skew."
+  ]
+}
