@@ -174,6 +174,28 @@ proc ::ot_dtsh::leaf {name parent} {
 }
 # OpenDB forbids connecting a new child to a dont_touch net. Freeze only
 # after the entire emitted tree, including every existing tap input, is wired.
+# An explicit INV trunk is allowed only when every density tap sees an even
+# number of inversions. This reduces logical clock-stage delay without changing
+# the sampling edge. Mixed/unknown masters or an odd path fail before CTS/STA.
+proc ::ot_dtsh::phase_audit {} {
+  variable nodes; variable root; variable leaves
+  set phase [dict create $root 0]
+  dict for {name info} $nodes {
+    set pn [dict get $info parent]; set net [dict get $info net]
+    if {![dict exists $phase $pn]} { error "OT_DTSH phase parent missing at $name" }
+    set mn [[[dict get $info inst] getMaster] getName]
+    if {[string match INV* $mn]} { set inv 1 } elseif {[string match BUF* $mn]} { set inv 0 } else {
+      error "OT_DTSH unqualified clock trunk master $mn"
+    }
+    dict set phase $net [expr {[dict get $phase $pn] ^ $inv}]
+  }
+  dict for {name net} $leaves {
+    if {![dict exists $phase $net] || [dict get $phase $net] != 0} {
+      error "OT_DTSH clock phase inversion at density tap $name"
+    }
+  }
+  puts "OT_DTSH PHASE PASS: all [dict size $leaves] taps retain the root sampling edge"
+}
 proc ::ot_dtsh::freeze {} {
   variable blk; variable root; variable nodes; variable taps; variable leaves
   if {[lsort [dict keys $leaves]] ne [lsort [dict keys $taps]]} { error "OT_DTSH cannot freeze before all tap inputs are wired" }
@@ -204,6 +226,7 @@ proc ::ot_dtsh::audit {{skip_orig 0}} {
     set got [expr {$n eq "NULL" || $n eq "" ? "" : [$n getName]}]
     if {$got ne $expected} { error "OT_DTSH changed FF data/control pin $name/$pin" }
   }
+  phase_audit
   set expected $root_extra
   dict for {name info} $nodes {
     set inst [dict get $info inst]; set net [dict get $info net]; set pn [dict get $info parent]
@@ -485,6 +508,8 @@ proc ::ot_dtsh::setup {block tap_list root_net cell} {
   variable active; variable blk; variable root; variable master; variable taps; variable nodes; variable leaves; variable root_extra
   if {$active || [llength [info commands ::ot_dtsh::cts_orig]]} { error "OT_DTSH setup may run only once per database/process" }
   set blk $block; set root $root_net
+  if {[info exists ::env(OT_DTSH_TRUNK_CELL)]} { set cell $::env(OT_DTSH_TRUNK_CELL) }
+  if {![regexp {^(BUF|INV)} $cell]} { error "OT_DTSH trunk cell must be an explicit buffer or inverter" }
   set master [[ord::get_db] findMaster $cell]
   if {$root eq "NULL" || $master eq "NULL" || ![llength $tap_list]} { error "OT_DTSH explicit root/master/taps missing" }
   set taps {}; set nodes {}; set leaves {}; set root_extra {}
@@ -515,6 +540,7 @@ proc ::ot_dtsh::setup {block tap_list root_net cell} {
   # row orientations and complete tap coverage as each operation is applied.
   uplevel #0 [list source $apply]
   if {![dict size $nodes]} { error "OT_DTSH planner emitted no physical trunk nodes" }
+  phase_audit
   if {$cl} { variable cl_args [list $dir $geom $plan]; closed_loop $dir $geom $plan }
   trunk_ndr
   freeze

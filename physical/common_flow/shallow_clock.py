@@ -590,7 +590,7 @@ def main():
         return
     if a.closed_loop:
         p=plan_legs(g,fanout=int(env.get('OT_DTSH_FANOUT','4')),leaf_fanout=int(env.get('OT_DTSH_LEAF_FANOUT','2')),
-                    rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')),topology=env.get('OT_DTSH_TOPOLOGY','bisect'),
+                    rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')),min_rep=int(env.get('OT_DTSH_MIN_REP','1')),topology=env.get('OT_DTSH_TOPOLOGY','bisect'),
                     levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')),depth0=env.get('OT_DTSH_DEPTH0','')=='1',
                     island_um=float(env.get('OT_DTSH_ISLAND_UM','0')),island_reach_um=float(env.get('OT_DTSH_ISLAND_REACH_UM','40')),
                     leg_extra_um=float(env['OT_DTSH_LEG_EXTRA_UM']) if 'OT_DTSH_LEG_EXTRA_UM' in env else None)

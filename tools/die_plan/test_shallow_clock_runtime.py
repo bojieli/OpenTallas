@@ -41,7 +41,7 @@ puts "ORIENT [catch {::ot_dtsh::check_site 6480 4320 MX} msg] $msg"
 def test_cts_only_local_nets_and_scoped_repair():
     s=run('''
 rename ::ot_dtsh::audit ::ot_dtsh::audit_real
-proc ::ot_dtsh::audit {} {incr ::audits}
+proc ::ot_dtsh::audit {{skip_orig 0}} {incr ::audits}
 rename ::ot_dtsh::bind_new_pg ::ot_dtsh::bind_new_pg_real
 proc ::ot_dtsh::bind_new_pg {} {incr ::pgs}
 set audits 0;set pgs 0;set repairs {}
@@ -170,3 +170,24 @@ puts "UNK [catch {::ot_dtsh::relocate ot_dtap_3 4320 4320 R0} m] $m"
     assert 'DATA 1 OT_DTSH planned node overlaps data_ff' in s
     assert 'MISS 1 OT_DTSH relocation left 2 planned nodes unplaced' in s
     assert 'UNK 1 OT_DTSH relocate of unknown planned node' in s
+
+
+def test_explicit_inverter_trunk_preserves_sampling_edge():
+    s=run("""
+proc im {cmd} {return INVx13_ASAP7_75t_R}
+proc bm {cmd} {return BUFx24_ASAP7_75t_R}
+proc ii {cmd} {return im}
+proc bi {cmd} {return bm}
+set ::ot_dtsh::root ROOT
+set ::ot_dtsh::nodes [dict create a [dict create parent ROOT net A inst ii] b [dict create parent A net B inst ii]]
+set ::ot_dtsh::leaves [dict create tap B]
+ot_dtsh::phase_audit
+set ::ot_dtsh::leaves [dict create tap A]
+puts "ODD [catch {ot_dtsh::phase_audit}]"
+set ::ot_dtsh::nodes [dict create a [dict create parent ROOT net A inst bi]]
+ot_dtsh::phase_audit
+set ::ot_dtsh::nodes [dict create a [dict create parent MISSING net A inst bi]]
+puts "MISSING [catch {ot_dtsh::phase_audit}]"
+""")
+    assert s.count("PHASE PASS")==2
+    assert "ODD 1" in s and "MISSING 1" in s
