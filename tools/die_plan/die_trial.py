@@ -787,7 +787,13 @@ def bumps_tcl(P, bumps, size=4.0):
     Stripe origins depend on the floorplan core origin and pdngen net phase.
     Computing them from the plan offset produced isolated voltage-source pins.
     """
-    t = ["set block [ord::get_db_block]", "set m9 [[ord::get_db_tech] findLayer M9]",
+    t = ["set block [ord::get_db_block]",
+         # pdngen makes boundary PG ports; they are not the specified C4 sources.
+         "foreach ot_auto_name {VDD VSS} { set ot_auto_bt [$block findBTerm $ot_auto_name]; "
+         "if {$ot_auto_bt ne \"NULL\"} { if {[$ot_auto_bt getSigType] ni {POWER GROUND}} "
+         "{ error \"refusing to remove non-PG boundary port $ot_auto_name\" }; "
+         "odb::dbBTerm_destroy $ot_auto_bt } }",
+         "set m9 [[ord::get_db_tech] findLayer M9]",
          "set bump_dbu [[ord::get_db_tech] getDbUnitsPerMicron]",
          "set bump_shapes {}", "set bump_x_cache {}",
          "foreach net_name {VDD VSS} {",
