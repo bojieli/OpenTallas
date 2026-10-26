@@ -148,3 +148,4 @@ OWNER?/COORD?: (a) flow churn: every completed canary strands all queued kits (o
 - Rows 5602e552bdce + e420a1084484 should launch next tick. kits_h (reviewed, superseded rows) kept as GEOM evidence until successors collect, then delete.
 - On collect: same GEOM conds as the 05:32 PARKED list above. If a newer S81 canary completes before launch, they go WAIT-CANARY again: re-pin the canary_gate-listed watched files to that canary and regen (place stays identical).
 - OWNER?: none.
+2026-10-26 06:20 PDT S81-CORE-LAT -> CORES-KITS: heads-up: main 49e28f506 removed face_guard.MAX_CHAIN -> legacy kits with any raw 'shared' face fail crash (AttributeError) instead of writing face_guard_raw.json; fix claude/s81-core-lat-qb-1026@0c7eb9491 (getattr, verdict unchanged), queued for ROOT-MERGE.
