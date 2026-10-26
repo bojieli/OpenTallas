@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS_MINIMUM_TRANSPORT",
+  "active_edges": 10000,
+  "mismatches": 0,
+  "mutant_mismatches": 9997,
+  "added_source_cycles": 2,
+  "clock_period_ps": 833,
+  "scope": "Actual kit_istations generated276-bit+epoch egress stages compared every edge against independent3-edge history; cold/warm reset, walking ones and randompayload. Not wholeB2/token/physical signoff.",
+  "artifact": "epyc1:/srv/opentallas-scratch2/claude/codex-head0733/b2_transport",
+  "ot_run_unit": "oth-ubuntu-4188746-1793030346"
+}
