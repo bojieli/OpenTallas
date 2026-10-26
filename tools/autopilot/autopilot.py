@@ -916,6 +916,34 @@ def flow_tags():
     return CLOSURE["tags"]
 
 
+LEGACY_TAG = "SIGNED-LEGACY"   # GRANDFATHER (COORD ruling 2026-10-25 19:13): flow_tag value of a pre-first-tag sign-off
+
+
+def first_flow_tag_ts():
+    """unix time of the oldest flow-* release tag on origin (None: no flow release yet), once per tick"""
+    if "first_ts" not in CLOSURE:
+        flow_tags()
+        rc, out, _ = sh(["git", "-C", str(REPO), "for-each-ref", "--format=%(creatordate:unix)", "refs/tags/flow-*"],
+                        timeout=60)
+        ts = [int(x) for x in out.split() if x.isdigit()] if rc == 0 else []
+        CLOSURE["first_ts"] = min(ts) if ts else None
+    return CLOSURE["first_ts"]
+
+
+def apply_legacy(j):
+    """GRANDFATHER: a run STARTED before the first flow tag (or while none exists) that names its source commit (or
+    its archive run dir) and has no flow tag counts as SIGNED-LEGACY; runs started after the first tag need a real
+    flow tag.  Sets j['flow_tag'] = LEGACY_TAG and returns True when it applies."""
+    if j.get("flow_tag") or not (j.get("src_commit") or j.get("archive")):
+        return False
+    first = first_flow_tag_ts()
+    started = float(j.get("started") or 0)
+    if first is not None and not (0 < started < first):
+        return False
+    j.update(flow_tag=LEGACY_TAG, legacy=True)
+    return True
+
+
 def resolve_provenance(src, flow=""):
     """-> {src_commit, flow_tag} or {..., error}: the full source commit of branch@sha (fetched on the hub repo when
     missing) and the flow release tag whose watched flow files (tools/flow_canary/canaries.json 'watch') are identical
@@ -992,7 +1020,9 @@ def retry_unversioned(st):
         prov = resolve_provenance(j["src"], j.get("flow", ""))
         if prov.get("error"):
             j["prov_error"] = prov["error"]
-            continue
+            if not apply_legacy(j):
+                continue
+            prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": LEGACY_TAG}
         j.update(src_commit=prov["src_commit"], flow_tag=prov["flow_tag"], prov_error="")
         host, dest = j["archive"].split(":", 1)
         if DRY:
@@ -1287,6 +1317,7 @@ def archive(st, j):
     mirror = f"{mhost}:{dest}" if m.get("ok") else f"MIRROR-FAILED({(m.get('bad') or m.get('error'))})"
     j["archive"] = f"{host}:{dest}"
     j["mirror"] = mirror
+    apply_legacy(j)
     w = write_provenance(host, dest, j)
     if w.get("error"):
         log(f"PROVENANCE write failed {j['id']}: {w['error'][:200]} (AUTOPILOT.json carries the same fields)")

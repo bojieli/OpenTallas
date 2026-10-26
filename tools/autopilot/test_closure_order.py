@@ -137,6 +137,7 @@ class TestGates(TickBase):
         self.assertEqual(j["status"], "RUNNING")
 
     def test_unversioned_signoff_not_counted_then_promoted(self):
+        self.ap.first_flow_tag_ts = lambda: 1.0          # a flow tag exists and the run started after it
         self.ap.resolve_provenance = lambda src, flow="": {"src_commit": "0123456789ab" + "0" * 28, "flow_tag": "",
                                                            "error": "no flow-* tag on origin yet"}
         self.queue(ROW)
@@ -154,6 +155,29 @@ class TestGates(TickBase):
         self.assertTrue(row.endswith("0123456789ab" + "0" * 28 + "\tflow-20261026-a"))
         provs = [c[2]["prov"] for c in self.f.calls if c[1] == self.ap.PROBE_PROVENANCE[:40]]
         self.assertEqual([p["verdict"] for p in provs], ["SIGNED-UNVERSIONED", "SIGNED"])
+
+    def test_pre_first_tag_signoff_is_signed_legacy(self):
+        """GRANDFATHER (COORD 19:13): no flow tag yet -> a sign-off naming its src commit counts as SIGNED-LEGACY"""
+        self.ap.first_flow_tag_ts = lambda: None
+        self.ap.resolve_provenance = lambda src, flow="": {"src_commit": "0123456789ab" + "0" * 28, "flow_tag": "",
+                                                           "error": "no flow-* tag on origin yet"}
+        self.queue(ROW)
+        self.tick()
+        (j,) = self.signed_finish(KPATH).values()
+        self.assertEqual(j["status"], "ARCHIVED")
+        head, row = (Path(self.tmp.name) / "signed.tsv").read_text().splitlines()
+        self.assertTrue(row.endswith("0123456789ab" + "0" * 28 + "\t" + self.ap.LEGACY_TAG))
+        provs = [c[2]["prov"] for c in self.f.calls if c[1] == self.ap.PROBE_PROVENANCE[:40]]
+        self.assertEqual([p["verdict"] for p in provs], ["SIGNED"])
+
+    def test_run_started_before_first_tag_is_legacy_after_it_not(self):
+        self.ap.first_flow_tag_ts = lambda: 1000.0
+        j = {"src_commit": "ab" * 20, "started": 999.0}
+        self.assertTrue(self.ap.apply_legacy(j)); self.assertEqual(j["flow_tag"], self.ap.LEGACY_TAG)
+        j = {"src_commit": "ab" * 20, "started": 1001.0}
+        self.assertFalse(self.ap.apply_legacy(j)); self.assertNotIn("flow_tag", j)
+        j = {"started": 999.0}
+        self.assertFalse(self.ap.apply_legacy(j))                  # names no src commit / run dir
 
     def test_signed_header_upgraded_in_place(self):
         p = Path(self.tmp.name) / "signed.tsv"
@@ -216,8 +240,11 @@ class TestOwnershipProvenance(unittest.TestCase):
         items = [{"die": "s81", "item": "bk_sel__t2", "kind": "type", "module": "bk_sel__t2", "members": ["bk_sel__t2"]}]
         rec = {"name": "dp_bk_sel__t2", "top": "bk_sel__t2", "path": "/k/signoff.json", "scan_host": "epyc1"}
         unv = {}
-        self.assertEqual(O.signed_items(items, {"signed_records": [rec]}, unv), {})          # old cache: no rule
-        self.assertIn(("s81", "bk_sel__t2"), unv)
+        out = O.signed_items(items, {"signed_records": [rec]}, unv)       # pre-rule-3 cache = SIGNED-LEGACY
+        self.assertIn("SIGNED-LEGACY", out[("s81", "bk_sel__t2")])
+        unv = {}
+        out = O.signed_items(items, {"provenance_rule": "v1", "signed_records": [dict(rec, legacy=True)]}, unv)
+        self.assertIn("SIGNED-LEGACY", out[("s81", "bk_sel__t2")])
         unv = {}
         self.assertEqual(O.signed_items(items, {"provenance_rule": "v1", "signed_records": [rec]}, unv), {})
         self.assertIn(("s81", "bk_sel__t2"), unv)

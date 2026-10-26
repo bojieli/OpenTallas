@@ -363,7 +363,10 @@ def signed_items(items, cache, unversioned=None):
     unv = unversioned if unversioned is not None else {}
     if not cache:
         return out
-    strict = cache.get("provenance_rule") == PROV_RULE
+    # GRANDFATHER (COORD 2026-10-25 19:13): a pre-rule-3 cache (no provenance_rule) holds only pre-first-tag records,
+    # which count as SIGNED-LEGACY; a v1 cache's per-plan lists already hold versioned + SIGNED-LEGACY records
+    legacy_cache = cache.get("provenance_rule") is None
+    strict = legacy_cache or cache.get("provenance_rule") == PROV_RULE
     by_key = {(it["die"], it["item"]): it for it in items}
     names = _names(items)
     by_plan = {d: k for k, d, _ in DIES}
@@ -379,12 +382,13 @@ def signed_items(items, cache, unversioned=None):
                     (out if strict else unv).setdefault(key, f"release cache {pdir}" + (f" ({k})" if k != key[1] else ""))
     for r in cache.get("signed_records") or []:
         text = f"{r.get('path', '')} {r.get('name', '')}"
-        ok = strict and r.get("versioned") and r.get("src_commit") and r.get("flow_tag")
+        ok = strict and (legacy_cache or r.get("legacy") or (r.get("versioned") and r.get("src_commit") and r.get("flow_tag")))
         for k in rec_keys(r):
             for key in pick(names.get(k, []), text, by_key):
                 if ok:
                     out.setdefault(key, f"SIGNED {r.get('scan_host')}:{r.get('path')} src {str(r['src_commit'])[:12]} "
-                                        f"flow {r['flow_tag']}")
+                                        f"flow {r['flow_tag']}" if r.get("versioned") else
+                                   f"SIGNED-LEGACY {r.get('scan_host')}:{r.get('path')}")
                 else:
                     unv.setdefault(key, f"UNVERSIONED {r.get('scan_host')}:{r.get('path')}")
     for key in out:
