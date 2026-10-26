@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4, 2026-10-26 ~07:3x; v3 ~07:0x; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4.1, 2026-10-26 ~08:0x; v4 ~07:3x; v3 ~07:0x; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -299,6 +299,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 ~06:3x OWNER: common core clock-latency target + in-core islands on all dies, rebuilt in parallel = CURRENT (12.2a, 12.3).
   - 10-26 ~07:0x OWNER: master plan first (city-planning model, 12.7) on all dies; leftover M8/M9 stays free for the router, entry via planned M7 pins = CURRENT.
   - 10-26 ~07:3x OWNER: root-cause clock structure, no tweaks (12.8): plan-defined centre clock entry + structured core trees; early taps, stub trims, clock ECOs, mesh-node CPPR credit banned as closure means = CURRENT.
+  - 10-26 ~08:0x OWNER: 12.8 d1 plan-computed per-tap sizing before build ALLOWED (post-measurement values banned); core split = last resort after internal H-tree = CURRENT.
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 ~07:0x, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
@@ -332,13 +333,15 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      and the die's ONE latency target (12.3). Kits must place the clock pin exactly there; kit generator + GEOM review reject any other location.
   b. Inside every core the clock is a STRUCTURED tree from that entry: symmetric (H-tree/fishbone) trunk to equal-load leaf clusters, stage
      count fixed by geometry, same structure for every instance of the type. A core whose longest entry-to-sink distance exceeds ~200 um, or
-     that cannot meet 250 +-20 TT with a centre entry, is restructured (internal H-tree with in-core islands, or split into smaller cores)
-     -- never padded/trimmed into range.
+     that cannot meet 250 +-20 TT with a centre entry, is restructured -- FIRST an internal H-tree with in-core islands; splitting into smaller
+     cores is the LAST resort (adds types and links; OWNER 10-26 ~08:0x) -- never padded/trimmed into range.
   c. Shallow cores reach the target with a designed fixed trunk delay at the entry (same cell chain per type), not per-sink padding.
   d. The die clock is balanced by construction: H-tree snapped to the partition lattice, equal-length branches, equal load per tap (density
      taps), regional meshes with landed seams. NOT allowed as closure means: early-tap offsets/branches, per-tap stub trims or useful-skew
-     offsets, post-CTS ECO padding/buffer swaps on the clock, mesh-node CPPR credit, gate-number relaxations. Sizing chosen in the PLAN
-     (uniform per tap class) is design, not a trim.
+     offsets, post-CTS ECO padding/buffer swaps on the clock, mesh-node CPPR credit, gate-number relaxations.
+  d1. (OWNER 10-26 ~08:0x) ALLOWED as design: per-tap driver/stub sizing COMPUTED BY THE PLAN TOOL from plan geometry and loads BEFORE any
+     block is built, deterministic, recorded and frozen with the plan. BANNED: any value chosen after a measurement (trims, offsets, ECOs).
+     A measured miss goes back to the structure/plan model (12.8e), then the plan is re-frozen as one PLAN-DELTA.
   e. A measured failure goes back to the structure (plan or core architecture), recorded with its root cause before any rebuild.
   f. Existing results obtained with the banned means (QC early-tap 154/143, any stub-trimmed mesh result incl. KV c3t 63.95/54.71) are
      re-measured on the 12.8 structure with the 12.4b gate number before they count.
