@@ -28,5 +28,11 @@
     "stage": "aligned-v2 exact asset correction before G2 rerun",
     "findings": "Actual bound BBs select aligned-v2 for all4 masters. Corrected3 paths and roundedBTAB/codec heights by0.024um; all182origins identical,5.4um halos/FT/taps/reset sites stilllegal, all9clock/reset trees identical. Viewed revised all_types image: open channels, no walls, BTAB adjacent Ewidebus, local reducer clusters. No actualcellplacement orSTA claimed.",
     "verdict": "PASS-COND construction/G2 only; fresh actual placement review required before route"
+  },
+  {
+    "picture": "results/kits_wave_qc_2155/dead_fault/port_delta.png",
+    "stage": "separate approved phantom fault interface batch",
+    "findings": "Viewed exact before/after STA-S andFW-N window closeups. Removes only two colocated M5/M7 constant-only endpoints per master. All10remaining data pin tables and clock/reset pins+trees identical by exact generation; outline/FT/macros/PG unaffected. Real STM->FW fault retained.12pairs/48endpointpins/24phantomwirebits,+0actualcycles. ROOT explicitly approved separate interface correction; actual full placement review remains before route.",
+    "verdict": "PASS-COND batch construction; independent current kit placement review remains"
   }
 ]
