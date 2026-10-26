@@ -397,7 +397,11 @@ def build_s81():
     _CUR.update(lanes=12, macros_per_pair=2)
     S = s81_units()
     E = s81_edges(S)
-    die_w = dict(stage=84.1, copyB=84.1, head=92.34)
+    # The historical 84.1 W already includes 30.6 W SerDes (scan_die_power.basis).
+    # assemble/tray_power_w charges the circuit PHYs separately, exactly once.
+    legacy_rank_w, embedded_phy_w = 84.1, 30.6
+    nonphy_rank_w = round(legacy_rank_w - embedded_phy_w, 1)
+    die_w = dict(stage=nonphy_rank_w, copyB=nonphy_rank_w, head=92.34)
     stacks = dict(stage=1, copyB=1, head=S["inp"]["head"]["hbm_stacks_per_die"])
     rows, tray_rows, slots, nracks, per, spare = assemble("S81", "S81", S["units"], E, S81_PAIRS, die_w, stacks, TRAFFIC)
     rec = finish_system(
@@ -408,7 +412,9 @@ def build_s81():
                     copy_b_groups=len(S["groups"]), copy_b_dies_per_group=S["per_copy"], head_dies=S["head_dies"],
                     total_dies=S["dies"], hbm_stacks=sum(t["hbm_stacks"] for t in tray_rows), stage_source=S["src"],
                     grade="MODEL" if not S["inp"].get("qualified") else "spec"),
-        die_power_src=dict(rank=N(84.1, "spec", "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json scan_die_power.total_saturated_w (old 10-04 S81 die report, busiest layer die; no 72-frame die power report yet) via results/arch/dsrom_s81_rack_20261006/rack.json die_w"),
+        die_power_src=dict(rank=N(nonphy_rank_w, "MODEL", "Historical non-PHY proxy: results/rtl/dsrom_s81_fulldie_20261004/floorplan.json scan_die_power.total_saturated_w 84.1 W minus the 30.6 W SerDes explicitly included by scan_die_power.basis; circuit PHY power is charged separately. Current 72-frame core power is not measured."),
+                           rank_legacy_including_phy=N(legacy_rank_w, "MODEL", "Old 10-04 scan_die_power.total_saturated_w; includes embedded SerDes, not an additional core-power charge"),
+                           rank_embedded_phy_removed=N(embedded_phy_w, "derived", "scan_die_power.basis: ICG ledger, 30.6 W of it SerDes; removed before separately charging circuit PHYs"),
                            head=N(92.34, "MODEL", "results/arch/dsrom_s81_rack_20261006/rack.json die_w.head_table (C1 ledger); not re-derived for the 4-die, HBM-free head (OWNER 2026-10-24)"),
                            stack=P("hbm3e_stack_static_w")),
         die_links=dict(rank=N(10, "spec", "OWNER-approved 5th link (10-21): 5 lane pairs = TP4 full mesh 3 + prev/next stage 2 (reports/s81_links_1021.md s2 option A)"),
