@@ -10,7 +10,7 @@ def main():
  rel=Path('physical/die_plan/qwen_compute/bind/asbuilt_meth_fixed_su.json');ab=json.loads((ROOT/rel).read_text());probe=dict(ab)
  for k in ('land_align','land_r8','land_r8_extra','param_regen'):probe.pop(k,None)
  ab['prefer']=list(ab.get('prefer',[]))+['rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv','rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_romleaf_rr.sv','rtl/qwen_dv/qfd_dv_slice2.sv'];probe['prefer']=ab['prefer']
- ab['dissolve']=list(ab['dissolve'])+['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1'];probe['dissolve']=ab['dissolve'];probe['type_canon']=True
+ ab['dissolve']=list(ab['dissolve'])+['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1'];probe['dissolve']=ab['dissolve'];probe['type_canon']=True;probe['internal_stations_types']=json.loads((ROOT/'physical/die_plan/qwen_compute/inputs/cb16_phase_profiles_1713.json').read_text())['original_families']
  selected={ROOT/rel,ROOT/'physical/die_plan/qwen_compute/plan_notes.json',ROOT/'results/token_pass/qc_cb16_phase_2209/run_bind.sh'};idx=E.module_index(ab.get('rtl_roots',[]),ab.get('files',[]),ROOT)
  with tempfile.TemporaryDirectory() as temp:
   temp=Path(temp);scan=dict(ab);scan['netlist']=[]
@@ -62,6 +62,12 @@ def main():
  dest=out/'results/rtl/qc_cb16_flow_1713';dest.mkdir(parents=True)
  for f in ('README.txt','dag_candidate.json','gen.py','run.sh'):shutil.copy2(ROOT/'results/rtl/qc_cb16_flow_1713'/f,dest/f)
  probe['rtl_roots']=[];probe['files']=sorted(str(p.relative_to(ROOT)) for p in selected if p.suffix in('.sv','.v') and str(p.relative_to(ROOT)) not in probe['netlist']);probe['note']+=' | QC phase2209 current explicit selected source closure; fresh ELAB required.'
+ mapping=json.loads((ROOT/'physical/die_plan/qwen_compute/bind'/ab['map_file']).read_text());changed=0
+ for row in mapping['rules']:
+  if row[0]==r'dvs_([WE]\d)\.u_core\.u_sub\.u_suvm':row[0]+=r'(?:\..*)?';changed+=1
+ assert changed==1,changed
+ probe['map_file']='asbuilt_map_phase_2209.json'
+ (out/'physical/die_plan/qwen_compute/bind/asbuilt_map_phase_2209.json').write_text(json.dumps(mapping,indent=1)+'\n')
  (out/'physical/die_plan/qwen_compute/bind/asbuilt_phase_probe_2209.json').write_text(json.dumps(probe,indent=1)+'\n')
  (out/'source_selection.json').write_text(json.dumps(dict(source_files=len(selected),resolution=rec),indent=1)+'\n');print(json.dumps(dict(stage=str(out),source_files=len(selected),resolution=rec)))
 if __name__=='__main__':main()

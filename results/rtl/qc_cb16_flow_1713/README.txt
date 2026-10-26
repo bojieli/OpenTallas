@@ -10,3 +10,5 @@ Result (TOK-QK 2026-10-25 18:42 PDT, ot-run intel2 unit oth-ubuntu-1451342-17929
 CAUGHT cycle 65; mutant2 (514/D16 valid one cycle early) CAUGHT cycle 67 -> CB16_FLOW_TWO_MUTANTS_CAUGHT.
 Scope: delay-class RTL replay only. Not a bind, not a QC token pass, no physical credit; fresh QC bind with the phase types
 (apply_cb16_phase_types.py) and CB16 alignment re-check remain the QC plan owner's gates.
+
+QC phase2209 followup source: gen.py now includes the actual forwarded epoch bit (W515/W517 instead of payload-only514/516). The new run compares all payload/valid/fault/epoch bits and adds an independently early-epoch mutant. The historical counts above describe the prior payload-only gate; new logs live in the phase2209 run root.

@@ -24,6 +24,14 @@ class NativeStations(unittest.TestCase):
   t['internal_stations'][1]['regs_um'][0]=[1,999]
   with self.assertRaisesRegex(ValueError,'conflicting OUT'):native_istations.annotate(b)
 
+ def test_source_and_destination_station_budget_is_not_double_charged(self):
+  b,L=self.fixture();b.types['sys']['internal_stations'][0]['regs_um']=[[0,0],[1,0]]
+  b.types['receiver']={'buses':[{'name':'i','dir':'in','width':8}],'internal_stations':[{'conn':'bus:i','regs_um':[[i,1] for i in range(7)]}]}
+  b.parts['q']={'type':'receiver'};b.out_bus['q']=[];L.update(dst='q',iname='i');b.plan['lanes'][0]['fixed_cycles']=9
+  native_istations.annotate(b);self.assertEqual(L['internal_source_cycles'],2);self.assertEqual(2+bind.lane_pad(L)+2,22)
+  b.plan['lanes'][0]['fixed_cycles']=8
+  with self.assertRaisesRegex(ValueError,r'source 2 \+ destination 7'):native_istations.annotate(b)
+
  def test_cycle_and_mutants(self):
   b,L=self.fixture();b.types['sys']['buses'].append(dict(name='i',dir='in',width=8));b.types['sys']['internal_stations'].append(dict(conn='bus:i',regs_um=[[99,99]]));native_istations.annotate(b)
   with tempfile.TemporaryDirectory() as tmp:

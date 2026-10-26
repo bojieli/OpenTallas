@@ -25,84 +25,84 @@
  ],
  "cells_per_type": {
   "cbf_q00": {
-   "cells": 790474,
+   "cells": 790489,
    "instances": 17,
    "outline_um": [
     1235.52,
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbf_q00_s2": {
-   "cells": 790474,
+   "cells": 790489,
    "instances": 1,
    "outline_um": [
     1235.52,
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbf_q01": {
-   "cells": 787904,
+   "cells": 787914,
    "instances": 17,
    "outline_um": [
     1235.52,
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbf_q01_s2": {
-   "cells": 787904,
+   "cells": 787914,
    "instances": 1,
    "outline_um": [
     1235.52,
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbf_q11": {
-   "cells": 784306,
+   "cells": 784309,
    "instances": 18,
    "outline_um": [
     1235.52,
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbn_q00": {
-   "cells": 790474,
+   "cells": 790489,
    "instances": 12,
    "outline_um": [
     1235.52,
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbn_q01": {
-   "cells": 787904,
+   "cells": 787914,
    "instances": 18,
    "outline_um": [
     1235.52,
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbn_q11": {
-   "cells": 784306,
+   "cells": 784309,
    "instances": 18,
    "outline_um": [
     1235.52,
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbx_q10": {
    "cells": 782764,
@@ -112,7 +112,7 @@
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "coll_core": {
    "cells": 120000,
@@ -655,94 +655,94 @@
    "macros": 0
   },
   "cbf_q00_na00d16": {
-   "cells": 790988,
+   "cells": 791004,
    "instances": 6,
    "outline_um": [
     1235.52,
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbf_q01_nb12d11": {
-   "cells": 788418,
+   "cells": 788429,
    "instances": 6,
    "outline_um": [
     1235.52,
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbf_q11_na22d2": {
-   "cells": 783792,
+   "cells": 783794,
    "instances": 6,
    "outline_um": [
     1235.52,
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbn_q00_xb10d1_na00d16": {
-   "cells": 791504,
+   "cells": 791521,
    "instances": 6,
    "outline_um": [
     1235.52,
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbn_q00_xb00d1": {
-   "cells": 798700,
+   "cells": 791006,
    "instances": 6,
    "outline_um": [
     1235.52,
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbn_q01_nb12d11": {
-   "cells": 788418,
+   "cells": 788429,
    "instances": 6,
    "outline_um": [
     1235.52,
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbn_q11_na22d2": {
-   "cells": 783792,
+   "cells": 783794,
    "instances": 6,
    "outline_um": [
     1235.52,
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbx_q10_xb30d1": {
-   "cells": 783280,
+   "cells": 783281,
    "instances": 6,
    "outline_um": [
     1235.52,
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   },
   "cbx_q10_xb30d2": {
-   "cells": 783796,
+   "cells": 783798,
    "instances": 6,
    "outline_um": [
     1235.52,
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
   }
  },
  "su_core_cells": {
@@ -5429,8 +5429,10 @@
  ],
  "census_dropped_bits": {},
  "cb16_phase_model": {
-  "additional_ff": 712464,
-  "max_ff_per_part": 8740,
-  "note": "MODEL only; source-defined hard-core and clock/buffer overhead must be measured"
+  "payload_ff": 712464,
+  "epoch_ff": 1386,
+  "actual_additional_ff": 713850,
+  "max_actual_ff_per_part": 8757,
+  "note": "MODEL; one DFF per payload/epoch bit per extra stage; real hard-core and clock/buffer overhead not measured"
  }
 }
