@@ -1,0 +1,11 @@
+--- /srv/opentallas-scratch2/claude/cores-kits/s81/kits/ot_s81sl_xrt1_k26b/rtl/ot_s81sl_xrt.sv	2026-10-26 01:31:34.598147483 -0700
++++ /srv/opentallas-scratch2/claude/cores-kits/s81/lintA/eq/ot_s81sl_xrt1/mut/ot_s81sl_xrt.sv	2026-10-26 01:32:37.982535247 -0700
+@@ -313,7 +313,7 @@
+     // pq capture enables (ev_c / pv drove 197 / 66 pins); the masters keep only the control decode.
+     (* keep *) reg [5*16-1:0] lov_c; (* keep *) reg [5*12-1:0] evd_c; (* keep *) reg [5*4-1:0] pvd_c;
+     always @(posedge clk) begin
+-        for (integer k = 0; k < 80; k = k + 1) lov_c[k] <= lo_v_i[k / 16];
++        for (integer k = 0; k < 80; k = k + 1) lov_c[k] <= !lo_v_i[k / 16];
+         for (integer k = 0; k < 60; k = k + 1) evd_c[k] <= e_v_i[k / 12];
+         for (integer k = 0; k < 20; k = k + 1) pvd_c[k] <= p_v_s[k / 4];
+     end

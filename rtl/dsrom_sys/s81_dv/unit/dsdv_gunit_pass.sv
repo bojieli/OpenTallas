@@ -17,13 +17,12 @@ module dsdv_gunit_pass #(
 );
     reg [N-1:0] v;                                      // bit 0 of each stage (reset)
     reg [W-1:1] s [0:N-1];                              // the rest (data, no reset)
-    integer k;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) v <= {N{1'b0}};
-        else begin v[0] <= d[0]; for (k = 1; k < N; k = k + 1) v[k] <= v[k - 1]; end
+        else begin v[0] <= d[0]; for (integer k = 1; k < N; k = k + 1) v[k] <= v[k - 1]; end
     always @(posedge clk) begin
         s[0] <= d[W-1:1];
-        for (k = 1; k < N; k = k + 1) s[k] <= s[k - 1];
+        for (integer k = 1; k < N; k = k + 1) s[k] <= s[k - 1];
     end
     assign q = {s[N - 1], v[N - 1]};
 endmodule
