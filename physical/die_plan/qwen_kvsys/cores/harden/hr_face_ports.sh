@@ -26,8 +26,15 @@ select $MOD
 write_verilog -selected $O/$MOD.v
 YS
 $Y -q -l $O/emit.log $O/emit.ys
-# no absolute paths in the kit RTL (evidence reads repo-relative paths): drop the yosys src attributes
-python3 -c "import re,sys;p=sys.argv[1];t=open(p).read();t=re.sub(r'\(\* src = \"[^\"]*\" \*\)\s*','',t);open(p,'w').write(t)" $O/$MOD.v
+# no absolute paths in the kit RTL (evidence reads repo-relative paths): drop the yosys src attributes; macro
+# instances get plain identifiers (gen_core_kit_kv reached_modules / the macro LEF+lib pick-up need `master inst (`)
+python3 - $O/$MOD.v <<'PY'
+import re, sys
+p = sys.argv[1]; t = open(p).read()
+t = re.sub(r'\(\* src = "[^"]*" \*\)\s*', '', t)
+t = re.sub(r'^(\s*)(ot_sram_\w+) \\(\S+)\s+\(', lambda m: m.group(1) + m.group(2) + ' ' + re.sub(r'\W', '_', m.group(3)) + ' (', t, flags=re.M)
+open(p, 'w').write(t)
+PY
 for V in post mut; do
 cat > $O/eq_$V.ys <<YS
 read_json $O/pre.json

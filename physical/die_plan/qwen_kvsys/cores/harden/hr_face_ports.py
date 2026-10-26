@@ -85,7 +85,13 @@ def transform(J, top, mutant=False):
         nc["connections"]["Q"] = [q]
         nc["attributes"] = {"keep": ONE, "src": "hr_face_ports.py private port flop"}
         cells[f"hrfp_{tag}"] = nc
-        M["netnames"][f"hrfp_{tag}_q"] = {"hide_name": 0, "bits": [q], "attributes": {"keep": ONE}}
+        # keep the original too: else synth opt_merge folds it into the kept copy (shared again, host_qm 1st build)
+        c.setdefault("attributes", {})["keep"] = ONE
+        # Preserve the actual Q nets across write_verilog/proc round trips.
+        # A kept alias of the output produces a real buffer load on the face.
+        for net in M["netnames"].values():
+            if c["connections"]["Q"][i] in net["bits"]:
+                net.setdefault("attributes", {})["keep"] = ONE
         return q, nc
 
     for pn, p in ports.items():
@@ -123,6 +129,7 @@ def transform(J, top, mutant=False):
                     nc["connections"]["D"] = [nb]
                 p["bits"][i] = q
                 M["netnames"][pn]["bits"][i] = q          # read_json takes the wire from netnames
+                M["netnames"][pn].setdefault("attributes", {})["keep"] = ONE
                 nm += 1
                 rep["private_out"].append(dict(pin=nm_, orig_ff=d[0], orig_bit=d[2], internal_loads=internal,
                                                other_ports=len(occ) - 1, cycles=0))
