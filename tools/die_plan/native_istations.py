@@ -14,9 +14,16 @@ def source_entries(typ):
         if buses[name]['dir']!='out':continue
         geometry={k:v for k,v in e.items() if k!='note'}
         if name in selected:
-            old={k:v for k,v in selected[name].items() if k!='note'}
+            old={k:v for k,v in next(row for row in typ['internal_stations'] if row.get('conn')=='bus:'+name).items() if k!='note'}
             if geometry!=old:raise ValueError(f'conflicting OUT station geometry {name}')
-        else:selected[name]=copy.deepcopy(e)
+        else:
+            item=copy.deepcopy(e)
+            # Plan bus geometry is written face->core even for OUT signals;
+            # actual source stage zero must sit nearest the launching core.
+            if item.get('capture')=='face flop' and item.get('launch')!='face flop':
+                item['regs_um']=list(reversed(item['regs_um']))
+                item['from_um'],item['to_um']=item.get('to_um'),item.get('from_um')
+            selected[name]=item
     return list(selected.values())
 
 
@@ -52,7 +59,7 @@ def materialize(b,tn,file):
     typ['internal_stations']=source_entries(typ)
     if not typ['internal_stations']:return
     import kit_istations
-    file=Path(file);kd=file.parent.parent/'native_internal_stations'/tn;kd.mkdir(parents=True,exist_ok=True)
+    file=Path(file).resolve();kd=file.parent.parent/'native_internal_stations'/tn;kd.mkdir(parents=True,exist_ok=True)
     local=kd/file.name;shutil.copyfile(file,local)
     plan=kd/'plan.json';plan.write_text(json.dumps({'partition_types':{tn:typ}}))
     man=kd/'kit_rtl.json';man.write_text(json.dumps({'bound_module':file.stem,'files':[str(local)]}))
