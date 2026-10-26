@@ -1,0 +1,9 @@
+# QC live calendar image macro: opt-in batch2 candidate
+
+The actual compute wrapper qfd_d2d_cal_seq_ovl_rope passes OVL_C_TX_IMG/RX_IMG from ovl_release_rope/ovl_release_img.svh into ot_qwen_d2d_ovl_seq, then its NL1/AUTO0 ot_qwen_d2d_cal_seq. These init writes are live; QC has no boot target overwriting them. The new candidate replaces only this live image storage with a generated64x64m2 ROM. Each word holds TX in bits31:0 and RX in bits63:32.
+
+The synchronous macro prefetches row(ip+1)>>1: TX row i is followed by RX row i, and the RX edge fetches row i+1 for the next TX edge. Reset/idle address0 preloads the first word. Reset must span one running clock edge, as the delivered wavefront does. Init remains66edges; cal_ready remains edge69 in the component bench. Production and init edge deltas are0. The generated wrappers keep every public port and forward the same OVL control/list-ROM signals.
+
+Run build_rtl.py to regenerate the three new RTL files; originals are immutable. prepare_bench.py SOURCE PREFIX OUT makes a self-contained ot-run--stage miter. install_bind.py RECIPE PROFILE_JSON NEW_OUT emits an immutable repo-relative alias/recipe and image manifest. Use the actual OVL_C profile under physical/die_plan/qwen_compute/dcal_rom/profiles/ovl_release_rope. The old recipe, frozen plan and kits remain untouched.
+
+The actual OVL_C and baseline D2D_CAL_C image components each pass1.5M clocks with every output compared, all32TX+32RX rows exercised, randomized reset/reload/epoch/halt, and2650 wrong-via-mask mutant mismatches caught. Full new OVL wrapper lint passes. Macro size12.312x9.192um, area113.171904um2; model TTclkQ250.330ps/FF201.209ps at833ps. New capture wiring, macro clock/tap, LEF/libs, placement review and physical re-kit are owed before adoption into QC batch2. No physical signoff or full-token claim. Shared ROM writer/blackbox metadata fix739ddb8364 is preserved.

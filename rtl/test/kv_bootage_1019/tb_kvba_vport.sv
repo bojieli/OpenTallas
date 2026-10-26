@@ -8,7 +8,7 @@
 // Prints "KVBA_VPORT PASS D=.. R=.. mut=.. checks=N" or "KVBA_VPORT FAIL ...".
 module tb_kvba_vport;
     parameter integer D = 0, R = 8, MUT = 0, NCYC = 4000, SEED = 1;
-    localparam integer DB = 15, RB = 31;
+    parameter integer DB = 15, RB = 63;
     reg ck = 0, rst_n = 0;
     always #1 ck = ~ck;
     reg [15:0] cfg;

@@ -1,0 +1,310 @@
+`timescale 1ns/1ps
+// HBM-P4-SPLIT (2026-10-23): CORE-SPLIT twin of the pinned ot_hgi_coll_tkm_static (generated verbatim from it, edits marked
+// HBM-P4-SPLIT).  Hard-core cut of ot_hgi_coll_tkm_m_tp192 (8.36M Yosys cells measured): 32 tile cores
+// ot_hgi_coll_tkm_tile_e86 (260k each; tile <-> tile pins are already register to register) + 1 root core (this module's
+// own logic + ot_hgi_coll_tkm_buffer, 2 SRAM).  The pinned root drives the 32 tiles' clr / conv combinationally from its
+// tick comparators and consumes up[0] combinationally (tinv -> buffer / output registers).  PIPE 1 registers both sides
+// of every root <-> tile crossing; every tile input shifts by exactly one edge (the tile chain is time-invariant, so its
+// outputs shift by one) and the root takes up[0] through a pin register: the root consumes the chain 2 edges later.
+// COST: +2 edges on the TKM timeline (finish / done / stat_cycles +2; the same words at the same addresses in the same
+// order, 2 edges later).  PIPE 0 = the pinned module exactly.  Bench: run_tp192_static_p.sh (golden vectors + lock-step).
+// PATH-HBM/ROOTPIPE 2026-10-25: ot_hgi_coll_tkm_static_pd = ot_hgi_coll_tkm_static_p (PIPE 1 only) with the root
+// datapath restructured for 833 ps, ZERO edge change on every port (lock-step identical to static_p PIPE 1):
+//  (a) decode at capture: the 8 issue slots (lane l, half h) of a captured group are decoded from del_flit (a face
+//      register) into ready raw elements in an 8-slot shift register (slot 0 is issued; load at capture, shift after
+//      every other edge), so no tick-derived lane/half select, multiply or group-limit compare sits in the issue path;
+//      j[10:0] = {f[7:0],h,s} and f[7:0] = flit[519:512] - (rank*pf)[7:0] (only the low 8 product bits are used);
+//  (b) sort after the entry register: entry holds the 4 raw elements, the 4-way rank sort + tform run in the
+//      existing PIPE launch stage (entry -> entry_q), whose edge count is unchanged;
+//  (c) derived configure values use three of the eight idle start-up edges: product, ingress/offsets, final bounds;
+//      sentinels prevent comparisons before the bounds are ready. This removes multiply plus serial-add chains
+//      without changing any root port edge;
+//  (d) reset is control-only: data/address/config registers sit in a reset-free block, so the timed delivered
+//      rst_n is not in their enable cone.
+// Measured reason (rootfp_1025 floorplan STA, ideal clock, TT): tick -> entry -1180 ps (70 levels), tick ->
+// valid_pairs -665, cfg_g -> finish -652, rst_n -> w_data/rline/ids/values/... -300..-346 on 4098 endpoints.
+module ot_hgi_coll_tkm_static_pd #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_W=(TP<=1?1:$clog2(TP)),
+ parameter integer PIPE=0,   // 1: root<->tile crossings registered (tile control/entry launch regs + up[0] pin reg): +2 edges
+ parameter integer MUTP=0,   // bench mutant: 1 = up[0] consumed one edge early under PIPE 1 (must FAIL)
+ // PATH-HBM/TOK 2026-10-25 (face shells): the root and the 32 common tiles are hardened cores with a face-register shell
+ // (+1 edge on every signal input, +1 on every signal output).  The 32 tiles are EXTERNAL to the root core; this module
+ // is then only the root-extraction source (rest_extract.sh minus g_tiles), and the parent (die / bench) supplies
+ //   * every tile->tile hop, down (ovf->ins) and up (up_out->up_in): HOP extra edges (tile out face + tile in face = 2);
+ //   * root<->tile0: FRT extra round-trip edges (root out face + tile in face + tile out face + root in face = 4);
+ //     entry reaches tile0 with +2 (face to face, no station);
+ //   * clr and conv: one control broadcast each, CB extra registered stages (equal-depth tree to all 32 tiles, plan
+ //     ~14 for the ~5.6 mm farthest sink) on top of the +2 faces; clr reaches every tile at +2+CB;
+ //   * conv DESKEW: conv reaches tile t HOP*(NT-1-t) edges later than tile NT-1 (deepest tile first, NT-1 at +2+CB).  Reason: the
+ //     conv shift is a lock-step systolic move (X[60..63] <= up_in = the next tile's X[0..3] mirror).  With HOP edges
+ //     on the up hop, tile t must shift exactly HOP edges after tile t+1 (derivation: tile t+1's up_out after its k-th
+ //     shift is captured by tile t at edge s(t+1)+k+HOP, so s(t) = s(t+1)+HOP); equal-latency conv duplicates /
+ //     drops groups.  1-bit relay chain along the up direction (ot_hgi_coll_tkm_conv_skew), HOP flops per tile pitch.
+ // Root timeline (derived; HOP=FRT=0 gives the PIPE-only module exactly):
+ //   XL     = FRT + CB + HOP*(NT-1): extra age of the conv stream at the root (tile0 conv late by 2+CB+DSK0, up[0] by 2)
+ //   SETTLE = (3+HOP)*(NT-1)+11-CB: the down wave is 3+HOP edges per tile (entries +2 like the faces of conv), conv at
+ //            tile t is late by CB+HOP*(NT-1-t); the worst tile (NT-1) keeps the PIPE module's margin of 10 edges
+ //            between its last insertion and its first shift.
+ //   clear2 = first+cells+5+XL: the whole pass-1 stream (late by XL) is in the buffer and every tile has finished its
+ //            (deskewed) conv1 window before the broadcast clr.
+ //   read2  = clear2+5+CLRB: the re-read entries (entry path has no CB) reach tile0 after clr2 (path +CB) by the PIPE margin.
+ //   capture tap / tk: 2*PIPE+XL.
+ //   CLRB>0: the tick-1 clear cannot land before the first entry (entry +2, clr +2+CB; PIPE margin 9 edges), so the clear
+ //         moves to the END of the operation (emitted at tk==finish, after the last conv2 shift landed) plus one
+ //         post-reset pulse, and done/busy-low is held CB edges so a next start (>= done+1) issues its first entry
+ //         after that clear landed at every tile (same 9-edge margin as tick 1 -> tick 9 + entry path).
+ // Cost: stat_cycles / done +2*(SETTLE-SETTLE0)+2*XL+2*CLRB edges (TP192 KMAX2048 HOP2 FRT4 CB21 CLRB0: 2*41+2*87 = 256; CB14 CLRB14: 2*48+2*80+28 = 284).
+ //   CLRB (clr only, default = CB): stages the clr path adds at tile 0 beyond the faces.  CLRB 0 = clr travels SYSTOLIC
+ //         down the chain with the data (in-tile FT flop, <= the data's 3+HOP edges per hop: provably safe, since every
+ //         later tile sees clr no later relative to its entries / earlier relative to its finished conv than tile 0):
+ //         then the tick-1 clear, read2 and done are as in the PIPE module; only conv carries CB.
+ // Opt in when rst_n is already synchronized/timed at the root boundary.
+ // Private-buffer reset retains the same three-edge release depth.
+ parameter integer HOP=0, FRT=0, CB=0, CLRB=CB, DELIVERED_RESET=0)(
+ input wire clk,rst_n,start,
+ input wire[31:0]tile_clk,input wire buffer_clk,
+ input wire[11:0]cfg_n,input wire[12:0]cfg_k,cfg_nout,
+ input wire[7:0]cfg_g,cfg_gbase,input wire[15:0]cfg_pf,
+ input wire[39:0]cfg_obase,cfg_rbase,input wire cfg_has_r,
+ input wire[3:0]del_slot,del_valid,input wire[2179:0]del_flit,
+ output reg w_v,output reg[39:0]w_addr,output reg[15:0]w_mask,output reg[511:0]w_data,
+ output reg busy,done,fault,output reg[31:0]stat_cycles
+);
+ localparam integer EW=78+RANK_W,KW=EW-2,VB=EW-2,RB=EW-1,ID_LO=12+RANK_W,ID_HI=43+RANK_W,VAL_LO=44+RANK_W,VAL_HI=75+RANK_W,NT=(KMAX+63)/64,SETTLE=(3+HOP)*(NT-1)+11-CB,XL=FRT+CB+HOP*(NT-1),CPW=2+2*PIPE+XL;
+    function automatic [31:0] okey(input [31:0] x);
+        reg [31:0] c;
+        begin
+            c = (x == 32'h8000_0000) ? 32'h0 : x;
+            okey = c[31] ? ~c : (c | 32'h8000_0000);
+        end
+    endfunction
+    function automatic [31:0] unkey(input [31:0] k, input nz);
+        unkey = nz ? 32'h8000_0000 : (k[31] ? (k & 32'h7FFF_FFFF) : ~k);
+    endfunction
+    function automatic [KW-1:0] vkey(input [EW-1:0] e);
+        vkey = e[VB:1];
+    endfunction
+    function automatic [KW-1:0] ikey(input [EW-1:0] e);
+        ikey = {e[VB], e[ID_HI:ID_LO], e[VAL_HI:VAL_LO], e[ID_LO-1:1]};
+    endfunction
+    // Insertion key (EW-1 bits): {valid, ~region, body}: region 0 = the value order (selection phase), region 1 = the id
+    // order (re-insertion phase, always below region 0); an invalid element is 0 (the lowest)
+    function automatic [KW:0] key2(input [EW-1:0] e);
+        reg [KW-1:0] b_;
+        begin
+            b_ = e[RB] ? ikey(e) : vkey(e);
+            key2 = e[VB] ? {1'b1, ~e[RB], b_[KW-2:0]} : {(KW+1){1'b0}};
+        end
+    endfunction
+    // KEY FORM (r3, the chain's storage format): T = {key2(e), nz} -- T[EW-1:1] is the EW-1-bit insertion key, so the
+    // tiles compare stored bits with no key mux; tinv restores the element (an invalid element is 0 in both forms)
+    function automatic [EW-1:0] tform(input [EW-1:0] e);
+        tform = e[VB] ? {key2(e), e[0]} : {EW{1'b0}};
+    endfunction
+    function automatic [EW-1:0] tinv(input [EW-1:0] t);
+        reg [EW-4:0] b_;
+        begin
+            b_ = t[EW-3:1];
+            tinv = !t[EW-1] ? {EW{1'b0}} : (!t[EW-2] ? {1'b1, 1'b1, b_[RANK_W+42:RANK_W+11], b_[RANK_W+74:RANK_W+43], b_[RANK_W+10:0], t[0]} : {1'b0, 1'b1, b_, t[0]});
+        end
+    endfunction
+
+ reg[31:0]tick,ingress_end,first,clear2,read2,second,finish;
+ reg[31:0]valid_pairs;reg[12:0]k;
+ reg[23:0]flits;reg[12:0]nout,cells;reg[7:0]gb,g;
+ reg[15:0]pf;reg[39:0]ob,rb;reg hr;
+ wire[31:0]rel=tick-8;
+ wire ingest=busy&&tick>=8&&tick<ingress_end;
+ wire capture=ingest&&(rel[2:0]==0);
+ wire issue1=busy&&tick>=9&&tick<=ingress_end;
+ wire[31:0]irel=tick-9;
+ wire[31:0]group_index=rel>>3;
+ reg[3:0]expected;
+ always @*begin
+  expected=0;
+  for(integer l=0;l<4;l=l+1)expected[l]=capture&&((group_index*4+32'(l))<flits);
+ end
+ wire conv1=busy&&tick>=first&&tick<first+32'(cells);
+ wire conv2=busy&&tick>=second&&tick<second+32'(cells);
+ wire[31:0]tk=tick-32'(2*PIPE+XL);   // the root's view of the conv stream (capture / finish)
+ reg rst_clr;wire eop=busy&&tk==finish;
+ always @(posedge clk or negedge rst_n)if(!rst_n)rst_clr<=1'b1;else rst_clr<=1'b0;   // CB>0 post-reset tile clear
+ wire clr=(CLRB==0)?(busy&&(tick==1||tick==clear2)):((busy&&tick==clear2)||eop||rst_clr);
+ // HBM-P4-SPLIT (PIPE 1): every root -> tile pin is launched by a root register (clr / conv / entry one edge later, all
+ // tiles shift uniformly) and up[0] lands in a root pin register; the root consumes the tile chain 2 edges later.
+ reg clr_q,conv_q;wire t_clr=(PIPE!=0)?clr_q:clr;wire t_conv=(PIPE!=0)?conv_q:(conv1||conv2);
+ wire read_v=busy&&tick>=read2&&tick<read2+32'(cells);
+ wire[9:0]read_addr=10'(tick-read2);
+ wire[4*EW-1:0]buf_data;wire buf_valid;
+ reg[CPW-1:0]conv_pipe;wire cp=conv_pipe[1+2*PIPE+XL-((PIPE!=0&&MUTP!=0)?1:0)];
+ reg[31:0]cap1,cap2;
+ reg[4*EW-1:0]buf_wdata;reg buf_wv;reg[9:0]buf_wa;
+ ot_hgi_coll_tkm_buffer #(.DW(4*EW),.DELIVERED_RESET(DELIVERED_RESET)) u_buffer(.clk(buffer_clk),.rst_n(rst_n),
+  .w_v(buf_wv),.w_addr(buf_wa),.w_data(buf_wdata),
+  .r_v(read_v),.r_addr(read_addr),.rd_v(buf_valid),.rd_data(buf_data));
+ reg[4*EW-1:0]entry;reg entry_v;
+ reg[EW-1:0]raw[0:3],sorted[0:3];
+ // (a) 8 issue slots x 4 raw elements, decoded at capture from del_flit
+ reg[4*EW-1:0]slot[0:7];
+ function automatic [EW-1:0] dec_el(input [31:0] vv,input [31:0] id,input [7:0] rk,input [7:0] f8,input h,input [1:0] s_,input ok);
+  begin
+   dec_el={1'b0,1'b1,okey(vv),~id,~rk[RANK_W-1:0],~{f8,h,s_},(vv==32'h80000000)};
+   if(vv==32'hffffffff||!ok)dec_el=0;
+  end
+ endfunction
+ always @(posedge clk)begin:slots
+  reg[7:0]rk;reg[7:0]f8;reg[15:0]pr;
+  if(capture)begin
+   for(integer l=0;l<4;l=l+1)begin
+    rk=del_flit[545*l+528+:8]-gb;pr=16'(rk)*16'(pf[7:0]);f8=del_flit[545*l+512+:8]-pr[7:0];
+    for(integer h=0;h<2;h=h+1)for(integer s=0;s<4;s=s+1)
+     slot[2*l+h][EW*s+:EW]<=dec_el(del_flit[545*l+32*(4*h+s)+:32],del_flit[545*l+256+32*(4*h+s)+:32],rk,f8,h[0],s[1:0],expected[l]);
+   end
+  end else for(integer k_=0;k_<7;k_=k_+1)slot[k_]<=slot[k_+1];
+ end
+ always @*begin:decode
+  for(integer s=0;s<4;s=s+1)begin raw[s]=slot[0][EW*s+:EW];sorted[s]=0;end
+  if(buf_valid)for(integer s=0;s<4;s=s+1)raw[s]=buf_data[EW*s+:EW];
+ end
+ // (b) the 4-way rank sort of the registered entry (raw elements), into the PIPE launch register entry_q
+ reg[EW-1:0]es[0:3],eso[0:3];
+ always @*begin:rank_sort
+  for(integer s=0;s<4;s=s+1)begin es[s]=entry[EW*s+:EW];eso[s]=0;end
+  for(integer s=0;s<4;s=s+1)begin:rs
+   integer rank_s;rank_s=0;
+   for(integer j_=0;j_<4;j_=j_+1)if(key2(es[j_])>key2(es[s])||(key2(es[j_])==key2(es[s])&&j_<s))rank_s=rank_s+1;
+   eso[rank_s]=es[s];
+  end
+ end
+ wire[4*EW-1:0]down[0:NT],up[0:NT];wire[NT:0]dv;
+ reg[4*EW-1:0]entry_q,up0_q;reg entry_vq;wire[4*EW-1:0]up0=(PIPE!=0)?up0_q:up[0];
+ always @(posedge clk)begin clr_q<=clr;conv_q<=conv1||conv2;entry_vq<=entry_v;up0_q<=up[0];
+  for(integer s=0;s<4;s=s+1)entry_q[EW*s+:EW]<=tform((MUT==1&&s==3)?{EW{1'b0}}:eso[s]);end
+ assign down[0]=(PIPE!=0)?entry_q:entry;assign dv[0]=(PIPE!=0)?entry_vq:entry_v;assign up[NT]=0;
+ for(genvar t=0;t<NT;t=t+1)begin:g_tiles
+  // TP=192 (RANK_W 8, EW 86) PT64 tiles use their own hardened shape name (die view per shape, no parameter alias).
+  if(EW==86 && KMAX>=64)begin:e86
+  ot_hgi_coll_tkm_tile_e86 u_tile(.clk(tile_clk[t]),.clk_r0(tile_clk[t]),.clk_r1(tile_clk[t]),.clk_r2(tile_clk[t]),.clk_r3(tile_clk[t]),.tid(6'(t)),.clr(t_clr),.conv(t_conv),
+   .tau_t(6'd0),.tau_l(7'd0),.ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),
+   .up_in(up[t+1]),.up_out(up[t]),.tau_o(),.busy());
+  end else begin:gen
+  ot_hgi_coll_tkm_tile #(.EW(EW),.PT((KMAX<64)?KMAX:64))u_tile(.clk(tile_clk[t]),.tid(6'(t)),.clr(t_clr),.conv(t_conv),
+   .tau_t(6'd0),.tau_l(7'd0),.ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),
+   .up_in(up[t+1]),.up_out(up[t]),.tau_o(),.busy());
+  end
+ end
+ reg[31:0]ids[0:15],values[0:15];
+ reg pending_r;reg[511:0]rline;reg[39:0]raddr;reg[15:0]rmask;
+ // A final partial line one cell after a full line (cells%4==1) would share the single write port with the
+ // previous line's R write. It is statically deferred one edge (O at +1, R at +2); the timeline is unchanged.
+ reg pending_o,r_after_o;reg[511:0]oline_q;reg[39:0]oaddr_q;reg[15:0]omask_q;
+ always @(posedge clk)begin
+  entry_v<=busy&&(issue1||buf_valid);
+  for(integer s=0;s<4;s=s+1)entry[EW*s+:EW]<=raw[s];
+ end
+ // (c) Use three idle boot edges: product -> ingress/offsets -> final bounds.
+ // Ingress cannot start before tick8, so these stages change no root port edge.
+ reg[2:0] cfg_pipe;
+ reg[23:0] cfg_fl;
+ reg[11:0] cfg_c;
+ reg[31:0] cfg_i,cfg_clear_off,cfg_read_off,cfg_second_off,cfg_finish_off;
+ localparam [31:0] SENT=32'h7FFF_FFFF;   // tk at tick 0 is 2^32-(2*PIPE+XL) >= 2^31: no equality, no >=
+ // control registers (reset = control only, owner decision 2)
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin busy<=0;done<=0;fault<=0;stat_cycles<=0;tick<=0;conv_pipe<=0;cfg_pipe<=0;
+   cap1<=0;cap2<=0;buf_wv<=0;w_v<=0;pending_r<=0;pending_o<=0;r_after_o<=0;end
+  else begin
+   done<=0;w_v<=0;buf_wv<=0;cfg_pipe<={cfg_pipe[1:0],1'b0};
+   conv_pipe<={conv_pipe[CPW-2:0],conv1||conv2};
+   if(busy)begin
+    tick<=tick+1;stat_cycles<=tick+1;
+    if(del_valid!=expected||del_slot!=expected)fault<=1;
+    if(capture)for(integer l=0;l<4;l=l+1)if(expected[l])begin
+     for(integer s=0;s<8;s=s+1)begin
+      if(del_flit[545*l+32*s+23+:8]==8'hff&&del_flit[545*l+32*s+:23]!=0&&del_flit[545*l+32*s+:32]!=32'hffffffff)fault<=1;
+     end
+     if(!del_flit[545*l+544]||del_flit[545*l+528+:8]<gb||del_flit[545*l+528+:8]>=gb+g)fault<=1;
+    end
+    if(cp&&tk<clear2)begin buf_wv<=1;cap1<=cap1+1;end
+    if(pending_o)begin w_v<=1;pending_o<=0;pending_r<=r_after_o;r_after_o<=0;end
+    else if(pending_r)begin w_v<=1;pending_r<=0;end
+    if(cp&&tk>=second)begin
+     cap2<=cap2+1;
+     if(cap2[1:0]==3||cap2+1==32'(cells))begin
+      if(pending_r&&MUT!=2)begin pending_o<=1;r_after_o<=hr;end
+      else begin w_v<=1;if(hr)pending_r<=1;end
+     end
+    end
+    if(tk==finish)begin
+     if(cap1!=32'(cells)||cap2!=32'(cells)||pending_r||pending_o||32'(nout)!=((32'(k)<valid_pairs)?32'(k):valid_pairs))fault<=1;
+    end
+    if(tk==finish+32'(CLRB))begin busy<=0;done<=1;end
+   end
+   if(start)begin
+    if(busy)fault<=1;
+    else begin
+     fault<=cfg_g==0||cfg_g>TP||cfg_pf!=(16'(cfg_n)+7)/8||cfg_nout==0||cfg_nout>KMAX||cfg_k>KMAX||
+        cfg_nout>cfg_k||cfg_obase[3:0]!=0||cfg_rbase[3:0]!=0;
+     busy<=1;tick<=0;stat_cycles<=0;cfg_pipe<=3'b001;
+     cap1<=0;cap2<=0;conv_pipe<=0;pending_r<=0;pending_o<=0;r_after_o<=0;
+    end
+   end
+  end
+ end
+ // (d) data / address / config registers: no reset (their values are only consumed under busy after a configure)
+ always @(posedge clk)begin
+  if(busy)begin
+   if(issue1)begin:count_pairs
+    integer added;added=0;for(integer s=0;s<4;s=s+1)added=added+int'(raw[s][VB]);
+    valid_pairs<=valid_pairs+32'(added);
+   end
+   if(cp&&tk<clear2)begin
+    buf_wa<=10'(cap1);
+    for(integer s=0;s<4;s=s+1)begin:tag
+     reg[EW-1:0]e;e=tinv(up0[EW*s+:EW]);
+     buf_wdata[EW*s+:EW]<=((cap1*4+32'(s))<32'(nout))?(e|{e[VB],{(EW-1){1'b0}}}):{EW{1'b0}};
+    end
+   end
+   if(pending_o)begin w_data<=oline_q;w_addr<=oaddr_q;w_mask<=omask_q;end
+   else if(pending_r)begin w_data<=rline;w_addr<=raddr;w_mask<=rmask;end
+   if(cp&&tk>=second)begin:output_cell
+    reg[EW-1:0]e;reg[511:0]oline,rl;reg[15:0]mask_;integer ix;integer count_;
+    oline=0;rl=0;
+    for(integer i=0;i<16;i=i+1)begin oline[32*i+:32]=ids[i];rl[32*i+:32]=values[i];end
+    for(integer s=0;s<4;s=s+1)begin
+     e=tinv(up0[EW*s+:EW]);ix=4*int'(cap2[1:0])+s;
+     ids[ix]<=~e[ID_HI:ID_LO];values[ix]<=unkey(e[VAL_HI:VAL_LO],e[0]);
+     oline[32*ix+:32]=~e[ID_HI:ID_LO];rl[32*ix+:32]=unkey(e[VAL_HI:VAL_LO],e[0]);
+    end
+    if(cap2[1:0]==3||cap2+1==32'(cells))begin
+     count_=int'(nout)-16*int'(cap2>>2);if(count_>16)count_=16;
+     mask_=16'((17'd1<<count_)-1);
+     for(integer i=0;i<16;i=i+1)if(i>=count_)begin oline[32*i+:32]=0;rl[32*i+:32]=0;end
+     if(pending_r&&MUT!=2)begin oline_q<=oline;omask_q<=mask_;oaddr_q<=ob+40'(16*(cap2>>2));end
+     else begin w_data<=oline;w_mask<=mask_;w_addr<=ob+40'(16*(cap2>>2));end
+     if(hr)begin rline<=rl;raddr<=rb+40'(16*(cap2>>2));rmask<=mask_;end
+    end
+   end
+  end
+  if(start&&!busy)begin
+   ingress_end<=SENT;first<=SENT;clear2<=SENT;read2<=SENT;second<=SENT;finish<=SENT;flits<=0;cells<=0;
+   valid_pairs<=0;k<=cfg_k;nout<=cfg_nout;gb<=cfg_gbase;g<=cfg_g;pf<=cfg_pf;ob<=cfg_obase;rb<=cfg_rbase;hr<=cfg_has_r;
+  end
+  if(cfg_pipe[0])begin
+   cfg_fl<=24'(g)*24'(pf);
+   cfg_c<=12'((32'(nout)+3)/4);
+  end
+  if(cfg_pipe[1])begin
+   cfg_i<=8+((32'(cfg_fl)+3)/4)*8;
+   cfg_clear_off<=32'(cfg_c)+SETTLE+5+XL;
+   cfg_read_off<=32'(cfg_c)+SETTLE+10+XL+CLRB;
+   cfg_second_off<=2*32'(cfg_c)+2*SETTLE+16+XL+CLRB;
+   cfg_finish_off<=3*32'(cfg_c)+2*SETTLE+24+XL+CLRB;
+  end
+  if(cfg_pipe[2])begin
+   ingress_end<=cfg_i;first<=cfg_i+SETTLE;
+   clear2<=cfg_i+cfg_clear_off;read2<=cfg_i+cfg_read_off;
+   second<=cfg_i+cfg_second_off;finish<=cfg_i+cfg_finish_off;
+   flits<=cfg_fl;cells<=13'(cfg_c);
+  end
+ end
+endmodule

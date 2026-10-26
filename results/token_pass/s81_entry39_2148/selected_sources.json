@@ -1,0 +1,70 @@
+{
+ "dsdv_eng_tap": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "b18b441dfd1164fb199c9b0bb1bd933050943499bf87baecef59c8070162180e"
+ },
+ "dsdv_eng_tap_c": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "d5d1d16999f9a2c503894b10a111696a334f4858fd66d778584398517ef1dfc1"
+ },
+ "dsdv_eng_tap_cellnz": {
+  "source": "physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv",
+  "module_sha256": "1269e70c3f3cf43839b8c48d9a74971200627ec8c43d602789b17992ef17c3f9"
+ },
+ "dsdv_eng_tap_dec4": {
+  "source": "physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv",
+  "module_sha256": "9200db7ad4ef18ed419747b83f371c5b7a9cd8115b08ea7a6809185a75a54ef9"
+ },
+ "dsdv_eng_tap_eng": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "0e0f92cfab2ce2d84db6ae0e3e89f2986a06d6f6ee591badfd7a77a62883347e"
+ },
+ "dsdv_eng_tap_hit": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "4e98fda68123e43c590d6f2462b336bd1f0f09dda420f438c4088709e20f29bc"
+ },
+ "dsdv_eng_tap_hs": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "7f21abeac0ff2fa14e6c3b9cf87376533923f117872f6d2e58490c011bb752a3"
+ },
+ "dsdv_eng_tap_ofb": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "68f8b740e3406121214e3669c7ca0f27c30db6edfb20c99b72c15f7b629a7973"
+ },
+ "dsdv_eng_tap_rqc": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "41072235d2cea9c8af79fe9571c0db13a7db440781544088931c8d6a698229ec"
+ },
+ "dsdv_eng_tap_rqd": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "4207e4742a27d0fee0fdfed41d29d26b3292afae43dc40bdcf5de3bd4c9a874c"
+ },
+ "dsdv_eng_tap_rsc": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "a9a71a2537650b339e8e764a26ff4465c7b8a0c7b2e712c73d18359214013c69"
+ },
+ "dsdv_eng_tap_sid4": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "917cef9290e6810131a31dde702bf8a1f4844f99e43935be3ec2e2c042041850"
+ },
+ "dsdv_eng_tap_slot": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "0409b076f127f188e91256fdc8b26861388c4f73c30434382755b80ec3dff544"
+ },
+ "dsdv_eng_tap_take": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "b07262798be385787c145266a1d1f2edb43f72c411b9971e7c74072bae4bfae7"
+ },
+ "dsdv_eng_tap_w": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "81a4b131e0f96519a667c11611fd7549f50e6b304e68d03ba6c62d407ffd6c15"
+ },
+ "dsdv_eng_tap_we": {
+  "source": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+  "module_sha256": "93d20497ee727d25e0e608f5534020cb51a75dc206dbf4295b12a30c8b271b16"
+ },
+ "ot_rst_relay_bounded32": {
+  "source": "rtl/lib/ot_rst_relay_bounded32.sv",
+  "module_sha256": "57b7e1155d697b37ad1c10a6dd87ec9170fb86a490684a95144619ba9f41c35b"
+ }
+}

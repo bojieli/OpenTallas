@@ -239,8 +239,8 @@ SEQ_TAIL = [
 ]
 
 
-def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out):
-    s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False)
+def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extra=()):
+    s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False, slang_extra=slang_extra)
     s += [f"read_verilog -overwrite {stubs}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
           # declared kept registers (the kept-register check): (* keep *) wires and every wire of a keep_hierarchy
           # module (pin / replica flop cells), marked before the hierarchy attributes are dropped
@@ -680,6 +680,22 @@ class Lec:
         # state-encoding constraints (FSM recoding): (side, keys, allowed value tuples) assumed on the current state
         # and proved on the next state together with the hypotheses (an inductive invariant like the others)
         self.cons = []
+        self.cycle_dropped = []                   # (node, hypothesis) dropped by build() to break a binding cycle
+
+    def _drop_cycle_hyp(self, pend):
+        """pend: unresolved hypothesis node -> the node it is bound to.  No pass made progress, so every walk along
+        the bindings either closes a cycle or ends at a node that is never bound in this pass (e.g. a 'cube' state
+        bit).  Drop exactly one hypothesis: on a cycle its largest key (the cycle's other equalities still relate all
+        its members; a wrong one is refuted by the induction like any other), on a dead end the node bound to it.
+        Dropping a hypothesis only removes an assumption: the flop becomes a free input, never a waiver.
+        -> [dropped node]"""
+        node, seen = min(pend), []
+        while node in pend and node not in seen:
+            seen.append(node)
+            node = pend[node]
+        drop = max(seen[seen.index(node):]) if node in seen else seen[-1]
+        self.cycle_dropped.append((drop, self.hyp.pop(drop)))
+        return [drop]
 
     def build(self, with_compare=True, with_hyp=True, extra=None, free_const=None, hold_matched=()):
         """one AIG with every matched key point a shared input; a hypothesised gold-only flop becomes its constant /
@@ -729,10 +745,15 @@ class Lec:
                 shared[k] = shared[rep] ^ inv
                 bind(lg, self.gp[k], shared[k])
                 bind(lt, self.tp[k], shared[k])
-            if len(nxt) == len(merged):
-                for k in nxt:
-                    self.hyp.pop(("both", k), None)
-                raise LecError("cyclic flop hypotheses (rebuild)")
+            if len(nxt) == len(merged):           # a cycle: drop ONE hypothesis on it (a free matched input)
+                pend = {("both", k): ("both", self.hyp[("both", k)][2]) for k in nxt}
+                (_, k), = self._drop_cycle_hyp(pend)
+                nxt.remove(k)
+                v = m.add_input(k)
+                kind[v >> 1] = ("matched", k)
+                shared[k] = v
+                bind(lg, self.gp[k], v)
+                bind(lt, self.tp[k], v)
             merged = nxt
         later = []
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
@@ -771,10 +792,14 @@ class Lec:
                     continue
                 lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
                 bind(lmap, p[k], v ^ inv)
-            if len(nxt) == len(later):
-                for side, k, h in nxt:          # cyclic partners: drop the hypothesis, free input
-                    self.hyp.pop((side, k), None)
-                raise LecError("cyclic flop hypotheses (rebuild)")
+            if len(nxt) == len(later):            # a cycle: drop ONE hypothesis on it (that flop a free input)
+                pend = {(side, k): (h[1], h[2]) for side, k, h in nxt}
+                (side, k), = self._drop_cycle_hyp(pend)
+                nxt = [e for e in nxt if (e[0], e[1]) != (side, k)]
+                lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
+                v = m.add_input(f"{side}:{k}")
+                kind[v >> 1] = (side + "_only", k)
+                bind(lmap, p[k], v)
             later = nxt
         for side, xs, anon, lmap in (("gold", self.gx, self.ganon, lg), ("gate", self.tx, self.tanon, lt)):
             for lit in xs:
@@ -2379,6 +2404,22 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
 
 
 # ---------------------------------------------------------------------------------------------- driver
+def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
+    """gold AIG.  An unpacked array that memory_map cannot convert (write ports on several clocks, e.g. a
+    per-tap clocked delay line r[p] <= r[p+1] on clk[(p-1)/48], ot_hbm_su_static_ins) stays a $mem_v2 cell and the
+    AIGER backend rejects it; synthesis (read_verilog) turned the same array into named registers (mem2reg), so the
+    gold is re-read with read_slang --no-implicit-memories: every array becomes its registers, as written."""
+    args = (env, kit, gold_fe, lib_bbs, out / "stubs.v", out / "wrap_gold.v", out / "lecff.v", out / "gold")
+    try:
+        return run_yosys(gold_script(*args), out / "gold.ys", log)
+    except Unproven as e:
+        if gold_fe != "slang" or "Unsupported cell type: $mem_v2" not in str(e):
+            raise
+        log.append(f"gold: unmappable memory ({str(e)[-160:]}); re-reading with read_slang --no-implicit-memories")
+        rec["gold_no_implicit_memories"] = True
+        return run_yosys(gold_script(*args, slang_extra=["--no-implicit-memories"]), out / "gold.ys", log)
+
+
 def run_yosys(script, path, log):
     Path(path).write_text(script)
     y = ORFS + "/tools/install/yosys/bin/yosys"
@@ -2445,8 +2486,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         else:
             from concurrent.futures import ThreadPoolExecutor
             with ThreadPoolExecutor(2) as ex:
-                fg = ex.submit(run_yosys, gold_script(env, kit, gold_fe, lib_bbs, out / "stubs.v", out / "wrap_gold.v",
-                                                      out / "lecff.v", out / "gold"), out / "gold.ys", log)
+                fg = ex.submit(run_gold, env, kit, gold_fe, lib_bbs, out, log, rec)
                 ft = ex.submit(run_yosys, gate_script(env, netlist, out / "stubs.v", out / "wrap_gate.v",
                                                       out / "lecff.v", out / "gate"), out / "gate.ys", log)
                 fg.result()
@@ -2558,6 +2598,10 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         rec["verdict"], rec["reason"] = "ERROR", f"{type(e).__name__}: {e}"
         import traceback
         log.append(traceback.format_exc())
+    lc = locals().get("L")
+    if lc is not None and getattr(lc, "cycle_dropped", None):   # hypotheses dropped to break binding cycles
+        rec["cycle_dropped"] = dict(n=len(lc.cycle_dropped),
+                                    first=[f"{sd}:{k} {list(h)}" for (sd, k), h in lc.cycle_dropped[:40]])
     rec["t_total_s"] = round(time.time() - t0, 1)
     rec["provenance"] = _provenance()
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")

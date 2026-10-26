@@ -176,8 +176,8 @@ module dsdv_svc_rs_c #(
             else begin qp[0] <= q[0]; hp[0] <= hw[0]; end
         always @(posedge ck) begin qp[514:1] <= q[514:1]; hp[291:1] <= hw[291:1]; end
         wire [514:0] cq;
-        ot_s81_svc_job #(.MUT(0)) u_job (.ck(ck), .rs_n(rn), .j_cmd(j), .j_dn(jdc), .q(qp), .core_q(cq),
-            .ad({513'd0, rad[512:0]}), .xd({512'd0, 1'b0, 1'b1}), .od({512'd0, 1'b0, 1'b1}));
+        ot_s81_svc_job_a0 #(.MUT(0)) u_job (.ck(ck), .rs_n(rn), .j_cmd(j), .j_dn(jdc), .q(qp), .core_q(cq),
+            .ad(rad[512:0]));
         // S81/H23 (10-24, COORD H3): the on-die SEL_IDS producer's entry leg.  Class-3 host-write words (the seqhost SEL
         // relay, dsdv_sh_selr) never go down the hw stream; dsdv_svc_selq turns each pair into one SEL_IDS q frame
         // (header + 1 payload word) injected on the q part in the compiled window (a q word from the job gate in the

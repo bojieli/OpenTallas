@@ -158,7 +158,7 @@ module ot_s81sl_vs #(
 `else
     wire rs_ra=rs_o,rs_kra=rs_o,rs_eng=rs_o,rs_flush=rs_o,rs_out=rs_o,rs_fault=rs_o;
 `endif
-    integer i, k, e2;
+
     function automatic [31:0] bf16(input [31:0] x);
         reg [32:0] s;
         begin s = {1'b0, x} + 33'h7FFF + {32'd0, x[16]}; bf16 = {s[31:16], 16'd0}; end
@@ -224,8 +224,8 @@ module ot_s81sl_vs #(
       ot_s81sl_vs_accept32 u_accept(.clk(clk),.rst_n(rsv[30+acr]),.packet(s_dw),.incoming_op(incoming_op),.stream_bad(stream_bad),.sv(s_v),.busy_after(busy_after),.gmask_after(gmask_after),.q(cmd_accept[32*acr+:32]));
     end endgenerate
     (* keep="true" *) reg [3:0] regional_packet_op[0:19];
-    integer cpr;
-    always @(posedge clk) for(cpr=0;cpr<20;cpr=cpr+1) regional_packet_op[cpr]<=s_dw[3:0];
+
+    always @(posedge clk) for(integer cpr=0;cpr<20;cpr=cpr+1) regional_packet_op[cpr]<=s_dw[3:0];
 `ifndef SYNTHESIS
     always @(posedge clk) if(rs_c && cmd_accept!=={128{acc_cmd}}) $fatal(1,"VS predicted command acceptance differs from original control");
 `endif
@@ -368,15 +368,15 @@ module ot_s81sl_vs #(
 `endif
     // ENG stash-read index replicas (gate high_fanout: one 16 x 256-b stash read select drove 4,100 loads): 4 identical
     // copies of the arrival and flush counters, one per 64-b column group of the stash (keep: not merged by synthesis)
-    integer rq;
+
 `ifndef OT_S81SL_VS_SRAM
     (* keep = "true" *) reg [7:0] ka_q [0:3];
     (* keep = "true" *) reg [3:0] fl_q [0:3];
     (* keep = "true" *) reg [3:0] eqp_q [0:3];
     (* keep = "true" *) reg       ep_q [0:3];
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) for (rq = 0; rq < 4; rq = rq + 1) ka_q[rq] <= 8'd0;
-        else for (rq = 0; rq < 4; rq = rq + 1)
+        if (!rs_c) for (integer rq = 0; rq < 4; rq = rq + 1) ka_q[rq] <= 8'd0;
+        else for (integer rq = 0; rq < 4; rq = rq + 1)
             if (acc_cmd) ka_q[rq] <= 8'd0; else if (arr) ka_q[rq] <= ka_q[rq] + 8'd1;
 
 `endif
@@ -478,7 +478,7 @@ module ot_s81sl_vs #(
     end endgenerate
 `else
     always @(posedge clk)
-        for (i = 0; i < 8; i = i + 1)
+        for (integer i = 0; i < 8; i = i + 1)
             if (op == OP_RB) begin
                 xa[i] <= xw[i & 3]; xb[i] <= (MUT == 2) ? 32'd0 : xw[4 + (i & 3)];
             end else if (op == OP_QR) begin
@@ -511,7 +511,7 @@ module ot_s81sl_vs #(
         if (!rs_x) k_xo <= 8'd0;
         else if (`S81_VS_ACC(112)) k_xo <= 8'd0;
         else if (vx[XL]) k_xo <= k_xo + 8'd1;
-    always @(posedge clk) for (i = 0; i < 8; i = i + 1) acc1[i] <= ay[i];
+    always @(posedge clk) for (integer i = 0; i < 8; i = i + 1) acc1[i] <= ay[i];
     reg xo_v; reg [255:0] xo_d; reg [127:0] qr_h;  // QR: pair 0's two results wait for pair 1's
     always @(posedge clk or negedge rs_x)
         if (!rs_x) xo_v <= 1'b0;
@@ -521,7 +521,7 @@ module ot_s81sl_vs #(
         if (vx[XL] && op == OP_QR && !k_xo[0]) qr_h <= {64'd0, bf16(ay[1]), bf16(ay[0])};
 `endif
 `ifndef OT_S81SL_VS_SRAM
-        for (i = 0; i < 8; i = i + 1) xo_d[32 * i +: 32] <= (op == OP_RB) ? ay[i] : bf16(ay[i]);
+        for (integer i = 0; i < 8; i = i + 1) xo_d[32 * i +: 32] <= (op == OP_RB) ? ay[i] : bf16(ay[i]);
         if (op == OP_QR) xo_d[127:0] <= {bf16(ay[1]), bf16(ay[0]), qr_h[63:0]};
 `endif
     end
@@ -591,7 +591,7 @@ module ot_s81sl_vs #(
       end
     end endgenerate
 `else
-    always @(posedge clk) if (rav_c) for (i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) rad[32 * i +: 32] <= rar_c;
+    always @(posedge clk) if (rav_c) for (integer i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) rad[32 * i +: 32] <= rar_c;
 `endif
     wire ra_row = rav_c && op == OP_RA && (k_ra[1:0] == 2'd3 || k_ra + 8'd1 == n);
 
@@ -705,7 +705,7 @@ module ot_s81sl_vs #(
     always @(*) gsel = gsel_r;
 `else
     always @(*) begin
-        for (rq = 0; rq < 4; rq = rq + 1) begin
+        for (integer rq = 0; rq < 4; rq = rq + 1) begin
             hrow[64 * rq +: 64] = hst[ep_q[rq] ? eqp_q[rq] : {ka_q[rq][3:1], 1'b0}][64 * rq +: 64];
             hra[64 * rq +: 64] = hst[{ka_q[rq][2:0], 1'b0}][64 * rq +: 64];
             hrb[64 * rq +: 64] = hst[{ka_q[rq][2:0], 1'b1}][64 * rq +: 64];
@@ -727,7 +727,7 @@ module ot_s81sl_vs #(
         if (!rs_eng) begin ve_rv <= 1'b0; ve_av <= 1'b0; gmask <= 4'd0; epend <= 1'b0;
 
 `ifndef OT_S81SL_VS_SRAM
-for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0;
+for (integer rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0;
 `endif
  end
         else begin
@@ -735,7 +735,7 @@ for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0;
             epend <= eng_r && ka >= 8'd16 && er[0];
 
 `ifndef OT_S81SL_VS_SRAM
-for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
+for (integer rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
 `endif
 
             ve_av <= eng_a;
@@ -752,11 +752,11 @@ for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
 `endif
         ve_rc <= eq[5:4];
 `ifndef OT_S81SL_VS_SRAM
-        for (i = 0; i < 4; i = i + 1) ve_rh_w[32 * i +: 32] <= hw32(hrow, eq[5:4], i[1:0]);
+        for (integer i = 0; i < 4; i = i + 1) ve_rh_w[32 * i +: 32] <= hw32(hrow, eq[5:4], i[1:0]);
 `endif
 `ifdef OT_S81SL_VS_SRAM
-        for(i=0;i<32;i=i+1) if(k_capture[i]) kst[8*i+:8] <= xq_c[8*i+:8];
-        for(i=0;i<16;i=i+1) if(w_capture[i]) wst[8*i+:8] <= xq_c[128+8*i+:8];
+        for(integer i=0;i<32;i=i+1) if(k_capture[i]) kst[8*i+:8] <= xq_c[8*i+:8];
+        for(integer i=0;i<16;i=i+1) if(w_capture[i]) wst[8*i+:8] <= xq_c[128+8*i+:8];
 `else
         if (eng_r && ka >= 8'd16 && !er[0]) kst <= xq_c;
         if (eng_r && ka >= 8'd16 && er[0]) wst <= xq_c[255:128];
@@ -764,11 +764,11 @@ for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
         eqp <= eq0 | 6'd1;
 
 `ifndef OT_S81SL_VS_SRAM
-for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
+for (integer rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
 `endif
 
 `ifdef OT_S81SL_VS_SRAM
-        for(i=0;i<16;i=i+1) begin
+        for(integer i=0;i<16;i=i+1) begin
           ve_rk[8*i+:8] <= hpend_data[i] ? kst[128+8*i+:8] : kst[8*i+:8];
           ve_rw[8*i+:8] <= (MUT == 8) ? (hpend_data[i] ? kst[128+8*i+:8] : kst[8*i+:8]) :
                                              (hpend_data[i] ? wst[8*i+:8] : xq_c[8*i+:8]);
@@ -779,7 +779,7 @@ for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
 `endif
         // ADD: arrival s (copy j = ka[4:3], elements 8 s' .. 8 s' + 7, s' = ka[2:0]) = V row pair; h from half rows 2 s', 2 s' + 1
         ve_ac <= ka[4:3];
-        for (i = 0; i < 4; i = i + 1) begin
+        for (integer i = 0; i < 4; i = i + 1) begin
 `ifdef OT_S81SL_VS_SRAM
             ve_ah_w[32*i+:32] <= {hw4(hra,region_ka_c[8+i][28:27],i[1:0],3),hw4(hra,region_ka_c[8+i][20:19],i[1:0],2),hw4(hra,region_ka_c[8+i][12:11],i[1:0],1),hw4(hra,region_ka_c[8+i][4:3],i[1:0],0),16'd0};
             ve_ah_w[32*(i+4)+:32] <= {hw4(hrb,region_ka_c[12+i][28:27],i[1:0],3),hw4(hrb,region_ka_c[12+i][20:19],i[1:0],2),hw4(hrb,region_ka_c[12+i][12:11],i[1:0],1),hw4(hrb,region_ka_c[12+i][4:3],i[1:0],0),16'd0};
@@ -793,10 +793,10 @@ for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
         // (decoded constant-index slices: one-hot row pair x copy, no runtime part-select)
 `ifndef OT_S81SL_VS_SRAM
         if (vov_c && op == OP_ENG && ph)
-            for (i = 0; i < 16; i = i + 1)
-                for (k = 0; k < 4; k = k + 1)
+            for (integer i = 0; i < 16; i = i + 1)
+                for (integer k = 0; k < 4; k = k + 1)
                     if ((i >> 1) == ko_e[2:0] && k == voc_c)
-                        for (e2 = 0; e2 < 4; e2 = e2 + 1)
+                        for (integer e2 = 0; e2 < 4; e2 = e2 + 1)
                             hst[i][(4 * k + e2) * 16 +: 16] <= voy_c[32 * (4 * (i & 1) + e2) + 16 +: 16];
 `endif
     end
@@ -805,7 +805,7 @@ for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
         if (!rs_flush) begin e_v <= 1'b0; kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
 
 `ifndef OT_S81SL_VS_SRAM
-for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
+for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
 `endif
  end
         else begin
@@ -813,7 +813,7 @@ for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
             if (`S81_VS_ACC(114)) begin kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
 
 `ifndef OT_S81SL_VS_SRAM
-for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
+for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
 `endif
  end
             else begin
@@ -822,7 +822,7 @@ for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
                 if (fl_on) begin fl_e <= fl_e + 5'd1; if (fl_e == 5'd15) fl_on <= 1'b0; end
 
 `ifndef OT_S81SL_VS_SRAM
-if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
+if (fl_on) for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
 `endif
 
             end
@@ -926,7 +926,7 @@ if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
                 begin x_wa <= ob + {4'd0, k_ra[7:2]} + ((MUT == 6) ? 10'd1 : 10'd0); x_wa_s <= ob + {4'd0, k_ra[7:2]} + ((MUT == 6) ? 10'd1 : 10'd0); end
                 begin x_wm <= (k_ra[1:0] == 2'd3) ? 8'h0F : (k_ra[1:0] == 2'd2) ? 8'h07 : (k_ra[1:0] == 2'd1) ? 8'h03 : 8'h01; x_wm_s <= (k_ra[1:0] == 2'd3) ? 8'h0F : (k_ra[1:0] == 2'd2) ? 8'h07 : (k_ra[1:0] == 2'd1) ? 8'h03 : 8'h01; end
                 begin x_wd <= {128'd0, rar_c, rad}; x_wd_s <= {128'd0, rar_c, rad}; end
-                for (i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) begin x_wd[32 * i +: 32] <= rar_c; x_wd_s[32 * i +: 32] <= rar_c; end
+                for (integer i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) begin x_wd[32 * i +: 32] <= rar_c; x_wd_s[32 * i +: 32] <= rar_c; end
             end
             OP_RB, OP_QR: begin begin x_wa <= ob + {2'd0, k_out[7:0]}; x_wa_s <= ob + {2'd0, k_out[7:0]}; end begin x_wm <= 8'h0F; x_wm_s <= 8'h0F; end begin x_wd <= {128'd0, xo_d[127:0]}; x_wd_s <= {128'd0, xo_d[127:0]}; end end
             OP_ENG: begin begin x_wa <= a1 + {4'd0, fl_e[4:0], 1'b0}; x_wa_s <= a1 + {4'd0, fl_e[4:0], 1'b0}; end begin x_wm <= 8'hFF; x_wm_s <= 8'hFF; end begin x_wd <= xwsel; x_wd_s <= xwsel; end end

@@ -5,10 +5,11 @@
 # RESET 10-24: the reset tree's entry stage and relays (u_rst_in / u_rst_root / u_rrl_<k>) too: a tap with no RTL
 # load kept no relay chain (CP1 reach405P: 125 of 175 relays deleted), so reset_taps.tcl could not re-point FIRM flops
 # to it and the placed-hop gate saw missing relays.
+# START mirror relays (u_srl), raw/gated copies (_r/_g), and the run entry/root are physical control stages too.
 # face_keep_release.tcl (POST_SYNTH_TCL) releases them so repair / resizing work on them as before.
 set fk_c {}
 foreach i [get_cells -hierarchical *] {
-  if {[regexp {(^|[/.])(u_(bin|bout|ft)_[^/]*|u_rst_in|u_rst_root|u_rrl_[0-9]+)[/.]} [get_full_name $i]]} { lappend fk_c $i }
+  if {[regexp {(^|[/.])(u_(bin|bout|ft)_[^/]*|u_(rst|run)_(in|root)|u_[rs]rl_[0-9]+(_[rg])?)[/.]} [get_full_name $i]]} { lappend fk_c $i }
 }
 if {[llength $fk_c]} { set_dont_touch $fk_c }
 puts "OT_FACE_KEEP dont_touch [llength $fk_c] boundary cells before eliminate_dead_logic"

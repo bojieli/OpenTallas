@@ -1202,6 +1202,39 @@ def read_arr(f):
     return tarr, tmin, slew, narr
 
 
+def read_node_ranges(path):
+    """Read both extrema of each shared tree node. Legacy read_arr callers
+    retain their four-result API; report credit must not discard N's min."""
+    out = {}
+    for line in Path(path).read_text().splitlines():
+        fields = line.split()
+        if len(fields) >= 4 and fields[0] == 'N':
+            try:
+                late, early = map(float, fields[2:4])
+            except ValueError:
+                continue
+            if math.isfinite(late) and math.isfinite(early):
+                out[fields[1]] = (late, early)
+    return out
+
+
+def pair_clock_damage(launch_late, launch_early, capture_late, capture_early, shared_range=0.0):
+    """Early/late pair damage with only the physically shared prefix credited.
+    Equal late arrivals alone do not close skew. No OCV percentage is added:
+    these extrema already come from the native corner's timing analysis."""
+    values = (launch_late, launch_early, capture_late, capture_early, shared_range)
+    if not all(math.isfinite(v) for v in values):
+        raise ValueError('nonfinite physical clock arrival')
+    if launch_late + 1e-3 < launch_early or capture_late + 1e-3 < capture_early:
+        raise ValueError('clock early arrival exceeds late arrival')
+    credit = min(max(0.0, shared_range), max(0.0, launch_late-launch_early),
+                 max(0.0, capture_late-capture_early))
+    setup = launch_late-capture_early-credit
+    hold = capture_late-launch_early-credit
+    return dict(setup_damage_ps=setup, hold_damage_ps=hold,
+                cppr_credit_ps=credit, max_damage_ps=max(0.0, setup, hold))
+
+
 def seam_pairs(P, taps_by_part):
     """{(launch port, capture port): bits} from every abutted port bit: nearest src-part tap / dst-part tap to the pin
     (the stand-in and kit nearest-tap rule)."""
@@ -1263,6 +1296,7 @@ def cmd_report(a):
         if not f.is_file():
             continue
         tarr, tmin, slew, narr = read_arr(f)
+        node_ranges = read_node_ranges(f)
         cellarr = {}
         for k, v in narr.items():
             cellarr[k] = v
@@ -1295,9 +1329,9 @@ def cmd_report(a):
                     return c, cellarr[c]
             return None, 0.0
 
-        def eff(port):
+        def eff(port, early=False):
             # effective flop clock: a core tap's early shift is paid back by the core insertion (contract)
-            return tarr[port] + (tap_early(by_port[port], corner) if tree["meta"].get("core_early") == "pad" else 0.0)
+            return (tmin if early else tarr)[port] + (tap_early(by_port[port], corner) if tree["meta"].get("core_early") == "pad" else 0.0)
 
         def rows_of(pairs, weight=None):
             rows = []
@@ -1310,16 +1344,24 @@ def cmd_report(a):
                 ua, ub = tarr[pa] - la, tarr[pb] - la
                 r = dict(launch=pa, capture=pb, where=key[2], nominal_ps=round(nom, 2), lca=lc,
                          uncommon_ps=round(max(ua, ub), 1), bits=(weight or {}).get(key, 1))
+                shared = node_ranges.get(lc)
+                credit = max(0.0, shared[0]-shared[1]) if shared else 0.0
+                r.update(pair_clock_damage(eff(pa), eff(pa, True), eff(pb), eff(pb, True), credit))
+                r['common_range_available'] = shared is not None
                 for k in OCV:
                     r[f"ocv{int(k * 100)}_ps"] = round(max(abs(ub * (1 - k) - ua * (1 + k)), abs(ub * (1 + k) - ua * (1 - k))), 1)
                 rows.append(r)
             return rows
         for nm, rows in (("seam", rows_of(list(sp), sp)), ("intra", rows_of(ip))):
-            av = [abs(r["nominal_ps"]) for r in rows]
+            av = [r["max_damage_ps"] for r in rows]
+            nominal = [abs(r["nominal_ps"]) for r in rows]
             bits = [r["bits"] for r in rows]
-            s = dict(pairs=len(rows), bits=sum(bits), max_abs_ps=round(max(av), 2) if av else None,
-                     max_pos_ps=round(max(r["nominal_ps"] for r in rows), 2) if rows else None,
-                     min_neg_ps=round(min(r["nominal_ps"] for r in rows), 2) if rows else None,
+            s = dict(pairs=len(rows), bits=sum(bits), metric="early_late_shared_prefix_credit",
+                     nominal_max_abs_ps=round(max(nominal), 2) if nominal else None,
+                     gate_max_ps=max(av) if av else None,
+                     max_abs_ps=round(max(av), 2) if av else None,
+                     max_pos_ps=round(max(r["hold_damage_ps"] for r in rows), 2) if rows else None,
+                     min_neg_ps=round(-max(r["setup_damage_ps"] for r in rows), 2) if rows else None,
                      p99_abs_ps=round(pctl(av, 0.99), 2) if av else None,
                      over_gate=sum(1 for x in av if x > GATE_PS), over_target=sum(1 for x in av if x > TARGET_PS))
             for k in OCV:
@@ -1327,7 +1369,7 @@ def cmd_report(a):
                 v = [r[key] for r in rows]
                 s[f"{key}_max_info"] = max(v) if v else None
                 s[f"{key}_p99_info"] = pctl(v, 0.99)
-            s["worst"] = sorted(rows, key=lambda r: -abs(r["nominal_ps"]))[:10]
+            s["worst"] = sorted(rows, key=lambda r: -r["max_damage_ps"])[:10]
             s["worst_ocv_info"] = sorted(rows, key=lambda r: -r[f"ocv{int(OCV[-1] * 100)}_ps"])[:5]
             cr[nm] = s
         res["corners"][corner] = cr
@@ -1344,7 +1386,7 @@ def cmd_report(a):
         if not cr:
             v[c] = "NOT RUN"
             continue
-        m = max(cr["seam"]["max_abs_ps"] or 0, cr["intra"]["max_abs_ps"] or 0)
+        m = max(cr["seam"]["gate_max_ps"] or 0, cr["intra"]["gate_max_ps"] or 0)
         v[c] = dict(pair_skew_max_ps=m, gate="PASS" if m <= GATE_PS else "FAIL",
                     target="MET" if m <= TARGET_PS else "MISSED")
     res["verdict"] = v

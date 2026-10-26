@@ -6,7 +6,7 @@
 // V chunk vc<k>_<g> must arrive DELTA[g] edges after the header vh<k> (the die relay chains are padded to it).
 module qkd_pvw_die_tb #(
  parameter integer PAIR=0, parameter integer CTL_RESET_PIN=1, parameter integer LEAF_RESET_PIN=1,
- parameter integer FIRST_INPUT_AGE=127, parameter integer MUT=0,
+ parameter integer FIRST_INPUT_AGE=255, parameter integer MUT=0,
  parameter integer TRUNK_MUT=0,  // bench negative control: 1 = one control station of group 0 is a wire
  parameter integer FLAG_D_ADJ=0,  // bench negative control: control-tile flag slot moved by this many edges
  parameter integer RS_MUT=0      // bench negative control: 1 = column 5 injects one edge late (onto beat 6)
