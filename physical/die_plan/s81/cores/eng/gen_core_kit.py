@@ -166,8 +166,11 @@ def main():
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if c["macros"] else ""))
     skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
     ff = (tool / "face_flops.tcl").read_text()
-    ff = ff.replace("set ff_skip_re {^(clk(_t[0-9]+)?|arst_n)$}", "set ff_skip_re {" + skip + "}")
-    assert ("set ff_skip_re {" + skip + "}") in ff, "face_flops.tcl skip regex anchor changed"
+    # Shared face_flops evolves its partition controls; core controls come from this kit's real ports.
+    # Require one declaration, preserving a fail-closed guard against missing/ambiguous templates.
+    anchors = re.findall(r"^set ff_skip_re \{.*$", ff, re.M)
+    assert len(anchors) == 1, "face_flops.tcl skip regex anchor changed"
+    ff = ff.replace(anchors[0], "set ff_skip_re {" + skip + "}")
     ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
                     "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
                     "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
