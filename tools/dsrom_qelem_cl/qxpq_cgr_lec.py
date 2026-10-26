@@ -19,6 +19,8 @@ gclk_r[k] (= ICG(clk, u_ze_r<k>)).  Method = the standard clock-gate abstraction
      -assert.  The 8 kept enable copies u_ze_r<k> have no gold counterpart: they are proved through their (matched)
      next state qz_zd and reset by the sequential steps.  Compare points: every primary output, every matched flop,
      every ROM black-box input pin.
+  --merge-enables (gate side, before step 2): the 8 copies u_ze_r<k> are proved STRUCTURALLY identical to u_z (same
+     cell type, clock, async reset, reset value, D bits) and merged into it; step 3 then runs without equiv_induct.
 """
 import argparse, json, os, subprocess, sys, time
 PARAMS = dict(MTP=1, EARLY=1, NB=2, FAST=1, PP=1, QTIMING_FIX=1, QPIPE=1, QP_XS=1, QP_CAP=0, QP_P1=1, QP_CSAM=10, QZ=1,
@@ -52,7 +54,7 @@ def elab(y, root, out, name, extra):
     return js
 
 
-def cg_to_enable(js, name, out):
+def cg_to_enable(js, name, out, merge_enables=False):
     d = json.load(open(js))
     tops = [k for k, v in d["modules"].items() if v.get("attributes", {}).get("top")]
     m = d["modules"][tops[0]]
@@ -69,11 +71,15 @@ def cg_to_enable(js, name, out):
             "parameters": {"A_SIGNED": "0", "B_SIGNED": "0", "A_WIDTH": "1", "B_WIDTH": "1", "Y_WIDTH": "1"},
             "port_directions": {"A": "input", "B": "input", "Y": "output"}, "connections": {"A": [a], "B": [b], "Y": [y]}}
         return y
+    if merge_enables:
+        st0 = merge_enable_copies(m)
     gates = {}
     for cn, c in list(m["cells"].items()):
         if c["type"] == "ot_hdc_cg":
             gates[c["connections"]["gclk"][0]] = (cn, c["connections"]["clk"][0], c["connections"]["en"][0])
     st = {"gates": sorted(v[0] for v in gates.values()), "flops": 0, "roms": 0}
+    if merge_enables:
+        st["merged_enable_copies"] = st0
     used = {g: 0 for g in gates}
     for cn, c in list(m["cells"].items()):
         t, pc = c["type"], c["connections"]
@@ -129,6 +135,37 @@ def cg_to_enable(js, name, out):
     return o, st
 
 
+def merge_enable_copies(m):
+    """--merge-enables (gate only): prove STRUCTURALLY that every kept enable copy u_ze_r<k> is the same register as
+    u_z (same cell type, clock, asynchronous reset, reset value, polarities and the same D bits = qz_zd), hence equal
+    in every cycle from reset; then replace each copy's output by u_z's output.  Sound: two registers with identical
+    clock, reset and next-state inputs hold identical values in every reachable state (both reset to RV)."""
+    def q_of(net):
+        bits = m["netnames"][net]["bits"]
+        for cn, c in m["cells"].items():
+            if c["type"] in ("$adff", "$dff") and c["connections"].get("Q") == bits:
+                return cn, c
+        sys.exit(f"merge-enables: no flop drives {net}")
+    zn, z = q_of("u_e.g_qz_cg.u_z.q")
+    key = lambda c: (c["type"], c["connections"]["CLK"], c["connections"].get("ARST"), c["connections"]["D"],
+                     tuple(sorted(c["parameters"].items())))
+    sub, done = {}, []
+    for k in range(8):
+        cn, c = q_of(f"u_e.g_cgr.u_ze_r{k}.q")
+        if key(c) != key(z):
+            sys.exit(f"merge-enables REFUSED: u_ze_r{k} differs from u_z: {key(c)} vs {key(z)}")
+        sub[c["connections"]["Q"][0]] = z["connections"]["Q"][0]
+        del m["cells"][cn]; done.append(f"u_e.g_cgr.u_ze_r{k}")
+    for c in m["cells"].values():
+        for p, bits in c["connections"].items():
+            if c["port_directions"].get(p) == "input":
+                c["connections"][p] = [sub.get(b, b) for b in bits]
+    for pn, pp in m["ports"].items():
+        if pp["direction"] == "output":
+            pp["bits"] = [sub.get(b, b) for b in pp["bits"]]
+    return {"into": "u_e.g_qz_cg.u_z", "copies": done, "check": "type/CLK/ARST/D/params identical"}
+
+
 def newnot(m, cn, a, newbit):
     y = newbit(cn + ".lec_nen")
     m["cells"][cn + ".lec_not"] = {"hide_name": 0, "type": "$not", "attributes": {},
@@ -141,14 +178,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("gate_root"); ap.add_argument("gold_root"); ap.add_argument("out")
     ap.add_argument("--yosys", default=os.path.expanduser("~/.local/opentallas-tools/yosys-0.68/bin/yosys"))
+    ap.add_argument("--merge-enables", action="store_true",
+                    help="prove the 8 kept enable copies equal to u_z structurally and merge them (no induction needed)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     open(os.path.join(a.out, "lec_bb.v"), "w").write(BB)
     t0 = time.time()
     gj, gst = cg_to_enable(elab(a.yosys, a.gold_root, a.out, "gold", {}), "gold", a.out)
-    tj, tst = cg_to_enable(elab(a.yosys, a.gate_root, a.out, "gate", {"CGR": 8}), "gate", a.out)
+    tj, tst = cg_to_enable(elab(a.yosys, a.gate_root, a.out, "gate", {"CGR": 8}), "gate", a.out, a.merge_enables)
     scr = (f"read_json {gj}; read_json {tj}; async2sync; equiv_make gold gate equiv; hierarchy -top equiv; "
-           "equiv_struct; equiv_simple -seq 2; equiv_induct -seq 2; equiv_status; equiv_status -assert")
+           "equiv_struct; equiv_simple -seq 2; " + ("" if a.merge_enables else "equiv_induct -seq 2; ") +
+           "equiv_status; equiv_status -assert")
     log = os.path.join(a.out, "equiv.log")
     r = subprocess.run([a.yosys, "-l", log, "-p", scr], stdout=subprocess.DEVNULL)
     txt = open(log).read()
@@ -162,7 +202,7 @@ def main():
         verdict = "TOOL ERROR"
     summ += errs[-1:]
     res = {"schema": "opentallas.lec_cgr.v1", "verdict": verdict, "gold": a.gold_root, "gate": a.gate_root,
-           "params": PARAMS, "gate_extra": {"CGR": 8}, "gold_cg": gst, "gate_cg": tst, "equiv_summary": summ,
+           "params": PARAMS, "gate_extra": {"CGR": 8}, "merge_enables": a.merge_enables, "gold_cg": gst, "gate_cg": tst, "equiv_summary": summ,
            "seconds": round(time.time() - t0)}
     json.dump(res, open(os.path.join(a.out, "lec_cgr.json"), "w"), indent=1)
     print(json.dumps(res, indent=1))
