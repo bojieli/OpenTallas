@@ -122,6 +122,15 @@ module tb_q3stageb;
   if(rst_n&&lc>=0)begin
    if(tkx_start)begin producer_start++;$display("EV START +%0d slot0%0d",cyc-lc,slot0);end
    if(|tkx_del_slot|| |tkx_del_valid)begin producer_flits++;$display("EV FLIT +%0d slot%h valid%h slot0%0d",cyc-lc,tkx_del_slot,tkx_del_valid,slot0);end
+   if(|tkx_del_valid)begin
+    if(tkx_del_valid!=4'hf || tkx_del_slot!=4'hf)errors++;
+    for(integer lane_=0;lane_<4;lane_++)begin
+     reg[511:0]payload;reg[544:0]want;
+     payload={16{32'hffffffff}};payload[31:0]=32'h40800000-32'(lane_)*32'h00800000;payload[256+:32]=32'(20+lane_);
+     want={1'b1,8'hff,8'(lane_),16'(lane_),payload};
+     if(tkx_del_flit[545*lane_+:545]!==want)begin errors++;$display("FLIT_GOLD_MISMATCH lane%0d got%h want%h",lane_,tkx_del_flit[545*lane_+:545],want);end
+    end
+   end
    if(twv)begin
     if(first_write<0)first_write=cyc-lc;last_write=cyc-lc;
     $display("EV WRITE +%0d addr%0d mask%h data%h",cyc-lc,twa,twm,twd);

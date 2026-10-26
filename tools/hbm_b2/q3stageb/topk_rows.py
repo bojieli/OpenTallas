@@ -17,7 +17,7 @@ def compile_rows(start=84, slot=94, done=608, halt=620, mutant=None, write=None)
   if c==0:
    d['vm_rq']=sum(((1<<16)|0x400)<<(17*b) for b in range(8))
    d['vm_pair_select']=sum((((2*j+1)<<3)|(2*j))<<(6*j) for j in range(4))
-   d['vm_meta']=sum(((1<<32)|(0xff<<24)|(j<<16))<<(33*j) for j in range(4))
+   d['vm_meta']=sum(((1<<32)|(0xff<<24)|(j<<16)|j)<<(33*j) for j in range(4))
   if c==start:d['tkm_start']=1
   if c==91:d['capture_slot']=0xf<<5
   if c==92:
