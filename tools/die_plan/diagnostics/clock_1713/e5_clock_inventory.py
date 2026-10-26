@@ -16,8 +16,12 @@ for net in block.getNets():
     key = rule.getName() if rule else 'DEFAULT'
     rules[key] += 1
     if rule and key not in rule_rows:
-        rule_rows[key] = [dict(layer=x.getLayer().getName(), width=x.getWidth(),
-                               spacing=x.getSpacing()) for x in rule.getLayerRules()]
+        layer_rows = []
+        for layer in db.getTech().getLayers():
+            x = rule.getLayerRule(layer)
+            if x:
+                layer_rows.append(dict(layer=layer.getName(), width=x.getWidth(), spacing=x.getSpacing()))
+        rule_rows[key] = layer_rows
 
 def clock_pin(inst):
     pins = [p for p in inst.getITerms() if p.isInputSignal() and
