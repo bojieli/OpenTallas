@@ -15,6 +15,13 @@
 // Masters:  hfd_hgi_vms_glue_sw_t  hfd_hgi_vms_static_SW_glue  (NC 2, sid 0)          -> hb_vms_SW
 //           hfd_hgi_vms_glue_e_t   ot_vms_slice_static_glue NC 1 RG 5 WG 2 = {SE,NE}b_glue with the sid strap -> hb_vms_SE / hb_vms_NE
 //           hfd_hgi_vms_glue_nw_t  hfd_hgi_vms_static_NW_glue  (NC 0, sid 2, bk_flt)  -> hb_vms_NW
+//           hfd_hgi_vms_glue_nwc_t (PATH-HBM/EDGE2 2026-10-25) the B2 NW hub q_hub_nw folds the as-built SW + NW hubs, so
+//                                  its VMS is the SW-client slice ot_vms_slice_static_glue NC 2 RG 5 WG 2 sid 0 with the
+//                                  exact hfd_hgi_vms_static_SW_glue client ports (cq 676 / cr 548, client_seq 6,
+//                                  response_enable 3, response_seq 6, bank_client 16, hub_ring_client 4) PLUS the NW bank
+//                                  fault merge of hfd_hgi_vms_static_NW_glue (bk_flt -> bank status bit 17): the folded hub
+//                                  keeps the NW wq2-merge vmm leaves (u_vmm_Q0..7.flt).  bk_flt = 0 -> = hfd_hgi_vms_glue_sw_t
+//                                  (bench vms_glue_tile_equiv.py --quadrant SWC)  -> q_hub_nw u_hb_vms_Q
 module hfd_hgi_vms_glue_sw_t (
     input wire clk,
     input wire rst_n,
@@ -507,5 +514,182 @@ module hfd_hgi_vms_glue_nw_t (
         .bk_pr(bk_pr),
         .bank_status(bank_status),
         .bk_flt(bk_flt));
+endmodule
+module hfd_hgi_vms_glue_nwc_t (
+    input wire clk,
+    input wire rst_n,
+    input wire [675:0] cq,
+    output wire [547:0] cr,
+    input wire [5:0] client_seq,
+    input wire [2:0] response_enable,
+    input wire [5:0] response_seq,
+    input wire [7:0] bank_enable,
+    input wire [15:0] bank_client,
+    input wire [1:0] hub_ring_enable,
+    input wire [3:0] hub_ring_client,
+    input wire [2223:0] cw_in,
+    input wire [2223:0] ccw_in,
+    output wire [2223:0] cw_out,
+    output wire [2223:0] ccw_out,
+    input wire [1:0] ring_tx_enable,
+    input wire [5:0] ring_tx_source,
+    input wire replay_enable,
+    input wire replay_source,
+    output wire [275:0] b0_xq,
+    output wire [275:0] b0_xq2,
+    input wire b0_xq_done,
+    input wire b0_xq2_done,
+    input wire [275:0] b0_eg,
+    output wire [284:0] b0_pq,
+    input wire [265:0] b0_pr,
+    input wire [17:0] b0_status,
+    input wire b0_flt,
+    output wire [275:0] b1_xq,
+    output wire [275:0] b1_xq2,
+    input wire b1_xq_done,
+    input wire b1_xq2_done,
+    input wire [275:0] b1_eg,
+    output wire [284:0] b1_pq,
+    input wire [265:0] b1_pr,
+    input wire [17:0] b1_status,
+    input wire b1_flt,
+    output wire [275:0] b2_xq,
+    output wire [275:0] b2_xq2,
+    input wire b2_xq_done,
+    input wire b2_xq2_done,
+    input wire [275:0] b2_eg,
+    output wire [284:0] b2_pq,
+    input wire [265:0] b2_pr,
+    input wire [17:0] b2_status,
+    input wire b2_flt,
+    output wire [275:0] b3_xq,
+    output wire [275:0] b3_xq2,
+    input wire b3_xq_done,
+    input wire b3_xq2_done,
+    input wire [275:0] b3_eg,
+    output wire [284:0] b3_pq,
+    input wire [265:0] b3_pr,
+    input wire [17:0] b3_status,
+    input wire b3_flt,
+    output wire [275:0] b4_xq,
+    output wire [275:0] b4_xq2,
+    input wire b4_xq_done,
+    input wire b4_xq2_done,
+    input wire [275:0] b4_eg,
+    output wire [284:0] b4_pq,
+    input wire [265:0] b4_pr,
+    input wire [17:0] b4_status,
+    input wire b4_flt,
+    output wire [275:0] b5_xq,
+    output wire [275:0] b5_xq2,
+    input wire b5_xq_done,
+    input wire b5_xq2_done,
+    input wire [275:0] b5_eg,
+    output wire [284:0] b5_pq,
+    input wire [265:0] b5_pr,
+    input wire [17:0] b5_status,
+    input wire b5_flt,
+    output wire [275:0] b6_xq,
+    output wire [275:0] b6_xq2,
+    input wire b6_xq_done,
+    input wire b6_xq2_done,
+    input wire [275:0] b6_eg,
+    output wire [284:0] b6_pq,
+    input wire [265:0] b6_pr,
+    input wire [17:0] b6_status,
+    input wire b6_flt,
+    output wire [275:0] b7_xq,
+    output wire [275:0] b7_xq2,
+    input wire b7_xq_done,
+    input wire b7_xq2_done,
+    input wire [275:0] b7_eg,
+    output wire [284:0] b7_pq,
+    input wire [265:0] b7_pr,
+    input wire [17:0] b7_status,
+    input wire b7_flt,
+    output wire [2:0] hub_status,
+    output wire [1:0] mirror_busy,
+    output wire [18:0] vmstat,
+    output wire [2:0] ring_fault
+);
+    wire [2207:0] bk_xq;
+    assign b0_xq = bk_xq[275:0];
+    assign b1_xq = bk_xq[551:276];
+    assign b2_xq = bk_xq[827:552];
+    assign b3_xq = bk_xq[1103:828];
+    assign b4_xq = bk_xq[1379:1104];
+    assign b5_xq = bk_xq[1655:1380];
+    assign b6_xq = bk_xq[1931:1656];
+    assign b7_xq = bk_xq[2207:1932];
+    wire [2207:0] bk_xq2;
+    assign b0_xq2 = bk_xq2[275:0];
+    assign b1_xq2 = bk_xq2[551:276];
+    assign b2_xq2 = bk_xq2[827:552];
+    assign b3_xq2 = bk_xq2[1103:828];
+    assign b4_xq2 = bk_xq2[1379:1104];
+    assign b5_xq2 = bk_xq2[1655:1380];
+    assign b6_xq2 = bk_xq2[1931:1656];
+    assign b7_xq2 = bk_xq2[2207:1932];
+    wire [7:0] bk_xq_done;
+    assign bk_xq_done = {b7_xq_done, b6_xq_done, b5_xq_done, b4_xq_done, b3_xq_done, b2_xq_done, b1_xq_done, b0_xq_done};
+    wire [7:0] bk_xq2_done;
+    assign bk_xq2_done = {b7_xq2_done, b6_xq2_done, b5_xq2_done, b4_xq2_done, b3_xq2_done, b2_xq2_done, b1_xq2_done, b0_xq2_done};
+    wire [2207:0] bk_eg;
+    assign bk_eg = {b7_eg, b6_eg, b5_eg, b4_eg, b3_eg, b2_eg, b1_eg, b0_eg};
+    wire [2279:0] bk_pq;
+    assign b0_pq = bk_pq[284:0];
+    assign b1_pq = bk_pq[569:285];
+    assign b2_pq = bk_pq[854:570];
+    assign b3_pq = bk_pq[1139:855];
+    assign b4_pq = bk_pq[1424:1140];
+    assign b5_pq = bk_pq[1709:1425];
+    assign b6_pq = bk_pq[1994:1710];
+    assign b7_pq = bk_pq[2279:1995];
+    wire [2127:0] bk_pr;
+    assign bk_pr = {b7_pr, b6_pr, b5_pr, b4_pr, b3_pr, b2_pr, b1_pr, b0_pr};
+    wire [143:0] bank_status;
+    assign bank_status = {b7_status, b6_status, b5_status, b4_status, b3_status, b2_status, b1_status, b0_status};
+    wire [7:0] bk_flt;
+    assign bk_flt = {b7_flt, b6_flt, b5_flt, b4_flt, b3_flt, b2_flt, b1_flt, b0_flt};
+    wire [143:0] bank_status_m;
+    genvar fb;
+    generate for(fb=0;fb<8;fb=fb+1)begin:g_flt
+        assign bank_status_m[fb*18+:18]={bank_status[fb*18+17]|bk_flt[fb],bank_status[fb*18+:17]};
+    end endgenerate
+    ot_vms_slice_static_glue #(.NC(2),.RG(5),.WG(2),.NATIVE_SHAPE(1),.BANK_PIN_IN(1)) u_slice (
+        .sid(2'd0),
+        .clk_hub(clk),
+        .clk_ring({clk, clk}),
+        .clk_replay(clk),
+        .rst_n(rst_n),
+        .cq(cq),
+        .cr(cr),
+        .client_seq(client_seq),
+        .response_enable(response_enable),
+        .response_seq(response_seq),
+        .bank_enable(bank_enable),
+        .bank_client(bank_client),
+        .hub_ring_enable(hub_ring_enable),
+        .hub_ring_client(hub_ring_client),
+        .cw_in(cw_in),
+        .ccw_in(ccw_in),
+        .cw_out(cw_out),
+        .ccw_out(ccw_out),
+        .ring_tx_enable(ring_tx_enable),
+        .ring_tx_source(ring_tx_source),
+        .replay_enable(replay_enable),
+        .replay_source(replay_source),
+        .hub_status(hub_status),
+        .mirror_busy(mirror_busy),
+        .vmstat(vmstat),
+        .ring_fault(ring_fault),
+        .bk_xq(bk_xq),
+        .bk_xq2(bk_xq2),
+        .bk_xq_done(bk_xq_done),
+        .bk_xq2_done(bk_xq2_done),
+        .bk_eg(bk_eg),
+        .bk_pq(bk_pq),
+        .bk_pr(bk_pr),
+        .bank_status(bank_status_m));
 endmodule
 `default_nettype wire

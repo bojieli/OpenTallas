@@ -16,14 +16,14 @@ src=($S/hfd_hgi_vms_static.sv $S/hfd_hgi_vms_static_glue.sv $S/hfd_hgi_vms_stati
      $(ls $S/ot_vms_bank_static_*.sv) $S/faces_q0/hfd_vms_bank_native_q0_faces.sv $S/faces_q0/ot_vms_bank_q0_faces_core.sv
      $S/faces_q0/ot_vms_bank_q0_faces_body.sv rtl/lib/ot_rst_relay.sv
      physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
-case $q in SW|NW) TAG=VMS_HOIST_EQUIV;; *) TAG=VMS_QB_EQUIV;; esac
+case $q in SW|NW|SWC) TAG=VMS_HOIST_EQUIV;; *) TAG=VMS_QB_EQUIV;; esac
 X=; [ "$m" != pos ] && X="--mut $m"
 D="$OUT/$q$m"
 python3 tools/hbm_die_v16/vms_glue_tile_equiv.py --quadrant $q --out "$D" $X > "$D.gen.log" 2>&1 || { cat "$D.gen.log"; echo "$TAG $q GENFAIL"; exit 1; }
 grep VMS_GLUE_TILE_TB "$D.gen.log"
 "$V" --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module tb_vms_hoist -Mdir "$D/obj" \
-  "${src[@]}" "$D/vms_hoist_comp_$q.sv" "$D/tb_vms_hoist.sv" > "$D.build.log" 2>&1 || { grep -m5 %Error "$D.build.log"; echo "$TAG $q BUILDFAIL"; exit 1; }
+  "${src[@]}" "$D/vms_hoist_comp_${q%C}.sv" "$D/tb_vms_hoist.sv" > "$D.build.log" 2>&1 || { grep -m5 %Error "$D.build.log"; echo "$TAG $q BUILDFAIL"; exit 1; }
 "$D/obj/Vtb_vms_hoist" > "$D.sim.log" 2>&1
 rm -rf "$D/obj"
 grep -E "$TAG|MISMATCH" "$D.sim.log" | tail -4
-grep -Eq "^$TAG $q PASS checks=[1-9][0-9]* errors=0$" "$D.sim.log"   # exit 0 only on a counted PASS (mutants: non-zero)
+grep -Eq "^$TAG ${q%C} PASS checks=[1-9][0-9]* errors=0$" "$D.sim.log"   # exit 0 only on a counted PASS (mutants: non-zero)

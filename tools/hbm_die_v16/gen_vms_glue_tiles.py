@@ -13,6 +13,13 @@ HBM-B-RTL1); the tops only
 Masters:  hfd_hgi_vms_glue_sw_t  hfd_hgi_vms_static_SW_glue  (NC 2, sid 0)          -> hb_vms_SW
           hfd_hgi_vms_glue_e_t   ot_vms_slice_static_glue NC 1 RG 5 WG 2 = {SE,NE}b_glue with the sid strap -> hb_vms_SE / hb_vms_NE
           hfd_hgi_vms_glue_nw_t  hfd_hgi_vms_static_NW_glue  (NC 0, sid 2, bk_flt)  -> hb_vms_NW
+          hfd_hgi_vms_glue_nwc_t (PATH-HBM/EDGE2 2026-10-25) the B2 NW hub q_hub_nw folds the as-built SW + NW hubs, so
+                                 its VMS is the SW-client slice ot_vms_slice_static_glue NC 2 RG 5 WG 2 sid 0 with the
+                                 exact hfd_hgi_vms_static_SW_glue client ports (cq 676 / cr 548, client_seq 6,
+                                 response_enable 3, response_seq 6, bank_client 16, hub_ring_client 4) PLUS the NW bank
+                                 fault merge of hfd_hgi_vms_static_NW_glue (bk_flt -> bank status bit 17): the folded hub
+                                 keeps the NW wq2-merge vmm leaves (u_vmm_Q0..7.flt).  bk_flt = 0 -> = hfd_hgi_vms_glue_sw_t
+                                 (bench vms_glue_tile_equiv.py --quadrant SWC)  -> q_hub_nw u_hb_vms_Q
     gen_vms_glue_tiles.py [--check]
 """
 import sys
@@ -27,7 +34,8 @@ BANK = [('xq', 'output', 276, 'bk_xq'), ('xq2', 'output', 276, 'bk_xq2'), ('xq_d
 FLT = ('flt', 'input', 1, 'bk_flt')
 M = dict(sw=dict(nc=2, glue='hfd_hgi_vms_static_SW_glue', sid=None, flt=False, q='SW'),
          e=dict(nc=1, glue=None, sid='strap', flt=False, q='SE/NE'),
-         nw=dict(nc=0, glue='hfd_hgi_vms_static_NW_glue', sid=None, flt=True, q='NW'))
+         nw=dict(nc=0, glue='hfd_hgi_vms_static_NW_glue', sid=None, flt=True, q='NW'),
+         nwc=dict(nc=2, glue=None, sid=0, flt=True, q='NW hub, folded SW clients'))
 RING = [('cw_in', 'input', 2224), ('ccw_in', 'input', 2224), ('cw_out', 'output', 2224), ('ccw_out', 'output', 2224),
         ('ring_tx_enable', 'input', 2), ('ring_tx_source', 'input', 6), ('replay_enable', 'input', 1), ('replay_source', 'input', 1)]
 OUTS = [('hub_status', 3), ('mirror_busy', 2), ('vmstat', 19), ('ring_fault', 3)]
@@ -40,7 +48,7 @@ def w(n):
 def ports(k, c):
     nc = c['nc']; cw = max(1, (nc).bit_length()) if nc else 1   # CW = clog2(NC+1)
     p = [('clk', 'input', 1), ('rst_n', 'input', 1)]
-    if c['sid']:
+    if c['sid'] == 'strap':
         p.append(('sid', 'input', 2))
     if nc:
         p += [('cq', 'input', nc * 338), ('cr', 'output', nc * 274)]
@@ -81,6 +89,14 @@ def tile(k, c):
     conn += [f'.{f}({f})' for _, _, _, f in BANK + ([FLT] if c['flt'] else [])]
     if c['glue']:
         L.append(f'    {c["glue"]} u_glue (\n        ' + ',\n        '.join(conn) + ');')
+    elif c['sid'] == 0:
+        # = hfd_hgi_vms_static_SW_glue (NC 2 RG 5 WG 2 sid 0) + the hfd_hgi_vms_static_NW_glue bank fault merge
+        L += ['    wire [143:0] bank_status_m;', '    genvar fb;', '    generate for(fb=0;fb<8;fb=fb+1)begin:g_flt',
+              '        assign bank_status_m[fb*18+:18]={bank_status[fb*18+17]|bk_flt[fb],bank_status[fb*18+:17]};',
+              '    end endgenerate']
+        conn = [x for x in conn if x not in ('.bank_status(bank_status)', '.bk_flt(bk_flt)')] + ['.bank_status(bank_status_m)']
+        L.append("    ot_vms_slice_static_glue #(.NC(2),.RG(5),.WG(2),.NATIVE_SHAPE(1),.BANK_PIN_IN(1)) u_slice (\n        .sid(2'd0),\n        "
+                 + ',\n        '.join(conn) + ');')
     else:
         L.append('    // = hfd_hgi_vms_static_SEb_glue / _NEb_glue (hfd_hgi_vms_static_qb.sv) with sid from the strap pin')
         L.append('    ot_vms_slice_static_glue #(.NC(1),.RG(5),.WG(2),.NATIVE_SHAPE(1),.BANK_PIN_IN(1)) u_slice (\n        .sid(sid),\n        '
