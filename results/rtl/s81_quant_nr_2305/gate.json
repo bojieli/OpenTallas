@@ -1,0 +1,19 @@
+{
+  "status": "PASS_CANDIDATE_ONLY",
+  "positive": "PASS quant true-r0c0 macro_reads=8152 delay_checks=10734 W1024 D11 cold_warm_reset all64rows masks read_hold write_read_collision zero_added_cycles\n- /srv/opentallas-scratch2/claude/codex-kv-quant-nr-2305/gate_v2/rtl/tb.sv:29: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 9us; walltime 0.288 s; speed 31.848 us/s\n- Verilator: cpu 0.288 s on 1 threads; allocated 7 MB\n",
+  "address_mutant": "[110374000] %Fatal: tb.sv:25: Assertion failed in tb: DELAY_DIFF cycle=131\n%Error: /srv/opentallas-scratch2/claude/codex-kv-quant-nr-2305/gate_v2/rtl/tb.sv:25: Verilog $stop\nAborting...\n",
+  "otrun": "ot-run: localhost      admits    71 GB (avail 404, reserve 0, fresh 242.6, peak 26.1, headroom 0, waiters 0/0 GB) load 47/256 running 38 disk 545 GB \not-run: -> localhost\not-heavy: admitted on tender-ray as oth-ubuntu-2976604-1792994858 after 0 s\nPASS quant true-r0c0 macro_reads=8152 delay_checks=10734 W1024 D11 cold_warm_reset all64rows masks read_hold write_read_collision zero_added_cycles\nPASS wrong-address mutant CAUGHT in actual delay-line lockstep\not-run: RAN on localhost (unit oth-ubuntu-2976604-1792994858): exit 0\n",
+  "first_attempt": {
+    "status": "MUTANT_ESCAPED",
+    "cause": "test $urandom(seed) reset PRNG each call, producing repeated cycle payload; corrected to stateful LCG",
+    "log": "/srv/opentallas-scratch2/claude/codex-kv-quant-nr-2305/gate_v1.otrun.log"
+  },
+  "source_sha256": {
+    "rtl/hdc/ot_sram_dline.sv": "76656320b9ae4390e93566eba95282d750283e4ee9cdbf91fd4c4ff4c5d4eb13",
+    "rtl/hdc/ot_sram_dline_nr.sv": "c892d1cb4047bce9d9b3e6972894b0c5668efac2bd98f782dc35118e72400d8b",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r0c0/ot_sram_1r1w_64x512_m1_r0c0.v": "840f78048168df5baba02ef09b9fc68e813854bba190d180a184456fc156a95f"
+  },
+  "cycles_added": 0,
+  "adoption": false,
+  "source_parent_selection": "Pending explicit native KV quant parent selection; current provider and live sizing jobs unchanged"
+}
