@@ -1,0 +1,21 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/codex-qc-phase-1026/tools/die_plan
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/codex-qc-phase-1026/tools/die_plan
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/wt/codex-qc-phase-1026/tools/die_plan
+ot-run: localhost      admits   162 GB (avail 318, reserve 0, fresh 86.9, peak 4.4, headroom 0, waiters 2/6 GB) load 47/256 running 34 disk 613 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-696666-1793008759 after 1 s
+/srv/opentallas-scratch2/claude/wt/codex-qc-phase-1026/tools/die_plan/kit_istations.py:377: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpv09vpunn/native_internal_stations/sys/plan.json' mode='r' encoding='UTF-8'>
+  raw = json.load(open(plan))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.104s
+
+OK
+nominal 0 CYCLE22_PASS
+/tmp/tmpv09vpunn/nominal.sv:96: $finish called at 1200000 (1ps)
+missing 1 FATAL: /tmp/tmpv09vpunn/missing.sv:96: EDGE_MISMATCH          41
+       Time: 410000  Scope: tb
+double 1 FATAL: /tmp/tmpv09vpunn/double.sv:96: EDGE_MISMATCH          41
+       Time: 410000  Scope: tb
+ot-run: RAN on localhost (unit oth-ubuntu-696666-1793008759): exit 0
