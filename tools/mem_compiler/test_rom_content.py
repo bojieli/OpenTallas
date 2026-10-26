@@ -48,3 +48,34 @@ def test_actual_released_token_map_producer_matches_legacy(tmp_path):
     names=[f'tmap{i}.viamap.hex' for i in range(8)]+['expected.hex']
     assert all((tmp_path/'old'/n).read_bytes()==(tmp_path/'new'/n).read_bytes() for n in names)
     assert len(list((tmp_path/'new'/'.rom-personalisation').glob('*/verify.json')))==8
+
+
+def test_hcx_actual_builder_matches_legacy_across_page_boundary(tmp_path):
+    import subprocess
+    source=C.ROOT/'tools/s81_ftok/hcx_rank_images.py'
+    legacy=subprocess.check_output(['git','-C',str(C.ROOT),'show','5e8ce49592:tools/s81_ftok/hcx_rank_images.py'],text=True)
+    old={'__file__':str(source),'__name__':'legacy_hcx_producer'}
+    new={'__file__':str(source),'__name__':'current_hcx_producer'}
+    exec(compile(legacy,str(source),'exec'),old)
+    exec(compile(source.read_text(),str(source),'exec'),new)
+    #Minimum HCX vehicle: same hu_hbm/hu_case formats, early and last43-set addresses,
+    #all8banks/4payload lanes/2pages, and final rank/leaf identity.
+    row=23;sources=[]
+    for layer in(0,42):
+        d=tmp_path/f'set{layer}';d.mkdir();records={};cases=[]
+        for block,base in enumerate((0,4096)):
+            cases.append('0'*56+f'{base<<397:x}')
+            for bank in range(8):
+                for run in range(80):
+                    for lane in range(4):
+                        a=base+4+(8*row+bank)*320+run*4+lane
+                        v=((layer<<28)|(block<<27)|(bank<<20)|(run<<8)|lane)+1
+                        records[a]=(1<<255)|(v*0x123456789abcdef)
+        (d/'hu_hbm.mem').write_text(''.join(f'{a:010x}{v:064x}\n' for a,v in records.items()))
+        (d/'hu_case.mem').write_text('\n'.join(cases)+'\n');sources.append((layer,d))
+    old['sets']=lambda root:iter(sources);new['sets']=lambda root:iter(sources)
+    before=old['build'](tmp_path,tmp_path/'old',[row])
+    after=new['build'](tmp_path,tmp_path/'new',[row])
+    assert before==after and len(after)==64
+    assert all((tmp_path/'old'/n).read_bytes()==(tmp_path/'new'/n).read_bytes() for n in before)
+    assert len(list((tmp_path/'new'/'.rom-personalisation').glob('*/verify.json')))==64
