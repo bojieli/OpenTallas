@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-10-25 17:55 PDT",
+  "source": "3317f13544",
+  "row": "6f61cf5ff8c9",
+  "kit": "intel1:codex-qc-sramif-1309/vmr_s6kc",
+  "odb_sha256": "3f55140a4e4b4d8de521d6eebf13a92ea7230816e32a361f20ca663c9f1d8ee0",
+  "config_sha256": "9ea2ed935a5d7e0dc21cbf75bcf499ea3051d81aabd3499a29e829c964a580da",
+  "verdict": "FAIL-to-route currentLC1basis; geometry/F6/nativepairsPASSonly",
+  "TT_setup": 199.43,
+  "FF_hold": 5.9,
+  "F6": {
+    "inputs": 556,
+    "reads": 512,
+    "missing": 0,
+    "over20": 0,
+    "input_max_um": 16.008,
+    "read_max_um": 14.6
+  },
+  "pairs": {
+    "n": 24978,
+    "TT": [
+      38.37,
+      26.29
+    ],
+    "FF": [
+      25.82,
+      20.15
+    ]
+  },
+  "LC1": {
+    "TT_mean": 395.74,
+    "FF_mean": 302.67,
+    "declared_TT": 346.69,
+    "declared_FF": 267.9,
+    "TT_mean_deviation": 49.05,
+    "FF_mean_deviation": 34.77,
+    "FF_pin_n": 1509,
+    "FF_pin_range": [
+      283.27,
+      314.65
+    ],
+    "misleading_mean_devs": [
+      10.44,
+      6.94
+    ],
+    "temporary_GRT_refs": [
+      385.3,
+      295.73
+    ],
+    "per_pin_count": "NOT RUN; meanalreadyfails"
+  },
+  "next": "ROOTexplicitold14:56RCX\u00b140diagnosticcarry vsstructuralretap/declaredplancontract decision; no silentrebind/Achange/routeapproval"
+}
