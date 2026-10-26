@@ -53,6 +53,8 @@ def main():
     ap.add_argument('--api-root', type=Path, required=True)
     ap.add_argument('--profile-dir', type=Path, required=True)
     ap.add_argument('--views', type=Path, required=True)
+    ap.add_argument('--common-clock-dir', type=Path,
+                    help='qualified one-clock adapter cohort; requires matching plan pins')
     ap.add_argument('--core', action='append', required=True,
                     choices=['body', 'edge', 'vm', 'reduce', 'ring_ag'])
     ap.add_argument('--out', type=Path, required=True)
@@ -82,6 +84,14 @@ def main():
             raise SystemExit(f'{core}: need exactly one selected physical view, found {len(candidates)}')
         v = candidates[0]
         module = v['module']
+        native_clocks = list(profile['clock_ports'])
+        if a.common_clock_dir:
+            adapt = load('q3_face_oneclk', root / 'tools/hbm_b2/q3sync/q3_common_clock.py')
+            recipe, staged, profile = adapt.adapt_recipe(
+                core, recipe, staged, profile, a.common_clock_dir)
+            if core in ('reduce', 'ring_ag') and module != canonical:
+                recipe, profile = kit.canonical_oneclk_map(
+                    core, recipe, profile, native_clocks, root)
         pins_path = a.views.parent / v['pins_file']
         if sha(pins_path) != v['pins_sha256']:
             raise SystemExit(f'{core}: plan pin hash changed')
@@ -90,7 +100,9 @@ def main():
         widths = {n: pb[n][0] for n in sorted(pb)}
         scalars = {n for n, (w, scalar) in pb.items() if scalar}
         cmap, straps, ties = None, {}, {}
-        if v.get('canonical_type'):
+        if recipe.get('canonical_pin_map'):
+            cmap = recipe['canonical_pin_map']
+        elif v.get('canonical_type'):
             ct = json.loads((gen.HARDEN / 'canonical_ports_split.json').read_text())['types'][v['canonical_type']]
             tids = [t for t in ct['type_ids'] if re.sub(r'__[\d.]+x[\d.]+$', '', t) == module]
             if len(tids) != 1:
@@ -98,6 +110,14 @@ def main():
             ti = ct['type_ids'][tids[0]]
             cmap, straps = ti['cut_pins'], ti.get('straps') or {}
             ties = dict(k.split('=', 1) for k in (ti.get('tied_at_parent') or {}))
+        if a.common_clock_dir:
+            if set(profile['clock_ports']) != {'clk'} or 'clk' not in pb:
+                raise SystemExit(f'{core}: one-clock adapter requires the plan scalar clk pin')
+            for old in native_clocks:
+                if old != 'clk' and old in pb:
+                    raise SystemExit(f'{core}: stale physical clock pin {old}')
+            if pb['clk'] != (1, True):
+                raise SystemExit(f'{core}: physical clk must be scalar')
         wrapper_pb, wrapper_cmap, packed = pb, cmap, None
         clock_proof = None
         if cmap and any(len(mp) != 1 for mp in cmap.values()):
@@ -153,6 +173,9 @@ def main():
                               passthru, clock, scalars=scalars)
         (a.out / (module + '__wrap.sv')).write_text(wrapper)
         (a.out / (module + '__fshell.sv')).write_text(shell)
+        if a.common_clock_dir:
+            adapter = staged[next(p for p in staged if p.startswith('tools/hbm_b2/q3sync/oneclk/'))]
+            (a.out / adapter.name).write_bytes(adapter.read_bytes())
         receipts[core] = dict(module=module, profile=profile, view=v, mapping=mapping,
                               widths=widths, dirs=dirs, scalars=sorted(scalars),
                               passthrough=sorted(passthru), clock=clock,
