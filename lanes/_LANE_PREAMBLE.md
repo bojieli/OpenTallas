@@ -51,3 +51,6 @@ You are a lane agent of the OpenTallas coordinator, which now runs on rtx-pro (t
 4. SPARE CAPACITY GOES ONLY TO PARTS NO PENDING PLAN DELTA TOUCHES. This is the existing kit rule, now applied to all lanes.
 
 Near misses (OWNER revised 10-25): small ECOs are allowed when the root cause is understood, local and non-recurring, and the miss is small. Record the root cause next to the ECO. A structural, large or recurring cause gets a structural fix + GEOM PASS + rebuild. Diagnose first; never reach for an ECO instead of finding the cause.
+
+### Rule 1 amendment (OWNER APPROVED 2026-10-25 ~21:00 PDT)
+Per die: once die GRT passes with overflow 0 INCLUDING the die clock, the die plan is FROZEN (FROZEN line in lanes/PATH-FREEZE.md) and ALL its tiles (path and non-path) route to sign-off at full breadth against the frozen interfaces. Die STA on real views stays the release gate. Frozen now: QC plan 441d1401, S81-HEAD plan d7b8d1eb. Failing dies (S81, KV, HBM): fix only the failing regions; tiles no fix touches proceed now (rule 4). Prefer re-using existing closed tiles that fit a frozen slot unchanged. No new gates until a die passes die STA on real views.
