@@ -1,0 +1,72 @@
+[
+  {
+    "name": "production_valid",
+    "rc": 0,
+    "expected": 0,
+    "record": {
+      "verdict": "PASS",
+      "rc": 0,
+      "top_params": [
+        "MODE",
+        "1"
+      ],
+      "errors": [],
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/bin/yosys",
+        "-q",
+        "-s",
+        "/srv/opentallas-scratch2/claude/codex-rtl-lint-params-2144/production_valid/rtl_lint.ys"
+      ]
+    }
+  },
+  {
+    "name": "production_bad_default_clean",
+    "rc": 1,
+    "expected": 1,
+    "record": {
+      "verdict": "FAIL",
+      "rc": 1,
+      "top_params": [
+        "MODE",
+        "2"
+      ],
+      "errors": [
+        "ERROR: Found 1 problems in 'check -assert'."
+      ],
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/bin/yosys",
+        "-q",
+        "-s",
+        "/srv/opentallas-scratch2/claude/codex-rtl-lint-params-2144/production_bad_default_clean/rtl_lint.ys"
+      ]
+    }
+  },
+  {
+    "name": "mutant_ignores_params",
+    "rc": 0,
+    "expected": 0,
+    "why": "old checker falsely passes the clean default instead of the broken production specialization"
+  },
+  {
+    "name": "unknown_parameter",
+    "rc": 1,
+    "expected": 1,
+    "record": {
+      "verdict": "FAIL",
+      "rc": 1,
+      "top_params": [
+        "MODE",
+        "1"
+      ],
+      "errors": [
+        "/srv/opentallas-scratch2/claude/codex-rtl-lint-params-2144/unknown_parameter/demo.sv:1: ERROR: Can't find object for defparam `MODE`!"
+      ],
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/bin/yosys",
+        "-q",
+        "-s",
+        "/srv/opentallas-scratch2/claude/codex-rtl-lint-params-2144/unknown_parameter/rtl_lint.ys"
+      ]
+    }
+  }
+]

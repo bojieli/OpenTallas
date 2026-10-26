@@ -139,5 +139,24 @@
  "ot_dsrom_su_hcpost_lane_pr": {
   "ref_tile": "physical/ref_tile/s81sl_hcpl",
   "hold_ff_margin": 5
+ },
+ "ot_s81sl_vs": {
+  "ref_tile": "physical/ref_tile/s81sl_vs",
+  "plan_pins_file": "inputs/core_pins/ot_s81sl_vs_tpl.json",
+  "suffix": "tpl_f6",
+  "face_band_um": {
+   "W": [
+    12,
+    15
+   ]
+  },
+  "macro_if_flops": true
+ },
+ "ot_s81sl_vq": {
+  "ref_tile": "physical/ref_tile/s81sl_vq",
+  "plan_pins_file": "inputs/core_pins/ot_s81sl_vq_tpl.json",
+  "suffix": "tpl_f6",
+  "core_margin": 2.16,
+  "macro_if_flops": true
  }
 }

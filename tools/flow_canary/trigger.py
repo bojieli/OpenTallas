@@ -141,6 +141,14 @@ def ready_dies(src, new, specs, watch, state, busy, force=False, spec=None):
             continue
         diff = git(src, "diff", "--name-only", old, new) if old and not force else None
         hits = flow_paths(diff.stdout.split(), spec or {"watch": watch}, die) if diff and diff.returncode == 0 else ["(first / forced / diff unavailable)"]
+        if "tools/flow_canary/canaries.json" in hits and spec:
+            before = git(src, "show", old + ":tools/flow_canary/canaries.json")
+            try:
+                previous = json.loads(before.stdout) if before.returncode == 0 else None
+            except ValueError:
+                previous = None
+            if isinstance(previous, dict) and not _watch_module.spec_flow_changed(previous, spec, die):
+                hits.remove("tools/flow_canary/canaries.json")
         if hits:
             ready.append(die)
             hits_all.update(hits)

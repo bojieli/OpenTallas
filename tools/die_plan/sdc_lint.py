@@ -17,8 +17,10 @@ liberty files before synthesis):
   relaxation every period = the plan period, no -waveform; max delays >= the declared IO budgets; and no exception
              command at all (set_false_path, set_multicycle_path, set_max_delay, set_min_delay, set_disable_timing,
              set_clock_groups, set_case_analysis, ... : any command outside the generator's vocabulary is an error).
-             Sole exception (OWNER 10-25 option B): set_false_path -from [get_ports {...}] on declared ID straps
+             Exception (OWNER 10-25 option B): set_false_path -from [get_ports {...}] on declared ID straps
              (lint(straps=...) / sdc_lint.json "straps" / kit straps.json, strap_* inputs) -- required on every declared strap, refused on any other port.
+             The owner reset rule also permits exactly the two unique whole-die asynchronous root RESETN pins;
+             root_async_reset context is generated from the wavefront plan, never from a signal-name match.
 """
 import argparse
 import gzip
@@ -193,7 +195,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
          hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
-         reset_pad_pins=None):
+         reset_pad_pins=None, root_async_reset=False):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -239,10 +241,16 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         err.append("straps: duplicate names")
     strap_fp = set()
     pad_l, pad_fp = list(reset_pad_pins or []), []
+    root_fp = 0
     for cmd in _split_cmds(text):
         try:
             w = _words(cmd)
             c = w[0]
+            if c == "set_false_path" and root_async_reset:
+                import gen_phys
+                if w == _words(gen_phys.ROOT_RESET_FALSE_PATH):
+                    root_fp += 1
+                    continue
             if c == "set_false_path" and pad_l and "-to" in w:
                 # PATH-KV-POR 10-25: the reset ROOT type of a die reset pad plan -- exactly
                 # set_false_path -from [get_ports arst_n] -to [get_pins {<reset_pad_pins>}], nothing wider
@@ -257,6 +265,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                                f" is allowed (fail-closed): {cmd}")
                 pad_fp.append(cmd)
                 continue
+
             if c == "set_false_path" and strap_l:
                 if len(w) != 3 or w[1] != "-from":
                     err.append(f"straps: only 'set_false_path -from [get_ports {{strap_*}}]' is allowed (fail-closed): {cmd}")
@@ -473,6 +482,8 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
             elif abs(v + back - fv) > EPS:
                 err.append(f"uncertainty: {kk} seam {a}<->{b} halves {v:g} + {back:g} ps != {fv:g} ps "
                            "(counted once per seam)")
+    if root_async_reset and root_fp != 1:
+        err.append(f"root reset: expected exactly one exception to the two async root RESETN pins; found {root_fp}")
     return err
 
 
@@ -511,7 +522,8 @@ def kit_context(P, tn):
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
-                port_period_mult=edge, **_seam_ctx(P), **_io_hold_ctx(P, tn))
+                port_period_mult=edge, **_seam_ctx(P), **_io_hold_ctx(P, tn),
+                **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}))
 
 
 def _io_hold_ctx(P, tn):

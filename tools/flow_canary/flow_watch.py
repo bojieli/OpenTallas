@@ -31,3 +31,26 @@ def flow_paths(paths, spec, die=None):
             continue
         out.add(p)
     return sorted(out)
+
+
+# Ignore only known metadata/admission fields. Any future implementation field
+# stays in the contract automatically rather than silently bypassing the gate.
+REFERENCE_METADATA = {"why", "golden", "mem_gb", "threads"}
+
+def reference_contract(spec, die):
+    item = next((c for c in spec.get("canaries", []) if c.get("die") == die), None)
+    if item is None:
+        return None
+    return {key: value for key, value in item.items() if key not in REFERENCE_METADATA}
+
+def spec_flow_changed(before, after, die):
+    """Unknown references stay conservative; resource/baseline edits are not flow edits."""
+    a, b = reference_contract(before, die), reference_contract(after, die)
+    if a is None or b is None:
+        return True
+    ignored = {"canaries", "die_plans", "note"}
+    extra_a = {k: v for k, v in before.items() if k not in ignored}
+    extra_b = {k: v for k, v in after.items() if k not in ignored}
+    return a != b or extra_a != extra_b or before.get("watch") != after.get("watch") or \
+        before.get("watch_exclude") != after.get("watch_exclude") or \
+        _plan_dirs(before, die) != _plan_dirs(after, die)

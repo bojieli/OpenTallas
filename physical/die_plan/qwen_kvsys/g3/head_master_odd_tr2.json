@@ -1,0 +1,898 @@
+{
+ "lane": "TYPE-REDUCE-2/KVQC 2026-10-25",
+ "rule": "OWNER 2026-10-25 07:01 option B (ID straps tied at parent)",
+ "evidence": "odd kits38x RTL diff after lane-neutral names: only .bsel(2'bXX) x2 differs; pin tables e3==e1, e7==e5",
+ "masters": {
+  "kv3_head_eighth_e1": [
+   "e1 bsel 00",
+   "e3 bsel 01"
+  ],
+  "kv3_head_eighth_e5": [
+   "e5 bsel 10",
+   "e7 bsel 11"
+  ]
+ },
+ "strap_pins": [
+  [
+   "strap_bsel[0]",
+   "M5",
+   107.976,
+   216.0
+  ],
+  [
+   "strap_bsel[1]",
+   "M5",
+   108.072,
+   216.0
+  ]
+ ],
+ "schedule_cycles": 0,
+ "lec": "each master vs each old constant variant with strap_bsel tied to its value (tools/die_plan/lec.py)",
+ "kit": "gen_core_kit_kv.py --head-strap-odd (cores/harden/head_strap_odd.py: bsel -> strap_bsel; RTL substitution proof IDENTICAL e1/e3 e5/e7)",
+ "instances": [
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e1",
+   "was": "kv3_head_eighth_e1",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b00",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e3",
+   "was": "kv3_head_eighth_e3",
+   "master": "kv3_head_eighth_e1",
+   "strap_bsel": "2'b01",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e5",
+   "was": "kv3_head_eighth_e5",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b10",
+   "conns_renamed": 0,
+   "stations_renamed": 0
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e7",
+   "was": "kv3_head_eighth_e7",
+   "master": "kv3_head_eighth_e5",
+   "strap_bsel": "2'b11",
+   "conns_renamed": 10,
+   "stations_renamed": 0
+  }
+ ]
+}
