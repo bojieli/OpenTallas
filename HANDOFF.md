@@ -1015,3 +1015,5 @@ CODEX: 2026-10-26 02:10 PDT FLOW canary staging READY99154991a hub codex/flow-10
 
 CODEX: 2026-10-26 02:10 PDT HBM resumed all lanes; M5 FT bands clear all>.55 cuts (H0.624->0.478); current M5-aware station repair live4098105; clock diagnostics FAIL147/154, regional remedy owned; v8 TKM WAIT-CANARY, current stable-sort root successor in progress.
 CODEX: 2026-10-26 02:10 PDT KV takeover: batchb30 strict/R8PASS; inheritedverifylive; mixed4chainheadCORE_CLOCK cause fixeda8c24031c and exact+mutantjoblaunched; SYS3physicalprojection andASTKsubroot workersactive; acceptedmesh73.16/73.50preserved.
+
+CODEX: 2026-10-26 02:11 PDT S81 legacy took over latest2b9f7617e; collected l0/cfg placePASS, preserved ongoing jobs; XRT3 M6/track-phase generator fix dd6cb07d5 pushed, 9122pin-gridPASS, own place trial live intel2 unit1643125 (M5 ceiling unchanged).
