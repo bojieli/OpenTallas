@@ -1023,7 +1023,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     low = []
     fams = family_lowerings()
     ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag,
-               svc_owner_epoch=svc_owner_epoch, svc_timing_profile=svc_timing_profile, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
+               svc_owner_epoch=svc_owner_epoch, svc_timing_profile=svc_timing_profile,
+               svc_allq=('OT_SVC_ALLQ' in {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}) if svc_timing_profile is not None else None, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,

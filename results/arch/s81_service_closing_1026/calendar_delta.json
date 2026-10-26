@@ -1,5 +1,5 @@
 {
- "status": "PROPOSED_DIAGNOSTIC_NOT_ADOPTED",
+ "status": "CONTROLLED_SERVICE_REPLAY_PASS_NOT_ADOPTED",
  "scope": "Complete H16/D512/T128 controlled-golden service programme, ALLQ+SMT, real closing hcores; not a released-model token",
  "rtl_cycles_added": 0,
  "legacy_fg3": {
@@ -49,5 +49,5 @@
   "First exp row on heads 9/11 is not in pbuf at the legacy P injection edge; initial eight P rows on those heads are zero",
   "dsdv_svc_att fault[19] is an empty P.V beat at its booked drain slot"
  ],
- "positive_replay": "seed1 PASS (PV8192/8192, P2048/2048, SE2048/2048, no faults); seed2 RUNNING; not adopted"
+ "positive_replay": "seeds1/2 PASS: each PV8192/8192, P2048/2048, SE2048/2048, scores2048/2048, no faults, no schedule errors. Controlled golden fixture; no released-model/bound-top token claim."
 }
