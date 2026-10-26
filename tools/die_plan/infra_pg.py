@@ -598,7 +598,7 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     (out / "psm" / "tracks.tcl").write_text(D.coarse_tracks(P, 0.72))
     (out / "psm" / "psm.tcl").write_text("\n".join(t) + "\n")
     (out / "run_psm.sh").write_text(D.run_sh("psm", 64, 8, "/usr/bin/time -v openroad -no_init -threads 8 -exit "
-                                                       "/work/psm/psm.tcl > /work/psm/psm.log 2>&1; echo EXIT \\$? >> /work/psm/psm.log"))
+                                                       "/work/psm/psm.tcl > /work/psm/psm.log 2>&1; ot_psm_rc=\\$?; echo EXIT \\$ot_psm_rc >> /work/psm/psm.log; (exit \\$ot_psm_rc)"))
     os.chmod(out / "run_psm.sh", 0o755)
     # the model's own estimate on the same domain (window-local bumps, open window edges) -> like-for-like check
     regs = [r for r in model["regions"] if r["kind"] == "phy" and _ov(r["rect_um"], [x0, y0, x1, y1]) > 0]
