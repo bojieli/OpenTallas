@@ -130,6 +130,7 @@ module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0,
  input wire[511:0]valid_s_l,input wire[63:0]seen_clear_s_l,input wire[127:0]valid_override_l,input wire[1279:0]elem_hi_s_l,input wire[71:0]write_element_bp,   // per lane slice replicas
  input wire[15:0]read_v_l,input wire[511:0]read_oh_l,input wire[79:0]read_beat_l,   // per lane slice read copies
  input wire[7:0]read_v_m,input wire[39:0]read_beat_m,input wire[39:0]bypass_beat_c,
+ input wire[7:0]read_v_b,   // bypass2 read-edge enable: same value / edge as read_v_m, own kept register (STN), so r_ce_in has one load
  input wire[7:0]wif_ce,input wire[39:0]wif_addr,input wire[127:0]wif_we,input wire[4095:0]wif_wd,   // WIF=1: write-face replicas
  output wire[511:0]read_data,output wire[15:0]seen_rd_l,output wire[15:0]all_seen_l,output wire[15:0]dup_l
 );
@@ -184,7 +185,7 @@ module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0,
    wdat_d<=write_data;
    for(integer k=0;k<8;k=k+1)begin
     wv_d[k]<=write_v[k]&&!clear;wb_d[5*k+:5]<=write_element[9*k+4+:5];wl_d[4*k+:4]<=write_element[9*k+:4];
-    if(read_v_m[k])begin
+    if(read_v_b[k])begin
      bypass2_v[k]<=wv_d[k]&&(wb_d[5*k+:5]==bypass_beat_c[5*k+:5])&&!(STN==3&&k==3);   // STN 3: mutant (writer 3 bypass2 off)
      bypass2_lane[4*k+:4]<=wl_d[4*k+:4];bypass2_data[32*k+:32]<=wdat_d[32*k+:32];
     end
@@ -355,16 +356,20 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
  // PATH-QC-N59-PROTO (QB_STN): per-bank read-port registers in kept cells (rv_m / rb_m were folded to one by opt_merge):
  // sr = face-stage replica of {q_slot, q_slot_beat} (same D / edge as f_qs / f_qb; the read-path station, sited between
  // the S-face pins and the read face), rm = the rv_m / rb_m value at the read pins (macro_pin_flops).  +0 edges.
- wire[7:0]rv_mx;wire[39:0]rb_mx;
+ wire[7:0]rv_mx,rv_bx;wire[39:0]rb_mx;
  generate if(QB_STN)begin:g_rstn
   for(genvar rw=0;rw<8;rw=rw+1)begin:g_w
    wire[5:0]sr_q,rm_q;
    qfd_n59_kreg #(.W(6)) u_sr(.ck(ck),.d({q_slot,q_slot_beat}),.q(sr_q));
    qfd_n59_kreg_r #(.W(6)) u_rm(.ck(ck),.rst_n(rst_pin),.d(sr_q),.q(rm_q));
-   assign rv_mx[rw]=rm_q[5];assign rb_mx[5*rw+:5]=rm_q[4:0];
+   // PATH-QC-N59-PROTO2 10-25: rm_q[5] (r_ce) also enabled 74 bypass2 flops, so macro_pin_flops could not anchor it
+   // (F6 r_ce_in 34..202 um on 7 banks).  u_rvb = the same value (same D, same edge) for bypass2 only; +0 edges.
+   wire rvb_q;
+   qfd_n59_kreg_r #(.W(1)) u_rvb(.ck(ck),.rst_n(rst_pin),.d(sr_q[5]),.q(rvb_q));
+   assign rv_mx[rw]=rm_q[5];assign rv_bx[rw]=rvb_q;assign rb_mx[5*rw+:5]=rm_q[4:0];
   end
  end else begin:g_rnstn
-  assign rv_mx=rv_m;assign rb_mx=rb_m;
+  assign rv_mx=rv_m;assign rv_bx=rv_m;assign rb_mx=rb_m;
  end endgenerate
  wire dd_v=p_dd[547];wire[1:0]dd_kind=p_dd[546:545];wire[7:0]dd_mask=p_dd[544:537];
  wire dd_q=dd_v&&dd_kind==2'd0;
@@ -443,7 +448,7 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
   .ck(ck),.rst_n(rst_top),.clear(begin_slot),.write_v(qhit_any),.write_element(qe_all),.write_data(p_dd[344:89]),
   .elem_l(elem_l),.valid_l(valid_l),.seen_clear_l(clr_l),
   .valid_s_l(valid_s_l),.seen_clear_s_l(clear_s_l),.valid_override_l(valid_override_l),.elem_hi_s_l(elem_hi_s_l),.write_element_bp(bp_element),.read_v_l(rv_l),.read_oh_l(roh_l),.read_beat_l(rb_l),
-  .read_v_m(rv_mx),.read_beat_m(rb_mx),.bypass_beat_c(bb_c),.wif_ce(wif_ce),.wif_addr(wif_addr),.wif_we(wif_we),.wif_wd(wif_wd),
+  .read_v_m(rv_mx),.read_v_b(rv_bx),.read_beat_m(rb_mx),.bypass_beat_c(bb_c),.wif_ce(wif_ce),.wif_addr(wif_addr),.wif_we(wif_we),.wif_wd(wif_wd),
   .read_data(qrow),.seen_rd_l(seen_rd_l),.all_seen_l(all_seen_l),.dup_l(dup_l));
  reg q_read_valid;reg[4:0]q_read_beat;
  always @(posedge ck or negedge rst_pin)
