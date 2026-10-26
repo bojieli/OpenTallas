@@ -338,10 +338,10 @@ NONFRAME_HC = {
     "leaf": dict(cores=[dict(inst="u_lf.u_vp.g_ln[%d].u_l" % i, module="ot_dsrom_su_hcpost_lane_pr", cells=50540,
                              plan_core="vp_hcpl",
                              lef=_rt("s81sl_hcpl", "ot_dsrom_su_hcpost_lane_pr")) for i in range(16)] +
-                       [dict(inst="u_lf.u_vp.u_b%d" % i, module="ot_sram_1r1w_512x128_m4_r2c2", cells=0,
+                       [dict(inst="u_lf.u_vp.u_b%d" % i, module="ot_sram_1r1w_512x128_m4_r0c0", cells=0,
                              plan_core="vp_store",
-                             lef="physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/"
-                                 "ot_sram_1r1w_512x128_m4_r2c2.lef") for i in range(2)] +
+                             lef="physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/"
+                                 "ot_sram_1r1w_512x128_m4_r0c0.lef") for i in range(2)] +
                        # S81/LEAFPLAN 10-24 (COORD C3: ve 468k > 400k cap, vn 385k at it): vn and ve split into two hard
                        # cores each (cores/leaf/split.py, plan pin tables + stub LEFs; RTL split = hand-off): vn = lanes
                        # 0..3 (u_a, h half 0) + lanes 4..7 (u_b, h half 1, chain tail, beat tree, p), stacked in vn's
