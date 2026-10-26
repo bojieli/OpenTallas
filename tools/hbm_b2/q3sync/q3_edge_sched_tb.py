@@ -266,5 +266,13 @@ endmodule
       "      if (o_%s_L !== o_%s_S) begin mism = mism + 1; if (mism < 20) $display(\"MISMATCH cyc=%%0d %s\", cyc); end" % (n, n, n)
       for w, n in outs if n != "arg_out_flit"))
   .replace("%%", "%"))
-open(a.out, "w").write("\n".join(L) + "\n")
+txt_out = "\n".join(L) + "\n"
+txt_out = (txt_out.replace("%OUTS_L%", ",".join("o_%s_L" % n for w, n in outs))
+           .replace("%OUTS_S%", ",".join("o_%s_S" % n for w, n in outs))
+           .replace("%NONFLIT%", "\n".join(
+               "      if (o_%s_L !== o_%s_S) begin mism = mism + 1; if (mism < 20) $display(\"MISMATCH cyc=%%0d %s\", cyc); end" % (n, n, n)
+               for w, n in outs if n != "arg_out_flit"))
+           .replace("%%", "%"))
+assert "%OUTS" not in txt_out and "%NONFLIT" not in txt_out and "%RUNS%" not in txt_out
+open(a.out, "w").write(txt_out)
 print("ports", len(ports), "outputs", len(outs))
