@@ -415,23 +415,29 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None):
             if k <= 0:
                 loads.append(ld)
                 continue
-            corner = (pb[0], pa[1])
-            planned, reservations = [], []
-            for c in range(1, k + 1):
-                t = c * L / (k + 1)
-                dx = abs(corner[0] - pa[0])
-                if t <= dx:
-                    p = (pa[0] + math.copysign(t, corner[0] - pa[0]), pa[1])
-                else:
-                    p = (corner[0], pa[1] + math.copysign(t - dx, pb[1] - pa[1]))
-                q, _ = free_near(K, p, limit=hop_max / 2)
-                if q is None:
+            # PATH-KV 10-26: try the x-first L, then the y-first L (a PHY corner often blocks only one of them)
+            for xfirst in (True, False):
+                planned, reservations = [], []
+                for c in range(1, k + 1):
+                    t = c * L / (k + 1)
+                    if xfirst:
+                        dx = abs(pb[0] - pa[0])
+                        p = ((pa[0] + math.copysign(t, pb[0] - pa[0]), pa[1]) if t <= dx else
+                             (pb[0], pa[1] + math.copysign(t - dx, pb[1] - pa[1])))
+                    else:
+                        dy = abs(pb[1] - pa[1])
+                        p = ((pa[0], pa[1] + math.copysign(t, pb[1] - pa[1])) if t <= dy else
+                             (pa[0] + math.copysign(t - dy, pb[0] - pa[0]), pb[1]))
+                    q, _ = free_near(K, p, limit=hop_max / 2)
+                    if q is None:
+                        break
+                    probe = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y))
+                    reservations.append(reserve_cell(K, f"split_probe_{c}", probe))
+                    planned.append(q)
+                for r in reservations:
+                    release_cell_reservation(K, r)
+                if len(planned) == k:
                     break
-                probe = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y))
-                reservations.append(reserve_cell(K, f"split_probe_{c}", probe))
-                planned.append(q)
-            for r in reservations:
-                release_cell_reservation(K, r)
             if len(planned) != k:
                 # A clock tail can traverse a PHY with its driver outside it. Never manufacture an illegal cell.
                 # Keep the direct tail only within the binding 750-um reach; actual routed slew still decides.
@@ -534,16 +540,44 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         return name
 
     # --- driver sites: intersection, else slide along the M9 strap (y) or the M8 strap (x), whichever is nearer
+    # PATH-KV 10-26: candidates on both straps first; a leaf pair (i, 2k)/(i, 2k+1) whose nearest sites land on
+    # opposite sides of a PHY/hard macro (pair span > 700 um, i.e. past the 750-um clock reach) takes the candidate combination with the shortest pair
+    # span instead, so the leaf node can reach both drivers around the macro.
+    cand = {}
     for i, x in enumerate(xs):
         for j, y in enumerate(ys):
-            best = None
             g = R[reg_ij[(i, j)]]
-            rk = dict(region=g["k"]) if regions else {}
+            cs = []
             for axis in (0, 1):
                 bnd = strap_bounds(g, xs, ys, axis)
                 q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
-                if q is not None and (best is None or d < best[1]):
-                    best = (q, d, axis)
+                if q is not None:
+                    cs.append((q, d, axis))
+            cand[(i, j)] = sorted(cs, key=lambda c: c[1])
+    pick = {k: (v[0] if v else None) for k, v in cand.items()}
+    pair_fix = []
+    for (i, j), v in cand.items():
+        if j % 2 or (i, j + 1) not in cand or not v or not cand[(i, j + 1)]:
+            continue
+        a, b = pick[(i, j)], pick[(i, j + 1)]
+        span = lambda p, q: abs(p[0][0] - q[0][0]) + abs(p[0][1] - q[0][1])
+        if span(a, b) > 700.0:
+            combo = min(((p, q) for p in v for q in cand[(i, j + 1)]), key=lambda pq: (span(*pq), pq[0][1] + pq[1][1]))
+            pick[(i, j)], pick[(i, j + 1)] = combo
+            pair_fix.append([i, j, round(span(a, b), 1), round(span(*combo), 1)])
+    out["meta"]["driver_pair_fixes"] = pair_fix
+    for i, x in enumerate(xs):
+        for j, y in enumerate(ys):
+            g = R[reg_ij[(i, j)]]
+            rk = dict(region=g["k"]) if regions else {}
+            best = pick[(i, j)]
+            if best is not None and hitf(K, best[0]):   # an earlier driver reserved this site: fall back to a fresh search
+                best = None
+                for axis in (0, 1):
+                    bnd = strap_bounds(g, xs, ys, axis)
+                    q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
+                    if q is not None and (best is None or d < best[1]):
+                        best = (q, d, axis)
             if best is None:
                 out["unplaced"].append([i, j])
                 continue
@@ -653,12 +687,34 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         q = c0
         out["unplaced"].append(["root", "node"])
     n0 = cell("ckm_n0", q[0], q[1], "node", level=0)
-    trunk = abs(root[0] - c0[0]) + abs(root[1] - c0[1])
-    if region_spec is not None and trunk + BUF_W + ROW_Y > 750.0:
-        out["unplaced"].append(["root", "STRUCTURAL root-to-tree span exceeds 750 um", round(trunk, 3)])
+    trunk = abs(root[0] - q[0]) + abs(root[1] - q[1])
+    # Trunk repeaters (PATH-KV 10-26): a cohort tree centre that is not the die input point gets equal-cut BUFx24
+    # repeaters on the L path root -> ckm_n0 (x first, then y), each at the nearest free site.  The trunk is
+    # upstream of ckm_n0, so it is common to every pair (no skew effect); it only keeps every hop <= rep_um.
+    trunk_reps = []
+    n_tr = max(1, math.ceil(trunk / rep_um - 1e-9))
+    if trunk + BUF_W + ROW_Y > 750.0:
+        ax_len = abs(q[0] - root[0])
+        for k in range(1, n_tr):
+            s_ = trunk * k / n_tr
+            if s_ <= ax_len:
+                p = (root[0] + math.copysign(s_, q[0] - root[0]), root[1])
+            else:
+                p = (q[0], root[1] + math.copysign(s_ - ax_len, q[1] - root[1]))
+            rq, rd = free_near(K, p, limit=rep_um / 2)
+            if rq is None:
+                out["unplaced"].append(["root", f"trunk repeater {k} has no free site", round(s_, 1)])
+                rq = p
+            trunk_reps.append(cell(f"ckm_t_{k}", rq[0], rq[1], "rep", level=0))
+        if region_spec is not None and trunk / n_tr + BUF_W + ROW_Y > 750.0:
+            out["unplaced"].append(["root", "STRUCTURAL root-to-tree span exceeds 750 um", round(trunk, 3)])
     out["meta"]["root_um"] = list(root)
     out["meta"]["trunk_um"] = round(trunk, 2)
-    nets.append(dict(name="root", drv="port:root", loads=[n0], level=-1))
+    out["meta"]["trunk_reps"] = len(trunk_reps)
+    chain = trunk_reps + [n0]
+    nets.append(dict(name="root", drv="port:root", loads=[chain[0]], level=-1))
+    for a_, b_ in zip(chain, chain[1:]):
+        nets.append(dict(name=f"ckm_w_{a_}", drv=a_, loads=[b_], level=-1))
     rec(0, nx, 0, ny, 0, n0, "h")
     # --- stubs: every partition tap
     taps = DC.plan_taps(P)
