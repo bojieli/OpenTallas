@@ -1,0 +1,18 @@
+{
+  "source": "c51d6d93039debcddb6964d35a6c79af74160a50",
+  "plan_sha256": "80d089d7b0cd189df7c705f923bb82c05d54c1a36927225d4476a9fab5465684",
+  "kit": "epyc1/epyc2:codex-s81-plan-1713/current_grt_it5",
+  "verdict": "PASS-COND ONE congestion-only it5 baseline; not releasegeometryPASS",
+  "findings": [
+    "Independentlyviewedcurrent_die.png:398parts171types,regularabuttedrows/alignedseams/PHYedgezones",
+    "KnownoldL1coreFTcapacityfailuresremain",
+    "Freshinputsmanifest/nooldguide;adj.75M4\u2013M7,50->5iterationsonly"
+  ],
+  "conditions": [
+    "RejectGRT0113/0114/wrappedcapacity",
+    "Preservepriorfailures/cd932guideclaimretraction",
+    "No STA/DRT/station/native/signoff/typeapproval",
+    "Dieabstractdoesnotmodelinternalstationmoves"
+  ],
+  "timestamp": "2026-10-25 17:28 PDT"
+}
