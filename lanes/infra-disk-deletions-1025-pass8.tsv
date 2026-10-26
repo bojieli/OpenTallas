@@ -66,3 +66,22 @@ time	host	path	size	reason	by
 2026-10-25 18:56:21 PDT	rtx-pro	/home/ubuntu/wt/tokd-hbm2-tools	<0.7G (disk 59.5%->59.5%)	wt-reaper apply: clean (pycache only), idle > 6.0 h, in origin/claude/tokd-hbm2-1023 (branch claude/tokd-hbm2-1023@e77f28b48)	INFRA2 pass8 (wt-reaper --idle-h 6, clean+pushed+no live ref)
 2026-10-25 18:56:29 PDT	rtx-pro	/home/ubuntu/wt/type-reduce-1025	<0.7G (disk 59.5%->59.5%)	wt-reaper apply: clean, idle > 6.0 h, in origin/claude/type-reduce-1025 (branch claude/type-reduce-1025@befcf3f66)	INFRA2 pass8 (wt-reaper --idle-h 6, clean+pushed+no live ref)
 2026-10-25 19:02:03 PDT	rtx-pro	(summary)	/ 83% -> 58% (2.9T -> 2.0T used)	66 worktrees removed of 97; 31 kept (live/dirty/<6 h/protected root-merge); DIRTY_IDLE codex-s81-lepw16m-submit-1022 kept (259941 paths dirty -> owner)	INFRA2 pass8
+2026-10-25 19:05:46 PDT	tender-ray	/srv/opentallas-scratch2/claude/codex-kv-hub	7G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:46 PDT	tender-ray	/srv/opentallas-scratch2/claude/codex-part-cap	1G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:46 PDT	tender-ray	/srv/opentallas-scratch2/claude/codex-prects	1G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:46 PDT	tender-ray	/srv/opentallas-scratch2/claude/codex-qwen	4G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:47 PDT	tender-ray	/srv/opentallas-scratch2/claude/codex-s81-xdie	1G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:47 PDT	tender-ray	/srv/opentallas-scratch2/claude/codex-signoff	1G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:47 PDT	tender-ray	/srv/opentallas-scratch2/claude/die-sta	2G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:48 PDT	tender-ray	/srv/opentallas-scratch2/claude/kv-g3	13G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:48 PDT	tender-ray	/srv/opentallas-scratch2/claude/qc-a0	1G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:48 PDT	tender-ray	/srv/opentallas-scratch2/claude/trial-hbm	6G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:49 PDT	tender-ray	/srv/opentallas-scratch2/claude/trial-s81	3G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:51 PDT	dear-crayfish	/srv/opentallas-scratch2/claude/codex-kv-hub	3G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:51 PDT	dear-crayfish	/srv/opentallas-scratch2/claude/codex-qwen	9G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:51 PDT	dear-crayfish	/srv/opentallas-scratch2/claude/fleet-disk	1G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:52 PDT	dear-crayfish	/srv/opentallas-scratch2/claude/geom-review	1G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:52 PDT	dear-crayfish	/srv/opentallas-scratch2/claude/part-cap	1G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:52 PDT	dear-crayfish	/srv/opentallas-scratch2/claude/tokd-hbm2	1G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:05:52 PDT	dear-crayfish	/srv/opentallas-scratch2/claude/trial-hbm	6G	untouched >24 h, no SIGNED signoff.json inside, no live process (owner rule 10-24 scratch cleanup)	INFRA2 pass8
+2026-10-25 19:06:01 PDT	epyc1+epyc2	(summary)	epyc1 scratch2 77% (-40G), epyc2 scratch2 76%->74% (-22G)	remaining use is <24 h fresh lane data (below the 85% limit); per-run failed data is deleted by the autopilot/reapers	INFRA2 pass8
