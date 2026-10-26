@@ -28,7 +28,7 @@ def run(a):
             x0,x1=min(pa[0],pb[0])-a.margin,max(pa[0],pb[0])+a.margin
             y0,y1=min(pa[1],pb[1])-a.margin,max(pa[1],pb[1])+a.margin
             boxes=[(max(0,r[0]-2.16),max(0,r[1]-1.08),min(P.W,r[2]+2.16),min(P.H,r[3]+1.08))
-                   for r in hard if r[2]>x0 and r[0]<x1 and r[3]>y0 and r[1]<y1]
+                   for r in hard if r[3]>y0 and r[1]<y1]
             points=C.route(pa,pb,boxes,(P.W,P.H))
             planned=[]
             for start,end in zip(points,points[1:]):
@@ -39,7 +39,7 @@ def run(a):
             for j,p in enumerate(planned):
                 q,_=M.free_near(K,p,limit=64,step=M.STEP_UM)
                 if q is None:raise ValueError(f'no legal relay for {net["drv"]}->{load} at {p}')
-                name=f'ckm_edge_{len(routes)}_{j}'
+                name=f'ckm_r_edge_{len(routes)}_{j}'
                 cell={'x':M.snap(q[0]-M.BUF_W/2,M.SITE_X),'y':M.snap(q[1]-M.ROW_Y/2,M.ROW_Y),'kind':'rep','level':net.get('level'),'edge_repair':True}
                 cells[name]=cell;M.reserve_cell(K,name,cell);names.append(name);actual.append(centre(cell))
             actual.append(pb)
@@ -63,4 +63,4 @@ def run(a):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('dir');p.add_argument('--out',required=True);p.add_argument('--plan',required=True);p.add_argument('--pitch',type=float,default=500);p.add_argument('--margin',type=float,default=1500);run(p.parse_args())
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('dir');p.add_argument('--out',required=True);p.add_argument('--plan',required=True);p.add_argument('--pitch',type=float,default=500);p.add_argument('--margin',type=float,default=300);run(p.parse_args())
