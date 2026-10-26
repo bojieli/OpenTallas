@@ -142,6 +142,40 @@ def recipe_from_census(core, census, profile_dir, root=REPO):
     return recipe, staged, receipt
 
 
+
+def stage_physical_macros(recipe, staged, receipt, profile_dir, root=REPO):
+    """Use opaque physical SRAMs with the exact provider's fixed ANSI ports.
+
+    Token/simulation filelists retain behavioral providers. Physical LEF/lib
+    selection still uses the unchanged recipe macro names and provider paths.
+    """
+    macro_dir = Path(profile_dir).resolve() / 'physical_macros'
+    macro_dir.mkdir(parents=True, exist_ok=True)
+    receipt['physical_macros'] = {}
+    for rel, provider_hash in receipt['macros'].items():
+        provider = Path(root) / rel
+        if sha(provider) != provider_hash:
+            raise SystemExit('NOT BUILT: macro provider changed: ' + rel)
+        text = re.sub(r"//[^\n]*|/\*.*?\*/", "", provider.read_text(), flags=re.S)
+        top = Path(rel).stem
+        ports = literal_ports(text, top)
+        match = re.search(r"(?m)^\s*module\s+" + re.escape(top) + r"\b", text)
+        end = text.find(');', match.end()) + 2
+        header = text[match.start():end]
+        stub = '(* blackbox *) ' + header + '\nendmodule\n'
+        if literal_ports(stub, top) != ports:
+            raise SystemExit('NOT BUILT: macro header port identity changed: ' + rel)
+        out = macro_dir / Path(rel).name
+        out.write_text(stub)
+        staged[rel] = out
+        receipt['physical_macros'][rel] = dict(
+            module=top, provider_sha256=provider_hash,
+            header_sha256=hashlib.sha256(header.encode()).hexdigest(),
+            physical_sha256=sha(out), ports=ports,
+            scope='physical opaque macro only; simulation provider unchanged')
+    return recipe, staged, receipt
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--core', required=True, choices=TOPS)
@@ -178,6 +212,7 @@ def main():
         sys.path.insert(0, str(REPO / 'tools/hbm_b2/q3sync'))
         from q3_common_clock import adapt_recipe
         recipe, staged, receipt = adapt_recipe(a.core, recipe, staged, receipt, a.common_clock_dir)
+    recipe, staged, receipt = stage_physical_macros(recipe, staged, receipt, a.profile_dir)
     receipt['diagnostic_inputs'] = bool(a.diagnostic_plan)
     receipt['plan_module'] = selected_view['module']
     p = REPO / 'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py'
