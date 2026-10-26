@@ -29,7 +29,7 @@ strict bind (it may change the PV lane depths); owner of the fix: PATH-KV (RTL/p
 Second finding, fixed in run_mu833.sh: the pair image must be built with the SAME link profile as the compile
 (EMB_WIN 1627, ROPE, HEAD_PREP 12); with run.sh's 595-edge image, link_image_check refuses target 11 (words 8,11,13-18).
 With that, the MU F=2 image compiles on the run4 depths in 15.6 s (token 290,059 cycles, period 293,376; MU frame
-10,223.6 tok/s aggregate, unchanged vs img44).  on it: STATIC_SCHEDULE PASS (1800 events, 180 service
+10,223.6 tok/s aggregate, unchanged vs img44). `token_gate.sh` on it: STATIC_SCHEDULE PASS (1800 events, 180 service
 windows, 0 collisions, all launches phase-legal, MU 471 words = rebuilt image); boot ABI with the bind's nc32 dispatcher
 (pinned 558fba7b5): SU327 installed, MU327 mutant fault 80, NATIVE_MU471 installed -> ACTUAL_NATIVE_MU471_IMAGE_PASS.
 DIECFG AGES96 + AGES0 lockstep NOT RUN: target10 cannot be produced while the boot ages overflow (above).
