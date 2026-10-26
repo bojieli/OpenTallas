@@ -100,3 +100,13 @@ def test_registered_monitor_replaces_long_die_status_vectors():
     assert "output wire [0:0] clock_landing_ready;" not in out
     assert ".cland_dn_ready_0(cland_ready_b)" in out
     assert ".cland_up_ready(clock_landing_ready)" in out
+
+
+def test_actual_observer_port_transform():
+    from clock_landings import gate_observer, LandingError
+    spec=dict(module="qfd_sys_face_lctx3_wrapped",instance_suffix="u_sys_face",fault_port="obs_fault",ready_port="seq_cfg_image_ready")
+    text="    qfd_sys_face_lctx3_wrapped native_u_sys_face (\n        .obs_fault((a | b)),\n        .seq_cfg_image_ready(c[0])\n    );\n"
+    out=gate_observer(text,spec)
+    assert ".obs_fault((((a | b)) | cland_up_fault))" in out
+    assert ".seq_cfg_image_ready(((c[0]) & cland_up_ready))" in out
+    with pytest.raises(LandingError):gate_observer(text.replace(".obs_fault", ".wrong"),spec)

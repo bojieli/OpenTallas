@@ -89,6 +89,9 @@ def io_tcl(P, tn, pins):
     for name, x, y in reset_out_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: reset wavefront out")
+    if t.get("clock", {}).get("landing_contract"):
+        import landing_contract as LC
+        lines.append(LC.io_tcl(P, tn).rstrip())
     return "\n".join(lines) + "\n"
 
 
@@ -660,8 +663,12 @@ def sdc(P, tn, pins):
         # downstream (rst_por_n, the lock qualifier, the wavefront relays) is timed (recovery / removal, data).
         out += ("# die reset pad (reset_tree.pad_false_path_pins): raw pad -> u_rst_root async + PLL analog pin only\n"
                 f"set_false_path -from [get_ports arst_n] -to [get_pins {{{' '.join(fp)}}}]\n")
-    return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
-                  "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
+    out += (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
+            "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
+    if P.types[tn].get("clock", {}).get("landing_contract"):
+        import landing_contract as LC
+        out = LC.sdc(P, tn, out)
+    return out
 
 
 
@@ -1104,6 +1111,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
             hook.write_text(f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n" + hook.read_text())
+    if t.get("clock", {}).get("landing_contract"):
+        import landing_contract as LC
+        (kd / "landing_contract.json").write_text(json.dumps(t["clock"]["landing_contract"], indent=1) + "\n")
+        (kd / "landing_exports.tcl").write_text(LC.export_tcl(P, tn))
+        hook = kd / "clock_taps.tcl"
+        hook.write_text(hook.read_text() + "\nsource /work/landing_exports.tcl\n")
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),

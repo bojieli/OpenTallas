@@ -80,6 +80,49 @@ def ident(s):
     return re.sub(r"[^A-Za-z0-9_]", "_", s)
 
 
+def gate_observer(body,spec):
+    """Bind the two real one-bit mission/observation inputs, never new IO."""
+    module=re.escape(spec["module"])
+    pattern=re.compile(r"(?m)^\s*"+module+r"(?:\s*#\([^;]*?\))?\s+(\w+)\s*\(\n",re.S)
+    matches=[m for m in pattern.finditer(body) if m.group(1).endswith(spec["instance_suffix"])]
+    if len(matches)!=1:raise LandingError(f"clock landing observer: expected one {spec['module']}.{spec['instance_suffix']}, found{len(matches)}")
+    m=matches[0];end=body.find("\n    );",m.end())
+    if end<0:raise LandingError("clock landing observer: instance terminator not found")
+    block=body[m.start():end]
+    for port,op,signal in ((spec["fault_port"],"|","cland_up_fault"),(spec["ready_port"],"&","cland_up_ready")):
+        hits=list(re.finditer(r"\."+re.escape(port)+r"\s*\(",block))
+        if len(hits)!=1:raise LandingError(f"clock landing observer: expected one exact input {port}")
+        start=hits[0].end();depth=1;i=start
+        while i<len(block) and depth:
+            depth+=(block[i]=="(")-(block[i]==")");i+=1
+        if depth:raise LandingError(f"clock landing observer: unbalanced input {port}")
+        old=block[start:i-1].strip()
+        if not old:raise LandingError(f"clock landing observer: empty input {port}")
+        block=block[:start]+f"(({old}) {op} {signal})"+block[i-1:]
+    return body[:m.start()]+block+body[end:]
+
+
+def expand_station_types(binder,table):
+    """Keep real native OUT stations enabled after phase/clock type splits.
+
+    The compose tool explicitly records each current type's prelanding base.
+    Phase type names preserve that original family as a complete prefix token.
+    Native annotate still checks the actual source-station count against each
+    lane's priced fixed_cycles; this does not exempt a station or add cycles.
+    """
+    selected=set(binder.ab.get("internal_stations_types",[]))
+    if not selected:return
+    lineage=table.get("collector",{}).get("types",{})
+    out=set();represented=set()
+    for tn in binder.types:
+        base=lineage.get(tn,{}).get("base_type",tn)
+        matches={s for s in selected if tn==s or base==s or base.startswith(s+"_")}
+        if matches:out.add(tn);represented.update(matches)
+    missing=selected-represented
+    if missing:raise LandingError(f"clock landing native station families have no actual cohort: {sorted(missing)}")
+    binder.ab["internal_stations_types"]=sorted(out)
+
+
 class Landings:
     def __init__(self, plan, table, *, require_geometry=True):
         self.plan = plan
@@ -150,6 +193,9 @@ class Landings:
             if not require_geometry:
                 continue
             declared = {b["name"]: b for b in self.types[tn].get("buses", [])}
+            contract=self.types[tn].get("clock",{}).get("landing_contract",{})
+            for pin in contract.get("pins",[]):
+                declared[pin["name"]]=dict(pin,width=1,face="interior",window_um=[0,1],layers=[pin["layer"]])
             required = {f"fclk_out_{b}": "out" for b in mask[1]}
             for b in mask[0]:
                 required.update({f"fclk_in_{b}": "in"})
@@ -158,7 +204,8 @@ class Landings:
             if self.collector:
                 info=self.collector["types"][tn]
                 if info["mask"]["active"]:
-                    required.update(cland_up_ready="out",cland_up_fault="out")
+                    if not info["mask"].get("observer"):
+                        required.update(cland_up_ready="out",cland_up_fault="out")
                     if info["mask"]["up_seam"]:required["fclk_out_cland_up"]="out"
                     for c in info["children"]:
                         required[c["ready"]]="in";required[c["fault"]]="in"
@@ -169,6 +216,19 @@ class Landings:
                     raise LandingError(f"clock landing {tn}: declare placed scalar {direction} pin {name}")
                 if not all(k in b for k in ("face", "window_um", "layers")):
                     raise LandingError(f"clock landing {tn}.{name}: missing physical pin geometry")
+
+    def validate_observer(self,binder):
+        if not self.collector or not self.collector.get("observer"):return
+        spec=self.collector["observer"];pn=spec["part"]
+        matches=[ci for ci in binder.members.get(pn,[]) if binder.F.cells[ci].module==spec["module"]
+                 and binder.F.cells[ci].path.endswith("."+spec["instance_suffix"])]
+        if len(matches)!=1:raise LandingError(f"clock landing observer: expected unique actual {pn}.{spec['module']}.{spec['instance_suffix']}")
+        ci=matches[0];cell=binder.F.cells[ci]
+        for port in (spec["fault_port"],spec["ready_port"]):
+            if binder.G.dirs[ci].get(port)!="input" or len(cell.ports.get(port,[]))!=1:
+                raise LandingError(f"clock landing observer {cell.path}.{port}: actual one-bit input required")
+        self.observer_source=dict(path=cell.path,module=cell.module,ports=[spec["fault_port"],spec["ready_port"]],
+                                  added_data_cycles=0,added_external_ports=0)
 
     def type_rtl(self, tn, text):
         """Emit actual landing hardware before each incoming boundary/station.
@@ -207,6 +267,8 @@ class Landings:
             # This is a timed local data relay, never another synchronizer.
             t = self.types[tn]
             geom = next((x for x in t.get("buses", []) if x["name"] == b), None)
+            if geom is None and collector_info:
+                geom=collector_info.get("bus_geometry",{}).get(b)
             if geom is None:
                 slot = next((x for x in t.get("ft_slots", []) if x["name"] + "_i" == b), None)
                 if slot:
@@ -246,7 +308,9 @@ class Landings:
                       f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
         if active_collector:
             import landing_collector as LC
-            extra += ["    output wire cland_up_ready", "    output wire cland_up_fault"]
+            if collector_info["mask"].get("observer"):
+                logic.append("    wire cland_up_ready, cland_up_fault;")
+            else:extra += ["    output wire cland_up_ready", "    output wire cland_up_fault"]
             if collector_info["mask"]["up_seam"]:
                 extra.append("    output wire fclk_out_cland_up")
                 logic.append("    assign fclk_out_cland_up = clk;")
@@ -257,7 +321,7 @@ class Landings:
                 src=dict(ch,name=f"child{i}")
                 if ch["seam"]:
                     extra.append(f"    input wire fclk_in_cland_dn_{i}")
-                    reset=f"rr_t{ch['tap']}"
+                    reset=LC.raw(ch.get("node",f"rst_n_t{ch.get('tap',0)}"))
                     if not re.search(r"\bwire\b[^;]*\b"+reset+r"\b",body):
                         raise LandingError(f"{tn}: raw monitor receiver reset {reset} missing")
                     logic += [f"    wire [1:0] cland_dn_word_{i};",
@@ -269,9 +333,12 @@ class Landings:
                     src.update(ready=f"(cland_dn_word_{i}[0] && cland_dn_trained_{i} && !cland_dn_guard_{i})",
                                fault=f"(cland_dn_word_{i}[1] || cland_dn_guard_{i})")
                 sources.append(src)
-            reduction=LC.build_local(collector_info["tree"],sources,body+"\n"+"\n".join(logic))
+            reduction=LC.build_local(collector_info["tree"],sources,body+"\n"+"\n".join(logic),
+                root_node=collector_info.get("collector_root_node","rst_root_n"))
             logic.extend(reduction["rtl"])
             self.reset_placements.setdefault(tn,{})["collector"]=reduction
+            if collector_info["mask"].get("observer"):
+                body=gate_observer(body,self.collector["observer"])
         # The former last port can carry an end-of-line comment.
         lines = head.splitlines()
         code, sep, comment = lines[-1].partition("//")
@@ -292,15 +359,17 @@ class Landings:
             self.emitted_top = True
             return text
         names = [f"clk_region_{ident(r)}" for r in clocks]
-        names += ["clock_landing_ready", "clock_landing_fault"]
+        local_observer=self.collector and self.collector.get("observer")
+        if not local_observer:names += ["clock_landing_ready", "clock_landing_fault"]
         match = re.search(r"(?m)^module (\w+) \(([^;]*)\);", text)
         if not match:
             raise LandingError("clock landing: binder non-ANSI die header not found")
         header = f"module {match.group(1)} ({match.group(2)}, " + ", ".join(names) + ");"
         text = text[:match.start()] + header + text[match.end():]
         decl = [f"    input wire clk_region_{ident(r)};" for r in clocks]
-        decl += (["    output wire clock_landing_ready;","    output wire clock_landing_fault;"] if self.collector else
-                 [f"    output wire [{n-1}:0] clock_landing_ready;",f"    output wire [{n-1}:0] clock_landing_fault;"])
+        if not local_observer:
+            decl += (["    output wire clock_landing_ready;","    output wire clock_landing_fault;"] if self.collector else
+                     [f"    output wire [{n-1}:0] clock_landing_ready;",f"    output wire [{n-1}:0] clock_landing_fault;"])
         fwd = {(r["src"], r["src_bus"]): f"clock_landing_fwd_{ident(r['src'])}__{ident(r['src_bus'])}"
                for r in self.rows}
         decl += [f"    wire {w};" for w in sorted(set(fwd.values()))]
@@ -335,7 +404,8 @@ class Landings:
                 cp=self.collector["parts"][pn]
                 ready="clock_landing_ready" if cp["parent"] is None else "cland_ready_"+ident(pn)
                 fault="clock_landing_fault" if cp["parent"] is None else "cland_fault_"+ident(pn)
-                conn += [f"        .cland_up_ready({ready})",f"        .cland_up_fault({fault})"]
+                if cp["parent"] is not None or not local_observer:
+                    conn += [f"        .cland_up_ready({ready})",f"        .cland_up_fault({fault})"]
                 if self.collector["types"][p["type"]]["mask"]["up_seam"]:
                     conn.append(f"        .fclk_out_cland_up(cland_clock_{ident(pn)})")
                 for e in self.collector["edges"]:
@@ -359,6 +429,7 @@ class Landings:
                     lane_added_cycles=dict(sorted(by_lane.items())),
                     types=self.by_type, reset_placements=self.reset_placements,
                     collector=self.collector,
+                    observer_source=getattr(self,"observer_source",None),
                     remaining_gates=["placed clock/status pins", "landing ring window STA",
                                      "trained region calendar offsets", "token pass"])
 

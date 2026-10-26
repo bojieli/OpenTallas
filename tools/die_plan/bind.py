@@ -3340,6 +3340,16 @@ def cmd_bind(a):
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
     B.strict_types = bool(getattr(a, "strict", False))
+    if B.ab.get("clock_landing_table"):
+        import clock_landings as CL
+        landing_base = Path(B.base).resolve()
+        landing_path = (landing_base / B.ab["clock_landing_table"]).resolve()
+        try:
+            landing_path.relative_to(landing_base)
+            B._clock_landing_table = json.loads(landing_path.read_text())
+            CL.expand_station_types(B, B._clock_landing_table)
+        except (ValueError, OSError) as exc:
+            raise BindError(f"clock landing: {exc}") from exc
     B.map_cells()
     B.analyse()
     B.build_buses()
@@ -3349,7 +3359,8 @@ def cmd_bind(a):
         landing_path = (landing_base / B.ab["clock_landing_table"]).resolve()
         try:
             landing_path.relative_to(landing_base)
-            B.clock_landings = CL.Landings(raw, json.loads(landing_path.read_text()))
+            B.clock_landings = CL.Landings(raw, B._clock_landing_table)
+            B.clock_landings.validate_observer(B)
         except (ValueError, OSError) as exc:
             raise BindError(f"clock landing: {exc}") from exc
         for L in B.links:
