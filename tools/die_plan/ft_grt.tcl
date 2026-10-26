@@ -79,16 +79,15 @@ proc ot_ftres_obs {rects} {
 }
 proc ot_ftres_unobs {obs} { foreach o $obs { odb::dbObstruction_destroy $o } }
 proc ot_ftres_set_special {nets v} { foreach n $nets { if {$v} { $n setSpecial } else { $n clearSpecial } } }
-# guide merge: every FT net from the FT pass, every other net from the OWN pass (write_guides of the OWN pass also
-# re-writes the FT nets' pass-FT routes, which GRT keeps for special nets: dropped here, so each net appears once)
-proc ot_ftres_merge_guides {out ftf ownf ftn} {
-  set fo [open $out w]
-  set fi [open $ftf r]; puts -nonewline $fo [read $fi]; close $fi
-  set fi [open $ownf r]; set keep 1; set name ""
+# guide filter: write_guides writes every net that holds a GRT route, including the special nets' routes from the
+# previous global_route (the planning route / the other pass); keep only the nets of this pass's class (keep = 1:
+# nets in ftn, keep = 0: nets not in ftn), so every net appears once in the merged file
+proc ot_ftres_filter_guides {inf out ftn keep} {
+  set fi [open $inf r]; set fo [open $out w]; set k 1; set name ""
   while {[gets $fi ln] >= 0} {
     set t [string trim $ln]
-    if {$name eq "" && $t ne "(" && $t ne ")" && $t ne ""} { set name $t; set keep [expr {![dict exists $ftn $t]}] }
-    if {$keep} { puts $fo $ln }
+    if {$name eq "" && $t ne "(" && $t ne ")" && $t ne ""} { set name $t; set k [expr {[dict exists $ftn $t] == $keep}] }
+    if {$k} { puts $fo $ln }
     if {$t eq ")"} { set name "" }
   }
   close $fi; close $fo
@@ -111,16 +110,22 @@ proc ot_ftres_run {args} {
   ot_ftres_unobs $obs
   ot_ftres_set_special $own 0
   if {$r1} { error "OT_FTRES pass FT: $e1" }
-  write_guides $wd/ftres_ft.guide
+  write_guides $wd/ftres_ft.raw.guide
+  ot_ftres_filter_guides $wd/ftres_ft.raw.guide $wd/ftres_ft.guide $ftn 1
+  file delete $wd/ftres_ft.raw.guide
   # pass OWN
   ot_ftres_set_special $ft 1
   set obs [ot_ftres_obs $::ot_ftres_ft]
   set r2 [catch { uplevel #0 [list global_route {*}$args] } e2]
-  write_guides $wd/ftres_own.guide
+  write_guides $wd/ftres_own.raw.guide
+  ot_ftres_filter_guides $wd/ftres_own.raw.guide $wd/ftres_own.guide $ftn 0
+  file delete $wd/ftres_own.raw.guide
   ot_ftres_unobs $obs
   ot_ftres_set_special $ft 0
   if {$r2} { error "OT_FTRES pass OWN: $e2" }
-  ot_ftres_merge_guides $wd/ftres_all.guide $wd/ftres_ft.guide $wd/ftres_own.guide $ftn
+  set fo [open $wd/ftres_all.guide w]
+  foreach f [list $wd/ftres_ft.guide $wd/ftres_own.guide] { set fi [open $f r]; puts -nonewline $fo [read $fi]; close $fi }
+  close $fo
   read_guides $wd/ftres_all.guide
   puts "OT_FTRES merged guides $wd/ftres_all.guide"
 }
