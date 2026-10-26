@@ -32,7 +32,8 @@ def install(recipe: Path, profile: Path, out: Path):
     rtl=ROOT/'rtl/qwen_sys/d2d_static_20261015'
     source=(rtl/'qkd_d2d_cal_seq_rom64.sv').read_text()
     source=source.replace('module qkd_d2d_cal_seq_pin_rom64 #(', 'module qkd_d2d_cal_seq_pin_bc4 #(',1)
-    source=source.replace('parameter string VIAMAP = ""',f'parameter string VIAMAP = "{rel(via)}"',1)
+    if source.count('parameter VIAMAP = ""') != 1:raise ValueError('unexpected profile metadata declaration')
+    source=source.replace('parameter VIAMAP = ""',f'parameter VIAMAP = "{rel(via)}"',1)
     alias=out/'qkd_d2d_cal_seq_bc4_rom64.sv';alias.write_text(source)
     bb=ROOT/f'physical/asap7_memory_macros_v2/{P.NAME}/{P.NAME}_bb.v'
     extra=[rel(alias),rel(rtl/'ot_qwen_d2d_cal_seq_rom64_core.sv'),rel(bb)]

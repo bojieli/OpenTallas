@@ -31,7 +31,7 @@
 //   (+ the sequencer's own faults)
 // Static schedule: no ready / credit / backpressure.  MUT (bench only, 0 = shipped): 1 = sequencer writes never reach
 // cfg_* (today's die: the base switch is lost).
-module qkd_d2d_cal_seq_pin_rom64 #(parameter string VIAMAP = "", parameter string INSTANCE = "kv_dcal", parameter integer GO_OFS = 0, parameter [20*36-1:0] START_ADJ = '0,
+module qkd_d2d_cal_seq_pin_rom64 #(parameter VIAMAP = "", parameter INSTANCE = "kv_dcal", parameter integer GO_OFS = 0, parameter [20*36-1:0] START_ADJ = '0,
                                 parameter integer EP_SKEW = 3, parameter integer MUT = 0) (
     input  wire        ck, rst_n, reload, epoch_go, halt,
     input  wire        bcfg_tx_we, bcfg_rx_we,
