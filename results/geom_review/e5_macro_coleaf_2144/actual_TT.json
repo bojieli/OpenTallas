@@ -1,0 +1,63 @@
+{
+  "verdict": "FAIL_PARTIAL",
+  "source_commit": "d2bc7885b",
+  "host_path": "epyc2:/srv/opentallas-scratch2/claude/codex-clock-2144/macro_grt",
+  "grt_overflow": 0,
+  "wire_um": 1393271,
+  "route_nets": 91256,
+  "exit": 0,
+  "clock": {
+    "cbuf": {
+      "count": 2297,
+      "slew_max_ps": 110.315094,
+      "slew_over80": 9,
+      "arrival_min_ps": 375.512207,
+      "arrival_mean_ps": 494.238227957772,
+      "arrival_max_ps": 560.600708
+    },
+    "macro": {
+      "count": 15,
+      "slew_max_ps": 43.074303,
+      "slew_over80": 0,
+      "arrival_min_ps": 494.524963,
+      "arrival_mean_ps": 522.5453611999999,
+      "arrival_max_ps": 559.937866
+    },
+    "reg": {
+      "count": 18058,
+      "slew_max_ps": 40.560658,
+      "slew_over80": 0,
+      "arrival_min_ps": 452.082581,
+      "arrival_mean_ps": 519.7754235314,
+      "arrival_max_ps": 561.963013
+    },
+    "tap": {
+      "count": 118,
+      "slew_max_ps": 64.187576,
+      "slew_over80": 0,
+      "arrival_min_ps": 352.866547,
+      "arrival_mean_ps": 420.2465641610171,
+      "arrival_max_ps": 457.902405
+    },
+    "trunk": {
+      "count": 470,
+      "slew_max_ps": 104.907486,
+      "slew_over80": 7,
+      "arrival_min_ps": 0.295024,
+      "arrival_mean_ps": 315.7272541382983,
+      "arrival_max_ps": 427.141907
+    }
+  },
+  "macro_if_within20": 12,
+  "macro_count": 15,
+  "remaining_macro_if_ps": {
+    "u_win.u_map.m[0].rom": -21.5,
+    "u_win.u_map.m[4].rom": -23.2,
+    "u_xq.u_wl": 29.7
+  },
+  "ff": "NOT_RUN",
+  "signoff": "NOT_SIGNED",
+  "added_data_cycles": 0,
+  "diagnosis": "Nearest own-interface leaf fixes unmatched macro depth but not remaining local-tree arrival variation. Combine with structural local-tree redesign; do not retry old layout or claim full closure.",
+  "attempt2_failure": "Duplicate foreground start EXIT125 container-name conflict; original admitted job preserved; attempt2.{exit,log} retained. Original grt.log contains NUL holes from duplicate redirection; collected_grt.log sanitizes text without altering original."
+}
