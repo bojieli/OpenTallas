@@ -1,0 +1,36 @@
+{
+  "verdict": "FAIL FF hold; no route",
+  "picture": "epyc1:/srv/opentallas-scratch2/claude/path-s81-hcore/cts02_review/hcore_cts02.png",
+  "runtime": "epyc1:/srv/opentallas-scratch2/claude/codex-hcore-fanout-2144/fan24",
+  "source": "699129abb6",
+  "comparison_basis": "stored5_1grtODBnativeglobalrouteparasitics,no read_guides",
+  "original_cap16": {
+    "TT_setup_ps": -61.95,
+    "FF_hold_ps": -5.56,
+    "inserted_buffers": 4798,
+    "nets_repaired": 2903,
+    "fanout_violations": 2220
+  },
+  "consistent_cap24": {
+    "TT_setup_ps": 3.43,
+    "FF_hold_ps": -5.340422569966819,
+    "FF_hold_EP": 9,
+    "inserted_buffers": 1514,
+    "nets_repaired": 844,
+    "fanout_violations": 8,
+    "resized": 140,
+    "GRT_overflow": 0,
+    "TT_pinreg_mean_ps": 259.87,
+    "FF_pinreg_mean_ps": 214.27
+  },
+  "clock_contract": {
+    "TT_bound_ps": 258.53,
+    "FF_bound_ps": 213.14,
+    "period_ps": 833,
+    "setup_unc_ps": 60,
+    "hold_unc_ps": 25
+  },
+  "failure_cause": "9shortreg-transferscrossdifferentclockleaves. Worstske2delayr3[7]->multiplier2cut0[8]:launch196.73/capture220.14FF,CPPR1.74;singleINVdataarr248.56vsrequired253.90. Localclockownershipneeded,notGRTbufferECO. Otherfamiliesf12lastcut->y,mul7lastcut->y,ske12shift.",
+  "tool_gate_fix": "postcts_gatePASSmeansinsertiononly. Newkit-localgrt_timing_guardrequiresnativeTTsetup>=0ANDFFhold>=0beforeroute;7positive/negativecontrolsPASSandactualFF-5.34rejected. FinalSIGNEDstillrequired.",
+  "notes": "Earlierread_guides-basedindependentreview-43.77/-6.31isnotapples-to-apples;thatreaderemitsGRT0008andmissingroutepinwarnings. NativecurrentODBreaderusedforreportedmetrics. Oldlogsretained.0RTL/publiccycles;shape unchanged."
+}

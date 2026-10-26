@@ -30,6 +30,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ ! -f /work/tt_check_place.ok ]; then ODB=\$R/4_cts.odb SDC=\$R/4_cts.sdc OUT=/work/tt_check_place.rpt BASIS=placement openroad -exit -no_init /work/tt_check.tcl > /work/tt_check_place.log 2>&1; rc=\$?; grep -h OT_TT_CHECK /work/tt_check_place.log; if [ \$rc = 0 ]; then touch /work/tt_check_place.ok; else echo 'PATH_S81_HCORE TT setup FAIL at placement'; rc=7; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != cts ]; then \$M grt; rc=\$?; \
     if [ \$rc = 0 ]; then O4=\$R/5_1_grt.odb; rm -f /work/FAIL_POSTCTS; for c in TT FF; do OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O4 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; grep -h OT_POSTCTS_GATE /work/postcts_gate_\$c.log || echo \"OT_POSTCTS_GATE \$c no result FAIL\" >> /work/postcts_gate_\$c.log; done; if grep -hq 'OT_POSTCTS_GATE.*FAIL' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log > /work/FAIL_POSTCTS; rc=3; fi; fi; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != cts ]; then python3 -I /work/grt_timing_guard.py /work; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = finish ]; then \$M route; rc=\$?; \
     if [ \$rc = 0 ]; then \$M do-finish && \$M do-generate_abstract; rc=\$?; fi; \
     O=\$(ls \$R/6_final.odb 2>/dev/null | tail -1); \
