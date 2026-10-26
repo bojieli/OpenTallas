@@ -13,7 +13,10 @@ def install(recipe:Path,profile:Path,out:Path):
     if (recipe.parent/r.get('base','.')).resolve()!=ROOT:raise ValueError('recipe base must resolve to this repository')
     data=json.loads(profile.read_text());P.pack_profile(data)
     if len(data['TX'])!=32:raise ValueError('QC rope implementation requires NE32')
+    if out.exists() and any(out.iterdir()):raise ValueError('output must be a new empty bind cohort; existing source is immutable')
     out.mkdir(parents=True,exist_ok=True);content=P.personalise(data,out/'content')
+    simulation_alias=out/'content'/'qc_dcal_image.viamap.hex'
+    simulation_alias.write_bytes((out/'content'/content['viamap']).read_bytes())
     rel=lambda p:str(p.relative_to(ROOT))
     rtl=ROOT/'rtl/qwen_sys/d2d_static_20261015'
     source=(rtl/'qfd_d2d_cal_seq_ovl_rope_image64.sv').read_text()
@@ -32,6 +35,8 @@ def install(recipe:Path,profile:Path,out:Path):
     model={'schema':'opentallas.qc-dcal-image-rom.v1','recipe':rel(target),'source_recipe':rel(recipe),'source_profile':rel(profile),
       'source_profile_sha256':hashlib.sha256(profile.read_bytes()).hexdigest(),'manifest':rel(out/'content'/content['manifest']),
       'macro':P.NAME,'macro_instance':'u_cseq.u_seq.u_seq.u_image','macro_size_um':[12.312,9.192],
+      'simulation_alias':rel(simulation_alias),'simulation_instance':'qc_dcal_image',
+      'functional_model':f'physical/asap7_memory_macros_v2/{P.NAME}/{P.NAME}.v',
       'macro_area_um2':113.171904,'macro_read_bits_per_cycle':64,'cfg_write_bits_per_cycle':32,
       'init_edges':66,'new_init_edges':0,'new_production_edges':0,'tt_clk_to_q_ps':250.330,'ff_clk_to_q_ps':201.209,
       'clock_ps':833,'reset_contract':'clock running; reset spans at least one clock edge, as the delivered synchronous wavefront does',
