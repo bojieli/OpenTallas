@@ -45,6 +45,15 @@ def test_config_override_or_bad_ceiling_fails(gen):
         gen.check_route_ceiling(PINS, "M4", "t")      # below the M5 core PG pin layer
 
 
+@pytest.mark.parametrize("gen", GENS)
+@pytest.mark.parametrize("ceiling", ["M6", "M7"])
+def test_explicit_upper_layer_override_fails(gen, ceiling):
+    # The die GRT0 proof depends on every core leaving M6+ available. An explicit
+    # override must not restore the obstruction that the approved plan removed.
+    with pytest.raises(SystemExit, match="ROUTE_CEILING"):
+        gen.check_route_ceiling(PINS, ceiling, "t")
+
+
 def _tkm_kit(tmp_path, clk_layer="M4", cfg="export MAX_ROUTING_LAYER = M5\n"):
     (tmp_path / "pins.json").write_text(json.dumps([dict(bus="tile_clk", bit=None, layer=clk_layer, x=319.68,
                                                          y=172.728, face="E")]))

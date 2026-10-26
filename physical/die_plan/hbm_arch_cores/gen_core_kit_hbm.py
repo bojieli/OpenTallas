@@ -50,7 +50,7 @@ RST_RE = r"^(rst_n|rst|arst_n|reset_n|rst_[a-z0-9_]+|[a-z0-9_]*_rst_n|[a-z0-9_]*
 # core routes to M5 (pins M4/M5, OBS M1-M5); the partition / die own M6+ over the core.  One explicit parameter;
 # a plan pin above it FAILS kit generation (re-pin the plan, e.g. hbm_arch/path_hbm_m5_ceiling.py) -- no silent clamp.
 HBM_CORE_ROUTE_CEILING = "M5"
-ROUTE_CEILINGS = ("M5", "M6", "M7")      # M5 = the core PG pin layer: a lower ceiling cannot carry the core PDN
+ROUTE_CEILINGS = (HBM_CORE_ROUTE_CEILING,)  # M6+ belongs to the partition/die; M5 also carries the core PDN.
 
 
 def layer_no(layer):
@@ -483,7 +483,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--corner", default="TC", choices=["WC", "TC", "BC"])
     ap.add_argument("--util", type=float, default=None)
     ap.add_argument("--route-ceiling", "--sigmax", dest="sigmax", default=HBM_CORE_ROUTE_CEILING,
-                    help="core MAX_ROUTING_LAYER (default M5, COORD 10-26); a plan pin above it fails generation")
+                    choices=ROUTE_CEILINGS,
+                    help="core MAX_ROUTING_LAYER (M5 required, COORD 10-26); a plan pin above it fails generation")
     ap.add_argument("--recipe-key", default=None)
     ap.add_argument("--wrapper", default=None, help="hand-checked wrapper SV defining the plan module")
     # HBM-CORES 10-24: default 30 -> 0.  The gate (TT setup / FF hold, 60/25 ps uncertainty in the SDC) is unchanged;
