@@ -1,0 +1,11 @@
+{
+  "G0C": "PASS",
+  "errors": 0,
+  "warnings": 111,
+  "report": "results/kits_wave_qc_2155/sram_batch/aligned_v2_g0c/g0_report.json",
+  "sparse_failures_diagnosed": "initial census then3existingPHYlibs missing from sparsecheckout; materializedunchangedHEADassets,0sourcechanges",
+  "G2": "PASS all9 types; overflow0 all layers/no-access0/actual FT geometryPASS",
+  "die_signal_clock_GRT0": "pendingcoordinatedbatch",
+  "independent_review": "codex/geom-review-2219@a6b1b9a06a430eb72af0c423df6d21dcc92b1ea3; G2/diebatch only",
+  "source": "d4ae52687 exactaligned-v2"
+}

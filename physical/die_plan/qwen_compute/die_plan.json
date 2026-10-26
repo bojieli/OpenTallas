@@ -84445,23 +84445,6 @@
       "M4"
      ],
      "order": "lsb_low"
-    },
-    {
-     "name": "flt_st_a_i",
-     "dir": "in",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_st_a_i",
-     "face": "N",
-     "window_um": [
-      94.368,
-      94.752
-     ],
-     "layers": [
-      "M7",
-      "M5"
-     ],
-     "order": "lsb_low"
     }
    ],
    "ft_slots": [
@@ -85786,6 +85769,346 @@
      "module": "slw_st_b_v2_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      278.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      102.816,
+      278.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      317.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      102.816,
+      317.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      356.4
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      447.984,
+      270.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      500.256,
+      270.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      447.984,
+      308.88
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      500.256,
+      308.88
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      447.984,
+      347.76
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      943.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      163.296,
+      943.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      982.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      163.296,
+      982.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      1021.68
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      1030.32
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
     }
    ],
    "note": "slice region partition st_b (W slice, landed region st_b); est. std-cell fill 0.14 at util 0.6: 40% of M4-M7 to ft",
@@ -85973,23 +86296,6 @@
       "M4"
      ],
      "order": "lsb_low"
-    },
-    {
-     "name": "flt_o",
-     "dir": "out",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_o",
-     "face": "S",
-     "window_um": [
-      94.368,
-      94.752
-     ],
-     "layers": [
-      "M7",
-      "M5"
-     ],
-     "order": "lsb_low"
     }
    ],
    "ft_slots": [
@@ -86106,6 +86412,414 @@
      "module": "slw_st_a_v2_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[0\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      440.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[1\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      524.88
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[2\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      583.2
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[3\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      641.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      295.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      295.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      334.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      334.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      373.68
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      261.36
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      223.776,
+      261.36
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      300.24
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      223.776,
+      300.24
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      339.12
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      1030.32
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      145.584,
+      900.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      197.856,
+      900.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      145.584,
+      939.6
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      197.856,
+      939.6
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      145.584,
+      978.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
     }
    ],
    "note": "slice region partition st_a (W slice, landed region st_a); est. std-cell fill 0.15 at util 0.6: 40% of M4-M7 to ft",
@@ -86784,23 +87498,6 @@
      "layers": [
       "M6",
       "M4"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "flt_st_a_i",
-     "dir": "in",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_st_a_i",
-     "face": "N",
-     "window_um": [
-      94.368,
-      94.752
-     ],
-     "layers": [
-      "M7",
-      "M5"
      ],
      "order": "lsb_low"
     },
@@ -90090,6 +90787,346 @@
      "module": "slw_st_b_v1_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      278.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      102.816,
+      278.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      317.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      102.816,
+      317.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      356.4
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      378.864,
+      339.12
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      431.136,
+      339.12
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      378.864,
+      378.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      431.136,
+      378.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      378.864,
+      416.88
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      943.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      163.296,
+      943.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      982.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      163.296,
+      982.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      1021.68
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      1030.32
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
     }
    ],
    "note": "slice region partition st_b (W slice, landed region st_b); est. std-cell fill 0.14 at util 0.6: 40% of M4-M7 to ft",
@@ -90294,23 +91331,6 @@
       "M4"
      ],
      "order": "lsb_low"
-    },
-    {
-     "name": "flt_o",
-     "dir": "out",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_o",
-     "face": "S",
-     "window_um": [
-      94.464,
-      94.848
-     ],
-     "layers": [
-      "M7",
-      "M5"
-     ],
-     "order": "lsb_low"
     }
    ],
    "ft_slots": [
@@ -90427,6 +91447,414 @@
      "module": "slw_st_a_v1_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[0\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      440.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[1\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      507.6
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[2\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      574.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[3\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      641.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      295.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      295.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      334.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      334.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      373.68
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      261.36
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      223.776,
+      261.36
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      300.24
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      223.776,
+      300.24
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      339.12
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      1030.32
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      145.584,
+      900.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      197.856,
+      900.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      145.584,
+      939.6
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      197.856,
+      939.6
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      145.584,
+      978.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
     }
    ],
    "note": "slice region partition st_a (W slice, landed region st_a); est. std-cell fill 0.15 at util 0.6: 40% of M4-M7 to ft",
@@ -91156,23 +92584,6 @@
      "layers": [
       "M6",
       "M4"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "flt_st_a_i",
-     "dir": "in",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_st_a_i",
-     "face": "N",
-     "window_um": [
-      94.464,
-      94.848
-     ],
-     "layers": [
-      "M7",
-      "M5"
      ],
      "order": "lsb_low"
     },
@@ -143677,6 +145088,346 @@
      "module": "sle_st_b_v1_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      278.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      102.816,
+      278.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      317.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      102.816,
+      317.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      356.4
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      404.784,
+      356.4
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      457.056,
+      356.4
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      404.784,
+      395.28
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      457.056,
+      395.28
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      404.784,
+      434.16
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      943.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      163.296,
+      943.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      982.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      163.296,
+      982.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      1021.68
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      1030.32
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
     }
    ],
    "note": "slice region partition st_b (E slice, landed region st_b); est. std-cell fill 0.12 at util 0.6: 40% of M4-M7 to ft",
@@ -144560,23 +146311,6 @@
       "M4"
      ],
      "order": "lsb_low"
-    },
-    {
-     "name": "flt_o",
-     "dir": "out",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_o",
-     "face": "S",
-     "window_um": [
-      94.464,
-      94.848
-     ],
-     "layers": [
-      "M7",
-      "M5"
-     ],
-     "order": "lsb_low"
     }
    ],
    "ft_slots": [
@@ -144693,6 +146427,414 @@
      "module": "sle_st_a_v1_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[0\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      440.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[1\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      516.24
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[2\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      574.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[3\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      641.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      295.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      295.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      334.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      334.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      373.68
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      261.36
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      223.776,
+      261.36
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      300.24
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      223.776,
+      300.24
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      339.12
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      1030.32
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      883.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      163.296,
+      883.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      922.32
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      163.296,
+      922.32
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      961.2
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
     }
    ],
    "note": "slice region partition st_a (E slice, landed region st_a); est. std-cell fill 0.13 at util 0.6: 40% of M4-M7 to ft",
@@ -145422,23 +147564,6 @@
      "layers": [
       "M6",
       "M4"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "flt_st_a_i",
-     "dir": "in",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_st_a_i",
-     "face": "N",
-     "window_um": [
-      94.464,
-      94.848
-     ],
-     "layers": [
-      "M7",
-      "M5"
      ],
      "order": "lsb_low"
     },
@@ -212909,6 +215034,346 @@
      "module": "sle_st_b_v2_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      278.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      102.816,
+      278.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      317.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      102.816,
+      317.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      50.544,
+      356.4
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      287.28
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      287.28
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      326.16
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      326.16
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      365.04
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      943.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      163.296,
+      943.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      982.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      163.296,
+      982.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      111.024,
+      1021.68
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      1030.32
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
     }
    ],
    "note": "slice region partition st_b (E slice, landed region st_b); est. std-cell fill 0.12 at util 0.6: 40% of M4-M7 to ft",
@@ -213096,23 +215561,6 @@
       "M4"
      ],
      "order": "lsb_low"
-    },
-    {
-     "name": "flt_o",
-     "dir": "out",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_o",
-     "face": "S",
-     "window_um": [
-      94.368,
-      94.752
-     ],
-     "layers": [
-      "M7",
-      "M5"
-     ],
-     "order": "lsb_low"
     }
    ],
    "ft_slots": [
@@ -213229,6 +215677,414 @@
      "module": "sle_st_a_v2_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[0\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      440.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[1\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      524.88
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[2\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      583.2
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb\\[3\\].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "origin_um": [
+      483.84,
+      641.52
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      295.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      295.92
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      334.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      334.8
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      373.68
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      261.36
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      223.776,
+      261.36
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      300.24
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      223.776,
+      300.24
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      171.504,
+      339.12
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      952.56
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      474.336,
+      991.44
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      422.064,
+      1030.32
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      145.584,
+      900.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      197.856,
+      900.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      145.584,
+      939.6
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      197.856,
+      939.6
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank\\[0\\].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      145.584,
+      978.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
     }
    ],
    "note": "slice region partition st_a (E slice, landed region st_a); est. std-cell fill 0.13 at util 0.6: 40% of M4-M7 to ft",
@@ -213907,23 +216763,6 @@
      "layers": [
       "M6",
       "M4"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "flt_st_a_i",
-     "dir": "in",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_st_a_i",
-     "face": "N",
-     "window_um": [
-      94.368,
-      94.752
-     ],
-     "layers": [
-      "M7",
-      "M5"
      ],
      "order": "lsb_low"
     },
@@ -216433,23 +219272,6 @@
      "layers": [
       "M6",
       "M4"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "flt_st_a_i",
-     "dir": "in",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_st_a_i",
-     "face": "N",
-     "window_um": [
-      94.368,
-      94.752
-     ],
-     "layers": [
-      "M7",
-      "M5"
      ],
      "order": "lsb_low"
     },
@@ -220310,6 +223132,108 @@
      "module": "coll_n_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_core.g_codec.u_codec.g_bank\\[0\\].u_store.u_sram",
+     "module": "ot_sram_1r1w_64x512_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      171.288,
+      77.784
+     ],
+     "origin_um": [
+      16.416,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_core.g_codec.u_codec.g_bank\\[1\\].u_store.u_sram",
+     "module": "ot_sram_1r1w_64x512_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      171.288,
+      77.784
+     ],
+     "origin_um": [
+      293.76,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_core.g_codec.u_codec.g_bank\\[2\\].u_store.u_sram",
+     "module": "ot_sram_1r1w_64x512_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      171.288,
+      77.784
+     ],
+     "origin_um": [
+      16.416,
+      535.68
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_core.g_codec.u_codec.g_bank\\[3\\].u_store.u_sram",
+     "module": "ot_sram_1r1w_64x512_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      171.288,
+      77.784
+     ],
+     "origin_um": [
+      293.76,
+      535.68
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_core.u_rx.u_mem",
+     "module": "ot_sram_1r1w2c_64x546_m1",
+     "status": "reuse",
+     "outline_um": [
+      178.632,
+      81.0
+     ],
+     "origin_um": [
+      16.416,
+      656.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
+    },
+    {
+     "inst": "u_bound.u_core.u_tx.u_mem",
+     "module": "ot_sram_1r1w2c_64x546_m1",
+     "status": "reuse",
+     "outline_um": [
+      178.632,
+      81.0
+     ],
+     "origin_um": [
+      293.76,
+      656.64
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+     "note": "PROPOSED actual synthesized SRAM; generated TT/FF views, 5.4um halo; no floating macro or timing credit"
     }
    ],
    "note": "west strip: io_collective segment coll_n (QC-FIX: coll split along y into 9 abutted segments <= 1209.6 um, one tap + reset sync each; face cores at their PHYs; face<->core records = plan lanes with stations). Carry-over: E/W seam pins M6 only (flx R M4 hotspot on the PHY side); codec_pl landing in coll_c",
@@ -367453,19 +370377,6 @@
    "kind": "ctl"
   },
   {
-   "id": "sl_W5_st_a__flt__0",
-   "src": {
-    "part": "sl_W5_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W5_fw",
-    "bus": "flt_st_a_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
    "id": "sl_W5_su_c__flt__0",
    "src": {
     "part": "sl_W5_su_c",
@@ -367552,19 +370463,6 @@
    "dst": {
     "part": "sl_W4_fw",
     "bus": "flt_stm_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
-   "id": "sl_W4_st_a__flt__0",
-   "src": {
-    "part": "sl_W4_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W4_fw",
-    "bus": "flt_st_a_i"
    },
    "width": 1,
    "kind": "ctl"
@@ -367674,19 +370572,6 @@
    "kind": "ctl"
   },
   {
-   "id": "sl_W3_st_a__flt__0",
-   "src": {
-    "part": "sl_W3_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W3_fw",
-    "bus": "flt_st_a_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
    "id": "sl_W3_su_c__flt__0",
    "src": {
     "part": "sl_W3_su_c",
@@ -367786,19 +370671,6 @@
    "dst": {
     "part": "sl_W2_fw",
     "bus": "flt_stm_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
-   "id": "sl_W2_st_a__flt__0",
-   "src": {
-    "part": "sl_W2_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W2_fw",
-    "bus": "flt_st_a_i"
    },
    "width": 1,
    "kind": "ctl"
@@ -367908,19 +370780,6 @@
    "kind": "ctl"
   },
   {
-   "id": "sl_W1_st_a__flt__0",
-   "src": {
-    "part": "sl_W1_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W1_fw",
-    "bus": "flt_st_a_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
    "id": "sl_W1_su_c__flt__0",
    "src": {
     "part": "sl_W1_su_c",
@@ -368020,19 +370879,6 @@
    "dst": {
     "part": "sl_W0_fw",
     "bus": "flt_stm_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
-   "id": "sl_W0_st_a__flt__0",
-   "src": {
-    "part": "sl_W0_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W0_fw",
-    "bus": "flt_st_a_i"
    },
    "width": 1,
    "kind": "ctl"
@@ -368142,19 +370988,6 @@
    "kind": "ctl"
   },
   {
-   "id": "sl_E0_st_a__flt__0",
-   "src": {
-    "part": "sl_E0_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E0_fw",
-    "bus": "flt_st_a_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
    "id": "sl_E0_su_c__flt__0",
    "src": {
     "part": "sl_E0_su_c",
@@ -368254,19 +371087,6 @@
    "dst": {
     "part": "sl_E1_fw",
     "bus": "flt_stm_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
-   "id": "sl_E1_st_a__flt__0",
-   "src": {
-    "part": "sl_E1_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E1_fw",
-    "bus": "flt_st_a_i"
    },
    "width": 1,
    "kind": "ctl"
@@ -368376,19 +371196,6 @@
    "kind": "ctl"
   },
   {
-   "id": "sl_E2_st_a__flt__0",
-   "src": {
-    "part": "sl_E2_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E2_fw",
-    "bus": "flt_st_a_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
    "id": "sl_E2_su_c__flt__0",
    "src": {
     "part": "sl_E2_su_c",
@@ -368488,19 +371295,6 @@
    "dst": {
     "part": "sl_E3_fw",
     "bus": "flt_stm_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
-   "id": "sl_E3_st_a__flt__0",
-   "src": {
-    "part": "sl_E3_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E3_fw",
-    "bus": "flt_st_a_i"
    },
    "width": 1,
    "kind": "ctl"
@@ -368610,19 +371404,6 @@
    "kind": "ctl"
   },
   {
-   "id": "sl_E4_st_a__flt__0",
-   "src": {
-    "part": "sl_E4_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E4_fw",
-    "bus": "flt_st_a_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
    "id": "sl_E4_su_c__flt__0",
    "src": {
     "part": "sl_E4_su_c",
@@ -368722,19 +371503,6 @@
    "dst": {
     "part": "sl_E5_fw",
     "bus": "flt_stm_i"
-   },
-   "width": 1,
-   "kind": "ctl"
-  },
-  {
-   "id": "sl_E5_st_a__flt__0",
-   "src": {
-    "part": "sl_E5_st_a",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E5_fw",
-    "bus": "flt_st_a_i"
    },
    "width": 1,
    "kind": "ctl"
@@ -381410,12 +384178,6 @@
    ]
   },
   {
-   "id": "sl_W5_st_a__flt",
-   "ports": [
-    "sl_W5_st_a__flt__0"
-   ]
-  },
-  {
    "id": "sl_W5_su_c__flt",
    "ports": [
     "sl_W5_su_c__flt__0"
@@ -381455,12 +384217,6 @@
    "id": "sl_W4_stm__flt",
    "ports": [
     "sl_W4_stm__flt__0"
-   ]
-  },
-  {
-   "id": "sl_W4_st_a__flt",
-   "ports": [
-    "sl_W4_st_a__flt__0"
    ]
   },
   {
@@ -381512,12 +384268,6 @@
    ]
   },
   {
-   "id": "sl_W3_st_a__flt",
-   "ports": [
-    "sl_W3_st_a__flt__0"
-   ]
-  },
-  {
    "id": "sl_W3_su_c__flt",
    "ports": [
     "sl_W3_su_c__flt__0"
@@ -381563,12 +384313,6 @@
    "id": "sl_W2_stm__flt",
    "ports": [
     "sl_W2_stm__flt__0"
-   ]
-  },
-  {
-   "id": "sl_W2_st_a__flt",
-   "ports": [
-    "sl_W2_st_a__flt__0"
    ]
   },
   {
@@ -381620,12 +384364,6 @@
    ]
   },
   {
-   "id": "sl_W1_st_a__flt",
-   "ports": [
-    "sl_W1_st_a__flt__0"
-   ]
-  },
-  {
    "id": "sl_W1_su_c__flt",
    "ports": [
     "sl_W1_su_c__flt__0"
@@ -381671,12 +384409,6 @@
    "id": "sl_W0_stm__flt",
    "ports": [
     "sl_W0_stm__flt__0"
-   ]
-  },
-  {
-   "id": "sl_W0_st_a__flt",
-   "ports": [
-    "sl_W0_st_a__flt__0"
    ]
   },
   {
@@ -381728,12 +384460,6 @@
    ]
   },
   {
-   "id": "sl_E0_st_a__flt",
-   "ports": [
-    "sl_E0_st_a__flt__0"
-   ]
-  },
-  {
    "id": "sl_E0_su_c__flt",
    "ports": [
     "sl_E0_su_c__flt__0"
@@ -381779,12 +384505,6 @@
    "id": "sl_E1_stm__flt",
    "ports": [
     "sl_E1_stm__flt__0"
-   ]
-  },
-  {
-   "id": "sl_E1_st_a__flt",
-   "ports": [
-    "sl_E1_st_a__flt__0"
    ]
   },
   {
@@ -381836,12 +384556,6 @@
    ]
   },
   {
-   "id": "sl_E2_st_a__flt",
-   "ports": [
-    "sl_E2_st_a__flt__0"
-   ]
-  },
-  {
    "id": "sl_E2_su_c__flt",
    "ports": [
     "sl_E2_su_c__flt__0"
@@ -381887,12 +384601,6 @@
    "id": "sl_E3_stm__flt",
    "ports": [
     "sl_E3_stm__flt__0"
-   ]
-  },
-  {
-   "id": "sl_E3_st_a__flt",
-   "ports": [
-    "sl_E3_st_a__flt__0"
    ]
   },
   {
@@ -381944,12 +384652,6 @@
    ]
   },
   {
-   "id": "sl_E4_st_a__flt",
-   "ports": [
-    "sl_E4_st_a__flt__0"
-   ]
-  },
-  {
    "id": "sl_E4_su_c__flt",
    "ports": [
     "sl_E4_su_c__flt__0"
@@ -381995,12 +384697,6 @@
    "id": "sl_E5_stm__flt",
    "ports": [
     "sl_E5_stm__flt__0"
-   ]
-  },
-  {
-   "id": "sl_E5_st_a__flt",
-   "ports": [
-    "sl_E5_st_a__flt__0"
    ]
   },
   {
@@ -400517,16 +403213,6 @@
     "pad": 0,
     "param": "LAT_SL_W5_STM__FLT"
    },
-   "sl_W5_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_W5_ST_A__FLT"
-   },
    "sl_W5_su_c__flt": {
     "cycles": 2,
     "stations": 0,
@@ -400596,16 +403282,6 @@
     "natural": 2,
     "pad": 0,
     "param": "LAT_SL_W4_STM__FLT"
-   },
-   "sl_W4_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_W4_ST_A__FLT"
    },
    "sl_W4_su_c__flt": {
     "cycles": 2,
@@ -400687,16 +403363,6 @@
     "pad": 0,
     "param": "LAT_SL_W3_STM__FLT"
    },
-   "sl_W3_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_W3_ST_A__FLT"
-   },
    "sl_W3_su_c__flt": {
     "cycles": 2,
     "stations": 0,
@@ -400776,16 +403442,6 @@
     "natural": 2,
     "pad": 0,
     "param": "LAT_SL_W2_STM__FLT"
-   },
-   "sl_W2_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_W2_ST_A__FLT"
    },
    "sl_W2_su_c__flt": {
     "cycles": 2,
@@ -400867,16 +403523,6 @@
     "pad": 0,
     "param": "LAT_SL_W1_STM__FLT"
    },
-   "sl_W1_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_W1_ST_A__FLT"
-   },
    "sl_W1_su_c__flt": {
     "cycles": 2,
     "stations": 0,
@@ -400956,16 +403602,6 @@
     "natural": 2,
     "pad": 0,
     "param": "LAT_SL_W0_STM__FLT"
-   },
-   "sl_W0_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_W0_ST_A__FLT"
    },
    "sl_W0_su_c__flt": {
     "cycles": 2,
@@ -401047,16 +403683,6 @@
     "pad": 0,
     "param": "LAT_SL_E0_STM__FLT"
    },
-   "sl_E0_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_E0_ST_A__FLT"
-   },
    "sl_E0_su_c__flt": {
     "cycles": 2,
     "stations": 0,
@@ -401136,16 +403762,6 @@
     "natural": 2,
     "pad": 0,
     "param": "LAT_SL_E1_STM__FLT"
-   },
-   "sl_E1_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_E1_ST_A__FLT"
    },
    "sl_E1_su_c__flt": {
     "cycles": 2,
@@ -401227,16 +403843,6 @@
     "pad": 0,
     "param": "LAT_SL_E2_STM__FLT"
    },
-   "sl_E2_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_E2_ST_A__FLT"
-   },
    "sl_E2_su_c__flt": {
     "cycles": 2,
     "stations": 0,
@@ -401316,16 +403922,6 @@
     "natural": 2,
     "pad": 0,
     "param": "LAT_SL_E3_STM__FLT"
-   },
-   "sl_E3_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_E3_ST_A__FLT"
    },
    "sl_E3_su_c__flt": {
     "cycles": 2,
@@ -401407,16 +404003,6 @@
     "pad": 0,
     "param": "LAT_SL_E4_STM__FLT"
    },
-   "sl_E4_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_E4_ST_A__FLT"
-   },
    "sl_E4_su_c__flt": {
     "cycles": 2,
     "stations": 0,
@@ -401496,16 +404082,6 @@
     "natural": 2,
     "pad": 0,
     "param": "LAT_SL_E5_STM__FLT"
-   },
-   "sl_E5_st_a__flt": {
-    "cycles": 2,
-    "stations": 0,
-    "boundary": 2,
-    "faces": 1,
-    "fixed": 0,
-    "natural": 2,
-    "pad": 0,
-    "param": "LAT_SL_E5_ST_A__FLT"
    },
    "sl_E5_su_c__flt": {
     "cycles": 2,
