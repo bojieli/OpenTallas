@@ -14,6 +14,10 @@ flow release tag -- 'src_commit'/'flow_tag' in the signoff.json itself, else in 
 SIGNED, written by the autopilot archive) or AUTOPILOT.json up to 6 directories above it.  Every record carries
 'versioned'; signed_types/signed_cores hold versioned records only, unversioned_types/unversioned_cores the rest;
 the cache says provenance_rule 'v1' (tools/autopilot/ownership.py counts only such caches).
+GRANDFATHER (COORD ruling 2026-10-25 19:13): a SIGNED record completed before the first flow-* tag on origin (or while
+no flow tag exists) counts as SIGNED-LEGACY -- in signed_types/signed_cores, ref suffixed 'SIGNED-LEGACY' -- when it
+names a source commit or a run dir (its scanned path is the run dir; origin/main records name main).  The
+src_commit + flow_tag requirement applies only to records generated after the first tag.
 Cached in ~/.local/state/fleet-viz/release_tree_plan_cache.json; refreshed when older than REFRESH_S (the hourly
 release-tree-render.timer calls this through release_tree_render.py). On any failure the last good per-die values are
 kept and the error is reported (the page keeps rendering).
@@ -97,6 +101,36 @@ def shlex_quote(s):
     return shlex.quote(s)
 
 
+def first_flow_tag_ts():
+    """unix time of the oldest flow-* tag on origin, or None when no flow release exists yet (GRANDFATHER cutoff)."""
+    sh(['git', '-C', str(REPO), 'fetch', '-q', '--tags', 'origin'], 180)
+    r = sh(['git', '-C', str(REPO), 'for-each-ref', '--sort=creatordate', '--format=%(creatordate:unix)', 'refs/tags/flow-*'], 30)
+    ts = [int(x) for x in r.stdout.split() if x.strip().isdigit()]
+    return min(ts) if ts else None
+
+
+def gen_ts(r):
+    g = r.get('generated')
+    if isinstance(g, (int, float)): return float(g)
+    if isinstance(g, str):
+        try:
+            import datetime
+            return datetime.datetime.fromisoformat(g.replace('Z', '+00:00')).timestamp()
+        except Exception:
+            return None
+    return None
+
+
+def is_legacy(r, cutoff):
+    """GRANDFATHER: unversioned SIGNED record made before the first flow tag that names a src commit or run dir."""
+    if r.get('versioned'): return False
+    names = bool(r.get('src_commit') or r.get('source_commit') or r.get('path'))
+    if not names: return False
+    if cutoff is None: return True
+    t = gen_ts(r)
+    return t is not None and t < cutoff
+
+
 _PROV_NS = {'os': os}
 exec(PROV_PY, _PROV_NS)
 
@@ -176,6 +210,9 @@ def refresh(log=lambda *a: None):
                     recs += f.result(timeout=600); scanned.append(h)
                 except Exception as e:
                     errs.append('SIGNED scan %s: %s' % (h, e))
+        cutoff = first_flow_tag_ts(); res['first_flow_tag_ts'] = cutoff
+        for r_ in recs:
+            r_['legacy'] = is_legacy(r_, cutoff)
         res['signed_records'] = recs; res['scanned'] = scanned
         # match SIGNED records to plan types / hard cores
         for d, ent in res['plans'].items():
@@ -187,7 +224,9 @@ def refresh(log=lambda *a: None):
                 ref = r_['scan_host'] + ':' + r_['path'] if r_['scan_host'] != 'origin/main' else r_['path']
                 if r_.get('versioned'):
                     ref += ' src %s flow %s' % (str(r_['src_commit'])[:12], r_['flow_tag'])
-                T, C = (st, sc) if r_.get('versioned') else (ut, uc)
+                elif r_.get('legacy'):
+                    ref += ' SIGNED-LEGACY'
+                T, C = (st, sc) if (r_.get('versioned') or r_.get('legacy')) else (ut, uc)
                 for k, m in tm.items():
                     if k in ks or m in ks: T.setdefault(k, []).append(ref)
                 for m in ent['hard_cores']:
@@ -209,7 +248,7 @@ def merge_with_cache(new, old):
         n = new['plans'].get(d)
         if (not n or 'g0c_clean' not in n) and 'g0c_clean' in ent:
             ent = dict(ent, stale_since=ent.get('stale_since') or old.get('generated'))
-            if old.get('provenance_rule') != new.get('provenance_rule'):   # pre-rule-3 lists are not sign-offs
+            if old.get('provenance_rule') not in (new.get('provenance_rule'), None):   # GRANDFATHER: pre-rule-3 (None) lists are SIGNED-LEGACY
                 for a in ('types', 'cores'):
                     ent['unversioned_' + a] = dict(ent.get('unversioned_' + a) or {}, **(ent.get('signed_' + a) or {}))
                     ent['signed_' + a] = {}
