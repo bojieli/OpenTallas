@@ -12,14 +12,16 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## INFRA-FIRST · shared tool (all dies)
 - [ ] IF.TOOL die_infra.py fixed infrastructure: preserve regional cuts + actual connected route import · INFRA-FIRST / CODEX / FLOW · RUNNING · 1d5b87430 fixes regional export; initial qc0 is capacity reservation only; actual ODB clock/PG wires+vias+terminals import tiny PASS, signal GRT50 confirmation running
-- [ ] IF.CLK128 die_clock_mesh.py 12.8-compliant for all dies (last-node CPPR, no early compensation, plan-computed per-tap sizing, shielded tree legs/stubs) · CLOCK-128 · RUNNING · base claude/hbm-clock-regions-1026@46cd4fb367; then HBM r8 skew
+- [ ] IF.CLK128 die clock tool 12.8 (last-node CPPR, early tap = FAIL, plan sizing, shielded legs) · CLOCK-128-R2 · READY clock128-main 2779c3a553 + default b5fb5d77a8 (after kv-clktools-r3); TODO shield VSS vias; HBM r8 461/384 diag (tree 830-846 ps/region, trunk 3 ns) -> by-construction rebuild
 - [ ] IF.MASTER Master plan first (METHODOLOGY v3 12.7, OWNER 10-26 all dies): census -> corridors -> bays <=405 um any layer -> M7 entry pins -> worst-case PG + shielded clock + islands + common core latency; static plan gates before any block build · MASTER-PLAN · RUNNING · QC first, then HEAD/S81/KV/HBM
+- [ ] IF.GEN Shared slice-driven core-kit generator (pushdown islands, in-core H-tree, bays, M7 pins), all dies · MASTER-PLAN-R2 · RUNNING · master-plan 979fc60bf0 READY; kits only stamp slice today
+- [ ] IF.FALLBACK Bottom-up + landed partition crossings: cost per die (crossings, tok/s at +2/+3, area) · FALLBACK-LAND · RUNNING · analysis only, owner 07:1x
 - [ ] IF.MERGE Merge mesh tool fdb5b851c7 (COORD APPROVED 01:1x) · ROOT-MERGE-16 · WAITS · after its gates
 
 ## DIE qwen_compute · Qwen compute · rev UNFROZEN 54a1aeb5 · PROTOTYPE of infra-first
 - [ ] QC.PATH CRITICAL PATH end to end (12.9b): 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> GRT0 -> skew gate -> die STA · INFRA-FIRST · RUNNING · dated ETA checklist in lanes/INFRA-FIRST.md
 - [ ] QC.INFRA One QC plan event: infra-first PG/clock/reset + batch 2 (STM ROMs, SRAM, DEAD-FAULT) + D-QC-FE-REACH stations (all FE variants) + COLLFTM-CTL + CB ID straps + SCROOT + vmr_s6kc · INFRA-FIRST + PATH-QC · RUNNING · PENDING-DELTA D-INFRA-FIRST-QC holds all 68 type routes
-- [ ] QC.CLK Clock under 12.8 (skew 80 = target; gate = related-pair STA) · INFRA-FIRST · FAIL · early-tap 154/143 RETIRED (banned means); SU cores need centre clock island (edge-pin floor ~340-420 ps) → QC.SU, → IF.CLK128
+- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · INFRA-FIRST-R3 · FAIL · region proof islands-every-node 101/86 CONFIRMED (tree 2, mesh <=18); fix = regions on partition unions (~70 exp); next STA + ngspice mesh check + DR on one region; SU cores: QC-SU-LAT-R3 internal H-tree
 - [ ] QC.SU 4 SU core types (72 inst) rebuilt with centre clock island + structured tree to 250+-20 · QC-SU-LAT-R2 · RUNNING · points vmr/rp1 (129.6,169.0), prog/btab (177.12,135.0) → IF.MASTER
 - [ ] QC.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · → QC.INFRA
 - [ ] QC.BIND Strict bind on the QC plan event (wavefront reset/START, CB16 phase classes) · PATH-QC · WAITS · → QC.INFRA
