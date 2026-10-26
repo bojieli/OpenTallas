@@ -21,7 +21,7 @@ module tb_q3stageb;
  reg [11:0] cfg_addr=0;reg [255:0] cfg_data=0;reg [12:0] limit=0;
  wire configured,init_busy,program_fault,busy,done,hf,fault;wire [15:0] fault_cause;
  reg [1535:0] rows[0:255];reg [63:0] meta[0:255];
- integer NR=0,P=1,MAXC=100000,drain_extra=0,WARMAT=150,HOLD=64,MISSION_AT=4097;
+ integer NR=0,P=1,MAXC=100000,drain_extra=0,WARMAT=150,HOLD=64,MISSION_AT=4096;
  string dir,tracef;integer tfd;
  function automatic [31:0] mix(input [31:0] x);
   reg [31:0] h;h=x*32'h9e3779b1;h=h^(h>>15);h=h*32'h85ebca6b;h=h^(h>>13);return h;
