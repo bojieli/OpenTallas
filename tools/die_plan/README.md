@@ -450,3 +450,23 @@ slacks unchanged to 0.000 ps on KV e5e6).  The serial SPEF reader dominates time
 Full die (400 x 400k logic cells): ~970 GB with full parasitics = NOT feasible on a 1 TB host; ~540 GB with
 `--reduce` = feasible, ~19 h per corner (one process per corner, TT and FF on two hosts).  The continuous G4 check is
 `ilm` (seam-exact); flat `--reduce` is the signoff run.
+
+### Master-plan and infrastructure-site analysis
+
+`python3 tools/die_plan/die_infra.py master-plan PLAN --out OUT` and
+`python3 tools/die_plan/die_infra.py sites PLAN --out OUT` provide the shared
+static planning reports for METHODOLOGY 12.7–12.9. The first command writes the
+traffic census, road/bay/entry-pin model, gate report, render and **unfrozen**
+partition/core slice data; the second reports infrastructure-site sufficiency.
+Missing clock geometry or worst-case regional IR remains NOT RUN and prevents
+a passing aggregate verdict. No production kit generator is changed by this
+analysis-only integration. The slice consumer, pushed-down cell implementation
+and experimental core clock predictor remain on their development branches.
+
+These are plan models, not routed/signoff views. The current road model groups
+traffic at declared bank/port centroids; exact indexed-bit routing and epoch
+accounting are being integrated separately. Analytic clock insertion uses its
+recorded calibration and does not qualify a replacement clock tree. Review the
+actual bit geometry, independently check reported numbers, and complete the
+real-clock die STA/GRT gates before freeze. New production routes still require
+matching per-die canary coverage for the source bytes they use.
