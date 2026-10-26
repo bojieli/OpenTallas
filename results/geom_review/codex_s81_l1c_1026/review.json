@@ -1,0 +1,11 @@
+{
+  "verdict": "REQ",
+  "image": "results/geom_review/codex_s81_l1c_1026/place.png",
+  "kit": "epyc1:/srv/opentallas-scratch2/claude/cores-kits/s81/kits/dsdv_gunit_l1c_k26b",
+  "kit_hash": "ed48de52ff517c0f",
+  "source": "claude/cores-kits-s81-1026@2b9f7617e",
+  "source_note": "freeze generated before RTL fix commit; actual dsdv_gunit_l1c.sv byte-identical2b9f7617e sha25610dcf5ed7874151444e0e16d5b8b40436ae62dd9767dc685bf74e0e6a5ef7fa9",
+  "findings": "Viewed actual placed image: continuous macrofree body with W1055 data pins, N249pins, Eclock/reset near y184um. No macro walls/slivers. Fill29.04%,empty29.88%,peakbin0.56,0unregistered,pinregp90 8.14/max67.36um,r2rmax255.10/0>405um,peak5.3pins/um. AUTO-GEOM FAIL onlyaspect2.5=actual86.4x216 slot. PG continuousM1/M2/M5; ordinary CTS/hold/signoff still pending.",
+  "preflight": "raw+postfacePASS,regfanoutPASS,rtl_lintPASS,LECEQUIVALENT",
+  "request": "Independent verdict on fixed-slot aspect2.5 before routing; normal flow gates apply."
+}
