@@ -415,23 +415,29 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None):
             if k <= 0:
                 loads.append(ld)
                 continue
-            corner = (pb[0], pa[1])
-            planned, reservations = [], []
-            for c in range(1, k + 1):
-                t = c * L / (k + 1)
-                dx = abs(corner[0] - pa[0])
-                if t <= dx:
-                    p = (pa[0] + math.copysign(t, corner[0] - pa[0]), pa[1])
-                else:
-                    p = (corner[0], pa[1] + math.copysign(t - dx, pb[1] - pa[1]))
-                q, _ = free_near(K, p, limit=hop_max / 2)
-                if q is None:
+            # PATH-KV 10-26: try the x-first L, then the y-first L (a PHY corner often blocks only one of them)
+            for xfirst in (True, False):
+                planned, reservations = [], []
+                for c in range(1, k + 1):
+                    t = c * L / (k + 1)
+                    if xfirst:
+                        dx = abs(pb[0] - pa[0])
+                        p = ((pa[0] + math.copysign(t, pb[0] - pa[0]), pa[1]) if t <= dx else
+                             (pb[0], pa[1] + math.copysign(t - dx, pb[1] - pa[1])))
+                    else:
+                        dy = abs(pb[1] - pa[1])
+                        p = ((pa[0], pa[1] + math.copysign(t, pb[1] - pa[1])) if t <= dy else
+                             (pa[0] + math.copysign(t - dy, pb[0] - pa[0]), pb[1]))
+                    q, _ = free_near(K, p, limit=hop_max / 2)
+                    if q is None:
+                        break
+                    probe = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y))
+                    reservations.append(reserve_cell(K, f"split_probe_{c}", probe))
+                    planned.append(q)
+                for r in reservations:
+                    release_cell_reservation(K, r)
+                if len(planned) == k:
                     break
-                probe = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y))
-                reservations.append(reserve_cell(K, f"split_probe_{c}", probe))
-                planned.append(q)
-            for r in reservations:
-                release_cell_reservation(K, r)
             if len(planned) != k:
                 # A clock tail can traverse a PHY with its driver outside it. Never manufacture an illegal cell.
                 # Keep the direct tail only within the binding 750-um reach; actual routed slew still decides.
@@ -581,6 +587,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                xs=xs, ys=ys, drivers={}, htree=[], stubs=[], unplaced=[])
     if axis_snap is not None:
         out["meta"].update(pg_aware=True, pg_tracks=track_profile, pg_axis_snap_max_um=axis_snap)
+    import gen_phys as GP
+    out["meta"]["tap_layer"] = P.layer_budget["partition_signal_max"]
+    out["meta"]["tap_pin_size_um"] = [GP.LAYER_W.get(out["meta"]["tap_layer"], .04), 4 * GP.PIN_LEN_UM]
     if region_spec is not None:
         out["meta"].update(region_spec=region_spec, region_axes=axes)
     if delta_id:
@@ -612,16 +621,44 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         return name
 
     # --- driver sites: intersection, else slide along the M9 strap (y) or the M8 strap (x), whichever is nearer
+    # PATH-KV 10-26: candidates on both straps first; a leaf pair (i, 2k)/(i, 2k+1) whose nearest sites land on
+    # opposite sides of a PHY/hard macro (pair span > 700 um, i.e. past the 750-um clock reach) takes the candidate combination with the shortest pair
+    # span instead, so the leaf node can reach both drivers around the macro.
+    cand = {}
     for i, x in enumerate(xs):
         for j, y in enumerate(ys):
-            best = None
             g = R[reg_ij[(i, j)]]
-            rk = dict(region=g["k"]) if regions else {}
+            cs = []
             for axis in (0, 1):
                 bnd = strap_bounds(g, xs, ys, axis)
                 q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
-                if q is not None and (best is None or d < best[1]):
-                    best = (q, d, axis)
+                if q is not None:
+                    cs.append((q, d, axis))
+            cand[(i, j)] = sorted(cs, key=lambda c: c[1])
+    pick = {k: (v[0] if v else None) for k, v in cand.items()}
+    pair_fix = []
+    for (i, j), v in cand.items():
+        if j % 2 or (i, j + 1) not in cand or not v or not cand[(i, j + 1)]:
+            continue
+        a, b = pick[(i, j)], pick[(i, j + 1)]
+        span = lambda p, q: abs(p[0][0] - q[0][0]) + abs(p[0][1] - q[0][1])
+        if span(a, b) > 700.0:
+            combo = min(((p, q) for p in v for q in cand[(i, j + 1)]), key=lambda pq: (span(*pq), pq[0][1] + pq[1][1]))
+            pick[(i, j)], pick[(i, j + 1)] = combo
+            pair_fix.append([i, j, round(span(a, b), 1), round(span(*combo), 1)])
+    out["meta"]["driver_pair_fixes"] = pair_fix
+    for i, x in enumerate(xs):
+        for j, y in enumerate(ys):
+            g = R[reg_ij[(i, j)]]
+            rk = dict(region=g["k"]) if regions else {}
+            best = pick[(i, j)]
+            if best is not None and hitf(K, best[0]):   # an earlier driver reserved this site: fall back to a fresh search
+                best = None
+                for axis in (0, 1):
+                    bnd = strap_bounds(g, xs, ys, axis)
+                    q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
+                    if q is not None and (best is None or d < best[1]):
+                        best = (q, d, axis)
             if best is None:
                 out["unplaced"].append([i, j])
                 continue
@@ -718,6 +755,12 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     c0 = node_xy(0, nx, 0, ny)
     sp = P.clock.get("spine", {}) or {}
     root = tuple(sp.get("die_root_um") or sp.get("root_um") or c0)
+    if pg_shapes is not None:
+        planned_root = root
+        # The actual die input is on M9; placing it on the old grid centre can short a newly sized PG rail.
+        root = (pg_free_axis([root[0]], pg_shapes, "M9", 0, W, track_profile["M9"],
+                             NDR[ndr]["width"] / 2, NDR[ndr]["space"], max_move)[0], root[1])
+        out["meta"].update(root_plan_um=list(planned_root), root_pg_shift_um=round(abs(root[0]-planned_root[0]), 6))
     q, d = free_along(K, c0, 0, 2 * rep_um)
     if q is None:
         q, d = free_near(K, c0, limit=max(W, H))
@@ -725,12 +768,34 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         q = c0
         out["unplaced"].append(["root", "node"])
     n0 = cell("ckm_n0", q[0], q[1], "node", level=0)
-    trunk = abs(root[0] - c0[0]) + abs(root[1] - c0[1])
-    if region_spec is not None and trunk + BUF_W + ROW_Y > 750.0:
-        out["unplaced"].append(["root", "STRUCTURAL root-to-tree span exceeds 750 um", round(trunk, 3)])
+    trunk = abs(root[0] - q[0]) + abs(root[1] - q[1])
+    # Trunk repeaters (PATH-KV 10-26): a cohort tree centre that is not the die input point gets equal-cut BUFx24
+    # repeaters on the L path root -> ckm_n0 (x first, then y), each at the nearest free site.  The trunk is
+    # upstream of ckm_n0, so it is common to every pair (no skew effect); it only keeps every hop <= rep_um.
+    trunk_reps = []
+    n_tr = max(1, math.ceil(trunk / rep_um - 1e-9))
+    if trunk + BUF_W + ROW_Y > 750.0:
+        ax_len = abs(q[0] - root[0])
+        for k in range(1, n_tr):
+            s_ = trunk * k / n_tr
+            if s_ <= ax_len:
+                p = (root[0] + math.copysign(s_, q[0] - root[0]), root[1])
+            else:
+                p = (q[0], root[1] + math.copysign(s_ - ax_len, q[1] - root[1]))
+            rq, rd = free_near(K, p, limit=rep_um / 2)
+            if rq is None:
+                out["unplaced"].append(["root", f"trunk repeater {k} has no free site", round(s_, 1)])
+                rq = p
+            trunk_reps.append(cell(f"ckm_t_{k}", rq[0], rq[1], "rep", level=0))
+        if region_spec is not None and trunk / n_tr + BUF_W + ROW_Y > 750.0:
+            out["unplaced"].append(["root", "STRUCTURAL root-to-tree span exceeds 750 um", round(trunk, 3)])
     out["meta"]["root_um"] = list(root)
     out["meta"]["trunk_um"] = round(trunk, 2)
-    nets.append(dict(name="root", drv="port:root", loads=[n0], level=-1))
+    out["meta"]["trunk_reps"] = len(trunk_reps)
+    chain = trunk_reps + [n0]
+    nets.append(dict(name="root", drv="port:root", loads=[chain[0]], level=-1))
+    for a_, b_ in zip(chain, chain[1:]):
+        nets.append(dict(name=f"ckm_w_{a_}", drv=a_, loads=[b_], level=-1))
     rec(0, nx, 0, ny, 0, n0, "h")
     # --- stubs: every partition tap
     taps = DC.plan_taps(P)
@@ -799,7 +864,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             nets.append(dict(name=f"ckm_w_{chain[-1]}", drv=chain[-1], loads=["port:" + tp], level=98))
             pts = [n0, hq] + [(cells[r]["x"] + BUF_W / 2, cells[r]["y"] + ROW_Y / 2) for r in reps] + [(x, y)]
             wire = sum(abs(b[0] - a[0]) + abs(b[1] - a[1]) for a, b in zip(pts, pts[1:]))
-            tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], early_ps=early,
+            tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], layer=out["meta"]["tap_layer"], early_ps=early,
                                  early_corner_ps=early_c.get((part, port)), stub=head, **rk,
                                  foot=[round(n0[0], 3), round(n0[1], 3)], strap=None, slide_um=0.0, stub_um=0.0,
                                  early_branch=dict(node=nname, node_tag=node_tag(nname)[1], level=node_tag(nname)[0],
@@ -817,7 +882,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             out["unplaced"].append([tp, "stub"])
         sb = cell(f"ckm_s_{len(tap_rows)}", fq[0], fq[1], "stub", **rk)
         nets.append(dict(name=f"ckm_w_{sb}", drv=sb, loads=["port:" + tp], level=99))
-        tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], early_ps=early,
+        tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], layer=out["meta"]["tap_layer"], early_ps=early,
                              early_corner_ps=early_c.get((part, port)), stub=sb, **rk, foot=[round(fq[0], 3),
                              round(fq[1], 3)], strap=("M8", j) if axis == 0 else ("M9", i), slide_um=round(fd, 2),
                              stub_um=round(abs(fq[0] - x) + abs(fq[1] - y), 2)))
@@ -936,11 +1001,11 @@ def cmd_build(a):
     return 0
 
 
-def pad_delay(corner, libdir, slew=40.0):
-    """BUFx24 stage delay driving the next abutted BUFx24 (smallest table load), ps."""
+def pad_delay(corner, libdir, slew=40.0, cell="BUFx24_ASAP7_75t_R"):
+    """pad-cell stage delay at the smallest table load (default BUFx24 driving the next abutted BUFx24), ps."""
     f = Path(libdir) / f"asap7sc7p5t_INVBUF_RVT_{corner}_nldm_220122.lib.gz"
     txt = gzip.open(f, "rt").read()
-    i = txt.index("cell (BUFx24_ASAP7_75t_R)")
+    i = txt.index(f"cell ({cell})")
     blk = txt[i:txt.index("cell (", i + 10)]
     m = re.search(r"cell_rise \(\w+\) \{\s*index_1 \(\"([^\"]+)\"\);\s*index_2 \(\"([^\"]+)\"\);\s*values \((.*?)\);",
                   blk, re.S)
@@ -969,6 +1034,8 @@ def cmd_balance(a):
     nets, ports = data["nets"], [tuple(p) for p in data["ports"]]
     D, _ = read_tree(Path(a.tree) if a.tree else src / f"tree_{a.corner}.txt")
     dl = pad_delay(a.corner, a.libdir)
+    df = pad_delay(a.corner, a.libdir, cell=a.fine_lib) if a.fine_lib else None
+    hist_f = defaultdict(int)
     by_drv = {n["drv"]: n for n in nets}
     memo = {}
 
@@ -1002,14 +1069,20 @@ def cmd_balance(a):
         for x in n["loads"]:
             v = sub(x) if x in ld else None
             k = int(round((vmax - v) / dl)) if v is not None else 0
-            if k <= 0:
+            kf = 0
+            if v is not None and a.fine_lib:
+                # PATH-KV 10-26 fine step: best (BUFx24 count, fine-pad count <= 3) for the measured lift
+                k, kf = min(((i, j) for i in range(0, int((vmax - v) / dl) + 2) for j in range(4)),
+                            key=lambda ij: (abs(vmax - v - ij[0] * dl - ij[1] * df), ij[1]))
+            if k <= 0 and kf <= 0:
                 loads.append(x)
                 continue
+            hist_f[kf] += 1
             hist[min(k, 50) // 5 * 5] += 1
-            total_pad += k * dl
+            total_pad += k * dl + kf * (df or 0.0)
             cx, cy = cells[x]["x"], cells[x]["y"]
             chain = []
-            for i in range(k):
+            for i in range(k + kf):
                 col, row = i % 16, i // 16
                 for sgn in (-1, 1):
                     q = (cx + BUF_W / 2 + sgn * (col + 1) * (BUF_W + SITE_X * 2), cy + ROW_Y / 2 + 2 * ROW_Y * (row + 1))
@@ -1023,6 +1096,8 @@ def cmd_balance(a):
                 added += 1
                 cells[nm] = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y), kind="pad",
                                  level=cells[x].get("level"))
+                if i >= k:
+                    cells[nm]["lib"] = a.fine_lib
                 if reserve_sites:
                     reserve_cell(K, nm, cells[nm])
                 chain.append(nm)
@@ -1039,7 +1114,9 @@ def cmd_balance(a):
     M["clock_cell_overlaps"] = placement_overlaps(cells)
     M["meta"]["clock_cell_overlap_pairs"] = len(M["clock_cell_overlaps"])
     M["meta"]["balance"] = dict(src=str(src), corner=a.corner, pad_ps=round(dl, 2), pads=added,
-                                total_pad_ns=round(total_pad / 1e3, 2), hist=dict(sorted(hist.items())))
+                                total_pad_ns=round(total_pad / 1e3, 2), hist=dict(sorted(hist.items())),
+                                fine_lib=a.fine_lib, fine_pad_ps=round(df, 2) if df else None,
+                                fine_hist=dict(sorted(hist_f.items())))
     (out / "mesh.json").write_text(json.dumps(M) + "\n")
     (out / "place.json").write_text(json.dumps(cells) + "\n")
     (out / "nets.json").write_text(json.dumps(dict(ports=ports, nets=nets)) + "\n")
@@ -1162,6 +1239,7 @@ def cmd_combo(a):
     """combo.v + combo.tcl: kit signals (abstracts, M4-M7) + the mesh clock (M8-M9) in ONE global_route, then the
     native-NDR RC export of every clock net and the tree arrival at every driver A pin."""
     d, kit = Path(a.dir), Path(a.kit)
+    import gen_phys as GP
     M = json.loads((d / "mesh.json").read_text())
     cells = json.loads((d / "place.json").read_text())
     if M.get("unplaced") or M["meta"].get("unplaced", 0):
@@ -1208,8 +1286,11 @@ def cmd_combo(a):
     root = M["meta"]["root_um"]
     L.append(f"place_pin -pin_name root -layer M9 -location {{{root[0]:.3f} {root[1]:.3f}}} -pin_size {{0.04 0.32}}")
     for t_ in M["taps"]:
-        L.append(f"place_pin -pin_name {t_['port']} -layer M9 -location {{{t_['xy'][0]:.3f} {t_['xy'][1]:.3f}}} "
-                 f"-pin_size {{0.04 0.32}}")
+        # Match gen_phys.io_tcl: the die spine drops onto the real partition signal-max tap (currently M7).
+        tap_layer = t_.get("layer", M["meta"].get("tap_layer", "M7"))
+        pin_size = t_.get("pin_size_um", M["meta"].get("tap_pin_size_um", [GP.LAYER_W.get(tap_layer, .04), 4 * GP.PIN_LEN_UM]))
+        L.append(f"place_pin -pin_name {t_['port']} -layer {tap_layer} -location {{{t_['xy'][0]:.3f} {t_['xy'][1]:.3f}}} "
+                 f"-pin_size {{{pin_size[0]:g} {pin_size[1]:g}}}")
     for c, v_ in sorted(cells.items()):
         L.append(f"place_inst -name {c} -location {{{v_['x']} {v_['y']}}} -orient R0 -status FIRM")
     hw = nd["width"] / 2
@@ -1636,6 +1717,7 @@ def sink_arrivals(M, arr, corner, early_by_plan):
 def regional_qualification(M, corners, crossings):
     """A regional clock diagnostic is not evidence of implemented forwarded-clock landings."""
     reasons = []
+    reasons.append("related-pair coverage unproven: spatial tap pairs need an actual endpoint-to-tap ledger or conservative superset proof")
     if M.get("unplaced") or M["meta"].get("unplaced", 0):
         reasons.append("clock cells have no legal site")
     if M["meta"].get("clock_cell_overlap_pairs", 0):
@@ -1650,7 +1732,7 @@ def regional_qualification(M, corners, crossings):
         reasons.append("clock skew or landing window fails")
     if crossings:
         reasons.append("forwarded-clock landing implementation and token cycle pricing remain required")
-    return dict(scope="regional clock diagnostic; not a die freeze gate", release_verdict="BLOCKED" if reasons else
+    return dict(scope="mesh clock diagnostic; not a complete die related-pair gate", release_verdict="BLOCKED" if reasons else
                 "CLOCK-PASS", blockers=reasons, proposed_landed_crossings=crossings)
 
 
@@ -1665,7 +1747,8 @@ def cmd_report(a):
         return htree_tag(i, j, nx, ny, M["meta"].get("region_axes", ""))
     import numpy as np
     xa, ya = np.array(xs), np.array(ys)
-    rep = dict(meta=M["meta"], corners={})
+    rep = dict(meta=M["meta"], corners={}, related_pair_coverage=dict(complete=False, kind="surrogate spatial tap pairs",
+                    required="actual endpoint-to-tap pair ledger or qualified conservative all-tap superset"))
     tb = defaultdict(list)
     for t in M["taps"]:
         tb[t["part"]].append(dict(port=t["port"], part=t["part"], xy=t["xy"]))
@@ -1771,8 +1854,7 @@ def cmd_report(a):
             + ncell * DC.BUF_CIN_FF / 1e3 + len(M["taps"]) * DC.TAP_LOAD_FF / 1e3
         r["clock_switched_cap_pF"] = round(c_tot, 1)
         r["clock_wire_power_W"] = round(c_tot * 1e-12 * VDD[corner] ** 2 / (DC.PERIOD_PS * 1e-12), 3)
-    if regd or M["meta"].get("pg_aware"):
-        rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"] if crossing_table else 0)
+    rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"] if crossing_table else 0)
     (d / "clock_report.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps({c: {k: v for k, v in r.items() if k != "worst"} for c, r in rep["corners"].items()}, indent=1))
     return 0
@@ -1884,6 +1966,7 @@ def main(argv=None):
     bl.add_argument("--corner", default="TT")
     bl.add_argument("--tree", help="measured tree_<corner>.txt of the same tree (default: DIR's)")
     bl.add_argument("--tag", default="", help="pad name tag (one per balancing pass)")
+    bl.add_argument("--fine-lib", help="fine-step pad master (e.g. BUFx6f_ASAP7_75t_R): <=3 per load after BUFx24 pads")
     bl.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
     tr = sub.add_parser("trim", help="measured EARLY-TAP branch pad trim (after balance)")
     tr.add_argument("dir")

@@ -40,7 +40,9 @@ def test_lint_records_file_prefixed_yosys_errors(tmp_path):
 
 def test_lint_uses_production_top_parameter_specialization(tmp_path):
     (tmp_path / 'config.mk').write_text('export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\nexport VERILOG_TOP_PARAMS = AQ_XMEM 2 WIDTH 16\n')
-    assert 'hierarchy -check -top demo -chparam AQ_XMEM 2 -chparam WIDTH 16' in rtl_lint.script(tmp_path)
+    text = rtl_lint.script(tmp_path)
+    assert 'chparam -set AQ_XMEM 2 -set WIDTH 16 demo' in text
+    assert 'hierarchy -check -top demo\n' in text and ' -chparam ' not in text
 
 def test_lint_fails_closed_on_malformed_top_parameters(tmp_path):
     (tmp_path / 'config.mk').write_text('export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\nexport VERILOG_TOP_PARAMS = AQ_XMEM\n')

@@ -23,7 +23,7 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def compile_inputs(die, fixtures):
+def compile_inputs(die, fixtures, entry_engram_inputs=None):
     fixtures = Path(fixtures)
     files = json.loads((fixtures / 'files.json').read_text())
     source = {}
@@ -38,6 +38,12 @@ def compile_inputs(die, fixtures):
         return np.frombuffer(path.read_bytes(), dtype=np.dtype(spec['dtype'])).reshape(spec['shape'])
 
     h = read('io/h_in.bin')
+    if entry_engram_inputs is not None:
+        import entry_engram
+        h = entry_engram.entry_h(fixtures, entry_engram_inputs)
+        manifest = Path(entry_engram_inputs) / 'inputs.json'
+        source['entry_engram'] = dict(manifest_sha256=sha(manifest),
+                                     producer='checkpoint rows/scales/wkv + genuine layer inputs')
     pre = read('io/pre_in.bin')
     gains = read('weights/attn_norm.bin')
     if h.dtype != np.dtype('float32') or h.shape != (4, 5120):
@@ -91,7 +97,9 @@ def compile_inputs(die, fixtures):
     return dict(schema='opentallas.s81.entry_input_rows.v1', status='PARTIAL',
         die_sha256=die.die_sha, fixture_meta_sha256=sha(fixtures/'meta.json'), input_sources=source,
         writes=writes, readers=readers, row_count=len(writes),
-        provenance='legitimate layer input h/pre and checkpoint norm gains; no ops output injection',
+        provenance=('checkpoint-derived Engram H + genuine layer input pre and checkpoint norm gains; no ops output injection'
+                    if entry_engram_inputs is not None else
+                    'legitimate layer input h/pre and checkpoint norm gains; no ops output injection'),
         lifetimes=[dict(region='H0..31', writer='entry target5', reader='VP HLOAD a0=0',
                         release='after actual HLOAD finishes; VN owns residual H thereafter'),
                    dict(region='GAIN64..79', writer='entry target5', reader='VP GAIN a0=64',
@@ -106,13 +114,27 @@ def compile_inputs(die, fixtures):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--tree', type=Path, required=True)
+    source = ap.add_mutually_exclusive_group(required=True)
+    source.add_argument('--tree', type=Path)
+    source.add_argument('--bound', type=Path, help='Current strict bound out/; no legacy geometry is read')
+    ap.add_argument('--bound-inventory', type=Path, help='Logical source inventory for --bound')
     ap.add_argument('--fixtures', type=Path, required=True)
+    ap.add_argument('--entry-engram-inputs', type=Path,
+                    help='Checkpoint-derived Engram inputs: reconstruct attention-entry H before native row packing')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
     if a.out.exists():
         raise ValueError('preserve existing entry artifact; select a fresh --out')
-    data = compile_inputs(D.Die(a.tree), a.fixtures)
+    if a.bound:
+        if not a.bound_inventory:
+            ap.error('--bound requires --bound-inventory')
+        from bound_die import BoundDie
+        die = BoundDie(a.bound, a.bound_inventory)
+    else:
+        if a.bound_inventory:
+            ap.error('--bound-inventory requires --bound')
+        die = D.Die(a.tree)
+    data = compile_inputs(die, a.fixtures, a.entry_engram_inputs)
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(data, indent=1)+'\n')
     print('ENTRY_INPUT_ROWS', data['row_count'], 'PARTIAL: native programme landing/adoption and collective calendar remain unbound')

@@ -14,9 +14,16 @@ def source_entries(typ):
         if buses[name]['dir']!='out':continue
         geometry={k:v for k,v in e.items() if k!='note'}
         if name in selected:
-            old={k:v for k,v in selected[name].items() if k!='note'}
+            old={k:v for k,v in next(row for row in typ['internal_stations'] if row.get('conn')=='bus:'+name).items() if k!='note'}
             if geometry!=old:raise ValueError(f'conflicting OUT station geometry {name}')
-        else:selected[name]=copy.deepcopy(e)
+        else:
+            item=copy.deepcopy(e)
+            # Plan bus geometry is written face->core even for OUT signals;
+            # actual source stage zero must sit nearest the launching core.
+            if item.get('capture')=='face flop' and item.get('launch')!='face flop':
+                item['regs_um']=list(reversed(item['regs_um']))
+                item['from_um'],item['to_um']=item.get('to_um'),item.get('from_um')
+            selected[name]=item
     return list(selected.values())
 
 
@@ -34,7 +41,12 @@ def annotate(b):
             count=len(e['regs_um']);matches=[L for L in b.out_bus[part] if L['oname']==name]
             if len(matches)!=1:raise ValueError(f'native stations {part}.{name}: expected one outgoing lane')
             L=matches[0];raw=lanes.get(L.get('lane'),{})
-            if int(raw.get('fixed_cycles',0))!=count:raise ValueError(f'native stations {L.get("lane")}: fixed_cycles must equal {count}')
+            destination=b.parts.get(L.get('dst'),{})
+            target=b.types.get(destination.get('type'),{})
+            incoming={len(row['regs_um']) for row in target.get('internal_stations',[]) if row.get('conn')=='bus:'+L.get('iname','')}
+            if len(incoming)>1:raise ValueError(f'native stations {L.get("lane")}: conflicting destination station counts')
+            receiver=next(iter(incoming),0)
+            if int(raw.get('fixed_cycles',0))!=count+receiver:raise ValueError(f'native stations {L.get("lane")}: fixed_cycles must equal source {count} + destination {receiver}')
             base=2+sum(h['stations'] for h in L.get('ft',[]))
             if L['cycles']<base+count:raise ValueError('native stations exceed priced lane depth')
             L['internal_source_cycles']=count
@@ -46,8 +58,22 @@ def materialize(b,tn,file):
     typ=copy.deepcopy(typ)
     typ['internal_stations']=source_entries(typ)
     if not typ['internal_stations']:return
+    # Binding removes proven constant/unused payload bits from the functional
+    # lane. The native station carries that exact bound payload plus its epoch,
+    # rather than the wider planning pin capacity. Keep the public plan intact.
+    widths={}
+    for part in b.by_type.get(tn,[]):
+        for lane in b.out_bus.get(part,[]):
+            widths.setdefault(lane['oname'],set()).add(int(lane['width']))
+    for entry in typ['internal_stations']:
+        name=entry['conn'][4:]
+        actual=widths.get(name,set())
+        if len(actual)!=1:raise ValueError(f'native stations {tn}.{name}: no unique bound payload width')
+        width=next(iter(actual));bus=next(v for v in typ['buses'] if v['name']==name)
+        if not 0<width<=int(bus['width']):raise ValueError(f'native stations {tn}.{name}: bound width exceeds plan capacity')
+        bus['width']=width
     import kit_istations
-    file=Path(file);kd=file.parent.parent/'native_internal_stations'/tn;kd.mkdir(parents=True,exist_ok=True)
+    file=Path(file).resolve();kd=file.parent.parent/'native_internal_stations'/tn;kd.mkdir(parents=True,exist_ok=True)
     local=kd/file.name;shutil.copyfile(file,local)
     plan=kd/'plan.json';plan.write_text(json.dumps({'partition_types':{tn:typ}}))
     man=kd/'kit_rtl.json';man.write_text(json.dumps({'bound_module':file.stem,'files':[str(local)]}))

@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.s81.head-lep-nr-source.v1",
+  "sources": {
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv": "429141a0ee0f3d1f5c021b395e284e6b345c78e57b1edd80cbbbb026a83f6bd8",
+    "rtl/lib/ot_sram_oldread_wreg.sv": "67df3246d6cb5648945ca87ef2fd2f46f6e631df622bc19f39432286f97a46f0",
+    "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv": "bdd5fd48fe22e22e3206bcdc0bb1c41c2645fd29386fd587669c250b6bc9a089",
+    "rtl/lib/ot_sram_showahead_1r1w.sv": "2a540b43978ffe98f7d67bb9d3da3b03db4763caad4ecd3bd75e716b299effdc"
+  },
+  "changes": [
+    "head-only module names",
+    "real512x128_m4_r0c0 instead of tied-repair r2c2",
+    "no data/control/credit/latency change"
+  ],
+  "added_cycles": 0,
+  "physical": "new head provider; no inherited physical view or signoff"
+}

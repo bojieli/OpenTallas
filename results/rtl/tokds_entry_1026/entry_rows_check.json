@@ -1,0 +1,38 @@
+{
+ "verdict": "PASS",
+ "h_words": 20480,
+ "h_mismatches": 0,
+ "native_rows": 3920,
+ "nx_partials": 80,
+ "bypass_engram_control_mismatches": 16430,
+ "input_sources": {
+  "io/h_in.bin": {
+   "sha256": "eaf3017e557b98cb4039ae5a07707ab151d65f909f749f470b853b059118ee42",
+   "dtype": "float32",
+   "shape": [
+    4,
+    5120
+   ]
+  },
+  "entry_engram": {
+   "manifest_sha256": "1a50acf7bcd41103a89aff18d23b8229e7680c7296fddb2fe07f4785506d66d1",
+   "producer": "checkpoint rows/scales/wkv + genuine layer inputs"
+  },
+  "io/pre_in.bin": {
+   "sha256": "6c29248eea3f09270ccf9822e1c4125b27f476982d15898f1c3720697760e3b6",
+   "dtype": "float32",
+   "shape": [
+    4
+   ]
+  },
+  "weights/attn_norm.bin": {
+   "sha256": "5582111c8c4137acab35749b26cfe96e911fafff7a811b2f9cc80c7d67f739b1",
+   "dtype": "uint8",
+   "shape": [
+    5120,
+    2
+   ]
+  }
+ },
+ "scope": "entry row codec and golden NX partials; transport/schedule not qualified"
+}

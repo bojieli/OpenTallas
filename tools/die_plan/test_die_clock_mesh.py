@@ -117,12 +117,13 @@ class T(unittest.TestCase):
             d = Path(td); kit = d / "kit"; (kit / "grt").mkdir(parents=True); (kit / "abstracts").mkdir()
             (kit / "grt/route.v").write_text("module route(rst); input rst; endmodule\n")
             (kit / "grt/grt.tcl").write_text("read_verilog /work/grt/route.v\nlink_design route\nsource /work/grt/obs.tcl\n")
-            (d / "ctree.v").write_text("module die_ctree(root); input root; endmodule\n")
+            (d / "ctree.v").write_text("module die_ctree(root,t_pin); input root; output t_pin; assign t_pin=root; endmodule\n")
             (d / "place.json").write_text("{}")
             (d / "nets.json").write_text('{"nets": []}')
             (d / "mesh.json").write_text(json.dumps(dict(meta=dict(ndr="4w", W=10, H=10, root_um=[1, 1]),
-                                                         xs=[2, 8], ys=[2, 8], taps=[])))
+                                                         xs=[2, 8], ys=[2, 8], taps=[dict(port="t_pin",xy=[5,5])])))
             CM.cmd_combo(SimpleNamespace(dir=str(d), kit=str(kit)))
+            self.assertIn("-layer M7 -location {5.000 5.000} -pin_size {0.032 0.768}", (d/"combo.tcl").read_text())
             fake = d / "bin"; fake.mkdir()
             docker = fake / "docker"
             docker.write_text('#!/bin/bash\nfor a in "$@"; do case "$a" in CORNER=TT) exit 7;; CORNER=FF) exit 0;; esac; done\nexit 9\n')
@@ -187,7 +188,8 @@ class T(unittest.TestCase):
         M = dict(meta={"unplaced": 0}, unplaced=[])
         corners = {c: dict(verdict="PASS", landed_verdict="PASS") for c in ("TT", "FF")}
         self.assertEqual(CM.regional_qualification(M, corners, 3)["release_verdict"], "BLOCKED")
-        self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "CLOCK-PASS")
+        self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "BLOCKED")
+        self.assertTrue(any("related-pair coverage" in s for s in CM.regional_qualification(M, corners, 0)["blockers"]))
         M["unplaced"] = [[0, 0]]
         self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "BLOCKED")
 
