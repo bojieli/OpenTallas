@@ -428,6 +428,30 @@ def _group_in_min(m):
 FF_TT_INSERTION_RATIO = 0.81
 
 
+ROOT_RESET_FALSE_PATH = (
+    r"set_false_path -from [get_ports {arst_n}] -to "
+    r"[get_pins -hierarchical -regexp {^u_rst_root[./]p\[[01]\]\$_DFF_PN0_/RESETN$}]"
+)
+
+
+def root_async_reset(P, tn):
+    """Owner reset rule: only the unique whole-die two-flop async root is exempt.
+
+    Every receiving partition's synchronous arst_n and all forwarded relays remain
+    timed. Do not infer a reset waiver from an input name or an RTL comment.
+    """
+    import reset_tree as RT
+    if not RT.wavefront(P) or P.types[tn].get("hard"):
+        return False
+    if RT.wf_solve(P)["root_type"] != tn:
+        return False
+    if RT.sync_stages(P, tn) != 2:
+        raise ValueError("owner reset contract requires exactly two root synchronizer stages")
+    if sum(p["type"] == tn for p in P.parts.values()) != 1:
+        raise ValueError("async root reset exception requires a unique root partition type")
+    return True
+
+
 def insertion_binding(P, tn):
     """{tt, ff, tol, basis, early_tap_ps}: the type's bound pin-register insertion per corner (ps)."""
     tc = P.types[tn].get("clock", {})
@@ -565,6 +589,9 @@ def sdc(P, tn, pins):
     for v, ports in _group_in_min(input_hold_min(P, tn)):
         out += (f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n"
                 f"set_input_delay -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
+    if root_async_reset(P, tn):
+        out += "# Sole asynchronous die-root reset CDC (owner reset rule); forwarded reset remains timed.\n"
+        out += ROOT_RESET_FALSE_PATH + "\n"
     # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
