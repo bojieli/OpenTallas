@@ -1,0 +1,39 @@
+{
+  "actual_kit": "epyc1:/srv/opentallas-scratch2/claude/codex-qc-fe-2205/kit",
+  "checkpoint": "run/results/asap7/dp_sle_fe_v1/base/3_place.odb",
+  "odb_sha1_prefix": "d8a348327be3fc46ebac",
+  "source": "declared original190ebb428e + source fixes5ee12cd0f/186e8631d/8d1605822; exact combined current-main receipt pending, not invented",
+  "pictures": [
+    "floorplan.png",
+    "density.png"
+  ],
+  "viewed": "2026-10-25 22:43 PDT",
+  "verdict": "PASS-COND",
+  "scope": "ONE CTS-only prototype after exact pinned current-source cohort receipt; no DRT until actual clock/timing/postCTS geometry clears",
+  "outline_um": [
+    622.08,
+    1339.2
+  ],
+  "macros": 0,
+  "fill": 0.014,
+  "FF": 21670,
+  "clock_ports": 8,
+  "nearest_clock_loads": {
+    "clk": 1989,
+    "clk_t1": 2221,
+    "clk_t2": 4425,
+    "clk_t3": 3275,
+    "clk_t4": 3309,
+    "clk_t5": 3404,
+    "clk_t6": 2550,
+    "clk_t7": 497
+  },
+  "configured_max_sinks": 3000,
+  "findings": "Wide N/S/E/W boundary banks and fixed FT station regions occupy open core; no macro wall, no extended density hotspot, continuous PG, zero obvious same-layer pin/PG overlaps. All6380 matched data interstage bit hops<=405um(max382.698), all6families laststage->face<=405(max380.383), inputpin->firstFTFF<=11.111. 56reset/STARTcontrol relays already qualified by builder, max375.8um. Clock nearest-load imbalance must be corrected by group-coherent cap assignment before CTS result is accepted; the configured balancing hook exists but has not run. Placement evidence is not clock closure.",
+  "conditions": [
+    "Exact source/kit hashes and current frozen-interface/pending-delta check before enqueue; retain normal canary/flow gates",
+    "CTS actual all21670 FF accounted; group-coherent load redistribution with no split FT/control cohort; report per-tap sink loads and reach",
+    "PostCTS full clock picture and native TT/FF pinreg insertion/related-pair skew/FF hold gates before any GRT/DRT; no budget relaxation",
+    "No skeleton/source substitution; current input/output/FT latency unchanged; no added cycles claimed"
+  ]
+}
