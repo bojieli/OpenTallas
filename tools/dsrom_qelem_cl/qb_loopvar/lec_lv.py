@@ -7,7 +7,7 @@ OLD = the q-element source list (rtl_list.txt) at OLD_SHA, every module renamed 
 under NEW_ROOT.  lv_top (lec_top.sv) instantiates both q elements at the S81 die parameters, so every module is
 elaborated at its in-context parameters.  Per frontend (Yosys read_verilog -sv, and read_slang: two independent HDL
 frontends), per module pair (old paramod <-> new paramod with the same parameters) of the five changed / containing
-modules: flatten both, memory_map, async2sync, equiv_make old new, equiv_simple -seq, equiv_struct (ROM black boxes
+modules: flatten both, memory_map, remove unused wires (including public loop integers), async2sync, equiv_make old new, equiv_simple -seq, equiv_struct (ROM black boxes
 merged once their input pins are proved equal; the merged cell's outputs then become one shared free $anyseq input),
 equiv_simple -seq, equiv_induct -seq, equiv_status.
 Verdict per pair: EQUIVALENT (every $equiv proved) / NOT_PROVEN (equiv_status lists the unproven signals).
@@ -96,7 +96,7 @@ def main():
         cmds = read_cmds(fe, files) + ["design -save elab"]
         for t, tag, o, n in todo:
             cmds += ["design -load elab", "setattr -mod -unset keep_hierarchy", f"rename {o} lv_gold", f"rename {n} lv_gate", "flatten lv_gold lv_gate",
-                     "memory -nomap lv_gold lv_gate", "memory_map lv_gold lv_gate", "opt_clean lv_gold lv_gate",
+                     "memory -nomap lv_gold lv_gate", "memory_map lv_gold lv_gate", "opt_clean -purge lv_gold lv_gate",
                      "async2sync lv_gold lv_gate", "equiv_make lv_gold lv_gate lv_eq",
                      "equiv_simple -seq 5 lv_eq", "equiv_struct lv_eq",
                      # the merged (shared) ROM macro cell -> a free per-cycle input ($anyseq) so equiv_induct has a SAT
