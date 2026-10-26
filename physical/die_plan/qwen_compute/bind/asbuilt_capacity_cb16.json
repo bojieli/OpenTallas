@@ -1,6 +1,6 @@
 {
  "note": "BINDER 10-23: Qwen compute as-built = r56 GEN die.v (sha256 bdee7c3c..., /home/ubuntu/scratch/plan-qc/r56) + RTL of record. Slices: the r56 master qfd_dv_slice2_w/_e wraps qfd_dv_slice2; the plan's 15 slice regions come from the s8 landed-parent record, whose logical parent is qfd_dv_s8_flat, so qfd_dv_slice2 is substituted by qfd_dv_s8_flat (recorded; same ports except s8's extra treq_i / treq_o). | ELEMQK-BIND 10-24: copy of asbuilt_tie.json for the P6 main plan (map asbuilt_map_p6.json, no land_r8_extra)",
- "base": "/srv/opentallas-scratch/claude/wt/elem-qk",
+ "base": "../../../..",
  "netlist": [
   "physical/die_plan/qwen_compute/bind/inputs/die_r56.v.gz"
  ],
@@ -302,7 +302,7 @@
   "c16_[WE]\\d_\\d\\.u_fab\\.u_x_\\d_\\d\\.sidx",
   "c16_[WE]\\d_\\d\\.u_fab\\.\\$not\\$.*\\.A"
  ],
- "map_file": "/srv/opentallas-scratch/claude/codex-qwen/qcp6_status_bind_v5/asbuilt_map_p6.json",
+ "map_file": "asbuilt_map_p6.json",
  "strap_note": "position straps (tile_id = cid/row/col, column station index, far flag): partition parameters, as built",
  "lint_waive": [
   {
@@ -352,10 +352,11 @@
  "lint_split": true,
  "lint_jobs": 2,
  "param_regen": {
-  "file": "/srv/opentallas-scratch/claude/wt/codex-elem-qk/physical/die_plan/qwen_compute/bind/coll_regen.py"
+  "file": "physical/die_plan/qwen_compute/bind/coll_regen.py"
  },
  "land_r8_extra": [
-  "/home/ubuntu/wt/qc-tok/physical/die_plan/qwen_compute/bind/qc_cb16_pads_capacity.json"
+  "physical/die_plan/qwen_compute/bind/qc_cb16_pads_capacity.json"
  ],
- "land_r8_cb16_note": "QC-TOK 12:40: + CB16 tree-align pads on the capacity candidate (t_0_0.n_a +18, t_1_2.n_b +12, t_2_2.n_a +2 x48 clusters, 789,504 flops)"
+ "land_r8_cb16_note": "QC-TOK 12:40: + CB16 tree-align pads on the capacity candidate (t_0_0.n_a +18, t_1_2.n_b +12, t_2_2.n_a +2 x48 clusters, 789,504 flops)",
+ "repo_relative_note": "PATH-QC 2026-10-25 21:3x (evidence gate, closure order rule 3): paths made repo-relative. Old absolute sources (wt/elem-qk, codex-qwen/qcp6_status_bind_v5 map, wt/qc-tok pads) are gone; replaced by the in-repo files of the same role (bind/asbuilt_map_p6.json, bind/coll_regen.py, bind/qc_cb16_pads_capacity.json). The 10-24 xt1 capacity receipts were made at the old sources and are NOT re-proved by this manifest; any new use must re-bind at its own commit. Not the plan of record for the frozen QC plan."
 }
