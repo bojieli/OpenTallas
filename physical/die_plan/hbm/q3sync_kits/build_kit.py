@@ -12,6 +12,8 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import math
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -31,6 +33,44 @@ TOPS = {
 
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def literal_ports(text, top):
+    """Inventory only a fixed ANSI interface; refuse all unresolved declarations."""
+    text = re.sub(r"//[^\n]*|/\*.*?\*/", "", text, flags=re.S)
+    starts = list(re.finditer(r"(?m)^\s*module\s+" + re.escape(top) + r"\b", text))
+    if len(starts) != 1:
+        raise ValueError("ambiguous or missing profile top")
+    tail = text[starts[0].end():].lstrip()
+    if not tail.startswith("("):
+        raise ValueError("profile interface must have no parameters")
+    end = tail.find(");")
+    if end < 0:
+        raise ValueError("unterminated profile interface")
+    header = tail[1:end]
+    if "`" in header:
+        raise ValueError("preprocessor in profile interface")
+    depth = 0
+    for directive in re.findall(r"(?m)^\s*`(ifdef|ifndef|endif)\b", text[:starts[0].start()]):
+        depth += -1 if directive == "endif" else 1
+        if depth < 0:
+            raise ValueError("unbalanced interface preprocessor")
+    if depth:
+        raise ValueError("conditional profile interface")
+    decl = re.compile(r"(input|output|inout)\s+(?:(?:wire|reg|logic)\s+)?"
+                      r"(?:(?:signed|unsigned)\s+)?"
+                      r"((?:\[\s*\d+\s*:\s*\d+\s*\]\s*)*)([A-Za-z_]\w*)")
+    ports, seen = [], set()
+    for item in header.split(","):
+        match = decl.fullmatch(item.strip())
+        if not match or match[3] in seen:
+            raise ValueError("ambiguous or nonliteral profile declaration: " + item.strip())
+        seen.add(match[3])
+        dims = re.findall(r"\[\s*(\d+)\s*:\s*(\d+)\s*\]", match[2])
+        ports.append((match[3], match[1], math.prod(abs(int(a)-int(b))+1 for a,b in dims)))
+    if not ports:
+        raise ValueError("empty profile interface")
+    return ports
 
 
 def materialize(core, profile_dir, root=REPO):
@@ -85,6 +125,16 @@ def recipe_from_census(core, census, profile_dir, root=REPO):
         sources.append(rel)
         receipt['macros'][rel] = sha(root / rel)
     top = TOPS[core]
+    top_source = next(e for e in selected if top in e['modules'])
+    generated_top = profile_dir / 'rtl' / top_source['emitted']
+    try:
+        ports = literal_ports(generated_top.read_text(), top + '__q3sync')
+    except ValueError as exc:
+        raise SystemExit('NOT BUILT: ' + str(exc)) from exc
+    receipt['port_inventory'] = dict(method='fixed literal ANSI header',
+                                     top=top+'__q3sync', ports=ports,
+                                     source_file=top_source['source'],
+                                     source_sha256=sha(generated_top))
     recipe = dict(files=sources, top=top, profile_top=top + '__q3sync', params={}, defines=[],
                   macros=[Path(p).stem for p in core_files['macros']],
                   source_commit=census['source_commit'], source='qualified q3sync closure')

@@ -573,6 +573,17 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 Path(p_).write_text(t_)
                 top = top + "__core"
                 break
+    def inventory(top_, params_):
+        pi = (source_profile or {}).get("port_inventory")
+        if pi and pi["top"] == top_:
+            if params_:
+                raise SystemExit("profile interface inventory cannot override parameters")
+            staged_top = kd / "rtl" / Path(pi["source_file"]).name
+            if sha(staged_top) != pi["source_sha256"]:
+                raise SystemExit("profile interface source hash changed before inventory")
+            return [tuple(p) for p in pi["ports"]]
+        return yosys_ports(local, top_, params_, rec.get("defines", []), kd / "rtl")
+
     wrap_rep = None
     if a.wrapper:
         shutil.copyfile(a.wrapper, kd / "rtl" / f"{module}__wrap.sv")
@@ -580,13 +591,13 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         local.append(str(kd / "rtl" / f"{module}__wrap.sv"))
         wrap_rep = dict(hand_wrapper=str(a.wrapper))
         design, dparams = module, {}
-        tports = yosys_ports(local, module, {}, rec.get("defines", []), kd / "rtl")
+        tports = inventory(module, {})
         tpw = {n: wd for n, _, wd in tports}
         bad = [b for b, (wd, _) in pb.items() if tpw.get(b) != wd] + [n for n in tpw if n not in pb]
         if bad:
             raise SystemExit(f"PORT_MISMATCH {a.view}: hand wrapper ports != plan pins, e.g. {bad[:6]}")
     elif top != module or canon:
-        tports = yosys_ports(local, top, params, rec.get("defines", []), kd / "rtl")
+        tports = inventory(top, params)
         if canon:
             ti = canon[1]
             ties = {}
@@ -597,12 +608,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                           straps=ti.get("straps") or {}, ties=ties)
         else:
             txt, wrap_rep = build_wrapper(module, pb, top, params, tports)
+        if source_profile and wrap_rep["open_outputs"]:
+            raise SystemExit("PORT_MISMATCH: unmatched profile outputs " + str(wrap_rep["open_outputs"]))
         (kd / "rtl" / f"{module}__wrap.sv").write_text(txt)
         srcs.append(f"/work/rtl/{module}__wrap.sv")
         local.append(str(kd / "rtl" / f"{module}__wrap.sv"))
         design, dparams = module, {}
     else:
-        tports = yosys_ports(local, top, params, rec.get("defines", []), kd / "rtl")
+        tports = inventory(top, params)
         tp = {n: wd for n, _, wd in tports}
         bad = [b for b, (wd, _) in pb.items() if tp.get(b) != wd] + [n for n in tp if n not in pb]
         if bad:
