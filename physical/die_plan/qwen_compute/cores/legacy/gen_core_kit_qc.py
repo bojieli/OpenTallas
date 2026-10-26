@@ -621,10 +621,11 @@ def main():
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise SystemExit(f"{mod}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
-    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "signoff.py", "pair_skew.tcl",
+    for f in ("face_flops_release.tcl",
               "selrange_gate.py", "lec.py"):
         shutil.copyfile(TOOL / f, kd / f)
-    shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
+    # Keep the standalone runtime complete, including sender-min qualification and clock helpers.
+    subprocess.run([sys.executable, "-I", str(TOOL / "signoff.py"), "bundle", str(kd)], check=True)
     # S81/KITS 10-24: clock-insertion balance to the plan insertion before the CTS repair (the SIGNED c2 / VQ r12
     # recipe).  Without it a small core's tree (~60-200 ps) sits far below the vclk budget and the CTS hold repair
     # pads every output (LLd: 1818 buffers, RSZ-0060).  Kit clock ports are 1-bit buses (clk[0]).

@@ -1,0 +1,29 @@
+{
+  "scope": "Offdefault source-only private reset mechanism; no physical qualification or binder manifest adoption",
+  "reset_contract": "TIMED_SYNC_INPUT",
+  "reset_input_timed": true,
+  "source_sha256": "eafc9c83190a0845ec442f59004d996db7d514b8c896615955e29cf1f83edc50",
+  "defaults": "OT_S81C_HCORE_RST_TIMED off; priority over legacy RSTE when set",
+  "private_assertion_cycles": 2,
+  "private_release_cycles": 2,
+  "smallest_vehicle": {
+    "actual_hcore_reset_and_sender": "PASS",
+    "cycles": 1000,
+    "bad": 0,
+    "arithmetic_datapath": "stubbed; not claimed by this test",
+    "legacy_async_mutant": "CAUGHT",
+    "mutant_violations": 305,
+    "mutant_exit": 1
+  },
+  "connected_v1": {
+    "unique_random_streams": 1,
+    "cycles": 20000,
+    "public_output_mismatches": 0,
+    "sampled_reset_history_mismatches": 0,
+    "legacy_async_mutant_public_mismatches": 4,
+    "legacy_async_mutant_reset_mismatches": 4,
+    "status": "numerical+reset semantics pass; aggregate verdict failed solely inherited falling-edge latency observer measured1 after newfalling-edge driver; v2 driver restored publishedposedge phase. Duplicate inheritedxsinitializer also fixed for genuinelydistinctseeds."
+  },
+  "physical_view_adoption": false,
+  "next": "v2 full3distinctseed profile miter+mutant, immutable timed manifest then fresh physical LEC/placement/CTS/TT+FF SIGNED"
+}

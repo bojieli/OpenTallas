@@ -1,0 +1,160 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/path-s81-f2/f2/asbuilt.json",
+  "forest_modules": [
+    {
+      "name": "ot_pl_land_reset_forest",
+      "params": {},
+      "ports": {
+        "ck": 1,
+        "d": 1,
+        "q": 278
+      },
+      "attributes": {
+        "hdlname": "ot_pl_land_reset_forest",
+        "src": "asbuilt_lib_stubs.sv:1350.8",
+        "blackbox": "00000000000000000000000000000001"
+      }
+    }
+  ],
+  "sample_frames": [
+    {
+      "name": "col_h10_l4_lp_r1$dv_die.u_f_0L01.u_r1",
+      "forest": [
+        {
+          "name": "u_lpr_age",
+          "type": "ot_pl_pad",
+          "params": {
+            "N": "00000000000000000000000000000011",
+            "W": "00000000000000000000000000000001"
+          },
+          "ports": {
+            "ck": 1,
+            "d": 1,
+            "q": 1
+          },
+          "d": [
+            7261
+          ]
+        },
+        {
+          "name": "u_lpr_ft1",
+          "type": "ot_pl_pad",
+          "params": {
+            "N": "00000000000000000000000000000001",
+            "W": "00000000000000000000000000000001"
+          },
+          "ports": {
+            "ck": 1,
+            "d": 1,
+            "q": 1
+          },
+          "d": [
+            4250
+          ]
+        },
+        {
+          "name": "u_lpr_r1",
+          "type": "ot_pl_land_reset_forest",
+          "params": {
+            "DEPTH": "00000000000000000000000000000111",
+            "LEAVES": "00000000000000000000000100100001",
+            "ROOT_LOADS": "00000000000000000000000000000011"
+          },
+          "ports": {
+            "ck": 1,
+            "d": 1,
+            "q": 278
+          },
+          "d": [
+            27031
+          ]
+        },
+        {
+          "name": "u_lprc_u_y_xa_5_0",
+          "type": "ot_pl_pad",
+          "params": {
+            "N": "00000000000000000000000000000000",
+            "W": "00000000000000000000000000000001"
+          },
+          "ports": {
+            "ck": 1,
+            "d": 1,
+            "q": 1
+          },
+          "d": [
+            "0"
+          ]
+        }
+      ],
+      "nets": [
+        {
+          "name": "lpr_r1_leaves",
+          "width": 289,
+          "constants": {
+            "0": 11,
+            "1": 0,
+            "x": 0,
+            "z": 0
+          },
+          "end_bits": [
+            27209,
+            27210,
+            27211,
+            27212,
+            27213,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        {
+          "name": "lpr_root",
+          "width": 1,
+          "constants": {
+            "0": 0,
+            "1": 0,
+            "x": 0,
+            "z": 0
+          },
+          "end_bits": [
+            4250
+          ]
+        },
+        {
+          "name": "lpr_root__age",
+          "width": 1,
+          "constants": {
+            "0": 0,
+            "1": 0,
+            "x": 0,
+            "z": 0
+          },
+          "end_bits": [
+            27031
+          ]
+        },
+        {
+          "name": "lpr_root__ft1",
+          "width": 1,
+          "constants": {
+            "0": 0,
+            "1": 0,
+            "x": 0,
+            "z": 0
+          },
+          "end_bits": [
+            7261
+          ]
+        }
+      ]
+    }
+  ]
+}

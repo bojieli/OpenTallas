@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.frame_kit.hard_params.v1",
+ "source": "rtl/dsrom_sys/s81_dv/frame_lp/vg/col_h9_l4_lp.sv",
+ "source_sha256": "850fd8a125021da500abab9d855a4e937fc50ea465bcfc576446ef117cce4d42",
+ "note": "hardened parameter set of each hard child whose #() the kit stripped (labels INSTANCE, MB excluded); bind_elab bakes these into the hard master stubs",
+ "sites": {
+  "dsfd_bf_col": 6,
+  "dsfd_bf_front_roots": 3,
+  "ot_rom_4096x72_m8": 105,
+  "ot_s81_cfg7_seq": 12,
+  "ot_s81_cfg7_seq_bfp": 3,
+  "ot_v41_rom_elem_q_qxpq_w10": 12
+ },
+ "masters": {
+  "dsfd_bf_col": {},
+  "dsfd_bf_front_roots": {},
+  "ot_rom_4096x72_m8": {},
+  "ot_s81_cfg7_seq": {
+   "LAYOUT": "1",
+   "PINREG": "1",
+   "PQ": "1"
+  },
+  "ot_s81_cfg7_seq_bfp": {
+   "LAYOUT": "1",
+   "PINREG": "1"
+  },
+  "ot_v41_rom_elem_q_qxpq_w10": {
+   "EARLY": "1",
+   "FAST": "1",
+   "MTP": "1",
+   "NB": "2",
+   "PP": "1",
+   "PQ": "1",
+   "QM": "5",
+   "QPIPE": "1",
+   "QP_CAP": "0",
+   "QP_CSAM": "10",
+   "QP_P1": "1",
+   "QP_XS": "1",
+   "QS": "5",
+   "QTIMING_FIX": "1",
+   "QW": "0",
+   "QX": "10",
+   "QY": "1",
+   "QZ": "1",
+   "QZ_NE": "4",
+   "QZ_NS": "8",
+   "RSTP": "1"
+  }
+ }
+}
