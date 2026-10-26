@@ -50,11 +50,16 @@ class NativePretreeTiming:
 class NativeTiming:
     read_return: int
     write_return: int
+    # TOK-HBM-SU 2026-10-26: the die's su_<q><g> PIN_REG (pin-registered lanes: lane writes / first output +4 edges,
+    # requests +2).  None = the leaf_split_latency environment default (old behaviour); a die contract passes its own.
+    pin_reg: object = None
 
     def __post_init__(self):
         if (type(self.read_return) is not int or type(self.write_return) is not int
                 or not 10 <= self.read_return or not 7 <= self.write_return <= self.read_return):
             raise ValueError("native multirate contract requires integer RR>=10 and 7<=WR<=RR")
+        if self.pin_reg not in (None, 0, 1):
+            raise ValueError("native PIN_REG must be 0 or 1")
 
     @staticmethod
     def serial_return(stream_return):
