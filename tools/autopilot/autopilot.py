@@ -73,8 +73,8 @@ OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 IMAGE = os.environ.get("AP_IMAGE", "openroad/orfs:asap7lock")
 ARCHIVE_ROOT = "/srv/opentallas-scratch2/claude/autopilot/closed"
 REVIEW_ROOT = "/srv/opentallas-scratch2/claude/autopilot/review"
-MIRROR = {"epyc3": "localhost"}                        # archive mirror host per source host (default epyc3)
-MIRROR_DEFAULT = "epyc3"
+MIRROR = {"intel2": "localhost"}                       # archive mirror host per source host (default intel2)
+MIRROR_DEFAULT = "intel2"                               # EPYC3-RETIRE 2026-10-25: was epyc3 (terminated); intel2 = hub standby
 CELL_CAP = 400_000
 NEAR_WNS_PS = -30.0
 NEAR_DRC_MAX = 50
