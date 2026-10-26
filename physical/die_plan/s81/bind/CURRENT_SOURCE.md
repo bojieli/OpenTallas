@@ -1,0 +1,9 @@
+The S81 source assembly now resolves entirely inside the repository. It preserves the adopt178 logical topology, real Engram CTL boot decoder, named ABI and source profile. No module is silently dropped to make the graph fit.
+
+Twenty required parents absent from main were imported byte for byte from650532346d; the four selected generated slice wrappers, PV source4 reset wrapper, tap extraction and standard-cell functional models preserve the existing selected source. The real boot master is retained separately because the legacy main dsdv_eng_rr top has cfg_en inputs. adopt_eng_split regenerates its E/H split from the current split source without replacing CTL boot with straps.
+
+Run python3 tools/s81_dv/current_source_assembly.py --check, or --stage DIR for a small standalone fleet source package. The default mode refreshes the generated Engram boot master. Every selected source and include is explicit and repository-relative. Last-preferred module selection is preserved. The manifest uses current VP together with its current BF16 hcpost ABI, F2 hard parameter sidecars, evaluated Slang interfaces for forest/rly, CST/CST1 body exposure and exact source bit packing.
+
+The selected hcore is the qualified CTLA+TIMED_RESET cohort: stationary load transport +1, private reset assertion/release +2 with at least2 asserted edges. Its exact source hashes and component qualification are checked before staging. This is source adoption; existing physical views are not transferred. The actual compiler must charge the load/readiness guards and boot clocks.
+
+The versioned logical topology input is not a current emitted bound top. Fresh source elaboration, strict tie/connectivity/type gates, physical qualification and current bound RTL token remain required. No gate is waived by source preparation.
