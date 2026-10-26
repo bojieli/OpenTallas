@@ -1,0 +1,135 @@
+{
+ "schema": "opentallas.qc_clock_region_price_1026.v1",
+ "status": "CONDITIONAL_NOT_ADOPTED",
+ "base": {
+  "cycles_per_token": 296341,
+  "tok_s": 4051.0,
+  "source": "v7 re-derived source model, CROM+3 already included"
+ },
+ "method": "Apply exact named physical landing lanes to v7 final. Retain existing phase hardware; use actual CB16 DAG and root-return offsets, sum real inter-slice crossings. Fresh post-landing R8/DAG can reduce old pads, so geometric8 reuse price is conservative, not globally optimal.",
+ "nominal_landing": "K=2 ring plus unchanged receiver boundary:3 added edges per crossed physical port, possibly multiple ports per named lane",
+ "cases": {
+  "west_east_2": {
+   "ports": 21,
+   "lanes": 21,
+   "source_table_sha256": "b11ba569d1520170b9fea64da3baf07b3d224f96610b13707388a8c893cfc928",
+   "cb_max_root_plus_rs": 16,
+   "extra_cb_rephase_members": 0,
+   "extra_cb_rephase_logical_ff": 0,
+   "inter_slice_add": 3,
+   "l9_add": 0,
+   "model": {
+    "land": {
+     "cycles_per_token": 296449,
+     "tok_s": 4049.5,
+     "chained_per_layer": 8132,
+     "cold_l0": 8644,
+     "delta_vs_v7": 108
+    },
+    "fe_land": {
+     "cycles_per_token": 303073,
+     "tok_s": 3961.0,
+     "chained_per_layer": 8316,
+     "cold_l0": 8828,
+     "delta_vs_v7": 6732
+    },
+    "fe_land_mif_plus1": {
+     "cycles_per_token": 303506,
+     "tok_s": 3955.4,
+     "delta_vs_mif0": 433,
+     "note": "selective TABLE_MIF=+1 programme edge; global MIF1=+2 edges.8region uses identical4region model edges/ages."
+    },
+    "fe_land_mif_plus2": {
+     "cycles_per_token": 303939,
+     "tok_s": 3949.7,
+     "delta_vs_mif0": 866,
+     "note": "selective TABLE_MIF=+1 programme edge; global MIF1=+2 edges.8region uses identical4region model edges/ages."
+    }
+   }
+  },
+  "slice_vertical_4": {
+   "ports": 65,
+   "lanes": 65,
+   "source_table_sha256": "ab058de48412e439a75e5ed2e58be992bc68915ff39fdef52360bfc4fb7a19d4",
+   "cb_max_root_plus_rs": 16,
+   "extra_cb_rephase_members": 0,
+   "extra_cb_rephase_logical_ff": 0,
+   "inter_slice_add": 9,
+   "l9_add": 3,
+   "model": {
+    "land": {
+     "cycles_per_token": 296773,
+     "tok_s": 4045.1,
+     "chained_per_layer": 8141,
+     "cold_l0": 8653,
+     "delta_vs_v7": 432
+    },
+    "fe_land": {
+     "cycles_per_token": 303397,
+     "tok_s": 3956.8,
+     "chained_per_layer": 8325,
+     "cold_l0": 8837,
+     "delta_vs_v7": 7056
+    },
+    "fe_land_mif_plus1": {
+     "cycles_per_token": 303830,
+     "tok_s": 3951.2,
+     "delta_vs_mif0": 433,
+     "note": "selective TABLE_MIF=+1 programme edge; global MIF1=+2 edges.8region uses identical4region model edges/ages."
+    },
+    "fe_land_mif_plus2": {
+     "cycles_per_token": 304263,
+     "tok_s": 3945.5,
+     "delta_vs_mif0": 866,
+     "note": "selective TABLE_MIF=+1 programme edge; global MIF1=+2 edges.8region uses identical4region model edges/ages."
+    }
+   }
+  },
+  "aligned_xyx_8": {
+   "ports": 137,
+   "lanes": 137,
+   "source_table_sha256": "d10ee39d3a80d3ab14bc0dda94515d9b968c11ebdc912dcc11c9697f897c1df1",
+   "cb_max_root_plus_rs": 16,
+   "extra_cb_rephase_members": 0,
+   "extra_cb_rephase_logical_ff": 0,
+   "inter_slice_add": 9,
+   "l9_add": 3,
+   "model": {
+    "land": {
+     "cycles_per_token": 296773,
+     "tok_s": 4045.1,
+     "chained_per_layer": 8141,
+     "cold_l0": 8653,
+     "delta_vs_v7": 432
+    },
+    "fe_land": {
+     "cycles_per_token": 303397,
+     "tok_s": 3956.8,
+     "chained_per_layer": 8325,
+     "cold_l0": 8837,
+     "delta_vs_v7": 7056
+    },
+    "fe_land_mif_plus1": {
+     "cycles_per_token": 303830,
+     "tok_s": 3951.2,
+     "delta_vs_mif0": 433,
+     "note": "selective TABLE_MIF=+1 programme edge; global MIF1=+2 edges.8region uses identical4region model edges/ages."
+    },
+    "fe_land_mif_plus2": {
+     "cycles_per_token": 304263,
+     "tok_s": 3945.5,
+     "delta_vs_mif0": 866,
+     "note": "selective TABLE_MIF=+1 programme edge; global MIF1=+2 edges.8region uses identical4region model edges/ages."
+    }
+   }
+  }
+ },
+ "mif_scope": "Selective+1/global+2 are proposed source-model ages, not current canonical RTL timing or rate adoption. MIF0 zero-edge physical variant remains an alternative until closure.",
+ "head_area_scope": "Actual83-type top has96 lane-head wrappers. A256FF/head alignment-stage removal implies24576FF conditional source saving; not mapped area or CTS qualification.",
+ "remaining": [
+  "fresh source R8/DAG after landing emission",
+  "real phase offsets/training/window STA",
+  "GRT0 and80ps TT/FF related-pair physical gate",
+  "final token on matching views"
+ ]
+}
