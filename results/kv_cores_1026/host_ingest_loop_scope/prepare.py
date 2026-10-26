@@ -9,7 +9,7 @@ for f in ('rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv','physical/asap7_memory_macros/o
  (out/Path(f).name).write_bytes(subprocess.check_output(['git','-C',str(wt),'show','HEAD:'+f]))
 ports={'d_rdy':1,'in_rdy':1,'w_v':1,'w_addr':32,'w_data':256,'r_v':1,'r_addr':32,'done_v':1,'done_tag':8,'busy':1,'n_sectors':32,'n_beats':32}
 inputs='clk,clk_bank,clk_out,rst_n,d_v,d_data,in_v,in_data,w_rdy,r_rdy,rd_v,rd_data'.split(',')
-b='''`timescale 1ns/1ps
+b='''`timescale 1ns/1fs
 module tb #(parameter integer MUT=0);
 reg clk=0; always #0.4165 clk=~clk;
 wire [1:0] clk_bank={2{clk}};wire clk_out=clk;reg rst_n=0;
@@ -17,6 +17,12 @@ reg d_v=0,in_v=0,w_rdy=1,r_rdy=1,rd_v=0;
 reg[255:0]d_data=0,rd_data=0;reg[511:0]in_data=0;
 reg[255:0] dm[0:7];reg[511:0]pm[0:2047];
 integer di=0,pi=0,done=0,cy=0,words=0;
+realtime previous_edge=0;
+always @(posedge clk)begin
+ if(previous_edge>0 && (($realtime-previous_edge<0.832999999)||($realtime-previous_edge>0.833000001)))
+  $fatal(1,"clock period must be exactly 833 ps");
+ previous_edge=$realtime;
+end
 '''
 for suffix in ['g','c']:
  for p,w in ports.items():b+=f'wire [{w-1}:0] {p}_{suffix};\n'

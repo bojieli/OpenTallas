@@ -30,3 +30,11 @@ The actual recorded lint used the current core wrapper's identical parameters.
 No P&R/STA/SIGNED claim. The host ingest core's separate raw-cut boundary
 obligations (324 unregistered outputs,256 dropped inputs,772 multi-capture bits)
 remain with PATH-KV; this closes its source-lint blocker only.
+
+Exact clock receipt: nominal833.log/mutant833.log supersede the initial logs for
+the clock label. The initial test's 1ps precision rounded 416.5ps half-cycles to
+417ps. The corrected helper uses 1fs precision and asserts every clock period
+is exactly833ps. Re-run epyc2 unit1585257-1793008816 (codex-kvhr-ingest-833)
+passes the same2772cycles/2048beats/2048sectors, and catches QMUT1 at cycle267.
+Original functional-cycle logs remain as history; physical constraints and RTL
+never changed. No timing closure is claimed by this simulation.
