@@ -231,6 +231,118 @@ def restructure_islands(w, h, reach=200.0):
     return dict(grid=[nx, ny], leaf_reach_um=r3(w / nx / 2 + h / ny / 2), islands=out)
 
 
+def _type_rect(P, part, r):
+    pts = [P.to_type(part, c) for c in ((r[0], r[1]), (r[2], r[3]))]
+    return (min(p[0] for p in pts), min(p[1] for p in pts), max(p[0] for p in pts), max(p[1] for p in pts))
+
+
+def phy_entries(P):
+    """12.8 / COORD 06:23: a PHY macro's clock pin sits on its digital-strip edge (the PHY edge facing the widest
+    soft margin of its partition), fed from an 8.64 island in that strip; no clock tap inside the macro.
+    Returns {type: dict(phy, phy_rect_um, strip_rect_um, clock_pin {edge, xy_um, layer}, island)} (type frame)."""
+    out = {}
+    for io in P.die.get("io") or []:
+        if io.get("kind") not in ("phy_macro", "phy", "serdes") or not io.get("rect_um") or io.get("part") not in P.parts:
+            continue
+        part = io["part"]
+        tn = P.parts[part]["type"]
+        if tn in out:
+            continue
+        W, H = P.types[tn]["outline_um"]
+        x0, y0, x1, y1 = _type_rect(P, part, io["rect_um"])
+        margins = dict(S=(y0, (0.0, 0.0, W, y0)), N=(H - y1, (0.0, y1, W, H)),
+                       W=(x0, (0.0, 0.0, x0, H)), E=(W - x1, (x1, 0.0, W, H)))
+        edge = max(margins, key=lambda k: margins[k][0])
+        depth, strip = margins[edge]
+        if depth < 8.64 + 1e-6:
+            out[tn] = dict(phy=io["name"], phy_rect_um=[r3(v) for v in (x0, y0, x1, y1)], strip_rect_um=None,
+                           error="no digital strip >= 8.64 um beside the PHY")
+            continue
+        cx = snap((x0 + x1) / 2) if edge in ("S", "N") else None
+        cy = snap((y0 + y1) / 2) if edge in ("W", "E") else None
+        pin = dict(S=(cx, y0), N=(cx, y1), W=(x0, cy), E=(x1, cy))[edge]
+        mid = dict(S=(cx, y0 - depth / 2), N=(cx, y1 + depth / 2), W=(x0 - depth / 2, cy), E=(x1 + depth / 2, cy))[edge]
+        tap = (P.types[tn].get("clock") or {}).get("tap_um")
+        tap_in = bool(tap) and x0 < tap[0] < x1 and y0 < tap[1] < y1
+        out[tn] = dict(phy=io["name"], module=io.get("iface"), plan_tap_um=tap, plan_tap_inside_phy=tap_in, phy_rect_um=[r3(v) for v in (x0, y0, x1, y1)],
+                       strip_rect_um=[r3(v) for v in strip], strip_edge=edge, strip_depth_um=r3(depth),
+                       clock_pin=dict(edge=edge, xy_um=[r3(pin[0]), r3(pin[1])], layer="M5",
+                                      note="published PHY interface edge; no clock tap inside the macro"),
+                       island=entry_island(mid), island_centre_um=[r3(mid[0]), r3(mid[1])])
+    return out
+
+
+def core_lattice(centres, q=0.01, lat=8.64):
+    """12.8 / COORD 06:23 commensurate die tree: per axis, the core-centre island lattice pitch (smallest gap) and
+    the gaps that are not an integer multiple of it.  A die tree whose node/leaf pitch is an integer multiple of
+    this pitch (leaf pitch 2 x pitch puts every node midpoint on a core centre) lands every node/driver on a
+    core-centre island."""
+    res = {}
+    for ax in (0, 1):
+        raw = sorted(c[ax] for c in centres)
+        vs, grp = [], []           # merge lines closer than one island (orientation snapping of the same column)
+        for v in raw:
+            if grp and v - grp[0] > lat + 1e-6:
+                vs.append(sum(grp) / len(grp))
+                grp = []
+            grp.append(v)
+        if grp:
+            vs.append(sum(grp) / len(grp))
+        gaps = [round(b - a, 3) for a, b in zip(vs, vs[1:]) if b - a > 1.0]
+        if not gaps:
+            res["xy"[ax]] = dict(pitch_um=None, lines=len(vs), irregular=[])
+            continue
+        p = min(gaps)
+        bad = sorted({g for g in gaps if abs(g / p - round(g / p)) > 1e-3})
+        res["xy"[ax]] = dict(pitch_um=r3(p), on_lattice=abs(p / lat - round(p / lat)) < 1e-3, lines=len(vs),
+                             span_um=[r3(vs[0]), r3(vs[-1])], irregular=bad[:20], n_irregular=len(bad),
+                             leaf_pitch_um=r3(2 * p))
+    return res
+
+
+def clock_sites(M, islands_die, glue_parts, macros_die, tol=0.5):
+    """COORD 06:23 gate: every die tree node and mesh driver on a declared island; no clock driver in tile glue
+    (inside a partition that holds hard cores, outside every island) and none inside a hard macro."""
+    from collections import Counter as _C
+    pts = []
+    for e in M.get("htree", []):
+        pts.append(("tree_node", e.get("tag"), tuple(e["b"])))
+    for k, d in (M.get("drivers") or {}).items():
+        pts.append(("mesh_driver", k, tuple(d.get("site") or d.get("ideal"))))
+    # bin islands for speed
+    B = 200.0
+    bins = defaultdict(list)
+    for r in islands_die:
+        for i in range(int((r[0] - tol) // B), int((r[2] + tol) // B) + 1):
+            for j in range(int((r[1] - tol) // B), int((r[3] + tol) // B) + 1):
+                bins[(i, j)].append(r)
+
+    def on(xy, rs):
+        return any(r[0] - tol <= xy[0] <= r[2] + tol and r[1] - tol <= xy[1] <= r[3] + tol for r in rs)
+    cnt, glue, inmac, examples = _C(), _C(), _C(), []
+    for kind, name, xy in pts:
+        ok = on(xy, bins.get((int(xy[0] // B), int(xy[1] // B)), []))
+        cnt[(kind, ok)] += 1
+        if ok:
+            continue
+        where = "soft"
+        if on(xy, [m[:4] for m in macros_die]):
+            where = "macro"
+            inmac[kind] += 1
+        elif on(xy, glue_parts):
+            where = "tile_glue"
+            glue[kind] += 1
+        if len(examples) < 40:
+            examples.append(dict(kind=kind, name=name, xy_um=[r3(xy[0]), r3(xy[1])], where=where))
+    off = sum(v for (k, ok), v in cnt.items() if not ok)
+    return dict(verdict="PASS" if not off else "FAIL",
+                tree_nodes=cnt[("tree_node", True)] + cnt[("tree_node", False)],
+                tree_nodes_off_island=cnt[("tree_node", False)],
+                mesh_drivers=cnt[("mesh_driver", True)] + cnt[("mesh_driver", False)],
+                mesh_drivers_off_island=cnt[("mesh_driver", False)], in_tile_glue=dict(glue), in_macro=dict(inmac),
+                declared_islands=len(islands_die), examples=examples)
+
+
 def rect_overlap(a, b, eps=1e-6):
     return min(a[2], b[2]) - max(a[0], b[0]) > eps and min(a[3], b[3]) - max(a[1], b[1]) > eps
 
@@ -401,7 +513,7 @@ def station_sites(P, part, reg_die, groups, face_tol=1.0):
     return (best[1] if best and best[0] <= 120.0 else None), False
 
 
-def fit_rect(r, box, blockers, horiz, step=2.16, slide=81.0):
+def fit_rect(r, box, blockers, horiz, step=2.16, slide=81.0, narrow=True):
     """translate a bay rect inside its partition, then slide it along the road (<= slide um) off hard cores /
     islands; returns the first clean position, else the in-box one (the gate then reports the overlap)."""
     w, h = r[2] - r[0], r[3] - r[1]
@@ -415,6 +527,33 @@ def fit_rect(r, box, blockers, horiz, step=2.16, slide=81.0):
                 (base[0], base[1] + d, base[2], base[3] + d)
             if rect_inside(q, box) and not any(rect_overlap(q, c[:4]) for c in blockers):
                 return q
+    # narrow channel (band wider than the gap between cores): clip the across-road width to the free interval
+    # that holds the road centre, keep the cell area by lengthening along the road, then slide again
+    if narrow:
+        lo, hi = (base[1], base[3]) if horiz else (base[0], base[2])
+        mid = (lo + hi) / 2
+        a0, a1 = (box[1], box[3]) if horiz else (box[0], box[2])
+        for c in blockers:
+            s0, s1 = (base[0], base[2]) if horiz else (base[1], base[3])
+            c_along = (c[0], c[2]) if horiz else (c[1], c[3])
+            if c_along[1] <= s0 - slide or c_along[0] >= s1 + slide:
+                continue
+            c0, c1 = (c[1], c[3]) if horiz else (c[0], c[2])
+            if c1 <= mid:
+                a0 = max(a0, c1)
+            elif c0 >= mid:
+                a1 = min(a1, c0)
+        nw = a1 - a0
+        if nw >= ROW * 4 and nw < hi - lo:
+            area = w * h
+            depth = math.ceil(area / nw / ROW - 1e-9) * ROW
+            if horiz:
+                cx = (base[0] + base[2]) / 2
+                q = (cx - depth / 2, a0, cx + depth / 2, a1)
+            else:
+                cy = (base[1] + base[3]) / 2
+                q = (a0, cy - depth / 2, a1, cy + depth / 2)
+            return fit_rect(q, box, blockers, horiz, step, slide, narrow=False)
     return base
 
 
@@ -569,6 +708,36 @@ CAL_ERR = [round(K_PS_PER_UM * L - t, 1) for _, L, t, _ in CAL_POINTS]
 CAL_RMS_PS = round(math.sqrt(sum(e * e for e in CAL_ERR) / len(CAL_ERR)), 1)
 
 
+# 12.9d die related-pair skew per clock region, CPPR at the last common tree node (= the region root for same-mesh
+# pairs, 12.4b), calibrated ONCE on the measured QC regional mesh claude-infra-qc-1026/b3 (mesh_{TT,FF}.json stub-input
+# late/early of 7121 taps, 4 regions; mesh.json tree geometry):
+#   pair = K_PITCH x mean mesh pitch (nominal intra-region spread)  +  OCV x K_TREE x tree path below the region root
+#          +  core window (12.8b: +-20 ps around the common latency, or the predicted core residual if larger)
+SKEW_CAL = dict(source="QC b3 regional mesh (claude-infra-qc-1026/b3, plan ec0cfafd), measured stub-input arrivals",
+                K_PITCH=dict(TT=round(103.15 / 449.08, 4), FF=round(105.48 / 449.08, 4)),   # spread / mean pitch
+                OCV=dict(TT=round(96.5 / 7423.0, 5), FF=round(86.0 / 6179.0, 5)),          # (late-early) / late
+                K_TREE=dict(TT=round(7423.0 / 28841.8, 5), FF=round(6179.0 / 28841.8, 5)),  # insertion / path um
+                check=dict(target="mesh-only related pair, region-root CPPR (EARLY-TAP t2 05:41): 154.0 TT / 142.8 FF",
+                           predicted=dict(TT=160.5, FF=156.6), error_ps=dict(TT=6.5, FF=13.8)))
+
+
+def pair_skew_pred(M, corner, core_term=0.0):
+    """per-region predicted related-pair skew from the clock plan geometry (mesh pitch, H-tree levels)."""
+    meta = M["meta"]
+    px, py = meta["pitch_um"]
+    depth = int(meta.get("regions_depth", 0) or 0)
+    lv = defaultdict(float)
+    for e in M.get("htree", []):
+        lv[e["level"]] = max(lv[e["level"]], float(e["len_um"]))
+    total = sum(lv.values()) + float(meta.get("trunk_um", 0.0))
+    above = sum(v for k, v in lv.items() if k <= depth) + float(meta.get("trunk_um", 0.0))
+    nominal = SKEW_CAL["K_PITCH"][corner] * (px + py) / 2
+    derate = SKEW_CAL["OCV"][corner] * SKEW_CAL["K_TREE"][corner] * (total - above)
+    return dict(nominal_ps=round(nominal, 1), derate_ps=round(derate, 1), pair_ps=round(nominal + derate, 1),
+                core_residual_ps=round(core_term, 1), pair_with_core_ps=round(nominal + derate + core_term, 1), path_um=round(total, 1),
+                below_root_um=round(total - above, 1), regions=len(meta.get("regions") or [1]))
+
+
 def core_insertion(far_um):
     tt = RCX_FACTOR * K_PS_PER_UM * far_um
     return round(tt, 1), round(tt * FF_RATIO, 1)
@@ -598,7 +767,7 @@ def static_ir(files):
 # ------------------------------------------------------------------------------------------------------ main run
 def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entries=None, sites_json=None,
         reach=None, detour=405.0, core_obs_top="M5", lower_pg_frac=0.25, fill_max=0.6, bay_fill=0.5,
-        track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, render=True, log=print):
+        track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, skew_gate_ps=80.0, render=True, log=print):
     reach = float(reach or P.reach)
     out = Path(out)
     (out / "slices").mkdir(parents=True, exist_ok=True)
@@ -898,7 +1067,69 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         shield = dict(verdict="NOT RUN", note="no --mesh")
         bal = dict(verdict="NOT RUN", note="no --mesh")
         mesh_early = []
+    # ---- declared islands (die frame): core-centre entries + in-core leaves + partition islands + PHY strips
+    phy = phy_entries(P)
+    isl_decl, centres, glue_parts, macros_die = [], [], [], []
+    for part in P.parts:
+        tn = P.parts[part]["type"]
+        t = P.types[tn]
+        if islands.get(tn):
+            isl_decl.append(IS.rect_pts(P, part, islands[tn]["rect_um"]))
+        if t.get("hard_cores"):
+            glue_parts.append(P.rect(part))
+        for h in t.get("hard_cores", []):
+            e = entry[h["module"]]
+            r = IS.rect_pts(P, part, core_to_type(h, e["island"]))
+            isl_decl.append(r)
+            centres.append(((r[0] + r[2]) / 2, (r[1] + r[3]) / 2))
+            for q in (e.get("in_core_islands") or {}).get("islands", []):
+                isl_decl.append(IS.rect_pts(P, part, core_to_type(h, q["rect_um"])))
+            macros_die.append(IS.rect_pts(P, part, core_to_type(h, (0, 0) + tuple(h["outline_um"]))))
+        if tn in phy and phy[tn].get("island"):
+            isl_decl.append(IS.rect_pts(P, part, phy[tn]["island"]))
+    for io in P.die.get("io") or []:
+        if io.get("kind") in ("phy_macro", "phy", "serdes") and io.get("rect_um"):
+            macros_die.append(tuple(io["rect_um"]))
+    lattice = core_lattice(centres) if centres else {}
+    irr = sum((v.get("n_irregular") or 0) for v in lattice.values())
+    off_lat = [a for a, v in lattice.items() if v.get("pitch_um") and not v.get("on_lattice")]
+    mesh_mult = {}
+    if mesh_dir and lattice:
+        for ax, key in (("x", "xs"), ("y", "ys")):
+            vs = sorted(M.get(key) or [])
+            p = lattice.get(ax, {}).get("pitch_um")
+            if len(vs) > 1 and p:
+                g = [b - a for a, b in zip(vs, vs[1:])]
+                mesh_mult[ax] = dict(mesh_pitch_um=[r3(min(g)), r3(max(g))],
+                                     multiple_of_core_pitch=all(abs(v / p - round(v / p)) < 1e-3 for v in g))
+    tree_comm = dict(
+        verdict=("NOT RUN" if not centres else
+                 "FAIL" if irr or off_lat or any(not v["multiple_of_core_pitch"] for v in mesh_mult.values())
+                 else "PASS"),
+        core_lattice=lattice, mesh_vs_core=mesh_mult or None, phy_entries=len(phy),
+        rule="die H-tree node/leaf pitch = integer multiple of the core-centre island pitch (leaf 2 x pitch), "
+             "so every node and mesh driver lands on a core-centre island (COORD 06:23)")
+    sites = (clock_sites(M, isl_decl, glue_parts, macros_die) if mesh_dir else
+             dict(verdict="NOT RUN", note="no --mesh"))
+    tap_in_phy = sorted(tn for tn, v in phy.items() if v.get("plan_tap_inside_phy"))
+    sites["plan_taps_inside_phy"] = tap_in_phy
+    if tap_in_phy:
+        sites["verdict"] = "FAIL"
     ir = static_ir(ir_files)
+    if mesh_dir:
+        core_term = 0.0
+        if ins_rows:
+            core_term = max(core_tol_ps, max(abs(r["pred_TT_ps"] - common) for r in ins_rows
+                                             if r["pred_TT_ps"] >= common - core_tol_ps) if any(
+                r["pred_TT_ps"] >= common - core_tol_ps for r in ins_rows) else core_tol_ps)
+        pr = {c: pair_skew_pred(M, c, core_term) for c in ("TT", "FF")}
+        skew_model = dict(verdict="PASS" if max(v["pair_with_core_ps"] for v in pr.values()) <= skew_gate_ps
+                          else "FAIL",
+                          gate_ps=skew_gate_ps, predicted=pr, calibration=SKEW_CAL,
+                          note="predicted FAIL = the clock plan cannot pass 12.4a by construction; fix the structure "
+                               "(more/denser drivers, deeper common node, shorter tree below the region root)")
+    else:
+        skew_model = dict(verdict="NOT RUN", note="no --mesh (clock plan geometry)")
 
     gates = dict(
         reach_gap=dict(verdict="PASS" if not gap_fail else "FAIL", max_gap_um=r3(gap_max[0]),
@@ -931,8 +1162,9 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                 calibration_err_ps=CAL_ERR, calibration_rms_ps=CAL_RMS_PS,
                 note="shallow cores (pred < target) pad up with a designed fixed trunk (12.8c): not a FAIL"),
             examples=ins_fail[:40], all=ins_rows),
-        die_pair_skew_model=dict(verdict="NOT RUN", note="12.9d per-region related-pair skew model not built yet "
-                                 "(MASTER-PLAN next); calibration targets QC mesh 146/132, HBM r7"),
+        die_pair_skew_model=skew_model,
+        tree_commensurate=tree_comm,
+        clock_sites=sites,
         infra_sites=sites_gate,
     )
     verdict = "PASS" if all(g["verdict"] == "PASS" for g in gates.values()) else "FAIL"
@@ -953,6 +1185,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     body = json.dumps(mp, sort_keys=True).encode()
     mp_sha = hashlib.sha256(body).hexdigest()
     mp["master_plan_sha256"] = mp_sha
+    write_slices.extra = dict(phy=phy, die_tree=tree_comm)
     write_slices(P, out / "slices", bays, pins, roads, islands, entry, core_types, in_core, gates, common,
                  plan_sha, mp_sha)
     (out / "master_plan.json").write_text(json.dumps(dict(mp, paths=[{k: v for k, v in p.items() if k != "legs"}
@@ -1028,10 +1261,22 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
                 a, b = P.to_type(rd["part"], rd["a"]), P.to_type(rd["part"], rd["b"])
                 cor.append(dict(path=rd["path"], layer=rd["layer"], bits=rd["bits"],
                                 polyline_um=[[r3(a[0]), r3(a[1])], [r3(b[0]), r3(b[1])]], band_um=rd["band_um"]))
+        ex = getattr(write_slices, "extra", {}) or {}
+        pe = (ex.get("phy") or {}).get(tn)
+        if pe and pe.get("island"):
+            isl_rows.append(dict(name="phy_clock_entry", rect_um=pe["island"], centre_um=pe["island_centre_um"],
+                                 use="clock_driver+reset", via_stack=["M9", "M5"], clock_pin=pe["clock_pin"],
+                                 pg_rails="die M8/M9 stripes on the 4.32 lattice"))
+            keep.append(dict(name="phy_clock_entry", rect_um=pe["island"], kind="island", use=["placement"]))
         sl = dict(schema=SLICE_SCHEMA, die=P.name, kind="partition", type=tn, module=t.get("module"),
                   instances=sorted(ps), plan=str(P.path), plan_sha256=plan_sha, master_plan_sha256=mp_sha,
                   frozen=False, outline_um=t["outline_um"], keepouts=keep, islands=isl_rows,
                   bays=list(seen.values()), entry_pins=ep, hard_cores=hcs, latency=lat, corridors=cor, gates=gv)
+        if pe:
+            sl["phy_clock_entry"] = pe
+        if hcs and ex.get("die_tree"):
+            sl["die_tree"] = dict(rule=ex["die_tree"]["rule"], core_lattice=ex["die_tree"]["core_lattice"],
+                                  verdict=ex["die_tree"]["verdict"])
         (d / f"{tn}.json").write_text(json.dumps(sl, indent=1))
     for mod, c in core_types.items():
         e = entry[mod]

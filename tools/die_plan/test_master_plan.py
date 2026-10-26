@@ -178,3 +178,60 @@ def test_corridor_overflow_moves_to_m89_and_entry_pins(tmp_path):
     assert c["verdict"] == "FAIL" or c["m89_roads"] > 0
     if c["m89_roads"]:
         assert gates["entry_pins"]["pins"] > 0
+
+
+def test_pair_skew_model_calibration_point():
+    M = dict(meta=dict(pitch_um=[487.755, 410.4], regions_depth=2, trunk_um=586.88, regions=[1, 2, 3, 4]),
+             htree=[dict(level=k, len_um=v) for k, v in {1: 7608.6, 2: 4097.5, 3: 6566.4, 4: 3283.2, 5: 2244.2,
+                                                          6: 1641.6, 7: 1121.9, 8: 820.8, 9: 561.2, 10: 410.4,
+                                                          11: 280.8, 12: 205.2}.items()])
+    tt, ff = MP.pair_skew_pred(M, "TT"), MP.pair_skew_pred(M, "FF")
+    assert abs(tt["pair_ps"] - 154.0) < 15 and abs(ff["pair_ps"] - 142.8) < 15     # recorded calibration error
+    M["meta"]["pitch_um"] = [200.0, 200.0]                                          # denser drivers -> less skew
+    assert MP.pair_skew_pred(M, "TT")["pair_ps"] < tt["pair_ps"]
+
+
+def test_fit_rect_narrow_channel_keeps_area_off_cores():
+    core = (86.4, 1382.4, 544.32, 2540.16, "u_t01")
+    r0 = MP.bay_rect((43.2, 1500.0), False, 88.9, 390.0)
+    r = MP.fit_rect(r0, (0.0, 0.0, 1235.52, 2609.28), [core], False)
+    assert not MP.rect_overlap(r, core[:4]) and MP.rect_inside(r, (0.0, 0.0, 1235.52, 2609.28))
+    assert (r[2] - r[0]) * (r[3] - r[1]) >= 390.0 - 1e-6
+
+
+# ---------------------------------------------------------------- COORD 06:23: commensurate tree / PHY entry / sites
+def test_core_lattice_regular_and_irregular():
+    c = [(176.0 + 354.24 * i, 160.0 + 371.52 * j) for i in range(4) for j in range(3)]
+    L = MP.core_lattice(c)
+    assert L["x"]["pitch_um"] == 354.24 and not L["x"]["irregular"] and L["x"]["leaf_pitch_um"] == 708.48
+    c.append((176.0 + 354.24 * 3 + 500.0, 160.0))       # a spine gap that is not a pitch multiple
+    assert MP.core_lattice(c)["x"]["n_irregular"] == 1
+
+
+def test_clock_sites_flags_glue_and_macro_drivers():
+    isl = [(100.0, 100.0, 108.64, 108.64)]
+    glue = [(0.0, 0.0, 400.0, 400.0)]
+    mac = [(200.0, 200.0, 300.0, 300.0)]
+    M = dict(htree=[dict(tag="h0", b=[104.0, 104.0])],
+             drivers={"a": dict(site=[104.0, 104.0]), "b": dict(site=[50.0, 50.0]), "c": dict(site=[250.0, 250.0])})
+    r = MP.clock_sites(M, isl, glue, mac)
+    assert r["verdict"] == "FAIL" and r["tree_nodes_off_island"] == 0 and r["mesh_drivers_off_island"] == 2
+    assert r["in_tile_glue"] == {"mesh_driver": 1} and r["in_macro"] == {"mesh_driver": 1}
+    M["drivers"] = {"a": dict(site=[104.0, 104.0])}
+    assert MP.clock_sites(M, isl, glue, mac)["verdict"] == "PASS"
+
+
+def test_phy_entry_on_digital_strip_edge(tmp_path):
+    raw = json.loads(TINY.read_text())
+    part = next(iter(raw["partitions"])) if isinstance(raw["partitions"], dict) else raw["partitions"][0]["name"]
+    P0 = plan(raw, tmp_path, "p0.json")
+    x0, y0, x1, y1 = P0.rect(part)
+    raw.setdefault("die", {}).setdefault("io", []).append(
+        dict(name="io_phy", kind="phy_macro", part=part, rect_um=[x0, y0 + 300.0, x1, y1]))
+    P = plan(raw, tmp_path)
+    pe = MP.phy_entries(P)[P.parts[part]["type"]]
+    isl = pe["island"]
+    s = pe["strip_rect_um"]
+    assert s[0] - 1e-6 <= isl[0] and isl[2] <= s[2] + 1e-6 and s[1] - 1e-6 <= isl[1] and isl[3] <= s[3] + 1e-6
+    ph = pe["phy_rect_um"]
+    assert pe["clock_pin"]["xy_um"][1] in (ph[1], ph[3])     # pin on the PHY edge, not inside
