@@ -677,7 +677,14 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     t.append("source /work/grt/obs.tcl")
     t.append("puts \"OT_T obs [expr {[clock seconds]-$t0}]\"")
     t.append("set_routing_layers -signal M4-M7")          # ruling 9.3: signals <= M7; M8/M9 = clock/reset/PG
-    band_layers, band_regs = band_region_adjust(P, dict(adjust).get("M4", 0.75))
+    explicit_ft = any(t.get("die_ft_bands") for t in P.types.values())
+    if explicit_ft:
+        import ft_bands
+        band_layers, band_regs = set(ft_bands.LAYERS), []
+        ft_obs = ft_bands.die_obs_rects(P)
+    else:
+        band_layers, band_regs = band_region_adjust(P, dict(adjust).get("M4", 0.75))
+        ft_obs = band_share_obs(P, band_regs)
     for L, a in adjust:
         t.append(f"set_global_routing_layer_adjustment {L} {0 if L in band_layers else a:g}")
     t += ["global_route -congestion_iterations 50 -allow_congestion -verbose "
@@ -692,7 +699,7 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
         obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
     for L, a, b, c, d in reserve:
         obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
-    for L, a, b, c, d in band_share_obs(P, band_regs):   # die_ft_bands share stripes (band_share_obs)
+    for L, a, b, c, d in ft_obs:   # exact kit-matched complement when explicit bands are declared
         obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
     (Path(out) / "obs.tcl").write_text("\n".join(obs) + "\n")
     return "\n".join(t) + "\n"
@@ -1043,10 +1050,17 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["grt"] = dict(ft_bits=nft, ft_slot_instances=len(ft_nets(P)), reset_taps=len(P.parts),
                        adjust=dict(adjust), coarse_m123_um=coarse, clock_reserve_rects=len(reserve),
                        pg_stripes=len(pg_stripes(P)))
-    bl, br = band_region_adjust(P, dict(adjust).get("M4", 0.75))
-    meta["grt"]["die_ft_bands"] = dict(layers=bl, band_rects=len(ft_band_rects(P)), share_strips=len(br),
-                                       share_obstructions=len(band_share_obs(P, br)),
-                                       transition_layers=list(TRANSITION_LAYERS), transition_keep=TRANSITION_KEEP)
+    if any(t.get("die_ft_bands") for t in P.types.values()):
+        import ft_bands
+        meta["grt"]["adjust"].update({L: 0 for L in ft_bands.LAYERS})
+        meta["grt"]["die_ft_bands"] = dict(layers=list(ft_bands.LAYERS),
+            band_rects=len(ft_band_rects(P)), share_obstructions=len(ft_bands.die_obs_rects(P)),
+            basis="ft_bands.type_rects: kit FT/own two-pass and die complement use identical rectangles; core/PG/clock OBS remain additive")
+    else:
+        bl, br = band_region_adjust(P, dict(adjust).get("M4", 0.75))
+        meta["grt"]["die_ft_bands"] = dict(layers=bl, band_rects=len(ft_band_rects(P)), share_strips=len(br),
+                                           share_obstructions=len(band_share_obs(P, br)),
+                                           transition_layers=list(TRANSITION_LAYERS), transition_keep=TRANSITION_KEEP)
     seam_bits = 0
     chan = 0
     for pid, pr in P.ports.items():

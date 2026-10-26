@@ -1,0 +1,150 @@
+# tools/die_plan/ft_grt.tcl -- explicit FT track reservation in the kit GRT (PATH-KV-FTRES 2026-10-26).
+# COORD ruling 2026-10-25 23:53: the reserved M4-M7 FT stripes (ft_reserve.py: middle half of every 8.64-um die lattice
+# cell, the SAME tracks the die GRT model gives die feedthroughs) block ONLY the kit's own logic; the nets the plan
+# declares as feedthroughs through this kit (ft_slots: ports <slot>_i / <slot>_o and the u_ft_<slot>_* station chain,
+# incl. any buffer / inverter between them) route ON them.  OpenROAD (26Q3) has no per-net track / region restriction
+# (no set_net_layer, region adjustments and odb obstructions apply to every net), so the reservation is two GRT passes
+# with disjoint M4-M7 resources (GRT skips special nets):
+#   pass FT : own nets special, the COMPLEMENT stripes (non-FT tracks) obstructed on M4-M7 -> FT nets on FT tracks only
+#   pass OWN: FT nets special, the FT stripes obstructed on M4-M7               -> own nets off the FT tracks
+#   then both route sets are merged (read_guides) so parasitics / repair / write_guides / DRT see every net.
+# M2 / M3 keep the platform adjustment (the die model blocks M2/M3 over partitions, reservation 0 there); M4-M7 get
+# adjustment 0: the explicit stripes replace the uniform ORFS 25%.  Data: ft_reserve.tcl (kit generator) sets
+#   ot_ftres_slots {slot ...}  ot_ftres_ft {{L x0 y0 x1 y1} ...}  ot_ftres_nonft {{L x0 y0 x1 y1} ...}   (um, kit frame)
+# Audit: ft_reserve.py audit PLAN TYPE RESULTS/ftres_ft.guide RESULTS/ftres_own.guide.
+# ORFS sources step hooks inside a proc (source_step_tcl): the data goes to the global scope explicitly.
+set ::ot_ftres_dir [file dirname [file normalize [info script]]]
+if {![info exists ::ot_ftres_slots]} { uplevel #0 [list source [file join $::ot_ftres_dir ft_reserve.tcl]] }
+
+proc ot_ftres_is_bufinv {inst} {
+  set m [[$inst getMaster] getName]
+  return [expr {[regexp {^(BUF|INV|HB)} $m] && [llength [ot_ftres_sig_iterms $inst]] == 2}]
+}
+proc ot_ftres_sig_iterms {inst} {
+  set out {}
+  foreach it [$inst getITerms] {
+    set n [$it getNet]
+    if {$n eq "NULL"} { continue }
+    if {[$n getSigType] in {POWER GROUND}} { continue }
+    lappend out $it
+  }
+  return $out
+}
+# FT nets: seeds = nets on the FT slot ports + the D / Q(N) nets of the u_ft_<slot>_* station flops; closed through
+# 1-in-1-out buffers / inverters (resizer / CTS-free repeaters).  Clock / reset nets are never FT.
+proc ot_ftres_ft_nets {} {
+  set blk [ord::get_db_block]
+  set seen [dict create]
+  set todo {}
+  foreach bt [$blk getBTerms] {
+    foreach s $::ot_ftres_slots {
+      if {[regexp "^${s}_(i|o)(\\\[|$)" [$bt getName]]} { set n [$bt getNet]; if {$n ne "NULL"} { lappend todo $n } }
+    }
+  }
+  foreach inst [$blk getInsts] {
+    set nm [$inst getName]
+    set hit 0
+    foreach s $::ot_ftres_slots { if {[string match "u_ft_${s}_*" $nm]} { set hit 1; break } }
+    if {!$hit} { continue }
+    foreach it [ot_ftres_sig_iterms $inst] {
+      set mt [[$it getMTerm] getName]
+      if {$mt in {D Q QN A Y}} { lappend todo [$it getNet] }
+    }
+  }
+  while {[llength $todo]} {
+    set n [lindex $todo end]; set todo [lrange $todo 0 end-1]
+    set nn [$n getName]
+    if {[dict exists $seen $nn]} { continue }
+    if {[$n getSigType] in {POWER GROUND CLOCK RESET}} { continue }
+    set clk 0
+    foreach it [$n getITerms] { if {[[$it getMTerm] getName] in {CLK RESETN SETN}} { set clk 1; break } }
+    if {$clk} { continue }
+    dict set seen $nn $n
+    foreach it [$n getITerms] {
+      set inst [$it getInst]
+      if {[ot_ftres_is_bufinv $inst]} { foreach j [ot_ftres_sig_iterms $inst] { lappend todo [$j getNet] } }
+    }
+  }
+  return [dict values $seen]
+}
+proc ot_ftres_obs {rects} {
+  set blk [ord::get_db_block]; set dbu [$blk getDbUnitsPerMicron]; set tech [ord::get_db_tech]
+  set out {}
+  foreach r $rects {
+    lassign $r L a b c d
+    lappend out [odb::dbObstruction_create $blk [$tech findLayer $L] [expr {round($a*$dbu)}] [expr {round($b*$dbu)}] \
+                   [expr {round($c*$dbu)}] [expr {round($d*$dbu)}]]
+  }
+  return $out
+}
+proc ot_ftres_unobs {obs} { foreach o $obs { odb::dbObstruction_destroy $o } }
+proc ot_ftres_set_special {nets v} { foreach n $nets { if {$v} { $n setSpecial } else { $n clearSpecial } } }
+# guide filter: write_guides writes every net that holds a GRT route, including the special nets' routes from the
+# previous global_route (the planning route / the other pass); keep only the nets of this pass's class (keep = 1:
+# nets in ftn, keep = 0: nets not in ftn), so every net appears once in the merged file
+proc ot_ftres_filter_guides {inf out ftn keep} {
+  set fi [open $inf r]; set fo [open $out w]; set k 1; set name ""
+  while {[gets $fi ln] >= 0} {
+    set t [string trim $ln]
+    if {$name eq "" && $t ne "(" && $t ne ")" && $t ne ""} { set name $t; set k [expr {[dict exists $ftn $t] == $keep}] }
+    if {$k} { puts $fo $ln }
+    if {$t eq ")"} { set name "" }
+  }
+  close $fi; close $fo
+}
+proc ot_ftres_run {args} {
+  set blk [ord::get_db_block]
+  set ft [ot_ftres_ft_nets]
+  set ftn [dict create]; foreach n $ft { dict set ftn [$n getName] 1 }
+  set own {}
+  foreach n [$blk getNets] {
+    if {[$n isSpecial] || [$n getSigType] in {POWER GROUND}} { continue }
+    if {![dict exists $ftn [$n getName]]} { lappend own $n }
+  }
+  puts "OT_FTRES nets ft [llength $ft] own [llength $own] stripes ft [llength $::ot_ftres_ft] nonft [llength $::ot_ftres_nonft]"
+  set wd [expr {[info exists ::env(OT_FTRES_DIR)] ? $::env(OT_FTRES_DIR) : $::env(RESULTS_DIR)}]
+  # pass FT
+  ot_ftres_set_special $own 1
+  set obs [ot_ftres_obs $::ot_ftres_nonft]
+  set r1 [catch { uplevel #0 [list global_route {*}$args] } e1]
+  ot_ftres_unobs $obs
+  ot_ftres_set_special $own 0
+  if {$r1} { error "OT_FTRES pass FT: $e1" }
+  write_guides $wd/ftres_ft.raw.guide
+  ot_ftres_filter_guides $wd/ftres_ft.raw.guide $wd/ftres_ft.guide $ftn 1
+  file delete $wd/ftres_ft.raw.guide
+  # pass OWN
+  ot_ftres_set_special $ft 1
+  set obs [ot_ftres_obs $::ot_ftres_ft]
+  set r2 [catch { uplevel #0 [list global_route {*}$args] } e2]
+  write_guides $wd/ftres_own.raw.guide
+  ot_ftres_filter_guides $wd/ftres_own.raw.guide $wd/ftres_own.guide $ftn 0
+  file delete $wd/ftres_own.raw.guide
+  ot_ftres_unobs $obs
+  ot_ftres_set_special $ft 0
+  if {$r2} { error "OT_FTRES pass OWN: $e2" }
+  set fo [open $wd/ftres_all.guide w]
+  foreach f [list $wd/ftres_ft.guide $wd/ftres_own.guide] { set fi [open $f r]; puts -nonewline $fo [read $fi]; close $fi }
+  close $fo
+  read_guides $wd/ftres_all.guide
+  puts "OT_FTRES merged guides $wd/ftres_all.guide"
+}
+# stage pre  (grt_pre.tcl, PRE_GLOBAL_ROUTE): M4-M7 adjustment 0; the stock flow (planning global_route, repair_design /
+#             repair_timing with their incremental reroutes) runs on the union of both classes' tracks.
+# stage post (grt_post.tcl, first line, POST_GLOBAL_ROUTE): the repaired netlist is routed again with the explicit
+#             reservation (two passes, merged, read_guides) and route.guide is rewritten; 5_1_grt.odb carries it.
+# (A wrapper around the FIRST global_route failed in the kit: the post-repair incremental reroute ran on the pass-OWN
+# grid, where the FT pins sit on blocked stripes: GRT-0183 heap underflow, kv3_io_ft 10-26 00:44.)
+proc ot_ftres_post {} {
+  ot_ftres_run -congestion_iterations 30 -congestion_report_file $::env(REPORTS_DIR)/congestion_ftres.rpt
+  write_guides $::env(RESULTS_DIR)/route.guide
+  set blk [ord::get_db_block]; set ng 0; set nn 0
+  foreach n [$blk getNets] { if {[$n isSpecial]} { continue }; incr nn; if {[llength [$n getGuides]]} { incr ng } }
+  puts "OT_FTRES post: route.guide rewritten from the reservation passes; db guides on $ng of $nn nets"
+}
+if {![info exists ::ot_ftres_stage] || $::ot_ftres_stage eq "pre"} {
+  set_global_routing_layer_adjustment M4-M7 0
+  puts "OT_FTRES pre: M4-M7 adjustment 0 (explicit FT stripes replace the uniform 25%); reservation route in POST"
+} else {
+  ot_ftres_post
+}
