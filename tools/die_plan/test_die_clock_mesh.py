@@ -70,6 +70,59 @@ class T(unittest.TestCase):
                 for j in range(8):
                     self.assertTrue(CM.htree_tag(i,j,8,8,"xx").startswith(g["tag"]))
 
+    def test_floorplan_regions_on_partition_edges(self):
+        xs, R = CM.floorplan_regions(dict(x_cuts_um=[700., 900.], region_nx=[4, 1, 4]), 1600., 800., 4)
+        self.assertEqual(len(xs), 9)
+        self.assertEqual([g["box_um"][0] for g in R], [0., 700., 900.])
+        self.assertEqual([g["tag"] for g in R], ["h0", "h1", "h2"])
+        self.assertTrue(all(700. < x < 900. for x in xs[R[1]["i0"]:R[1]["i1"]]))
+        for g in R:
+            for i in range(g["i0"], g["i1"]):
+                for j in range(4):
+                    self.assertTrue(CM.floorplan_tag(i, j, R, 4).startswith(g["tag"]))
+        with self.assertRaises(ValueError):
+            CM.floorplan_regions(dict(x_cuts_um=[700.], region_nx=[3, 4]), 1600., 800., 4)
+
+    def test_macro_hole_clips_strap_end_never_splits(self):
+        hole = [dict(name="PHY", rect_um=[600., 600., 1000., 800.])]
+        self.assertEqual(CM.clip_span(0., 700., 700., 0, hole, 0.5), (0., 599.5))       # row ends at the macro edge
+        self.assertEqual(CM.clip_span(0., 700., 500., 0, hole, 0.5), (0., 700.))        # row below the macro: untouched
+        self.assertIsNone(CM.clip_span(700., 900., 700., 0, hole, 0.5))                  # wholly inside: removed
+        self.assertEqual(CM.clip_span(0., 800., 800., 1, hole, 0.5), (0., 599.5))       # column stops at the macro
+        with self.assertRaises(ValueError):
+            CM.clip_span(0., 1600., 700., 0, hole, 0.5)                                  # would split: refuse
+
+    def test_floorplan_build_holes_prune_and_explicit_regions(self):
+        types = dict(ta=dict(hard_cores=[dict(inst="core", origin_um=[400., 100.], outline_um=[250., 500.],
+                                              obs_max="M5")]), tb={}, tc={})
+        rects = dict(A=(0., 0., 700., 800.), B=(700., 0., 900., 600.), C=(900., 0., 1600., 800.),
+                     PHY=(600., 600., 1000., 800.))
+        P = SimpleNamespace(W=1600., H=800., clock={}, types=types, layer_budget=dict(partition_signal_max="M7"),
+                            parts=dict(A=dict(type="ta"), B=dict(type="tb"), C=dict(type="tc")),
+                            rect=lambda n: rects[n], to_die=lambda n, xy: xy)
+        ko = [(400., 100., 650., 600., "A/core"), (600., 600., 1000., 800., "io/PHY")]
+        fp = dict(x_cuts_um=[700., 900.], region_nx=[2, 1, 2], macro_holes=[dict(name="PHY", rect_um=list(rects["PHY"]))],
+                  hard_core_drivers="drop")
+        taps = [("A", "clk", 300., 300., 0.), ("B", "clk", 790., 300., 0.), ("C", "clk", 1200., 300., 0.)]
+        with patch.object(CM.DC, "keepouts", return_value=ko), patch.object(CM.DC, "plan_taps", return_value=taps), \
+                patch.object(CM.DC, "plan_tap_early", return_value={}):
+            cells, nets, ports, M = CM.build(P, 4, 4, m=1, max_move=50., region_edge_straps=True, floorplan=fp)
+        self.assertEqual(M["unplaced"], [])
+        self.assertEqual([g["tag"] for g in M["meta"]["regions"]], ["h0", "h1", "h2"])
+        self.assertEqual(M["part_region"], dict(A=0, B=1, C=2))
+        kinds = {(v[0], v[1]): v[2] for v in M["hole_drivers"]}
+        self.assertEqual(kinds[(2, 3)], "macro_hole")                    # centre column top row: under the PHY
+        self.assertIn("hard_core", kinds.values())                       # x=525 rows inside the core: driverless
+        self.assertIsNone(M["strap_spans"]["H:3:1"])                      # centre top row wholly in the hole
+        self.assertLess(M["strap_spans"]["V:2:1"][1], 600.)               # centre column stops at the macro edge
+        self.assertIn("h111", M["pruned_branches"])                       # dead centre-top leaf pruned
+        for c in cells.values():                                          # no clock cell inside the macro hole
+            self.assertFalse(CM.in_rect(rects["PHY"], c["x"], c["y"]))
+        loads = {ld for n in nets for ld in n["loads"]}
+        undriven = [c for c, v in cells.items() if c != "ckm_n0" and v["kind"] != "stub" and c not in loads]
+        self.assertEqual(undriven, [])                                     # every tree cell is driven (stubs: mesh)
+        self.assertEqual(CM.floorplan_tag(3, 0, M["meta"]["regions"], 4)[:2], "h2")
+
     def test_free_along_bounds(self):
         K = Box((90, -5, 110, 5))
         q, d = CM.free_along(K, (100.0, 0.0), 0, 50.0)
@@ -156,6 +209,68 @@ class T(unittest.TestCase):
             self.assertEqual(nets[0]["loads"], ["port:t"])
             self.assertEqual(bool(out["unplaced"]), structural)
 
+    def test_floorplan_tail_tries_y_first_l_through_channel(self):
+        # node in a vertical channel (x 600-700), driver in a row gap (y 1000-1020); the x-first L crosses the core
+        ko = [(0., 0., 600., 1000., "c0"), (700., 0., 1400., 1000., "c1"), (0., 1020., 1400., 2000., "c2")]
+        for both, splits in ((False, 0), (True, 1)):
+            cells = dict(n=dict(x=650., y=500., kind="node"), d=dict(x=200., y=1010., kind="drv"))
+            nets = [dict(name="w", drv="n", loads=["d"], level=9)]
+            K = CM.DC.KeepIndex(ko, die=(1400., 2000.))
+            out = dict(unplaced=[])
+            made = []
+            def cell(name, x, y, kind, **kw):
+                made.append((x, y)); cells[name] = dict(x=x, y=y, kind=kind); return name
+            self.assertEqual(CM.split_long(cells, nets, K, {}, 480., cell, out, both_l=both), splits)
+            self.assertEqual(bool(out["unplaced"]), not both)
+            for x, y in made:
+                self.assertIsNone(K.hit(x, y, m=0.))
+
+    def test_floorplan_tail_single_repeater_within_reach(self):
+        # 770-um straight tail whose midpoint sits in a 600-um macro: one legal repeater near the start keeps both
+        # hops inside the 750-um reach; without both_l the tail is structural
+        ko = [(100., 0., 700., 1000., "macro")]
+        for both in (False, True):
+            cells = dict(n=dict(x=10., y=500., kind="node"), d=dict(x=780., y=500., kind="drv"))
+            nets = [dict(name="w", drv="n", loads=["d"], level=9)]
+            out = dict(unplaced=[])
+            made = []
+            def cell(name, x, y, kind, **kw):
+                made.append((x, y)); cells[name] = dict(x=x, y=y, kind=kind); return name
+            CM.split_long(cells, nets, CM.DC.KeepIndex(ko, die=(1000., 1000.)), {}, 480., cell, out, both_l=both)
+            self.assertEqual(bool(out["unplaced"]), not both)
+            if both:
+                (x, y), = made
+                self.assertLessEqual(max(abs(x - 10.), abs(780. - x)) + CM.BUF_W + CM.ROW_Y, 750.)
+
+    def test_floorplan_tail_detours_around_a_wall(self):
+        ko = [(300., 0., 1300., 1600., "wall")]
+        K = CM.DC.KeepIndex(ko, die=(2000., 2000.))
+        cells = dict(n=dict(x=200., y=800., kind="node"), d=dict(x=1400., y=800., kind="drv"))
+        nets = [dict(name="w", drv="n", loads=["d"], level=9)]
+        out = dict(unplaced=[])
+        made = []
+        def cell(name, x, y, kind, **kw):
+            made.append((x, y)); cells[name] = dict(x=x, y=y, kind=kind); return name
+        CM.split_long(cells, nets, K, {}, 480., cell, out, both_l=True)
+        self.assertEqual(out["unplaced"], [])
+        pts = [(200., 800.)] + made + [(1400., 800.)]
+        self.assertTrue(all(K.hit(x, y, m=0.) is None for x, y in made))
+        self.assertLessEqual(max(abs(b[0] - a[0]) + abs(b[1] - a[1]) for a, b in zip(pts, pts[1:])), 480.)
+
+    def test_island_window_is_a_legal_driver_site_only_in_its_own_core(self):
+        wins = [(100., 200., 108.64, 204.32, "P/core_a"), (400., 200., 408.64, 204.32, "P/core_b")]
+        site = CM.island_site(wins, "P/core_a", 130., 230., 250., 60., lambda ax: (0., 1000.))
+        (cx, cy), foot, axis, slide, jog = site
+        self.assertEqual((cx, cy), (104.32, 202.16))
+        self.assertLessEqual(jog, 60.)
+        self.assertEqual(foot[axis], (cx, cy)[axis])                  # the foot lies on the strap through the window
+        self.assertIsNone(CM.island_site(wins, "P/core_c", 130., 230., 250., 60., lambda ax: (0., 1000.)))
+        P = SimpleNamespace(W=1000., H=1000.)
+        cells = dict(d=dict(x=101., y=201., kind="drv"), r=dict(x=101., y=201.5, kind="rep"))
+        with patch.object(CM.DC, "keepouts", return_value=[(50., 50., 300., 300., "P/core_a")]):
+            bad = CM.hard_keepout_violations(P, cells, wins)
+        self.assertEqual([b["cell"] for b in bad], ["r"])           # islands hold clock drivers only
+
     def test_hard_keepout_census_checks_the_whole_real_cell_body(self):
         P = SimpleNamespace(W=100., H=100.)
         with patch.object(CM.DC, "keepouts", return_value=[(11.5, 0., 20., 100., "macro")]):
@@ -193,6 +308,186 @@ class T(unittest.TestCase):
         M["unplaced"] = [[0, 0]]
         self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "BLOCKED")
 
+
+LIBDIR = Path("~/.cache/opentallas/asap7_nldm").expanduser()
+
+
+def _fp_plan(early=None):
+    """3-partition floorplan fixture (same as test_floorplan_build_holes_prune_and_explicit_regions)."""
+    types = dict(ta=dict(hard_cores=[dict(inst="core", origin_um=[400., 100.], outline_um=[250., 500.],
+                                          obs_max="M5")]), tb={}, tc={})
+    rects = dict(A=(0., 0., 700., 800.), B=(700., 0., 900., 600.), C=(900., 0., 1600., 800.),
+                 PHY=(600., 600., 1000., 800.))
+    P = SimpleNamespace(W=1600., H=800., clock={}, types=types, layer_budget=dict(partition_signal_max="M7"),
+                        parts=dict(A=dict(type="ta"), B=dict(type="tb"), C=dict(type="tc")),
+                        rect=lambda n: rects[n], to_die=lambda n, xy: xy)
+    ko = [(400., 100., 650., 600., "A/core"), (600., 600., 1000., 800., "io/PHY")]
+    fp = dict(x_cuts_um=[700., 900.], region_nx=[2, 1, 2], macro_holes=[dict(name="PHY", rect_um=list(rects["PHY"]))],
+              hard_core_drivers="drop", shield_net="VSS")
+    taps = [("A", "clk", 300., 300., 0.), ("A", "clk_c0", 120., 700., (early or {}).get("TT", 0.)),
+            ("B", "clk", 790., 300., 0.), ("C", "clk", 1200., 300., 0.), ("C", "clk1", 1500., 50., 0.)]
+    pte = {("A", "clk_c0"): early} if early else {}
+    return P, ko, fp, taps, pte
+
+
+def _build128(early=None, rule=True):
+    P, ko, fp, taps, pte = _fp_plan(early)
+    with patch.object(CM.DC, "keepouts", return_value=ko), patch.object(CM.DC, "plan_taps", return_value=taps), \
+            patch.object(CM.DC, "plan_tap_early", return_value=pte), \
+            patch("schema.core_taps", return_value=[("clk_c0", 0, 0, dict(budget_owner="core_lib_x"))]):
+        return CM.build(P, 4, 4, m=1, max_move=50., region_edge_straps=True, floorplan=fp,
+                        rule128=dict(libdir=str(LIBDIR)) if rule else None)
+
+
+@unittest.skipUnless((LIBDIR / "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz").exists(), "ASAP7 NLDM liberty")
+class Rule128(unittest.TestCase):
+    """METHODOLOGY v4.1 12.8 items (1)-(4)."""
+
+    def test_default_build_has_no_12_8_keys(self):
+        cells, nets, ports, M = _build128(rule=False)
+        self.assertNotIn("rule_12_8", M)
+        self.assertNotIn("rule_12_8", M["meta"])
+        self.assertFalse(M["meta"]["clock_shield"]["complete"])
+        self.assertFalse(any("lib" in c for c in cells.values()))
+        self.assertFalse(CM.C128.enabled(M))
+
+    # (1) CPPR at the last common tree node only; mesh-node credit INFO only
+    def test_gate_credits_region_root_not_mesh_node(self):
+        M = dict(meta=dict(regions=[dict(k=0, tag="h0")]), drivers={},
+                 taps=[dict(port="a", stub="sa", region=0), dict(port="b", stub="sb", region=0)])
+        late, early = dict(a=1000., b=1060.), dict(a=940., b=1000.)
+        rng = {"h": 5., "h0": 10.}                                   # region root range 10 ps
+        mesh = dict(sa=dict(late=900., early=850.), sb=dict(late=950., early=900.))   # mesh-node range 50 ps
+        g = CM.C128.gate(M, None, [("a", "b")], late, early, rng, 1, mesh, {}, [])
+        # setup a late 1000 - b early 1000 = 0; hold b late 1060 - a early 940 = 120, minus credit 10 = 110
+        self.assertAlmostEqual(g["related_pair_max_ps"], 110.0)
+        self.assertAlmostEqual(g["info_mesh_node_cppr_max_ps"], 70.0)  # 120 - 50: INFO only, never the gate
+        self.assertEqual(g["verdict"], "FAIL")
+        # two regions: only the die root is common
+        M["taps"][1]["region"] = 1
+        M["meta"]["regions"].append(dict(k=1, tag="h1"))
+        g = CM.C128.gate(M, None, [("a", "b")], late, early, rng, 1, mesh, {}, [])
+        self.assertAlmostEqual(g["related_pair_max_ps"], 115.0)
+
+    # (2) early-offset taps: no add-back, gate FAIL naming the core type
+    def test_early_offset_tap_fails_and_names_core(self):
+        cells, nets, ports, M = _build128(early={"TT": 120., "FF": 95.})
+        rows = M["rule_12_8"]["early_offset_taps"]
+        self.assertEqual([(r["part"], r["tap"], r["core"]) for r in rows], [("A", "clk_c0", "core_lib_x")])
+        self.assertIn("core_lib_x", M["rule_12_8"]["early_offset_cores"])
+        self.assertEqual(M["meta"]["rule_12_8"]["early_offset_taps"], 1)
+        tap = rows[0]["port"]
+        other = next(t["port"] for t in M["taps"] if t["port"] != tap and t["region"] == 0)
+        late = {tap: 500., other: 500.}
+        early = {tap: 495., other: 495.}
+        g = CM.C128.gate(M, None, [(tap, other)], late, early, {"h": 0.}, 1, {}, {}, rows)
+        self.assertLessEqual(g["related_pair_max_ps"], 80.)        # skew itself fine (core already meets the target)...
+        self.assertEqual(g["verdict"], "FAIL")                       # ...but a declared early offset is a FAIL
+        self.assertIn("restructure", g["fails"][0])
+        self.assertEqual(g["residual"]["core_latency"]["early_offset_taps"], 1)
+        # no compensating branch: the core tap gets an ordinary stub like every tap
+        stub = next(t["stub"] for t in M["taps"] if t["port"] == tap)
+        self.assertEqual(cells[stub]["kind"], "stub")
+
+    # (3) plan-model sizing, deterministic, no measured input; balance adds no cell and refuses measurements
+    def test_stub_sizing_is_deterministic_plan_model(self):
+        a = _build128()
+        b = _build128()
+        self.assertEqual(json.dumps(a[3]["rule_12_8"]["stub_sizing"], sort_keys=True),
+                         json.dumps(b[3]["rule_12_8"]["stub_sizing"], sort_keys=True))
+        cells, nets, ports, M = a
+        for rk, r in M["rule_12_8"]["stub_sizing"]["regions"].items():
+            self.assertLessEqual(r["model_spread_sized_ps"], r["model_spread_full_ps"] + 1e-9)
+        libs = {t["stub_lib"] for t in M["taps"]}
+        self.assertTrue(libs <= set(CM.C128.STUB_SIZES))
+        for t in M["taps"]:
+            self.assertEqual(cells[t["stub"]].get("lib", CM.BUF), t["stub_lib"])
+
+    def test_balance_128_is_audit_only(self):
+        cells, nets, ports, M = _build128()
+        P, ko, fp, taps, pte = _fp_plan()
+        with tempfile.TemporaryDirectory() as td:
+            src, out = Path(td) / "b", Path(td) / "o"
+            src.mkdir()
+            ren = CM.write_verilog(cells, nets, ports, src / "ctree.v")
+            M["meta"]["root_um"] = M["meta"].get("root_um", [800., 400.])
+            (src / "mesh.json").write_text(json.dumps(M))
+            (src / "place.json").write_text(json.dumps(cells))
+            (src / "nets.json").write_text(json.dumps(dict(ports=ports, nets=nets)))
+            a = SimpleNamespace(dir=str(src), out=str(out), plan="unused", corner="TT", tree=None, tag="0",
+                                libdir=str(LIBDIR))
+            with patch.object(CM.S, "load", return_value={}), patch.object(CM.S, "Plan", return_value=P):
+                self.assertEqual(CM.cmd_balance(a), 0)
+                self.assertEqual(json.loads((out / "place.json").read_text()), cells)     # no pad, no swap
+                au = json.loads((out / "balance_audit.json").read_text())
+                self.assertIn("no measurement", au["method"])
+                self.assertFalse((src / "tree_TT.txt").exists())
+                a.tree = str(src / "tree_TT.txt")
+                with self.assertRaises(SystemExit):
+                    CM.cmd_balance(a)
+
+    # (4) every tree net is a fixed, VSS-shielded pre-route with its own SPEF; shield record complete
+    def test_tree_nets_fixed_shielded_and_spef(self):
+        cells, nets, ports, M = _build128()
+        sh = M["meta"]["clock_shield"]
+        self.assertTrue(sh["complete"])
+        self.assertEqual(sh["grt_routed_tree_nets"], 0)
+        self.assertEqual(sh["fixed_tree_nets"], len(nets))
+        wires = CM.C128.fixed_wires(M, cells, nets, CM.BUF_W, CM.ROW_Y)
+        self.assertEqual({w["name"] for w in wires}, {n["name"] for n in nets})
+        # never collinear with a mesh strap (the tree runs TREE_OFF_UM off every pin line)
+        for w in wires:
+            for lay, x0, y0, x1, y1 in w["segs"]:
+                if lay == "M8":
+                    self.assertTrue(all(abs(y0 - y) > 0.5 for y in M["ys"]) or x0 == x1)
+                else:
+                    self.assertTrue(all(abs(x0 - x) > 0.5 for x in M["xs"]) or y0 == y1)
+        nd = CM.NDR["4w"]
+        tcl = "\n".join(CM.C128.combo_tcl(wires, nd, "VSS"))
+        self.assertEqual(tcl.count("[fwnet "), len(nets))
+        self.assertIn("dbObstruction_create", tcl)
+        self.assertEqual(tcl.count("\nfw $sw "), sh["fixed_tree_segs"])
+        sp = CM.C128.spef(wires, cells, CM.BUF, nd, CM.DC.LAYER_RC, CM.DC.VIA_KOHM)
+        import restore_clock_spef_caps as R
+        from mix_clock_spef import header, sections
+        import io
+        f = io.StringIO(sp)
+        h, names, first = header(f)
+        n = 0
+        for name, lines in sections(f, first, names):
+            out, info = R.restore(lines, 4)
+            self.assertEqual(info["added_caps"], 0)               # consistent caps: restore is a no-op
+            n += 1
+        self.assertEqual(n, len(nets))
+        # Elmore length check on one stub: total C = wire length x C/um (NDR)
+        w = next(w for w in wires if w["drv"].startswith("ckm_s_"))
+        c_um = (CM.DC.LAYER_RC["M8"][1] if w["horiz"] else CM.DC.LAYER_RC["M9"][1]) * nd["cf"]
+        tot = float(next(l for l in sp.split("\n") if l.startswith(f"*D_NET {w['name']} ")).split()[2])
+        self.assertGreater(tot, 0.0)
+        self.assertLessEqual(tot, w["wire_um"] * max(CM.DC.LAYER_RC["M8"][1], CM.DC.LAYER_RC["M9"][1]) * nd["cf"] + 1e-6)
+
+
+
+class Rule128Export(unittest.TestCase):
+    def test_tap_arrivals_export_for_die_sta(self):
+        import tempfile, json as _j
+        M = {"meta": {"regions": [dict(k=0, tag="h0"), dict(k=1, tag="h1")]},
+             "taps": [dict(part="A", tap="clk", port="A__clk", region=0), dict(part="B", tap="clk_1", port="B__clk_1", region=1)]}
+        arr = {"A__clk": (410.0, 395.5, 30.0), "B__clk_1": (420.25, 401.0, 31.0)}
+        with tempfile.TemporaryDirectory() as td:
+            out = CM.C128.write_tap_arrivals(Path(td) / "tap_arrivals_TT.json", M, "TT", arr,
+                                             {"h": 5.0, "h0": 20.0, "h1": 21.0, "h00": 30.0}, 1)
+            back = _j.loads((Path(td) / "tap_arrivals_TT.json").read_text())
+        self.assertEqual(back["spine_late"], {"A": {"clk": 410.0}, "B": {"clk_1": 420.25}})
+        self.assertEqual(back["spine_early"]["B"]["clk_1"], 401.0)
+        self.assertEqual([r["cppr_node"] for r in out["taps"]], ["h0", "h1"])
+        self.assertEqual(out["cppr_node_range_ps"], {"h": 5.0, "h0": 20.0, "h1": 21.0})   # tree nodes only
+
+    def test_shield_record_not_vss_tied(self):
+        r = CM.C128.shield_record([dict(wire_um=1000., segs=[1, 2])], "VSS", 4, 0)
+        self.assertTrue(r["complete"])
+        self.assertFalse(r["vss_tied"])
+        self.assertFalse(r["freeze_evidence_ok"])
 
 if __name__ == "__main__":
     unittest.main()
