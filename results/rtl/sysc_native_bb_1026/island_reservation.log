@@ -1,0 +1,13 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-sysc-island-probe
+ot-run: intel1         admits   669 GB (avail 825, reserve 0, fresh 20.9, peak 70.6, headroom 0, waiters 0/0 GB) load 25/112 running 11 disk 2009 GB 
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-sysc-island-probe
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/codex-sysc-island-probe
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-2136571-1793008874 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_DIE_ISLANDS blockages=74 rectangle_area_sum_um2=150.33437999999998 row_intersections=222
+ACTUAL_BLOCKAGES_ADDED 74
+ot-run: RAN on intel1 (unit oth-ubuntu-2136571-1793008874): exit 0

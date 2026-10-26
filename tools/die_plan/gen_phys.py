@@ -719,6 +719,36 @@ def _tcl_re(s):
     return re.sub(r"([.\[\]()*+?^$|\\])", r"\\\1", s)
 
 
+def die_islands_tcl(P, tn):
+    """Reserve the accepted die clock driver islands in the actual tile placement.
+
+    This does not move the tile clock ports, change tap assignment or rebuild the
+    die mesh. The same union of island rectangles is hardened for each type.
+    """
+    t = P.types[tn]
+    rects = t.get("clock", {}).get("die_islands_um", [])
+    if not rects:
+        return ""
+    w, h = t["outline_um"]
+    for x0, y0, x1, y1 in rects:
+        if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
+            raise ValueError(f"{tn}: die clock island outside outline or empty: {[x0, y0, x1, y1]}")
+    lines = ["# Generated physical reservation for accepted die clock driver islands.", "uplevel #0 {",
+             "set di_b [ord::get_db_block]", "set di_u [[ord::get_db_tech] getDbUnitsPerMicron]",
+             "set di_count 0; set di_area 0.0; set di_rows 0"]
+    for x0, y0, x1, y1 in rects:
+        lines += [f"set di_x0 [expr {{round({x0:g}*$di_u)}}]; set di_y0 [expr {{round({y0:g}*$di_u)}}]",
+                  f"set di_x1 [expr {{round({x1:g}*$di_u)}}]; set di_y1 [expr {{round({y1:g}*$di_u)}}]",
+                  "odb::dbBlockage_create $di_b $di_x0 $di_y0 $di_x1 $di_y1", "incr di_count",
+                  "set di_area [expr {$di_area + ($di_x1-$di_x0)*($di_y1-$di_y0)/double($di_u*$di_u)}]",
+                  "foreach di_r [$di_b getRows] {",
+                  "  set di_box [$di_r getBBox]",
+                  "  if {[$di_box xMin]<$di_x1 && [$di_box xMax]>$di_x0 && [$di_box yMin]<$di_y1 && [$di_box yMax]>$di_y0} { incr di_rows }",
+                  "}"]
+    lines += ['puts "OT_DIE_ISLANDS blockages=$di_count rectangle_area_sum_um2=$di_area row_intersections=$di_rows"', "}"]
+    return "\n".join(lines) + "\n"
+
+
 def _pdn_inst_patterns(instances):
     # PDN -instances is a Tcl list of regular expressions, not literal names.
     # ODB stores escaped Verilog brackets as literal backslash-bracket pairs.
@@ -1113,6 +1143,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
             hook.write_text(f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n" + hook.read_text())
+    islands = die_islands_tcl(P, tn)
+    if islands:
+        (kd / "die_islands.tcl").write_text(islands)
+        hook = kd / "face_flops.tcl"
+        hook.write_text("source /work/die_islands.tcl\n" + hook.read_text())
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
