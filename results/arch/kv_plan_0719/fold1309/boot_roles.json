@@ -1,0 +1,64 @@
+{
+ "bootstrap_types": [
+  "kv3_hg",
+  "kv3_hg_v1",
+  "kv3_hg_v3",
+  "kv3_hgi_v3",
+  "kv3_hgi_v4",
+  "kv3_hgi_v5",
+  "kv3_hgi_v6",
+  "kv3_hgi_v7",
+  "kv3_hgi_v8",
+  "kv3_hroot",
+  "kv3_hub_C",
+  "kv3_hub_Ei",
+  "kv3_hub_Eo",
+  "kv3_hub_Wi",
+  "kv3_hub_Wo",
+  "kv3_io_cor",
+  "kv3_io_cor_v1",
+  "kv3_io_ft",
+  "kv3_io_ft_v1",
+  "kv3_pc",
+  "kv3_pc_v1",
+  "kv3_pc_v3",
+  "kv3_pv_v1",
+  "kv3_pv_v12",
+  "kv3_pv_v2",
+  "kv3_pv_v3",
+  "kv3_pv_v4",
+  "kv3_pv_v5",
+  "kv3_pv_v6",
+  "kv3_pv_v7",
+  "kv3_sys_SD",
+  "kv3_sys_SD_v1",
+  "kv3_sys_c"
+ ],
+ "bootstrap_parts": 110,
+ "actual_ack_endpoints": 160,
+ "data_cycles_added": 0,
+ "start_port": "mission_start_global",
+ "phy_line_ports": [
+  {
+   "pin": "link_v",
+   "dir": "output",
+   "width": 1
+  },
+  {
+   "pin": "link_flit",
+   "dir": "output",
+   "width": 583
+  },
+  {
+   "pin": "far_v",
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "pin": "far_flit",
+   "dir": "input",
+   "width": 583
+  }
+ ],
+ "host_mission_gate_required": true
+}
