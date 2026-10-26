@@ -151,7 +151,8 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
             rc=None
             if routing_model is not None:
                 from core_infra_wire import rooted_rc
-                branch=routing_model['nonleaf' if children[name] else 'leaf']
+                branch=routing_model.get('nodes',{}).get(name)
+                if branch is None:branch=routing_model['nonleaf' if children[name] else 'leaf']
                 rc=rooted_rc([point]+[q[1] for q in targets],[q[2] for q in targets],**branch)
                 wire=rc['wire_um'];wire_load=rc['wire_cap_ff']
             else:wire_load=wire*wire_c_ff_um
@@ -174,5 +175,5 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
                                    min_ps=min(v),mean_ps=sum(v)/len(v),max_ps=max(v)))
         answer[corner]=dict(sinks=len(vals),min_ps=min(vals),mean_ps=sum(vals)/len(vals),max_ps=max(vals),
                             window_ps=max(vals)-min(vals),leaf_means=leaf_means,nets=nets)
-    return dict(basis="Geometry/ASAP7 NLDM + Manhattan-MST branch C + Elmore path R; no clock measurements/pad selection",
+    return dict(basis=("Geometry/ASAP7 NLDM + directional rooted shared-subtree RC prototype; no clock measurements/pad selection" if routing_model is not None else "Geometry/ASAP7 NLDM + historical Manhattan-MST branch C/direct branch R; no clock measurements/pad selection"),
                 wire_r_kohm_um=wire_r_kohm_um,wire_c_ff_um=wire_c_ff_um,input_slew_ps=input_slew_ps,routing_model=routing_model,corners=answer)

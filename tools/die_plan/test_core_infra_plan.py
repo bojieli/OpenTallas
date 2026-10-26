@@ -54,3 +54,24 @@ def test_actual_corner_caps_and_declared_source_slew_propagate():
     slower=Model(s,libs,pts,caps,.02,.1,input_slew_ps=40.).evaluate(['BUFx16f_ASAP7_75t_R'])
     assert slower['TT']['mean']>fast['TT']['mean']
     with pytest.raises(KeyError):CP.sink_cap({'TT':.5},'FF')
+
+
+def test_cached_rooted_model_matches_shared_predictor_after_driver_change():
+    from core_infra_search import Model
+    s=sample();s['core_tree']=dict(clock_port='clk',nodes=[
+      dict(name='root',master='BUFx16f_ASAP7_75t_R',xy_um=[430,430],parent='port:clk'),
+      dict(name='leaf',master='BUFx8_ASAP7_75t_R',xy_um=[440,440],parent='root')],
+      leaves=[dict(node='leaf',sinks=['a/CLK','b/CLK'])])
+    lib=dict(delay=([0,100],[0,100],[[10,30],[20,40]]),trans=([0,100],[0,100],[[10,30],[20,40]]),cap=1.)
+    other={**lib,'cap':2.}
+    libs={c:{'BUFx16f_ASAP7_75t_R':lib,'BUFx8_ASAP7_75t_R':other} for c in ('TT','FF')}
+    pts={'a/CLK':[450,440],'b/CLK':[460,440]};caps={p:{'TT':.5,'FF':.8} for p in pts}
+    profile=dict(horizontal_rc=[.1,.2],vertical_rc=[.2,.3]);routing=dict(nonleaf=profile,leaf=profile)
+    model=Model(s,libs,pts,caps,0,0,input_slew_ps=0,routing_model=routing)
+    for chosen in ('BUFx8_ASAP7_75t_R','BUFx16f_ASAP7_75t_R'):
+        changed=copy.deepcopy(s);changed['core_tree']['nodes'][1]['master']=chosen
+        detailed=CP.predict_tree(changed,libs,pts,caps,0,0,input_slew_ps=0,routing_model=routing)
+        fast=model.evaluate(['BUFx16f_ASAP7_75t_R',chosen])
+        for corner in libs:
+            assert fast[corner]['mean']==pytest.approx(detailed['corners'][corner]['mean_ps'])
+            assert fast[corner]['all_max']==pytest.approx(detailed['corners'][corner]['max_ps'])

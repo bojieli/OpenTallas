@@ -1,7 +1,7 @@
 """Plan-only rooted branch RC with directional layers and horizontal obstacles.
 
 An explicit rectilinear MST joins original physical terminal points. Each edge
-uses a valid V-H-V channel; all downstream sink and wire C loads shared edges.
+uses a valid two-bend channel; all downstream sink and wire C loads shared edges.
 Overlapping edge paths are intentionally not merged: this is a conservative
 unmerged-tree prototype, not an extracted Steiner topology or qualification.
 No timing measurement or routed geometry is an input.
@@ -14,6 +14,7 @@ def channel_path(a,b,obstacles=(),clearance=0.,vertical_obstacles=()):
     for r in [*obstacles,*vertical_obstacles]:
         xs.update((r[0]-clearance,r[2]+clearance));ys.update((r[1]-clearance,r[3]+clearance))
     def clear(p,q):
+        if p==q:return True
         if p[1]==q[1]:
             lo,hi=sorted((p[0],q[0]))
             return all(not (lo<r[2]+clearance and hi>r[0]-clearance and r[1]-clearance<p[1]<r[3]+clearance) for r in obstacles)
@@ -57,6 +58,10 @@ def rooted_rc(points,caps,horizontal_rc,vertical_rc,obstacles=(),clearance=0.,ve
     for j in reversed(order[1:]):subtree[parent[j]]+=subtree[j]+edge_c[j]
     arrival=[0.]*n
     for j in order[1:]:arrival[j]=arrival[parent[j]]+edge_r[j]*subtree[j]+intrinsic[j]
-    return dict(target_elmore_ps=arrival[1:],wire_cap_ff=sum(edge_c),total_load_ff=subtree[0],
+    ancestors=[set() for _ in range(n)]
+    for j in order[1:]:ancestors[j]=ancestors[parent[j]]|{j}
+    coeff=[[sum(edge_r[e] for e in ancestors[i]&ancestors[j]) for j in range(1,n)] for i in range(1,n)]
+    wire_elmore=[arrival[i]-sum(coeff[i-1][j-1]*caps[j-1] for j in range(1,n)) for i in range(1,n)]
+    return dict(target_elmore_ps=arrival[1:],pin_elmore_coeff_kohm=coeff,wire_elmore_ps=wire_elmore,wire_cap_ff=sum(edge_c),total_load_ff=subtree[0],
                 wire_um=sum(sum(v for v,_ in p) for p in paths[1:]),parent=parent,
                 paths=paths,basis='PLAN rooted directional MST; shared downstream C; unmerged channel-path upper bound, no vias/coupling/capacity qualification')
