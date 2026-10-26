@@ -1,0 +1,23 @@
+{
+ "source_mismatch": [],
+ "swapped": [
+  "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv"
+ ],
+ "wrappers": [
+  "src/wrap_dsfd_dvland_276.v",
+  "src/wrap_dsfd_dvland_276l.v",
+  "src/wrap_dsfd_dvland_512.v",
+  "src/wrap_dsfd_dvland_562.v",
+  "src/wrap_dsfd_dvland_70.v"
+ ],
+ "manifest_masters": [
+  "dsfd_ctrl_rg3",
+  "dsfd_dvland_276",
+  "dsfd_dvland_276l",
+  "dsfd_dvland_512",
+  "dsfd_dvland_562",
+  "dsfd_dvland_70",
+  "dsfd_dvland_pvrd"
+ ],
+ "die_v_sha256": "64d4be888d3fefb3f35e0144be3555fd75d7b1587c0af7321013d0331cf33e25"
+}

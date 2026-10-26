@@ -10,6 +10,8 @@
 # := rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv at commit XRT_COMMIT (c2ef1998e, main, 'align staggered norm partials',
 # blob sha256 18850f53 = cfc3 + NORM-DESKEW PDSK 01234 with FACE_LAND 0 / no XR_PDC defaults; module ports identical to the
 # kit's cfc3 XRT; main HEAD's XRT has FACE_LAND 1 = +1 leaf-interface cycle the cfc3-era cuts never had). Then mk_tree on fc31. Records vehicle.json (every output sha256).
+# <IN> is reproduced from this commit alone: materialize_blobs.py --list results/token_pass/tokds_dskr_1025/inputs_blobs.txt
+#   --data results/token_pass/tokds_dskr_1025/inputs_data --out <IN>  (777 files are git blobs, 68 are committed data).
 # Usage (from anywhere): prep_dskr.sh <IN dir> <OUT dir>; all tool paths are repo-relative to this script's checkout.
 set -eu
 IN=$(realpath $1); O=$(realpath -m $2)
