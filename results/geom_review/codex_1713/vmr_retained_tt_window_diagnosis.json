@@ -1,0 +1,17 @@
+{
+  "reviewed_at": "2026-10-25 18:14 PDT",
+  "scope": "Read existing VMR reports only; no new STA",
+  "root": "intel1:/srv/opentallas-scratch2/claude/codex-qc-sramif-1713/vmr_readiness",
+  "current_tt_pin_mean_ps": 395.74,
+  "current_tt_pin_minmax": "NOT RETAINED in expected JSON; owner checking other copy",
+  "current_ff_pin_window_ps": [
+    283.27,
+    314.65
+  ],
+  "cause": "postcts_gate_native_v2.tcl sets pg_corner but output still uses global c. Sourced RC leaves c=1.62979E-01; TT then FF overwrite same numeric-named JSON. Expected postcts_gate_tt.json is stale14:54 mean389.81, not native_v2.",
+  "tt_later_all_ff_tap_union_ps": [
+    371.2,
+    405.7
+  ],
+  "caution": "Later tap table is all FF, not pin subset, and follows mscts correction load; cannot substitute it for exact pin LC1 in earlier measurement scene. No changed latency contract/route token."
+}
