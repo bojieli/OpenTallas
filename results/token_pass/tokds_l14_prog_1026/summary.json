@@ -1,0 +1,138 @@
+{
+ "schema": "opentallas.tokds.l14_prog_record.v1",
+ "scope": "L14 programme compile + bound-port carve stimulus spec; NOT a token pass",
+ "runs": {
+  "s0S": {
+   "spec": "/srv/opentallas-scratch2/claude/tok-ds/s81_877/l14_prog/l14_bound_stim_s0S.json",
+   "spec_sha256": "5e662cc75ae1d351b7ab40cfb65024d840baa7c4fdeec1b6810c3849730ec566",
+   "prog": "/srv/opentallas-scratch2/claude/tok-ds/s81_877/l14_prog/layers_legacy/prog_L14_su",
+   "price": {
+    "span": 26067.4,
+    "crit": 26013.5,
+    "source": "tools/s81_dv/dv_layer_price.py facts + dv_price.dv_deltas dv_base + accepted_cost.solve",
+    "capture_extra_edges": 0,
+    "vsw_lr_extra_edges": 1,
+    "critical_ops_span": 26067.4
+   },
+   "counts": {
+    "inputs": {
+     "CLOCK": 1,
+     "RESET": 14,
+     "MISSING": 157,
+     "LOOPBACK_FT": 11,
+     "DERIVABLE": 1
+    },
+    "outputs": {
+     "CLOCK_RESET": 42,
+     "UNSPECIFIED": 127
+    }
+   },
+   "missing_by_producer": {
+    "bk_sel": 5,
+    "frame": 82,
+    "offdie": 9,
+    "slice": 35,
+    "svc": 26
+   },
+   "derivable": [
+    {
+     "port": "x_s_4S_L1_ft0_o_s_4S_C",
+     "lane": "xtier__bk_sel__s_4S_C",
+     "words": 142,
+     "first_port_edge": 20593
+    }
+   ],
+   "prog_load_counts": {
+    "MAPPED_IN_CARVE": 9,
+    "MAPPED_OUTSIDE_CARVE": 18,
+    "MAPPED_PARTLY_OUTSIDE_CARVE": 38
+   },
+   "rom_images": {
+    "n": 84,
+    "empty_instance": 84,
+    "status": "BLOCKED: emitted INSTANCE(\"\") on every carve ROM macro -> no image is read in simulation (bind emit must carry the elaborated INSTANCE string)"
+   },
+   "timebase": {
+    "unit": "compiled layer cycle (layer 0 = KS + 5)",
+    "t0": null,
+    "t0_status": "UNRESOLVED: needs the measured boot/KS phase of a bound replay"
+   },
+   "sources": {
+    "bound_top": "/srv/opentallas-scratch2/claude/tok-ds/s81_877/v2/out/rtl/s81_bound_top.sv",
+    "bound_top_sha256": "1c11db22badf63d1365251ceae327ad65b9c05d470f5898ef20d35fd246d33d8",
+    "carve": "/srv/opentallas-scratch2/claude/tok-ds/s81_877/l14_carve/s81_l14_ft_carve.json",
+    "carve_sha256": "15469f9579816e2a1c0efc9b5c9591b07ecf8fca873e9bf6125aff161fc4bb76",
+    "schedule_sha256": "aa76891e8033ab81fc0d37ba370feb013e2fe42d7d71a90fd10740a45be26e35",
+    "manifest_sha256": "3e81a6078680384b513ded7e6969de443957839abfcb7dae68f2234c7f3cd401",
+    "layer": "L14",
+    "timing_contract": "opentallas.s81.selected_transport_timing.v2"
+   }
+  },
+  "s6S": {
+   "spec": "/srv/opentallas-scratch2/claude/tok-ds/s81_877/l14_prog/l14_bound_stim_s6S.json",
+   "spec_sha256": "1a071187b1195d0c1215713542678810e5fe59e1396cedc6df4b44cc52982828",
+   "prog": "/srv/opentallas-scratch2/claude/tok-ds/s81_877/l14_prog/layers_legacy_s6S/prog_L14_su",
+   "price": {
+    "span": 26067.4,
+    "crit": 26013.5,
+    "source": "tools/s81_dv/dv_layer_price.py facts + dv_price.dv_deltas dv_base + accepted_cost.solve",
+    "capture_extra_edges": 0,
+    "vsw_lr_extra_edges": 1,
+    "critical_ops_span": 26067.4
+   },
+   "counts": {
+    "inputs": {
+     "CLOCK": 1,
+     "RESET": 14,
+     "MISSING": 157,
+     "LOOPBACK_FT": 11,
+     "DERIVABLE": 1
+    },
+    "outputs": {
+     "CLOCK_RESET": 42,
+     "UNSPECIFIED": 127
+    }
+   },
+   "missing_by_producer": {
+    "bk_sel": 5,
+    "frame": 82,
+    "offdie": 9,
+    "slice": 35,
+    "svc": 26
+   },
+   "derivable": [
+    {
+     "port": "x_s_4S_L1_ft0_o_s_4S_C",
+     "lane": "xtier__bk_sel__s_4S_C",
+     "words": 142,
+     "first_port_edge": 20593
+    }
+   ],
+   "prog_load_counts": {
+    "MAPPED_IN_CARVE": 46,
+    "MAPPED_OUTSIDE_CARVE": 4,
+    "MAPPED_PARTLY_OUTSIDE_CARVE": 11
+   },
+   "rom_images": {
+    "n": 84,
+    "empty_instance": 84,
+    "status": "BLOCKED: emitted INSTANCE(\"\") on every carve ROM macro -> no image is read in simulation (bind emit must carry the elaborated INSTANCE string)"
+   },
+   "timebase": {
+    "unit": "compiled layer cycle (layer 0 = KS + 5)",
+    "t0": null,
+    "t0_status": "UNRESOLVED: needs the measured boot/KS phase of a bound replay"
+   },
+   "sources": {
+    "bound_top": "/srv/opentallas-scratch2/claude/tok-ds/s81_877/v2/out/rtl/s81_bound_top.sv",
+    "bound_top_sha256": "1c11db22badf63d1365251ceae327ad65b9c05d470f5898ef20d35fd246d33d8",
+    "carve": "/srv/opentallas-scratch2/claude/tok-ds/s81_877/l14_carve/s81_l14_ft_carve.json",
+    "carve_sha256": "15469f9579816e2a1c0efc9b5c9591b07ecf8fca873e9bf6125aff161fc4bb76",
+    "schedule_sha256": "629b009c59ee163384345bf891aae8b873f8be46b5d015df9ddbb996668dacfe",
+    "manifest_sha256": "727fc7a5111e33e49a8cfc7c909c111981155a0e4fce40fa8ffa5026cd998ad6",
+    "layer": "L14",
+    "timing_contract": "opentallas.s81.selected_transport_timing.v2"
+   }
+  }
+ }
+}
