@@ -1,0 +1,94 @@
+{
+  "die_trial_sha256": "427b4da0d1d2dca5b1e5d01091d96792a1dfbaac893ae049a40bf959013793d2",
+  "plan_sha256": "d8d3dd75ef4188060508115a1abab364a03324d3e8a0499e6d2bf3f82a95169d",
+  "part": "s_5N_L3",
+  "segmented": true,
+  "original_ft_bits": 1267,
+  "wire_segments": 9467,
+  "adjust": {
+    "M4": 0.75,
+    "M5": 0.75,
+    "M6": 0.75,
+    "M7": 0.75,
+    "M8": 0.4,
+    "M9": 0.4
+  },
+  "types": {
+    "ot_s81sl_leaf__t53": {
+      "original_pins": 3801,
+      "core_obs_layers": [
+        "M4",
+        "M5",
+        "M7"
+      ],
+      "station_data_pins": 16400
+    }
+  },
+  "added_data_cycles": 0,
+  "qualification": "ROUTING_DIAGNOSTIC_ONLY",
+  "bounded": true,
+  "part_bounds_um": [
+    17418.24,
+    19733.76,
+    18861.120000000003,
+    20960.64
+  ],
+  "coupon_canvas_um": [
+    17409.600000000002,
+    19731.600000000002,
+    18867.600000000002,
+    20962.800000000003
+  ],
+  "boundary": {
+    "outside_canvas_rectangles": 0,
+    "rectangles": 61310,
+    "max_boundary_quantization_um": 6.48
+  },
+  "verdict": "PASS",
+  "overflow": 0,
+  "layers": {
+    "M1": {
+      "max_h": 0,
+      "max_v": 0,
+      "overflow": 0
+    },
+    "M2": {
+      "max_h": 0,
+      "max_v": 0,
+      "overflow": 0
+    },
+    "M3": {
+      "max_h": 0,
+      "max_v": 0,
+      "overflow": 0
+    },
+    "M4": {
+      "max_h": 0,
+      "max_v": 0,
+      "overflow": 0
+    },
+    "M5": {
+      "max_h": 0,
+      "max_v": 0,
+      "overflow": 0
+    },
+    "M6": {
+      "max_h": 0,
+      "max_v": 0,
+      "overflow": 0
+    },
+    "M7": {
+      "max_h": 0,
+      "max_v": 0,
+      "overflow": 0
+    }
+  },
+  "grt_errors": {
+    "GRT-0113": 0,
+    "GRT-0114": 0,
+    "GRT-0229": 0
+  },
+  "completed": true,
+  "wire_um": 3181863,
+  "routed_nets": 9468
+}

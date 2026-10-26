@@ -3,12 +3,14 @@
 
 This diagnostic adds D/Q terminals at the existing planned register locations.
 It does not instantiate extra logic, move plan pins/cores or change capacity.
-Use --part for a small flat-vs-segmented comparison before a whole die run.
+Use --part for a bounded, gcell-aligned coupon before a whole die run.
+--unbounded retains the historical full-canvas diagnostic only.
 It is routing evidence only: real cell access and timing remain G2/G3 obligations.
 """
 import argparse
 import hashlib
 import json
+import math
 import re
 import sys
 from collections import defaultdict
@@ -56,8 +58,10 @@ def pin(name,d,x,y):
 '''
 
 
-def build(plan,out,part=None,segmented=False,slots=None):
+def build(plan,out,part=None,segmented=False,slots=None,bounded=None):
     raw=S.load(plan);P=S.Plan(raw,Path(plan));out=Path(out)
+    if bounded is None:bounded=bool(part)
+    if bounded and not part:raise ValueError('--bounded requires --part')
     if part:
         P.parts={part:P.parts[part]}
         tn=P.parts[part]['type'];P.types={tn:P.types[tn]}
@@ -67,6 +71,11 @@ def build(plan,out,part=None,segmented=False,slots=None):
         b=defaultdict(int)
         for bus,bit,*_ in gen_phys.type_pins(P,tn):b[bus]=max(b[bus],bit+1)
         bits[tn]=dict(b);tables[tn]={}
+        if bounded:
+            planned=[h for h in t.get('hard_cores',[]) if 'origin_um' in h and 'outline_um' in h]
+            observed=DT.core_obs(t)
+            if len(planned)!=len(observed) or any(h.get('obs_max') and int(r[4][1:])<int(h['obs_max'][1:]) for h,r in zip(planned,observed)):
+                raise ValueError('bounded coupons require the conservative declared/view core obstruction union')
         lef,st=DT.abstract_lef(P,tn)
         add=''
         if segmented:
@@ -107,8 +116,40 @@ def build(plan,out,part=None,segmented=False,slots=None):
     (out/'grt/tracks.tcl').write_text(DT.coarse_tracks(P,.72))
     adjust=[(f'M{i}',.75) for i in range(4,8)]+[('M8',.4),('M9',.4)]
     tcl=DT.grt_tcl(P,out/'grt',.72,lefs,[],adjust).replace('-congestion_iterations 50','-congestion_iterations 5')
+    coupon_canvas=None
+    if bounded:
+        # Preserve the original die's 10.8um GRT gcell phase and include only
+        # cells touching the partition. Exact-edge cropping loses north pins
+        # in OpenROAD's final fractional gcell. This is a guide-domain hull,
+        # never a physical enlargement of the partition.
+        bx0,by0,bx1,by1=P.rect(part);gcell=10.8
+        x0,y0=math.floor((bx0-1e-7)/gcell)*gcell,math.floor((by0-1e-7)/gcell)*gcell
+        x1,y1=math.ceil((bx1+1e-7)/gcell)*gcell,math.ceil((by1+1e-7)/gcell)*gcell
+        x0,y0,x1,y1=max(0.,x0),max(0.,y0),min(P.W,x1),min(P.H,y1)
+        coupon_canvas=[x0,y0,x1,y1]
+        area=f'{x0:.6f} {y0:.6f} {x1:.6f} {y1:.6f}'
+        tcl=re.sub(r'initialize_floorplan -die_area \{[^}]+\} -core_area \{[^}]+\}',f'initialize_floorplan -die_area {{{area}}} -core_area {{{area}}}',tcl)
+        # The coupon reset source is local to its existing reset pin, as in G2;
+        # this avoids an unrelated full-die reset wire outside the coupon.
+        entry=next((q for q in gen_phys.tap_pins(P,tn) if q[0]=='arst_n'),None)
+        if entry is None:raise ValueError('bounded coupon requires its real reset entry pin')
+        rx,ry=P.to_die(part,entry[1:])
+        tcl=re.sub(r'place_pin -pin_name rst_n -layer \S+ -location \{[^}]+\}',f'place_pin -pin_name rst_n -layer M7 -location {{{rx:.6f} {ry:.6f}}}',tcl)
+        tracks=[]
+        for layer in ['M1','M2','M3','M4','M5','M6','M7','M8','M9']:
+            pitch=.72 if layer in ['M1','M2','M3'] else P.layers[layer]['pitch_um']
+            offset=.36 if layer in ['M1','M2','M3'] else P.layers[layer]['offset_um']
+            tracks.append(f'make_tracks {layer} -x_offset {(offset-x0)%pitch:.12f} -x_pitch {pitch} -y_offset {(offset-y0)%pitch:.12f} -y_pitch {pitch}')
+        (out/'grt/tracks.tcl').write_text('\n'.join(tracks)+'\n')
+        obs=out/'grt/obs.tcl';clipped=[]
+        for line in obs.read_text().splitlines():
+            m=re.search(r'-region \{([^}]+)\} -layer (M\d+)',line)
+            if not m:raise ValueError('unexpected obstruction statement')
+            a,b,c,d=map(float,m[1].split());a,b,c,d=max(a,x0),max(b,y0),min(c,x1),min(d,y1)
+            if a<c and b<d:clipped.append(f'create_obstruction -region {{{a:.6f} {b:.6f} {c:.6f} {d:.6f}}} -layer {m[2]}')
+        obs.write_text('\n'.join(clipped)+'\n')
     (out/'grt/grt.tcl').write_text(tcl)
-    result=dict(die_trial_sha256=hashlib.sha256(Path(DT.__file__).read_bytes()).hexdigest(),plan_sha256=hashlib.sha256(Path(plan).read_bytes()).hexdigest(),part=part,segmented=segmented,original_ft_bits=original,wire_segments=segments,adjust=dict(adjust),types=stats,added_data_cycles=0,qualification='ROUTING_DIAGNOSTIC_ONLY')
+    result=dict(die_trial_sha256=hashlib.sha256(Path(DT.__file__).read_bytes()).hexdigest(),plan_sha256=hashlib.sha256(Path(plan).read_bytes()).hexdigest(),part=part,segmented=segmented,original_ft_bits=original,wire_segments=segments,adjust=dict(adjust),types=stats,added_data_cycles=0,qualification='ROUTING_DIAGNOSTIC_ONLY',bounded=bounded,part_bounds_um=list(P.rect(part)) if part else None,coupon_canvas_um=coupon_canvas)
     (out/'station_probe.json').write_text(json.dumps(result,indent=2))
     (out/'station_sites.json').write_text(json.dumps(tables))
     return result
@@ -125,9 +166,24 @@ def report(out):
     errors={k:len(re.findall(k,log)) for k in ['GRT-0113','GRT-0114','GRT-0229']}
     complete='OT_DONE' in log and bool(re.search(r'ot-run:.*RAN on.*exit 0',log)) and {'M4','M5','M6','M7'} <= set(layers)
     overflow=sum(x['overflow'] for x in layers.values())
-    verdict='NOT RUN' if not complete else 'FAIL' if overflow or any(errors.values()) else 'PASS'
+    boundary=None
+    if meta.get('bounded'):
+        guide=out/'grt/route.guide';canvas=meta['coupon_canvas_um'];box=meta['part_bounds_um']
+        outside=0;max_escape=0.;net='';rectangles=0
+        if not guide.is_file():complete=False
+        else:
+            for line in guide.read_text().splitlines():
+                f=line.split()
+                if len(f)==1 and f[0] not in ['(',')']:net=f[0];continue
+                if len(f)!=5 or not net.startswith('ft_'):continue
+                a,b,c,d=[float(v)/1000 for v in f[:4]];rectangles+=1
+                outside+=int(a<canvas[0]-.001 or b<canvas[1]-.001 or c>canvas[2]+.001 or d>canvas[3]+.001)
+                max_escape=max(max_escape,box[0]-a,box[1]-b,c-box[2],d-box[3])
+        boundary=dict(outside_canvas_rectangles=outside,rectangles=rectangles,max_boundary_quantization_um=round(max_escape,6))
+        if not rectangles:complete=False
+    verdict='NOT RUN' if not complete else 'FAIL' if overflow or any(errors.values()) or (boundary and boundary['outside_canvas_rectangles']) else 'PASS' 
     w=re.findall(r'Total wirelength:\s+(\d+) um',log);n=re.findall(r'Routed nets:\s+(\d+)',log)
-    result=dict(**meta,verdict=verdict,overflow=overflow if layers else None,layers=layers,grt_errors=errors,completed=complete,wire_um=int(w[-1]) if w else None,routed_nets=int(n[-1]) if n else None)
+    result=dict(**meta,boundary=boundary,verdict=verdict,overflow=overflow if layers else None,layers=layers,grt_errors=errors,completed=complete,wire_um=int(w[-1]) if w else None,routed_nets=int(n[-1]) if n else None)
     receipt=out/'station_result.json';index=0
     while receipt.exists():
         if json.loads(receipt.read_text())==result:return result
@@ -140,4 +196,5 @@ if __name__=='__main__':
     if len(sys.argv)>1 and sys.argv[1]=='report':
         r=report(sys.argv[2]);print(json.dumps(r));sys.exit(0 if r['verdict']=='PASS' else 1)
     a=argparse.ArgumentParser(description=__doc__);a.add_argument('plan',type=Path);a.add_argument('--out',type=Path,required=True);a.add_argument('--part');a.add_argument('--slot',action='append');a.add_argument('--segmented',action='store_true')
-    p=a.parse_args();print(json.dumps(build(p.plan,p.out,p.part,p.segmented,p.slot)))
+    scope=a.add_mutually_exclusive_group();scope.add_argument('--bounded',action='store_const',const=True,default=None);scope.add_argument('--unbounded',dest='bounded',action='store_const',const=False)
+    p=a.parse_args();print(json.dumps(build(p.plan,p.out,p.part,p.segmented,p.slot,p.bounded)))

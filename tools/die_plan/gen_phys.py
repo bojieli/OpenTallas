@@ -463,6 +463,10 @@ def root_async_reset(P, tn):
     import reset_tree as RT
     if not RT.wavefront(P) or P.types[tn].get("hard"):
         return False
+    if RT.pad_false_path_pins(P, tn):
+        # a declared die reset pad plan (PATH-KV-POR) already emits the ONE root CDC exception (raw pad ->
+        # u_rst_root async + PLL analog); a second one would double the waiver (test_por_gate)
+        return False
     if RT.wf_solve(P)["root_type"] != tn:
         return False
     if RT.sync_stages(P, tn) != 2:
