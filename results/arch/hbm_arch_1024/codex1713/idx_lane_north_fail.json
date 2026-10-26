@@ -1,0 +1,30 @@
+{
+ "lane": "L156",
+ "width": 2740,
+ "pin_window_um": 489.6,
+ "pins_per_um": 5.59640522875817,
+ "initial_cycles": {
+  "cycles": 8,
+  "stations": 6,
+  "boundary": 2,
+  "faces": 2,
+  "fixed": 0,
+  "natural": 8,
+  "pad": 0
+ },
+ "selected_TKM_L74_unchanged": true,
+ "source_548_gap": "Current NW master has no cr; native SW-client VMS master/profile and real548pins required before binding",
+ "source_plan_sha256": "f2859a48f5b6e1ff7d4d815aa3acf788374f523a5862a7c9392674750697f840",
+ "packing_failure": "no reach-bounded station-target chain",
+ "station_sites": {
+  "points": 290960,
+  "entries": 20270,
+  "violations": 0,
+  "types": []
+ },
+ "findings": [],
+ "status": "CANDIDATE_UNBOUND_548_NATIVE_SOURCE_AND_ENDPOINT_STATIONS_PENDING",
+ "verdict": "FAIL_GEOMETRY_NO_PNR",
+ "native_map_bits": 2740,
+ "review_image": "idx_lane_north_fail.png"
+}
