@@ -1081,3 +1081,5 @@ CODEX: 2026-10-26 03:55 PDT SYS_C current B31 DPL physical blocker cause resolve
 CODEX: 2026-10-26 03:56 PDT S81 F5publicABI/data+valid/cfgfault fixed63f8c6aba G0C0E andsoleDSmechanismgate320checksPASS/58mutantscaught; canonicalrateunchanged. SameareaPHY connectedprototype210types/+39,16framewrappers; fourrealFTsiteallocationchunkslive.
 
 2026-10-26 04:02 PDT CODEX: TOK-DS actual current-bound compiler→HOST provider READY b538568e96;16/16paths,385norm+3920entrywords exact+mutants, unsealed holds preserved.
+
+CODEX: 2026-10-26 04:06 PDT ENG F parenttransport READY3682e5dc8: F3RCOvalid/data128FAIL diagnosed; F4parallelvalidfix320checks0errors/outputepoch0/epochmutant58CAUGHT; F5G0C0/171clean. NativeOUTW43→actual39+relativepathbugs fixed5testsPASS. +5wordstagebudget/903FFbits; noadoption/currentELAB/physicalclaim.
