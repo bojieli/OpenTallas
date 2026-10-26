@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Restore pin-access wire caps omitted by OpenROAD rsz::SpefWriter.
 
-Scope: the explicitly checked ASAP7 RVT clock buffers (M1 terminals) and M9 top ports.
+Scope: the explicitly checked ASAP7 RVT clock buffers (M1 terminals) and one public port per net
+(M7 partition taps or the M9 die root). The public port's omitted wire cap is reconstructed from the native
+D_NET remainder, so its metal layer is not guessed.
 The native exporter records the pin-access resistors but excludes terminal-node
 ground caps. Infer each missing half-cap from its native resistor and the SAME cap-profile estimate, retaining the
 native via resistance. STANDARD layer R is used: native NDR width credit is
@@ -65,7 +67,7 @@ def restore(lines,width):
         remaining=total-original-sum(new.values())
         if remaining < -tolerance:raise ValueError('cell pin caps exceed native D_NET cap budget')
         # Native D_NET includes terminal wire caps. A generated clock net
-        # has at most one M9 port, so its missing cap is uniquely determined.
+        # has at most one public port, so its missing cap is uniquely determined.
         new[ports[0]]=max(0.,remaining)
     error=abs(total-original-sum(new.values()))
     if error>tolerance:raise ValueError(f'pin-cap reconstruction differs from D_NET by {error:.6f}fF (allowed {tolerance:.6f})')

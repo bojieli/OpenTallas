@@ -60,6 +60,16 @@ class T(unittest.TestCase):
         self.assertEqual(R[0]["box_um"], [0.0, 0.0, 200.0, 400.0])   # x, y, x halvings
         self.assertEqual(CM.region_boxes(8, 8, 0)[0]["tag"], "h")
 
+    def test_dataflow_cohort_cuts_match_real_xx_tree_tags(self):
+        _, edges = CM.cohort_axis_grid(8, 800., [100., 300., 650.], 2)
+        R = CM.region_boxes(8, 8, 2, W=800., H=800., axes="xx", x_edges=edges)
+        self.assertEqual([g["box_um"] for g in R], [[0.,0.,100.,800.], [100.,0.,300.,800.],
+                                                    [300.,0.,650.,800.], [650.,0.,800.,800.]])
+        for g in R:
+            for i in range(g["i0"],g["i1"]):
+                for j in range(8):
+                    self.assertTrue(CM.htree_tag(i,j,8,8,"xx").startswith(g["tag"]))
+
     def test_free_along_bounds(self):
         K = Box((90, -5, 110, 5))
         q, d = CM.free_along(K, (100.0, 0.0), 0, 50.0)
@@ -107,12 +117,13 @@ class T(unittest.TestCase):
             d = Path(td); kit = d / "kit"; (kit / "grt").mkdir(parents=True); (kit / "abstracts").mkdir()
             (kit / "grt/route.v").write_text("module route(rst); input rst; endmodule\n")
             (kit / "grt/grt.tcl").write_text("read_verilog /work/grt/route.v\nlink_design route\nsource /work/grt/obs.tcl\n")
-            (d / "ctree.v").write_text("module die_ctree(root); input root; endmodule\n")
+            (d / "ctree.v").write_text("module die_ctree(root,t_pin); input root; output t_pin; assign t_pin=root; endmodule\n")
             (d / "place.json").write_text("{}")
             (d / "nets.json").write_text('{"nets": []}')
             (d / "mesh.json").write_text(json.dumps(dict(meta=dict(ndr="4w", W=10, H=10, root_um=[1, 1]),
-                                                         xs=[2, 8], ys=[2, 8], taps=[])))
+                                                         xs=[2, 8], ys=[2, 8], taps=[dict(port="t_pin",xy=[5,5])])))
             CM.cmd_combo(SimpleNamespace(dir=str(d), kit=str(kit)))
+            self.assertIn("-layer M7 -location {5.000 5.000} -pin_size {0.032 0.768}", (d/"combo.tcl").read_text())
             fake = d / "bin"; fake.mkdir()
             docker = fake / "docker"
             docker.write_text('#!/bin/bash\nfor a in "$@"; do case "$a" in CORNER=TT) exit 7;; CORNER=FF) exit 0;; esac; done\nexit 9\n')
@@ -177,10 +188,40 @@ class T(unittest.TestCase):
         M = dict(meta={"unplaced": 0}, unplaced=[])
         corners = {c: dict(verdict="PASS", landed_verdict="PASS") for c in ("TT", "FF")}
         self.assertEqual(CM.regional_qualification(M, corners, 3)["release_verdict"], "BLOCKED")
-        self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "CLOCK-PASS")
+        self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "BLOCKED")
+        self.assertTrue(any("related-pair coverage" in s for s in CM.regional_qualification(M, corners, 0)["blockers"]))
         M["unplaced"] = [[0, 0]]
         self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "BLOCKED")
 
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_stubtrim_pairs_complete_superset_and_damage():
+    """stubtrim pair superset: all intra-partition tap pairs + tap cross-products of connected SAME-region partitions;
+    connected cross-region partitions are landed (excluded); unconnected partitions never pair."""
+    import types
+    import die_clock_mesh as DM
+    M = {"taps": [dict(port="a0", part="A", region=0), dict(port="a1", part="A", region=0),
+                  dict(port="b0", part="B", region=0), dict(port="c0", part="C", region=1),
+                  dict(port="d0", part="D", region=0)]}
+    P = types.SimpleNamespace(ports={"p1": {"src": {"part": "A"}, "dst": {"part": "B"}},
+                                     "p2": {"src": {"part": "B"}, "dst": {"part": "C"}}})
+    pairs, reg = DM.stubtrim_pairs(P, M)
+    assert pairs == [("a0", "a1"), ("a0", "b0"), ("a1", "b0")]
+    arr = {"a0": (100.0, 40.0), "b0": (110.0, 50.0)}
+    # late a0 vs early b0 and late b0 vs early a0 (70), minus the region-node credit 30
+    assert DM.pair_damage(arr, {0: 30.0}, reg, "a0", "b0") == 40.0
+    # lifting b0 by 10 (early side 0.97 x) raises the damage by 10 + 0.3
+    assert abs(DM.pair_damage(arr, {0: 30.0}, reg, "a0", "b0", {"b0": 10.0}, 0.97) - 50.0) < 1e-9
+
+
+def test_kv_site_fixes_default_off():
+    import inspect
+    import die_clock_mesh as DM
+    sig = inspect.signature(DM.build)
+    assert sig.parameters["trunk_repeaters"].default is False
+    assert sig.parameters["driver_pair_span_um"].default == 0.0
+    assert sig.parameters["split_yfirst"].default is False
+    assert inspect.signature(DM.split_long).parameters["yfirst"].default is False

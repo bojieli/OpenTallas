@@ -82,12 +82,19 @@ def pow2(n):
     return n > 0 and (n & (n - 1)) == 0
 
 
-def htree_tag(i, j, nx, ny):
+def split_axis(ni, nj, level, axes=""):
+    axis = (0 if axes[level] == "x" else 1) if level < len(axes) else (0 if ni >= nj and ni > 1 else 1)
+    if (ni if axis == 0 else nj) <= 1:
+        raise ValueError("clock-region split profile exceeds the intersection grid")
+    return axis
+
+
+def htree_tag(i, j, nx, ny, axes=""):
     """H-tree tag ('h' + one bit per level) of intersection (i, j): replay the build's index bisection."""
     i0, i1, j0, j1, tag = 0, nx, 0, ny, "h"
     while (i1 - i0) * (j1 - j0) > 1:
         ni, nj = i1 - i0, j1 - j0
-        if ni >= nj and ni > 1:
+        if split_axis(ni, nj, len(tag) - 1, axes) == 0:
             h = (i0 + i1) // 2
             c = int(i >= h)
             i0, i1 = (i0, h) if not c else (h, i1)
@@ -99,17 +106,17 @@ def htree_tag(i, j, nx, ny):
     return tag
 
 
-def region_boxes(nx, ny, depth, W=None, H=None):
+def region_boxes(nx, ny, depth, W=None, H=None, axes="", x_edges=None, y_edges=None):
     """the 2^depth clock regions = the H-tree subtrees below level `depth`, in index space [i0, i1) x [j0, j1)
     (same bisection as the build), each with its geometric box (cut half-way between straps) when W, H are given."""
     regs = [("h", 0, nx, 0, ny)]
-    for _ in range(depth):
+    for level in range(depth):
         nxt = []
         for tag, i0, i1, j0, j1 in regs:
             ni, nj = i1 - i0, j1 - j0
             if ni * nj <= 1:
                 raise ValueError(f"--regions {depth} deeper than the {nx}x{ny} mesh")
-            if ni >= nj and ni > 1:
+            if split_axis(ni, nj, level, axes) == 0:
                 h = (i0 + i1) // 2
                 nxt += [(tag + "0", i0, h, j0, j1), (tag + "1", h, i1, j0, j1)]
             else:
@@ -121,9 +128,23 @@ def region_boxes(nx, ny, depth, W=None, H=None):
         r = dict(k=k, tag=tag, i0=i0, i1=i1, j0=j0, j1=j1)
         if W is not None:
             px, py = W / nx, H / ny
-            r["box_um"] = [round(i0 * px, 3), round(j0 * py, 3), round(i1 * px, 3), round(j1 * py, 3)]
+            r["box_um"] = [round(x_edges[i0] if x_edges is not None else i0 * px, 3),
+                           round(y_edges[j0] if y_edges is not None else j0 * py, 3),
+                           round(x_edges[i1] if x_edges is not None else i1 * px, 3),
+                           round(y_edges[j1] if y_edges is not None else j1 * py, 3)]
         out.append(r)
     return out
+
+
+def cohort_axis_grid(n, span, cuts, count):
+    """Keep a power-of-two driver count per cohort while placing physical cuts on real dataflow seams."""
+    edges = [0.] + list(map(float, cuts)) + [float(span)]
+    if len(edges) != 2**count + 1 or any(b <= a for a, b in zip(edges, edges[1:])) or n % (len(edges)-1):
+        raise ValueError("clock cohort cuts must be ordered internal seams matching the split-axis profile")
+    each = n // (len(edges) - 1)
+    grid = [a + (i + .5) * (b-a)/each for a, b in zip(edges, edges[1:]) for i in range(each)]
+    cell_edges = [a + i * (b-a)/each for a, b in zip(edges, edges[1:]) for i in range(each)] + [float(span)]
+    return grid, cell_edges
 
 
 def strap_bounds(g, xs, ys, axis):
@@ -375,7 +396,7 @@ def stub_foot(K, xs, ys, x, y, limit, box=None, extent=None):
     return best[1], best[2], best[3], best[4], best[5]
 
 
-def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None):
+def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False):
     """every driver -> load branch longer than hop_max (a slide / jog / node move made it long) gets equal-cut
     repeaters on its own L path (x first, then y), each at the nearest free site: no hop exceeds ~hop_max, so slew
     stays inside the limit.  Returns the number of repeaters added."""
@@ -394,23 +415,29 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None):
             if k <= 0:
                 loads.append(ld)
                 continue
-            corner = (pb[0], pa[1])
-            planned, reservations = [], []
-            for c in range(1, k + 1):
-                t = c * L / (k + 1)
-                dx = abs(corner[0] - pa[0])
-                if t <= dx:
-                    p = (pa[0] + math.copysign(t, corner[0] - pa[0]), pa[1])
-                else:
-                    p = (corner[0], pa[1] + math.copysign(t - dx, pb[1] - pa[1]))
-                q, _ = free_near(K, p, limit=hop_max / 2)
-                if q is None:
+            # PATH-KV 10-26: try the x-first L, then the y-first L (a PHY corner often blocks only one of them)
+            for xfirst in ((True, False) if yfirst else (True,)):
+                planned, reservations = [], []
+                for c in range(1, k + 1):
+                    t = c * L / (k + 1)
+                    if xfirst:
+                        dx = abs(pb[0] - pa[0])
+                        p = ((pa[0] + math.copysign(t, pb[0] - pa[0]), pa[1]) if t <= dx else
+                             (pb[0], pa[1] + math.copysign(t - dx, pb[1] - pa[1])))
+                    else:
+                        dy = abs(pb[1] - pa[1])
+                        p = ((pa[0], pa[1] + math.copysign(t, pb[1] - pa[1])) if t <= dy else
+                             (pa[0] + math.copysign(t - dy, pb[0] - pa[0]), pb[1]))
+                    q, _ = free_near(K, p, limit=hop_max / 2)
+                    if q is None:
+                        break
+                    probe = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y))
+                    reservations.append(reserve_cell(K, f"split_probe_{c}", probe))
+                    planned.append(q)
+                for r in reservations:
+                    release_cell_reservation(K, r)
+                if len(planned) == k:
                     break
-                probe = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y))
-                reservations.append(reserve_cell(K, f"split_probe_{c}", probe))
-                planned.append(q)
-            for r in reservations:
-                release_cell_reservation(K, r)
             if len(planned) != k:
                 # A clock tail can traverse a PHY with its driver outside it. Never manufacture an illegal cell.
                 # Keep the direct tail only within the binding 750-um reach; actual routed slew still decides.
@@ -447,7 +474,11 @@ def part_regions(P, R):
 
 
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
-          regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None):
+          regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None,
+          region_spec=None, trunk_repeaters=False, driver_pair_span_um=0.0, split_yfirst=False):
+    """opt-in PATH-KV 10-26 site fixes (defaults keep the prior QC/S81 builds unchanged): trunk_repeaters = equal-cut
+    BUFx24 repeaters on a root->ckm_n0 trunk > 750 um; driver_pair_span_um > 0 = a leaf driver pair whose nearest sites
+    span more than this takes the shortest-span candidate combination; split_yfirst = split_long also tries the y-first L."""
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
@@ -456,6 +487,14 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     K = DC.KeepIndex(ko, die=(W, H))
     xs = [(i + 0.5) * W / nx for i in range(nx)]
     ys = [(j + 0.5) * H / ny for j in range(ny)]
+    axes, x_edges, y_edges = "", None, None
+    if region_spec is not None:
+        axes = region_spec["split_axes"].lower()
+        if not axes or set(axes) - {"x", "y"} or regions not in (0, len(axes)):
+            raise ValueError("region-spec split_axes must match --regions and contain only x/y")
+        regions = len(axes)
+        xs, x_edges = cohort_axis_grid(nx, W, region_spec.get("x_cuts_um", []), axes.count("x"))
+        ys, y_edges = cohort_axis_grid(ny, H, region_spec.get("y_cuts_um", []), axes.count("y"))
     axis_snap = None
     if pg_shapes is not None:
         if track_profile is None:
@@ -470,9 +509,14 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                xs=xs, ys=ys, drivers={}, htree=[], stubs=[], unplaced=[])
     if axis_snap is not None:
         out["meta"].update(pg_aware=True, pg_tracks=track_profile, pg_axis_snap_max_um=axis_snap)
+    import gen_phys as GP
+    out["meta"]["tap_layer"] = P.layer_budget["partition_signal_max"]
+    out["meta"]["tap_pin_size_um"] = [GP.LAYER_W.get(out["meta"]["tap_layer"], .04), 4 * GP.PIN_LEN_UM]
+    if region_spec is not None:
+        out["meta"].update(region_spec=region_spec, region_axes=axes)
     if delta_id:
         out["meta"]["delta_id"] = delta_id
-    R = region_boxes(nx, ny, regions, W, H)
+    R = region_boxes(nx, ny, regions, W, H, axes, x_edges, y_edges)
     if region_edge_straps:
         if not regions:
             raise ValueError("--region-edge-straps requires --regions")
@@ -499,16 +543,44 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         return name
 
     # --- driver sites: intersection, else slide along the M9 strap (y) or the M8 strap (x), whichever is nearer
+    # PATH-KV 10-26: candidates on both straps first; a leaf pair (i, 2k)/(i, 2k+1) whose nearest sites land on
+    # opposite sides of a PHY/hard macro (pair span > 700 um, i.e. past the 750-um clock reach) takes the candidate combination with the shortest pair
+    # span instead, so the leaf node can reach both drivers around the macro.
+    cand = {}
     for i, x in enumerate(xs):
         for j, y in enumerate(ys):
-            best = None
             g = R[reg_ij[(i, j)]]
-            rk = dict(region=g["k"]) if regions else {}
+            cs = []
             for axis in (0, 1):
                 bnd = strap_bounds(g, xs, ys, axis)
                 q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
-                if q is not None and (best is None or d < best[1]):
-                    best = (q, d, axis)
+                if q is not None:
+                    cs.append((q, d, axis))
+            cand[(i, j)] = sorted(cs, key=lambda c: c[1])
+    pick = {k: (v[0] if v else None) for k, v in cand.items()}
+    pair_fix = []
+    for (i, j), v in cand.items():
+        if j % 2 or (i, j + 1) not in cand or not v or not cand[(i, j + 1)]:
+            continue
+        a, b = pick[(i, j)], pick[(i, j + 1)]
+        span = lambda p, q: abs(p[0][0] - q[0][0]) + abs(p[0][1] - q[0][1])
+        if driver_pair_span_um > 0 and span(a, b) > driver_pair_span_um:
+            combo = min(((p, q) for p in v for q in cand[(i, j + 1)]), key=lambda pq: (span(*pq), pq[0][1] + pq[1][1]))
+            pick[(i, j)], pick[(i, j + 1)] = combo
+            pair_fix.append([i, j, round(span(a, b), 1), round(span(*combo), 1)])
+    out["meta"]["driver_pair_fixes"] = pair_fix
+    for i, x in enumerate(xs):
+        for j, y in enumerate(ys):
+            g = R[reg_ij[(i, j)]]
+            rk = dict(region=g["k"]) if regions else {}
+            best = pick[(i, j)]
+            if best is not None and hitf(K, best[0]):   # an earlier driver reserved this site: fall back to a fresh search
+                best = None
+                for axis in (0, 1):
+                    bnd = strap_bounds(g, xs, ys, axis)
+                    q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
+                    if q is not None and (best is None or d < best[1]):
+                        best = (q, d, axis)
             if best is None:
                 out["unplaced"].append([i, j])
                 continue
@@ -521,6 +593,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     nid = [0]
 
     def node_xy(i0, i1, j0, j1):
+        if region_spec is not None:
+            # Mean children give equal sibling leg lengths even for unequal physical cohort widths.
+            return (sum(xs[i0:i1])/(i1-i0), sum(ys[j0:j1])/(j1-j0))
         return ((xs[i0] + xs[i1 - 1]) / 2, (ys[j0] + ys[j1 - 1]) / 2)
 
     def rec(i0, i1, j0, j1, level, drv_cell, path):
@@ -528,7 +603,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         ni, nj = i1 - i0, j1 - j0
         if ni == 1 and nj == 1:
             raise AssertionError
-        ax = 0 if ni >= nj and ni > 1 else 1
+        ax = split_axis(ni, nj, level, axes)
         if ax == 0:
             h = (i0 + i1) // 2
             kids = [(i0, h, j0, j1), (h, i1, j0, j1)]
@@ -602,6 +677,12 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     c0 = node_xy(0, nx, 0, ny)
     sp = P.clock.get("spine", {}) or {}
     root = tuple(sp.get("die_root_um") or sp.get("root_um") or c0)
+    if pg_shapes is not None:
+        planned_root = root
+        # The actual die input is on M9; placing it on the old grid centre can short a newly sized PG rail.
+        root = (pg_free_axis([root[0]], pg_shapes, "M9", 0, W, track_profile["M9"],
+                             NDR[ndr]["width"] / 2, NDR[ndr]["space"], max_move)[0], root[1])
+        out["meta"].update(root_plan_um=list(planned_root), root_pg_shift_um=round(abs(root[0]-planned_root[0]), 6))
     q, d = free_along(K, c0, 0, 2 * rep_um)
     if q is None:
         q, d = free_near(K, c0, limit=max(W, H))
@@ -609,10 +690,34 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         q = c0
         out["unplaced"].append(["root", "node"])
     n0 = cell("ckm_n0", q[0], q[1], "node", level=0)
-    trunk = abs(root[0] - c0[0]) + abs(root[1] - c0[1])
+    trunk = abs(root[0] - q[0]) + abs(root[1] - q[1])
+    # Trunk repeaters (PATH-KV 10-26): a cohort tree centre that is not the die input point gets equal-cut BUFx24
+    # repeaters on the L path root -> ckm_n0 (x first, then y), each at the nearest free site.  The trunk is
+    # upstream of ckm_n0, so it is common to every pair (no skew effect); it only keeps every hop <= rep_um.
+    trunk_reps = []
+    n_tr = max(1, math.ceil(trunk / rep_um - 1e-9))
+    if trunk_repeaters and trunk + BUF_W + ROW_Y > 750.0:
+        ax_len = abs(q[0] - root[0])
+        for k in range(1, n_tr):
+            s_ = trunk * k / n_tr
+            if s_ <= ax_len:
+                p = (root[0] + math.copysign(s_, q[0] - root[0]), root[1])
+            else:
+                p = (q[0], root[1] + math.copysign(s_ - ax_len, q[1] - root[1]))
+            rq, rd = free_near(K, p, limit=rep_um / 2)
+            if rq is None:
+                out["unplaced"].append(["root", f"trunk repeater {k} has no free site", round(s_, 1)])
+                rq = p
+            trunk_reps.append(cell(f"ckm_t_{k}", rq[0], rq[1], "rep", level=0))
+    if region_spec is not None and (trunk / n_tr if trunk_repeaters else trunk) + BUF_W + ROW_Y > 750.0:
+        out["unplaced"].append(["root", "STRUCTURAL root-to-tree span exceeds 750 um", round(trunk, 3)])
     out["meta"]["root_um"] = list(root)
     out["meta"]["trunk_um"] = round(trunk, 2)
-    nets.append(dict(name="root", drv="port:root", loads=[n0], level=-1))
+    out["meta"]["trunk_reps"] = len(trunk_reps)
+    chain = trunk_reps + [n0]
+    nets.append(dict(name="root", drv="port:root", loads=[chain[0]], level=-1))
+    for a_, b_ in zip(chain, chain[1:]):
+        nets.append(dict(name=f"ckm_w_{a_}", drv=a_, loads=[b_], level=-1))
     rec(0, nx, 0, ny, 0, n0, "h")
     # --- stubs: every partition tap
     taps = DC.plan_taps(P)
@@ -633,14 +738,14 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             out["unplaced"].append([tp, "stub"])
         sb = cell(f"ckm_s_{len(tap_rows)}", fq[0], fq[1], "stub", **rk)
         nets.append(dict(name=f"ckm_w_{sb}", drv=sb, loads=["port:" + tp], level=99))
-        tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], early_ps=early,
+        tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], layer=out["meta"]["tap_layer"], early_ps=early,
                              early_corner_ps=early_c.get((part, port)), stub=sb, **rk, foot=[round(fq[0], 3),
                              round(fq[1], 3)], strap=("M8", j) if axis == 0 else ("M9", i), slide_um=round(fd, 2),
                              stub_um=round(abs(fq[0] - x) + abs(fq[1] - y), 2)))
     out["taps"] = tap_rows
     if hop_max:
         out["meta"]["split_reps"] = split_long(cells, nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows}, hop_max,
-                                               cell, out)
+                                               cell, out, yfirst=split_yfirst)
     overlaps = placement_overlaps(cells)
     out["clock_cell_overlaps"] = overlaps
     out["clock_hard_keepout_violations"] = hard_keepout_violations(P, cells)
@@ -713,8 +818,11 @@ def cmd_build(a):
         pg = json.loads(Path(a.pg_json).read_text())
         pg_shapes = DI.pg_rects(P, pg["grid"])
         tracks = mesh_tracks(a.track_file, P)
+    region_spec = json.loads(Path(a.region_spec).read_text()) if a.region_spec else None
     cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
-                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks)
+                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks, region_spec,
+                                  trunk_repeaters=a.trunk_repeaters, driver_pair_span_um=a.driver_pair_span,
+                                  split_yfirst=a.split_yfirst)
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
@@ -732,11 +840,11 @@ def cmd_build(a):
     return 0
 
 
-def pad_delay(corner, libdir, slew=40.0):
-    """BUFx24 stage delay driving the next abutted BUFx24 (smallest table load), ps."""
+def pad_delay(corner, libdir, slew=40.0, cell="BUFx24_ASAP7_75t_R"):
+    """pad-cell stage delay at the smallest table load (default BUFx24 driving the next abutted BUFx24), ps."""
     f = Path(libdir) / f"asap7sc7p5t_INVBUF_RVT_{corner}_nldm_220122.lib.gz"
     txt = gzip.open(f, "rt").read()
-    i = txt.index("cell (BUFx24_ASAP7_75t_R)")
+    i = txt.index(f"cell ({cell})")
     blk = txt[i:txt.index("cell (", i + 10)]
     m = re.search(r"cell_rise \(\w+\) \{\s*index_1 \(\"([^\"]+)\"\);\s*index_2 \(\"([^\"]+)\"\);\s*values \((.*?)\);",
                   blk, re.S)
@@ -765,6 +873,8 @@ def cmd_balance(a):
     nets, ports = data["nets"], [tuple(p) for p in data["ports"]]
     D, _ = read_tree(Path(a.tree) if a.tree else src / f"tree_{a.corner}.txt")
     dl = pad_delay(a.corner, a.libdir)
+    df = pad_delay(a.corner, a.libdir, cell=a.fine_lib) if a.fine_lib else None
+    hist_f = defaultdict(int)
     by_drv = {n["drv"]: n for n in nets}
     memo = {}
 
@@ -798,14 +908,20 @@ def cmd_balance(a):
         for x in n["loads"]:
             v = sub(x) if x in ld else None
             k = int(round((vmax - v) / dl)) if v is not None else 0
-            if k <= 0:
+            kf = 0
+            if v is not None and a.fine_lib:
+                # PATH-KV 10-26 fine step: best (BUFx24 count, fine-pad count <= 3) for the measured lift
+                k, kf = min(((i, j) for i in range(0, int((vmax - v) / dl) + 2) for j in range(4)),
+                            key=lambda ij: (abs(vmax - v - ij[0] * dl - ij[1] * df), ij[1]))
+            if k <= 0 and kf <= 0:
                 loads.append(x)
                 continue
+            hist_f[kf] += 1
             hist[min(k, 50) // 5 * 5] += 1
-            total_pad += k * dl
+            total_pad += k * dl + kf * (df or 0.0)
             cx, cy = cells[x]["x"], cells[x]["y"]
             chain = []
-            for i in range(k):
+            for i in range(k + kf):
                 col, row = i % 16, i // 16
                 for sgn in (-1, 1):
                     q = (cx + BUF_W / 2 + sgn * (col + 1) * (BUF_W + SITE_X * 2), cy + ROW_Y / 2 + 2 * ROW_Y * (row + 1))
@@ -819,6 +935,8 @@ def cmd_balance(a):
                 added += 1
                 cells[nm] = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y), kind="pad",
                                  level=cells[x].get("level"))
+                if i >= k:
+                    cells[nm]["lib"] = a.fine_lib
                 if reserve_sites:
                     reserve_cell(K, nm, cells[nm])
                 chain.append(nm)
@@ -835,11 +953,179 @@ def cmd_balance(a):
     M["clock_cell_overlaps"] = placement_overlaps(cells)
     M["meta"]["clock_cell_overlap_pairs"] = len(M["clock_cell_overlaps"])
     M["meta"]["balance"] = dict(src=str(src), corner=a.corner, pad_ps=round(dl, 2), pads=added,
-                                total_pad_ns=round(total_pad / 1e3, 2), hist=dict(sorted(hist.items())))
+                                total_pad_ns=round(total_pad / 1e3, 2), hist=dict(sorted(hist.items())),
+                                fine_lib=a.fine_lib, fine_pad_ps=round(df, 2) if df else None,
+                                fine_hist=dict(sorted(hist_f.items())))
     (out / "mesh.json").write_text(json.dumps(M) + "\n")
     (out / "place.json").write_text(json.dumps(cells) + "\n")
     (out / "nets.json").write_text(json.dumps(dict(ports=ports, nets=nets)) + "\n")
     print(json.dumps(M["meta"]["balance"]))
+    return 0
+
+
+# ---------------------------------------------------------------------------------------------------------- stubtrim
+def stubtrim_pairs(P, M):
+    """conservative complete related-pair superset at tap level: every intra-partition tap pair plus every tap
+    cross-product of plan-connected partitions in the SAME clock region (cross-region connected pairs are landed and
+    gated by the landing window instead)."""
+    import itertools
+    reg = {t["port"]: t.get("region") for t in M["taps"]}
+    tb = defaultdict(list)
+    for t in M["taps"]:
+        tb[t["part"]].append(t["port"])
+    conn = {tuple(sorted((p["src"]["part"], p["dst"]["part"]))) for p in P.ports.values()
+            if p["src"]["part"] in tb and p["dst"]["part"] in tb and p["src"]["part"] != p["dst"]["part"]}
+    pairs = set()
+    for ts in tb.values():
+        pairs.update(itertools.combinations(sorted(ts), 2))
+    for u, v in conn:
+        if reg[tb[u][0]] == reg[tb[v][0]]:
+            pairs.update((a, b) for a in tb[u] for b in tb[v])
+    return sorted(pairs), reg
+
+
+def region_credit(M, tree_path):
+    """CPPR credit per region = late - early arrival at the region's own H-tree node (the mesh is NOT common)."""
+    Dd, Nn = read_tree(tree_path)
+    D = {**Dd, **Nn}
+    out = {}
+    for g in M["meta"]["regions"]:
+        nm = [n for n in D if re.match(rf"ckm_n\d+_{g['tag']}$", n)]
+        out[g["k"]] = (D[nm[0]][0] - D[nm[0]][1]) if nm else 0.0
+    return out
+
+
+def read_taps(path):
+    arr = {}
+    for line in open(path):
+        f = line.split()
+        if len(f) >= 4 and f[0] == "T":
+            arr[f[1]] = (float(f[2]), float(f[3]))
+    return arr
+
+
+def pair_damage(arr, cred, reg, x, y, lift=None, ratio=1.0):
+    """CPPR pair damage (both directions) with optional per-tap lifts (early side gets ratio * lift)."""
+    lx = lift.get(x, 0.0) if lift else 0.0
+    ly = lift.get(y, 0.0) if lift else 0.0
+    La, Ea = arr[x][0] + lx, arr[x][1] + ratio * lx
+    Lb, Eb = arr[y][0] + ly, arr[y][1] + ratio * ly
+    c = min(cred[reg[x]], arr[x][0] - arr[x][1], arr[y][0] - arr[y][1])
+    return max(La - Eb, Lb - Ea) - c
+
+
+def cmd_stubtrim(a):
+    """measured per-tap stub trim (standard mesh tap-delay tuning on routed RC): a joint TT+FF LP over the COMPLETE
+    tap-level related-pair superset (stubtrim_pairs) picks a lift x_p >= 0 per tap minimising the worst CPPR pair
+    damage (credit only at the region H-tree node; the trim's own range is uncredited: its early side gets
+    --min-ratio of the lift).  Each lift is realised as abutted BUFx24 (+ <= 3 fine) pads inserted between the stub
+    buffer and its tap wire (the stub buffer drives the first pad, the last pad drives the unchanged stub wire), so the
+    mesh load and the stub route stay as they are.  Writes a new build dir like balance; re-measure with combo + post."""
+    import numpy as np
+    import scipy.sparse as sp
+    from scipy.optimize import linprog
+    src, out = Path(a.dir), Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    P = S.Plan(S.load(a.plan))
+    M = json.loads((src / "mesh.json").read_text())
+    cells = json.loads((src / "place.json").read_text())
+    data = json.loads((src / "nets.json").read_text())
+    nets, ports = data["nets"], [tuple(p) for p in data["ports"]]
+    pairs, reg = stubtrim_pairs(P, M)
+    dl = {c: pad_delay(c, a.libdir) for c in ("TT", "FF")}
+    df = {c: pad_delay(c, a.libdir, cell=a.fine_lib) for c in ("TT", "FF")} if a.fine_lib else None
+    kff = dl["FF"] / dl["TT"]
+    arr = {c: read_taps(src / f"taps_{c}.txt") for c in ("TT", "FF")}
+    cred = {c: region_credit(M, src / f"tree_{c}.txt") for c in ("TT", "FF")}
+    taps = sorted(arr["TT"])
+    idx = {p: i for i, p in enumerate(taps)}
+    n = len(taps)
+    rows, cols, vals, rhs = [], [], [], []
+    for c, kc in (("TT", 1.0), ("FF", kff)):
+        A = arr[c]
+        for x, y in pairs:
+            for p, q in ((x, y), (y, x)):
+                cc = min(cred[c][reg[p]], A[p][0] - A[p][1], A[q][0] - A[q][1])
+                k = len(rhs)
+                rows += [k, k, k]
+                cols += [idx[p], idx[q], n]
+                vals += [kc, -a.min_ratio * kc, -1.0]
+                rhs.append(-(A[p][0] - A[q][1] - cc))
+    Am = sp.csr_matrix((vals, (rows, cols)), shape=(len(rhs), n + 1))
+    cost = np.full(n + 1, 1e-4)
+    cost[n] = 1.0
+    r = linprog(cost, A_ub=Am, b_ub=np.array(rhs), bounds=[(0, a.xmax)] * n + [(0, None)], method="highs")
+    if not r.success:
+        raise SystemExit(f"die_clock_mesh stubtrim: LP failed: {r.message}")
+    real = {}
+    for p in taps:
+        x = float(r.x[idx[p]])
+        best = (abs(x), 0, 0)
+        for i in range(0, int(x / dl["TT"]) + 2):
+            for j in (range(4) if df else [0]):
+                best = min(best, (abs(x - i * dl["TT"] - j * (df["TT"] if df else 0.0)), i, j))
+        real[p] = best[1:]
+    lift = {c: {p: i * dl[c] + j * (df[c] if df else 0.0) for p, (i, j) in real.items()} for c in ("TT", "FF")}
+
+    def worst(c, lf):
+        return max((round(pair_damage(arr[c], cred[c], reg, x, y, lf, a.min_ratio), 2), x, y) for x, y in pairs)
+    K = DC.KeepIndex(list(DC.keepouts(P)), die=(float(P.W), float(P.H)))
+    for name, c in cells.items():
+        reserve_cell(K, name, c)
+    by_drv = {nn["drv"]: nn for nn in nets}
+    added, new_nets = 0, []
+    for t in M["taps"]:
+        i, j = real[t["port"]]
+        if i + j == 0:
+            continue
+        sb = t["stub"]
+        nn = by_drv[sb]
+        cx, cy = cells[sb]["x"], cells[sb]["y"]
+        chain = []
+        for m_ in range(i + j):
+            col, row = m_ % 16, m_ // 16
+            for sgn in (-1, 1):
+                q = (cx + BUF_W / 2 + sgn * (col + 1) * (BUF_W + SITE_X * 2), cy + ROW_Y / 2 + 2 * ROW_Y * (row + 1))
+                if not hitf(K, q):
+                    break
+            else:
+                q, _ = free_near(K, q)
+            if q is None:
+                raise SystemExit("die_clock_mesh stubtrim: no legal site for trim pad")
+            nm = f"ckm_p{a.tag}_{added}"
+            added += 1
+            cells[nm] = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y), kind="pad", level=99)
+            if "region" in cells[sb]:
+                cells[nm]["region"] = cells[sb]["region"]
+            if m_ >= i:
+                cells[nm]["lib"] = a.fine_lib
+            reserve_cell(K, nm, cells[nm])
+            chain.append(nm)
+        loads = nn["loads"]
+        nn["loads"] = [chain[0]]
+        for u, w in zip(chain, chain[1:]):
+            new_nets.append(dict(name=f"ckm_w_{u}", drv=u, loads=[w], level=99))
+        # the LAST pad drives the unchanged tap wire: keep the stub net's name on it (stub_nets/SPEF naming)
+        new_nets.append(dict(name=nn["name"], drv=chain[-1], loads=loads, level=99))
+        nn["name"] = f"ckm_w_{sb}"
+    nets += new_nets
+    ren = write_verilog(cells, nets, ports, out / "ctree.v")
+    for nn in nets:
+        nn["name"] = ren.get(nn["name"], nn["name"])
+    M["meta"]["cells"] = len(cells)
+    M["clock_cell_overlaps"] = placement_overlaps(cells)
+    M["meta"]["clock_cell_overlap_pairs"] = len(M["clock_cell_overlaps"])
+    M["meta"]["stubtrim"] = dict(
+        src=str(src), pairs=len(pairs), coverage="complete tap superset (intra-partition + connected same-region)",
+        lp_bound_ps=round(float(r.x[n]), 2), untrimmed={c: worst(c, None) for c in ("TT", "FF")},
+        predicted={c: worst(c, lift[c]) for c in ("TT", "FF")}, pads=added,
+        trimmed_taps=sum(1 for v in real.values() if sum(v)), pad_ps={c: round(dl[c], 2) for c in dl},
+        fine_lib=a.fine_lib, fine_ps={c: round(df[c], 2) for c in df} if df else None, xmax_ps=a.xmax,
+        min_ratio=a.min_ratio)
+    (out / "mesh.json").write_text(json.dumps(M) + "\n")
+    (out / "place.json").write_text(json.dumps(cells) + "\n")
+    (out / "nets.json").write_text(json.dumps(dict(ports=ports, nets=nets)) + "\n")
+    print(json.dumps(M["meta"]["stubtrim"]))
     return 0
 
 
@@ -848,6 +1134,7 @@ def cmd_combo(a):
     """combo.v + combo.tcl: kit signals (abstracts, M4-M7) + the mesh clock (M8-M9) in ONE global_route, then the
     native-NDR RC export of every clock net and the tree arrival at every driver A pin."""
     d, kit = Path(a.dir), Path(a.kit)
+    import gen_phys as GP
     M = json.loads((d / "mesh.json").read_text())
     cells = json.loads((d / "place.json").read_text())
     if M.get("unplaced") or M["meta"].get("unplaced", 0):
@@ -894,8 +1181,11 @@ def cmd_combo(a):
     root = M["meta"]["root_um"]
     L.append(f"place_pin -pin_name root -layer M9 -location {{{root[0]:.3f} {root[1]:.3f}}} -pin_size {{0.04 0.32}}")
     for t_ in M["taps"]:
-        L.append(f"place_pin -pin_name {t_['port']} -layer M9 -location {{{t_['xy'][0]:.3f} {t_['xy'][1]:.3f}}} "
-                 f"-pin_size {{0.04 0.32}}")
+        # Match gen_phys.io_tcl: the die spine drops onto the real partition signal-max tap (currently M7).
+        tap_layer = t_.get("layer", M["meta"].get("tap_layer", "M7"))
+        pin_size = t_.get("pin_size_um", M["meta"].get("tap_pin_size_um", [GP.LAYER_W.get(tap_layer, .04), 4 * GP.PIN_LEN_UM]))
+        L.append(f"place_pin -pin_name {t_['port']} -layer {tap_layer} -location {{{t_['xy'][0]:.3f} {t_['xy'][1]:.3f}}} "
+                 f"-pin_size {{{pin_size[0]:g} {pin_size[1]:g}}}")
     for c, v_ in sorted(cells.items()):
         L.append(f"place_inst -name {c} -location {{{v_['x']} {v_['y']}}} -orient R0 -status FIRM")
     hw = nd["width"] / 2
@@ -1299,6 +1589,7 @@ def sink_arrivals(M, arr, corner, early_by_plan):
 def regional_qualification(M, corners, crossings):
     """A regional clock diagnostic is not evidence of implemented forwarded-clock landings."""
     reasons = []
+    reasons.append("related-pair coverage unproven: spatial tap pairs need an actual endpoint-to-tap ledger or conservative superset proof")
     if M.get("unplaced") or M["meta"].get("unplaced", 0):
         reasons.append("clock cells have no legal site")
     if M["meta"].get("clock_cell_overlap_pairs", 0):
@@ -1313,7 +1604,7 @@ def regional_qualification(M, corners, crossings):
         reasons.append("clock skew or landing window fails")
     if crossings:
         reasons.append("forwarded-clock landing implementation and token cycle pricing remain required")
-    return dict(scope="regional clock diagnostic; not a die freeze gate", release_verdict="BLOCKED" if reasons else
+    return dict(scope="mesh clock diagnostic; not a complete die related-pair gate", release_verdict="BLOCKED" if reasons else
                 "CLOCK-PASS", blockers=reasons, proposed_landed_crossings=crossings)
 
 
@@ -1325,10 +1616,11 @@ def cmd_report(a):
     nx, ny = len(xs), len(ys)
 
     def path_of(i, j):
-        return htree_tag(i, j, nx, ny)
+        return htree_tag(i, j, nx, ny, M["meta"].get("region_axes", ""))
     import numpy as np
     xa, ya = np.array(xs), np.array(ys)
-    rep = dict(meta=M["meta"], corners={})
+    rep = dict(meta=M["meta"], corners={}, related_pair_coverage=dict(complete=False, kind="surrogate spatial tap pairs",
+                    required="actual endpoint-to-tap pair ledger or qualified conservative all-tap superset"))
     tb = defaultdict(list)
     for t in M["taps"]:
         tb[t["part"]].append(dict(port=t["port"], part=t["part"], xy=t["xy"]))
@@ -1348,7 +1640,8 @@ def cmd_report(a):
     landed = [x for x in seam if reg[x[0]] != reg[x[1]]]
     seam_in = [x for x in seam if reg[x[0]] == reg[x[1]]]
     intra_x = [x for x in intra if reg[x[0]] != reg[x[1]]]
-    crossing_table = write_landed(P, S.load(a.plan), M, d, a.landing_cycles) if regd else None
+    landing_cycles = M["meta"].get("region_spec", {}).get("landing_cycles", a.landing_cycles)
+    crossing_table = write_landed(P, S.load(a.plan), M, d, landing_cycles) if regd else None
     if intra_x:
         raise SystemExit(f"die_clock_mesh report: {len(intra_x)} intra-partition pairs straddle a region seam")
     for corner in [c for c in a.corner if (d / f"taps_{c}.txt").exists()]:
@@ -1413,8 +1706,7 @@ def cmd_report(a):
             + ncell * DC.BUF_CIN_FF / 1e3 + len(M["taps"]) * DC.TAP_LOAD_FF / 1e3
         r["clock_switched_cap_pF"] = round(c_tot, 1)
         r["clock_wire_power_W"] = round(c_tot * 1e-12 * VDD[corner] ** 2 / (DC.PERIOD_PS * 1e-12), 3)
-    if regd or M["meta"].get("pg_aware"):
-        rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"] if crossing_table else 0)
+    rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"] if crossing_table else 0)
     (d / "clock_report.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps({c: {k: v for k, v in r.items() if k != "worst"} for c, r in rep["corners"].items()}, indent=1))
     return 0
@@ -1496,6 +1788,12 @@ def main(argv=None):
                    help="reserve every clock cell body while searching later sites; prevent overlapping clock cells")
     b.add_argument("--pg-json", help="actual IR-sized PG file; consumes die_infra.pg_rects geometry (trial-only if infeasible)")
     b.add_argument("--track-file", help="actual die kit grt/tracks.tcl, required with --pg-json")
+    b.add_argument("--region-spec", help="opt-in dataflow clock cohorts: split_axes plus actual x_cuts_um/y_cuts_um")
+    b.add_argument("--trunk-repeaters", action="store_true",
+                   help="opt-in: equal-cut BUFx24 repeaters on a root->tree-centre trunk > 750 um (PATH-KV 10-26)")
+    b.add_argument("--driver-pair-span", type=float, default=0.0,
+                   help="opt-in (>0, KV uses 700): leaf driver pair split by a macro beyond this span takes the shortest pair")
+    b.add_argument("--split-yfirst", action="store_true", help="opt-in: split_long retries the y-first L (PHY corners)")
     b.add_argument("--delta-id", help="plan delta tag recorded in mesh.json meta (e.g. D-QC-CLKMESH)")
     bl = sub.add_parser("balance")
     bl.add_argument("dir")
@@ -1504,7 +1802,17 @@ def main(argv=None):
     bl.add_argument("--corner", default="TT")
     bl.add_argument("--tree", help="measured tree_<corner>.txt of the same tree (default: DIR's)")
     bl.add_argument("--tag", default="", help="pad name tag (one per balancing pass)")
+    bl.add_argument("--fine-lib", help="fine-step pad master (e.g. BUFx6f_ASAP7_75t_R): <=3 per load after BUFx24 pads")
     bl.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
+    st = sub.add_parser("stubtrim")
+    st.add_argument("dir")
+    st.add_argument("--out", required=True)
+    st.add_argument("--plan", required=True)
+    st.add_argument("--tag", default="t", help="pad name tag")
+    st.add_argument("--xmax", type=float, default=120.0, help="max TT lift per tap, ps")
+    st.add_argument("--min-ratio", type=float, default=0.97, help="early-side fraction of a lift (rest uncredited)")
+    st.add_argument("--fine-lib", help="fine-step pad master (<= 3 per tap after BUFx24 pads)")
+    st.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
     c = sub.add_parser("combo")
     c.add_argument("dir")
     c.add_argument("--kit", required=True)
@@ -1537,7 +1845,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "report" and not a.corner:
         a.corner = ["TT", "FF"]
-    return dict(build=cmd_build, balance=cmd_balance, combo=cmd_combo, mesh=cmd_mesh, stubsta=cmd_stubsta, report=cmd_report,
+    return dict(build=cmd_build, balance=cmd_balance, stubtrim=cmd_stubtrim, combo=cmd_combo, mesh=cmd_mesh, stubsta=cmd_stubsta, report=cmd_report,
                 render=cmd_render)[a.cmd](a)
 
 
