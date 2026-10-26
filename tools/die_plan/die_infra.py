@@ -459,6 +459,8 @@ def cmd_clockkit(a):
 
 
 def cmd_grt(a):
+    if a.iterations < 50:
+        raise ValueError("infra-first die GRT requires at least 50 congestion iterations")
     P = load_plan(a.plan)
     kit, pre, out = Path(a.kit).resolve(), Path(a.pre).resolve(), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -482,7 +484,7 @@ def cmd_grt(a):
 D=$(cd $(dirname $0) && pwd); K={kit}; PRE={pre}
 docker run --rm --name dinfra-grt-$(basename $D)-$$ --cpus=${{CPUS:-16}} --memory=${{MEM:-{a.mem}}}g --memory-swap=${{MEM:-{a.mem}}}g \\
   -v $K:/work:ro -v $(readlink -f $K/abstracts):/work/abstracts:ro -v $PRE:/pre:ro -v $D:/out openroad/orfs:latest \\
-  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -no_init -threads 16 -exit /out/grt.tcl > /out/grt.log 2>&1; echo EXIT \\$? >> /out/grt.log; chown -R $(id -u):$(id -g) /out"
+  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -no_init -threads 16 -exit /out/grt.tcl > /out/grt.log 2>&1; rc=\\$?; echo EXIT \\$rc >> /out/grt.log; chown -R $(id -u):$(id -g) /out; exit \\$rc"
 """)
     (out / "run_grt.sh").chmod(0o755)
     print("grt written", out / "grt.tcl")
@@ -501,8 +503,10 @@ def parse_grt(log):
     m = re.search(r"^\s*Total\s+(-?\d+)\s+(\d+)\s+([\d.]+)%\s+(\d+)\s*/\s*(\d+)\s*/\s*(\d+)", blk, re.M)
     if m:
         tot = int(m.group(6))
-    return dict(layers=rows, total_overflow=tot if tot is not None else sum(r["overflow"] for r in rows.values()),
-                exit=(re.findall(r"EXIT (\d+)", txt) or [None])[-1])
+    rc = (re.findall(r"EXIT (\d+)", txt) or [None])[-1]
+    complete = tot is not None and rc == "0" and bool(rows)
+    return dict(layers=rows, total_overflow=tot, exit=rc,
+                verdict="PASS" if complete and tot == 0 else "FAIL" if complete or rc not in (None, "0") else "NOT RUN")
 
 
 def cmd_report(a):

@@ -126,6 +126,22 @@ class T(unittest.TestCase):
             self.assertEqual(r["total_overflow"], 3)
             self.assertEqual(r["layers"]["M8"]["overflow"], 3)
             self.assertEqual(r["exit"], "0")
+            self.assertEqual(r["verdict"], "FAIL")
+
+    def test_incomplete_or_crashed_grt_cannot_report_zero_overflow(self):
+        with tempfile.TemporaryDirectory() as td:
+            f = Path(td) / "grt.log"
+            for txt, verdict in (("starting route\n", "NOT RUN"),
+                                 ("[ERROR GRT-0113] no routing\nEXIT 1\n", "FAIL"),
+                                 ("EXIT 0\n", "NOT RUN")):
+                f.write_text(txt)
+                r = DI.parse_grt(f)
+                self.assertIsNone(r["total_overflow"])
+                self.assertEqual(r["verdict"], verdict)
+
+    def test_die_gate_cannot_run_five_iteration_diagnostic(self):
+        with self.assertRaisesRegex(ValueError, "at least 50"):
+            DI.cmd_grt(SimpleNamespace(iterations=5))
 
 
 if __name__ == "__main__":
