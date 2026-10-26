@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "reviewer": "CODEX auxiliary independent review",
+ "reviewed": "2026-10-26 02:42 PDT",
+ "request": "CODEX-HEADB-LEGALMAP-CTS40",
+ "autopilot": "3a54027be876",
+ "source": "codex/s81-head-eng-1026@127f2c545f",
+ "checkpoint_sha1_prefix": "9a4c35f6cf20f8c0eab6",
+ "image": "/home/ubuntu/coord/codex-head-eng-1026/headb_legalmap_place.png",
+ "verdict": "PASS-COND",
+ "scope": "CTS-only trial",
+ "findings": [
+  "Viewed stacked centralROMs with substantial open E/W flanks and an inter-ROM channel; no full-width macro wall or isolated cell sliver.",
+  "Supplied full12954-endpoint census max323um,0>405; all291facepins<=8.625um;512ROMcapture flops<=12.807um and26launch<=10.803um align with depicted macro edges.",
+  "40umregional/625sink taps,20umclusterdiam/16sinks,no dummyloads addresses prior129pslateleaf/70psclockwire; RTL/pins/SDC unchanged."
+ ],
+ "conditions": [
+  "Only CTS diagnostic authorized; current flow/plan holds remain.",
+  "Measure actual TT/FF sink insertion, relatedpair<=80, macroCK-vs-IF groups and FF input landing hold on checkpoint AFTER all postCTS F4 moves (1836 captures).",
+  "Meanclockoffset/FFinputhold remain open; review actualpostCTS before any GRT/DRT, no SIGNED/token claim."
+ ]
+}
