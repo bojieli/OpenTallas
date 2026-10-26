@@ -2583,7 +2583,7 @@ class Binder:
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and F.cells[ci].module in modules]
                 if len(candidates) != 1:
                     raise BindError(f"wavefront core reset {tn}/{target['inst']}.{pin}: expected one bound leaf, found {len(candidates)} "
-                                    f"(partition {p} root {self.root[p]}; e.g. " + ", ".join(
+                                    f"(partition {p} root {getattr(self, 'root', {}).get(p)}; e.g. " + ", ".join(
                                         f"{F.cells[ci].path} rel {self.rel_of(ci)}" for ci in candidates[:3]) + ")")
                 core_reset[(candidates[0], pin)] = f"rst_n_t{target['tap']}"
         need_rst = False
