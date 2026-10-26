@@ -37,19 +37,30 @@ def face(names, side, w, h, lo=8.64, hi=None):
     return pins
 
 
-def template(module):
+
+def north(names, w, h):
+    # Central clock access corridor; data pins occupy two disjoint M5 bands.
+    n = len(names) // 2
+    p = face(names[:n], "N", w, h, hi=w / 2 - 6.0)
+    p += face(names[n:], "N", w, h, lo=w / 2 + 6.0)
+    p += face(["clk", "rst_n"], "N", w, h, lo=w / 2 - .096, hi=w / 2 + .096)
+    return p
+
+
+def template(module, pair_ports=None):
     w, h = OUTLINES[module]
     if "subtree" in module:
-        return face(bits("data", 1024) + ["valid_in", "clk", "rst_n"], "N", w, h) + face(
+        return north(bits("data", 1024) + ["valid_in"], w, h) + face(
             bits("sum", 32) + ["valid_out"] + bits("node_fault", 31), "S", w, h)
     p = []
     if "first" not in module:
         p += face(bits("sum_in", 512), "W", w, h)
     p += face(bits("sum_out", 512), "E", w, h)
     controls = bits("write_data", 512) + bits("write_addr", 10) + bits("weight_addr", 10) + bits("x_addr", 7)
-    controls += bits("lane_valid", 16) + bits("square", 16)
-    controls += ["go", "weight_read", "weight_we0", "weight_we1", "x_read", "x_write", "clk", "rst_n"]
-    p += face(controls, "N", w, h)
+    square_width = pair_ports["square"][1] if pair_ports else 16
+    controls += bits("lane_valid", 16) + bits("square", square_width)
+    controls += ["go", "weight_read", "weight_we0", "weight_we1", "x_read", "x_write"]
+    p += north(controls, w, h)
     p += face(bits("fault", 2), "S", w, h)
     return p
 
@@ -74,18 +85,22 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--plan", required=True, type=Path)
     ap.add_argument("--out", required=True, type=Path)
+    ap.add_argument("--source-commit", required=True)
+    ap.add_argument("--pair-map", type=Path, help="Actual compact_port_map.json; use its live square ABI")
     a = ap.parse_args()
     raw = json.loads(a.plan.read_text())
+    pair_ports = json.loads(a.pair_map.read_text())["ports"] if a.pair_map else None
     a.out.mkdir(parents=True, exist_ok=True)
     manifest = dict(schema="opentallas.hbm.hc128_templates.v1", qualification="PARENT_BIND_PENDING",
-                    source_cut="57735a47793c58046dc2d3c0bef4ac5a6bf7ca1f", added_cut_cycles=0,
+                    source_cut=a.source_commit, added_cut_cycles=0,
                     routing_ceiling="M5", masters={}, bank_placements={})
     for module, outline in OUTLINES.items():
-        pins = template(module)
+        pins = template(module, pair_ports)
         path = a.out / (module + "_pins.json")
         path.write_text(json.dumps(pins) + "\n")
         manifest["masters"][module] = dict(outline_um=list(outline), pins=len(pins),
-                pins_file=path.name, pins_sha256=hashlib.sha256(path.read_bytes()).hexdigest(), obs_max="M5")
+                pins_file=path.name, pins_sha256=hashlib.sha256(path.read_bytes()).hexdigest(), obs_max="M5",
+                interface_basis="actual_compact_pair" if pair_ports and "subtree" not in module else "recovered_template")
     for tn, t in raw["partition_types"].items():
         if tn in {"q_b000", "q_b001", "q_b002", "q_b003", "q_b010", "q_b011", "q_b012", "q_b013"}:
             manifest["bank_placements"][tn] = placements(tn, t["outline_um"], first=tn == "q_b000")
