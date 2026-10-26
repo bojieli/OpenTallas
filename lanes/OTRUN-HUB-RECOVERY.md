@@ -2,7 +2,7 @@
 
 The fleet job launcher `ot-run` runs on ONE hub: **epyc1 (= tender-ray, 84.32.71.203)**. Since 10-24 its root md0 is a
 1-disk RAID1 (nvme0n1p2 only; nvme1n1 became /srv/opentallas-scratch2). If epyc1 dies, no new heavy job can be launched
-until another host is made the hub. Standby = **epyc3** (eternal-dove, 96 threads, 1 TB, root 7.3 TB 19 %, scratch2 6.9 TB).
+until another host is made the hub. Standby = RETIRED 2026-10-25 (was epyc3 eternal-dove; pick a new standby), 96 threads, 1 TB, root 7.3 TB 19 %, scratch2 6.9 TB).
 
 ## What the hub consists of
 | Item | Path on epyc1 | Notes |
