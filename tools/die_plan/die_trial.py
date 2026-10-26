@@ -102,7 +102,7 @@ def core_obs(t):
         if h.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
             w, hh = hh, w
         top = lef_top_layer(h.get("lef"))
-        out.append((x0, y0, x0 + w, y0 + hh, top or "M5", h.get("module", "?"), top is not None))
+        out.append((x0, y0, x0 + w, y0 + hh, top or h.get("obs_max", "M5"), h.get("module", "?"), top is not None))
     return out
 
 
