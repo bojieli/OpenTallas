@@ -517,7 +517,7 @@ def main():
                     help="head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
                          "0 cycles, COORD ruling 5); odd heads refresh only the LT-copy leaf; even heads need --head-port-regs")
     ap.add_argument("--head-lane-s3copy", action="store_true",
-                    help="head_eighth (even or opt-in odd master): ot_qkh_lane8 S3_COPY=1 (per-lane S3 pin-flop copies, 0 cycles, PATH-KV-HEAD 10-25)")
+                    help="even head_eighth: ot_qkh_lane8 S3_COPY=1 (per-lane S3 pin-flop copies, 0 cycles, PATH-KV-HEAD 10-25)")
     ap.add_argument("--head-lane-taps", action=argparse.BooleanOptionalAction, default=None,
                     help="per-lane regional clock taps + GPL lane guide regions (KV-HEADCLK 10-25); default ON for the even "
                          "head_eighth cores, odd heads opt in (PATH-KV e1 LT_COPY successor), --no-head-lane-taps = old single-tree CTS")
