@@ -193,6 +193,7 @@ def calibrate(work, seed):
         meas[f'{name}@{s}'] = v
     print('CALIBRATE raw', json.dumps(meas))
     A = dict(schema='opentallas.qwen.dv-slice-vec-ages.v1', add_psum_out=meas['add@1'], xs_out=meas['xs@1'],
+             memory_profile=D.memory_profile(),
              silu_out=meas['silu@3'], red_vm=(meas[f'red_vm@{qprobe}'] or [None])[-1], root_cfg_lead=4,
              d2d={k: meas[f'{k}@{s}'] for k, s in (('rs', qprobe), ('qn', qprobe), ('rope_q', qprobe), ('rope_k', 8), ('v', 10),
                                                     ('gur', 3), ('readback', 1))},
