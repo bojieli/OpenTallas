@@ -3,6 +3,7 @@
 
     regen_constants.py --die {qwen_compute,qwen_kvsys,hbm,s81} --bound BIND_DIR [--out-json F] [--out-sv F]
                        [--peer BIND_DIR] [--expect EXPECT.json] [--src-root REPO] [--write-fixture DIR]
+                       [--kv-image BOOT_IMAGE_DIR]
 
 Why: every plan or bind change shifts lane latencies (QC: 1601 of 1858 crossing buses changed vs as-built) and each
 token agent re-derived calendars and schedule constants by hand (tp8 MU calendar at LS 389, xdie seam / TXDP, KV
@@ -31,6 +32,10 @@ Laws (one place; sources cited per rule):
       Delta(ap_s) + Delta(f_aqm), FR_OFS asb (intra hub_C), TRUNK_D/FLAG_D pv_trunk_gen, KVN_A0 = asb +
       Delta(kvn_word_valid -> seq core) - Delta(att_rx_v -> kvs_attn) (KV-P6 18:09), vport RT/DQ/cfg_fia, d2d ages,
       hroot down/ret; seam KS_*/SK_* = landed d2d_kv <-> kvs_attn depths (KV-P6-BOOT KST); TXDP K.
+      pc833: every PC master's u_pc controller CORE_CLOCK (bound RTL + its sources; 1 = common833 PATH-KV-PC833, ERROR on
+      a legacy / mixed die), the 833 controller timing (HBM_RL, WDONE, tRCD.. tREFI/tREFIpb) evaluated from the RTL
+      CORE_CLOCK formulas and checked against the PATH-KV-PC833 reprice table (kind compiler), and --kv-image: the
+      compiled boot image's own controller profile (static.json ticks / OT_KV_CONTROLLER_CORE) must equal the die's.
   HBM leaf-split shifts (tools/hbm_static/leaf_split_latency.py, bound twins detected in the bound RTL) + bank-client
       round trips (tools/hbm_die_v16/d4g_bank_latency.py RULES: param = ref + RT - ref_rt, RT_b = BANK + PIN +
       D(rq->bank) + D(bank->rr)).
@@ -476,6 +481,12 @@ def qc_seam(o):
 
 # ============================================================================================================ KV
 KV_STACKS = ("WS", "WN", "ES", "EN")
+# As-built leaf values (rtl6 / kv_bound_rtl6), used only where a law is written as as-built + Delta (FR_OFS, KVN_A0, seam).
+# RESPONSE_LAT 80 / QK_ISSUE_AGE 91 are the KV-ECTL4 10-18 PADDED as-built values (kv_static_ages K_RT_BUDGET 80 = every
+# frame's K round trip padded to one budget, + QK_WRITE_BEFORE_READ 11), NOT anchors of the 833-ps bind: the ECTL laws
+# are absolute (RL = 8 + D(krq) + D(krs), QK = max(34, RL + 11), core-clock cycles, no period term) and a bound top that
+# still carries 80 / 91 / KVN_A0 32 is a bind whose param_regen hook did not apply the KV rules (b19 / b23: agebounds
+# hook only) -> MISMATCH, never an accepted value.  Recorded for reference only (no rule reads them).
 KV_ANCHOR = dict(FR_OFS=-7, KVN_A0=32, RESPONSE_LAT=80, QK_ISSUE_AGE=91,
                  seam=dict(KS_RXV=11, KS_RXP=11, KS_TXS=9, KS_TXK=9, KS_TXB=9, SK_TXV=9, SK_TXP=9))
 KV_SEAM = {"KS_RXV": ("d2d_kv", r"att_rx_v", "kvs_attn", r"d2d__srx"),
@@ -684,8 +695,10 @@ def kv_vport(o):
     o.add("VPORT_DQ", dq, "boot", "max_q(W_q + RT_q) - (W_p + RT_p) (<= 15, else W-lane pads)", group="vport",
           status="OK" if max(dq.values()) <= 15 else "WARN",
           note=None if max(dq.values()) <= 15 else f"DQ > 15 on {[k for k, v in dq.items() if v > 15]}: W request pads")
-    o.add("CFG_FIA", VPORT_RL_BASE + rl + 1, "boot", "4 + max_p(W_p + RT_p) + 1 (KV-P5 rule)", group="vport", status="WARN",
-          note="KV-P6-BOOT: the boot generator RL = 4 + WP + O + DQ + RT (adds O) and the PV entry-pad table sets cfg_fia; "
+    fia = VPORT_RL_BASE + rl + 1
+    o.add("CFG_FIA", fia, "boot", "4 + max_p(W_p + RT_p) + 1 (KV-P5 rule; <= 255 = PV FIRST_INPUT_AGE capacity, PATH-KV 10-25 "
+          "21:21)", group="vport", status="WARN" if fia <= 255 else "ERROR",
+          note=("" if fia <= 255 else f"FIA {fia} > 255 (8-b PV age): shorten the V round trip. ") + "KV-P6-BOOT: the boot generator RL = 4 + WP + O + DQ + RT (adds O) and the PV entry-pad table sets cfg_fia; "
                "the compiled boot image (KV_BOOT recipe) is authoritative for cfg_fia / DQ")
 
 
@@ -746,6 +759,294 @@ def kv_seam(o):
           "SK_TXP + PR pin flops, from the KV bound top; BOTH dies bind the same pair image (QC emits it with --peer)",
           dict(KS_TXS=st["KS_TXS"], SK_TXP=st["SK_TXP"], asbuilt=asb), group="xdie",
           note=None if k[0] == asb else f"moved {asb} -> {k[0]} vs as-built: re-bind the pair image on both dies")
+
+
+# ------------------------------------------------------------------------------------- KV 833-ps PC controller profile
+# The KV die's one clock-period change: the PC controller master (PATH-KV-PC833 10-25 18:43, kvspc_core_clock.py,
+# Codex common833 f14f42039b): CORE_CLOCK=1 at the actual u_pc of qkd_static_kv_pc_path_fan_nc_b(_head_p) inside every
+# PC master qkd_kvs_pc* => the controller runs on the 833-ps die clock (one tree, 625/625 phase ticks) with the timing
+# below; CORE_CLOCK=0 = the legacy 1024-ps controller (625/768).  The boot compiler selects its profile with
+# OT_KV_CONTROLLER_CORE (kv_static_programme CORE_U/HBM_U, run_mu833.sh), so a die that binds a legacy (or mixed) PC
+# master under an 833-compiled image, or the reverse, schedules HBM returns at the wrong edges -> ERROR.
+KV_PC_MASTER = r"qkd_kvs_pc\w*"
+KV_PC_CHAIN = (r"qkd_static_kv_pc_path_fan_nc_b(?:_head_p)?", r"qkd_static_kv_pc_path_emb_nc_b", r"qkd_static_kv_pc_path_nc",
+               r"qkd_ctrl_pc_host_static_nc", r"qkd_ctrl_pc_sched_nc", r"ot_qkd_static_ctrl_pc_emb", r"ot_qkd_static_kv_timing")
+KV_PC_SRC_DIRS = ("rtl/qwen_sys/kv_plan_leaves_1023", "rtl/qwen_sys/static_embedding_20261014", "rtl/qwen_sys/static_kv_20261014")
+# RTL formulas (CORE_CLOCK ? 833 : 1024 cycles) the profile table is evaluated from, (file, parameter regex)
+KV_PC_TIMING_RTL = (("rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv", r"T_\w+"),
+                    ("rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv", r"HBM_RL"),
+                    ("rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv", r"WDONE"))
+# PATH-KV-PC833 reprice of record (KV-TOK 2026-10-25 18:43; ceil(t_1024 * 1024 / 833), refresh deadlines even-floor).
+# The RTL-evaluated table must equal it, else the RTL moved under the compiler / token schedule -> ERROR.
+KV_PC_REPRICE = {
+    1: dict(T_RCD=24, T_RP=20, T_RAS=35, T_RTP=8, T_CCDL=4, T_RRDS=4, T_RRDL=5, T_FAW=19, T_RFC=421, T_RFCPB=241,
+            T_REFI=4680, T_REFIPB=144, T_RREFD=10, T_RTW=13, T_WTR=18, T_WRR=35, T_RCDW=13, HBM_RL=29, WDONE=19),
+    0: dict(T_RCD=19, T_RP=16, T_RAS=28, T_RTP=6, T_CCDL=3, T_RRDS=3, T_RRDL=4, T_FAW=15, T_RFC=342, T_RFCPB=196,
+            T_REFI=3808, T_REFIPB=118, T_RREFD=8, T_RTW=10, T_WTR=14, T_WRR=28, T_RCDW=10, HBM_RL=23, WDONE=17)}
+KV_PC_PROFILE = {1: dict(name="common833", controller_ps=833, phase_ticks=[625, 625]),
+                 0: dict(name="legacy1024", controller_ps=1024, phase_ticks=[625, 768])}
+
+
+def _nocomment(t):
+    return re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", t, flags=re.S))
+
+
+def _paren(t, i):
+    """t[i] == '(' -> (inner text, index after the matching ')')"""
+    d = 0
+    for j in range(i, len(t)):
+        d += {"(": 1, ")": -1}.get(t[j], 0)
+        if d == 0:
+            return t[i + 1:j], j + 1
+    raise RuleError("unbalanced parentheses in SV source")
+
+
+class SvIndex:
+    """module name -> (file, header, body) over tiers of SV files (first tier with a definition wins; two definitions
+    in one tier = ambiguous unless one file is named after the module)."""
+
+    def __init__(self, tiers):
+        self.tiers = [[Path(f) for f in t] for t in tiers]
+        self._txt = {}
+
+    def text(self, f):
+        if f not in self._txt:
+            self._txt[f] = _nocomment(f.read_text(errors="replace"))
+        return self._txt[f]
+
+    def module(self, name):
+        pat = re.compile(rf"(?m)^\s*module\s+{name}\b")
+        for tier in self.tiers:
+            hits = [(f, m) for f in tier for m in [pat.search(self.text(f))] if m]
+            if not hits:
+                continue
+            if len(hits) > 1:
+                named = [h for h in hits if h[0].stem == name]
+                if len(named) != 1:
+                    raise RuleError(f"module {name} defined in {sorted(str(f) for f, _ in hits)} (ambiguous source)")
+                hits = named
+            f, m = hits[0]
+            t = self.text(f)
+            end = t.find("endmodule", m.end())
+            src = t[m.end():end if end > 0 else len(t)]
+            k = re.match(r"\s*#\s*\(", src)
+            header, body = ("", src)
+            if k:
+                header, e = _paren(src, k.end() - 1)
+                body = src[e:]
+            return dict(file=f, header=header, body=body)
+        return None
+
+
+def _hdr_default(header, p):
+    m = re.search(rf"\b{p}\s*=\s*(\d+)", header)
+    return int(m.group(1)) if m else None
+
+
+def _insts(body, mod_re):
+    """[(module, instance, {param: expr})] of instances of mod_re in a module body"""
+    out = []
+    for m in re.finditer(rf"(?<![\w.$])({mod_re})\b\s*", body):
+        i, ps = m.end(), {}
+        if body[i:i + 1] == "#":
+            k = body.index("(", i)
+            plist, i = _paren(body, k)
+            ps = {a: b.strip() for a, b in re.findall(r"\.(\w+)\s*\(((?:[^()]|\([^()]*\))*)\)", plist)}
+        n = re.match(r"\s*(\\?[\w\[\]\.$]+)\s*\(", body[i:])
+        if n:
+            out.append((m.group(1), n.group(1), ps))
+    return out
+
+
+def _pc_walk(idx, master):
+    """effective CORE_CLOCK of a PC master's controller: follow KV_PC_CHAIN from the master's u_pc down to the timing core;
+    each level takes the instance's .CORE_CLOCK (literal, or the forwarded parent value) or else the child's default."""
+    d = idx.module(master)
+    if d is None:
+        raise RuleError(f"PC master {master}: source not found (BIND_DIR/rtl, asbuilt_sources.json, {KV_PC_SRC_DIRS})")
+    env, cur, trail, n_upc = _hdr_default(d["header"], "CORE_CLOCK"), master, [], None
+    for k, nxt in enumerate(KV_PC_CHAIN):
+        ins = _insts(d["body"], nxt)
+        if not ins:
+            if k < 2:
+                raise RuleError(f"{cur}: no {nxt} instance (PC controller chain broken at level {k})")
+            trail.append(dict(module=cur, stop=f"no {nxt} instance"))
+            break
+        if k == 0:
+            n_upc = len(ins)
+        got = set()
+        for mod, inst, ps in ins:
+            e = ps.get("CORE_CLOCK")
+            if e is None:
+                v = None
+            elif re.fullmatch(r"\d+", e):
+                v = int(e)
+            elif e == "CORE_CLOCK":
+                if env is None:
+                    raise RuleError(f"{cur}.{inst}: forwards CORE_CLOCK but {cur} does not declare it")
+                v = env
+            else:
+                raise RuleError(f"{cur}.{inst}: CORE_CLOCK({e}) not a literal / forward")
+            got.add((mod, v, e))
+        if len(got) != 1:
+            raise RuleError(f"{cur}: {nxt} instances differ {sorted(got, key=str)}")
+        mod, v, e = got.pop()
+        cd = idx.module(mod)
+        if cd is None:
+            trail.append(dict(module=cur, child=mod, set=e, CORE_CLOCK=v, stop="child source not found"))
+            env = v
+            break
+        cdef = _hdr_default(cd["header"], "CORE_CLOCK")
+        if v is not None and cdef is None and "CORE_CLOCK" not in cd["header"]:
+            raise RuleError(f"{cur}: sets CORE_CLOCK on {mod}, which does not declare it")
+        env = v if v is not None else cdef
+        trail.append(dict(module=cur, child=mod, set=e, CORE_CLOCK=env, child_declares=cdef is not None or v is not None))
+        d, cur = cd, mod
+    return env, trail, n_upc
+
+
+def _pc_timing_table(src_root):
+    """{profile: {param: cycles}} evaluated from the RTL formulas (KV_PC_TIMING_RTL) + the source files"""
+    tab, files = {0: {}, 1: {}}, {}
+    for rel, pre in KV_PC_TIMING_RTL:
+        f = Path(src_root) / rel
+        if not f.exists():
+            raise RuleError(f"{rel}: not in --src-root {src_root} (PC timing formulas)")
+        t = _nocomment(f.read_text())
+        files[rel] = hashlib.sha256(f.read_bytes()).hexdigest()[:16]
+        n = 0
+        for m in re.finditer(rf"(?<![\w])\.?({pre})\s*[=(]\s*CORE_CLOCK\s*\?\s*(.+?)\s*:\s*(\d+)\s*[,)\n]", t):
+            expr = m.group(2)
+            if not re.fullmatch(r"[\d\s()+\-*/]+", expr):
+                raise RuleError(f"{rel} {m.group(1)}: formula {expr!r} not integer arithmetic")
+            v1, v0 = eval(expr.replace("/", "//")), int(m.group(3))      # noqa: S307 (digits and operators only)
+            for p, v in ((1, v1), (0, v0)):
+                if tab[p].get(m.group(1), v) != v:
+                    raise RuleError(f"{rel} {m.group(1)}: two formulas ({tab[p][m.group(1)]} vs {v})")
+                tab[p][m.group(1)] = v
+            n += 1
+        if not n:
+            raise RuleError(f"{rel}: no CORE_CLOCK ? : formula for {pre}")
+    return tab, files
+
+
+def _pc_sources(B, src_root):
+    """SV file tiers for master / chain lookup: BIND_DIR/rtl, the bind's asbuilt_sources.json files mapped into
+    --src-root (repo-relative tail rtl/... or physical/...), then KV_PC_SRC_DIRS under --src-root"""
+    t0 = sorted((B.dir / "rtl").glob("*.sv")) + sorted((B.dir / "rtl").glob("*.v"))
+    t1, unmapped = [], []
+    s = _load(B.dir / "asbuilt_sources.json") or {}
+    for p in list(s.get("full") or []) + list(s.get("lib") or []):
+        parts = Path(p).parts
+        q = next((Path(src_root).joinpath(*parts[i:]) for i, x in enumerate(parts) if x in ("rtl", "physical")
+                  and Path(src_root).joinpath(*parts[i:]).exists()), None)
+        if q is None and (B.dir / Path(p).name).exists():
+            q = B.dir / Path(p).name
+        (t1.append(q) if q else unmapped.append(p))
+    t2 = [f for d in KV_PC_SRC_DIRS for f in sorted((Path(src_root) / d).glob("*.sv"))]
+    return [t0, t1, t2], unmapped
+
+
+def _image_profile(d):
+    """the controller profile a compiled KV boot image records: static.json phase ticks, compile.env / RECIPE flags"""
+    d, rec = Path(d), {}
+    sj = _load(d / "static.json")
+    if sj and sj.get("ticks"):
+        t = list(sj["ticks"])
+        rec["static.json ticks"] = 1 if t == [625, 625] else 0 if t == [625, 768] else f"unknown {t}"
+    for n in ("compile.env", "RECIPE", "README.md", "README.txt"):
+        f = d / n
+        if f.exists():
+            t = f.read_text(errors="replace")
+            m = re.search(r"OT_KV_CONTROLLER_CORE=[\"']?(\d)", t)
+            if m:
+                rec[f"{n} OT_KV_CONTROLLER_CORE"] = int(m.group(1))
+            elif n == "RECIPE" and "run_mu833.sh" in t:
+                rec["RECIPE run_mu833.sh (exports OT_KV_CONTROLLER_CORE=1)"] = 1
+    return rec
+
+
+def kv_pc833(o, src_root, kv_image=None):
+    B, g = o.B, "pc833"
+    tab, tfiles = _pc_timing_table(src_root)
+    # 1. the bound die's PC masters
+    prof, inputs = None, {}
+    if B is None or not (B.dir / "rtl").is_dir():
+        o.pending("PC_CORE_CLOCK", "rtl", "bound RTL not in BIND_DIR (bus_groups-only copy): the PC masters' CORE_CLOCK "
+                  "cannot be read; run on the bind output dir with rtl/ + asbuilt_sources.json", group=g)
+    else:
+        tiers, unmapped = _pc_sources(B, src_root)
+        idx = SvIndex(tiers)
+        parts, top = {}, defaultdict(int)
+        for f in tiers[0]:
+            t = idx.text(f)
+            mods = re.findall(r"(?m)^\s*module\s+(\w+)", t)
+            for m in re.finditer(rf"(?m)^\s*({KV_PC_MASTER})\s+(?:#\s*\([^;]*?\)\s*)?(\w+)\s*\(", t):
+                parts.setdefault(mods[0] if mods else f.stem, defaultdict(int))[m.group(1)] += 1
+        for f in tiers[0]:
+            t = idx.text(f)
+            for p in parts:
+                top[p] += len(re.findall(rf"(?m)^\s*{p}\s+(?:#\s*\(|\\?[A-Za-z_])", t))
+        if not parts:
+            raise RuleError(f"no PC master instance ({KV_PC_MASTER}) in BIND_DIR/rtl")
+        masters = sorted({m for v in parts.values() for m in v})
+        per, die_pcs = {}, defaultdict(int)
+        for m in masters:
+            v, trail, n_upc = _pc_walk(idx, m)
+            src = idx.module(m)["file"]
+            try:
+                src = str(Path(src).resolve().relative_to(Path(src_root).resolve()))
+            except ValueError:
+                src = str(Path(src).relative_to(B.dir)) if str(src).startswith(str(B.dir)) else str(src)
+            n_die = sum(top[p] * c[m] for p, c in parts.items() if m in c)
+            die_pcs[v] += n_die
+            per[m] = dict(CORE_CLOCK=v, profile=KV_PC_PROFILE.get(v, {}).get("name", f"CORE_CLOCK={v}"), file=src,
+                          u_pc=n_upc, die_instances=n_die, chain=[f"{t_['module']}->{t_.get('child', t_.get('stop'))}"
+                                                                  f"[{t_.get('set')}]={t_.get('CORE_CLOCK')}" for t_ in trail])
+        vals = {p["CORE_CLOCK"] for p in per.values()}
+        prof = vals.pop() if len(vals) == 1 else None
+        inputs = dict(masters=per, partitions={p: dict(instances=top[p], masters=dict(c)) for p, c in sorted(parts.items())},
+                      die_pcs={str(k): v for k, v in die_pcs.items()}, unmapped_sources=len(unmapped))
+        legacy = sorted(m for m, p in per.items() if p["CORE_CLOCK"] != 1)
+        o.add("PC_CORE_CLOCK", {m: p["CORE_CLOCK"] for m, p in per.items()}, "rtl",
+              "effective CORE_CLOCK of every PC master's u_pc controller chain (qkd_kvs_pc* -> u_pc fan_nc_b(_head_p) -> u_pce "
+              "-> u_path -> u_ctrl -> u_sched -> u_ctl -> timing core); the 833-ps KV die needs 1 on every PC "
+              "(kvspc_core_clock.py)", inputs, group=g, status="OK" if not legacy else "ERROR",
+              note=None if not legacy else (f"{'MIXED' if prof is None else 'LEGACY'} PC controller: {legacy} run the "
+                                            f"CORE_CLOCK=0 1024-ps timing on {sum(per[m]['die_instances'] for m in legacy)} "
+                                            f"PCs of the bound die (die PCs by CORE_CLOCK {inputs['die_pcs']})"))
+        o.add("PC_CONTROLLER_PROFILE", KV_PC_PROFILE[prof]["name"] if prof in KV_PC_PROFILE else "mixed", "rtl",
+              "one controller profile on the die: common833 (CORE_CLOCK=1) / legacy1024 (0)", group=g,
+              status="OK" if prof == 1 else "ERROR")
+    # 2. the controller constants the boot compiler / token schedule must use (kind compiler), from the RTL formulas
+    use = prof if prof in (0, 1) else 1
+    bad = {p: {k: (tab[p].get(k), v) for k, v in KV_PC_REPRICE[p].items() if tab[p].get(k) != v} for p in (0, 1)}
+    for k in sorted(KV_PC_REPRICE[use]):
+        o.add(f"PC_{k}", tab[use].get(k), "compiler", f"RTL CORE_CLOCK={use} formula ({', '.join(tfiles)}) = PATH-KV-PC833 "
+              f"reprice {KV_PC_REPRICE[use][k]}", group=g, status="OK" if tab[use].get(k) == KV_PC_REPRICE[use][k] else "ERROR",
+              note=None if prof in (0, 1) else "die profile not uniform: 833 values shown")
+    o.add("PC_PHASE_TICKS", KV_PC_PROFILE[use]["phase_ticks"], "compiler", "kv_static_programme CORE_U/HBM_U (625/625 = "
+          "OT_KV_CONTROLLER_CORE=1 one clock tree; 625/768 legacy)", dict(controller_ps=KV_PC_PROFILE[use]["controller_ps"],
+                                                                            rtl_sha=tfiles), group=g)
+    if bad[0] or bad[1]:
+        o.error("PC_TIMING_TABLE", "compiler", f"RTL formulas != PATH-KV-PC833 reprice table: {bad}", group=g)
+    # 3. the boot image's own record of its controller profile
+    if kv_image:
+        rec = _image_profile(kv_image)
+        iv = set(rec.values())
+        if not rec:
+            o.add("PC_IMAGE_PROFILE", None, "boot", "image records no controller profile (static.json ticks / compile.env / "
+                  "RECIPE)", dict(image=str(kv_image)), group=g, status="WARN")
+        else:
+            ip = iv.pop() if len(iv) == 1 else None
+            ok = ip in (0, 1) and ip == prof
+            o.add("PC_IMAGE_PROFILE", KV_PC_PROFILE[ip]["name"] if ip in KV_PC_PROFILE else f"inconsistent {rec}", "boot",
+                  "compiled boot image controller profile must equal the bound die's (an 833 image on a legacy PC master, "
+                  "or the reverse, lands HBM returns at the wrong edges)", dict(image=str(kv_image), records=rec,
+                                                                               bound=inputs.get("die_pcs")), group=g,
+                  status="OK" if ok else ("PENDING" if B is None or not (B.dir / "rtl").is_dir() else "ERROR"),
+                  note=None if ok else f"image {rec} vs bound die profile "
+                                       f"{KV_PC_PROFILE[prof]['name'] if prof in KV_PC_PROFILE else 'mixed / unread'}")
 
 
 # ============================================================================================================ HBM
@@ -884,7 +1185,7 @@ def sv_package(die, doc):
     return "\n".join(L) + "\n"
 
 
-def run(die, bound, src_root=REPO, hbm_tools=None, peer=None):
+def run(die, bound, src_root=REPO, hbm_tools=None, peer=None, kv_image=None):
     B = Bound(bound) if bound else None
     o = Out(die, B)
     if die == "qwen_compute":
@@ -899,6 +1200,7 @@ def run(die, bound, src_root=REPO, hbm_tools=None, peer=None):
         o.rule("vport", kv_vport)
         o.rule("prog", kv_prog)
         o.rule("xdie", kv_seam)
+        o.rule("pc833", kv_pc833, src_root, kv_image)
     elif die == "hbm":
         o.rule("hbm", hbm_rules, src_root, hbm_tools)
     elif die == "s81":
@@ -954,9 +1256,11 @@ def main(argv=None):
     ap.add_argument("--expect", type=Path, help="JSON {name: value} hand values of record; any difference -> exit 1")
     ap.add_argument("--src-root", type=Path, default=REPO, help="repo tree with tools/qwen_split + rtl (coll RTL defaults)")
     ap.add_argument("--hbm-tools", type=Path, help="dir with leaf_split_latency.py (default: <src-root>/tools/hbm_static)")
+    ap.add_argument("--kv-image", type=Path, help="qwen_kvsys: compiled KV boot image dir (static.json / compile.env / "
+                    "RECIPE) whose controller profile must equal the bound die's PC masters (pc833 PC_IMAGE_PROFILE)")
     ap.add_argument("--write-fixture", type=Path, help="write the members this run read as a small test fixture")
     a = ap.parse_args(argv)
-    doc = run(a.die, a.bound, a.src_root, a.hbm_tools, a.peer)
+    doc = run(a.die, a.bound, a.src_root, a.hbm_tools, a.peer, a.kv_image)
     B = doc.pop("_bound_obj")
     rc = 0
     if a.expect:
