@@ -1,0 +1,5 @@
+TX_BANK_PASS cycles=30001 bits=15360512 mutant0=29893 mutant1=29175
+- /srv/opentallas-scratch2/claude/codex-s81-legacy-1026/tx_single_bank/tb_tx_single_bank.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 300us; walltime 0.493 s; speed 608.295 us/s
+- Verilator: cpu 0.492 s on 1 threads; allocated 8 MB

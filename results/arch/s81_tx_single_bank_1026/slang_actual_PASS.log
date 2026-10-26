@@ -1,0 +1,1530 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-legacy-1026/checks
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-legacy-1026/checks
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-s81-legacy-1026/checks
+ot-run: localhost      admits   153 GB (avail 317, reserve 0, fresh 95.9, peak 4.1, headroom 0, waiters 0/0 GB) load 45/256 running 34 disk 597 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-2890764-1793011173 after 1 s
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/work/slang_only.ys' --
+
+1. Executing SLANG frontend.
+Top level design units:
+    dsdv_idx_tx_n32_phys
+
+
+Build succeeded: 0 errors, 0 warnings
+
+1.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[15].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[14].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[13].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[12].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[11].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[10].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[9].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[15].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[14].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[13].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[12].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[11].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[10].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[9].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[15].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[14].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[13].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[12].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[11].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[10].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[9].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[15].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[14].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[13].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[12].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[11].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[10].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[9].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[15].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[14].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[13].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[12].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[11].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[10].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[9].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[15].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[14].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[13].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[12].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[11].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[10].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[9].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[15].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[14].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[13].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[12].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[11].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[10].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[9].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[15].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[14].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[13].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[12].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[11].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[10].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[9].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_shd.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[1].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[0].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[3].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[2].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[1].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[0].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[15].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[14].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[13].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[12].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[11].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[10].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[9].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[8].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[7].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[6].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[5].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[4].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[3].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[2].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[1].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[0].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[1].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[0].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[3].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[2].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[1].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[0].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[15].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[14].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[13].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[12].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[11].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[10].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[9].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[8].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[7].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[6].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[5].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[4].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[3].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[2].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[1].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[0].u_field.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_hlc.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[0].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[8].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[7].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[6].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[5].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[4].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[3].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[2].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[1].u.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[0].u.$0'.
+Removing empty process `dsdv_idx_txm_n32$dsdv_idx_tx_n32_phys.u_logic.u_sm.$445'.
+Removing empty process `dsdv_idx_txm_n32$dsdv_idx_tx_n32_phys.u_logic.u_sm.$315'.
+Removing empty process `dsdv_idx_txm_n32$dsdv_idx_tx_n32_phys.u_logic.u_sm.$249'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim1.$1'.
+Removing empty process `dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim1.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim0.$1'.
+Removing empty process `dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim0.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix1.$1'.
+Removing empty process `dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix1.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix0.$1'.
+Removing empty process `dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix0.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_fwl.$0'.
+Removing empty process `dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_fwc.$0'.
+Removing empty process `dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib1.$11'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib1.$9'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib1.$4'.
+Removing empty process `dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib0.$11'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib0.$9'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib0.$4'.
+Removing empty process `dsdv_tx_pin_front$dsdv_idx_tx_n32_phys.u_logic.u_pin_front.$10'.
+Removing empty process `dsdv_tx_pin_front$dsdv_idx_tx_n32_phys.u_logic.u_pin_front.$7'.
+Removing empty process `dsdv_tx_pin_front$dsdv_idx_tx_n32_phys.u_logic.u_pin_front.$4'.
+Removing empty process `dsdv_tx_pin_front$dsdv_idx_tx_n32_phys.u_logic.u_pin_front.$1'.
+Removing empty process `dsdv_tx_pin_front$dsdv_idx_tx_n32_phys.u_logic.u_pin_front.$0'.
+Removing empty process `ot_rst_relay$dsdv_idx_tx_n32_phys.u_logic.u_rr.$3'.
+Removing empty process `ot_rst_relay$dsdv_idx_tx_n32_phys.u_logic.u_rr.$0'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$2209'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$2172'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$2116'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$2113'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$2110'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$2007'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1958'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1948'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1843'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1003'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$960'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$917'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$874'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$831'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$788'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$745'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$702'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$659'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$651'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$622'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$599'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$541'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$539'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$517'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$479'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$442'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$432'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$419'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$289'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$285'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$6'.
+Cleaned up 61 empty switches.
+<suppressed ~2194 debug messages>
+
+1.2. Executing TRIBUF pass.
+
+1.3. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $0 in module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[3].u.
+Marked 2 switch rules as full_case in process $0 in module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[2].u.
+Marked 2 switch rules as full_case in process $0 in module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[1].u.
+Marked 2 switch rules as full_case in process $0 in module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[0].u.
+Marked 2 switch rules as full_case in process $0 in module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[3].u.
+Marked 2 switch rules as full_case in process $0 in module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[2].u.
+Marked 2 switch rules as full_case in process $0 in module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[1].u.
+Marked 2 switch rules as full_case in process $0 in module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[0].u.
+Marked 15 switch rules as full_case in process $1 in module dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim1.
+Marked 15 switch rules as full_case in process $1 in module dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim0.
+Marked 15 switch rules as full_case in process $1 in module dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix1.
+Marked 15 switch rules as full_case in process $1 in module dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix0.
+Marked 7 switch rules as full_case in process $2172 in module dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.
+Marked 3 switch rules as full_case in process $1948 in module dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.
+Marked 17 switch rules as full_case in process $1843 in module dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.
+Marked 20 switch rules as full_case in process $622 in module dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.
+Marked 5 switch rules as full_case in process $599 in module dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.
+Marked 15 switch rules as full_case in process $479 in module dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.
+Marked 15 switch rules as full_case in process $442 in module dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.
+Marked 6 switch rules as full_case in process $432 in module dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.
+Marked 4 switch rules as full_case in process $24 in module dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.
+Removed a total of 0 dead cases.
+
+1.4. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 17 redundant assignments.
+Promoted 0 assignments to connections.
+
+1.5. Executing PROC_INIT pass (extract init attributes).
+
+1.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~508 debug messages>
+
+1.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[1].u.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[0].u.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[3].u.$0'.
+     1/2: $value$2
+     2/2: $value$3
+Creating decoders for process `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[2].u.$0'.
+     1/2: $value$2
+     2/2: $value$3
+Creating decoders for process `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[1].u.$0'.
+     1/2: $value$2
+     2/2: $value$3
+Creating decoders for process `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[0].u.$0'.
+     1/2: $value$2
+     2/2: $value$3
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[15].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[14].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[13].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[12].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[11].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[10].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[9].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[8].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[7].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[6].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[5].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[4].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[3].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[2].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[1].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[0].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[1].u.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[0].u.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[3].u.$0'.
+     1/2: $value$2
+     2/2: $value$3
+Creating decoders for process `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[2].u.$0'.
+     1/2: $value$2
+     2/2: $value$3
+Creating decoders for process `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[1].u.$0'.
+     1/2: $value$2
+     2/2: $value$3
+Creating decoders for process `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[0].u.$0'.
+     1/2: $value$2
+     2/2: $value$3
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[15].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[14].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[13].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[12].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[11].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[10].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[9].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[8].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[7].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[6].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[5].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[4].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[3].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[2].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[1].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[0].u_field.$0'.
+     1/1: $value$1
+Creating decoders for process `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim1.$1'.
+     1/16: $n$17
+     2/16: $n$16
+     3/16: $n$15
+     4/16: $n$14
+     5/16: $n$13
+     6/16: $n$12
+     7/16: $n$11
+     8/16: $n$10
+     9/16: $n$9
+    10/16: $n$8
+    11/16: $n$7
+    12/16: $n$6
+    13/16: $n$5
+    14/16: $n$4
+    15/16: $n$3
+    16/16: $n$2
+Creating decoders for process `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim0.$1'.
+     1/16: $n$17
+     2/16: $n$16
+     3/16: $n$15
+     4/16: $n$14
+     5/16: $n$13
+     6/16: $n$12
+     7/16: $n$11
+     8/16: $n$10
+     9/16: $n$9
+    10/16: $n$8
+    11/16: $n$7
+    12/16: $n$6
+    13/16: $n$5
+    14/16: $n$4
+    15/16: $n$3
+    16/16: $n$2
+Creating decoders for process `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix1.$1'.
+     1/16: $n$17
+     2/16: $n$16
+     3/16: $n$15
+     4/16: $n$14
+     5/16: $n$13
+     6/16: $n$12
+     7/16: $n$11
+     8/16: $n$10
+     9/16: $n$9
+    10/16: $n$8
+    11/16: $n$7
+    12/16: $n$6
+    13/16: $n$5
+    14/16: $n$4
+    15/16: $n$3
+    16/16: $n$2
+Creating decoders for process `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix0.$1'.
+     1/16: $n$17
+     2/16: $n$16
+     3/16: $n$15
+     4/16: $n$14
+     5/16: $n$13
+     6/16: $n$12
+     7/16: $n$11
+     8/16: $n$10
+     9/16: $n$9
+    10/16: $n$8
+    11/16: $n$7
+    12/16: $n$6
+    13/16: $n$5
+    14/16: $n$4
+    15/16: $n$3
+    16/16: $n$2
+Creating decoders for process `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib1.$9'.
+     1/1: $g_m.bs$10
+Creating decoders for process `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib1.$4'.
+     1/1: $g_m.mx$7
+Creating decoders for process `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib0.$9'.
+     1/1: $g_m.bs$10
+Creating decoders for process `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib0.$4'.
+     1/1: $g_m.mx$7
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1632'.
+     1/1: $1634
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1622'.
+     1/1: $1624
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1612'.
+     1/1: $1614
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1602'.
+     1/1: $1604
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1592'.
+     1/1: $1594
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1582'.
+     1/1: $1584
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1572'.
+     1/1: $1574
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1562'.
+     1/1: $1564
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1552'.
+     1/1: $1554
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1542'.
+     1/1: $1544
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1532'.
+     1/1: $1534
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1522'.
+     1/1: $1524
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1512'.
+     1/1: $1514
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1502'.
+     1/1: $1504
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1492'.
+     1/1: $1494
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1482'.
+     1/1: $1484
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1472'.
+     1/1: $1474
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1462'.
+     1/1: $1464
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1452'.
+     1/1: $1454
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1442'.
+     1/1: $1444
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1432'.
+     1/1: $1434
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1422'.
+     1/1: $1424
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1412'.
+     1/1: $1414
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1402'.
+     1/1: $1404
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1392'.
+     1/1: $1394
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1382'.
+     1/1: $1384
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1372'.
+     1/1: $1374
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1362'.
+     1/1: $1364
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1352'.
+     1/1: $1354
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1342'.
+     1/1: $1344
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1332'.
+     1/1: $1334
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1322'.
+     1/1: $1324
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1312'.
+     1/1: $1314
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1302'.
+     1/1: $1304
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1292'.
+     1/1: $1294
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1282'.
+     1/1: $1284
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1272'.
+     1/1: $1274
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1262'.
+     1/1: $1264
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1252'.
+     1/1: $1254
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1242'.
+     1/1: $1244
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1232'.
+     1/1: $1234
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1222'.
+     1/1: $1224
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1212'.
+     1/1: $1214
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1202'.
+     1/1: $1204
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1192'.
+     1/1: $1194
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1182'.
+     1/1: $1184
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1172'.
+     1/1: $1174
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1162'.
+     1/1: $1164
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1152'.
+     1/1: $1154
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1142'.
+     1/1: $1144
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1132'.
+     1/1: $1134
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1122'.
+     1/1: $1124
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1112'.
+     1/1: $1114
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1102'.
+     1/1: $1104
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1092'.
+     1/1: $1094
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1082'.
+     1/1: $1084
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1072'.
+     1/1: $1074
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1062'.
+     1/1: $1064
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1052'.
+     1/1: $1054
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$2172'.
+     1/8: $fc_set[7]$2207
+     2/8: $fc_set[6]$2202
+     3/8: $fc_set[5]$2201
+     4/8: $fc_set[4]$2195
+     5/8: $fc_set[3]$2189
+     6/8: $fc_set[2]$2184
+     7/8: $fc_set[1]$2182
+     8/8: $fc_set[0]$2178
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1948'.
+     1/3: $ib_w$1957
+     2/3: $e_h$1954
+     3/3: $e_h$1955
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1843'.
+     1/44: $nx_done$1929
+     2/44: $nx_busy$1928
+     3/44: $nx_w0c$1922
+     4/44: $nx_act$1921
+     5/44: $nx_wv$1920
+     6/44: $nx_fin$1898
+     7/44: $nx_lcur$1895
+     8/44: $nx_lcur$1907
+     9/44: $nx_d_last$1906
+    10/44: $nx_d_em$1905
+    11/44: $nx_d_rb$1904
+    12/44: $nx_d_buf$1903
+    13/44: $nx_d_h$1902
+    14/44: $nx_bix$1901
+    15/44: $nx_bq_n$1900
+    16/44: $nx_fin$1899
+    17/44: $nx_bix$1887
+    18/44: $nx_bq_n$1886
+    19/44: $nx_lcur$1917
+    20/44: $nx_d_h$1912
+    21/44: $nx_bix$1911
+    22/44: $nx_bq_n$1910
+    23/44: $nx_d_last$1916
+    24/44: $nx_d_em$1915
+    25/44: $nx_d_rb$1914
+    26/44: $nx_d_buf$1913
+    27/44: $nx_fin$1909
+    28/44: $nx_hdr_q$1908
+    29/44: $sn_h[11:6]$1874
+    30/44: $sn_i[11:6]$1873
+    31/44: $sn_h[5:0]$1872
+    32/44: $sn_i[5:0]$1871
+    33/44: $nx_rc$1868
+    34/44: $nx_rc$1869
+    35/44: $nx_tc$1859
+    36/44: $nx_tc$1860
+    37/44: $nx_fin$1855
+    38/44: $nx_hdr_q$1854
+    39/44: $nx_wv$1853
+    40/44: $nx_in_end$1852
+    41/44: $nx_done$1851
+    42/44: $nx_busy$1850
+    43/44: $nx_armed$1849
+    44/44: $nx_in_end$1848
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1762'.
+     1/1: $1764
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1752'.
+     1/1: $1754
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1742'.
+     1/1: $1744
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1732'.
+     1/1: $1734
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1722'.
+     1/1: $1724
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1712'.
+     1/1: $1714
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1702'.
+     1/1: $1704
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$622'.
+     1/22: $649
+     2/22: $644
+     3/22: $iw[319:304]$642
+     4/22: $iw[303:288]$641
+     5/22: $iw[287:272]$640
+     6/22: $iw[271:256]$639
+     7/22: $iw[255:240]$638
+     8/22: $iw[239:224]$637
+     9/22: $iw[223:208]$636
+    10/22: $iw[207:192]$635
+    11/22: $iw[191:176]$634
+    12/22: $iw[175:160]$633
+    13/22: $iw[159:144]$632
+    14/22: $iw[143:128]$631
+    15/22: $iw[127:112]$630
+    16/22: $iw[111:96]$629
+    17/22: $iw[95:80]$628
+    18/22: $iw[79:64]$627
+    19/22: $iw[63:48]$626
+    20/22: $iw[47:32]$625
+    21/22: $iw[31:16]$624
+    22/22: $iw[15:0]$623
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$599'.
+     1/6: $rf_r$617
+     2/6: $rf_w$615
+     3/6: $iw_v$613
+     4/6: $iw_v$610
+     5/6: $iw_v$604
+     6/6: $ib_r$603
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1692'.
+     1/1: $1694
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1682'.
+     1/1: $1684
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$517'.
+     1/1: $lvl_next$525
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$479'.
+     1/32: $ne_v$511
+     2/32: $ne$510
+     3/32: $ne_v$509
+     4/32: $ne$508
+     5/32: $ne_v$507
+     6/32: $ne$506
+     7/32: $ne_v$505
+     8/32: $ne$504
+     9/32: $ne_v$503
+    10/32: $ne$502
+    11/32: $ne_v$501
+    12/32: $ne$500
+    13/32: $ne_v$499
+    14/32: $ne$498
+    15/32: $ne_v$497
+    16/32: $ne$496
+    17/32: $ne_v$495
+    18/32: $ne$494
+    19/32: $ne_v$493
+    20/32: $ne$492
+    21/32: $ne_v$491
+    22/32: $ne$490
+    23/32: $ne_v$489
+    24/32: $ne$488
+    25/32: $ne_v$487
+    26/32: $ne$486
+    27/32: $ne_v$485
+    28/32: $ne$484
+    29/32: $ne_v$483
+    30/32: $ne$482
+    31/32: $ne_v$481
+    32/32: $ne$480
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$442'.
+     1/16: $e_lo[255:240]$458
+     2/16: $e_lo[239:224]$457
+     3/16: $e_lo[223:208]$456
+     4/16: $e_lo[207:192]$455
+     5/16: $e_lo[191:176]$454
+     6/16: $e_lo[175:160]$453
+     7/16: $e_lo[159:144]$452
+     8/16: $e_lo[143:128]$451
+     9/16: $e_lo[127:112]$450
+    10/16: $e_lo[111:96]$449
+    11/16: $e_lo[95:80]$448
+    12/16: $e_lo[79:64]$447
+    13/16: $e_lo[63:48]$446
+    14/16: $e_lo[47:32]$445
+    15/16: $e_lo[31:16]$444
+    16/16: $e_lo[15:0]$443
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$432'.
+     1/9: $j_dly$441
+     2/9: $j_sm$440
+     3/9: $j_ot$439
+     4/9: $j_hb[19:10]$438
+     5/9: $j_hb[9:0]$437
+     6/9: $j_r$436
+     7/9: $j_k$435
+     8/9: $j_pt$434
+     9/9: $j_l$433
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1672'.
+     1/1: $1674
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1662'.
+     1/1: $1664
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1652'.
+     1/1: $1654
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$24'.
+     1/72: $283
+     2/72: $280
+     3/72: $277
+     4/72: $274
+     5/72: $271
+     6/72: $268
+     7/72: $265
+     8/72: $262
+     9/72: $259
+    10/72: $256
+    11/72: $253
+    12/72: $250
+    13/72: $247
+    14/72: $244
+    15/72: $241
+    16/72: $238
+    17/72: $235
+    18/72: $229
+    19/72: $218
+    20/72: $215
+    21/72: $212
+    22/72: $209
+    23/72: $206
+    24/72: $203
+    25/72: $200
+    26/72: $197
+    27/72: $194
+    28/72: $191
+    29/72: $188
+    30/72: $185
+    31/72: $182
+    32/72: $179
+    33/72: $176
+    34/72: $173
+    35/72: $170
+    36/72: $164
+    37/72: $153
+    38/72: $150
+    39/72: $147
+    40/72: $144
+    41/72: $141
+    42/72: $138
+    43/72: $135
+    44/72: $132
+    45/72: $129
+    46/72: $126
+    47/72: $123
+    48/72: $120
+    49/72: $117
+    50/72: $114
+    51/72: $111
+    52/72: $108
+    53/72: $105
+    54/72: $99
+    55/72: $88
+    56/72: $85
+    57/72: $82
+    58/72: $79
+    59/72: $76
+    60/72: $73
+    61/72: $70
+    62/72: $67
+    63/72: $64
+    64/72: $61
+    65/72: $58
+    66/72: $55
+    67/72: $52
+    68/72: $49
+    69/72: $46
+    70/72: $43
+    71/72: $40
+    72/72: $34
+Creating decoders for process `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1642'.
+     1/1: $1644
+
+1.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[1].u.$0'.
+Removing empty process `dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[1].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[0].u.$0'.
+Removing empty process `dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[0].u.$0'.
+Found and cleaned up 3 empty switches in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[3].u.$0'.
+Removing empty process `dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[3].u.$0'.
+Found and cleaned up 3 empty switches in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[2].u.$0'.
+Removing empty process `dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[2].u.$0'.
+Found and cleaned up 3 empty switches in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[1].u.$0'.
+Removing empty process `dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[1].u.$0'.
+Found and cleaned up 3 empty switches in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[0].u.$0'.
+Removing empty process `dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[0].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[15].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[15].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[14].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[14].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[13].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[13].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[12].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[12].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[11].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[11].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[10].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[10].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[9].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[9].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[8].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[8].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[7].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[7].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[6].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[6].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[5].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[5].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[4].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[4].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[3].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[3].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[2].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[2].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[1].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[1].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[0].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[0].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[1].u.$0'.
+Removing empty process `dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[1].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[0].u.$0'.
+Removing empty process `dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[0].u.$0'.
+Found and cleaned up 3 empty switches in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[3].u.$0'.
+Removing empty process `dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[3].u.$0'.
+Found and cleaned up 3 empty switches in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[2].u.$0'.
+Removing empty process `dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[2].u.$0'.
+Found and cleaned up 3 empty switches in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[1].u.$0'.
+Removing empty process `dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[1].u.$0'.
+Found and cleaned up 3 empty switches in `\dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[0].u.$0'.
+Removing empty process `dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[0].u.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[15].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[15].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[14].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[14].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[13].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[13].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[12].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[12].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[11].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[11].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[10].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[10].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[9].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[9].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[8].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[8].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[7].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[7].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[6].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[6].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[5].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[5].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[4].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[4].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[3].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[3].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[2].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[2].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[1].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[1].u_field.$0'.
+Found and cleaned up 1 empty switch in `\dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[0].u_field.$0'.
+Removing empty process `dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[0].u_field.$0'.
+Found and cleaned up 31 empty switches in `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim1.$1'.
+Removing empty process `dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim1.$1'.
+Found and cleaned up 31 empty switches in `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim0.$1'.
+Removing empty process `dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim0.$1'.
+Found and cleaned up 31 empty switches in `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix1.$1'.
+Removing empty process `dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix1.$1'.
+Found and cleaned up 31 empty switches in `\dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix0.$1'.
+Removing empty process `dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix0.$1'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib1.$9'.
+Removing empty process `dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib1.$9'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib1.$4'.
+Removing empty process `dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib1.$4'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib0.$9'.
+Removing empty process `dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib0.$9'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib0.$4'.
+Removing empty process `dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib0.$4'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1632'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1632'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1622'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1622'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1612'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1612'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1602'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1602'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1592'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1592'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1582'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1582'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1572'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1572'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1562'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1562'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1552'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1552'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1542'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1542'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1532'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1532'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1522'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1522'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1512'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1512'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1502'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1502'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1492'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1492'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1482'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1482'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1472'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1472'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1462'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1462'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1452'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1452'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1442'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1442'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1432'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1432'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1422'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1422'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1412'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1412'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1402'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1402'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1392'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1392'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1382'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1382'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1372'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1372'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1362'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1362'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1352'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1352'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1342'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1342'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1332'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1332'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1322'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1322'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1312'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1312'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1302'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1302'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1292'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1292'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1282'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1282'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1272'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1272'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1262'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1262'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1252'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1252'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1242'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1242'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1232'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1232'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1222'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1222'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1212'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1212'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1202'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1202'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1192'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1192'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1182'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1182'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1172'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1172'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1162'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1162'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1152'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1152'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1142'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1142'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1132'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1132'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1122'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1122'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1112'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1112'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1102'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1102'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1092'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1092'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1082'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1082'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1072'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1072'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1062'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1062'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1052'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1052'.
+Found and cleaned up 15 empty switches in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$2172'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$2172'.
+Found and cleaned up 5 empty switches in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1948'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1948'.
+Found and cleaned up 29 empty switches in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1843'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1843'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1762'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1762'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1752'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1752'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1742'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1742'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1732'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1732'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1722'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1722'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1712'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1712'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1702'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1702'.
+Found and cleaned up 40 empty switches in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$622'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$622'.
+Found and cleaned up 11 empty switches in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$599'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$599'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1692'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1692'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1682'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1682'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$517'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$517'.
+Found and cleaned up 31 empty switches in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$479'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$479'.
+Found and cleaned up 31 empty switches in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$442'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$442'.
+Found and cleaned up 13 empty switches in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$432'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$432'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1672'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1672'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1662'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1662'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1652'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1652'.
+Found and cleaned up 72 empty switches in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$24'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$24'.
+Found and cleaned up 1 empty switch in `\dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1642'.
+Removing empty process `dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.$1642'.
+Cleaned up 508 empty switches.
+
+1.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[15].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[14].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[13].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[12].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[11].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[10].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[9].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[7].g_mask[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[15].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[14].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[13].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[12].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[11].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[10].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[9].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[6].g_mask[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[15].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[14].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[13].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[12].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[11].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[10].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[9].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[5].g_mask[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[15].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[14].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[13].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[12].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[11].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[10].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[9].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[4].g_mask[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[15].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[14].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[13].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[12].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[11].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[10].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[9].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[3].g_mask[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[15].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[14].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[13].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[12].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[11].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[10].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[9].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[2].g_mask[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[15].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[14].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[13].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[12].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[11].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[10].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[9].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[1].g_mask[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[15].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[14].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[13].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[12].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[11].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[10].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[9].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_sm.g_m.g_b[0].g_mask[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_shd.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[1].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[1].u_enable.
+Optimizing module dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[0].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_addr[0].u_enable.
+Optimizing module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[3].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[3].u_enable.
+Optimizing module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[2].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[2].u_enable.
+Optimizing module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[1].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[1].u_enable.
+Optimizing module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[0].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_valid[0].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[15].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[15].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[14].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[14].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[13].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[13].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[12].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[12].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[11].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[11].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[10].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[10].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[9].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[9].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[8].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[8].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[7].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[7].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[6].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[6].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[5].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[5].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[4].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[4].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[3].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[3].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[2].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[2].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[1].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[1].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[0].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[1].g_field[0].u_enable.
+Optimizing module dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[1].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[1].u_enable.
+Optimizing module dsdv_tx_window_addr$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[0].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_addr[0].u_enable.
+Optimizing module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[3].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[3].u_enable.
+Optimizing module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[2].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[2].u_enable.
+Optimizing module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[1].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[1].u_enable.
+Optimizing module dsdv_tx_window_valid$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[0].u.
+Optimizing module dsdv_tx_open_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_valid[0].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[15].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[15].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[14].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[14].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[13].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[13].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[12].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[12].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[11].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[11].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[10].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[10].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[9].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[9].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[8].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[8].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[7].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[7].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[6].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[6].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[5].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[5].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[4].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[4].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[3].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[3].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[2].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[2].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[1].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[1].u_enable.
+Optimizing module dsdv_tx_score_field$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[0].u_field.
+Optimizing module dsdv_tx_score_enable$dsdv_idx_tx_n32_phys.u_logic.g_window_score[0].g_field[0].u_enable.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_hlc.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_pop_pred$dsdv_idx_tx_n32_phys.u_logic.u_popb.
+Optimizing module dsdv_tx_pop_pred$dsdv_idx_tx_n32_phys.u_logic.u_popa.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[7].g_field[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[6].g_field[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[5].g_field[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[4].g_field[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[3].g_field[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[2].g_field[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[1].g_field[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[8].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[7].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[6].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[5].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[4].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[3].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[2].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[1].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_write[0].g_field[0].u.
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[8].u.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[7].u.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[6].u.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[5].u.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[4].u.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[3].u.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[2].u.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[1].u.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.g_rf_read[0].u.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_idx_txm_n32$dsdv_idx_tx_n32_phys.u_logic.u_sm.
+<suppressed ~34 debug messages>
+Optimizing module dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim1.
+<suppressed ~2 debug messages>
+Optimizing module dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pim0.
+<suppressed ~2 debug messages>
+Optimizing module dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix1.
+<suppressed ~2 debug messages>
+Optimizing module dsdv_tx_priority_mux$dsdv_idx_tx_n32_phys.u_logic.u_pix0.
+<suppressed ~2 debug messages>
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_fwl.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_tx_copy$dsdv_idx_tx_n32_phys.u_logic.u_fwc.
+<suppressed ~1 debug messages>
+Optimizing module dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib1.
+<suppressed ~3 debug messages>
+Optimizing module dsdv_idx_txm$dsdv_idx_tx_n32_phys.u_logic.u_ib0.
+<suppressed ~3 debug messages>
+Optimizing module dsdv_tx_pin_front$dsdv_idx_tx_n32_phys.u_logic.u_pin_front.
+<suppressed ~31 debug messages>
+Optimizing module ot_rst_relay$dsdv_idx_tx_n32_phys.u_logic.u_rr.
+<suppressed ~2 debug messages>
+Optimizing module dsdv_idx_tx_n32$dsdv_idx_tx_n32_phys.u_logic.
+<suppressed ~101 debug messages>
+Optimizing module dsdv_idx_tx_n32_phys.
+
+End of script. Logfile hash: 57e387e482, time: 0.44s, user: 0.37s, system: 0.54s, MEM: 46.46 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 94% 2x read_slang (0 sec), 3% 1x opt_expr (0 sec), ...
+ot-run: RAN on localhost (unit oth-ubuntu-2890764-1793011173): exit 0

@@ -1,0 +1,9 @@
+{
+  "verdict": "PASS",
+  "cause": "ActualcurrentphysicalTXSlangLECfrontfailed4dynamic-sizeerrors: twoD1024IBbuffers instantiate bankselector slices ra/wa[AW-1:10] withAW10, althoughconstantNB1 masks them. Yosys/Verilatoroptimizedmaskedbranch; Slangrejectedbeforefolding.",
+  "fix": "Compile-timegenerateNB1 select1/readbank0; NB>1 usesoriginalslice. Puredeclarationscopedg_sel loopindicesremoveSlangasync-loopwarnings.",
+  "cycles_added": 0,
+  "miter": "Actualmacrofunctionalmodels, D1024onebankandD8192eightbanks,30,001cycles x512bits=15,360,512bitchecks,0mismatchvsoriginalprimitive. Wrongread-addressmutantscaught29,893/29,175edges.",
+  "frontend": "ActualfullTXphysicaltopSlangread_slang--keep-hierarchy withallcurrentparams nowPASS0errors (0.44s,46.46MB). OldUNPROVENreceiptretained, freshfullLEC/place cohortnext.",
+  "status": "Sourceonly; noarea/timing/routeclaim."
+}

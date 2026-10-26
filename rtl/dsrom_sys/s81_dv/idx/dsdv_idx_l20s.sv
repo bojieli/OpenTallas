@@ -871,9 +871,8 @@ module dsdv_idx_tx_n32 #(
     always @(posedge ck or negedge rl[3])
         if (!rl[3]) begin sb0 <= 16'd0; srb <= 2'd0; sb1 <= 2'd0; s_b0 <= 1'b0; s_b1 <= 1'b0; s_h <= 1'b0; s_p <= 1'b0; lo[0] <= 1'b0; end
         else begin : g_sel
-            integer b_, c_;
-            for (b_ = 0; b_ < 2; b_ = b_ + 1) begin
-                for (c_ = 0; c_ < 8; c_ = c_ + 1) sb0[8 * b_ + c_] <= nx_pop && nx_isb0 && !nx_d_em && nx_d_buf == b_[0];
+            for (integer b_ = 0; b_ < 2; b_ = b_ + 1) begin
+                for (integer c_ = 0; c_ < 8; c_ = c_ + 1) sb0[8 * b_ + c_] <= nx_pop && nx_isb0 && !nx_d_em && nx_d_buf == b_[0];
                 srb[b_] <= nx_pop && nx_isr && nx_d_buf == b_[0];
                 sb1[b_] <= nx_pop && nx_isb1 && !nx_d_em && nx_d_buf == b_[0];
             end
