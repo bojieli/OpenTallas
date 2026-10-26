@@ -77,8 +77,8 @@ module ot_hgi_qdq_record_calendar #(
             end
             if(due)begin
                 command_v<=1;
-                command<={(beat+16'd1==current[47:32]),current[79:64]+16'(beat*4),
-                    current[63:48]+16'(beat*4)+(MUT==1?16'd1:16'd0),current[93:86],current[85:80],1'b1};
+                command<={(beat+16'd1==current[47:32]),current[79:64]+{beat[13:0],2'b00},
+                    current[63:48]+{beat[13:0],2'b00}+(MUT==1?16'd1:16'd0),current[93:86],current[85:80],1'b1};  // YOSYS-CONCAT 10-26: {beat[13:0],2'b00} == 16'(beat*4); the cast form lost the MSB member in yosys (YC1)
                 if(cycle!=current[31:0]+32'(beat)+(MUT==2?32'd1:32'd0))fault<=1;
                 beat<=beat+1'b1;
                 if(last)begin

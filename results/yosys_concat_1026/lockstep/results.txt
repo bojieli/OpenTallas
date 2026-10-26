@@ -1,0 +1,12 @@
+st_rtl_L0: LOCKSTEP PASS cycles 1536 mismatches 0 words 60 tag9 60 faults 5
+st_rtl_L1: LOCKSTEP PASS cycles 1536 mismatches 0 words 60 tag9 60 faults 5
+st_mut_L0: LOCKSTEP DIFF cycles 1536 mismatches 1435 words 60 tag9 60 faults 5
+st_mut_L1: LOCKSTEP DIFF cycles 1536 mismatches 1435 words 60 tag9 60 faults 5
+st_ysfix_L0: LOCKSTEP PASS cycles 1536 mismatches 0 words 60 tag9 60 faults 5
+st_ysfix_L1: LOCKSTEP PASS cycles 1536 mismatches 0 words 60 tag9 60 faults 5
+st_ysorig_L0: LOCKSTEP DIFF cycles 1536 mismatches 1435 words 60 tag9 60 faults 5
+st_ysorig_L1: LOCKSTEP DIFF cycles 1536 mismatches 1435 words 60 tag9 60 faults 5
+na_rtl: LOCKSTEP PASS cycles 1536 mismatches 0 words 60 tag9 60 faults 5
+na_mut: LOCKSTEP DIFF cycles 1536 mismatches 1450 words 60 tag9 60 faults 5
+na_ysfix: LOCKSTEP PASS cycles 1536 mismatches 0 words 60 tag9 60 faults 5
+na_ysorig: LOCKSTEP DIFF cycles 1536 mismatches 1450 words 60 tag9 60 faults 5

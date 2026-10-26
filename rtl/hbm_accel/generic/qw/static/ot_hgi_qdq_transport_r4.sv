@@ -123,7 +123,7 @@ module ot_hgi_qdq_transport_ctl_s4 #(
         rq_next='0; wv_next='0; wa_next='0; wm_next='0; kr='0; kw='0;
         for(integer b=0;b<8;b=b+1) begin
             kr=3'(b)-cmd_src_lo[b*3+:3];
-            if(kr<3'd4) rq_next[b*17+:17]={cmd_v,{cmd_src[15:3],cmd_src_lo[b*3+:3]}+16'(kr)};
+            if(kr<3'd4) rq_next[b*17+:17]={cmd_v,{cmd_src[15:3],cmd_src_lo[b*3+:3]}+{13'd0,kr}}; // YOSYS-CONCAT 10-26: zero-extend by concat, no cast inside the concat member (rtl_lint YC1)
             kw=(3'(b)^(MUT==2?3'd1:3'd0))-wbl[b];
             if(kw<3'd4) begin wv_next[b]=dv[ND-1]; wa_next[b*16+:16]={dst[ND-1][15:3],wbl[b]}+16'(kw); wm_next[b*8+:8]=8'hff; end
         end
