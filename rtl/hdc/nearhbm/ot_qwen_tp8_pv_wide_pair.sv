@@ -134,7 +134,10 @@ endmodule
 module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7, RESET_PIN=0)(
  input wire clk,rst_n,input wire[1023:0] ts0,ts1,ts2,ts3,   // bank tree sums {b1,b0}, {b3,b2}, {b5,b4}, {b7,b6} (one face each)
  input wire join_go,input wire[7:0] sf,
- output reg[511:0] y,output reg y_valid,output reg fault
+ // CORES-KITS/KVX 10-26: keep on the y port flops too.  y and y_hold have the SAME next state (load ? jy : y_hold)
+ // and clock, so opt_merge folded the port copy into the kept y_hold (kit k1: face_guard shared 512, y driven by
+ // u_leaf.y_hold); with both kept (ot_keep_regs.tcl puts keep on their cells) both flops stay.  0 cycles.
+ (* keep = "true" *) output reg[511:0] y,output reg y_valid,output reg fault
 );
  wire local_rst_n;
  generate if(RESET_PIN)begin:g_reset_pin
