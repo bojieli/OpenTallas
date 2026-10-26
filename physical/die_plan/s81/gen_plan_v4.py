@@ -2758,6 +2758,7 @@ def main():
     ap.add_argument("--census", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--ir-detours", action="store_true", help="Keep far-link transit out of PHY partitions; reprice all changed routes")
+    ap.add_argument("--routes-only", action="store_true", help="Emit transport graph only; preserve existing hard-core placements during a narrow routing delta")
     a = ap.parse_args()
     ab = json.load(open(a.asbuilt))
     census = list(csv.DictReader(open(a.census), delimiter="\t"))
@@ -2778,6 +2779,24 @@ def main():
     miss = [(c, r) for c in range(NC) for r in range(NR) if (c, r) not in grid.owner and (c, r) not in chan_cells]
     assert not miss, miss
     routes = route_v48(grid, lanes_all(ab, census, parts, frames, serdes, slices, v47=True)[0], lanes, ir_detours=a.ir_detours)
+    if a.routes_only:
+        # Routing experiments must not silently re-floorplan unrelated signed cores.
+        out = Path(a.out)
+        out.mkdir(parents=True, exist_ok=True)
+        def owners(cells):
+            seq = []
+            for cell in cells:
+                name = grid.owner[tuple(cell)]
+                if not seq or seq[-1] != name:
+                    seq.append(name)
+            return seq
+        data = dict(schema="opentallas.s81.route_graph.v1", ir_detours=a.ir_detours,
+                    source_asbuilt=a.asbuilt, source_census=a.census,
+                    parts={p.name: dict(kind=p.kind, ft_ok=p.ft_ok, cells=list(p.cells())) for p in parts},
+                    lanes=[dict(l, cells=routes[l["id"]], parts=owners(routes[l["id"]])) for l in lanes])
+        (out / "route_graph.json").write_text(json.dumps(data, indent=1) + "\n")
+        print(f"transport graph: {len(lanes)} lanes, {len(parts)} partitions -> {out / 'route_graph.json'}")
+        return
     stats = emit(parts, lanes, routes, chans, fmap, Path(a.out))
     print(json.dumps({k: v for k, v in stats.items() if k != "instances_per_type"}, indent=1, default=str))
 
