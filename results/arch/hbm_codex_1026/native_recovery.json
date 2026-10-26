@@ -43,5 +43,22 @@
     "root_relay_each_direction": 1,
     "router": 0,
     "scope": "Existing parked implementation restored; not new price/adoption"
+  },
+  "format_locality": {
+    "source": "c1da0fad6",
+    "opt_in": true,
+    "added_cycles": 0,
+    "old_die_format_zero_bits": 1024,
+    "new_die_format_zero_bits": 0,
+    "old_CONST_INPUT": 64,
+    "new_CONST_INPUT": 0,
+    "lockstep_checks": 996,
+    "mutant": "wrong format zero caught cycle4",
+    "unresolved_OUTPUT_UNREAD": 98,
+    "job": "epyc1:/srv/opentallas-scratch2/claude/codex-hbm-native-1026/qdq_bf16 unit2858107 exit0"
+  },
+  "integration": {
+    "base": "d62f555e2e",
+    "scope": "Source-only; current plan extracts and source comparison revision required; historical batch launcher omitted; no default physical plan selection"
   }
 }
