@@ -1,0 +1,7 @@
+[base] LOCKSTEP 512x128_m4 cycles 20000 reads 14982 mismatches 0 -> PASS
+[MUT] LOCKSTEP 512x128_m4 cycles 20000 reads 14973 mismatches 1184 -> FAIL
+[base] LOCKSTEP 64x512_m1 cycles 20000 reads 14943 mismatches 0 -> PASS
+[MUT] LOCKSTEP 64x512_m1 cycles 20000 reads 14892 mismatches 1190 -> FAIL
+[base] LOCKSTEP 128x256_m1 cycles 20000 reads 14932 mismatches 0 -> PASS
+[MUT] LOCKSTEP 128x256_m1 cycles 20000 reads 15017 mismatches 1249 -> FAIL
+verilator/verilator:v5.032, docker; run: run_tb.sh with /w=repo root, /tb=this dir, /out=scratch
