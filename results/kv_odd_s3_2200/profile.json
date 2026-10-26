@@ -19,5 +19,7 @@
   "flow canary disposition",
   "CTS/GRT and propagated-clock TT/FF signoff"
  ],
- "exact_gate": "results/kv_odd_s3_2200/result.json"
+ "exact_gate": "results/kv_odd_s3_2200/result.json",
+ "measured_added_flops_per_master": 364,
+ "measured_evidence": "results/kv_odd_s3_2200/sequential_counts.json"
 }
