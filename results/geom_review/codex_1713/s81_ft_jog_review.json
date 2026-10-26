@@ -1,0 +1,12 @@
+{
+  "reviewed_at": "2026-10-25 18:04 PDT",
+  "tag": "S81-FT-JOG-1713",
+  "plan_sha256": "19ea8d801481afccffef54aa8b6d1d6b77c686b6690c7b2e949df2b8c14a2e4f",
+  "image": "s81_ft_jog_review.png",
+  "verdict": "PASS-COND ONLY two fresh G2 diagnostic successors after G0C/genlat pass and source freeze",
+  "findings": [
+    "Viewed all four old-actual/new-planned panels. t14 FT0 x600 clears narrow VN slit; t58 FT0 x500 west of VS/VN and FT6 y1110 above HC row address the old red hot gcells.",
+    "Unchanged bits/depth/outlines/cores/buses; no added jog cycles. Planned whole-cell 1.08um clearance and paired reach383.939/392.58 must stay in frozen source.",
+    "Actual post-DPL cell sites/hops/corehits/drift and capacity-valid overflow remain gates. Preserve prior27/214 failures. No STA/DRT/native/whole-die adoption."
+  ]
+}
