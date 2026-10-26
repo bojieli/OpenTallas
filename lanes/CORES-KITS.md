@@ -1,0 +1,5 @@
+# CORES-KITS (hard-core kits for KV + S81 unowned cores; started 2026-10-26 01:17 PDT)
+Scope: hard cores only (no pending die-plan delta). Skipped: ot_s81sl_vn_b ot_s81sl_vn_a ot_s81sl_ve_s (PENDING-DELTA TR2-S81).
+Flow: S81 kits = released canary 0f076c3f7 flow; KV = canary golden flow (flow-20261025-b not cut; KV routes autopilot-HOLD on KV core canary REGRESSION).
+2026-10-26 01:17 PDT CORES-KITS: CLAIM KV: ot_qwen_tp8_pv_join_t qkd_ectlk_q0 qkd_ectlk_q1 qkd_ectlk_q2 qkd_ectlk_q3 qkd_hr_cdc_ch qkd_hr_cdc_ci qkd_hr_cdc_hi qkd_hr_cdc_pc qkd_hr_core_guard qkd_hr_core_order qkd_hr_core_peer qkd_hr_core_prompt qkd_hr_core_queue qkd_hr_core_rx qkd_hr_core_tx qkd_hr_host_qm qkd_hr_ingest_eng qkd_hr_phy_adp qkd_hr_phy_pad qkd_kvs_ctl qkd_ahub kv3_pv_pair
+2026-10-26 01:17 PDT CORES-KITS: CLAIM S81: dsdv_bk_g dsdv_bksel_c dsdv_bksel_q dsdv_gunit_l0 dsdv_gunit_l0r dsdv_gunit_l1 dsdv_gunit_l3 dsdv_gunit_l4 dsdv_gunit_l5 dsdv_idx_tx_n32 dsfd_cfifo_crs4 dsfd_qbank_S ot_s81dv_xfin ot_s81sl_capc5r ot_s81sl_xrt1 ot_s81sl_xrt3 ot_v41_rom_elem_q_qxpq_w10 dsdv_gunit_l1c ot_s81sl_eg ot_s81_cfg7_seq_bfp ot_s81sl_vsw dsdv_eng_rr_h0 dsfd_su_t_rxsf
