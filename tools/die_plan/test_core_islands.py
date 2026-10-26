@@ -27,3 +27,9 @@ def test_site_refuses_when_no_site_reachable():
     import pytest
     with pytest.raises(ValueError, match="legal island sites"):
         CI.site(g, k=4, max_entry_um=2.0)
+
+
+def test_site_keeps_clear_of_entry_island():
+    r = CI.site(_geo(), k=4, max_entry_um=110.0)
+    for q in r["islands"]:
+        assert abs(q["centre_um"][0] - 100) + abs(q["centre_um"][1] - 100) >= 17.28

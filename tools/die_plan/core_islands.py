@@ -150,7 +150,9 @@ def site(geo, k=4, max_entry_um=110.0, pct=95, rounds=6, sample=1500, seed=1, se
     for x in np.arange(snap(core[0] + ISL_HALF), core[2] - ISL_HALF + 1e-6, LAT):
         for y in np.arange(snap(core[1] + ISL_HALF), core[3] - ISL_HALF + 1e-6, LAT):
             c = (round(float(x), 3), round(float(y), 3))
-            if G.island_legal(c, core) and De[G.cell(c)] <= max_entry_um:
+            # legal square, clear of the entry island (no overlap, >= sep_um), within the entry maze limit
+            if (G.island_legal(c, core) and De[G.cell(c)] <= max_entry_um
+                    and abs(c[0] - entry[0]) + abs(c[1] - entry[1]) >= sep_um):
                 cand.append(c)
     if len(cand) < k:
         raise ValueError(f"only {len(cand)} legal island sites within {max_entry_um} um maze of the entry")
