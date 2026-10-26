@@ -30,14 +30,21 @@ while read -r f;do
  if [ -f "$OUT/ovl/$f" ];then echo "$OUT/ovl/$f";else echo "$BUNDLE/$f";fi
 done < "$BUNDLE/files.f" > "$OUT/files_abs.f"
 find "$OUT/ovl" -name '*.sv' -o -name '*.v' | sort >> "$OUT/files_abs.f"
-python3 tools/die_port_bind.py "$OUT/top/die_b2.v" --top hbm_b2_die --rtl-root "$BUNDLE/rtl" --rtl-root "$BUNDLE/physical" -f "$OUT/files_abs.f" "${X[@]}" --out "$OUT/port_bind.json" > "$OUT/port_bind.log" 2>&1 || true
+set +e
+python3 tools/die_port_bind.py "$OUT/top/die_b2.v" --top hbm_b2_die --rtl-root "$BUNDLE/rtl" --rtl-root "$BUNDLE/physical" -f "$OUT/files_abs.f" "${X[@]}" --out "$OUT/port_bind.json" > "$OUT/port_bind.log" 2>&1
+bind_rc=$?
+set -e
 python3 - "$OUT/port_bind.json" <<'PY_CHECK'
 import json,sys
 r=json.load(open(sys.argv[1]));assert r.get('schema') and isinstance(r.get('summary'),dict),r
 s=r['summary'];assert s.get('instances',0)>300,s
 PY_CHECK
-grep -E '^FAIL' "$OUT/port_bind.log" | grep -Ev '^FAIL \S+ +x[0-9]+ +INPUT_TIED |ot_hbm3e_phy_rc_e8p5 .*STUB|child ot_hbm_accel_smh_fc_' > "$OUT/new_fail.txt" || true
+grep -E '^FAIL' "$OUT/port_bind.log" > "$OUT/new_fail.txt" || true
 tail -1 "$OUT/port_bind.log"
-if [ -s "$OUT/new_fail.txt" ];then cat "$OUT/new_fail.txt";echo 'B2_NATIVE_BIND FAIL';exit 1;fi
+if [ "$bind_rc" != 0 ] || [ -s "$OUT/new_fail.txt" ];then
+ cat "$OUT/new_fail.txt"
+ echo 'B2_NATIVE_BIND FAIL (strict port binding; historical failures are not waived)'
+ exit 1
+fi
 echo 'B2_NATIVE_BIND PASS'
 echo 'Physical capacity, per-cut SU binding, W128 HC views, reset wavefront and L74 multi-beat schedule remain separate gates.'
