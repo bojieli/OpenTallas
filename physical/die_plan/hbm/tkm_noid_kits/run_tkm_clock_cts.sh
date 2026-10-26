@@ -54,4 +54,11 @@ if ! docker ps >/dev/null 2>&1; then docker_cmd=(sudo docker);fi
 "${docker_cmd[@]}" run --rm --cpus="$threads" --memory="${mem}g" --memory-swap="${mem}g" \
  -v "$kit":/work -e HUID="$(id -u)" -e HGID="$(id -g)" \
  -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock \
- bash -lc 'set -euo pipefail; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$1" -o "$2" cts; chown -R "$HUID:$HGID" /work/run' tkm-clock "$threads" "$checkpoint"
+ bash -lc 'set -euo pipefail; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
+ if [[ "$2" == */3_place.odb ]]; then
+   make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$1" do-4_1_cts
+   make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$1" do-4_cts
+ else
+   make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$1" -o "$2" cts
+ fi
+ chown -R "$HUID:$HGID" /work/run' tkm-clock "$threads" "$checkpoint"
