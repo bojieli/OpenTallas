@@ -1,0 +1,7 @@
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \top
+ERROR: Module `ot_rom_64x32_m2' referenced in module `top' in cell `u' does not have a parameter named 'UNDECLARED_PARAMETER'.

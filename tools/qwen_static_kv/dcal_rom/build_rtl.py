@@ -21,7 +21,7 @@ def build():
     core = re.sub(r"(cfg_data_part\d+\[\d+ \+: 8\]\s*=)[^;]*;", r"\1 8'b0;", core)
     assert not re.search(r"\b(?:START|TX_IMG|RX_IMG)\[", re.sub(r"//[^\n]*", "", core)), "unconverted profile table"
     top = (D / "qkd_d2d_cal_seq_bc4.sv").read_text()
-    top = top.replace("module qkd_d2d_cal_seq_pin_bc4 #(", "module qkd_d2d_cal_seq_pin_rom64 #(parameter string VIAMAP = \"\", parameter string INSTANCE = \"kv_dcal\", ")
+    top = top.replace("module qkd_d2d_cal_seq_pin_bc4 #(", "module qkd_d2d_cal_seq_pin_rom64 #(parameter VIAMAP = \"\", parameter INSTANCE = \"kv_dcal\", ")
     top = re.sub(r"    `include \"d2d_cal_image_mu.svh\"\n", "", top)
     a = top.index("    ot_qwen_d2d_cal_seq_bc4 #(")
     z = top.index("    // ---- merge", a)
