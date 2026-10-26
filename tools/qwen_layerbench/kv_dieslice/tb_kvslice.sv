@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 // TOKj-KV 10-23: KV DIE-SLICE VEHICLE on the BOUND KV die top (qwen_kvsys_bound_top, tools/die_plan/bind.py output).
 // The DUT is the whole bound top byte-for-byte (all 160 partitions, every landed lane / pad / R8 delay as bound).  Only
 // the off-die boundaries are bench models (owner 10-14):
@@ -6,8 +6,8 @@
 //   host SerDes     ot_qfd_serdes_112g_x6_phy x2 -> kvs_link_phy_models.sv; the far end = the HOST BOARD PORT, built from the
 //                   real host link adapter + CDC RTL (qkd_host_board_port_fixture: qfd_link_adp512_split + qkd_host_phy_cdc5)
 //   UCIe d2d PHY    ot_qkvd_ucie_x64_phy   -> kvs_link_phy_models.sv; far end = the compute-die driver (phase TOKEN)
-// Clocks: the top clock inputs at the as-built PLL periods (qkd_hbm3e PLL analog model: core 1.2 GHz, hbm 0.977, host
-// 1.0, ingest 0.6, phy 0.959); pad_refclk 100 MHz.  The die's own analog PLL model (hub_C u_pll) produces pll_locked.
+// Clocks: the top clock inputs at the as-built PLL periods (core 1.2 GHz, phy 0.959; b23h binds: the HBM PHY slices,
+// HOST and ingest run on the die clock clk_core); the host board 1.0 GHz; pad_refclk 100 MHz.  The die's own analog PLL model (hub_C u_pll) produces pll_locked.
 // Phase BOOT (+PHASE=boot): replay the boot bundle (+FRAMES=<hex, one 528-b class-8 frame per line>) through the host
 // board port with its credits (the die's host path is real RTL end to end); watch the host root's boot_image_* and the
 // kvs_ctl dispatcher; PASS = every image of +EXPECT=<file: "target digest" per line, bundle order> reported ready with the
@@ -15,24 +15,31 @@
 // (one program word) -> the image digest must mismatch -> FAIL required.
 module tb_kvslice;
     // ------------------------------------------------------------------ clocks / reset
-    reg ck_core = 0, ck_hbm = 0, ck_host = 0, ck_ing = 0, ck_phy = 0, ck_ref = 0;
-    always #0.416667 ck_core = ~ck_core;
-    always #0.512    ck_hbm  = ~ck_hbm;
-    always #0.500    ck_host = ~ck_host;
-    always #0.833334 ck_ing  = ~ck_ing;
+    reg ck_core = 0, ck_host = 0, ck_phy = 0, ck_ref = 0;
+    always #0.416500 ck_core = ~ck_core;
+    always #0.500    ck_host = ~ck_host;     // the host BOARD's own clock (off-die host port fixture)
     always #0.521500 ck_phy  = ~ck_phy;
     always #5.0      ck_ref  = ~ck_ref;
     reg por_n = 0, rst_n = 0;
+    // Optional physical mission START after native bootstrap setup; reset and START are independent inputs.
+    reg mission_start = 0;
+    integer start_after_setup = 0, mission_start_delay = 130, mission_start_cycle = -1;
     reg [2:0] die_id = 3'd1;
     // ------------------------------------------------------------------ link far ends (read by the PHY models)
     wire         h2d_v;
     wire [1042:0] h2d_flit;
     wire         c2k_v;
     wire [582:0] c2k_flit;
+    // TOK-KVE 10-26: the bound top's pad set (b23h strict bind): one die clock clk_core (+ the SerDes PHY clock clk_clk_phy;
+    // the HBM PHY slices and the HOST run on clk_core), pad_por_n = the reset root (asynchronous assert), start = the START
+    // broadcast pad (decision 13c: every region releases on the later of its wavefront reset and START), and the UCIe
+    // line-side bumps (sys_c_link_* out = KV TX at the bump, sys_c_far_* in = the compute die's TX, c2k_*).
+    wire         kv_link_v;
+    wire [582:0] kv_link_flit;
     qwen_kvsys_bound_top dut (
-        .rst_n(rst_n), .clk_clk_fwd(ck_core), .clk_clk_hbm_EN(ck_hbm), .clk_clk_hbm_ES(ck_hbm), .clk_clk_hbm_WN(ck_hbm),
-        .clk_clk_hbm_WS(ck_hbm), .clk_clk_host(ck_host), .clk_clk_ingest(ck_ing), .clk_clk_phy(ck_phy), .clk_core(ck_core),
-        .pad_die_id(die_id), .pad_por_n(por_n), .pad_refclk(ck_ref));
+        .pad_por_n(por_n), .start(start_after_setup ? mission_start : rst_n), .clk_clk_phy(ck_phy), .clk_core(ck_core),
+        .pad_die_id(die_id), .pad_refclk(ck_ref),
+        .sys_c_link_v(kv_link_v), .sys_c_link_flit(kv_link_flit), .sys_c_far_v(c2k_v), .sys_c_far_flit(c2k_flit));
     // ------------------------------------------------------------------ compute-die far end on the UCIe link (+FAR=1)
     // KV-TOK 10-24 token phase: kvs_compute_end.sv (the compute die's real d2d master + calendar sequencer + record codec
     // + KVN transport on the pair image of the KV boot image; see that file).  +FAR=0 (default): the link is silent.
@@ -40,13 +47,14 @@ module tb_kvslice;
     // stages to the bump pad u_fwb_*) -- isolates the epoch-anchor skew question (KV dcal EP_SKEW 3 vs pad + package).
     reg far_en = 0, far_m1 = 0, far_epraw = 0; reg [4:0] far_epb = 0; reg [12:0] far_pos = 13'd255;
     kvs_compute_end u_far (.ck(ck_core), .rst_n(rst_n), .en(far_en), .epb(far_epb), .epoch(dut.sys_c.i_host_token_epoch_q),
-        .pos(far_pos), .kv_tx_v(dut.sys_c.w_d2d_kv_fdi_tx_v[0]), .kv_tx_flit(dut.sys_c.w_d2d_kv_fdi_tx_flit[582:0]),
+        .pos(far_pos), .kv_tx_v(kv_link_v), .kv_tx_flit(kv_link_flit),
         .kv_fwd_ep_pad(far_epraw ? dut.sys_c.w_d2d_kv_fwd_epoch[0] : dut.sys_c.d5_d2d_kv_fwd_epoch[0]),
         .kv_fwd_lrst_pad(far_epraw ? dut.sys_c.w_d2d_kv_fwd_link_rst_n[0] : dut.sys_c.d5_d2d_kv_fwd_link_rst_n[0]),
         .mut_cmd_late(far_m1), .c2k_v(c2k_v), .c2k_flit(c2k_flit));
-    // die host TX (two halves) -> host board port RX
-    wire d2h_v = dut.sys_SW.u_core.tx_v & dut.sys_SE.u_core.tx_v;
-    wire [1042:0] d2h_flit = {dut.sys_SE.u_core.tx_flit, dut.sys_SW.u_core.tx_flit};
+    // die host TX (two halves) -> host board port RX.  Each half is the as-built ot_qfd_serdes_112g_x6_phy_c45 (real FDI
+    // CDC u_fdi_cdc, core -> clk_clk_phy) around the PHY u_phy (= the bench model): the line side is the PHY's tx word.
+    wire d2h_v = dut.sys_SW.u_core.u_phy.tx_v & dut.sys_SE.u_core.u_phy.tx_v;
+    wire [1042:0] d2h_flit = {dut.sys_SE.u_core.u_phy.tx_flit, dut.sys_SW.u_core.u_phy.tx_flit};
     reg  [1042:0] d2h_q [0:3]; reg d2h_vq [0:3];
     always @(posedge ck_phy) begin
         d2h_q[0] <= d2h_flit; d2h_vq[0] <= d2h_v;
@@ -80,6 +88,11 @@ module tb_kvslice;
     string fpath, epath, phase;
     integer maxcyc = 200000, setup_wait = 20000, epoch_exp = -1;
     always @(posedge ck_core) cyc_core <= cyc_core + 1;
+    always @(negedge ck_core) if (start_after_setup && t_setup >= 0 && !mission_start &&
+                                cyc_core >= t_setup + mission_start_delay) begin
+        mission_start = 1; mission_start_cycle = cyc_core;
+        $display("KVSLICE_START cycle %0d setup_cycle %0d delay %0d", mission_start_cycle, t_setup, mission_start_delay);
+    end
     always @(posedge ck_host) begin
         cyc_host <= cyc_host + 1;
         hc_rx_cr <= hc_rx_v;                       // host consumes every die->host word at once (returns its credit)
@@ -159,42 +172,12 @@ module tb_kvslice;
     // DIAGNOSTIC ONLY (+DIAG_KVPC_RST_HBM): the 32 kvpc reset spines (bound to HOST die_rst_n) follow hbm_rst_n instead.
     // The kvpc holds qkd_static_kv_pc_es_merge_b (the slice's boot-window controller face hes/her), so with die_rst_n held
     // until every slice reports boot_done the cold-boot scratch check cannot reach the controller; this tests that claim.
+    // The force list is GENERATED by build.sh from the bound top (every "reset spine" net x_hub_Wi_rs_host_die_rst_n_<n>_pc_<Q>_<k>),
+    // so it follows the bind's net numbering; the plusarg is off by default (nominal and mutant runs never force).
     initial if ($test$plusargs("DIAG_KVPC_RST_HBM")) begin
-            $display("DIAG kvpc reset spines forced to hbm_rst_n (32 spines)");
-            force dut.x_hub_Wi_rs_host_die_rst_n_65_pc_EN_0 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_69_pc_EN_1 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_70_pc_EN_2 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_71_pc_EN_3 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_72_pc_EN_4 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_73_pc_EN_5 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_89_pc_EN_6 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_93_pc_EN_7 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_66_pc_ES_0 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_74_pc_ES_1 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_75_pc_ES_2 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_76_pc_ES_3 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_77_pc_ES_4 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_78_pc_ES_5 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_90_pc_ES_6 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_94_pc_ES_7 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_67_pc_WN_0 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_79_pc_WN_1 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_80_pc_WN_2 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_81_pc_WN_3 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_82_pc_WN_4 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_83_pc_WN_5 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_91_pc_WN_6 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_95_pc_WN_7 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_68_pc_WS_0 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_84_pc_WS_1 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_85_pc_WS_2 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_86_pc_WS_3 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_87_pc_WS_4 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_88_pc_WS_5 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_92_pc_WS_6 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
-            force dut.x_hub_Wi_rs_host_die_rst_n_96_pc_WS_7 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+`include "kvpc_rst_diag.svh"
     end
-    // partition input record (+REC_hub_Wi=<file>, partrec/gen_partrec.py) for the flat replay sub-bench
+    // partition input record (+REC_hub_Wi=<file>, partrec/gen_partrec.py; build.sh regenerates it from the bound top)
 `include "partrec_hub_Wi.svh"
 `include "kvtok2_obs.svh"
     // heartbeat (+HB=<core cycles>, default 20000): progress line + stdout flush (the log is a redirected file)
@@ -214,6 +197,9 @@ module tb_kvslice;
         if (!$value$plusargs("SETUP_WAIT=%d", setup_wait)) setup_wait = 20000;
         if (!$value$plusargs("EPOCH=%d", epoch_exp)) epoch_exp = -1;
         if (!$value$plusargs("POST=%d", post)) post = 0;
+        start_after_setup = $test$plusargs("START_AFTER_SETUP");
+        void'($value$plusargs("MISSION_START_DELAY=%d", mission_start_delay));
+        if (mission_start_delay < 1) $fatal(1, "MISSION_START_DELAY must be positive");
         begin : farcfg integer x;
             if ($value$plusargs("FAR=%d", x)) far_en = (x != 0);
             if ($value$plusargs("EPB=%d", x)) far_epb = 5'(x);
