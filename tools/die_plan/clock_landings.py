@@ -220,14 +220,18 @@ class Landings:
     def validate_observer(self,binder):
         if not self.collector or not self.collector.get("observer"):return
         spec=self.collector["observer"];pn=spec["part"]
+        # The sidecar names the emitted wrapper member. Original ELAB paths
+        # can be root-relative ("sys_face"), so use the exact binder emitter's
+        # name transformation and still require one actual module/input pair.
+        from bind import short_id
         matches=[ci for ci in binder.members.get(pn,[]) if binder.F.cells[ci].module==spec["module"]
-                 and binder.F.cells[ci].path.endswith("."+spec["instance_suffix"])]
+                 and short_id("u_"+binder.rel_of(ci),90)==spec["instance_suffix"]]
         if len(matches)!=1:raise LandingError(f"clock landing observer: expected unique actual {pn}.{spec['module']}.{spec['instance_suffix']}")
         ci=matches[0];cell=binder.F.cells[ci]
         for port in (spec["fault_port"],spec["ready_port"]):
             if binder.G.dirs[ci].get(port)!="input" or len(cell.ports.get(port,[]))!=1:
                 raise LandingError(f"clock landing observer {cell.path}.{port}: actual one-bit input required")
-        self.observer_source=dict(path=cell.path,module=cell.module,ports=[spec["fault_port"],spec["ready_port"]],
+        self.observer_source=dict(path=cell.path,emitted_instance=spec["instance_suffix"],module=cell.module,ports=[spec["fault_port"],spec["ready_port"]],
                                   added_data_cycles=0,added_external_ports=0)
 
     def type_rtl(self, tn, text):
