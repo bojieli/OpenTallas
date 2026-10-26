@@ -1,0 +1,40 @@
+{
+  "verdict": "BLOCKED",
+  "scope": "syntheticr0 proofcut externalFT contract",
+  "actual_failing_path": "ft4_i[38] -> u_ft_ft4_s0/q[38]",
+  "actual_setup_tt_ps": -89.3461974644,
+  "balanced_nominal_window_ps": {
+    "period": 833,
+    "input_max": 766.36,
+    "seam_setup_uncertainty": 30,
+    "actual_library_setup": 9.38,
+    "tt_pin_to_d_max": 27.26,
+    "input_min": -40,
+    "seam_hold_uncertainty": 12.5,
+    "ff_pin_to_d_min_before_library_hold": 52.5
+  },
+  "reason": "At chosen matched common insertion, required FFminimum data delay exceeds allowed TTmaximum; padding cannot repair both. No inputmax/min or phase waiver adopted.",
+  "original_sources": [
+    {
+      "part": "s_0S_x03",
+      "type": "slice_station__t50",
+      "outputs": [
+        "ft0_o",
+        "ft1_o"
+      ]
+    },
+    {
+      "part": "fW0_p2_b0",
+      "type": "col_h9_r0_p2__t1",
+      "outputs": [
+        "ret_o0",
+        "ft1_o",
+        "ft2_o",
+        "ft3_o",
+        "ft4_o"
+      ]
+    }
+  ],
+  "signed_receipts": "None matching these current types in realepyc1 autopilot/signed.tsv at22:24PDT",
+  "next": "Await matching real output-min/parentcontext, or coordinator/owner scoped harness disposition. Continue R1 independently."
+}

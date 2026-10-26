@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS",
+  "chains": 384,
+  "buffers_per_chain": 8,
+  "truth": {
+    "TT": "Y=A",
+    "FF": "Y=A"
+  },
+  "cross_input_mutant_caught": true,
+  "registers_added": 0
+}

@@ -1,0 +1,29 @@
+{
+  "verdict": "FAIL",
+  "source": "73b9004d4",
+  "scope": "early173 local clock CTS prototype",
+  "period_ps": 833,
+  "uncertainty_setup_hold_ps": [
+    60,
+    25
+  ],
+  "r0": {
+    "setup_tt_ps": -89.3461974644,
+    "hold_ff_ps": -18.7738852992,
+    "hold_ff_endpoints": 65,
+    "pair_tt_ps": 96.13,
+    "pair_ff_ps": 72.49,
+    "pairs": 16729
+  },
+  "r1": {
+    "setup_tt_ps": 350.8283122485,
+    "hold_ff_ps": -52.3100592712,
+    "hold_ff_endpoints": 324,
+    "pair_tt_ps": 103.19,
+    "pair_ff_ps": 78.51,
+    "pairs": 8536
+  },
+  "cause": "Early ingress local clock group is related to normal local groups; TT related-pair skew exceeds80. R0 external FT input max766.36 also makes early capture fail setup.",
+  "next": "No route. Restore uniformly250/202.5 physical local targets; planned receiver hold rows on fallback inputs. R0FT window needs actual source context before any newP&R.",
+  "picture": "r1_actual_clock_FAIL.png"
+}

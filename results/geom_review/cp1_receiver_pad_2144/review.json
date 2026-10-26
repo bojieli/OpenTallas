@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "CP1 plannedreceiverhold rows CTS-only",
+  "pictures": [
+    "col_h10_r0_p1__t1_plan.png",
+    "col_h10_r1__t1_plan.png"
+  ],
+  "findings": [
+    "Viewed whole r0/r1 pad distribution and dense r1 top strip. Pads sit beside fallback input registers in existing standard-cell rows; no macros in proof vehicle.",
+    "No pre-existing cell moves. Occupancy scan includes every existing cell and reserves4.32um aroundclocktap sites. Eight BUFx2 perchain fit contiguous free rows.",
+    "r02558chains/20464BUF/1491.8256um2/max16.254um; r1384chains/3072BUF/223.9488um2/max7.56um. These short local paths need no relay or extra cycle by construction; setup still must be measured.",
+    "Keep uniform250/202.5 local clocks; sender_min only actual pair cut; external-40 unchanged. PDN rowrail orientation preserved.",
+    "Early173 variant failed actualTTrelatedpair103.19ps and remains FAIL; this distinct plannedreceiverdata-delay variant addresses that cause."
+  ],
+  "conditions": [
+    "Before CTS, apply audits every original D-pin net through non-invertingBUF A->Y, actual TT/FFlib truth, cross-input mutant, and no addedregisters.",
+    "No cycle-cost claim until833ps TTsetup+FFhold measured; no route before pairmetric<=80 and independentfullreview"
+  ]
+}
