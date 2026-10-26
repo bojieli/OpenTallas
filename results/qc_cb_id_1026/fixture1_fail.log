@@ -1,0 +1,68 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/codex-qc-1026
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/codex-qc-1026
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/wt/codex-qc-1026
+ot-run: localhost      admits    18 GB (avail 222, reserve 0, fresh 111.4, peak 28.1, headroom 0, waiters 1/32 GB) load 125/256 running 41 disk 703 GB 
+ot-run: SPILL not possible: localhost lacks /srv/opentallas-scratch2/claude/qcdieclk-2330 (data not on the queue host)
+ot-run: -> localhost (will queue: admits 18 GB < 8 GB)
+ot-heavy: admitted on tender-ray as oth-ubuntu-2173042-1793006182 after 1 s
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+______ test_full_width_partial_literal_id_preserves_internal_connections _______
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-859/test_full_width_partial_litera0')
+
+    def test_full_width_partial_literal_id_preserves_internal_connections(tmp_path):
+        src=tmp_path/'source';src.mkdir()
+        ex=HERE/'examples'/'bind_tiny'
+        for name in ['leaves.sv','par.sv','die.v']:
+            s=re.sub(r'\bid\b','tile_id',(ex/name).read_text())
+            s=s.replace('[3:0] tile_id','[15:0] tile_id').replace('{tile_id, tile_id}','(tile_id[15:8] ^ tile_id[7:0])')
+            s=s.replace("4'd5","16'h1230").replace("4'd6","16'h4560")
+            if name=='par.sv':
+                s=s.replace('.tile_id(tile_id)', '.tile_id({tile_id[15:4], a_o[3:0]})')
+            (src/name).write_text(s)
+        p=json.loads((ex/'die_plan.json').read_text());p['asbuilt']['base']=str(src)
+        p['asbuilt']['straps']=[r'p\d\.u_b\.tile_id']
+        p['partition_types']['ta']['contents']=[dict(inst='u_b',module='lf_b',status='reuse',
+            parent_id_straps={'tile_id':dict(width=16,value=0x1230)})]
+        plan=src/'plan.json';plan.write_text(json.dumps(p));out=tmp_path/'bound'
+        for cmd in ['elab','bind','verify']:
+>           assert bind.main([cmd,str(plan),'--out',str(out),'--mem','4'])==0
+E           AssertionError: assert 2 == 0
+E            +  where 2 = <function main at 0x78fd693f8f60>(['verify', '/tmp/pytest-of-ubuntu/pytest-859/test_full_width_partial_litera0/source/plan.json', '--out', '/tmp/pytest-of-ubuntu/pytest-859/test_full_width_partial_litera0/bound', '--mem', '4'])
+E            +    where <function main at 0x78fd693f8f60> = bind.main
+
+tools/die_plan/test_parent_id_bind.py:64: AssertionError
+----------------------------- Captured stdout call -----------------------------
+{"modules": 4, "full_files": 1, "lib_files": 1, "ambiguous": 0, "undefined": 5, "substituted": [], "aliased": {}, "hard_params": {"files": [], "masters": {}}, "json": "/tmp/pytest-of-ubuntu/pytest-859/test_full_width_partial_litera0/bound/asbuilt.json", "script": "/tmp/pytest-of-ubuntu/pytest-859/test_full_width_partial_litera0/bound/asbuilt.ys", "top": "tdie"}
+{"partitions": 3, "types": 2, "crossings": 6, "crossing_bits": 34, "errors": 1, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 24, "plan_driven": 0}
+   EMIT parent ID A0.u_b.tile_id: unknown or missing as-built ID bits
+bind: ERROR yosys failed (rc 1):
+ERROR: Module `bind_tiny_bound_top' not found!
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/tmp/pytest-of-ubuntu/pytest-859/test_full_width_partial_litera0/bound/verify/bound.ys' --
+
+1. Executing Verilog-2005 frontend: /tmp/pytest-of-ubuntu/pytest-859/test_full_width_partial_litera0/bound/verify/lib_stubs.sv
+Parsing SystemVerilog input from `/tmp/pytest-of-ubuntu/pytest-859/test_full_width_partial_litera0/bound/verify/lib_stubs.sv' to AST representation.
+Generating RTLIL representation for module `\lf_a'.
+Generating RTLIL representation for module `\lf_b'.
+Generating RTLIL representation for module `\lf_sink'.
+Generating RTLIL representation for module `\lf_b_nid'.
+Generating RTLIL representation for module `\par'.
+Generating RTLIL representation for module `\par_nid'.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+ERROR: Module `bind_tiny_bound_top' not found!
+
+=========================== short test summary info ============================
+FAILED tools/die_plan/test_parent_id_bind.py::test_full_width_partial_literal_id_preserves_internal_connections
+ot-run: RAN on localhost (unit oth-ubuntu-2173042-1793006182): exit 1
