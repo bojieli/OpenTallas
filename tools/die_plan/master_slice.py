@@ -20,6 +20,7 @@ without a slice is refused; `--trial` kits (not sign-off) stay allowed and are s
 import hashlib
 import json
 import os
+import re
 import shutil
 from pathlib import Path
 
@@ -289,7 +290,9 @@ def emit_tcl(sl, dbu=1000):
          "}",
          "set ms_place {}; set ms_nb 0; set ms_no 0"]
     place = []
-    pushdown = sl.get("kind") == "core" and bool(sl.get("pushdown"))
+    # 12.2a1 + COORD (MASTER-PLAN-R2 ruling): islands of cores AND partitions are pushdown cells, never strip
+    # placement blockages; core_infra places the fixed cells and their ft ports
+    pushdown = bool(sl.get("pushdown"))
     for i in sl.get("islands", []) or []:
         if not pushdown:
             place.append((f"island {i.get('name')}", i["rect_um"]))
@@ -328,7 +331,9 @@ def emit_tcl(sl, dbu=1000):
     nplaced = 0
     for p in sl.get("entry_pins", []) or []:
         x, y = p["xy_um"]
-        if p.get("pin"):
+        if p.get("pin") and pushdown:
+            nplaced += 1          # placed (fail-closed on a missing port) by master_core_infra.tcl ot_ci_entry
+        elif p.get("pin"):
             L.append(f"place_pin -pin_name {_tcl_word(p['pin'])} -layer {p.get('layer', 'M7')} "
                      f"-location {{{x:.4f} {y:.4f}}} -pin_size {{0.032 0.192}}   ;# entry {p.get('name')}")
             nplaced += 1
@@ -389,7 +394,7 @@ def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, 
         return TRIAL if req else None
     p, sl = resolve(slice_dir, name, outline_um, plan_raw, trial, kind)
     kd = Path(kd)
-    if sl.get("kind") == "core" and sl.get("pushdown"):
+    if sl.get("pushdown"):
         import core_infra
         effective = sl
         explicit = [p for p in (clock_ports or []) if p]
@@ -403,9 +408,198 @@ def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, 
         core_infra.install(kd, effective)
     shutil.copyfile(p, kd / "master_slice.json")
     (kd / "master_slice.tcl").write_text(emit_tcl(sl))
+    _consume_io(kd, sl, _clock_port(kd, sl))
     if not (kd / "keepout_phys.tcl").is_file():
         shutil.copyfile(Path(__file__).with_name("keepout_phys.tcl"), kd / "keepout_phys.tcl")
     if gpl_hook:
         h = Path(gpl_hook)
         h.write_text(HOOK_LINE + h.read_text())
     return stamp(sl)
+
+
+# ------------------------------------------------------------------------------------------------ kit <-> slice
+# MASTER-PLAN-R3 (COORD 10-26): kits CONSUME the slice.  The generator's own io placement is rewritten so the core
+# clock entry and every bound M7 entry pin sit where the slice says (no later override), and check_kit() is the
+# static gate GEOM-REVIEW / the kit preflight runs on a finished kit dir: kit == slice, else FAIL with the reason.
+_PLACE = re.compile(r"^(\s*place_pin\s+-pin_name\s+)(\{[^}]*\}|\S+)(.*)$")
+_OWN = ("master_slice.tcl", "master_core_infra.tcl", "core_infra_impl.tcl", "native_pg_binding.tcl",
+        "keepout_phys.tcl")
+
+
+def _pin_name(tok):
+    return tok[1:-1] if tok.startswith("{") and tok.endswith("}") else tok
+
+
+def _clock_port(kd, sl):
+    p = Path(kd) / "core_infra_plan.json"
+    if p.is_file():
+        try:
+            return json.loads(p.read_text()).get("core_clock_port")
+        except ValueError:
+            return None
+    return sl.get("core_clock_port") or (sl.get("core_tree") or {}).get("clock_port")
+
+
+def slice_pins(sl, clock_port=None):
+    """{pin name: (layer, (x, y))} the slice fixes: core clock entry (M5) + bound entry pins (M7)."""
+    want = {}
+    entry = next((i["clock_pin"] for i in sl.get("islands", []) or [] if i.get("clock_pin")), None)
+    if entry and clock_port and (sl.get("kind") == "core" or sl.get("core_clock_port")):
+        want[clock_port] = (entry.get("layer", "M5"), tuple(float(v) for v in entry["xy_um"]))
+    for p in sl.get("entry_pins", []) or []:
+        if p.get("pin"):
+            want[p["pin"]] = (p.get("layer", "M7"), tuple(float(v) for v in p["xy_um"]))
+    return want
+
+
+def _consume_io(kd, sl, clock_port):
+    want = slice_pins(sl, clock_port)
+    done = {}
+    if not want:
+        return done
+    for f in sorted(Path(kd).glob("*.tcl")):
+        if f.name in _OWN:
+            continue
+        lines, hit = f.read_text().split("\n"), False
+        for i, ln in enumerate(lines):
+            m = _PLACE.match(ln)
+            if not m or _pin_name(m.group(2)) not in want:
+                continue
+            name = _pin_name(m.group(2))
+            layer, (x, y) = want[name]
+            lines[i] = (f"{m.group(1)}{{{name}}} -layer {layer} -location {{{x:.4f} {y:.4f}}} -pin_size {{0.032 0.192}}"
+                        f"   ;# master-plan slice (was:{m.group(3).strip()[:80]})")
+            done.setdefault(name, []).append(f.name)
+            hit = True
+        if hit:
+            f.write_text("\n".join(lines))
+    (Path(kd) / "master_slice_io.json").write_text(json.dumps(dict(
+        rewritten={k: v for k, v in sorted(done.items())},
+        slice_pins={k: dict(layer=v[0], xy_um=list(v[1])) for k, v in sorted(want.items())}), indent=1) + "\n")
+    return done
+
+
+def _kit_outline(kd):
+    cfg = Path(kd) / "config.mk"
+    if not cfg.is_file():
+        return None
+    m = re.search(r"^\s*export\s+DIE_AREA\s*:?=\s*([-\d.eE+]+)\s+([-\d.eE+]+)\s+([-\d.eE+]+)\s+([-\d.eE+]+)",
+                  cfg.read_text(), re.M)
+    if not m:
+        return None
+    x0, y0, x1, y1 = (float(v) for v in m.groups())
+    return (x1 - x0, y1 - y0)
+
+
+def check_kit(kd, slice_path=None, tol=1e-3):
+    """Static kit-vs-slice gate (12.7c GEOM-REVIEW part 1).  Every finding is a FAIL; returns a report dict."""
+    kd = Path(kd)
+    issues, checks = [], {}
+    sp = Path(slice_path) if slice_path else kd / "master_slice.json"
+    try:
+        sl = load(sp)
+    except SliceError as e:
+        return dict(verdict="FAIL", kit=str(kd), issues=[str(e)], checks={})
+    if slice_path and (kd / "master_slice.json").is_file() and \
+            digest(json.loads((kd / "master_slice.json").read_text())) != digest(sl):
+        issues.append("kit master_slice.json is not the given slice (stale or different plan)")
+    ol = _kit_outline(kd)
+    checks["outline"] = dict(kit=list(ol) if ol else None, slice=sl["outline_um"])
+    if ol is None:
+        issues.append("config.mk DIE_AREA missing")
+    elif any(abs(a - b) > tol for a, b in zip(ol, sl["outline_um"])):
+        issues.append(f"outline {list(ol)} != slice {sl['outline_um']}")
+    mtcl = kd / "master_slice.tcl"
+    if not mtcl.is_file() or mtcl.read_text() != emit_tcl(sl):
+        issues.append("master_slice.tcl missing or not generated from this slice")
+    if not any(HOOK_LINE.strip() in f.read_text() for f in kd.glob("*.tcl") if f.name not in _OWN):
+        issues.append("no kit step sources /work/master_slice.tcl")
+    clock_port = _clock_port(kd, sl)
+    if sl.get("pushdown"):
+        import core_infra as CI
+        try:
+            eff = dict(sl, core_clock_port=clock_port) if clock_port else sl
+            plan = CI.compile_slice(eff)
+            got = json.loads((kd / "core_infra_plan.json").read_text())
+            if got != json.loads(json.dumps(plan)):
+                issues.append("core_infra_plan.json differs from compile_slice(slice)")
+            if (kd / "master_core_infra.tcl").read_text() != CI.emit_tcl(eff):
+                issues.append("master_core_infra.tcl not generated from this slice")
+            impl = (kd / "core_infra_impl.tcl").read_text()
+            if impl != (Path(__file__).with_name("core_infra.tcl")).read_text():
+                issues.append("core_infra_impl.tcl differs from the shared tools/die_plan/core_infra.tcl")
+            checks["pushdown"] = dict(cells=len(plan["cells"]), ft_ports=len(plan["ports"]),
+                                      tree=bool(plan.get("core_tree")), bay_cells=len(plan["bays"]),
+                                      reserved_bays=len(plan.get("reserved_bays", [])),
+                                      unbound_entry_pins=plan.get("unbound_entry_pins", 0))
+            # island coordinates: every pushdown island's cells inside its slice rect at the slice centre
+            for isl in (sl["pushdown"].get("islands") or []):
+                mine = [c for c in plan["cells"] if c["name"].startswith(f"mp_{isl['name']}_")]
+                if not mine and not isl.get("cells"):
+                    issues.append(f"pushdown island {isl['name']}: no fixed cells")
+                for c in mine:
+                    x, y = c["xy_um"]
+                    r = isl["rect_um"]
+                    if not (r[0] <= x <= r[2] and r[1] <= y <= r[3]):
+                        issues.append(f"{c['name']} at {c['xy_um']} outside island {isl['name']} {r}")
+        except (OSError, ValueError, KeyError, CI.InfraError) as e:
+            issues.append(f"pushdown not installed from the slice: {type(e).__name__}: {e}")
+        # no island strip blockage left in the kit
+        for k in sl.get("keepouts", []) or []:
+            if k.get("kind") == "island" and f"keepout {k.get('name')} (island)" in (mtcl.read_text() if mtcl.is_file() else ""):
+                issues.append(f"island {k.get('name')} emitted as a placement blockage (12.2a1: pushdown cells)")
+    elif sl.get("kind") == "core" and sl.get("islands"):
+        issues.append("core slice without pushdown section: islands would be strip blockages (12.2a1)")
+    # clock entry + bound entry pins: every place_pin of those ports in the kit must be the slice's
+    want = slice_pins(sl, clock_port)
+    entry = next((i["clock_pin"] for i in sl.get("islands", []) or [] if i.get("clock_pin")), None)
+    if sl.get("kind") == "core" and entry and not clock_port:
+        issues.append("core clock entry in the slice but no core clock port bound (kit cannot place it)")
+    seen = {}
+    for f in sorted(kd.glob("*.tcl")):
+        if f.name in _OWN:
+            continue
+        for ln in f.read_text().split("\n"):
+            m = _PLACE.match(ln)
+            if not m or _pin_name(m.group(2)) not in want:
+                continue
+            n = _pin_name(m.group(2))
+            lm = re.search(r"-layer\s+(\S+)", ln)
+            xm = re.search(r"-location\s+\{\s*([-\d.eE+]+)\s+([-\d.eE+]+)\s*\}", ln)
+            lay, (x, y) = want[n]
+            seen[n] = seen.get(n, 0) + 1
+            if not lm or lm.group(1) != lay or not xm or abs(float(xm.group(1)) - x) > tol or abs(float(xm.group(2)) - y) > tol:
+                issues.append(f"{f.name}: {n} placed at {xm.groups() if xm else '?'} {lm.group(1) if lm else '?'}, "
+                              f"slice {lay} ({x:g}, {y:g})")
+    checks["slice_pins"] = dict(fixed=len(want), placed_by_kit_io=sum(seen.values()),
+                                clock_port=clock_port, clock_entry=list(entry["xy_um"]) if entry else None)
+    # latency target carried into the kit SDC/budget (12.3)
+    lat = (sl.get("latency") or {}).get("common_clock_latency_ps") or {}
+    checks["latency"] = lat
+    issues = list(dict.fromkeys(issues))
+    return dict(verdict="FAIL" if issues else "PASS", kit=str(kd), slice=str(sp), slice_sha256=digest(sl),
+                type=sl.get("type"), kind=sl.get("kind"), issues=issues[:50], n_issues=len(issues), checks=checks)
+
+
+def main(argv=None):
+    import argparse
+    ap = argparse.ArgumentParser(description="master-plan slice tools")
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    c = sub.add_parser("check-kit", help="static kit-vs-slice gate on finished kit dirs")
+    c.add_argument("kits", nargs="+")
+    c.add_argument("--slice", help="the plan slice the kit must match (default: the kit's own copy)")
+    c.add_argument("--out")
+    a = ap.parse_args(argv)
+    rows = [check_kit(k, a.slice) for k in a.kits]
+    rep = dict(verdict="PASS" if all(r["verdict"] == "PASS" for r in rows) else "FAIL", kits=rows)
+    txt = json.dumps(rep, indent=1)
+    if a.out:
+        Path(a.out).write_text(txt + "\n")
+    print(txt if len(rows) <= 3 else json.dumps({r["kit"]: r["verdict"] for r in rows}, indent=1))
+    return 0 if rep["verdict"] == "PASS" else 1
+
+
+if __name__ == "__main__":
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    raise SystemExit(main())

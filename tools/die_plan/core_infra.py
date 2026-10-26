@@ -114,6 +114,28 @@ def compile_slice(sl):
                     n = add_cell(dict(name=f"mp_{name}_{kind}{k}", master=master,
                                       xy_um=[cx + (k - (nbuf - 1) / 2) * 1.08, yy]), rect)
                     arcs.append(dict(cell=n, source=ip[0]["name"], sink=op[0]["name"]))
+    # partition H-tree leg repeaters (COORD 06:53): one fixed BUF per site between its own in/out ft ports
+    for rep in sl.get("pushdown", {}).get("clock_repeaters", []):
+        for p in rep.get("ft_ports", []):
+            p = dict(p)
+            n = p["name"]
+            if not IDENT.fullmatch(n) or n in seen_ports:
+                raise InfraError(f"duplicate/invalid feedthrough port {n!r}")
+            seen_ports.add(n)
+            direction = {"in": "INPUT", "out": "OUTPUT"}.get(p.get("dir"), p.get("dir"))
+            if direction not in ("INPUT", "OUTPUT"):
+                raise InfraError(f"{n}: input or output required")
+            if p.get("layer", "M5") != "M5":
+                raise InfraError(f"{n}: clock repeater feedthrough must terminate on M5")
+            p.update(direction=direction, xy_um=xy(p.get("xy_um"), n, outline))
+            ports.append(p)
+        ip = [p["name"] for p in rep.get("ft_ports", []) if p.get("dir") == "in"]
+        op = [p["name"] for p in rep.get("ft_ports", []) if p.get("dir") == "out"]
+        if len(ip) != 1 or len(op) != 1:
+            raise InfraError(f"{rep.get('name')}: exactly one in/out feedthrough pair required")
+        n = add_cell(dict(name=f"mp_{rep['name']}", master=rep.get("cell"), xy_um=rep.get("xy_um")),
+                     rep.get("rect_um"))
+        arcs.append(dict(cell=n, source=ip[0], sink=op[0]))
     for a in arcs:
         if a["source"] not in seen_ports or a["sink"] not in seen_ports:
             raise InfraError(f"{a['cell']}: feedthrough arc references an undeclared port")
@@ -173,8 +195,15 @@ def compile_slice(sl):
             if len(pair) != 2 or any(s not in owner for s in pair) or owner[pair[0]] != owner[pair[1]]:
                 raise InfraError(f"zero-logic related pair does not share its planned leaf: {pair}")
         tree["depth"] = next(iter(levels))
+    reserved = []
     for b in sl.get("bays", []):
         assignments = b.get("cells", [])
+        if b.get("bits", 0) and not assignments and sl.get("kind") == "partition":
+            # partition station/repeater bay: a reserved site region the kit's ft-station step fills (12.2b);
+            # the kit holds it as a named region, it never becomes a blockage for those cells
+            reserved.append(dict(name=b["name"], rect_um=b["rect_um"], regions_um=b.get("regions_um", []),
+                                 bits=b["bits"], kind=b.get("kind")))
+            continue
         if b.get("bits", 0) and not assignments:
             raise InfraError(f"bay {b['name']}: bits require explicit cell assignments; metadata alone is not a built bay")
         for c in assignments:
@@ -182,6 +211,8 @@ def compile_slice(sl):
             bays.append(dict(c, bay=b["name"], rect_um=b["rect_um"], regions_um=b.get("regions_um", [])))
     entry = next((i["clock_pin"] for i in sl.get("islands", []) if i.get("clock_pin")), None)
     clock_port = sl.get("core_clock_port") or ((tree or {}).get("clock_port"))
+    if sl.get("kind") == "partition" and not clock_port:
+        entry = None      # partition PHY-strip clock entry: placed by the partition io step, checked by kit_check
     if entry and not clock_port:
         raise InfraError("clock entry requires explicit core_clock_port (or core_tree.clock_port); port names are never guessed")
     if entry and entry.get("layer") != "M5":
@@ -208,7 +239,10 @@ def compile_slice(sl):
             c["orient"] = p["orient"]
     return dict(module=sl["module"], outline_um=outline, cells=cells, ports=ports, arcs=arcs,
                 core_tree=tree, core_clock_port=clock_port, clock_entry=entry,
-                bays=bays, entry_pins=sl.get("entry_pins", []), clock_ndr=sl.get("clock_ndr"))
+                bays=bays, reserved_bays=reserved,
+                entry_pins=[p for p in sl.get("entry_pins", []) if p.get("pin")],
+                unbound_entry_pins=sum(1 for p in sl.get("entry_pins", []) if not p.get("pin")),
+                clock_ndr=sl.get("clock_ndr"))
 
 
 def named_tree_report(report, clock_port, macro_pins=None, load_balance="equal_counts"):
@@ -355,7 +389,7 @@ def emit_wrapper(sl, logic_module, interface):
 
 def install(kd, sl):
     """Called by every kit's master_slice hook. No slice/pushdown means no change."""
-    if sl.get("kind") != "core" or not sl.get("pushdown"):
+    if sl.get("kind") not in ("core", "partition") or not sl.get("pushdown"):
         return False
     kd = Path(kd)
     script = emit_tcl(sl)  # refuse incomplete plan BEFORE writing kit files

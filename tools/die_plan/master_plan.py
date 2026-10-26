@@ -473,6 +473,135 @@ def island_lattice(M, island_centres, core_rects, B=400.0):
                      "mesh build must reference its ft ports, not place a die cell there")
 
 
+def island_tree(sites, leaves, B=200.0, spread_tol_um=20.0, rep_um=None, band_um=40.0, search=4):
+    """12.2a1 / 12.2c MASTER-PLAN-R3: the die clock tree planned ON the declared island lattice.
+
+    sites  : [dict(id, xy, role, inst)] every declared island (partition die_node, core clock_entry, in-core
+             tree_leaf, PHY strip) in the die frame -- the only legal places for a die tree node / leg repeater;
+    leaves : the subset of site ids every one of which the tree must reach (each core instance's clock-entry island
+             + partition islands): 'every instance's island is used (tree node or mesh driver)'.
+    Top-down median bisection of the leaf set (equal leaf count per branch, +-1), bottom-up node choice: the node of
+    two subtrees is the declared island (within `search` bins of the geometric midpoint) that minimises the
+    root->leaf path-length mismatch of its two branches, ties -> nearest to the midpoint.  Nodes are therefore ON
+    islands by construction; the remaining FAIL causes are reported, never hidden: path-length spread (balance) and
+    leg-repeater gaps (no island within band along a leg longer than rep_um).  Deterministic, plan geometry only."""
+    rep_um = rep_um or CLOCK_REP_UM
+    byid = {q["id"]: q for q in sites}
+    bins = defaultdict(list)
+    for q in sites:
+        bins[(int(q["xy"][0] // B), int(q["xy"][1] // B))].append(q)
+    nodes = []
+
+    def cands(mx, my):
+        i, j = int(mx // B), int(my // B)
+        for r in range(search + 1):
+            out = [q for di in range(-r, r + 1) for dj in range(-r, r + 1) if max(abs(di), abs(dj)) == r
+                   for q in bins.get((i + di, j + dj), [])]
+            if out:
+                return out
+        return []
+
+    def md(a, b):
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+    def build(ids, depth):
+        if len(ids) == 1:
+            q = byid[ids[0]]
+            return dict(site=q["id"], xy=q["xy"], lo=0.0, hi=0.0, n=1, depth=depth, kids=[])
+        xs = [byid[i]["xy"][0] for i in ids]
+        ys = [byid[i]["xy"][1] for i in ids]
+        ax = 0 if max(xs) - min(xs) >= max(ys) - min(ys) else 1
+        ids = sorted(ids, key=lambda i: (byid[i]["xy"][ax], byid[i]["xy"][1 - ax], i))
+        h = len(ids) // 2
+        A, Bk = build(ids[:h], depth + 1), build(ids[h:], depth + 1)
+        mx, my = (A["xy"][0] + Bk["xy"][0]) / 2, (A["xy"][1] + Bk["xy"][1]) / 2
+        best = None
+        for q in cands(mx, my):
+            la, lb = md(q["xy"], A["xy"]), md(q["xy"], Bk["xy"])
+            hi = max(la + A["hi"], lb + Bk["hi"])
+            lo = min(la + A["lo"], lb + Bk["lo"])
+            key = (round(hi - lo, 3), round(md(q["xy"], (mx, my)), 3), q["id"])
+            if best is None or key < best[0]:
+                best = (key, q, hi, lo)
+        if best is None:                   # no island anywhere near: off-island node (reported FAIL)
+            xy, site = (mx, my), None
+            la, lb = md(xy, A["xy"]), md(xy, Bk["xy"])
+            hi, lo = max(la + A["hi"], lb + Bk["hi"]), min(la + A["lo"], lb + Bk["lo"])
+        else:
+            _, q, hi, lo = best
+            xy, site = q["xy"], q["id"]
+        n = dict(site=site, xy=xy, lo=lo, hi=hi, n=A["n"] + Bk["n"], depth=depth, kids=[A, Bk])
+        return n
+    import sys as _s
+    _s.setrecursionlimit(max(_s.getrecursionlimit(), 10000))
+    root = build(sorted(set(leaves)), 0)
+    # flatten + leg checks
+    off, legs, rep_gaps, worst_gap = 0, 0, [], 0.0
+    used = set()
+
+    def gap_on(a, b):
+        """largest gap between declared islands along the L route a -> (b.x, a.y) -> b within +-band."""
+        pts = []
+        for (p, q) in ((a, (b[0], a[1])), ((b[0], a[1]), b)):
+            L = md(p, q)
+            if L < 1e-6:
+                continue
+            horiz = abs(p[1] - q[1]) < 1e-6
+            lo_, hi_ = (min(p[0], q[0]), max(p[0], q[0])) if horiz else (min(p[1], q[1]), max(p[1], q[1]))
+            fixed = p[1] if horiz else p[0]
+            ts = [lo_, hi_]
+            for i in range(int((lo_ - band_um) // B), int((hi_ + band_um) // B) + 1):
+                for j in range(int((fixed - band_um) // B), int((fixed + band_um) // B) + 1):
+                    for s_ in bins.get((i, j) if horiz else (j, i), []):
+                        u, v = (s_["xy"][0], s_["xy"][1]) if horiz else (s_["xy"][1], s_["xy"][0])
+                        if lo_ <= u <= hi_ and abs(v - fixed) <= band_um:
+                            ts.append(u)
+            ts.sort()
+            pts.append(max((y - x for x, y in zip(ts, ts[1:])), default=0.0))
+        return max(pts, default=0.0)
+    stack = [(root, None, "t")]
+    while stack:
+        nd, par, tag = stack.pop()
+        nodes.append(dict(tag=tag, site=nd["site"], xy_um=[r3(nd["xy"][0]), r3(nd["xy"][1])], parent=par,
+                          depth=nd["depth"], leaves=nd["n"],
+                          role=byid[nd["site"]]["role"] if nd["site"] else None,
+                          inst=byid[nd["site"]].get("inst") if nd["site"] else None))
+        if nd["site"] is None:
+            off += 1
+        else:
+            used.add(nd["site"])
+        for k, kd_ in enumerate(nd["kids"]):
+            legs += 1
+            L = md(nd["xy"], kd_["xy"])
+            if L > rep_um:
+                g = gap_on(nd["xy"], kd_["xy"])
+                worst_gap = max(worst_gap, g)
+                if g > rep_um:
+                    rep_gaps.append(dict(parent=tag, child=tag + str(k), leg_um=r3(L), max_island_gap_um=r3(g)))
+            stack.append((kd_, tag, tag + str(k)))
+    spread = root["hi"] - root["lo"]
+    roles = defaultdict(int)
+    for n_ in nodes:
+        if n_["leaves"] > 1:
+            roles[n_["role"]] += 1
+    verdict = "PASS" if not off and not rep_gaps and spread <= spread_tol_um else "FAIL"
+    causes = []
+    if off:
+        causes.append(f"{off} tree nodes with no declared island within {search} x {B:g} um of the midpoint")
+    if spread > spread_tol_um:
+        causes.append(f"root->leaf path-length spread {spread:.1f} um > {spread_tol_um:g} um: the island lattice is "
+                      "not symmetric about the chosen nodes (move/add islands in the plan, 12.8d)")
+    if rep_gaps:
+        causes.append(f"{len(rep_gaps)} legs > {rep_um:g} um with an island gap > {rep_um:g} um (no leg-repeater site)")
+    return dict(verdict=verdict, leaves=len(set(leaves)), nodes=len(nodes),
+                internal_nodes=sum(1 for n_ in nodes if n_["leaves"] > 1), nodes_off_island=off,
+                node_roles=dict(roles), path_len_um=dict(min=r3(root["lo"]), max=r3(root["hi"]), spread=r3(spread)),
+                spread_tol_um=spread_tol_um, legs=legs, leg_repeater_gap_fails=len(rep_gaps),
+                worst_leg_island_gap_um=r3(worst_gap), leg_gap_examples=rep_gaps[:20], causes=causes,
+                rule="12.2a1/12.2c: die tree nodes, leg repeaters and mesh drivers are declared islands (pushdown "
+                     "cells in cores/partitions); the die build consumes die_tree_plan.json sites, never free sites"), nodes
+
+
 # ---- 12.8 d1 / 12.2a1 island driver sizing from plan geometry only (deterministic, frozen with the slice)
 # ASAP7 clock buffers (TT, approx. effective drive resistance, input cap): the plan picks the smallest cell whose
 # R x C_load meets the 12.8 slew budget (slew ~ 2.2 R C <= 80 ps -> R C <= 36 ps).  C_load = NDR wire c x the
@@ -1441,6 +1570,33 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             for q in (e.get("in_core_islands") or {}).get("islands", []):
                 isl_inst.append(dict(kind="core", part=part, inst=f"{part}/{h['inst']}", role="tree_leaf",
                                      rect_um=IS.rect_pts(P, part, core_to_type(h, q["rect_um"]))))
+    # MASTER-PLAN-R3 task 2: the die tree planned on the per-type island lattice (sites = declared islands)
+    t_sites, t_leaves = [], []
+    for k, q in enumerate(isl_inst):
+        r = q["rect_um"]
+        t_sites.append(dict(id=k, xy=((r[0] + r[2]) / 2, (r[1] + r[3]) / 2), role=q["role"], inst=q["inst"]))
+        if q["role"] in ("clock_entry", "die_node"):
+            t_leaves.append(k)
+    for part in P.parts:
+        tn = P.parts[part]["type"]
+        if tn in phy and phy[tn].get("island"):
+            r = IS.rect_pts(P, part, phy[tn]["island"])
+            t_sites.append(dict(id=len(t_sites), xy=((r[0] + r[2]) / 2, (r[1] + r[3]) / 2), role="phy_entry",
+                                inst=part))
+            t_leaves.append(len(t_sites) - 1)
+    if t_leaves:
+        tree_plan, tree_nodes = island_tree(t_sites, t_leaves)
+        (out / "die_tree_plan.json").write_text(json.dumps(dict(
+            schema="opentallas.die_tree_plan.v1", die=P.name, plan_sha256=plan_sha, gate=tree_plan,
+            sites=[dict(id=q["id"], xy_um=[r3(q["xy"][0]), r3(q["xy"][1])], role=q["role"], inst=q["inst"])
+                   for q in t_sites], nodes=tree_nodes), indent=None) + "\n")
+        isl_lat_plan = island_lattice(dict(htree=[dict(tag=n_["tag"], b=n_["xy_um"]) for n_ in tree_nodes
+                                                  if n_["leaves"] > 1]),
+                                      [q["xy"] for q in t_sites], [])
+        tree_plan["island_lattice_of_plan_tree"] = dict(verdict=isl_lat_plan["verdict"],
+                                                        displacement=isl_lat_plan["displacement"])
+    else:
+        tree_plan = dict(verdict="NOT RUN", note="no declared islands")
     rulings = dict(clock_rep_sites=rep_gate, tap_region_containment=MR.tap_region_containment(Mx, P),
                    footless_stubs=MR.footless_stubs(Mx), island_ft_inputs=MR.island_ft_inputs(Mx, isl_inst))
     tap_in_phy = sorted(tn for tn, v in phy.items() if v.get("plan_tap_inside_phy"))
@@ -1501,6 +1657,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         tree_commensurate=tree_comm,
         clock_sites=sites,
         island_lattice=isl_lat,
+        tree_on_islands=tree_plan,
         infra_sites=sites_gate,
         **rulings,
     )
@@ -1643,6 +1800,15 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
     for mod, c in core_types.items():
         e = entry[mod]
         ic = [b["proposed_in_core_bay"] for b in in_core if b.get("module") == mod]
+        # the core clock port the slice entry binds (from the plan's own core taps "<inst>.<port>"); never guessed:
+        # absent / ambiguous -> None and the kit must pass its manifest clock port (kit_check refuses otherwise)
+        cports = set()
+        for tn, h in c["uses"]:
+            for tp in (P.types[tn].get("clock") or {}).get("taps", []):
+                nm = tp.get("name", "")
+                if tp.get("kind") == "core" and nm.startswith(h["inst"] + "."):
+                    cports.add(nm[len(h["inst"]) + 1:])
+        cport = next(iter(cports)) if len(cports) == 1 else None
         sl = dict(schema=SLICE_SCHEMA, die=P.name, kind="core", type=mod, module=mod,
                   instances=sorted({f"{tn}/{h['inst']}" for tn, h in c["uses"]}), plan=str(P.path),
                   plan_sha256=plan_sha, master_plan_sha256=mp_sha, frozen=False, outline_um=c["outline_um"],
@@ -1659,7 +1825,11 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
                      for i, q in enumerate((e.get("in_core_islands") or {}).get("islands", []))],
                   bays=[dict(name=f"in_core_bay{i}", rect_um=b["core_local_um"], owner=mod, kind="repeater",
                              bits=0, cell_area_um2=0.0, fill=0.0, layer="M6/M7", paths=[]) for i, b in enumerate(ic)],
-                  entry_pins=[], hard_cores=[], latency=lat, corridors=[], gates=gv)
+                  entry_pins=[], hard_cores=[], latency=lat, corridors=[], gates=gv,
+                  core_clock_port=cport)
+        if cport is None:
+            sl.pop("core_clock_port")
+            sl["core_clock_port_candidates"] = sorted(cports)
         w, h = c["outline_um"]
         sub = e.get("in_core_islands") or {}
         leaves = sub.get("islands", [])

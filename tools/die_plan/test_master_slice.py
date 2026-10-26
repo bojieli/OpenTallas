@@ -182,8 +182,11 @@ def test_gen_phys_with_slice(tmp_path):
     assert _gen(tmp_path, base).returncode == 0
     a, b = _tree(base / "src"), _tree(kd)
     extra = set(b) - set(a)
-    assert extra == {"master_slice.json", "master_slice.tcl"}
-    assert {k for k in a if a[k] != b[k]} == {"face_flops.tcl", "budget.json"}
+    assert extra == {"master_slice.json", "master_slice.tcl", "master_slice_io.json"}
+    io = json.loads((kd / "master_slice_io.json").read_text())
+    # MASTER-PLAN-R3: the kit's own io placement is rewritten to the slice's bound entry pins (consumed, not stamped)
+    assert {k for k in a if a[k] != b[k]} == {"face_flops.tcl", "budget.json"} | {f for v in io["rewritten"].values() for f in v}
+    assert MS.check_kit(kd)["verdict"] == "PASS", MS.check_kit(kd)["issues"]
 
 
 def test_gen_phys_outline_mismatch_refused(tmp_path):
