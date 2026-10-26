@@ -1,0 +1,51 @@
+{
+  "status": "PASS_SMALLEST_EXACT_GRAPH_MITER_NOT_FULL_PROGRAMME",
+  "source_commit": "79f40d1349",
+  "canonical_top": "ot_hfd_coll_q3_hard_v8x_s",
+  "params": {
+    "NLINK": 3,
+    "TP": 192,
+    "AR_ITER": 1,
+    "ROWS": 256,
+    "VM_RT": 81,
+    "VM_FACE_RT": 2,
+    "VM_ASM_FACE_RT": 2
+  },
+  "defines": [
+    "OT_COLL_ISSUER256_NATIVE32"
+  ],
+  "contract": {
+    "body_vm_rr_observed_valid_extra": 2,
+    "body_vm_as_il_data_extra": 4,
+    "body_internal_metadata_extra": 4,
+    "body_internal_assembled_valid_extra": 4,
+    "exported_vm_select_extra": 0,
+    "physical_faces_preserved": true
+  },
+  "storage": {
+    "metadata": 528,
+    "internal_pair_select": 48,
+    "expected_valid": 16,
+    "assembled_valid": 8,
+    "total_added_ff": 600,
+    "payload_ff": 0
+  },
+  "miter": {
+    "checks": 1980,
+    "valid_output_edges": 1442,
+    "resets": 3,
+    "unchanged_default_errors": 0,
+    "physical_face_errors": 0,
+    "missing_contract_errors": 1980,
+    "global_vmrt83_errors": 1773
+  },
+  "model": {
+    "scope": "per-path source contract only; fullB1 token pricing awaits source-matched programme and finalstationledger",
+    "headline_delta": null,
+    "programme_capture_instr_candidate": 95,
+    "programme_sink_instr_candidate": 96,
+    "programme_slot_instr_candidate": 98
+  },
+  "prior_scope_correction": "vmface_miter_r1 modeled metadata endpointfaceflops outsidebody. qslotsareinsidebody; only r2actualreturngraph qualifies. Oldlogs retained in scratch, no oldfullprogrammePASS.",
+  "next": "canonicalbody sourcegen + freshcommonclockmanifest + actual5FS programme with newbody source; no route/signoff claim"
+}

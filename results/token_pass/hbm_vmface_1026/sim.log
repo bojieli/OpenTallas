@@ -1,0 +1,6 @@
+VMFACE_SUMMARY checks1980 outputs1442 resets3 default_errors0 face_errors0 missing_errors1980 global_errors1773
+VMFACE_MITER_PASS exact_default physical4endpointedges select0extra missing_contract_CAUGHT global_RT83_CAUGHT
+- rtl/hbm_accel/generic/collective/p2p/tb_hbm_vmface.sv:119: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.375 s; speed 5.248 us/s
+- Verilator: cpu 0.375 s on 1 threads; allocated 8 MB
