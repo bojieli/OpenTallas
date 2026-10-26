@@ -1,0 +1,70 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[INFO ODB-0227] LEF file: /work/tiny.lef, created 5 layers, 2 vias, 1 library cells
+[INFO ODB-0127] Reading DEF file: /work/source_routed_control.def
+[INFO ODB-0128] Design: tiny
+[INFO ODB-0130]     Created 4 pins.
+[INFO ODB-0131]     Created 2 components and 8 component-terminals.
+[INFO ODB-0132]     Created 1 special nets and 2 connections.
+[INFO ODB-0133]     Created 1 nets and 2 connections.
+[INFO ODB-0134] Finished DEF file: /work/source_routed_control.def
+HAS_NET_SETWIRETYPE True HAS_WIRE_SETWIRETYPE False
+BEFORE ROUTED
+AFTER FIXED
+OPCODES_IDENTICAL True
+VERSION 5.8 ;
+DIVIDERCHAR "/" ;
+BUSBITCHARS "[]" ;
+DESIGN tiny ;
+UNITS DISTANCE MICRONS 1000 ;
+DIEAREA ( 0 0 ) ( 100000 100000 ) ;
+TRACKS X 100 DO 100 STEP 1000 LAYER M1 ;
+TRACKS Y 100 DO 100 STEP 1000 LAYER M1 ;
+TRACKS X 100 DO 100 STEP 1000 LAYER M2 ;
+TRACKS Y 100 DO 100 STEP 1000 LAYER M2 ;
+TRACKS X 100 DO 100 STEP 1000 LAYER M3 ;
+TRACKS Y 100 DO 100 STEP 1000 LAYER M3 ;
+COMPONENTS 2 ;
+    - a TILE + FIXED ( 20000 20000 ) N ;
+    - b TILE + FIXED ( 70000 70000 ) N ;
+END COMPONENTS
+PINS 4 ;
+    - clk + NET clk + DIRECTION INPUT + USE CLOCK
+      + PORT
+        + LAYER M2 ( -100 -100 ) ( 100 100 )
+        + FIXED ( 10100 21000 ) N ;
+    - din + NET sig_in + DIRECTION INPUT + USE SIGNAL
+      + PORT
+        + LAYER M3 ( -100 -100 ) ( 100 100 )
+        + FIXED ( 100 25100 ) N ;
+    - dout + NET sig_out + DIRECTION OUTPUT + USE SIGNAL
+      + PORT
+        + LAYER M3 ( -100 -100 ) ( 100 100 )
+        + FIXED ( 99900 75100 ) N ;
+    - vdd + NET VDD + SPECIAL + DIRECTION INOUT + USE POWER
+      + PORT
+        + LAYER M1 ( -100 -100 ) ( 100 100 )
+        + FIXED ( 5000 20100 ) N ;
+END PINS
+SPECIALNETS 1 ;
+    - VDD ( PIN vdd ) ( * VDD ) + USE POWER
+      + ROUTED M1 200 ( 5000 20100 ) ( 25000 20100 )
+      NEW M1 0 ( 25000 20100 ) VIA12
+      NEW M2 200 ( 25000 20100 ) ( 25000 70100 )
+      NEW M1 0 ( 25000 70100 ) VIA12
+      NEW M1 200 ( 25000 70100 ) ( 75000 70100 ) ;
+END SPECIALNETS
+NETS 3 ;
+    - clk ( PIN clk ) ( a CK ) ( b CK ) + USE CLOCK
+      + FIXED M2 ( 10100 21000 ) ( * 71000 ) VIA23
+      NEW M3 ( 10100 71000 ) ( 70100 * )
+      NEW M2 ( 10100 21000 ) VIA23
+      NEW M3 ( 10100 21000 ) ( 20100 * ) ;
+    - sig_in ( PIN din ) + USE SIGNAL ;
+    - sig_out ( PIN dout ) + USE SIGNAL ;
+END NETS
+END DESIGN
+
