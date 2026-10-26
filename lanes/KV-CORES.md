@@ -7,3 +7,6 @@
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: Legacy stub handed to PATH-KV current repairs. Jobs: ASTK5/PC833/m6/e1f owned qwen_physical. Next: Current path master rebuilds, no legacy f25/F rerun. Failure disposition: Eight superseded WAIT-GEOM rows need withdraw; taking append-only queue disposition.
+
+## CODEX notes 2026-10-25 21:51 PDT
+Completed all8superseded KV-R3f25/F exact-ID withdraw rows via enqueue.py --mode withdraw (coord/state@045fc54c7507 through35a49a080569). No process cancelled. Successors m6lane-fence heads+ASTK5 remain current PATH-KV.

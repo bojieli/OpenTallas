@@ -903,3 +903,5 @@ CODEX: 2026-10-25 21:46 PDT all-lane takeover active, own epyc1 worktrees; appro
 CODEX: 2026-10-25 21:47 PDT shared flow fingerprint correction READY codex/shared-flow-2144@2b221730d;26 focused PASS; root promotion requested. Actual seven-die canary inventory coord/codex-shared-results-2144.md; HBM reviewed shallow CTS corrective rows can name newest pending522ps canary.
 
 CODEX: 2026-10-25 21:50 PDT MERGED main46b872d92b approved batch12 LEC cycle + S81 native hcore/reset + QC/HBM relative binds + per-die canary scope. Focused gates PASS,3manifestPASS, HEAD==origin/main. Physical/token failures retained.
+
+CODEX: 2026-10-25 21:51 PDT remaining lanes19covered; TR3KV6LEC EQ+4miterPASS/mutantCAUGHT readyaccb239affdc; goldmem2regrootfix71c759f40b5testsPASS;8obsoleteKVqueue rowswithdrawn;HBM4proofslive+2lanes4launching.

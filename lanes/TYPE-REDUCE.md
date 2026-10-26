@@ -41,3 +41,6 @@ OWNER? (1) HBM strap_map_lane_j / strap_lane_lane_id / strap_lane0..3_lane_id = 
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: TR3-KV6LECs EQ,4miters PASS+mutant CAUGHT; TR3-HBM6benches PASS. Jobs: epyc1:tr3-hbm/lec four inherited active proofs; synth sfu/l4 spill intel2/intel1. Next: Own codex/tr3-kv-1025 receipts+delta ready once G0C completes; collect HBM terminal proofs. Failure disposition: HBM mem_v2 gold fallback7ea4e53614 fixes known exp NOTRUN; four owner proposals remain questions.
+
+## CODEX notes 2026-10-25 21:51 PDT
+Collected TR3-KV all6LEC EQUIVALENT,4mitersPASS+wrongstrapCAUGHT; branch codex/tr3-kv-1025@accb239affdc ready. TR3-HBM6twoID benchesPASS+mutants;4inherited proofs live; missing lanes4 first/last kit proofs being launched in own epyc1:/srv/opentallas-scratch2/claude/codex-tr3-hbm,80GB ot-run. Generic gold mem2reg fallback isolated codex/lec-mem2reg-1025@71c759f40b,5testsPASS; unsupported$mem_v2 failure retained.
