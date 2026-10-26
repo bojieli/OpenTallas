@@ -1,6 +1,6 @@
 import unittest
 from layer_prog.bound_entry_transport import BufferSinks
-from layer_prog.bound_return_transport import collect_return
+from layer_prog.bound_return_transport import collect_return, import_buffers
 
 SL = 'u_s_0N'
 XR = SL + '.u_sl.u_xr'
@@ -85,6 +85,19 @@ class ReturnTransportTest(unittest.TestCase):
         def m(raw):
             raw[f'{vnb(2)}.rb_d[5]'] = ['pin', f'{XR}.rb_d[6]', 2, False]
         self.assertEqual(run(mutate=m)[2]['status'], 'BLOCKED')
+
+
+    def test_buffer_import_requires_same_source_and_stays_in_scope(self):
+        d = FakeDie()
+        d.inventory.update(schema='s', source_top='t', source_top_sha256='a')
+        buf = dict(module='$buf', kind='glue', ports=dict(A=dict(dir='input', width=2), Y=dict(dir='output', width=2)))
+        full = dict(schema='s', source_top='t', source_top_sha256='a', source_asbuilt_sha256='y',
+                    leaf_interfaces={SL + '.u_sl.$23': buf, 'u_x.$1': buf, SL + '.u_sl.u_lf0.u_vn.$3': buf,
+                                     SL + '.u_sl.$9': dict(module='$not', kind='glue', ports={})})
+        self.assertEqual(import_buffers(d, full)['added_buffers'], 2)
+        self.assertNotIn('u_x.$1', d.inventory['leaf_interfaces'])
+        with self.assertRaisesRegex(ValueError, 'differs'):
+            import_buffers(FakeDie(), dict(full, source_asbuilt_sha256='z'))
 
 
 if __name__ == '__main__':

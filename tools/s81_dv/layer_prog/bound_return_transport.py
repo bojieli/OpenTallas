@@ -53,6 +53,28 @@ def wanted_pins(die):
     return wanted
 
 
+def import_buffers(die, full):
+    """Add exact source $buf glue interfaces from the full inventory of the SAME source graph, limited to the
+    slice-parent, leaf and VN scopes this return crosses. Nothing else is imported; other glue stays opaque."""
+    for k in ('schema', 'source_top', 'source_top_sha256', 'source_asbuilt_sha256'):
+        if full.get(k) != die.inventory.get(k):
+            raise ValueError(f'buffer inventory {k} differs from the selected inventory')
+    li = die.inventory['leaf_interfaces']
+    scopes = {n.rsplit('.', 1)[0] for n, u in die.units.items() if u['master'] in XRS}
+    for name, meta in li.items():
+        if meta.get('module') == VNB:
+            leaf = leaf_of(name, '.u_vn.u_b')
+            scopes.update((leaf, leaf + '.u_vn'))
+    added = 0
+    for name, meta in full['leaf_interfaces'].items():
+        if name.rsplit('.', 1)[0] in scopes and BufferSinks.width(meta) is not None:
+            if name in li and li[name] != meta:
+                raise ValueError(f'{name}: buffer interface differs between inventories')
+            if name not in li:
+                li[name] = meta; added += 1
+    return dict(scopes=len(scopes), added_buffers=added)
+
+
 def enable(die):
     from layer_prog.bound_die import object_items
     wanted = wanted_pins(die)
@@ -178,14 +200,18 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for name in ('bound', 'inventory', 'out'):
         ap.add_argument('--' + name, type=Path, required=True)
+    ap.add_argument('--buffer-inventory', type=Path,
+                    help='full inventory of the same source graph; only in-scope $buf glue interfaces are imported')
     a = ap.parse_args()
     if a.out.exists():
         raise ValueError('preserve prior verdict; use a fresh output')
     die = BoundDie(a.bound, a.inventory)
+    imported = import_buffers(die, json.loads(a.buffer_inventory.read_text())) if a.buffer_inventory else None
     enable(die)
     ent = collect_entry(die)
     rec = collect_return(die, ent['leaves'])
     rec['entry_verdict'] = ent['verdict']
+    rec['buffer_import'] = imported
     rec['transparent_buffer_proofs'] = die.sinks.proofs
     a.out.write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps(dict(verdict=rec['verdict'], entry=ent['verdict'], leaves=len(rec['leaves']),
