@@ -13,3 +13,14 @@ def test_station_terminals_keep_g2_stage_zero_and_epoch(monkeypatch):
     s['bit_sites_um'][0].pop()
     with pytest.raises(ValueError,match='width\\+1'):
         probe.station_sites(None,'type',s,2)
+
+
+def test_exit_zero_never_overrides_routing_failure(tmp_path):
+    import json
+    (tmp_path/'station_probe.json').write_text(json.dumps(dict(qualification='ROUTING_DIAGNOSTIC_ONLY')))
+    lines=['Final congestion report:']+[f'M{i} 123 100 1.00%             0 /  0 / {17 if i==6 else 0}' for i in range(1,8)]
+    lines+=['OT_DONE','ot-run: RAN on localhost (unit test): exit 0']
+    (tmp_path/'run.log').write_text('\n'.join(lines))
+    assert probe.report(tmp_path)['verdict']=='FAIL'
+    (tmp_path/'run.log').write_text('\n'.join(lines).replace('OT_DONE',''))
+    assert probe.report(tmp_path)['verdict']=='NOT RUN'

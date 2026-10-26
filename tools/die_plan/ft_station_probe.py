@@ -9,6 +9,8 @@ It is routing evidence only: real cell access and timing remain G2/G3 obligation
 import argparse
 import hashlib
 import json
+import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -24,7 +26,7 @@ def station_sites(P, tn, slot, bits):
     pins={bit:(x,y,f) for bus,bit,layer,x,y,f in gen_phys.type_pins(P,tn) if bus==slot['name']+'_i'}
     sites=[]
     ft_bit_sites.validate_slot(slot)
-    if not slot.get('bit_sites_um'):
+    if int(slot.get('stations',1)) > 1 and not slot.get('bit_sites_um'):
         raise ValueError(f"{tn}/{slot['name']} has no explicit bit_sites_um")
     for j in range(int(slot.get('stations',1))):
         row=[]
@@ -111,6 +113,31 @@ def build(plan,out,part=None,segmented=False,slots=None):
     (out/'station_sites.json').write_text(json.dumps(tables))
     return result
 
+def report(out):
+    out=Path(out);log=(out/'run.log').read_text() if (out/'run.log').is_file() else ''
+    meta=json.loads((out/'station_probe.json').read_text())
+    tables=log.split('Final congestion report:')
+    layers={}
+    if len(tables)>1:
+        for line in tables[-1].splitlines():
+            m=re.match(r'\s*(M[1-9])\s+\d+\s+\d+\s+[\d.]+%\s+(\d+)\s*/\s*(\d+)\s*/\s*(\d+)',line)
+            if m:layers[m[1]]=dict(max_h=int(m[2]),max_v=int(m[3]),overflow=int(m[4]))
+    errors={k:len(re.findall(k,log)) for k in ['GRT-0113','GRT-0114','GRT-0229']}
+    complete='OT_DONE' in log and bool(re.search(r'ot-run:.*RAN on.*exit 0',log)) and {'M4','M5','M6','M7'} <= set(layers)
+    overflow=sum(x['overflow'] for x in layers.values())
+    verdict='NOT RUN' if not complete else 'FAIL' if overflow or any(errors.values()) else 'PASS'
+    w=re.findall(r'Total wirelength:\s+(\d+) um',log);n=re.findall(r'Routed nets:\s+(\d+)',log)
+    result=dict(**meta,verdict=verdict,overflow=overflow if layers else None,layers=layers,grt_errors=errors,completed=complete,wire_um=int(w[-1]) if w else None,routed_nets=int(n[-1]) if n else None)
+    receipt=out/'station_result.json';index=0
+    while receipt.exists():
+        if json.loads(receipt.read_text())==result:return result
+        index+=1;receipt=out/f'station_result_{index}.json'
+    receipt.write_text(json.dumps(result,indent=2)+'\n')
+    return result
+
+
 if __name__=='__main__':
+    if len(sys.argv)>1 and sys.argv[1]=='report':
+        r=report(sys.argv[2]);print(json.dumps(r));sys.exit(0 if r['verdict']=='PASS' else 1)
     a=argparse.ArgumentParser(description=__doc__);a.add_argument('plan',type=Path);a.add_argument('--out',type=Path,required=True);a.add_argument('--part');a.add_argument('--slot',action='append');a.add_argument('--segmented',action='store_true')
     p=a.parse_args();print(json.dumps(build(p.plan,p.out,p.part,p.segmented,p.slot)))
