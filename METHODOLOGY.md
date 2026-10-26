@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4.3, 2026-10-26 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4.4, 2026-10-26 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -269,6 +269,13 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   a. INFRA ISLAND = top-owned placement hole + M9->M1 via stack, used ONLY for die clock drivers (H-tree / mesh) and the regional reset register +
      repeaters. Location: the partition channel cross where one exists (QC: the A0 channel cross); otherwise INSIDE the hard core (core rebuilt
      with it).
+  a1. IN-CORE ISLAND = PUSHDOWN (OWNER 10-26 06:39; OpenROAD cannot place parent cells inside a hard-core outline): the island's clock/reset
+     driver cells are instantiated IN THE CORE NETLIST at plan-fixed coordinates, identical for every instance of the type, connected only
+     through dedicated feed-through ports (in from the M9->M5 stack, out to the die mesh/tree/reset net). The core build places/routes them
+     (fixed, dont_touch); the core is signed with them; LEC/bind treat them as die-owned feed-throughs (no core logic on those ports). The
+     master plan fixes the island coordinates per core type BEFORE the core is built; every instance's island is used (tree node or mesh
+     driver), so the die tree/mesh lattice is chosen to coincide with the per-type island lattice. No parent cells inside core outlines;
+     cut-out macros are not used.
   b. REPEATER BAY = partition- or core-owned reserved site rows for pushed-down ft stations/repeaters, along ft corridors / under die-top routes,
      <= 405 um apart, sized from measured demand. In-core bays only where a core longer than reach blocks a corridor and leftover M8/M9 + a
      bay outside the core cannot close the gap.
@@ -307,6 +314,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 06:11 OWNER: 12.8 d1 plan-computed per-tap sizing before build ALLOWED (post-measurement values banned); core split = last resort after internal H-tree = CURRENT.
   - 10-26 06:15 OWNER: 12.9 execution rules (one owner per die clock/plan, QC critical path, rule freeze, predict-before-build, per-die flow releases, independent number check) = CURRENT.
   - 10-26 06:33 OWNER: freeze gate = die STA with the real clock (TT setup, FF hold) on related pairs; 80 ps related-pair skew becomes design target/diagnostic (12.4a) = CURRENT. Supersedes the 10-26 01:0x skew-gate form.
+  - 10-26 06:39 OWNER: in-core islands built by PUSHDOWN (12.2a1); no parent cells inside core outlines = CURRENT.
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 05:58, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
