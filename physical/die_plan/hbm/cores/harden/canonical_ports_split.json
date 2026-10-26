@@ -19624,8 +19624,8 @@
   },
   "tkm_tile": {
    "elab_bits": [
-    698,
-    689
+    692,
+    691
    ],
    "file": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv",
    "master": "ot_hgi_coll_tkm_m_tp192",
@@ -19668,12 +19668,6 @@
      0
     ],
     [
-     "tile_tid",
-     "input",
-     6,
-     0
-    ],
-    [
      "tile_ovf_v",
      "output",
      1,
@@ -19690,8 +19684,32 @@
      "output",
      344,
      0
+    ],
+    [
+     "tile_clr_o",
+     "output",
+     1,
+     0
+    ],
+    [
+     "tile_conv_o",
+     "output",
+     1,
+     0
     ]
    ],
+   "profile": {
+    "data_cycle_delta": 0,
+    "dead_id_port_removed": "tile_tid6, no observable loads (owner8b9)",
+    "extra_outputs": [
+     "tile_clr_o",
+     "tile_conv_o"
+    ],
+    "native_control_relays": {
+     "tile_clr_o": 1,
+     "tile_conv_o": 0
+    }
+   },
    "top": "ot_hgi_coll_tkm_tp192_tile_core",
    "type_ids": {
     "ot_hgi_coll_tkm_m_tp192__tile0__319.68x345.6": {
@@ -19730,9 +19748,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "000000"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile10__319.68x345.6": {
      "check": "PASS",
@@ -19770,9 +19790,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "001010"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile11__319.68x345.6": {
      "check": "PASS",
@@ -19810,9 +19832,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "001011"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile12__319.68x345.6": {
      "check": "PASS",
@@ -19850,9 +19874,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "001100"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile13__319.68x345.6": {
      "check": "PASS",
@@ -19890,9 +19916,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "001101"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile14__319.68x345.6": {
      "check": "PASS",
@@ -19930,9 +19958,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "001110"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile15__319.68x345.6": {
      "check": "PASS",
@@ -19970,9 +20000,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "001111"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile16__319.68x345.6": {
      "check": "PASS",
@@ -20010,9 +20042,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "010000"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile17__319.68x345.6": {
      "check": "PASS",
@@ -20050,9 +20084,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "010001"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile18__319.68x345.6": {
      "check": "PASS",
@@ -20090,9 +20126,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "010010"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile19__319.68x345.6": {
      "check": "PASS",
@@ -20130,9 +20168,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "010011"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile1__319.68x345.6": {
      "check": "PASS",
@@ -20170,9 +20210,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "000001"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile20__319.68x345.6": {
      "check": "PASS",
@@ -20210,9 +20252,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "010100"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile21__319.68x345.6": {
      "check": "PASS",
@@ -20250,9 +20294,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "010101"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile22__319.68x345.6": {
      "check": "PASS",
@@ -20290,9 +20336,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "010110"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile23__319.68x345.6": {
      "check": "PASS",
@@ -20330,9 +20378,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "010111"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile24__319.68x345.6": {
      "check": "PASS",
@@ -20370,9 +20420,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "011000"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile25__319.68x345.6": {
      "check": "PASS",
@@ -20410,9 +20462,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "011001"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile26__319.68x345.6": {
      "check": "PASS",
@@ -20450,9 +20504,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "011010"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile27__319.68x345.6": {
      "check": "PASS",
@@ -20490,9 +20546,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "011011"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile28__319.68x345.6": {
      "check": "PASS",
@@ -20530,9 +20588,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "011100"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile29__319.68x345.6": {
      "check": "PASS",
@@ -20570,9 +20630,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "011101"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile2__319.68x345.6": {
      "check": "PASS",
@@ -20610,9 +20672,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "000010"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile30__319.68x345.6": {
      "check": "PASS",
@@ -20650,9 +20714,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "011110"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile31__319.68x345.6": {
      "check": "PASS",
@@ -20685,9 +20751,11 @@
       "tile_ovf_b": 344,
       "tile_ovf_v": 1
      },
-     "straps": {
-      "tile_tid": "011111"
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
      },
+     "straps": {},
      "tied_at_parent": {
       "tile_up_in=0": 344
      }
@@ -20728,9 +20796,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "000011"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile4__319.68x345.6": {
      "check": "PASS",
@@ -20768,9 +20838,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "000100"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile5__319.68x345.6": {
      "check": "PASS",
@@ -20808,9 +20880,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "000101"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile6__319.68x345.6": {
      "check": "PASS",
@@ -20848,9 +20922,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "000110"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile7__319.68x345.6": {
      "check": "PASS",
@@ -20888,9 +20964,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "000111"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile8__319.68x345.6": {
      "check": "PASS",
@@ -20928,9 +21006,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "001000"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     },
     "ot_hgi_coll_tkm_m_tp192__tile9__319.68x345.6": {
      "check": "PASS",
@@ -20968,9 +21048,11 @@
       }
      },
      "excluded": "",
-     "straps": {
-      "tile_tid": "001001"
-     }
+     "profile_extra_outputs": {
+      "tile_clr_o": 1,
+      "tile_conv_o": 1
+     },
+     "straps": {}
     }
    }
   }
