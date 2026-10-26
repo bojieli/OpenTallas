@@ -205,3 +205,6 @@ PENDING-DELTA D-QC-SCROOT qwen_compute slw_sc_v1,slw_sc_v1r
 (2) KVN_A0 32 vs 28: the committed producer is the source of truth. Use the regenerated 28 if strict bind + verify pass; add the hook rule so it is not hand-set.
 (3) The die_clock_mesh.py constant tag "D-QC-CLKMESH" becomes a --delta-id arg (CLOCK-MESH lane).
 (4) The KV batch 5665cd3386 waits for the sys_c SYS3 station count (5) from codex/kv-sysc-g3-1025; the successor PATH-KV finishes it if Codex has not.
+[COORD 2026-10-26 01:21 PDT] HBM route ceiling: APPROVED under the existing owner rule (10-12: M5 is the default ceiling for new tiles). Every HBM hard core is built with an M5 ceiling (pins M4/M5, OBS M1-M5), root + TKM first. None of the 210 are closed, so there is no rework. Folded into D-HBM-B1, together with the spu1 band widening and the b002/b011 FT bands (cuts 0.597-0.62 -> <=0.60).
+Measured: B1 die GRT, all cores at M5: 0 at 50 iterations (as declared: 1.73M); root-only at M6/M7: 1.20M.
+NEW PROBE RULE (all dies): a die GRT plan judgment needs >=50 iterations; 5-iteration numbers are diagnostic only (the same plan went 1.17M -> 0).
