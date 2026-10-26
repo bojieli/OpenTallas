@@ -156,6 +156,9 @@ def merge_enable_copies(m):
                 return cn, c
         sys.exit(f"merge-enables: no flop drives {net}")
     alias = "u_e.g_qz_cg.u_z.q"
+    if alias in m["netnames"] and not any(n.startswith("u_e.g_cgr.") for n in m["netnames"]):
+        # S81-QX-GB 2026-10-26: gate at CGR 0 (single gate, no copies): nothing to merge; --state-points stays usable
+        return {"into": None, "copies": [], "check": "CGR 0: no enable copies in the gate"}
     if alias in m["netnames"]:
         zn, z = q_of(alias); rep = "u_e.g_qz_cg.u_z"; ks = range(8)
     else:                               # CGR: u_z has no load (only simulation checks read it) and is gone after
