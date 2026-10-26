@@ -32,8 +32,10 @@ REPO = HERE.parents[4]
 CORE_MARGIN_UM = 4.32
 PIN_LEN_UM = 0.192
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032)
-PITCH = dict(M4=0.048, M5=0.048, M6=0.064, M7=0.064)
-OFFS = dict(M4=0.024, M5=0.024, M6=0.032, M7=0.032)
+# CORES-KITS/KVX 10-26: M3 core pins (vertical, N/S faces) on the M3 track grid of M123_TRACKS (0.009 + k 0.036):
+# the re-used pv_join view keeps 1024 S-face M3 pins (plan v3.9e pv_join_pins.json; r4..r6 closed with them)
+PITCH = dict(M3=0.036, M4=0.048, M5=0.048, M6=0.064, M7=0.064)
+OFFS = dict(M3=0.009, M4=0.024, M5=0.024, M6=0.032, M7=0.032)
 KEEP = 2.16
 IO_BUDGET = 0.2
 UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 60.0, 25.0, 0.5, 2.0
@@ -904,8 +906,8 @@ def main():
     for n, c in cj["pin_class"].items():
         names.append(n)
     add = [n for n in names if n not in have]
-    off = [q["name"] for q in pins if abs(((q["x"] if q["layer"] in ("M5", "M7") else q["y"]) - OFFS[q["layer"]]) /
-                                       PITCH[q["layer"]] - round(((q["x"] if q["layer"] in ("M5", "M7") else q["y"])
+    off = [q["name"] for q in pins if abs(((q["x"] if q["layer"] in ("M3", "M5", "M7") else q["y"]) - OFFS[q["layer"]]) /
+                                       PITCH[q["layer"]] - round(((q["x"] if q["layer"] in ("M3", "M5", "M7") else q["y"])
                                                                   - OFFS[q["layer"]]) / PITCH[q["layer"]])) > 0.05]
     if off:
         raise SystemExit(f"{tid}: {len(off)} pins off the die symmetric tracks, e.g. {off[:3]}")
