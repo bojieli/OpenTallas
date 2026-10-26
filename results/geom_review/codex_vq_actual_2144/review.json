@@ -1,0 +1,16 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "actual3_place; CTS-only trial permitted, no route/SIGNED credit",
+ "image": "results/geom_review/codex_vq_actual_2144/actual_place.png",
+ "findings": [
+  "SRAM occupies south-central area; broad north logic region, no macro wall or narrow trapped channel. Placement density is distributed around the macro.",
+  "All520 dynamic SRAM IF pins have adjacent launch/capture registers: maximum13.221um, zero beyond20um. IF bands are on the macro pin sides with short local wires.",
+  "298 constant macro pins (mask, repair, unused high addresses, CE) separately recorded; not counted as dynamic IF success or silently waived.",
+  "Clock taps/related-pair skew and propagated TT/FF timing not measured yet. PDN uses existing generated native macro grid; final connectivity/route checks remain gates."
+ ],
+ "conditions": [
+  "CTS-only on block clock layersM4-M5, local balance target20ps; IO SDC/833ps/60-25uncertainties unchanged",
+  "view post-CTS clock/macro IF geometry and TT/FF gate before any route",
+  "signoff wave remains subject to current die and flow gates"
+ ]
+}

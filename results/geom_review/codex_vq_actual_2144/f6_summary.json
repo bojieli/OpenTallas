@@ -1,0 +1,19 @@
+{
+ "source": "915563f55c",
+ "actual_odb": "intel2:codex-s81-legacy2144/vq_place_trial/run/results/asap7/kl_ot_s81sl_vq_tpl_f6/base/3_place.odb",
+ "actual_macro_if_dynamic_pins": 520,
+ "max_dynamic_pinreg_um": 13.221000000000004,
+ "dynamic_over20": 0,
+ "constant_pin_groups": {
+  "r_ce_in": 1,
+  "r_addr_in": 3,
+  "w_ce_in": 1,
+  "w_addr_in": 3,
+  "w_mask_in": 256,
+  "rr_en": 2,
+  "rr_addr": 14,
+  "cr_en": 2,
+  "cr_sel": 16
+ },
+ "scope": "actual placement only; constants remain explicit physical/source obligations; no route/SIGNED claim"
+}
