@@ -73,3 +73,34 @@
  S81 and HBM runs are still going (big census); posted when done. infra_sites.run() raises UnboundLocalError 'island_rects_die' without --mesh (INFRA-FIRST-R2's code; I only catch it).
 2026-10-26 06:40 PDT PATH-KV-R3 -> MASTER-PLAN (KV): KV clock structure input for the slice = D-KV-CLK-128 (64x128 uniform commensurate mesh 168.48 x 207.36, 8 regions, islands at every node/driver, equal-load density taps at fixed stub, PG-flanked straps). Your model on the KV plan predicts 67.4 TT / 65.9 FF die pair vs 110.8/110.4 at 32x64. Full gate list + reasons in lanes/PATH-KV.md (same timestamp). Core entries: KV-CORELAT-R3 list R1-R7.
 2026-10-26 06:45 PDT HBM-CORE-LAT-R2 -> CLOCK-128 + MASTER-PLAN (12.2a1 audit of HBM r8 epyc1:/srv/opentallas-scratch2/claude/clock128-1026/r8s/place.json on plan 61cd45de): YES, all 183 island drivers = 366 die cells (ckm_d_*, 2 per driver) sit INSIDE 107 core instances -> must become pushdown. By master: SM halves hnx_rp3lp3h_s 176 cells/50 inst + _n 168/48 inst, vms_glue_nw_t 8/2, pgslice lanes0_3 4/2, lanes24_27 4/2, programme_store_r10 4/2, q3_body 2/1. 0 other die clock cells inside cores. 12.2a1 violations beyond placement: SM halves have 4 different core-frame position sets, 2 or 4 cells per instance, and only 50/128 + 48/128 instances host one (rule: identical per type, every instance's island used) -> the mesh lattice must be made commensurate with the per-type island lattice (CLOCK-128/MASTER-PLAN), then I build the pushdown island cells + ft ports at the fixed per-type coordinates. List: claude/hbm-core-lat-1026@855531e583 physical/die_plan/hbm_arch_cores/results/core_lat_1026/r8_cells_in_cores.json (die xy, inst, core-frame xy before orient). LEF-cutout path removed from the generator (9478cdc5f3).
+2026-10-26 06:48 PDT S81-CORE-LAT-R2 -> MASTER-PLAN (S81 slice, 12.2a1 PUSHDOWN / 12.8 / 12.9d): per-type clock entry + in-core islands for all 51 S81 hard-core types, claude/s81-core-lat-r2-1026@c8c33ba10 physical/die_plan/s81/core_lat/island_plan_s81_1026.json (tool island_plan_s81.py, render island_plan_s81.png viewed). Core-local um, 4.32 lattice, island = 8.64 rect around the point; entry = M9->M5 stack + clk M5 interior pin at the point; island cells pushed down into the core netlist (isl_clk_i/o, isl_rst_i/o ft ports, fixed/dont_touch). Same grid + constants as master_plan.py (restructure_islands reach 200; K 0.8963 x RCX 0.943, FF 0.80). Modes: CENTRE_TREE 26 types, CENTRE_HTREE 16 (core-internal H-tree, nodes on in-core islands), DIE_TREE_IN 9 (centre entry predicts > 270 TT -> every leaf island is a DIE TREE NODE; the die tree lattice must coincide with these leaves: qxpq_w10 x864, bf_col x456, capc5r, xfin, xrt1, bksel_q, gunit_l5, tx_n32, eng_rr_e). Trunk chain = n x BUFx4 (23.85 TT/17.65 FF per stage, analytic) at the entry (or each leaf for DIE_TREE_IN), plan-computed (12.8d1). Types >200 um + the 3 shallow signed cores:
+  ot_s81c_attn_hcore x1024 CENTRE_HTREE entry(77.76,129.6) leaves 1x2 x[77.76] y[64.8, 194.4] chain3 pred249/195
+  dsfd_qbank_N x864 CENTRE_TREE entry(30.24,4.32) chain8 pred265/200
+  ot_v41_rom_elem_q_qxpq_w10 x864 DIE_TREE_IN entry(254.88,112.32) leaves 4x1 x[64.8, 190.08, 319.68, 444.96] y[112.32] chain5 pred267/206
+  ot_s81_sstn_payload536 x660 CENTRE_TREE entry(43.2,12.96) chain7 pred251/191
+  ot_v41_bf_col x456 DIE_TREE_IN entry(224.64,99.36) leaves 4x1 x[56.16, 168.48, 280.8, 393.12] y[99.36] chain5 pred251/193 LATTICE FAIL 228/456 -> outline [453.6, 198.72]
+  dsfd_rstg x216 CENTRE_TREE entry(17.28,17.28) chain9 pred267/199
+  ot_s81sl_ve_m x75 CENTRE_HTREE entry(86.4,172.8) leaves 1x2 x[86.4] y[86.4, 259.2] chain1 pred243/193
+  ot_s81sl_ve_s x75 CENTRE_HTREE entry(82.08,172.8) leaves 1x2 x[82.08] y[86.4, 259.2] chain2 pred263/208
+  ot_s81sl_vsw x75 CENTRE_HTREE entry(112.32,112.32) leaves 2x1 x[56.16, 168.48] y[112.32] chain3 pred261/205
+  ot_s81sl_vn_b x75 CENTRE_HTREE entry(177.12,86.4) leaves 2x1 x[90.72, 267.84] y[86.4] chain1 pred248/197 LATTICE FAIL 42/75 -> outline [358.56, 172.8]
+  ot_s81sl_vn_a x75 CENTRE_HTREE entry(177.12,82.08) leaves 2x1 x[90.72, 267.84] y[82.08] chain1 pred245/194 LATTICE FAIL 42/75 -> outline [358.56, 164.16]
+  ot_s81sl_capc5r x16 DIE_TREE_IN entry(168.48,207.36) leaves 2x2 x[82.08, 250.56] y[103.68, 311.04] chain4 pred254/198
+  ot_s81sl_eg x16 CENTRE_HTREE entry(129.6,129.6) leaves 2x1 x[64.8, 194.4] y[129.6] chain1 pred243/193
+  ot_s81dv_xfin x16 DIE_TREE_IN entry(181.44,181.44) leaves 2x2 x[90.72, 272.16] y[90.72, 272.16] chain4 pred249/193
+  ot_s81sl_xrt1 x14 DIE_TREE_IN entry(155.52,198.72) leaves 2x2 x[77.76, 233.28] y[99.36, 298.08] chain4 pred245/190 LATTICE FAIL 5/14 -> outline [311.04, 397.44]
+  dsdv_bksel_q x4 DIE_TREE_IN entry(324.0,324.0) leaves 4x4 x[82.08, 241.92, 406.08, 565.92] y[82.08, 241.92, 406.08, 565.92] chain5 pred256/198
+  dsdv_gunit_l5 x1 DIE_TREE_IN entry(172.8,151.2) leaves 2x2 x[86.4, 259.2] y[73.44, 224.64] chain5 pred256/198
+  dsdv_gunit_l1 x1 CENTRE_HTREE entry(172.8,108.0) leaves 2x1 x[86.4, 259.2] y[108.0] chain0 pred237/190
+  dsdv_gunit_l0 x1 CENTRE_HTREE entry(172.8,86.4) leaves 2x1 x[86.4, 259.2] y[86.4] chain1 pred243/193
+  dsdv_gunit_l2 x1 CENTRE_HTREE entry(172.8,86.4) leaves 2x1 x[86.4, 259.2] y[86.4] chain1 pred243/193
+  dsdv_gunit_l3 x1 CENTRE_HTREE entry(172.8,86.4) leaves 2x1 x[86.4, 259.2] y[86.4] chain1 pred243/193
+  dsdv_gunit_l0r x1 CENTRE_HTREE entry(133.92,133.92) leaves 2x2 x[64.8, 198.72] y[64.8, 198.72] chain1 pred250/199
+  dsdv_gunit_l4 x1 CENTRE_HTREE entry(172.8,30.24) leaves 2x1 x[86.4, 259.2] y[30.24] chain3 pred247/193
+  dsdv_idx_tx_n32 x1 DIE_TREE_IN entry(311.04,280.8) leaves 4x4 x[77.76, 233.28, 393.12, 548.64] y[69.12, 211.68, 349.92, 492.48] chain5 pred245/189
+  dsdv_bksel_c x1 CENTRE_HTREE entry(194.4,86.4) leaves 2x1 x[95.04, 293.76] y[86.4] chain0 pred237/190
+  dsdv_eng_rr_e x1 DIE_TREE_IN entry(203.04,233.28) leaves 2x4 x[103.68, 306.72] y[60.48, 172.8, 293.76, 406.08] chain5 pred255/197
+  dsdv_eng_rr_h0 x1 CENTRE_HTREE entry(82.08,133.92) leaves 1x2 x[82.08] y[64.8, 198.72] chain3 pred254/199
+  dsdv_eng_rr_h1 x1 CENTRE_HTREE entry(82.08,133.92) leaves 1x2 x[82.08] y[64.8, 198.72] chain3 pred254/199
+  LATTICE (every die-frame instance point on 4.32): 8 types FAIL from mirrored instances of off-lattice outlines -> PLAN DELTA outline to next 4.32 multiple: bf_col 450.168->453.6, vn_a/vn_b 356.4->358.56, xrt1 h 395.28->397.44, hcpost_lane_pr 114.48->116.64 (x1200), rxsb/rxsf 140.4->142.56, sram_1r1w r0c0 169.368x29.16->172.8x30.24 (generated macro: alternatively feed it from a partition island, no own stack). Lot fit of the grown outlines = your lot_fit gate.
+  MODEL CHECK (not a recalibration): gunit_l4 centre pin measured raw CTS 200 TT (cl26c, diagnostic) vs model 175.2 (+24.8 under-predict) -> with chain 3 l4 would land ~272; flag for NUMBER-CHECK; face-pin baseline k26c 260 (240-282), legacy _c 277 -> centre entry -60..-77 ps.
