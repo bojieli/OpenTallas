@@ -1079,7 +1079,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             raise ValueError(f'line slot reservation does not converge: {clash[:4]}')
         return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
                              mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid,
-                             entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs)
+                             entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile)
     prog.line_avoid = {k: sorted(v) for k, v in (line_avoid or {}).items()}
     if entry_norm:
         # TOK-DS-GAPS 10-24 (opt-in; default byte-identical): layer-entry residency of the smoke slice as pre-layer CTL
@@ -1135,7 +1135,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
                                  svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid,
-                                 entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs)
+                                 entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1279,7 +1279,7 @@ def main(argv=None):
     tree = die_tree(a.die_ref, a.die_src)
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
                       svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check,
-                      entry_engram_inputs=a.entry_engram_inputs)
+                      entry_engram_inputs=a.entry_engram_inputs, svc_timing_profile=a.svc_timing_profile)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
