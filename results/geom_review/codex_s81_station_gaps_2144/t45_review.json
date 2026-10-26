@@ -1,0 +1,6 @@
+{
+ "type": "slice_station__t45", "candidate": "c5e40b6ef7 on A8 geometry", "image": "results/geom_review/codex_s81_station_gaps_2144/t45_geometry.png",
+ "scope": "source geometry only; RESET+START census running; no route authorization",
+ "verdict": "PASS-COND",
+ "findings": ["Viewed fixed-bit FT banks in three aligned columns near x360/720/1080 um; no diagonal bank placement.", "All 2493 transit station sites stay within the y488-669 active band; 8 density taps, none empty, follow face and FT sink bands.", "No macros or sliver channels. The large empty regions are the required abutting slice lattice outline, accepted by GEOM 20:19; outline unchanged.", "Three existing four-cycle slots retain their depths (+0 data cycles). Actual reset entry/relay clock inventory, START forwarding and whole-die release/calendar comparison remain prerequisites to physical launch."]
+}

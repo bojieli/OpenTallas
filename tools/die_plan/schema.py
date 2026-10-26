@@ -314,7 +314,7 @@ SCHEMA = {
                         # "density" (OWNER decision 5, 10-24; opt-in): NO grid -- taps placed by sink density
                         # (taps.density_taps: <= tap_target_sinks per tap within tap_radius_um, none on a hard
                         # core); sinks = face / ft registers + sink_sites_um + sink_bins_file (internal inventory)
-                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density"]}, "tap_radius_um": _pos,
+                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density", "explicit"]}, "tap_radius_um": _pos,
                         # OWNER DEC. 16 / FP32 audit (COORD 10-25): PHY-edge clocks a soft type takes as a bound-only
                         # port (QC clk_coll / clk_serdes / clk_d2d at the die period, clk_coll_blk = the /6 block
                         # clock of qfd_ckdiv6).  Each is an interior pin at tap_um and a kit clock (create_clock, period
@@ -1054,7 +1054,7 @@ def tap_pitch(P, tn):
 def sink_tap_mode(t):
     """True when the type adds sink-anchored taps to its grid (clock.tap_mode "grid+sinks", or the KV-P6 alias
     "sinks", which since the CP1 r8 RULING no longer replaces the grid)."""
-    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks", "density")
+    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks", "density", "explicit")
 
 
 def tap_grid(P, tn):
@@ -1073,6 +1073,9 @@ def tap_grid(P, tn):
         xy = t.get("clock", {}).get("tap_um")
         if isinstance(xy, (list, tuple)) and len(xy) == 2:
             return [("clk", float(xy[0]), float(xy[1]))]
+    if t.get("clock", {}).get("tap_mode") == "explicit":
+        import taps
+        return [(n, x, y) for n, x, y, _, _ in taps.explicit_taps(P, tn)]
     if t.get("clock", {}).get("tap_mode") == "density":
         import taps
         return [(n, x, y) for n, x, y, _, _ in taps.density_taps(P, tn)]

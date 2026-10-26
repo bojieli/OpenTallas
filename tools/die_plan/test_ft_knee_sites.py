@@ -24,5 +24,8 @@ def main():
  a=np.column_stack((np.zeros(514),np.linspace(20,120,514)))
  b=np.column_stack((np.full(514,1442.88),np.linspace(300,400,514)))
  assert case(a,b,'W','E',4)>=5
- print('PASS3: straight depth preserved; mandatory L and Z knees; actual paired bits<=403um; exact rowlegal sites')
+ a=np.array([[100.,1226.],[200.,1226.]])
+ b=np.array([[100.,0.],[400.,0.]])
+ case(a,b,'N','S',4)  # bit0 is straight while the shared spine is Z-shaped
+ print('PASS4: straight depth preserved; mandatory L and Z knees; actual paired bits<=403um; exact rowlegal sites')
 if __name__=='__main__':main()

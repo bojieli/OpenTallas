@@ -246,6 +246,10 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
     taps of a few hundred sinks next to each other).  Greedily merge the pair of leaves whose union still fits the
     target and radius with the smallest merged radius, until no pair fits.  Deterministic."""
     leaves = list(leaves)
+    # A merge changes only pairs touching its two removed leaves. Reusing the
+    # immutable pairs avoids re-sorting their sinks after every other merge.
+    # Keep every leaf alive so Python cannot recycle an identity in this cache.
+    retained, pair_cache = list(leaves), {}
     while True:
         best = None
         for i, a in enumerate(leaves):
@@ -253,15 +257,68 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
                 b = leaves[j]
                 if a[2] + b[2] > target or abs(a[0] - b[0]) + abs(a[1] - b[1]) > 2 * radius:
                     continue
-                g = a[4] + b[4]
-                x, y = _wmedian(g, 0), _wmedian(g, 1)
-                r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
-                if r <= radius and not blocked(x, y) and (best is None or (r, i, j) < best[:3]):
-                    best = (r, i, j, (x, y, a[2] + b[2], r, g))
+                key = (id(a), id(b))
+                if key not in pair_cache:
+                    g = a[4] + b[4]
+                    x, y = _wmedian(g, 0), _wmedian(g, 1)
+                    r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
+                    pair_cache[key] = ((r, (x, y, a[2] + b[2], r, g))
+                                       if r <= radius and not blocked(x, y) else None)
+                cached = pair_cache[key]
+                if cached is not None:
+                    r, merged = cached
+                    if best is None or (r, i, j) < best[:3]:
+                        best = (r, i, j, merged)
         if best is None:
             return leaves
         _, i, j, m = best
+        retained.append(m)
         leaves = [q for k, q in enumerate(leaves) if k not in (i, j)] + [m]
+
+
+
+def explicit_taps(P, tn):
+    """Fixed planned local clock endpoints, with full actual sink-budget checks.
+
+    Materializing a density-derived table breaks control-relay/tap coordinate
+    feedback. No endpoint is moved, added, dropped or silently re-legalized.
+    The normal density CTS/load/balance recipe still applies to these ports.
+    """
+    import schema
+    ck=P.types[tn].get("clock",{})
+    table=[p for p in ck.get("taps",[]) if p.get("kind")!="core"]
+    if not table:
+        raise ValueError(f"{tn}: explicit tap table is empty")
+    names=[p["name"] for p in table]
+    expected=["clk"]+[f"clk_t{i}" for i in range(1,len(table))]
+    if names!=expected:
+        raise ValueError(f"{tn}: explicit local tap names/order must be {expected}")
+    out=[];taken=[(x,y) for _,x,y,_ in schema.core_taps(P,tn)]
+    for p in table:
+        x,y=map(float,p["xy"])
+        # Frozen density coordinates are rounded to 4 decimals. Check the
+        # same halo/spacing geometry directly; binary 8.64-8.64 subtraction
+        # must not trigger a fresh legalizer move (t43 gap 8.639999999999986).
+        eps=1e-8
+        clear=schema.TAP_CLEAR_UM
+        typ=P.types[tn];w,h=typ["outline_um"]
+        boxes=list(schema.placed_macro_boxes(typ,halo=clear).values())
+        boxes += [(a-clear,b-clear,c+clear,d+clear) for a,b,c,d in ck.get("keepouts_um",[])]
+        legal=(clear-eps<=x<=w-clear+eps and clear-eps<=y<=h-clear+eps
+               and not any(abs(x-a)<clear-eps and abs(y-b)<clear-eps for a,b in taken)
+               and not any(a+eps<x<c-eps and b+eps<y<d-eps for a,b,c,d in boxes))
+        if not legal:
+            raise ValueError("{}: explicit tap {} violates outline/halo/tap spacing".format(tn,p["name"]))
+        out.append((p["name"],x,y));taken.append((x,y))
+    sinks=sink_sites(P,tn)
+    cap=int(ck.get("tap_max_sinks",1500));radius=float(ck.get("tap_radius_um",200.))
+    if cap<=0 or radius<=0:
+        raise ValueError(f"{tn}: explicit tap radius/capacity must be positive")
+    load,far,_=assign(out,sinks,cap,radius,max_distance_um=radius)
+    for i,(n,r) in enumerate(zip(load,far)):
+        if n>cap or r>radius+1e-6 or n==0:
+            raise ValueError(f"{tn}: explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, empty={n==0}")
+    return [(name,x,y,n,r) for (name,x,y),n,r in zip(out,load,far)]
 
 
 def density_taps(P, tn):
@@ -414,6 +471,8 @@ def bins_from_dump(dump, bin_um=10.8, origin=(0.0, 0.0)):
 
 def sink_taps(P, tn):
     """[(port, x, y, n_sinks, radius_um)] sink-anchored taps of type tn (cached per plan object and type)."""
+    if P.types[tn].get("clock", {}).get("tap_mode") == "explicit":
+        return explicit_taps(P, tn)
     if P.types[tn].get("clock", {}).get("tap_mode") == "density":
         return density_taps(P, tn)
     key = (id(P), tn)
@@ -463,7 +522,7 @@ def report(P, tn):
     """kit / G0 summary of the sink-anchored taps."""
     taps = sink_taps(P, tn)
     ck = P.types[tn].get("clock", {})
-    dens = ck.get("tap_mode") == "density"
+    dens = ck.get("tap_mode") in ("density", "explicit")
     return dict(mode=ck.get("tap_mode", "sinks"), radius_um=float(ck.get("tap_radius_um", 200.0 if dens else 250.0)),
                 max_sinks=int(ck.get("tap_max_sinks", 1500)), n=len(taps), empty=sum(1 for t in taps if t[3] == 0),
                 taps=[dict(name=n, xy=[x, y], planned_sinks=s, radius_um=r) for n, x, y, s, r in taps])
