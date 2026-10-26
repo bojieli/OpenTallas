@@ -1,0 +1,93 @@
+{
+ "schema": "opentallas.die_plan.g2.v1",
+ "plan": "/srv/opentallas-scratch2/claude/codex-kv-sysc3-2205/runtime/physical/die_plan/qwen_kvsys/die_plan.json",
+ "probes": {
+  "part_kv3_sys_c": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 34859789,
+     "demand": 1979125,
+     "usage_pct": 5.68,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 38982252,
+     "demand": 768615,
+     "usage_pct": 1.97,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 29263198,
+     "demand": 26054,
+     "usage_pct": 0.09,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 29518047,
+     "demand": 334,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 27561488,
+     "demand": 8289,
+     "usage_pct": 0.03,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 27542086,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 1596946.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "qwen_kvsys",
+   "type": "kv3_sys_c",
+   "instance": "sys_c",
+   "outline_um": [
+    2160.0,
+    1036.8
+   ],
+   "pins": 4967,
+   "flops": 10217,
+   "leaf_blockages": 5,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 1,
+    "max_hop_um": 372.222,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 6276,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  }
+ },
+ "verdict": "PASS"
+}
