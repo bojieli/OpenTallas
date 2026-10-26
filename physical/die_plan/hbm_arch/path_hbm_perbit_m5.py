@@ -14,7 +14,7 @@ from gen_phys import type_pins
 from tools.die_trial.legal_sites import RowAllocator
 
 REACH=323.0  # reserve 2*40um cell displacement plus data-pin offsets below405
-RADIUS=40.0
+RADIUS=80.0
 CELL=np.array([1.404,.27])
 _NEIGHBORS={}
 
@@ -131,9 +131,22 @@ def repair_type(raw,tn):
         sites=np.empty((count,n,2))
         for bit,path in enumerate(paths):
             for stage,index in enumerate(path):
-                try:pts,_=alloc.allocate(targets[index],1,max_radius_um=RADIUS)
-                except ValueError as error:raise ValueError(f'{tn}/{name}[{bit}] stage{stage+1} target{targets[index].tolist()}: {error}') from error
-                sites[stage,bit]=pts[0]
+                rejected=[]
+                prev=a[bit] if stage==0 else sites[stage-1,bit]
+                following=b[bit] if stage+1==count else targets[path[stage+1]]
+                try:
+                    for attempt in range(512):
+                        pts,_=alloc.allocate(targets[index],1,max_radius_um=RADIUS)
+                        point=pts[0]
+                        if np.abs(point-prev).sum()<=403+1e-6 and np.abs(point-following).sum()<=403+1e-6:
+                            sites[stage,bit]=point;break
+                        ix=round((point[0]-alloc.cw/2-alloc.ox)/alloc.cp)
+                        iy=round((point[1]-alloc.ch/2-alloc.oy)/alloc.rp)
+                        rejected.append((iy-alloc.iy0)*alloc.nx+ix-alloc.ix0)
+                    else:raise ValueError('no candidate preserves both paired-bit legs')
+                except ValueError as error:
+                    raise ValueError(f'{tn}/{name}[{bit}] stage{stage+1} target{targets[index].tolist()}: {error}') from error
+                finally:alloc.used.difference_update(rejected)
         chain=[a,*sites,b];worst=max(float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(chain,chain[1:]))
         if worst>403+1e-6:raise ValueError(f'{tn}/{name}: paired-bit hop{worst}>403')
         slot['stations']=count+1;slot['regs_um']=[a.mean(axis=0).round(4).tolist(),*sites.mean(axis=1).round(4).tolist()]
