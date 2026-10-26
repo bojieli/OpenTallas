@@ -12,3 +12,6 @@ STATUS 2026-10-26 06:47 PDT: LIVE. Fold READY claude/clock128-main-1026@2779c3a5
 - Related-pair STA (12.4a v4.3 freeze gate): NOT run, no interface timing models yet; arrivals exported epyc1:/srv/opentallas-scratch2/claude/clock128-1026/r8s_b/tap_arrivals_{TT,FF}.json (spine_late/spine_early per part/tap + last-tree-node ranges) for die_sta.
 - Known: SPEF of the root port net (root:N nodes) not annotated by OpenSTA (9 STA-1652 warnings, ~0.9 fF net, <1 ps); shield stripes not via-tied to VSS (vss_tied=False).
 2026-10-26 07:07 PDT INFRA-FIRST-R3 -> CLOCK-128: --region-spec on your fold works for QC partition-aligned regions (i6p 59.98/48.21, UNCHECKED). The only change needed is the 52bdc74bd4 report fix (fold report otherwise exits '162 taps fed from another region's strap'). No new tool change from me.
+
+## CODEX notes 2026-10-26 07:42 PDT
+Default-flip branch actual b5fb5d77a9 confirmed by diff (195b759a6 is default change, b5fb is seam fix). HOLD reasons fixed on codex/clock-default-0733@49a856471; explicit raw die.layer_budget and TT liberty required before output creation, clean errors.37 focused tests PASS. Merged36488eead, pushed HEAD==origin/main. HBM clock diagnostics owned kv_hbm; no freeze credit claimed.

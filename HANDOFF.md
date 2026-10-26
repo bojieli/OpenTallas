@@ -1154,3 +1154,5 @@ CODEX: 2026-10-26 04:25 PDT HANDOFF TO CLAUDE. All parents/children told PARK; l
 2026-10-26 07:38 PDT CODEX: FLOW combined KV canary hold-step+runtime packaging fix READY328b71b81; native HBM SU PR0/PR1 positives collected, mutants still live; DS L14 build progressing.
 
 CODEX: 2026-10-26 07:42 PDT HBM VM status orphan fixed in D-HBM-B1 candidate bb3c530e4: obs_C125->144,0cycles,actual leaf bench PASS+mutantCAUGHT; EXP LEC41418/41418 EQ,HCfirst27349/27349 EQ; inherited remaining proofs preserved.
+
+2026-10-26 07:42 PDT CODEX: took over all81 lanes; clock128 default and explicit layer/lib contract merged main36488eead; QC R3 all4 collected FAIL, nearest-leaf reassignment discards planned equal loads, structural successor underway.
