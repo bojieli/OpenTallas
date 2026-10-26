@@ -32,10 +32,10 @@ Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574f
   - [ ] HEAD.TILES Head tile sign-offs · S81-HEAD / KITS-WAVE-3 · WAITS · types held by D-INFRA-FIRST-HEAD; 1/2 hard cores signed → HEAD.INFRA
 
 ## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
-- [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · sys_c RTL has 8 N-channel stations vs plan 5 (L747); finish codex/kv-sysc-g3-1025 SYS3
-- [ ] KV.CLK Mesh skew on the batch's reserved sites · PATH-KV / CLOCK-MESH-B · RUNNING · main it5 mesh PASS 73.2/73.5; kv5665 builds had 884 cells off reserved sites → re-run on exact sites
+- [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · b29 @6f8f4cce4d strict PASS 0 err/unbound/tied/undriven/MD + R8 PASS (L747 = 8 plan fix, odd-head strap_bsel compose); b30 @2fadbbc172 adds KVN_A0/QK_ISSUE_AGE/TXDP regen
+- [ ] KV.CLK Mesh skew on the batch's reserved sites · PATH-KV · PASS · batch 650841e1ef reserved sites (9503/9503): CPPR 73.16/73.50 ps TT/FF, 0 pairs > 80; do NOT rebuild mesh (rebuild 87/82 FAIL)
 - [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · WAITS · → IF.TOOL
-- [ ] KV.GRT GRT0 incl. clock on the batch · PATH-KV · RUNNING · FT-reserve probe ovf 0; it5 ovf 0 TT+FF
+- [ ] KV.GRT GRT0 incl. clock on the batch · PATH-KV · PASS · batch 650841e1ef one global_route signals M4-M7 + mesh M8-M9: ovf 0 TT+FF; freeze waits KV.BIND + D-INFRA-FIRST PG/pre-route
 - [ ] KV.STA Die STA on real views · DIE-PROTO · WAITS · → KV.CLK, → KV.TILES
   - [ ] KV.TILES Tile sign-offs · PATH-KV / CORES-KITS · WAITS · 3 head-eighth routes held on flow canary; PC833 LEC fix 070a15290 READY (urgent); ASTK face clock = structural sub-root (COORD)
 
