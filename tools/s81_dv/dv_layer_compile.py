@@ -987,13 +987,20 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, entry_engram_inputs=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, entry_engram_inputs=None, svc_timing_profile=None):
     if entry_norm and not fixtures:
         raise ValueError('--entry-norm-check needs --fixtures (the layer-entry inputs and the reference model checks)')
     if entry_engram_inputs is not None and not entry_norm:
         raise ValueError('--entry-engram-inputs requires --entry-norm-check so native entry rows actually consume H')
     if dense_stage is not None and mu_ctx:
         raise ValueError('DENSE2 MU requires the corrected per-position static stage graph binding')
+    if fixtures is not None:
+        if svc_timing_profile is None:
+            raise ValueError('fixture programmes require explicit --svc-timing-profile matching the selected service engine')
+        defines = {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}
+        expected = 'legacy_fg3' if 'SVCQ_ENG_FG3' in defines else 'closing_allq'
+        if svc_timing_profile != expected:
+            raise ValueError(f'service timing profile {svc_timing_profile} disagrees with selected source {expected}')
     if svc_owner_epoch is not None and mu_ctx:
         raise ValueError('SO source-owner fields require per-user MU remapping before admission')
     out = Path(out)
@@ -1244,6 +1251,8 @@ def main(argv=None):
                     help='Checkpoint-derived Engram sidecars for actual attention-entry native rows and NX partials')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
+    ap.add_argument('--svc-timing-profile', choices=('legacy_fg3', 'closing_allq'), default=None,
+                    help='Service engine timing calendar; closing_allq requires actual ALLQ+SMT source')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
                     help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
     ap.add_argument('--entry-norm-check', nargs='?', const='smoke', choices=('smoke', 'all'), default=None,
