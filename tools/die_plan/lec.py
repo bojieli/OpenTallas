@@ -917,6 +917,11 @@ class Lec:
             for sd, keys, allowed in self.cons:
                 m.outs.append(m.AND(assume, member([self.dlit[(sd, k)] for k in keys], allowed) ^ 1))
                 m.onames.append(f"cons:{sd}:{keys[0]}")
+        # Proof statuses are keyed by output name. A collision can overwrite a
+        # failed obligation with a later pass, so reject it before any solver.
+        duplicates = sorted(n for n, count in collections.Counter(m.onames).items() if count > 1)
+        if duplicates:
+            raise LecError("duplicate miter output names: " + ", ".join(duplicates[:8]))
         return m, kind
 
 
