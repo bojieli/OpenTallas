@@ -53,7 +53,8 @@ module tb_seqhost_timing;
    if(t_host[75])begin errors=errors+1;if(errors<5)$display("SEQ_FAULT edge=%0d status=%h iss_code=%0d sealed=%b cfg=%b run=%b",cyc,t_host,dut.u_seqhost.u.u_u.u_l1.u_iss.fault_code,dut.u_seqhost.u.u_u.u_l1.u_iss.sealed,dut.u_seqhost.u.u_u.u_l1.u_iss.cfg_fault,dut.u_seqhost.u.u_u.u_l1.u_iss.run_fault);end
   end
  end
- integer i;reg[511:0]d;
+ integer i;reg[511:0]d;string mux_boot_file;integer mux_boot_words=0,ks0_pin_edge=0,ks_gap=0;
+ reg[514:0]mux_boot[0:2047];
  initial begin
   if($value$plusargs("mut_payload=%d",mut_payload))begin end
   if($value$plusargs("phase=%d",launch_phase))begin end
@@ -66,6 +67,12 @@ module tb_seqhost_timing;
   // Configure the actual always-present MU tracker. Gaps152 are the
   // static start spacing; RL79 is the measured diagnostic KIT offset for
   // this calendar (KIT issue72), not an unmeasured compiler default.
+  if($value$plusargs("mux_boot=%s",mux_boot_file))begin
+   if(!$value$plusargs("mux_boot_words=%d",mux_boot_words)||mux_boot_words<1||mux_boot_words>2048)$fatal(1,"explicit mux boot word count required");
+   if(!$value$plusargs("ks0_pin_edge=%d",ks0_pin_edge)||!$value$plusargs("ks_gap=%d",ks_gap))$fatal(1,"explicit KS pin dates required");
+   $readmemh(mux_boot_file,mux_boot,0,mux_boot_words-1);
+   for(i=0;i<mux_boot_words;i=i+1)host(mux_boot[i]);
+  end else begin
   d=0;d[57:32]=(26'd1<<25)|26'd152;host(csr(8'h15,d));
   d=0;d[57:32]=(26'd1<<25)|26'd152;host(csr(8'h15,d));
   d=0;d[57:32]=(26'd1<<25)|(26'd1<<24)|26'd79;host(csr(8'h15,d));
@@ -75,9 +82,14 @@ module tb_seqhost_timing;
    d=0;d[57:32]=(26'd1<<25)|(26'd2<<21);host(csr(8'h16,d));
    d=0;d[57:32]=(26'd1<<25)|(26'd2<<21)|26'd1;host(csr(8'h16,d));
   end
+  end
   repeat(250)@(negedge ck);
   for(i=0;i<2;i=i+1)begin
-   job=i;while(phase!=2'(launch_phase))@(negedge ck);
+   job=i;
+   if(mux_boot_words!=0)begin
+    while(cyc<ks0_pin_edge+i*ks_gap)@(negedge ck);
+    if(cyc!=ks0_pin_edge+i*ks_gap)$fatal(1,"booked KS pin date already missed");
+   end else while(phase!=2'(launch_phase))@(negedge ck);
    f_ks={1'b1,10'(31+i),21'(77+i),21'(55+i)};@(negedge ck);f_ks=0;
    repeat(150)@(negedge ck);
   end
