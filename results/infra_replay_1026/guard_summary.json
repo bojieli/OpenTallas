@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS",
+  "freeze_qualified": false,
+  "unit": "epyc1:oth-ubuntu-802493-1793008901",
+  "normal_import": "PASS",
+  "GRT_iterations_requested": 50,
+  "GRT_overflow": 0,
+  "post_GRT_preservation": "PRESERVED",
+  "locked_cells": [
+    "a",
+    "b"
+  ],
+  "protected_data_terminal_mutant": "REJECTED: sig_mid attaches a.CK",
+  "renamed_provisional_clock_unlisted": "REJECTED",
+  "renamed_provisional_clock_explicit_list": "ACCEPTED",
+  "source_already_DNT_and_LOCKED": "ACCEPTED",
+  "preserved_failure_controls": {
+    "guard_import_v1_invalid_status_fail.log": "OpenDB rejects placement status FIXED; native LOCKED/FIRM both export DEF FIXED",
+    "guard_import_v2_early_dnt_fail.log": "dbITerm.connect aborts on DNT instances; private DB now temporarily clears DNT while appending legitimate signal pins, then locks and fingerprints final state"
+  }
+}

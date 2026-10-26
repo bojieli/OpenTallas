@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "tiny importer/GRT mechanism only, no timing or die freeze",
+  "picture": "results/infra_replay_1026/review.png",
+  "findings": [
+    "Two 10um macros leave open routing channels; CK terminals face source branches.",
+    "Clock paths connect both CK pins through actual M2/M3 vias; VDD path connects both lower-face supply pins with M1/M2 vias.",
+    "Three signal nets are unrouted; dashed lines show intended connectivity.",
+    "No production clock-skew/IR qualification claimed."
+  ]
+}
