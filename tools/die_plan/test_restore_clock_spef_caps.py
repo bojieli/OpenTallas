@@ -1,6 +1,6 @@
 import json
 import pytest
-from restore_clock_spef_caps import restore,repair
+from restore_clock_spef_caps import restore,repair,M1_CLOCK_BUFFERS
 
 # Actual native exporter root net from the admitted ASAP7 three-buffer pair.
 NATIVE='''*D_NET root 1.81881
@@ -39,6 +39,20 @@ def test_missing_segment_negative_control_is_rejected():
     mutant=NATIVE.replace('4 root:4 root:5 0.0118\n','')
     with pytest.raises(ValueError,match='disconnected'):
         restore(mutant.splitlines(True),4)
+
+
+@pytest.mark.parametrize('master', sorted(M1_CLOCK_BUFFERS))
+def test_checked_m1_buffers_keep_the_native_wire_cap_reconstruction(master):
+    fixed, stats = restore(NATIVE.replace('BUFx24_ASAP7_75t_R', master).splitlines(True), 4)
+    assert stats['added_caps'] == 2
+    assert stats['cap_ff'] == pytest.approx(1.81881-.547131-.362275)
+    assert f'*I nroot:A I *D {master}\n' in fixed
+
+
+def test_other_masters_and_supply_pins_are_rejected():
+    for mutant in (NATIVE.replace('BUFx24_ASAP7_75t_R', 'BUFx2_ASAP7_75t_L'), NATIVE.replace('nroot:A', 'nroot:VDD')):
+        with pytest.raises(ValueError, match='checked native'):
+            restore(mutant.splitlines(True), 4)
 
 
 def test_clock_coverage_is_required_before_mixed_rc(tmp_path):
