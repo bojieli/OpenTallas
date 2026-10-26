@@ -70,7 +70,7 @@ import json
 import math
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -382,6 +382,130 @@ def core_lattice(centres, q=0.01, lat=8.64):
                              breaks=[[r3(a), r3(b)] for a, b in zip(vs, vs[1:])
                                      if leaf and b - a > leaf + lat][:10])
     return res
+
+
+def _lines(vals, lat=8.64):
+    """merge coordinates closer than one island (orientation snapping of the same column) -> sorted lines."""
+    vs, grp = [], []
+    for v in sorted(vals):
+        if grp and v - grp[0] > lat + 1e-6:
+            vs.append(sum(grp) / len(grp))
+            grp = []
+        grp.append(v)
+    if grp:
+        vs.append(sum(grp) / len(grp))
+    return vs
+
+
+def _repeat(vs, lat=8.64, need=0.9):
+    """smallest translation (> one island) that maps >= need of the lines whose translate stays inside the array
+    onto lines, with at least half of the lines staying inside (a translate as long as the array is no repeat);
+    None when the lines have no repeat."""
+    def ok(L):
+        ins = [v for v in vs if v + L <= vs[-1] + lat / 2]
+        if len(ins) < math.ceil(len(vs) / 2):
+            return False
+        return sum(1 for v in ins if any(abs(v + L - u) <= lat / 2 for u in vs)) / len(ins) >= need
+    for L in sorted({round(b - a, 3) for i, a in enumerate(vs) for b in vs[i + 1:] if b - a > lat}):
+        if ok(L):
+            return L
+    return None
+
+
+def clock_regions(P, mode="partition"):
+    """MASTER-PLAN-R6 clock regions: the plan's declared clock.regions [{name, parts}] when present, else one region
+    per partition instance (a hardened partition is the unit whose crossings are its registered face pins)."""
+    decl = (P.clock or {}).get("regions") if isinstance(P.clock, dict) else None
+    if decl:
+        return [(r["name"], list(r["parts"])) for r in decl], "declared clock.regions"
+    return [(p, [p]) for p in P.parts], "partition instance (one region per partition)"
+
+
+def regional_tree_commensurate(P, core_rows, tree_pts, lat=8.64, tol=0.5, need=0.9):
+    """COORD 13:05 RULING HBM-B1E (1): tree_commensurate in the REGIONAL form (12.2a1 applied per clock region).
+
+    core_rows : [(part, inst, module, (x, y) die-frame clock-entry island centre)]
+    tree_pts  : [(tag, (x, y))] die tree nodes / mesh drivers (die frame)
+    Per region and axis:
+      * island lattice: per core type (module) with >= 2 instances in the region, its entry-island lines must have
+        a repeat (smallest translate mapping >= 90 % of the lines onto lines), an integer multiple of `lat`;
+      * region tree lattice: the tree points inside the region; their line offsets must be integer multiples of
+        half the dominant type's repeat (an H-tree arm = k x repeat/2), i.e. every tree point sits at the same
+        phase of the island lattice -> equal sub-trees per leaf (<= 1 tree line: trivially coincident);
+    regions join only through landed crossings: the die tree above them and the registered partition face pins
+    (counted, not re-verified here)."""
+    regions, how = clock_regions(P)
+    rects = {p: P.rect(p) for p in P.parts}
+    rows = []
+    n_fail = 0
+    for name, parts in regions:
+        cs = [r for r in core_rows if r[0] in parts]
+        inside = [t for t in tree_pts if any(rects[p][0] - tol <= t[1][0] <= rects[p][2] + tol and
+                                             rects[p][1] - tol <= t[1][1] <= rects[p][3] + tol for p in parts)]
+        by_mod = defaultdict(list)
+        for r in cs:
+            by_mod[r[2]].append(r[3])
+        dom = max(by_mod, key=lambda m: (len(by_mod[m]), m)) if by_mod else None
+        row = dict(region=name, parts=len(parts), cores=len(cs), types=len(by_mod), dominant=dom,
+                   tree_points=len(inside), axes={}, issues=[])
+        for ax in (0, 1):
+            a = "xy"[ax]
+            irr = []
+            rep_dom = None
+            for m, pts in sorted(by_mod.items()):
+                if len(pts) < 2:
+                    continue
+                vs = _lines([q[ax] for q in pts], lat)
+                if len(vs) < 2:
+                    rep = 0.0
+                else:
+                    rep = _repeat(vs, lat, need)
+                if rep is None or (rep and abs(rep / lat - round(rep / lat)) > 1e-3):
+                    irr.append(dict(module=m, n=len(pts), lines=len(vs), repeat_um=r3(rep) if rep else None))
+                if m == dom:
+                    rep_dom = rep
+            tl = _lines([t[1][ax] for t in inside], 1.0)
+            tree_ok, off = True, []
+            if len(tl) >= 2:
+                if not rep_dom:
+                    tree_ok = False
+                    off = ["no island repeat to coincide with"]
+                else:
+                    half = rep_dom / 2.0
+                    for v in tl[1:]:
+                        k = (v - tl[0]) / half
+                        if abs(k - round(k)) * half > tol:
+                            tree_ok = False
+                            off.append(r3(v - tl[0]))
+            row["axes"][a] = dict(dominant_repeat_um=r3(rep_dom) if rep_dom else rep_dom, irregular_types=irr[:10],
+                                  n_irregular_types=len(irr), tree_lines=len(tl), tree_coincides=tree_ok,
+                                  tree_off_phase_um=off[:10])
+            if irr:
+                row["issues"].append(f"{a}: {len(irr)} type(s) without an island repeat")
+            if not tree_ok:
+                row["issues"].append(f"{a}: tree lines not on the island lattice phase")
+        row["verdict"] = "FAIL" if row["issues"] else "PASS"
+        n_fail += bool(row["issues"])
+        rows.append(row)
+    # crossings between regions (die links / partition-to-partition lanes): landed at registered face pins
+    reg_of = {p: name for name, parts in regions for p in parts}
+    xing = 0
+    for lid in P.lanes:
+        pr = {reg_of.get(c[0]) for c in P.lane_crossings(lid) if c[0] in reg_of}
+        xing += len(pr) > 1
+    fails = [r for r in rows if r["verdict"] == "FAIL"]
+    return dict(verdict="PASS" if rows and not fails else ("NOT RUN" if not rows else "FAIL"), form="regional",
+                regions=len(rows), regions_fail=len(fails), regions_from=how,
+                regions_with_tree_points=sum(1 for r in rows if r["tree_points"]),
+                fail_examples=[{k: v for k, v in r.items()} for r in fails[:40]],
+                fail_by_type=dict(sorted(Counter(P.parts[r["region"]]["type"] for r in fails
+                                                 if r["region"] in P.parts).items())),
+                inter_region_lanes=xing,
+                rule="COORD 13:05 RULING HBM-B1E (1) / 12.2a1 per region: within each clock region the region tree "
+                     "lattice coincides with that region's per-type island lattice; regions join only through landed "
+                     "crossings (die tree above the regions; registered partition face pins = partition kit default, "
+                     "counted here, not re-verified)",
+                rows=rows)
 
 
 def clock_sites(M, islands_die, glue_parts, macros_die, tol=0.5):
@@ -1446,7 +1570,7 @@ def static_ir(files):
 def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entries=None, sites_json=None,
         reach=None, detour=405.0, core_obs_top="M5", lower_pg_frac=0.25, fill_max=0.6, bay_fill=0.5,
         track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, skew_gate_ps=80.0, render=True, log=print,
-        core_islands=None, tree_lattice=(8, 8)):
+        core_islands=None, tree_lattice=(8, 8), tree_comm_form="die"):
     reach = float(reach or P.reach)
     out = Path(out)
     (out / "slices").mkdir(parents=True, exist_ok=True)
@@ -1824,6 +1948,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     # ---- declared islands (die frame): core-centre entries + in-core leaves + partition islands + PHY strips
     phy = phy_entries(P)
     isl_decl, centres, glue_parts, macros_die = [], [], [], []
+    centre_rows = []
     for part in P.parts:
         tn = P.parts[part]["type"]
         t = P.types[tn]
@@ -1836,6 +1961,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             r = IS.rect_pts(P, part, core_to_type(h, e["island"]))
             isl_decl.append(r)
             centres.append(((r[0] + r[2]) / 2, (r[1] + r[3]) / 2))
+            centre_rows.append((part, h["inst"], h["module"], centres[-1]))
             for q in (e.get("in_core_islands") or {}).get("islands", []):
                 isl_decl.append(IS.rect_pts(P, part, core_to_type(h, q["rect_um"])))
             macros_die.append(IS.rect_pts(P, part, core_to_type(h, (0, 0) + tuple(h["outline_um"]))))
@@ -1947,6 +2073,14 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     else:
         tree_plan = dict(verdict="NOT RUN", note="no declared islands")
         lat_gate = dict(verdict="NOT RUN", note="no declared islands")
+    if tree_comm_form == "regional":     # MASTER-PLAN-R6 opt-in (COORD 13:05): per clock region, plan tree = lattice nodes
+        die_form = tree_comm
+        tpts = [(n_["tag"], tuple(n_["xy_um"])) for n_ in (lat_nodes if t_leaves else [])]
+        tree_comm = regional_tree_commensurate(P, centre_rows, tpts)
+        tree_comm["tree_source"] = "die_tree_plan.json lattice.nodes (the plan tree CLOCK-128 builds)"
+        tree_comm["die_wide_form"] = dict(verdict=die_form["verdict"], no_leaf_axes=die_form.get("no_leaf_axes"),
+                                          note="R5 die-wide form, INFO only under the regional ruling")
+        tree_comm["core_lattice"] = die_form.get("core_lattice")
     rulings = dict(clock_rep_sites=rep_gate, tap_region_containment=MR.tap_region_containment(Mx, P),
                    footless_stubs=MR.footless_stubs(Mx), island_ft_inputs=MR.island_ft_inputs(Mx, isl_inst))
     tap_in_phy = sorted(tn for tn, v in phy.items() if v.get("plan_tap_inside_phy"))
@@ -2151,6 +2285,10 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
         if hcs and ex.get("die_tree"):
             sl["die_tree"] = dict(rule=ex["die_tree"]["rule"], core_lattice=ex["die_tree"]["core_lattice"],
                                   verdict=ex["die_tree"]["verdict"])
+            if ex["die_tree"].get("form") == "regional":      # MASTER-PLAN-R6 opt-in: this type's region rows
+                sl["die_tree"]["regions"] = [dict(region=r["region"], verdict=r["verdict"], issues=r["issues"])
+                                             for r in ex["die_tree"]["rows"]
+                                             if r["region"] in P.parts and P.parts[r["region"]]["type"] == tn]
         (d / f"{tn}.json").write_text(json.dumps(sl, indent=1))
     for mod, c in core_types.items():
         e = entry[mod]
@@ -2299,6 +2437,9 @@ def add_args(p):
     p.add_argument("--core-islands", help="core_islands.py JSON {core module: SRAM-aware sited in-core islands}")
     p.add_argument("--tree-lattice", default="8x8", help="die H-tree lattice: NXxNY regular bbox lattice (R4 default) or cNXxNY = "
                                                          "channel-cross lattice, pitch = core-array multiple (R5)")
+    p.add_argument("--tree-commensurate", default="die", choices=("die", "regional"),
+                   help="tree_commensurate gate form: die-wide core lattice (R5 default) or REGIONAL (MASTER-PLAN-R6, "
+                        "COORD 13:05: per clock region tree lattice == region island lattice)")
 
 
 def parse_tree_lattice(v):
@@ -2321,7 +2462,7 @@ def cmd(a):
                     lower_pg_frac=a.lower_pg_frac, bay_fill=a.bay_fill, core_reach_um=a.core_reach_um,
                     render=not a.no_render,
                     core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None,
-                    tree_lattice=parse_tree_lattice(a.tree_lattice))
+                    tree_lattice=parse_tree_lattice(a.tree_lattice), tree_comm_form=a.tree_commensurate)
     print(json.dumps(dict(die=mp["die"], verdict=mp["verdict"], gates=mp["gates"], census=mp["census"]), indent=1))
     return 0 if mp["verdict"] == "PASS" else 1
 
