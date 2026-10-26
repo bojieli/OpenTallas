@@ -1212,7 +1212,9 @@ def cmd_report(a):
         slew = {p: v[2] for p, v in arr.items()}
 
         def dmg(pa, pb):
-            c = lca(tagof[pa], tagof[pb])
+            # A region mesh mixes every driver in its subtree. A nearby driver is not a common clock path:
+            # only the region root is shared by ALL contributors (D-INFRA-FIRST regional-clock contract).
+            c = M["meta"]["regions"][reg[pa]]["tag"] if regd else lca(tagof[pa], tagof[pb])
             while c not in rng and len(c) > 1:
                 c = c[:-1]
             return DC.pair_clock_damage(late[pa], early[pa], late[pb], early[pb], rng.get(c, 0.0))["max_damage_ps"]
