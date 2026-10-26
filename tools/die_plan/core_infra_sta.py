@@ -57,7 +57,10 @@ def emit_model(sl,data,outdir):
             node=leaf['node'];xy=gate_by[node]['xy_um'] if node in gate_by else cells[node]['xy_um']
             rect=CP.gated_leaf_region(leaf,gate_by.get(node),data.get('points'))
             n=leaf.get('domain_sinks',len(leaf.get('sinks',[])));i=len(opened)
+            k=CI._cts_levels(dict(domain_sinks=n,cts_fanout=leaf.get('cts_fanout',CI.CTS_FANOUT)),node)
+            why=CP.calibration_check(n,k,CP.region_reach(rect,xy),rect,sl['outline_um'],leaf.get('nested_gates',0))
             opened.append(dict(node=node,alias=f'r{i}',net=f'rn{i}',xy_um=xy,region_rect_um=rect,domain_sinks=n,
+                               calibration='OUT' if why else 'IN',out_of_calibration=why,
                                kind='gated_domain' if leaf.get('load_class')=='gated_domain' else 'cts_open',
                                subtree={c:CP.open_subtree(n,rect,c,xy,leaf.get('cts_fanout',CI.CTS_FANOUT)) for c in ('TT','FF')}))
             continue
@@ -138,7 +141,7 @@ def emit_model(sl,data,outdir):
             [pin_layer(g['master'],g['out_pin']),pin_layer(CP.CTS_ROOT_MASTER,'A')])
     (out/'plan.spef').write_text('\n'.join(spef)+'\n')
     open_rows=[dict(node=o['node'],kind=o['kind'],alias=o['alias']+'/A',domain_sinks=o['domain_sinks'],region_rect_um=o['region_rect_um'],
-                    driver_xy_um=o['xy_um'],subtree=o['subtree']) for o in opened]
+                    driver_xy_um=o['xy_um'],subtree=o['subtree'],calibration=o['calibration'],out_of_calibration=o['out_of_calibration']) for o in opened]
     meta=dict(schema='opentallas.core_clock_plan_sta.v1',model_only=True,nodes=aliases,gates=gate_alias,sinks=manifest,open_domains=open_rows,
               subtree_basis=CP.OPEN_SUBTREE_CAL['basis'] if opened else None,leaf_groups=tree['leaves'],wire_nets=wire_reports,input_slew_ps=0,limitations=['Synthetic clock model only; no functional or release timing meaning.','Actual TT/FF receiver pin caps come from library, not SPEF pin-cap duplication.','Via R uses declared per-layer values when supplied; via C=0, coupling/pin-access and full capacity remain open.','No measured timing input or per-leaf correction; no CTS/GRT or physical data moves.'])
     (out/'model_manifest.json').write_text(json.dumps(meta,indent=1))
@@ -162,9 +165,12 @@ def combine_arrivals(meta,arrivals):
         for o in meta.get('open_domains',[]):
             base=float(a['open:'+o['node']]);sub=o['subtree'][corner]
             groups.append(dict(node=o['node'],kind=o['kind'],sinks=o['domain_sinks'],driver_out_ps=base,min_ps=base+sub['min_ps'],
-                               mean_ps=base+sub['mean_ps'],max_ps=base+sub['max_ps']))
+                               mean_ps=base+sub['mean_ps'],max_ps=base+sub['max_ps'],calibration=o.get('calibration','OUT'),
+                               out_of_calibration=o.get('out_of_calibration',['no calibration record'])))
         if not groups:raise CI.InfraError('no timed sinks or open domains')
         n=sum(g['sinks'] for g in groups);lo=min(g['min_ps'] for g in groups);hi=max(g['max_ps'] for g in groups)
+        bad=[g['node'] for g in groups if g['kind']!='listed' and g['calibration']!='IN']
         out[corner]=dict(sinks=n,mean_ps=sum(g['mean_ps']*g['sinks'] for g in groups)/n,min_ps=lo,max_ps=hi,window_ps=hi-lo,
-                         open_domains=[g for g in groups if g['kind']!='listed'])
+                         open_domains=[g for g in groups if g['kind']!='listed'],
+                         prediction='INVALID' if bad else 'VALID',valid_for_build_gating=not bad,out_of_calibration_leaves=bad)
     return out

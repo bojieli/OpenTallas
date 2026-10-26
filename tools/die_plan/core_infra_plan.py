@@ -142,7 +142,7 @@ def sink_cap(value, corner):
 # (or below a cts_open planned buffer) is not a list of planned cells, so it is modelled from its census N, the
 # planned CTS stage count k = ceil(log_F N) (core_infra._cts_levels) and its region geometry:
 #   load on the driver  = one CTS root buffer (CTS_ROOT_MASTER) next to the driver (TritonCTS places the subtree
-#                         root at the driver: ICG -> first-level buffer median 1.1 um qxpq / 2.2 um bf_col)
+#                         root at the driver: measured bf_col 16/16 gated domains, root buffer within ~2 um of the ICG)
 #   subtree mean        = stage_ps * k + region_ps_per_um * D,  D = Manhattan driver -> farthest region corner
 #                         (= (w + h) / 2 for a gate at its region centre, the 12.8b plan position)
 #   subtree min / max   = mean - lo_ps_per_um * D / mean + hi_ps_per_um * D
@@ -156,6 +156,34 @@ OPEN_SUBTREE_CAL = {
     "TT": dict(stage_ps=24.93, region_ps_per_um=0.636, lo_ps_per_um=0.092, hi_ps_per_um=0.270),
     "FF": dict(stage_ps=19.06, region_ps_per_um=0.518, lo_ps_per_um=0.086, hi_ps_per_um=0.239),
 }
+
+# Calibrated shape (COORD 10-26 condition): the fit only covers ONE-LEVEL REGIONAL gated domains. Measured envelope
+# of the regional domains (whole-core gates excluded): N <= 1,472 sinks (k <= 3), driver->farthest-corner reach
+# <= 224.4 um, region <= 0.346 of the core outline area (limits rounded up to 224.5 um / 0.35), no gate inside
+# the domain. bf_col's whole-core gates
+# (16,213 / 13,994 sinks, reach 307.5 / 313.7 um, 0.905 / 0.937 of the outline) sit outside it and are
+# under-predicted by ~50 ps TT (CTS grew 9-11 levels to balance). Outside the envelope the number is reported
+# but the prediction is INVALID for build gating.
+CAL_ENVELOPE = dict(max_sinks=1472, max_levels=3, max_reach_um=224.5, max_outline_fraction=0.35, max_nested_gates=0)
+
+
+def calibration_check(n_sinks, levels, reach_um, region_rect_um, outline_um, nested_gates=0, env=None):
+    """[] when the CTS-open domain is inside the calibrated one-level regional shape, else the list of reasons."""
+    env = env or CAL_ENVELOPE
+    x0, y0, x1, y1 = (float(v) for v in region_rect_um)
+    frac = (x1 - x0) * (y1 - y0) / (float(outline_um[0]) * float(outline_um[1]))
+    bad = []
+    if nested_gates > env["max_nested_gates"]:
+        bad.append(f"multi-level gated domain ({nested_gates} gate(s) inside)")
+    if n_sinks > env["max_sinks"]:
+        bad.append(f"{n_sinks} sinks > calibrated {env['max_sinks']}")
+    if levels > env["max_levels"]:
+        bad.append(f"{levels} CTS levels > calibrated {env['max_levels']}")
+    if reach_um > env["max_reach_um"]:
+        bad.append(f"reach {reach_um:.1f} um > calibrated {env['max_reach_um']}")
+    if frac > env["max_outline_fraction"]:
+        bad.append(f"region {frac:.3f} of the outline > {env['max_outline_fraction']} (whole-core gate)")
+    return bad
 
 
 def icg_lib_cells(corner, libdir, names=("ICGx1_ASAP7_75t_R",)):
@@ -290,6 +318,8 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
                 row=dict(node=node,kind=leaf.get("load_class","register") if not leaf.get("cts_open") or leaf.get("load_class")=="gated_domain" else "cts_open",
                          sinks=n,min_ps=base+sub["min_ps"],mean_ps=base+sub["mean_ps"],max_ps=base+sub["max_ps"],
                          driver_out_ps=round(base,3),cts_levels=sub["levels"],region_d_um=round(sub["region_d_um"],3),modelled_subtree=True)
+                why=calibration_check(n,sub["levels"],sub["region_d_um"],opened[node]["rect"],sl["outline_um"],leaf.get("nested_gates",0))
+                row["calibration"]="OUT" if why else "IN";row["out_of_calibration"]=why
                 if leaf.get("load_class")=="gated_domain":row["kind"]="gated_domain"
             else:
                 v=[sink_arr[q] for q in leaf["sinks"]]
@@ -297,8 +327,10 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
             leaf_means.append(row);groups.append(row)
         n=sum(g["sinks"] for g in groups)
         lo=min(g["min_ps"] for g in groups);hi=max(g["max_ps"] for g in groups)
+        out=[g["node"] for g in groups if g.get("calibration")=="OUT"]
         answer[corner]=dict(sinks=n,min_ps=lo,mean_ps=sum(g["mean_ps"]*g["sinks"] for g in groups)/n,max_ps=hi,
-                            window_ps=hi-lo,leaf_means=leaf_means,nets=nets)
+                            window_ps=hi-lo,leaf_means=leaf_means,nets=nets,
+                            prediction="INVALID" if out else "VALID",valid_for_build_gating=not out,out_of_calibration_leaves=out)
     basis=("Geometry/ASAP7 NLDM + directional rooted shared-subtree RC prototype; no clock measurements/pad selection" if routing_model is not None else "Geometry/ASAP7 NLDM + historical Manhattan-MST branch C/direct branch R; no clock measurements/pad selection")
     if opened:basis+="; ICG = liberty CLK->GCLK arc, CTS-open subtrees = plan stage count + region model ("+(subtree_cal or OPEN_SUBTREE_CAL)["basis"]+")"
     return dict(basis=basis,

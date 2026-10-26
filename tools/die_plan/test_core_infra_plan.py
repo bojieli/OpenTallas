@@ -227,3 +227,64 @@ def test_plan_sta_model_emits_icg_stage_and_combines_open_subtrees(tmp_path):
     o0 = [o for o in meta["open_domains"] if o["node"] == "u_e.g_cgr.u_cg_r0.u_icg"][0]
     g0 = [g for g in out["TT"]["open_domains"] if g["node"] == o0["node"]][0]
     assert g0["mean_ps"] == pytest.approx(100 + o0["subtree"]["TT"]["mean_ps"]) and out["TT"]["sinks"] == 14800
+
+
+# ---- COORD 10-26 condition: out-of-calibration (whole-core / multi-level) gated domains are INVALID for gating ----
+OUTLINES = {"qxpq": [510.84, 221.4], "bfcol": [450.168, 198.72]}
+
+
+@pytest.mark.skipif(not VALIDATION.exists(), reason="validation fixture not in this checkout")
+def test_calibration_envelope_flags_exactly_the_whole_core_gates():
+    fx = json.loads(VALIDATION.read_text())
+    out = set()
+    for p in fx["points"]:
+        k = CI._cts_levels(dict(domain_sinks=p["n"], cts_fanout=CI.CTS_FANOUT), "x")
+        why = CP.calibration_check(p["n"], k, CP.region_reach(p["rect"], p["icg_xy"]), p["rect"], OUTLINES[p["core"]])
+        if why:
+            out.add((p["core"], p["icg"]))
+            assert any("whole-core" in w for w in why) and any("sinks" in w for w in why)
+    # the two bf_col whole-core gates (16,213 / 13,994 sinks, under-predicted ~50 ps TT) and nothing else
+    assert out == {("bfcol", "g_tcg.u_tc.u_cg.u_icg"), ("bfcol", "g_bf.g_fqt.u_bf.u_tt.u_cg.u_icg")}
+
+
+def _regional_slice(n=1400, half=50):
+    s = _icg_slice()
+    for i, x in ((0, 216), (1, 648)):
+        s["core_tree"]["leaves"][i].update(domain_sinks=n, region_rect_um=[x - half, 430 - half, x + half, 430 + half])
+    for leaf in s["core_tree"]["leaves"][2:]:
+        leaf["domain_sinks"] = n
+    return s
+
+
+def test_regional_one_level_gates_valid_whole_core_and_nested_invalid():
+    libs, pts, caps = _icg_inputs()
+    ok = CP.predict_tree(_regional_slice(), libs, pts, caps, .02, .1)["corners"]["TT"]
+    assert ok["prediction"] == "VALID" and ok["valid_for_build_gating"] and not ok["out_of_calibration_leaves"]
+    assert all(l["calibration"] == "IN" for l in ok["leaf_means"] if l.get("modelled_subtree"))
+    whole = _regional_slice(); whole["core_tree"]["leaves"][0].update(domain_sinks=13800, region_rect_um=[0, 0, 864, 864])  # k=3: equal stages, still whole-core
+    bad = CP.predict_tree(whole, libs, pts, caps, .02, .1)["corners"]["TT"]
+    assert bad["prediction"] == "INVALID" and not bad["valid_for_build_gating"]
+    assert bad["out_of_calibration_leaves"] == ["u_e.g_cgr.u_cg_r0.u_icg"]
+    row = [l for l in bad["leaf_means"] if l["node"] == "u_e.g_cgr.u_cg_r0.u_icg"][0]
+    assert row["calibration"] == "OUT" and any("whole-core" in w for w in row["out_of_calibration"])
+    assert row["mean_ps"] > 0                                   # the number is still reported, only not gate-valid
+    nested = _regional_slice(); nested["core_tree"]["leaves"][1]["nested_gates"] = 2
+    n = CP.predict_tree(nested, libs, pts, caps, .02, .1)["corners"]["FF"]
+    assert n["prediction"] == "INVALID" and any("multi-level" in w for l in n["leaf_means"] for w in l.get("out_of_calibration", []))
+
+
+def test_plan_sta_combine_marks_out_of_calibration_invalid(tmp_path):
+    import core_infra_sta as CS
+    _, pts, _ = _icg_inputs()
+    prof = dict(horizontal_rc=[.02, .1], vertical_rc=[.02, .1], merge_collinear=True)
+    ff = [dict(name="CLK", direction="input", clock=True), dict(name="QN", direction="output", clock=False)]
+    icg = [dict(name="GCLK", direction="output", clock=False), dict(name="CLK", direction="input", clock=True),
+           dict(name="ENA", direction="input", clock=False), dict(name="SE", direction="input", clock=False)]
+    data = dict(routing_model=dict(nonleaf=prof, leaf=prof), points=pts,
+                terminal_cells={p: dict(master="DFFHQNx1_ASAP7_75t_R", pin="CLK") for p in pts},
+                master_pins={"DFFHQNx1_ASAP7_75t_R": ff, "ICGx1_ASAP7_75t_R": icg})
+    for s, verdict in ((_regional_slice(), "VALID"), (_icg_slice(), "INVALID")):
+        meta = CS.emit_model(s, data, tmp_path / verdict)
+        arr = {c: {"open:" + o["node"]: 100. for o in meta["open_domains"]} for c in ("TT", "FF")}
+        res = CS.combine_arrivals(meta, arr)
+        assert res["TT"]["prediction"] == verdict and res["FF"]["valid_for_build_gating"] == (verdict == "VALID")
