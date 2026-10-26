@@ -1047,3 +1047,5 @@ CODEX: 2026-10-26 02:40 PDT SYS_C native synth/face/fanout PASS; fixed ROM front
 CODEX: 2026-10-26 02:40 PDT TOK-DS real closing service fixed: codex/svc-fix-1026@81f42ce89 READY, seeds1/2 PASS8192PV+2048P/SE/scores each0errors/faults; +35servicecycles (GO0), model receipt, no RTLchange; baseline FAIL1136 retained. Compiler/bench explicit source-calendar matching + driver propagation.
 
 CODEX: 2026-10-26 02:41 PDT actual QC landing source95840d0c0e/evidencee55b4744ef READY;6phases×1144streamchecks+resetPASS/mutantCAUGHT,265genericFF retained. +3cycles/hop,439crossings/99cohorts/1.01MliveFF ledger toQC+TOK; physical/calendar gatesopen.
+
+CODEX: 2026-10-26 02:48 PDT HBM relay-cell wall fix: q_b10010slots/12849FF/max348.57um andq_b1106slots/3153FF/max333.18um geometryPASS, unchangedoutlines/facepins,0halo/FFcollisions. Sourcecodex/hbm-plan-1026; +1L70/L100/L48/L53+mirrors. AuxiliaryrebuildLIVE; noP&R/GRT; SU21/30/31/10 structuralcellcapacityrepairscontinue.
