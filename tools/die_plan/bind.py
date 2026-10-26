@@ -3151,11 +3151,33 @@ def _bus_note(L, side):
     return f"{lane}: {L['src']} {segs} -> {L['dst']}" if side == "in" else f"{lane}: {segs} -> {L['dst']}"
 
 
+_CONST_BIT = re.compile(r"1'b([01xzXZ])")
+
+
+def _const_run(vals):
+    """constant bits (LSB first, each '0'/'1'/'x'/'z') -> one short literal: {N{1'b0}} for a uniform run, else N'b..."""
+    n = len(vals)
+    if n == 1:
+        return f"1'b{vals[0]}"
+    if len(set(vals)) == 1:
+        return f"{{{n}{{1'b{vals[0]}}}}}"
+    return f"{n}'b" + "".join(reversed(vals))
+
+
 def _concat(bits):
-    """per-bit expressions (LSB first) -> one SV expression, runs of one vector merged into slices."""
+    """per-bit expressions (LSB first) -> one SV expression, runs of one vector merged into slices and runs of
+    constant bits merged into one short literal (TOK-DS 10-26: a 8,528-bit {1'b0, 1'b0, ...} pin connection made a
+    51k-char line that Verilator rejects, 'Too many preprocessor tokens on a line').  Same bits, same order."""
     runs = []
     for b in bits:
         m = re.fullmatch(r"(\w+)\[(\d+)\]", b)
+        k = _CONST_BIT.fullmatch(b)
+        if k:
+            if runs and runs[-1][0] is None:
+                runs[-1][1].append(k.group(1).lower())
+            else:
+                runs.append([None, [k.group(1).lower()], None])
+            continue
         if m and runs and runs[-1][0] == m.group(1) and runs[-1][2] + 1 == int(m.group(2)):
             runs[-1][2] += 1
             continue
@@ -3165,7 +3187,9 @@ def _concat(bits):
             runs.append([b, None, None])
     parts = []
     for v, lo, hi in reversed(runs):
-        if lo is None:
+        if v is None:
+            parts.append(_const_run(lo))
+        elif lo is None:
             parts.append(v)
         elif lo == hi:
             parts.append(f"{v}[{lo}]")
