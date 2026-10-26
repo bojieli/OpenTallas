@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS-COND ONE CTS-only trial for each q1final/q3final",
+  "reviewer": "root coordinator; directly viewed both actual placed images",
+  "tag": "CODEX-ECTLK-Q1Q3-CTS-1026",
+  "design_source": "970fe2fa6",
+  "guarded_runner_source": "fa6162d73",
+  "findings": {
+    "q1": "North/east macros leave clear core and edge access; actual data reach257.47um/0>405. Legal-site face packing required to avoid four demonstrated endtap overlaps.",
+    "q3": "NW/SW macro bank and SE logic have broad paths within251.80um/0>405."
+  },
+  "automated_failures_preserved": "q1 fill19.69%; q3 fill12.83%/empty65.23%; fixed216x172.8template cost, not accepted closure",
+  "conditions": [
+    "Ordinary canary and plan holds. No re-kit for latest-main source churn.",
+    "Sink-density-pruned local clock trees; no empty-field taps.",
+    "Native TT/FF related-pair<=80ps; actual clock/PG overlay and postCTS pin/reach review before any route.",
+    "No clock, uncertainty, IO, reset or RTL changes; no SIGNED claim."
+  ]
+}
