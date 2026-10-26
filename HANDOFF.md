@@ -1079,3 +1079,5 @@ CODEX: 2026-10-26 03:47 PDT mergedffd190d6e8 actualfixedinfraimport, abbc189068 
 
 CODEX: 2026-10-26 03:55 PDT SYS_C current B31 DPL physical blocker cause resolved by guarded cleanup READY411eae3b9 (nativePASS,6602physical/0logicremoved); fullreach remains FAIL4660dataD>405/max2819.826um, no route. Source-onlyROM/PG71c alreadymerged8a121; exactB31formal live.
 CODEX: 2026-10-26 03:56 PDT S81 F5publicABI/data+valid/cfgfault fixed63f8c6aba G0C0E andsoleDSmechanismgate320checksPASS/58mutantscaught; canonicalrateunchanged. SameareaPHY connectedprototype210types/+39,16framewrappers; fourrealFTsiteallocationchunkslive.
+
+2026-10-26 04:02 PDT CODEX: TOK-DS actual current-bound compiler→HOST provider READY b538568e96;16/16paths,385norm+3920entrywords exact+mutants, unsealed holds preserved.
