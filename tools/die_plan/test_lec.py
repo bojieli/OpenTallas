@@ -925,3 +925,69 @@ def test_rejected_register_pair_has_a_bounded_retry_count(tmp_path, monkeypatch)
     lec.correspond(L, tmp_path, 100, [], rounds=24, sim_iters=1)
     assert len(attempts) <= 6, attempts
     assert not L.hyp  # rejecting a relation never turns it into an assumption
+
+
+def test_scalar_unpacked_array_alias_needs_function_correspondence(tmp_path, monkeypatch):
+    # Slang wire cf[0:4] aliases head0.cf_o to flat cf[3], head2.cf_o to cf[1].
+    # Gate synthesis names the same physical flops cf[1] and cf[3]. A blind alias
+    # rename swaps the two state points, making the following cfi registers differ.
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    def design(name, mutant=False):
+        p = tmp_path / (name + ".aig")
+        gate = name.startswith("gate")
+        nxt = [2, 4 if not mutant else 3, 6, 8]
+        p.write_bytes(("aig 6 2 4 0 0\n" + "".join(f"{x}\n" for x in nxt)).encode())
+        names = ["cf[1]", "cf[3]"] if gate else ["h0.cf_o", "h2.cf_o"]
+        names += ["h1.cfi_p", "h3.cfi_p"]
+        mp = {"input": {0: [("d0", 0)], 1: [("d1", 0)]}, "output": {},
+              "latch": {i: [(f"u.{n}$_DFF_P_.lecq", 0)] for i,n in enumerate(names)}}
+        if not gate:
+            mp["latch"][0].append(("u.cf", 3))
+            mp["latch"][1].append(("u.cf", 1))
+        return lec.read_aig(p), mp
+    g, gm = design("gold")
+    for mut in (False, True):
+        t, tm = design("gate" + str(mut), mut)
+        L = lec.Lec(g, gm, t, tm)
+        assert "ff:u.h0.cf_o" in L.gonly and "ff:u.h2.cf_o" in L.gonly
+        lec.correspond(L, tmp_path, 100, [])
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        verdicts = set(_sim_prove(m).values())
+        assert ("differs" in verdicts) == mut
+        if not mut:
+            assert verdicts == {"proved"}
+
+
+@pytest.mark.parametrize("reverse", [False, True])
+def test_alias_array_unique_driver_layout_avoids_whole_design_simulation(monkeypatch, tmp_path, reverse):
+    # Flat gold q[0:3] vs gate SX[0:1][0:1]. Element-driver metadata names
+    # one unique layout; arbitrary simulation scores cannot change that choice.
+    from types import SimpleNamespace
+    gold = [f"ff:u.q[{i}]" for i in range(4)]
+    gate = [f"ff:u.SX[{i}][{j}]" for i in range(2) for j in range(2)]
+    def no_build(**kwargs):
+        raise AssertionError("unique structural layout must not build a simulation miter")
+    L = SimpleNamespace(gp=dict.fromkeys(gold, 0), tp=dict(zip(gate, range(10,14))),
+                        gc={}, tc={}, matched=[], gonly=gold, tonly=gate, hyp={},
+                        galias={k:[gate[0]] for k in gold}, build=no_build)
+    expected = {gold[i]:gate[(3-i)//2*2+i%2] if reverse else gate[i] for i in range(4)}
+    metadata = {k:t[len("ff:u.SX"):] for k,t in expected.items()}
+    monkeypatch.setattr(lec, "slang_elements", lambda path:metadata)
+    log=[];lec.alias_arrays(L,log,work=tmp_path)
+    assert L.tp == {k:10+gate.index(t) for k,t in expected.items()}
+    assert L.matched == sorted(gold) and not L.gonly and not L.tonly
+    assert L.hyp == {}  # no unproved correspondence hypothesis was accepted
+    assert "proof pending" in log[-1]
+
+
+@pytest.mark.parametrize("metadata", [{}, {"ff:u.q[0]":"[9][0]"},
+    {"ff:u.q[0]":"[0][0]", "ff:u.q[3]":"[0][1]"}])
+def test_alias_array_missing_or_unusable_driver_evidence_keeps_simulation_fallback(monkeypatch,tmp_path,metadata):
+    from types import SimpleNamespace
+    gold=[f"ff:u.q[{i}]" for i in range(4)]
+    gate=[f"ff:u.SX[{i}][{j}]" for i in range(2) for j in range(2)]
+    def need_scoring(**kwargs):raise RuntimeError("fallback simulation reached")
+    L=SimpleNamespace(gp=dict.fromkeys(gold,0),tp=dict(zip(gate,range(10,14))),gc={},tc={},
+                      matched=[],gonly=gold,tonly=gate,hyp={},galias={k:[gate[0]] for k in gold},build=need_scoring)
+    monkeypatch.setattr(lec,"slang_elements",lambda path:metadata)
+    with pytest.raises(RuntimeError,match="fallback simulation reached"):lec.alias_arrays(L,[],work=tmp_path)
