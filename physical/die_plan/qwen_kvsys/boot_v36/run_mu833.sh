@@ -31,5 +31,6 @@ export -p | grep -E " (OT_KV_|PYTHONDONTWRITEBYTECODE)" > "$O/compile.env"   # t
 /usr/bin/time -f "elapsed %e s maxrss %M KB" python3 $T compile --ages "$O/prep/die_ages_bound_padded.json" \
   --rs "$O/prep/relay_stages_bound.json" --mu $CONTRACT --out "$O/cmp_mu833" > "$O/compile.log" 2>&1
 ( cd "$O/cmp_mu833" && sha256sum target*.hex boot_bundle.json ../img_bnd/d2d_cal_image.svh > "$O/targets.sha256" )
-echo "RECIPE: commit $(git -C "$R" rev-parse --short=10 HEAD) BIND=$B KST=$KST F=$OT_KV_MU_FRAME_F bash physical/die_plan/qwen_kvsys/boot_v36/run_mu833.sh BIND OUT" > "$O/RECIPE"
+BREL=$(realpath --relative-to="$R" "$B"); case "$BREL" in ../*) BREL="OUT-OF-REPO:$B";; esac
+echo "RECIPE: commit $(git -C "$R" rev-parse --short=10 HEAD) dirty=$(git -C "$R" status --porcelain --untracked-files=no | wc -l) BIND=$BREL KST=$KST F=$OT_KV_MU_FRAME_F bash physical/die_plan/qwen_kvsys/boot_v36/run_mu833.sh BIND OUT" > "$O/RECIPE"
 tail -3 "$O/compile.log"
