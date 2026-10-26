@@ -1,0 +1,19 @@
+Calendar/F20 old B2l INFO SRAM canary, NOT the release TKM canary.
+2026-10-25 22:34 PDT diagnostic: REJECTED, DO NOT ROUTE.
+Exact source4CTS sha2566257c345fbc020e596023fe085f8368ab9279ab5b532b9b2a13917cf8c69ef6e.
+Old FF captured27->calendar27 launch173.26/capture345.25,172ps branch offset.
+The existing generic F4 co-leaf cap20um excludes this85um cross-macro pair.
+Physical group-only candidate:164/187 paired branches,441 clock sinks,all prior
+cell placement/data/control unchanged. Critical23 bits remain without a legal
+balanced channel site. Bit27: captured(98.428,90.315),calendar(102.694,9.855),
+its direct outputFF(235.156,8.235)um. Midpoint lies on the central174.7x70.5um
+SRAM. A balanced new group driver needs the E channel~224/50um, but the old
+captured-clock parent at56.090/91.395 would need~209um of clock input wire.
+The naive shallower-parent substitution also creates parent fanout95/96.
+Thus postCTS affinity is NOT an acceptable structural fix and noSTA/P&R ran.
+Need a fresh reserved E/W clock-buffer island plan plus a low-latency buffered
+common trunk (or re-place the data-path pair/face cohort). Parent CLOCK owns
+new low-latency INV tree; this prototype is preserved only as diagnosed failure.
+No change to RTL, clock, SDC, interface constraints or data cycles. No owner
+question. Geometry-only own job localhost(epyc1) unit858484-1792992779 EXIT0;
+passing script execution is NOT a physical PASS.
