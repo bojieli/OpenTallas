@@ -450,9 +450,18 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
             tcl.append(f"create_obstruction -region {{{x0:g} {y0:g} {x1:g} {y1:g}}} -layer {L}")
         nobs += 1
     for c, x, y in place:
-        x = min(max(x, m), w - m - 1.0)
-        y = min(max(y, m), h - m - 0.3)
-        tcl.append(f"place_inst -name {c} -location {{{x:.3f} {y:.3f}}} -status PLACED")
+        if c in explicit_anchors:
+            # Actual DFF footprint is 1.08 x 0.27 um.  The cloud inset below
+            # is not a legal-site operation and must never alter a packed LL.
+            if not (m - 1e-6 <= x <= w - m - 1.08 + 1e-6
+                    and m - 1e-6 <= y <= h - m - 0.27 + 1e-6):
+                raise ValueError(f"explicit packed station {c} outside probe placement bounds: {(x, y)}")
+        else:
+            x = min(max(x, m), w - m - 1.0)
+            y = min(max(y, m), h - m - 0.3)
+        # Canonical packed per-bit sites are immutable; centroid clouds remain movable.
+        status = "FIRM" if c in explicit_anchors else "PLACED"
+        tcl.append(f"place_inst -name {c} -location {{{x:.3f} {y:.3f}}} -status {status}")
     if reset_pair_specs:
         import shutil
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), out / "reset_pair_place.tcl")
