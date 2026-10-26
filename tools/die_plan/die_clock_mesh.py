@@ -1300,6 +1300,7 @@ def cmd_combo(a):
     # the strap footprint (+ NDR spacing) is also a routing obstruction: GRT does not derate special wires
     hs = hw + nd["space"]
     regs = M["meta"].get("regions") or [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))]
+    vias_meta = {}
     for g in regs:      # one special net per clock region (the whole strap grid without --regions)
         rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
         xlo, xhi = strap_bounds(g, xs, ys, 0)
@@ -1318,6 +1319,18 @@ def cmd_combo(a):
         for x in rx:
             L.append(f"odb::dbSBox_create $sw $l9 [um {x - hw:.4f}] [um {ylo - hw:.4f}] [um {x + hw:.4f}] "
                      f"[um {yhi + hw:.4f}] STRIPE")
+        if getattr(a, "mesh_vias", False):   # COORD 10-26 CPPR ruling cond. 1: the mesh is ONE connected net in the routed DB
+            L.append("set v89 [$tech findVia VIA89]")
+            L.append("if {$v89 == \"NULL\"} { error \"tech via VIA89 missing\" }")
+            for x in rx:
+                for y in ry:
+                    L.append(f"odb::dbSBox_create $sw $v89 [um {x:.4f}] [um {y:.4f}] STRIPE")
+            L.append("set nv 0; foreach b [$sw getWires] { if {[$b isVia]} { incr nv } }")
+            L.append(f"puts \"OT_MESH_VIAS {mesh_net(g['k'])} $nv\"")
+            vias_meta[str(g["k"])] = len(rx) * len(ry)
+    if getattr(a, "mesh_vias", False):
+        M["meta"]["mesh_vias"] = vias_meta
+        (d / "mesh.json").write_text(json.dumps(M) + "\n")
     clock_nets = [n["name"] for n in data["nets"]]
     L += [f"puts \"OT_MESH regions {len(regs)} straps {sum((g['i1'] - g['i0']) + (g['j1'] - g['j0']) for g in regs)}\"",
           "create_clock -name dck -period 833.000 [get_ports root]",
@@ -1702,16 +1715,24 @@ def lca(a, b):
     return a[:k]
 
 
-def mesh_connected(M):
+def mesh_connected(M, d=None):
     """{region k: bool}: True when region k's mesh is ONE connected net in the emitted geometry (COORD 10-26 CPPR
     ruling condition 1): every M8 strap spans the region strap box in x and every M9 strap spans it in y (strap_bounds),
     so every M8 strap crosses every M9 strap, AND the crossings carry emitted M8-M9 vias (meta.mesh_vias, written by
     combo --mesh-vias).  Without emitted crossing vias the mesh is connected only in the RC model -> False."""
     vias = M["meta"].get("mesh_vias") or {}
+    db = {}
+    for lg in sorted(Path(d).glob("combo_*.log")) if d else []:      # OT_MESH_VIAS <net> <n>: counted in the DB
+        for m_ in re.finditer(r"^OT_MESH_VIAS (\S+) (\d+)", lg.read_text(errors="replace"), re.M):
+            db[m_.group(1)] = min(db.get(m_.group(1), 1 << 60), int(m_.group(2)))
     out = {}
     for g in M["meta"].get("regions") or []:
         nh, nv = g["j1"] - g["j0"], g["i1"] - g["i0"]
-        out[g["k"]] = bool(nh > 0 and nv > 0 and int(vias.get(str(g["k"]), 0)) >= nh * nv)
+        need = nh * nv
+        ok = nh > 0 and nv > 0 and int(vias.get(str(g["k"]), 0)) >= need
+        if d is not None:
+            ok = ok and db.get(mesh_net(g["k"]), 0) >= need
+        out[g["k"]] = bool(ok)
     return out
 
 
@@ -1824,7 +1845,7 @@ def cmd_report(a):
         # when the mesh is ONE connected net in the emitted geometry; the region-root-credited number is INFO.
         Mz_ = json.loads((d / f"mesh_{corner}.json").read_text())
         srng = {s_["port"]: s_["late"] - s_["early"] for s_ in Mz_["stubs"].values()}
-        mesh_ok = mesh_connected(M) if regd else {}
+        mesh_ok = mesh_connected(M, d) if regd else {}
 
         def dmg(pa, pb, mesh=True):
             c = lca(common(pa), common(pb)) or "h"
@@ -2028,6 +2049,9 @@ def main(argv=None):
     c.add_argument("dir")
     c.add_argument("--kit", required=True)
     c.add_argument("--plan", help="pinned physical plan for the all-clock-cell hard-keepout census")
+    c.add_argument("--mesh-vias", action="store_true",
+                   help="emit an M8-M9 VIA89 at every mesh strap crossing (mesh = one connected net in the DB; "
+                        "needed for the COORD 10-26 mesh-node CPPR credit)")
     m = sub.add_parser("mesh")
     m.add_argument("dir")
     m.add_argument("--corner", default="TT")
