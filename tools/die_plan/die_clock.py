@@ -67,6 +67,17 @@ OCV = (0.03, 0.05)                      # INFO derates on the uncommon clock pat
 # ASAP7 setRC.tcl (kohm / fF per um); clock NDR 2W2S: R / 2, C x 1.1 (die_trial.py, hbm_arch clock_htree.py)
 LAYER_RC = {"M8": (8.44765e-3, 1.03962e-1), "M9": (8.89556e-3, 9.28446e-2)}
 NDR_R, NDR_C = 0.5, 1.1
+# --ndr 4w (DIECLK-TOPO 10-25): every die-tree segment on the 4W NDR (R / 4, C x 1.3), not only hops > WIDE_UM.  The
+# head-die tree (17.5 mm, root->leaf ~16-24 mm, ~60 BUFx24 stages at 2W) is wire-RC bound: the early/late arrival gap
+# per pin is the liberty rise_capacitance_range (2.01..2.61 fF on BUFx24 A) times the upstream R of every stage, so it
+# grows with stage R and stage count; 4W halves the per-stage R and cuts the wire delay per um ~28 %.
+NDR_MODE = "2w"
+# --wide-levels N: the top N H-tree levels (and the trunk) on an 8W NDR (R / 8, C x 1.6, ASSUMED by extrapolating
+# 2W2S R/2 C*1.1 and 4W R/4 C*1.3).  The early/late gap a seam pair sees is ~ the input-cap range of every stage
+# times the wire R upstream of it, summed over its UNCOMMON path; for pairs that split at the top levels that is
+# dominated by the long top legs (head die: L1-L4 ~ 13.6 of ~19 mm), so widening only those few legs (2+4+8+16
+# wires) removes most of it for negligible M8/M9 tracks.
+WIDE_LEVELS = 0
 PAD_CAP_UM = 440.0                      # balance pads fill segments up to this length before any goes wide
 SNAKE_UM = 440.0                        # a pad beyond the segment cap becomes delay stages: BUF + SNAKE_UM wire each
 WIDE_UM = 520.0                         # longer segments use the 4W NDR
@@ -83,11 +94,28 @@ MAX_SEG_X = 1.15                        # a legalised segment may reach 1.15 x r
 SIDE_MAX_UM = 1500.0
 
 
-def layer_rc(layer, length_um=0.0):
+def net_leg_level(T, n):
+    """H-tree leg level a net belongs to: a node at level l drives leg l+1, a repeater of leg l drives leg l, the
+    root port / trunk repeaters (level None) are the trunk (0).  Leaf/last-mile nets return a large level."""
+    drv = n["drv"]
+    if drv.startswith("port:"):
+        return 0
+    c = T.cells.get(drv) or {}
+    lv = c.get("level")
+    if c.get("kind") == "node":
+        return (lv or 0) + 1
+    if c.get("kind") == "rep":
+        return 0 if lv is None else lv
+    return 99
+
+
+def layer_rc(layer, length_um=0.0, leg_level=99):
     """NDR wire RC per um; a segment longer than WIDE_UM (a legalised hop over a macro, or a balance pad) gets the
     wide NDR (4W: R / 4, C x 1.3) so its slew stays inside the 320-ps limit."""
     r, c = LAYER_RC[layer]
-    if length_um > WIDE_UM:
+    if WIDE_LEVELS > 0 and leg_level <= WIDE_LEVELS:
+        return r * 0.125, c * 1.6
+    if NDR_MODE == "4w" or length_um > WIDE_UM:
         return r * 0.25, c * 1.3
     return r * NDR_R, c * NDR_C
 
@@ -101,13 +129,51 @@ def plan_taps(P):
     """[(part, port, x_die, y_die, early_ps)]: every partition clock tap exactly as the kits / stand-ins see it."""
     import gen_phys
     out = []
+    by_type = {}
     for n, p in sorted(P.parts.items()):
         tn = p["type"]
-        early = {nm: S.core_tap_early_ps(P, tp) for nm, _, _, tp in S.core_taps(P, tn)}
-        for port, x, y in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn):
+        if tn not in by_type:
+            t = P.types[tn]
+            if t.get("hard") and not t.get("hard_cores"):
+                # A hard macro terminal is fixed by its physical view, rather
+                # than a proposed standard-cell buffer location.
+                xy = t.get("clock", {}).get("tap_um")
+                if not isinstance(xy, (list, tuple)) or len(xy) != 2:
+                    raise ValueError(f"hard type {tn} requires an explicit clock.tap_um")
+                x, y = map(float, xy)
+                w, h = map(float, t["outline_um"])
+                if not (math.isfinite(x) and math.isfinite(y) and 0 <= x <= w and 0 <= y <= h):
+                    raise ValueError(f"hard type {tn} has an invalid clock.tap_um: {xy}")
+                by_type[tn] = [("clk", x, y, 0.0)]
+            else:
+                early = {nm: S.core_tap_early_ps(P, tp) for nm, _, _, tp in S.core_taps(P, tn)}
+                by_type[tn] = [(port, x, y, float(early.get(port, 0.0)))
+                               for port, x, y in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)]
+        for port, x, y, early_ps in by_type[tn]:
             X, Y = P.to_die(n, (x, y))
-            out.append((n, port, round(X, 3), round(Y, 3), float(early.get(port, 0.0))))
+            out.append((n, port, round(X, 3), round(Y, 3), early_ps))
     return out
+
+
+def plan_tap_early(P):
+    """{(part, port): {"TT": ps, "FF": ps}}: how early each core tap must arrive at each sign-off corner (schema
+    core_tap_early_ps per corner: core insertion - die common latency at THAT corner; CORELAT 10-25)."""
+    import gen_phys
+    out = {}
+    by_type = {}
+    for n, p in sorted(P.parts.items()):
+        tn = p["type"]
+        if tn not in by_type:
+            by_type[tn] = {port: {c: S.core_tap_early_ps(P, tp, c) for c in ("TT", "FF")}
+                           for port, _, _, tp in S.core_taps(P, tn)}
+        for port, e in by_type[tn].items():
+            out[(n, port)] = e
+    return out
+
+
+def tap_early(t, corner):
+    """a tree tap's early shift at a corner (trees built before CORELAT carry the TT number only)."""
+    return float((t.get("early_corner_ps") or {}).get(corner, t["early_ps"]))
 
 
 def keepouts(P):
@@ -350,6 +416,7 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     window = SPLIT_WINDOW if window is None else window
     aware_levels = AWARE_LEVELS if aware_levels is None else aware_levels
     taps = plan_taps(P) if taps is None else taps
+    early_c = plan_tap_early(P) if core_early == "pad" else {}
     base_keep = list(keep if keep is not None else keepouts(P))
     if domain_corridors:
         base_keep += [(r[0]-domain_clear_um,r[1]-domain_clear_um,r[2]+domain_clear_um,r[3]+domain_clear_um,
@@ -633,7 +700,8 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                     prev, prevpt = cn, (xx, yy)
             if not cuts:
                 nets.append(dict(name=out, drv=prev, branches=[(STUB_UM, "M8", "port:" + out, 0.0)]))
-            tap_rows.append(dict(part=part, tap=port, port=out, xy=[X, Y], early_ps=early, leaf=ncell(key),
+            tap_rows.append(dict(part=part, tap=port, port=out, xy=[X, Y], early_ps=early,
+                                 early_corner_ps=early_c.get((part, port)) if early > 0 else None, leaf=ncell(key),
                                  path=path_of[key] + [dn] + cells, pad_nets=[[f"w_{c}", 0] for c in cells] + [[out, 0]]))
     # chain standard per segment index = the longest legalised chain segment of that index (balance by construction);
     # a core-early chain keeps its cut below the standard
@@ -693,7 +761,7 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 last_mile_pad_um=[round(Lx, 2), round(Ly, 2)], last_mile_stages=[kx, ky],
                 core_early=core_early, core_taps=sum(1 for t in taps if t[4] > 0),
                 long_hop_repeaters=split, cells=len(T.cells), dummies=sum(1 for c in T.cells.values() if c["kind"] == "dummy"),
-                buffer=BUF, ndr="2W2S R/2 C*1.1", geometry_over_standard_um=round(over, 3),
+                buffer=BUF, ndr=("4W R/4 C*1.3" if NDR_MODE == "4w" else "2W2S R/2 C*1.1 (4W > %g um)" % WIDE_UM) + (f"; 8W R/8 C*1.6 on trunk + levels 1-{WIDE_LEVELS}" if WIDE_LEVELS else ""), geometry_over_standard_um=round(over, 3),
                 level_segments={lev: dict(leg_max_um=round(L, 1), cuts=n, std_um=round(seg_std[lev], 1))
                                 for lev, (L, n) in leg_len.items()},
                 pair_weight=tot_w, cut_weight_per_level={lev: round(v) for lev, v in sorted(cut_w.items())},
@@ -851,7 +919,7 @@ def write_spef(T, path, design="die_ctree", pads=None):
                 if lay!=last_layer:
                     via=node();ress.append((prev,via,abs(VIA_KOHM[lay]-VIA_KOHM[last_layer])))
                     prev=via
-                r,c=layer_rc(lay,wire if routes else geo)
+                r,c=layer_rc(lay,wire if routes else geo,net_leg_level(T,n))
                 m=max(1,math.ceil(wire/LADDER_UM));seg=wire/m
                 for _ in range(m):
                     nxt=node();ress.append((prev,nxt,r*seg))
@@ -892,6 +960,9 @@ def sta_tcl(d, corner, libdir):
 
 
 def cmd_build(a):
+    global NDR_MODE, WIDE_LEVELS
+    NDR_MODE = getattr(a, "ndr", NDR_MODE)
+    WIDE_LEVELS = getattr(a, "wide_levels", WIDE_LEVELS)
     raw = S.load(a.plan)
     P = S.Plan(raw)
     out = Path(a.out)
@@ -952,7 +1023,7 @@ def load_tree(d):
     return T
 
 
-def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False):
+def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False, corners=None):
     """one balance pass: every tap up to the latest tap of its leaf, every child subtree up to its latest sibling,
     by wire pads on the child's last leg segment (a tap's last chain segment).  arrs: [(tap arr, node arr)] per
     corner; the delta is the corner mean.  Returns the largest residual delta (ps) before this pass."""
@@ -962,8 +1033,13 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False):
     for t in tree["taps"]:
         leaf_taps[t["leaf"]].append(t["port"])
 
+    early = {}
+    if corners and tree["meta"].get("core_early") == "pad":
+        early = {t["port"]: [tap_early(t, c) for c in corners] for t in tree["taps"] if t["early_ps"] > 0}
+
     def tap_a(p):
-        return sum(ta[p] for ta, _ in arrs) / len(arrs)
+        e = early.get(p)
+        return sum(ta[p] + (e[i] if e else 0.0) for i, (ta, _) in enumerate(arrs)) / len(arrs)
     memo = {}
 
     def smax(node):
@@ -979,7 +1055,7 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False):
     def sens(net, bi):
         L, layer, load, geo = nets[net]["branches"][bi]
         L += pads.get((net, bi), 0.0)
-        r, c = layer_rc(layer, geo)
+        r, c = layer_rc(layer, geo, net_leg_level(T, nets[net]))
         cl = TAP_LOAD_FF if load.startswith("port:") else BUF_CIN_FF
         if L > max(geo, PAD_CAP_UM) + SNAKE_UM:      # the pad is now delay stages: one stage per SNAKE_UM
             r2, c2 = layer_rc(layer, min(geo, SNAKE_UM))
@@ -1056,6 +1132,13 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False):
     return worst
 
 
+def eff_skew(tree, corner, tarr):
+    """tap skew of the effective flop clock: arrival + the core tap's early shift at that corner (core_early pad)."""
+    pad_ = tree["meta"].get("core_early") == "pad"
+    v = [tarr[t["port"]] + (tap_early(t, corner) if pad_ else 0.0) for t in tree["taps"] if t["port"] in tarr]
+    return round(max(v) - min(v), 2) if v else 0.0
+
+
 def cmd_run(a):
     """build + STA-driven wire-pad balance (iterations) + final STA + report: the full die clock step."""
     out = Path(a.out)
@@ -1076,14 +1159,15 @@ def cmd_run(a):
         if rc:
             return rc
         arrs = [read_arr(out / f"arr_{c}.txt") for c in a.corner]
-        sk = {c: round(max(x[0].values()) - min(x[0].values()), 2) for c, x in zip(a.corner, arrs)}
+        sk = {c: eff_skew(tree, c, x[0]) for c, x in zip(a.corner, arrs)}
         hist.append(dict(iter=it, tap_skew_ps=sk, pads=len(pads), pad_um=round(sum(pads.values()), 1), stages=st))
         print(json.dumps(hist[-1]))
         if best is None or max(sk.values()) < best[0]:
             best = (max(sk.values()), it, dict(pads))
         if it == a.iters or max(sk.values()) <= a.stop_ps:
             break
-        pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads, take_back=getattr(a, "take_back", False))
+        pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads, take_back=getattr(a, "take_back", False),
+                 corners=a.corner)
     if best[1] != hist[-1]["iter"]:                 # keep the best iteration (the loop may oscillate)
         pads = best[2]
         st = emit(pads)
@@ -1189,8 +1273,16 @@ def cmd_report(a):
         if early:
             std = [tarr[t["port"]] for t in taps if t["early_ps"] == 0 and t["port"] in tarr]
             ref = max(std) if std else ins[-1]
-            err = [abs((ref - tarr[t["port"]]) - t["early_ps"]) for t in early if t["port"] in tarr]
+            err = [abs((ref - tarr[t["port"]]) - tap_early(t, corner)) for t in early if t["port"] in tarr]
             cr["core_early_err_max_ps"] = round(max(err), 2) if err else None
+            # per declared core value (CORELAT): delivered early shift vs contract at this corner
+            grp = defaultdict(list)
+            for t in early:
+                if t["port"] in tarr:
+                    grp[round(tap_early(t, corner), 2)].append(ref - tarr[t["port"]])
+            cr["core_early_by_contract"] = {f"{k:g}": dict(taps=len(v), delivered_min_ps=round(min(v), 2),
+                                                          delivered_max_ps=round(max(v), 2)) for k, v in sorted(grp.items())}
+            cr["eff_tap_skew_ps"] = eff_skew(tree, corner, tarr)
 
         def lca_arr(pa, pb):
             A, B = paths[pa], paths[pb]
@@ -1205,7 +1297,7 @@ def cmd_report(a):
 
         def eff(port):
             # effective flop clock: a core tap's early shift is paid back by the core insertion (contract)
-            return tarr[port] + (by_port[port]["early_ps"] if tree["meta"].get("core_early") == "pad" else 0.0)
+            return tarr[port] + (tap_early(by_port[port], corner) if tree["meta"].get("core_early") == "pad" else 0.0)
 
         def rows_of(pairs, weight=None):
             rows = []
@@ -1340,6 +1432,8 @@ def main(argv=None):
     b.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
     b.add_argument("--domain-clear-um", type=float, default=8.64)
     b.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
+    b.add_argument("--wide-levels", type=int, default=0, help="trunk + top N H-tree levels on the 8W NDR")
+    b.add_argument("--ndr", choices=("2w", "4w"), default="2w", help="die-tree wire NDR: 2w (default; 4W only > WIDE_UM) or 4w everywhere")
     u = sub.add_parser("run")
     u.add_argument("plan")
     u.add_argument("--out", required=True)
@@ -1351,6 +1445,8 @@ def main(argv=None):
     u.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
     u.add_argument("--domain-clear-um", type=float, default=8.64)
     u.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
+    u.add_argument("--wide-levels", type=int, default=0, help="trunk + top N H-tree levels on the 8W NDR")
+    u.add_argument("--ndr", choices=("2w", "4w"), default="2w", help="die-tree wire NDR: 2w (default; 4W only > WIDE_UM) or 4w everywhere")
     u.add_argument("--corner", action="append")
     u.add_argument("--libdir")
     u.add_argument("--iters", type=int, default=10)

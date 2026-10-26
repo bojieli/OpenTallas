@@ -1,0 +1,13 @@
+{
+  "core": "ot_s81sl_vn_b",
+  "opt_in": "HW_STAGE=1; default0",
+  "external_cycles_added": 0,
+  "internal_write_commit_cycles_added": 1,
+  "flops_added": 521,
+  "logic_added": "one7bitcompare+256bitreadforwardmux",
+  "read_write_words_per_cycle": 1,
+  "bits_per_word": 256,
+  "geometry_requirement": "pendingwriteandreadcaptureIFregisterswithin20umofSRAMpins; clockregionsclipmacrohalos",
+  "exactness": "3seeds119994everycyclecomparisonsagainstproductionSRAMmodel;missingforwardmutantcaught",
+  "physical_status": "NOT RUN; no SIGNEDclaim"
+}

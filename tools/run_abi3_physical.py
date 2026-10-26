@@ -2816,15 +2816,17 @@ def run_pnr(
     # wrapper, so the killed run kept burning cores on a result nobody would read.
     reports_dir = case / "reports" / platform_name / nickname / "base"
     logs_dir = case / "logs" / platform_name / nickname / "base"
-    if stop_after in ("cts", "floorplan"):
+    if stop_after in ("cts", "floorplan", "place"):
         # through clock-tree synthesis and its setup/hold repair only (or through
         # floorplan: the synthesised netlist timed at the run's ORFS corner before
-        # placement, a fast path-finding pass); the record carries that stage's own
-        # metrics (ORFS 4_1_cts.json / 2_1_floorplan.json)
-        st = stop_after
-        proc = orfs_make(st, "orfs_flow.log", flow_timeout_seconds())
-        require_success(proc, f"ORFS place-and-route through {st}")
-        cts_json = logs_dir / ("4_1_cts.json" if st == "cts" else "2_1_floorplan.json")
+        # placement, a fast path-finding pass; or through detailed placement: a
+        # PLACE-ONLY geometry review run, no CTS / GRT); the record carries that stage's
+        # own metrics (ORFS 4_1_cts.json / 2_1_floorplan.json / 3_5_place_dp.json)
+        mk = stop_after
+        proc = orfs_make(mk, "orfs_flow.log", flow_timeout_seconds())
+        require_success(proc, f"ORFS place-and-route through {mk}")
+        st = {"place": "detailedplace"}.get(mk, mk)
+        cts_json = logs_dir / {"cts": "4_1_cts.json", "floorplan": "2_1_floorplan.json", "place": "3_5_place_dp.json"}[mk]
         if not cts_json.is_file():
             raise FlowError(f"ORFS produced no {st} metrics at {cts_json}")
         cts = json.loads(cts_json.read_text(encoding="utf-8"))
@@ -2851,7 +2853,9 @@ def run_pnr(
             "sdc_clock_period_library_units": period_lib,
             **({"signal_integrity_constraints": constraints} if constraints else {}),
             "metrics": {
-                "stage": "cts (placement-estimated parasitics)" if st == "cts" else "floorplan (synthesised netlist, no placement parasitics)",
+                "stage": {"cts": "cts (placement-estimated parasitics)",
+                          "detailedplace": "detailed placement (placement-estimated parasitics, ideal clocks)"}.get(
+                              st, "floorplan (synthesised netlist, no placement parasitics)"),
                 "setup_wns_ns": float(cts[f"{st}__timing__setup__ws"]) * time_unit_ns,
                 "hold_wns_ns": float(cts[f"{st}__timing__hold__ws"]) * time_unit_ns,
                 "setup_tns_ns": float(cts[f"{st}__timing__setup__tns"]) * time_unit_ns,
@@ -3551,7 +3555,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--pnr-stop-after",
         default="finish",
-        choices=["finish", "cts", "floorplan"],
+        choices=["finish", "cts", "floorplan", "place"],
         help=(
             "cts: run ORFS through clock-tree synthesis (with its setup/hold repair) "
             "and record the CTS-stage metrics, for a block whose global route does "

@@ -1,0 +1,15 @@
+{
+ "source": "s81-head-elem elemA/B_rb_s4 actual 3_place.odb",
+ "reviewer": "CODEX HEAD0719",
+ "verdict": "PASS-COND CTS/isolated-FF repair probe only",
+ "findings": [
+  "Two centered ROMs; broad side corridors and inter-ROM channel; logic remains continuous beside pin interfaces, no slivers or crossed core wall.",
+  "Extent277/318um is below405um; this picture does not prove interface pin distance or clock timing.",
+  "B MY orientation retained. Before route measure t_r->w_r median<=20/max100um, macro pin register distances, balanced clock taps and matching TT/FF insertion; calibratedFF hold>=0 and independentTT setup mandatory.",
+  "No route approval; FLOW owns isolated FF-session repair successor for the proven dual-mode stale slack failure."
+ ],
+ "images": [
+  "elemA_s4_place.png",
+  "elemB_s4_place.png"
+ ]
+}

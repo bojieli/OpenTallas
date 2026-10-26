@@ -1,0 +1,743 @@
+{
+ "kv3_hub_Wi": {
+  "type": "kv3_hub_Wi",
+  "channels": {
+   "x": [
+    [
+     1137.8400000000001,
+     1258.72
+    ]
+   ],
+   "y": [
+    [
+     20.0,
+     114.96
+    ],
+    [
+     619.44,
+     849.36
+    ],
+    [
+     1561.1999999999998,
+     1656.16
+    ]
+   ]
+  },
+  "slots": {
+   "ft4": {
+    "width": 256,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 1150.1760000000002,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 29.66,
+    "max_bit_hop_um": 406.0,
+    "worst_bit": {
+     "bit": 34,
+     "route_um": 2831.6,
+     "hops": [
+      406.0,
+      404.7,
+      404.9,
+      404.7,
+      404.3,
+      403.7,
+      403.2
+     ]
+    }
+   },
+   "ft24": {
+    "width": 144,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 1184.8000000000002,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.59,
+    "max_bit_hop_um": 405.8,
+    "worst_bit": {
+     "bit": 86,
+     "route_um": 2007.2,
+     "hops": [
+      405.8,
+      400.7,
+      398.0,
+      402.2,
+      400.5
+     ]
+    }
+   },
+   "ft2": {
+    "width": 48,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 1212.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.74,
+    "max_bit_hop_um": 405.6,
+    "worst_bit": {
+     "bit": 31,
+     "route_um": 1612.9,
+     "hops": [
+      405.6,
+      403.7,
+      402.2,
+      401.5
+     ]
+    }
+   },
+   "ft15": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 1232.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 4.23,
+    "max_bit_hop_um": 405.0,
+    "worst_bit": {
+     "bit": 1,
+     "route_um": 2829.1,
+     "hops": [
+      405.0,
+      403.7,
+      404.5,
+      404.9,
+      403.5,
+      403.6,
+      403.8
+     ]
+    }
+   },
+   "ft17": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 1252.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.84,
+    "max_bit_hop_um": 404.9,
+    "worst_bit": {
+     "bit": 0,
+     "route_um": 2829.0,
+     "hops": [
+      404.8,
+      403.7,
+      404.8,
+      404.9,
+      404.9,
+      404.7,
+      401.2
+     ]
+    }
+   },
+   "ft22": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 1232.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.65,
+    "max_bit_hop_um": 404.9,
+    "worst_bit": {
+     "bit": 1,
+     "route_um": 2827.6,
+     "hops": [
+      404.3,
+      403.7,
+      404.2,
+      404.8,
+      404.9,
+      404.5,
+      401.3
+     ]
+    }
+   },
+   "ft23": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 1252.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.43,
+    "max_bit_hop_um": 404.9,
+    "worst_bit": {
+     "bit": 1,
+     "route_um": 2827.5,
+     "hops": [
+      404.2,
+      403.7,
+      404.0,
+      404.9,
+      404.7,
+      403.9,
+      402.1
+     ]
+    }
+   },
+   "ft26": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 1252.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.33,
+    "max_bit_hop_um": 404.9,
+    "worst_bit": {
+     "bit": 0,
+     "route_um": 2827.4,
+     "hops": [
+      404.4,
+      403.7,
+      404.5,
+      404.9,
+      404.7,
+      403.9,
+      401.6
+     ]
+    }
+   },
+   "ft27": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 1232.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.45,
+    "max_bit_hop_um": 404.9,
+    "worst_bit": {
+     "bit": 0,
+     "route_um": 2827.7,
+     "hops": [
+      402.9,
+      403.7,
+      404.0,
+      404.6,
+      403.9,
+      404.9,
+      404.2
+     ]
+    }
+   },
+   "ft5": {
+    "width": 1118,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 1191.5520000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 11.13,
+    "max_bit_hop_um": 391.6,
+    "worst_bit": {
+     "bit": 1113,
+     "route_um": 1898.6,
+     "hops": [
+      369.4,
+      391.6,
+      381.0,
+      379.8,
+      377.4
+     ]
+    }
+   },
+   "ft6": {
+    "width": 1118,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 1191.5520000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.77,
+    "max_bit_hop_um": 355.3,
+    "worst_bit": {
+     "bit": 1079,
+     "route_um": 1393.9,
+     "hops": [
+      345.4,
+      355.3,
+      348.0,
+      345.6
+     ]
+    }
+   },
+   "ft25": {
+    "width": 144,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 1234.8000000000002,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.88,
+    "max_bit_hop_um": 402.5,
+    "worst_bit": {
+     "bit": 143,
+     "route_um": 1416.5,
+     "hops": [
+      402.5,
+      338.7,
+      337.2,
+      337.9
+     ]
+    }
+   },
+   "ft7": {
+    "width": 128,
+    "faces": "EW",
+    "stations": 8,
+    "jog_um": 1214.0320000000002,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 7.95,
+    "max_bit_hop_um": 364.0,
+    "worst_bit": {
+     "bit": 126,
+     "route_um": 2839.2,
+     "hops": [
+      349.8,
+      357.3,
+      357.3,
+      364.0,
+      361.9,
+      355.3,
+      353.8,
+      355.0
+     ]
+    }
+   },
+   "ft8": {
+    "width": 128,
+    "faces": "EW",
+    "stations": 8,
+    "jog_um": 1244.0320000000002,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 7.65,
+    "max_bit_hop_um": 366.5,
+    "worst_bit": {
+     "bit": 51,
+     "route_um": 2838.6,
+     "hops": [
+      362.6,
+      366.5,
+      354.2,
+      354.2,
+      353.9,
+      353.8,
+      352.3,
+      353.2
+     ]
+    }
+   },
+   "ft28": {
+    "width": 128,
+    "faces": "WE",
+    "stations": 8,
+    "jog_um": 1184.0320000000002,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.28,
+    "max_bit_hop_um": 358.5,
+    "worst_bit": {
+     "bit": 36,
+     "route_um": 2842.2,
+     "hops": [
+      355.7,
+      355.3,
+      355.3,
+      357.4,
+      358.5,
+      355.0,
+      354.8,
+      353.2
+     ]
+    }
+   },
+   "ft29": {
+    "width": 128,
+    "faces": "WE",
+    "stations": 8,
+    "jog_um": 1144.0320000000002,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.22,
+    "max_bit_hop_um": 358.1,
+    "worst_bit": {
+     "bit": 43,
+     "route_um": 2841.1,
+     "hops": [
+      355.5,
+      355.3,
+      355.3,
+      354.0,
+      358.1,
+      357.9,
+      354.5,
+      353.5
+     ]
+    }
+   },
+   "ft3": {
+    "width": 48,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 1212.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.33,
+    "max_bit_hop_um": 323.8,
+    "worst_bit": {
+     "bit": 36,
+     "route_um": 1282.8,
+     "hops": [
+      323.8,
+      320.5,
+      320.5,
+      318.1
+     ]
+    }
+   },
+   "ft14": {
+    "width": 43,
+    "faces": "WE",
+    "stations": 8,
+    "jog_um": 1212.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.21,
+    "max_bit_hop_um": 357.5,
+    "worst_bit": {
+     "bit": 9,
+     "route_um": 2837.8,
+     "hops": [
+      355.0,
+      355.3,
+      353.8,
+      354.5,
+      354.5,
+      357.5,
+      357.1,
+      353.1
+     ]
+    }
+   },
+   "ft16": {
+    "width": 43,
+    "faces": "WE",
+    "stations": 8,
+    "jog_um": 1252.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.1,
+    "max_bit_hop_um": 357.4,
+    "worst_bit": {
+     "bit": 15,
+     "route_um": 2837.7,
+     "hops": [
+      355.0,
+      355.3,
+      353.8,
+      357.0,
+      357.4,
+      354.2,
+      354.2,
+      353.7
+     ]
+    }
+   },
+   "ft0": {
+    "width": 35,
+    "faces": "EW",
+    "stations": 8,
+    "jog_um": 1232.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 4.68,
+    "max_bit_hop_um": 360.8,
+    "worst_bit": {
+     "bit": 25,
+     "route_um": 2837.2,
+     "hops": [
+      355.4,
+      358.5,
+      360.8,
+      354.5,
+      354.1,
+      353.8,
+      353.8,
+      352.5
+     ]
+    }
+   },
+   "ft1": {
+    "width": 35,
+    "faces": "EW",
+    "stations": 8,
+    "jog_um": 1232.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 4.62,
+    "max_bit_hop_um": 360.3,
+    "worst_bit": {
+     "bit": 25,
+     "route_um": 2836.5,
+     "hops": [
+      353.4,
+      360.3,
+      360.0,
+      354.5,
+      354.0,
+      353.8,
+      353.8,
+      352.7
+     ]
+    }
+   },
+   "ft10": {
+    "width": 33,
+    "faces": "EW",
+    "stations": 8,
+    "jog_um": 1172.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 6.28,
+    "max_bit_hop_um": 363.1,
+    "worst_bit": {
+     "bit": 31,
+     "route_um": 2836.2,
+     "hops": [
+      353.2,
+      361.5,
+      363.1,
+      354.0,
+      352.8,
+      353.8,
+      353.8,
+      353.0
+     ]
+    }
+   },
+   "ft9": {
+    "width": 28,
+    "faces": "EW",
+    "stations": 8,
+    "jog_um": 1192.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.24,
+    "max_bit_hop_um": 363.4,
+    "worst_bit": {
+     "bit": 26,
+     "route_um": 2835.6,
+     "hops": [
+      360.4,
+      363.4,
+      354.2,
+      354.0,
+      353.2,
+      353.8,
+      352.3,
+      353.4
+     ]
+    }
+   },
+   "ft11": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 1212.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.7,
+    "max_bit_hop_um": 352.6,
+    "worst_bit": {
+     "bit": 1,
+     "route_um": 1758.7,
+     "hops": [
+      352.6,
+      351.8,
+      350.8,
+      352.3,
+      351.4
+     ]
+    }
+   },
+   "ft12": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 1252.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.73,
+    "max_bit_hop_um": 353.1,
+    "worst_bit": {
+     "bit": 1,
+     "route_um": 1758.6,
+     "hops": [
+      353.1,
+      351.4,
+      352.6,
+      351.1,
+      351.5
+     ]
+    }
+   },
+   "ft13": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 1212.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.88,
+    "max_bit_hop_um": 322.1,
+    "worst_bit": {
+     "bit": 1,
+     "route_um": 1284.7,
+     "hops": [
+      322.1,
+      320.5,
+      320.5,
+      321.5
+     ]
+    }
+   },
+   "ft18": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 6,
+    "jog_um": 1212.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.79,
+    "max_bit_hop_um": 350.0,
+    "worst_bit": {
+     "bit": 0,
+     "route_um": 2090.4,
+     "hops": [
+      350.0,
+      347.8,
+      348.0,
+      349.0,
+      348.3,
+      347.8
+     ]
+    }
+   },
+   "ft19": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 1252.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.86,
+    "max_bit_hop_um": 353.1,
+    "worst_bit": {
+     "bit": 0,
+     "route_um": 1757.0,
+     "hops": [
+      353.1,
+      350.8,
+      350.8,
+      351.2,
+      351.8
+     ]
+    }
+   },
+   "ft20": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 1252.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.84,
+    "max_bit_hop_um": 353.0,
+    "worst_bit": {
+     "bit": 1,
+     "route_um": 1756.9,
+     "hops": [
+      353.0,
+      350.8,
+      350.8,
+      351.2,
+      351.7
+     ]
+    }
+   },
+   "ft21": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 1212.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.78,
+    "max_bit_hop_um": 353.0,
+    "worst_bit": {
+     "bit": 0,
+     "route_um": 1756.8,
+     "hops": [
+      353.0,
+      350.8,
+      350.8,
+      351.5,
+      351.1
+     ]
+    }
+   },
+   "ft30": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 1252.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.69,
+    "max_bit_hop_um": 353.0,
+    "worst_bit": {
+     "bit": 0,
+     "route_um": 1758.4,
+     "hops": [
+      353.0,
+      350.8,
+      352.3,
+      350.7,
+      352.1
+     ]
+    }
+   },
+   "ft31": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 1212.8400000000001,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.83,
+    "max_bit_hop_um": 353.0,
+    "worst_bit": {
+     "bit": 0,
+     "route_um": 1758.3,
+     "hops": [
+      353.0,
+      350.8,
+      352.3,
+      351.4,
+      351.3
+     ]
+    }
+   }
+  },
+  "max_bit_hop_um": 406.0,
+  "sites": 16001
+ }
+}

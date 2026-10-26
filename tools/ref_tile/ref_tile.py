@@ -538,12 +538,19 @@ def reset_landing_plan(s: dict) -> dict | None:
         if ck != SOURCE_NATIVE_RESET_LANDINGS[native["id"]]["clock"]:
             raise SpecError("spec: source-native reset effective landing clock differs from reviewed source")
         plan["source_native"] = native
+    distributed = rl.get("distributed_chain", False)
+    if type(distributed) is not bool:
+        raise SpecError("spec: reset_landing.distributed_chain must be a boolean")
+    if distributed:
+        if st < 3 or not rl.get("copies") or not rl.get("first_copies"):
+            raise SpecError("spec: distributed_chain requires >=3 stages, first_copies and copies")
+        plan["distributed_chain"] = True
     fc = rl.get("first_copies")
     if fc is not None:
         if (not isinstance(fc, dict) or not fc or any(p not in resets for p in fc)
                 or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 32 for n in fc.values())):
             raise SpecError('spec: reset_landing.first_copies must map declared resets to integers 1..32')
-        if st != 2:
+        if st != 2 and not distributed:
             raise SpecError('spec: balanced first_copies requires exactly two landing stages')
         if not native and (not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32):
             raise SpecError('spec: balanced first_copies requires reset_relay_split.max_loads <=32')
@@ -609,6 +616,8 @@ def reset_landing_vars(s: dict) -> list:
     if not plan or not plan["enable"] or plan.get("source_native"):
         return []
     out = ["--orfs-var OT_RST_LAND=1", f"--orfs-var OT_RST_LAND_STAGES={plan['stages']}"]
+    if plan.get("distributed_chain"):
+        out.append("--orfs-var OT_RST_LAND_DISTRIBUTED=1")
     pp = pin_regs_plan(s)
     if not pp or not pp.get("enable"):
         # landing only: the wrapper still needs the literal clock / reset roles (data ports pass straight through)
@@ -2113,11 +2122,16 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             + clock_entry_constraints.single_clock_contract.guard(s))
 
 
-def sdc_extra(s: dict) -> str:
+def sdc_extra(s: dict, keys=("sdc_clock_extra", "sdc_extra")) -> str:
     """spec 'sdc_extra': repo SDC files appended (inlined) to clock.sdc and signoff.sdc -- a second clock domain
-    (e.g. a CDC adapter's controller clock) after core_clk exists"""
+    (e.g. a CDC adapter's controller clock) after core_clk exists.
+    spec 'sdc_clock_extra' (PATH-QC-NK 10-25): files that (RE)DEFINE the block clock's sources (A0 interior tap ports
+    ck_t*, a0_ck_taps.sdc).  clock.sdc keeps them where sdc_extra sits (route SDC unchanged); signoff.sdc inlines them
+    BEFORE io_ref_skew.sdc, so the IO reference register is measured on the real clock: with the taps defined after the
+    boundary, a standalone sign-off / FF-gate session saw ck_t* as unconstrained data inputs and read the reference's
+    tree insertion as a default-clock data arrival (max only; min 0.0 -> nk_r4 FF gate -316.66 / 2066)."""
     out = ""
-    for f in s.get("sdc_extra", []):
+    for f in [f for k in keys for f in s.get(k, [])]:
         body = (ROOT / f).read_text()
         if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in body:
             continue
@@ -2140,7 +2154,7 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
                f"set ::env(OT_BH_TILE_HOLD_UNC_PS) {HOLD_BUDGET_U_PS}\nset ::env(OT_BH_ROUTE_RELIEF_PS) 0\n"
                if hold_budget_die(s) else "")
             + f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
-            + io + sdc_extra(s)
+            + sdc_extra(s, ("sdc_clock_extra",)) + io + sdc_extra(s, ("sdc_extra",))
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
             + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
             + "\nset_propagated_clock [all_clocks]\n"

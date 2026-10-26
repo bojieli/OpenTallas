@@ -306,6 +306,7 @@ module dsfd_selt_c #(
     reg [2*Q-1:0] qs;                        // the quarter each slice serves (from its lane's header)
     reg        coll_n;
     integer q, s;
+    integer sqi;                             // clocked-block loop index (one integer per always block, rtl_lint, KITS-SPARE 10-25)
     always @(*) begin
         coll_n = 1'b0;
         for (s = 0; s < Q; s = s + 1)
@@ -378,13 +379,14 @@ module dsfd_selt_c #(
     reg  [CW-1:0] lc [0:Q-1];
     reg  [Q-1:0]  lpop;
     wire [Q-1:0]  lv;
-    integer l, e;
+    integer l, e, lr;                       // lr: loop index of the credit-count block (one integer per always block:
+                                            // a shared loop integer is multi-driven, rtl_lint check -assert, KITS-SPARE 10-25)
     generate for (g = 0; g < Q; g = g + 1) begin : g_l
         assign lv[g] = lc[g] != 0;
     end endgenerate
     always @(posedge ck[0] or negedge rst_n)
-        if (!rst_n) for (l = 0; l < Q; l = l + 1) lc[l] <= {CW{1'b0}};
-        else for (l = 0; l < Q; l = l + 1) lc[l] <= lc[l] + (oq[OB * l] ? 1'b1 : 1'b0) - (lpop[l] ? 1'b1 : 1'b0);
+        if (!rst_n) for (lr = 0; lr < Q; lr = lr + 1) lc[lr] <= {CW{1'b0}};
+        else for (lr = 0; lr < Q; lr = lr + 1) lc[lr] <= lc[lr] + (oq[OB * lr] ? 1'b1 : 1'b0) - (lpop[lr] ? 1'b1 : 1'b0);
     always @(posedge ck[0])
         for (l = 0; l < Q; l = l + 1)
             for (e = 0; e < DM; e = e + 1) begin
@@ -442,7 +444,7 @@ module dsfd_selt_c #(
             kld_r <= |s_acc;
             if (|s_acc) k_r <= seg_k;
             e_coll <= coll_n;
-            for (s = 0; s < Q; s = s + 1) if (h_v[s]) qs[2*s +: 2] <= act_q[2*s +: 2];
+            for (sqi = 0; sqi < Q; sqi = sqi + 1) if (h_v[sqi]) qs[2*sqi +: 2] <= act_q[2*sqi +: 2];
             e_kt <= 1'b0;
             begin : hdr
                 integer t; reg op; reg [KW-1:0] kk; reg [7:0] tt;

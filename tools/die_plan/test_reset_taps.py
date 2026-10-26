@@ -40,7 +40,7 @@ def test_reset_tap_ambiguous_nested_partitions(tmp_path):
     assert 'ambiguous synchroniser net for tap 20' in p.stderr
 
 
-def leaf_hook(tmp_path, sink_x=100):
+def leaf_hook(tmp_path, sink_x=100, alias=None, leaf_alias=False):
     """Clock pins point to the wrong leaf; actual reset launch flops decide."""
     mock = r'''
 namespace eval ord {}
@@ -67,6 +67,26 @@ proc si {m args} {global current; switch $m {getMTerm {return inp} getNet {retur
 set rt_postplace 1
 set rt_leaf_reach_um 405
 '''
+    if leaf_alias:
+        mock=mock.replace('getName {return rst_n_t1}', 'getName {return rst_n}')
+    if alias:
+        mock += r'''
+rename blk oldblk
+proc blk {m args} {if {$m eq "getNets"} {return {n0 n1 a0 a1}}; return [oldblk $m {*}$args]}
+rename n0 oldn0
+rename n1 oldn1
+proc n0 {m} {switch $m {getName {return canonical0} getITerms {return {q0 si ai0}}}}
+proc n1 {m} {switch $m {getName {return canonical1} getITerms {return {q1 ai1}}}}
+proc a0 {m} {switch $m {getName {return rst_n_t0} getITerms {return ao0}}}
+proc a1 {m} {switch $m {getName {return rst_n_t1} getITerms {return ao1}}}
+proc ai0 {m} {switch $m {getMTerm {return inp} getNet {return n0} getInst {return alias0}}}
+proc ai1 {m} {switch $m {getMTerm {return inp} getNet {return n1} getInst {return alias1}}}
+proc ao0 {m} {switch $m {getMTerm {return out} getNet {return a0} getInst {return alias0}}}
+proc ao1 {m} {switch $m {getMTerm {return out} getNet {return a1} getInst {return alias1}}}
+proc alias0 {m} {switch $m {getMaster {return alias_master} getITerms {return {ai0 ao0}}}}
+proc alias1 {m} {switch $m {getMaster {return alias_master} getITerms {return {ai1 ao1}}}}
+'''
+        mock += f'\nproc alias_master {{m}} {{return {alias}x2}}\n'
     script = (mock + f'\nset sx {sink_x}\nset ::env(RESULTS_DIR) {{{tmp_path}}}\n'
               + f'if {{[catch {{source {{{HOOK}}}}} msg]}} {{puts stderr $msg; exit 1}}\n'
               + 'puts "FINAL $current"\n')
@@ -134,3 +154,38 @@ def test_reset_leaf_single_terminal_without_launch_flop_fails(tmp_path):
     p = single_hook(tmp_path, launch=False)
     assert p.returncode != 0
     assert 'has no single reset launch flop' in p.stderr
+
+
+@pytest.mark.parametrize('alias', ['BUF','INV'])
+def test_dangling_preserved_terminal_alias_still_counts_functional_sinks(tmp_path, alias):
+    p=leaf_hook(tmp_path,alias=alias)
+    assert p.returncode==0,p.stderr
+    assert 'LEAF 1 sinks, max hop 100.000 um' in p.stdout
+    assert 'FINAL n1' in p.stdout
+    # The alias must not turn a real geometry failure into PASS with zero sinks.
+    p=leaf_hook(tmp_path,sink_x=500,alias=alias)
+    assert p.returncode!=0
+    assert 'LEAF 1 sinks, max hop 500.000 um' in p.stdout
+    assert 'OT_RESET_LEAF unreachable control sinks' in p.stderr
+
+
+def test_shared_leaf_alias_maps_to_nonzero_missing_terminal(tmp_path):
+    p=leaf_hook(tmp_path,leaf_alias=True)
+    assert p.returncode==0,p.stderr
+    assert 'LEAF 1 sinks, max hop 100.000 um' in p.stdout
+    assert 'FINAL n1' in p.stdout
+
+
+def test_reset_tap_sourced_inside_proc(tmp_path):
+    """ORFS sources PRE_CTS / PRE_GLOBAL_PLACE hooks inside a proc (cts.tcl): rt_tapnet's global table must resolve."""
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh unavailable')
+    mock = ['namespace eval ord {}', 'proc ord::get_db_block {} {return blk}',
+            'proc ord::get_db_tech {} {return tech}', 'proc tech {method} {return 1000}',
+            'proc blk {method args} {switch $method {getNets {return {n0 n1}} getBTerms {return {}} findNet {return NULL}}}',
+            'proc n0 {method} {return rst_n_t0}', 'proc n1 {method} {return rst_n_t20}']
+    script = '\n'.join(mock) + (f'\nproc orfs_hook {{}} {{ source {{{HOOK}}}; puts "RES [rt_tapnet blk 0] [rt_tapnet blk 20]" }}'
+                                '\norfs_hook\n')
+    p = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+    assert not p.stderr, p.stderr
+    assert 'RES n0 n1' in p.stdout

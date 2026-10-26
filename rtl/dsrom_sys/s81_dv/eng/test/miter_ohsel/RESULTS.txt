@@ -1,0 +1,32 @@
+# PATH-S81/ENG2 evidence 2026-10-25 09:42 PDT for -DOT_S81ENG_XQ_OHSEL (src 1c961ae350, ref d2d23d2ebb)
+## miter (ot-run epyc1, Verilator 5.050, 3 seeds x 200000 cycles, reset pulses + stalls, every-cycle compare)
+ENG2_MITER build xq pass ref=d2d23d2ebb new=1c961ae350 dirty=0 defs: +define+SYNTHESIS +define+OT_ENGRAM_CRCMAT +define+OT_S81ENG_RR_N32 +define+OT_S81ENG_RR_MUL_N32 +define+OT_S81ENG_TMAP_CPRE +define+OT_S81ENG_XQ_OHSEL
+ENG2_XQ_MITER PASS seed=1 cycles=200000 mismatches=0 resets=4 tx_cycles=95863 tx_nonzero_vo_b=48931 frag1_cycles=23966 pass_nonzero=103110
+ENG2_XQ_MITER PASS seed=2 cycles=200000 mismatches=0 resets=4 tx_cycles=95978 tx_nonzero_vo_b=48989 frag1_cycles=23995 pass_nonzero=102991
+ENG2_XQ_MITER PASS seed=3 cycles=200000 mismatches=0 resets=4 tx_cycles=95943 tx_nonzero_vo_b=48972 frag1_cycles=23986 pass_nonzero=103028
+ENG2_MITER DONE xq pass rc=0 (all seeds PASS iff rc=0)
+ENG2_MITER build xq mut ref=d2d23d2ebb new=1c961ae350 dirty=0 defs: +define+SYNTHESIS +define+OT_ENGRAM_CRCMAT +define+OT_S81ENG_RR_N32 +define+OT_S81ENG_RR_MUL_N32 +define+OT_S81ENG_TMAP_CPRE +define+OT_S81ENG_XQ_OHSEL +define+OHSEL_MUT
+ENG2_XQ_MITER FAIL seed=1 cycles=200000 mismatches=10784 resets=4 tx_cycles=95863 tx_nonzero_vo_b=48931 frag1_cycles=23966 pass_nonzero=103110
+ENG2_XQ_MITER FAIL seed=2 cycles=200000 mismatches=10794 resets=4 tx_cycles=95978 tx_nonzero_vo_b=48989 frag1_cycles=23995 pass_nonzero=102991
+ENG2_XQ_MITER FAIL seed=3 cycles=200000 mismatches=10763 resets=4 tx_cycles=95943 tx_nonzero_vo_b=48972 frag1_cycles=23986 pass_nonzero=103028
+ENG2_MITER DONE xq mut rc=0 (mutant CAUGHT on every seed iff rc=0)
+ENG2_MITER build core pass ref=d2d23d2ebb new=1c961ae350 dirty=0 defs: +define+SYNTHESIS +define+OT_ENGRAM_CRCMAT +define+OT_S81ENG_RR_N32 +define+OT_S81ENG_RR_MUL_N32 +define+OT_S81ENG_TMAP_CPRE +define+OT_S81ENG_XQ_OHSEL
+ENG2_CORE_MITER PASS seed=1 cycles=200000 mismatches=0 resets=4 tx_cycles=24960 tx_nonzero_vo_n=12740 frag1_cycles=6240 pass_nonzero=174746 st=1111
+ENG2_CORE_MITER PASS seed=2 cycles=200000 mismatches=0 resets=4 tx_cycles=24960 tx_nonzero_vo_n=12740 frag1_cycles=6240 pass_nonzero=174754 st=1111
+ENG2_CORE_MITER PASS seed=3 cycles=200000 mismatches=0 resets=4 tx_cycles=24960 tx_nonzero_vo_n=12740 frag1_cycles=6240 pass_nonzero=174749 st=1111
+ENG2_MITER DONE core pass rc=0 (all seeds PASS iff rc=0)
+ENG2_MITER build core mut ref=d2d23d2ebb new=1c961ae350 dirty=0 defs: +define+SYNTHESIS +define+OT_ENGRAM_CRCMAT +define+OT_S81ENG_RR_N32 +define+OT_S81ENG_RR_MUL_N32 +define+OT_S81ENG_TMAP_CPRE +define+OT_S81ENG_XQ_OHSEL +define+OHSEL_MUT
+ENG2_CORE_MITER FAIL seed=1 cycles=200000 mismatches=1053 resets=4 tx_cycles=24960 tx_nonzero_vo_n=12740 frag1_cycles=6240 pass_nonzero=174746 st=1111
+ENG2_CORE_MITER FAIL seed=2 cycles=200000 mismatches=1110 resets=4 tx_cycles=24960 tx_nonzero_vo_n=12740 frag1_cycles=6240 pass_nonzero=174754 st=1111
+ENG2_CORE_MITER FAIL seed=3 cycles=200000 mismatches=1125 resets=4 tx_cycles=24960 tx_nonzero_vo_n=12740 frag1_cycles=6240 pass_nonzero=174749 st=1111
+ENG2_MITER DONE core mut rc=0 (mutant CAUGHT on every seed iff rc=0)
+## gate (kit copy eng2_synth = E3 kit + this rr_n32 + -DOT_S81ENG_XQ_OHSEL, synth only)
+FACE_GUARD PASS top dsdv_eng_rr_e bits 2688 ok 2688 fails {} missing 0 extra 0
+GATE rtl_lint rc=0
+GATE synth rc=0
+RTL_LINT PASS errors 0
+synth top cells E3 132986 -> 89846; area 15679.5 -> 11716.0 um2; DFF 16736 -> 16883 (+288 one-hot, -141 tx/fc copies 49..95)
+## zero-wire TT (sta_synth_vo.tcl, select flops -> 552 vo_a/vo_b D, 833 ps, 60 ps unc.)
+E3   fck -> vo: worst slack 102.1 (arrival 649.4, 25 levels incl. HAxp5 offset adders), median 313.2
+ENG2 sel -> vo: worst slack 596.7 (arrival 152.0, vo_a[0] valid bit via fck), median 642.0
+## E3 post-CTS probe (4_cts.odb, estimate_parasitics -placement): fck[19]->vo_b[153] +17.3 (INV + 4 serial BUFx2 24/17/24/24 + 7-level mux)

@@ -1,0 +1,9 @@
+== nom: ASTK4 LEAF zn0_mismatch 0 (valid 53349) ctl_mismatch 0 zk_mismatch 0 (starts 252 z_emit 11535) PASS
+== mut_zn: ASTK4 LEAF zn0_mismatch 19774 (valid 53349) ctl_mismatch 0 zk_mismatch 0 (starts 252 z_emit 11535) FAIL
+ZN0 MISMATCH cyc 82
+ZN0 MISMATCH cyc 87
+ZN0 MISMATCH cyc 92
+== mut_ctl: ASTK4 LEAF zn0_mismatch 0 (valid 53349) ctl_mismatch 0 zk_mismatch 252 (starts 252 z_emit 11535) FAIL
+ZK MISMATCH cyc 320
+ZK MISMATCH cyc 604
+ZK MISMATCH cyc 856

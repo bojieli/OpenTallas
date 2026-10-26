@@ -480,7 +480,9 @@ module ot_s81_engram_lookup_ra640 #(
     wire [3:0] ek1 = ek + 4'd1;
     // n32: E0q captures every cycle (r_* / E1 / the macros use it only on the e0_go -> rq_v -> e1_vn edges)
     always @(posedge clk_ctl) begin
-        q_off <= roff[ej]; q_j <= ej; q_k <= ek[2:0]; q_s <= slot;
+        // ej advances to CPR after the final row. Define the inactive read, too:
+        // downstream valid is off there; this also preserves a fully defined LEC cone.
+        q_off <= (ej < CPR) ? roff[ej] : 2'b00; q_j <= ej; q_k <= ek[2:0]; q_s <= slot;
         rq_ea <= {ej, ek[0] ? ek1[3:1] : ek[3:1]};
         rq_oa <= {ej, ek[3:1]};
         rq_aa <= ej;

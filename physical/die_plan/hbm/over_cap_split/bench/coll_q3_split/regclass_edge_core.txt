@@ -1,0 +1,7 @@
+('cut', 'input', 'NOT-REG') 12 {'ff-ctl:CLK/logic': 12}
+('cut', 'input', 'ok') 4097 {'reg': 4092, 'ff-ctl:CLK': 4, 'ff-ctl:ARST': 1}
+('cut', 'output', 'ok') 4030 {'reg': 4015, 'const': 15}
+cut ports not registered: 3 12
+   ('link0_ck', 'input', 'ff-ctl:CLK/logic', 4)
+   ('link1_ck', 'input', 'ff-ctl:CLK/logic', 4)
+   ('link2_ck', 'input', 'ff-ctl:CLK/logic', 4)

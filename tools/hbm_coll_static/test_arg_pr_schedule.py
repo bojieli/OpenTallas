@@ -10,7 +10,7 @@ import argmax_rows as A
 ROOT=Path(__file__).resolve().parents[2]
 
 def load_baseline():
-    src=subprocess.check_output(['git','show','5df2380a1e:tools/hbm_coll_static/argmax_rows.py'],cwd=ROOT,text=True)
+    src=subprocess.check_output(['git','show','0951e4b3d:tools/hbm_coll_static/argmax_rows.py'],cwd=ROOT,text=True)
     m=types.ModuleType('argmax_before');m.__file__=str(ROOT/'tools/hbm_coll_static/argmax_rows.py');exec(compile(src,m.__file__,'exec'),m.__dict__);return m
 
 def configure(m,rows,vm,pr):

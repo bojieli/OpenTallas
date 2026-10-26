@@ -25,7 +25,11 @@
 module ot_s81c_attn_hcore #(
     // S81-P10 (opt-in, off by default): hgrp_s WPRE = 1, the write predicates captured at R0 (same values, same edges);
     // the hard-core kit sets it with -DOT_S81C_HCORE_WPRE
-`ifdef OT_S81C_HCORE_WPRE
+`ifdef OT_S81C_HCORE_CTLA
+    // S81-CORES2/EH 10-25: control-ahead (ld_grp / ld_w2v one cycle ahead of the rest of the load word), every pin
+    // registered once (face_guard clean) and the predicates still captured on the data's R0 edge (hgrp_s WPRE 2)
+    parameter integer WPRE = 2
+`elsif OT_S81C_HCORE_WPRE
     parameter integer WPRE = 1
 `else
     parameter integer WPRE = 0
@@ -48,9 +52,23 @@ module ot_s81c_attn_hcore #(
     output wire [31:0]       oy,
     output wire              oflt
 );
+    // S81-CORES2/EH 10-25 (-DOT_S81C_HCORE_RSTE, decision 13b): the rst_n pin drives only the reset ENTRY flop and the
+    // relay flop (async assert, synchronous release); the relay (kept, placed at the core centroid) drives every
+    // reset pin of the core over a full cycle.  Release +2 cycles, static and equal for all 1024 cores (hardened once).
+    wire rst_core_n;
+`ifdef OT_S81C_HCORE_RSTE
+    (* keep = "true", dont_touch = "true" *) reg rst_e_q, rst_r_q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin rst_e_q <= 1'b0; rst_r_q <= 1'b0; end
+        else begin rst_e_q <= 1'b1; rst_r_q <= rst_e_q; end
+    end
+    assign rst_core_n = rst_r_q;
+`else
+    assign rst_core_n = rst_n;
+`endif
     ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(1), .TD(32), .NBANK(5), .BW(3), .PWORDS(2), .FPL(4), .FML(6), .F12(1),
                               .PCOLP(1), .WPRE(WPRE)) u_h (
-        .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .clk(clk), .rst_n(rst_core_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
         .ld_w({512'd0, ld_w}), .ld_wp(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy),
         .oflt(oflt));
 endmodule
@@ -72,6 +90,21 @@ module ot_s81c_attn_tile_hc (
     output wire [511:0]      oy,
     output wire [15:0]       oflt
 );
+    // Physical CTLA/WPRE2 cores consume group/w2v one edge before the
+    // corresponding data/valid. A real tile-local data stage supplies that
+    // relationship from the existing synchronous load word (no prediction).
+    // +1 stationary-load transport edge, one word/edge; +1029 FF per tile.
+    wire lv_s, lm_s; wire [2:0] lb_s; wire [7:0] lg_s;
+    wire [1023:0] lw_s; wire l2_s;
+`ifdef OT_S81C_HCORE_CTLA
+    ot_s81c_hcore_load_stage u_load_stage (.clk(clk), .rst_n(rst_n),
+        .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .ld_w(ld_w), .ld_w2v(ld_w2v), .out_v(lv_s), .out_mode(lm_s),
+        .out_bank(lb_s), .out_grp(lg_s), .out_w(lw_s), .out_w2v(l2_s));
+`else
+    assign lv_s=ld_v; assign lm_s=ld_mode; assign lb_s=ld_bank;
+    assign lg_s=ld_grp; assign lw_s=ld_w; assign l2_s=ld_w2v;
+`endif
     localparam integer H = 16, TD = 32, PW = 2, RT = TD / H;
     wire [H-1:0] hov;
     genvar g, gw, gj;
@@ -83,18 +116,38 @@ module ot_s81c_attn_tile_hc (
                 for (gj = 0; gj < RT; gj = gj + 1) begin : g_wj
 `ifdef OT_S81C_HCORE_MUT
                     // bench negative control: head g takes head (g+1)'s column of p-word 1
-                    assign wp[(gw*RT + gj)*16 +: 16] = ld_w[gw*TD*16 + (gj*H + ((gw == 1) ? ((g + 1) % H) : g))*16 +: 16];
+                    assign wp[(gw*RT + gj)*16 +: 16] = lw_s[gw*TD*16 + (gj*H + ((gw == 1) ? ((g + 1) % H) : g))*16 +: 16];
 `else
-                    assign wp[(gw*RT + gj)*16 +: 16] = ld_w[gw*TD*16 + (gj*H + g)*16 +: 16];
+                    assign wp[(gw*RT + gj)*16 +: 16] = lw_s[gw*TD*16 + (gj*H + g)*16 +: 16];
 `endif
                 end
             end
             wire [7:0] gid = g;
             ot_s81c_attn_hcore u_c (
-                .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
-                .ld_grp(ld_grp), .ld_w(ld_w[511:0]), .ld_wp(wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib),
+                .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(lv_s), .ld_mode(lm_s), .ld_bank(lb_s),
+                .ld_grp(lg_s), .ld_w(lw_s[511:0]), .ld_wp(wp), .ld_w2v(l2_s), .iv(iv), .ibank(ibank), .ib(ib),
                 .ov(hov[g]), .oy(oy[g*32 +: 32]), .oflt(oflt[g]));
         end
     endgenerate
     assign ov = hov[0];
+endmodule
+
+// Actual CTLA sender stage, shared by the tile and the minimum head-group miter.
+// Only valid resets; mode/bank/data are ordinary datapath registers.
+module ot_s81c_hcore_load_stage (
+ input wire clk,rst_n,ld_v,ld_mode,input wire[2:0]ld_bank,
+ input wire[7:0]ld_grp,input wire[1023:0]ld_w,input wire ld_w2v,
+ output reg out_v,output reg out_mode,output reg[2:0]out_bank,
+ output wire[7:0]out_grp,output reg[1023:0]out_w,output wire out_w2v);
+ always @(posedge clk or negedge rst_n)
+   if(!rst_n) out_v<=1'b0; else out_v<=ld_v;
+ always @(posedge clk) begin out_mode<=ld_mode;out_bank<=ld_bank;out_w<=ld_w;end
+`ifdef OT_S81C_LOAD_STAGE_MUT
+ // Wrong: delay control with data, destroying the required one-edge lead.
+ reg[7:0] bad_grp;reg bad_w2v;
+ always @(posedge clk) begin bad_grp<=ld_grp;bad_w2v<=ld_w2v;end
+ assign out_grp=bad_grp;assign out_w2v=bad_w2v;
+`else
+ assign out_grp=ld_grp;assign out_w2v=ld_w2v;
+`endif
 endmodule

@@ -125,3 +125,28 @@ proc ot_die_constant_cells {} {
   }
 }
 ot_die_constant_cells
+# OWNER 10-25 option B (ID straps, rule 3): right after the tie mapping, every declared strap bit must be driven by its
+# OWN TIEHI/TIELO of the right value next to the pin.  bind.py writes strap_ties_check.tcl (tools/die_plan/straps.py
+# tie_check_tcl) next to bind_parent_id_straps.json; a die chain stages both into its work dir (or points
+# OT_STRAP_TIES_TCL at the check).  Fail closed: a die with declared straps but no check, or any failed bit, errors here.
+# Sourced at global scope (uplevel #0): ORFS/die hooks may source this file inside a proc (la_d / rt_named_nets class).
+proc ot_die_strap_ties {} {
+  set chk ""
+  if {[info exists ::env(OT_STRAP_TIES_TCL)] && $::env(OT_STRAP_TIES_TCL) ne ""} {
+    set chk $::env(OT_STRAP_TIES_TCL)
+    if {![file exists $chk]} { error "OT_STRAP_TIE: OT_STRAP_TIES_TCL=$chk does not exist" }
+  } elseif {[file exists [file join [pwd] strap_ties_check.tcl]]} {
+    set chk [file join [pwd] strap_ties_check.tcl]
+  }
+  if {$chk eq ""} {
+    if {[file exists [file join [pwd] bind_parent_id_straps.json]]} {
+      error "OT_STRAP_TIE: bind_parent_id_straps.json declares ID straps but strap_ties_check.tcl is missing"
+    }
+    puts "OT_STRAP_TIE NONE (no declared ID straps in this die)"
+    return
+  }
+  uplevel #0 [list source $chk]
+  if {![info exists ::ot_strap_fail]} { error "OT_STRAP_TIE: $chk did not report" }
+  if {$::ot_strap_fail} { error "OT_STRAP_TIE FAIL: $::ot_strap_fail strap bit(s) not on their own adjacent tie cell" }
+}
+ot_die_strap_ties

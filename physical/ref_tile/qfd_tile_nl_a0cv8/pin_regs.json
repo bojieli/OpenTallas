@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_tile_nl_a0c",
+ "enable": false,
+ "reason": "Actual RTL already samples tap/tile_id/rst_n on ck_fa4, n_a/n_b on their face roots and launches t_out/n_y on their face roots; node-less twin omits n_* ports. Preserve these proved native stages and their fixed calendar; tie_hi/tie_lo are constant straps. Additional generic wrapper stages would duplicate the existing registers. Native all-pin timing still required."
+}

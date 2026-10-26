@@ -1,0 +1,33 @@
+{
+ "config": {
+  "P": 8,
+  "vm_rt": 81,
+  "rows": 256,
+  "start_reg": true,
+  "npt": 3,
+  "pr": 1
+ },
+ "base": {
+  "P": 8,
+  "rows": 226,
+  "halt": 353,
+  "last_delivery": 352,
+  "II": 32,
+  "body_rows": 32,
+  "prologue": 96,
+  "epilogue": 96
+ },
+ "arg_pr": {
+  "P": 8,
+  "rows": 228,
+  "halt": 354,
+  "last_delivery": 353,
+  "II": 32,
+  "body_rows": 32,
+  "prologue": 97,
+  "epilogue": 97
+ },
+ "moved_events": 24,
+ "errors": [],
+ "verdict": "PASS"
+}

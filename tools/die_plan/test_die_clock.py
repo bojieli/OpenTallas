@@ -142,3 +142,49 @@ def test_delay_stage_pads_keep_netlist_consistent():
     assert set(c for c in E.cells) == set(d for d in drv if not d.startswith("port:"))
     tot = sum(b[0] for n in E.nets for b in n["branches"])
     assert abs(tot - (10 + 100 + 200 + 1500 + 1000)) < 1e-6
+
+
+def test_ndr_4w_everywhere():
+    """--ndr 4w: every die-tree segment gets the 4W RC (R/4, C*1.3), not only hops > WIDE_UM; default unchanged."""
+    old = DC.NDR_MODE
+    try:
+        DC.NDR_MODE = "2w"
+        r2, c2 = DC.layer_rc("M8", 400.0)
+        assert DC.layer_rc("M8", DC.WIDE_UM + 1) == pytest.approx((DC.LAYER_RC["M8"][0] * 0.25, DC.LAYER_RC["M8"][1] * 1.3))
+        DC.NDR_MODE = "4w"
+        r4, c4 = DC.layer_rc("M8", 400.0)
+        assert r4 == pytest.approx(r2 / 2) and c4 > c2
+        P = S.Plan(json.loads(PLANS[1].read_text()))
+        T, tree = DC.build(P, leaf_um=1000.0, rep_um=450.0, keep=[], pad="level")
+        assert tree["meta"]["ndr"].startswith("4W")
+    finally:
+        DC.NDR_MODE = old
+
+
+def test_cmd_build_sets_ndr(tmp_path):
+    old = DC.NDR_MODE
+    try:
+        rc = DC.main(["build", str(PLANS[0]), "--out", str(tmp_path / "b"), "--ndr", "4w"])
+        assert rc == 0
+        meta = json.loads((tmp_path / "b" / "tree.json").read_text())["meta"]
+        assert meta["ndr"].startswith("4W")
+    finally:
+        DC.NDR_MODE = old
+
+
+def test_wide_levels_only_top_legs():
+    """--wide-levels N: trunk + legs 1..N on 8W (R/8); deeper legs and the default (0) unchanged."""
+    old = DC.WIDE_LEVELS
+    try:
+        P = S.Plan(json.loads(PLANS[1].read_text()))
+        T, tree = DC.build(P, leaf_um=300.0, rep_um=450.0, keep=[], pad="level")
+        lv = {n["name"]: DC.net_leg_level(T, n) for n in T.nets}
+        assert 0 in lv.values() and 1 in lv.values() and max(lv.values()) > 2
+        DC.WIDE_LEVELS = 0
+        assert DC.layer_rc("M9", 100.0, 0) == DC.layer_rc("M9", 100.0)
+        DC.WIDE_LEVELS = 2
+        r0, _ = DC.layer_rc("M9", 100.0, 1)
+        r9, _ = DC.layer_rc("M9", 100.0, 3)
+        assert r0 == pytest.approx(DC.LAYER_RC["M9"][0] / 8) and r9 == pytest.approx(DC.LAYER_RC["M9"][0] * DC.NDR_R)
+    finally:
+        DC.WIDE_LEVELS = old

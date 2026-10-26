@@ -1,0 +1,60 @@
+{
+  "variant": "nl_l3rs",
+  "source": "intel2:/srv/opentallas-scratch2/claude/qc/a0v8c/ana_nl_l3rs",
+  "reviewed_image": "qfd_tile_nl_a0cv8c_nl_l3rs_placed.png",
+  "verdict": "BLOCKED",
+  "placement_data_verdict": "FAIL",
+  "density": {
+    "bins": 1582,
+    "mean": 0.187,
+    "p90": 0.494,
+    "p99": 0.798,
+    "max": 0.969,
+    "bins_gt_0p8": 15,
+    "bins_gt_0p9": 5
+  },
+  "data_hops_over405": {
+    "genblk3.g_toreg.t_vout_q": {
+      "n": 1,
+      "p50": 440.7,
+      "p99": 440.7,
+      "max": 440.7,
+      "over405": 1
+    }
+  },
+  "reset_hop_max_um": 638.1,
+  "reset_hops_over405": 18,
+  "cut_ratios": {
+    "W_col": 0.437,
+    "M_col": 0.301,
+    "gap": 0.15,
+    "E_col": 0.063,
+    "node_col": 0.024,
+    "Wchan": 0.106,
+    "Echan": 0.017,
+    "H_full.band": 0.233,
+    "H_full.row01": 0.202,
+    "H_full.row12": 0.148,
+    "H_full.row0": 0.205,
+    "H_full.row1": 0.183,
+    "H_full.row2": 0.152,
+    "H_east.band": 0.339,
+    "H_east.row01": 0.235,
+    "H_east.row12": 0.207,
+    "H_east.row0": 0.245,
+    "H_east.row1": 0.247,
+    "H_east.row2": 0.227,
+    "H_west.band": 0.027,
+    "H_west.row01": 0.03,
+    "H_west.row12": 0.08,
+    "H_west.row0": 0.053,
+    "H_west.row1": 0.07,
+    "H_west.row2": 0.081
+  },
+  "findings": [
+    "Mirrored E column faces central channel; wide head buses remain local. NK exclusive cone membership relieves hub overlap; no density bins >0.8.",
+    "Legacy 2-stage reset landing with 32 copies violates 405-um delivery reach; adopt decision-13 timed control-only reset relays before CTS/GRT/route.",
+    "Clock taps and PDN geometry retain v8 contract; extracted balance/continuity not evaluated at place stage."
+  ],
+  "next": "Retain NK k2rs recipe; collect live NL l3rsp/l3rsvm, adopt compliant reset and review before timing-bearing runs."
+}

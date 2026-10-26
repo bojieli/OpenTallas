@@ -33,6 +33,11 @@ module ot_hdc_v41x_attn_hgrp_s #(
                                        //    slot group, ld_grp == hh) are decoded from the ld_* pins and captured in
                                        //    the head's R0 (kept) registers, so the R0 -> DFFE-enable path is one AND-OR
                                        //    (svc hcore TT -25 ps on r_ld_grp -> compare -> we).  Same values, same edges.
+                                       // 2 (S81-CORES2/EH 10-25, opt-in, CONTROL-AHEAD): ld_grp / ld_w2v arrive ONE cycle
+                                       //    ahead of ld_v / ld_mode / ld_bank / ld_w / ld_wp (sender protocol).  Every
+                                       //    pin lands in exactly one R0 flop (face_guard clean, unlike WPRE 1); the
+                                       //    predicates are decoded from the early R0 flops and captured by u_rpd on the
+                                       //    same edge as the data's R0: write enables/data unchanged, no extra cycle.
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -141,6 +146,7 @@ module ot_hdc_v41x_attn_hgrp_s #(
             wire [PWORDS*TD*16-1:0] r_ld_w;
             wire             r_ld_w2v;
             ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rv (.clk(clk), .rst_n(rst_n), .d(ld_v), .q(r_ld_v));
+            // WPRE 2: r_ld_grp / r_ld_w2v hold the EARLY (one cycle ahead) control, i.e. R0 of the next load's group
             ot_hdc_v41x_kreg #(.W(1 + BW + 8 + 1), .R(0)) u_rc (.clk(clk), .rst_n(rst_n),
                 .d({ld_mode, ld_bank, ld_grp, ld_w2v}), .q({r_ld_mode, r_ld_bank, r_ld_grp, r_ld_w2v}));
             ot_hdc_v41x_kreg #(.W(PWORDS*TD*16), .R(0)) u_rw (.clk(clk), .rst_n(rst_n), .d(ld_w), .q(r_ld_w));
@@ -192,7 +198,16 @@ module ot_hdc_v41x_attn_hgrp_s #(
             localparam integer NQ = TD / R;
             wire [NQ-1:0] q_lo, q_hi;
             wire          q_hh;
-            if (WPRE != 0) begin : g_wpre
+            if (WPRE == 2) begin : g_wctla
+                // control-ahead: decode the early R0 copy, capture on the data's R0 edge (u_rpd) -> same predicates
+                wire [NQ-1:0] d_lo, d_hi;
+                for (gk = 0; gk < NQ; gk = gk + 1) begin : g_q
+                    assign d_lo[gk] = (r_ld_grp == gk);
+                    assign d_hi[gk] = r_ld_w2v && ((r_ld_grp + 8'd1) == gk);
+                end
+                ot_hdc_v41x_kreg #(.W(2 * NQ + 1), .R(0)) u_rpd (.clk(clk), .rst_n(rst_n),
+                    .d({d_hi, d_lo, r_ld_grp == hh}), .q({q_hi, q_lo, q_hh}));
+            end else if (WPRE != 0) begin : g_wpre
                 wire [NQ-1:0] d_lo, d_hi;
 `ifdef OT_S81C_WPRE_MUT
                 // bench negative control: the predicates captured one edge late (from the R0 registers)

@@ -358,6 +358,12 @@ def layer_schedule(tree, layer, workload='ar'):
         for node in doc['nodes']:
             if any(re.search(pattern, node.get('op', '')) for pattern in capture_ops):
                 delta[node['id']] = delta.get(node['id'], 0.0) + cap5_extra
+    # Main adopts vsw LR=1: keep dependent issues behind the extra SW output
+    # edge as well as extending the leaf-busy duration in lower_vs.
+    from layer_prog.lower_vs import VSW_LR_CYCLES
+    for node in doc['nodes']:
+        if re.fullmatch(r'ffn\.(?:shared_)?swiglu(?:\.r\d+)?', node.get('op', '')):
+            delta[node['id']] = delta.get(node['id'], 0.0) + VSW_LR_CYCLES
     _, end = ac.solve(doc['nodes'], doc['edges'], delta)
     by = {n['id']: n for n in doc['nodes']}
     if layer in LAYERS:
@@ -395,7 +401,7 @@ def layer_schedule(tree, layer, workload='ar'):
     prefetch_lead = -min(0.0, min(o['start'] for o in ops))
     crit = sum(o['cycles'] for o in ops if o['critical'])
     return dict(layer=layer, workload=workload, span=round(span, 1), crit=round(crit, 1),
-                capture_extra_edges=cap5_extra,
+                capture_extra_edges=cap5_extra, vsw_lr_extra_edges=VSW_LR_CYCLES,
                 prefetch_lead=round(prefetch_lead, 1), ops=ops, deps=deps,
                 price_source='tools/s81_dv/dv_layer_price.py facts + dv_price.dv_deltas dv_base + accepted_cost.solve')
 
@@ -1157,7 +1163,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     'calendar shifted by its CTL arrival; the layer span is max over slices and units of the last '
                     'scheduled event (op schedule span below = the priced critical slice)',
         price=dict(span=sched['span'], crit=sched['crit'], source=sched['price_source'],
-                   capture_extra_edges=sched['capture_extra_edges']),
+                   capture_extra_edges=sched['capture_extra_edges'], vsw_lr_extra_edges=sched['vsw_lr_extra_edges']),
         ops=sched['ops'], deps=sched['deps'], smoke=sub, line_slot_reserved=getattr(prog, 'line_avoid', {}), events=sorted(prog.events, key=lambda e: e['cycle']),
         event_words='LB2-S81/EVENTS: an encoded boundary event carries words [[edge, value hex, mask hex]] on `ports` '
                     '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '

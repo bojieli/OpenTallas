@@ -1,0 +1,114 @@
+{
+ "ok": false,
+ "variants": {
+  "nk": {
+   "n_decl": 42,
+   "decl_vs_gen": {
+    "missing": [],
+    "extra": [],
+    "moved": [],
+    "ok": true
+   },
+   "decl_vs_kit_pins": {
+    "missing": [],
+    "extra": [],
+    "moved": [],
+    "ok": true
+   },
+   "kit_pin_layers": [
+    "M7"
+   ],
+   "decl_vs_rtl_ports": {
+    "missing": [],
+    "extra": [],
+    "ok": true,
+    "defines": [
+     "OT_A0_CK_TAPS",
+     "OT_A0_CK_TAPS24",
+     "OT_A0_CK_TAPS31",
+     "OT_A0_CK_TAPS32",
+     "OT_A0_CK_TAPS37",
+     "OT_A0_CK_TAPS38",
+     "OT_A0_CK_TAPS42"
+    ]
+   },
+   "plan": {
+    "cores": 35,
+    "cores_mismatched": 35,
+    "ok": false,
+    "first_mismatch": {
+     "type": "cbf_q00",
+     "inst": "u_t00",
+     "n": 38,
+     "missing": [
+      "ck_t38",
+      "ck_t39",
+      "ck_t40",
+      "ck_t41"
+     ],
+     "extra": [],
+     "moved": [
+      "ck_t33",
+      "ck_t36"
+     ],
+     "ok": false
+    }
+   },
+   "ok": false
+  },
+  "nl": {
+   "n_decl": 41,
+   "decl_vs_gen": {
+    "missing": [],
+    "extra": [],
+    "moved": [],
+    "ok": true
+   },
+   "decl_vs_kit_pins": {
+    "missing": [],
+    "extra": [],
+    "moved": [],
+    "ok": true
+   },
+   "kit_pin_layers": [
+    "M7"
+   ],
+   "decl_vs_rtl_ports": {
+    "missing": [],
+    "extra": [],
+    "ok": true,
+    "defines": [
+     "OT_A0_CK_TAPS",
+     "OT_A0_CK_TAPS24",
+     "OT_A0_CK_TAPS31",
+     "OT_A0_CK_TAPS32",
+     "OT_A0_CK_TAPS37",
+     "OT_A0_CK_TAPS41"
+    ]
+   },
+   "plan": {
+    "cores": 1,
+    "cores_mismatched": 1,
+    "ok": false,
+    "first_mismatch": {
+     "type": "cbx_q10",
+     "inst": "u_t30",
+     "n": 37,
+     "missing": [
+      "ck_t37",
+      "ck_t38",
+      "ck_t39",
+      "ck_t40"
+     ],
+     "extra": [],
+     "moved": [
+      "ck_t34",
+      "ck_t36"
+     ],
+     "ok": false
+    }
+   },
+   "ok": false
+  }
+ }
+}

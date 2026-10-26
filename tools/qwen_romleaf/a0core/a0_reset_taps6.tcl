@@ -1,3 +1,8 @@
+# Multi-level synchronous reset is opt-in; the legacy hook remains unchanged for existing kits.
+if {[info exists ::env(OT_RST_LAND_DISTRIBUTED)] && $::env(OT_RST_LAND_DISTRIBUTED) eq "1"} {
+  source /src/tools/qwen_romleaf/a0core/a0_reset_paths.tcl
+  return
+}
 # QC-P6-A0 10-23 A0 v6 per-tap reset landing (GEOM-REVIEW7 18:34 FIX (2); KV kv-p5-tool @0d8b36ab6 reset_taps pattern).
 # PRE_GLOBAL_PLACE, after the pin flops are fixed (spec pin_hook_after_flops).  The core reset lands at the E-face pin
 # (rst_n__ot_rl0, io_flop_at_pins) and its LAST landing stage is already a family of identical copies (rst_n__ot_rl1 +

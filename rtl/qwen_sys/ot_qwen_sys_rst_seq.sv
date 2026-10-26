@@ -24,7 +24,16 @@ module ot_qwen_sys_rst_seq #(
     parameter integer ND       = 4,       // dies
     parameter integer T_LINK   = 20000,
     parameter integer T_HBM    = 20000,
-    parameter integer T_SETTLE = 4
+    parameter integer T_SETTLE = 4,
+    // KV-TOK2 10-25: HBM boot_go settle = cycles from hbm_rst_n release to the boot_go pulse.  Every KV HBM PC
+    // controller (qkd_ctrl_pc_nc / _host_static_core / kvpc clones / qkd_ctrl_strip) releases its scheduler a counted
+    // strap dly(pc) = RP + ((RP + pc) % 2) (+1 MUT) cycles after its own hbm reset, RP = (pc*118/32) % 118, so the
+    // latest PC (pc 31) runs 115 (+1) cycles later, plus its reset pin flop and the hgo flop: 118.  A boot static command
+    // that lands inside the strap is an f_early fault (traffic inside the strap delay), which latches the PC fault
+    // chain and leaves every slice behind it with no PHY command (E13 cold boot: 15/14 of 32 slices per stack).
+    // 160 = 118 + 42 cycles for the boot_go vs hbm_rst_n lane skew from the sequencer to the PC partitions.  Counted
+    // once per boot (~133 ns); static, no ready handshake.  Was T_SETTLE (4).
+    parameter integer T_HBM_GO = 160
 ) (
     input  wire          clk,
     input  wire          por_n,
@@ -64,7 +73,7 @@ module ot_qwen_sys_rst_seq #(
                 S_LINK:
                     if (&link_up) begin hbm_rst_n <= 1'b1; t <= 0; boot_state <= S_HBM; end
                     else if (t >= T_LINK) begin boot_fault <= 1'b1; boot_err <= 4'd1; boot_state <= S_FAULT; end
-                S_HBM: if (t >= T_SETTLE) begin boot_go <= 1'b1; t <= 0; boot_state <= S_HBMW; end
+                S_HBM: if (t >= T_HBM_GO) begin boot_go <= 1'b1; t <= 0; boot_state <= S_HBMW; end
                 S_HBMW:
                     if (&boot_done) begin
                         if (&boot_ok) begin die_rst_n <= 1'b1; t <= 0; boot_state <= S_DIE; end

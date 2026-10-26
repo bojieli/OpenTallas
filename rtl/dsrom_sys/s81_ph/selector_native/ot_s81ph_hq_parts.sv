@@ -96,7 +96,12 @@ module ot_s81ph_hq_hist #(
 `else
         ot_s81ph_native_sel_hist_bank #(.W(16), .CB(11), .BANK(0), .NB(32), .HPIPE(1)) u_bank (
 `endif
+`ifdef OT_HB_PINCOPY
+            // one bank pin per kept capture flop (KITS-SPARE-2/HB 10-25): the bank's copy registers are fed in parallel
+            .clk(clk), .rst_n(rst_n), .clr({17{nc}}), .i_v(i_v), .i_en(i_en), .i_dg(nd), .gsel({16{ng}}),
+`else
             .clk(clk), .rst_n(rst_n), .clr(nc), .i_v(i_v), .i_en(i_en), .i_dg(nd), .gsel(ng),
+`endif
             .gsum(gsum[30*b +: 30]), .gbin(bk_out[176*b +: 176]), .busy(bb_unused[b]));
     end endgenerate
     reg [175:0] j;

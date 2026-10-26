@@ -14,11 +14,22 @@ module ot_s81ph_native_sel_hist_bank #(
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
+`ifdef OT_HB_PINCOPY
+    // KITS-SPARE-2/HB 10-25 (face_guard 'shared', register every partition pin): one pin per kept capture flop, the
+    // parent multicasts its per-bank copy onto them (same value, same edge, 0 added cycles). clr[16] = r_clr,
+    // clr[k] = clear copy k; gsel[4k +: 4] = per-output-bin select copy k.
+    input  wire [16:0]          clr,
+`else
     input  wire                 clr,
+`endif
     input  wire                 i_v,
     input  wire [W-1:0]         i_en,
     input  wire [W*8-1:0]       i_dg,
+`ifdef OT_HB_PINCOPY
+    input  wire [16*4-1:0]      gsel,
+`else
     input  wire [3:0]           gsel,
+`endif
     output reg  [(NB/16)*(CB+4)-1:0] gsum,
     output reg  [16*CB-1:0]     gbin,
     output reg                  busy
@@ -39,9 +50,20 @@ module ot_s81ph_native_sel_hist_bank #(
     genvar gp;
     for (gp=0;gp<16;gp=gp+1) begin:g_selpin
         (* keep="true" *) reg [3:0] q;
+`ifdef OT_HB_PINCOPY
+        always @(posedge clk) q <= gsel[4*gp +: 4];
+`else
         always @(posedge clk) q <= gsel;
+`endif
         assign gsel_c[4*gp+:4]=q;
     end
+`ifdef OT_HB_PINCOPY
+    wire clr_r = clr[16];
+    wire [15:0] clr_k = clr[15:0];
+`else
+    wire clr_r = clr;
+    wire [15:0] clr_k = {16{clr}};
+`endif
     initial begin
         if (NB!=32 || BANK<0 || BANK>7 || HPIPE!=1) $fatal(1,"HIST_BANK requires NB32 BANK0..7 HPIPE1");
     end
@@ -59,11 +81,11 @@ module ot_s81ph_native_sel_hist_bank #(
         reg [W*8-1:0] r_dg;
         always @(posedge clk or negedge bank_rst[16])
             if (!bank_rst[16]) begin r_v <= 1'b0; r_clr <= 1'b0; end
-            else begin r_v <= i_v; r_clr <= clr; end
+            else begin r_v <= i_v; r_clr <= clr_r; end
         always @(posedge clk) begin r_en <= i_en; r_dg <= i_dg; end
         assign x_v = r_v; assign x_clr = r_clr; assign x_en = r_en; assign x_dg = r_dg;
     end else begin : g_xd
-        assign x_v = i_v; assign x_clr = clr; assign x_en = i_en; assign x_dg = i_dg;
+        assign x_v = i_v; assign x_clr = clr_r; assign x_en = i_en; assign x_dg = i_dg;
     end endgenerate
 
     reg          v1, v2;
@@ -114,10 +136,10 @@ module ot_s81ph_native_sel_hist_bank #(
         if (HPIPE != 0) begin : g_r
             (* keep = "true" *) reg rc;
             always @(posedge clk or negedge bank_rst[gk])
-                if (!bank_rst[gk]) rc <= 1'b0; else rc <= clr;
+                if (!bank_rst[gk]) rc <= 1'b0; else rc <= clr_k[gk];
             assign x_clr_c[gk] = rc;
         end else begin : g_d
-            assign x_clr_c[gk] = clr;
+            assign x_clr_c[gk] = clr_k[gk];
         end
         (* keep = "true" *) reg rv;
         always @(posedge clk or negedge bank_rst[gk])

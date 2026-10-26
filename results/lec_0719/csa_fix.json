@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-25T14:23:53+0000",
+ "verdict": "EQUIVALENT",
+ "top": "lec_t1",
+ "netlist": "/work/run/results/asap7/lec_t1/base/1_2_yosys.v",
+ "synth_frontend": "slang",
+ "gold_frontend": "verilog",
+ "implicit_nets": [],
+ "black_boxes": {
+  "lec_bbx": 3
+ },
+ "ports": {
+  "inputs": 65,
+  "outputs": 47
+ },
+ "t_aig_s": 1.6,
+ "t_corr_s": 0.2,
+ "keypoints": {
+  "gold": {
+   "inputs": 73,
+   "flops": 113,
+   "outputs": 0,
+   "ands": 1868
+  },
+  "gate": {
+   "inputs": 75,
+   "flops": 111,
+   "outputs": 0,
+   "ands": 848
+  },
+  "matched": 124,
+  "gold_constant_flops": {
+   "n": 2,
+   "first": [
+    "ff:u_dut.st[2]",
+    "ff:u_dut.st[3]"
+   ]
+  },
+  "paired_flops": {
+   "n": 0,
+   "first": []
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 8,
+  "gate_x_sources": 10,
+  "gold_only_compare": {
+   "n": 2,
+   "first": [
+    "ff:u_dut.st[2]",
+    "ff:u_dut.st[3]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 0.0,
+ "x_dont_care_points": {
+  "n": 16,
+  "first": [
+   "ff:u_dut.mem[0][0]",
+   "ff:u_dut.mem[0][1]",
+   "ff:u_dut.mem[0][2]",
+   "ff:u_dut.mem[0][3]",
+   "ff:u_dut.mem[1][0]",
+   "ff:u_dut.mem[1][1]",
+   "ff:u_dut.mem[1][2]",
+   "ff:u_dut.mem[1][3]",
+   "ff:u_dut.mem[2][0]",
+   "ff:u_dut.mem[2][1]",
+   "ff:u_dut.mem[2][2]",
+   "ff:u_dut.mem[2][3]",
+   "ff:u_dut.mem[3][0]",
+   "ff:u_dut.mem[3][1]",
+   "ff:u_dut.mem[3][2]",
+   "ff:u_dut.mem[3][3]"
+  ]
+ },
+ "counts": {
+  "compare_points": 109,
+  "proved": 109,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "109 compare points proved; 124 key points matched by name, 0 register pairs / merges and 2 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 16 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 1.9
+}

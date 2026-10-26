@@ -1,0 +1,27 @@
+{
+  "miter": "PASS",
+  "mutant": "CAUGHT",
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "cycles_per_seed": 20000,
+  "zero_mismatches": true,
+  "load_words_per_seed": 5316,
+  "transport_added_cycles": 1,
+  "core_reset_release_added_cycles": 2,
+  "source_FF_per_16head_tile": 1029,
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_s81c_attn_hcore.sv": "46f3b9c968a35f8059870e277e3ae0bbe9e2cefd8dc468b77fd2537b62227818",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv": "780e80103eb6ee7436c1d44eed93e3cfc3fd5dbdafc87d9f1a10ae41e0346252",
+    "rtl/hdc/v41x/test/tb_s81c_hgrp_load_stage.sv": "17deccfdd94402390228924cf6c191b893ab0e2b4bf8e24023dee31837554f7d"
+  },
+  "positive_log": "/srv/opentallas-scratch2/claude/codex-hcore-profile-0719/pass.otrun.log",
+  "mutant_log": "/srv/opentallas-scratch2/claude/codex-hcore-profile-0719/mut.otrun.log",
+  "physical_view_adoption": false,
+  "compiler_bound_data_gate": "Actual last-load/first-IV gap and reset+2 readiness must be priced and verified separately by TOK-SCHED; component qualification is not G5.",
+  "physical_implementation": "kit_swr has independent function-equivalent OT_F12_SWAP_REP physical option; do not globally enable that option in a die manifest merely to adopt CTLA/RSTE.",
+  "hard_core_module_byte_identical_to_EH_physical_kit": true,
+  "tool_smoke": "PASS positive, qualification-source mismatch rejected, output-overwrite rejected, input manifest unchanged"
+}

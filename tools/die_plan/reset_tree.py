@@ -107,6 +107,104 @@ def die_root_um(P):
     return (P.W / 2, P.H / 2)
 
 
+# ----------------------------------------------------------------------------------------------- die reset pad
+# PATH-KV DECISION 10-25 14:19 + CLOCK-RESET amendments A/B (14:32): ONE external reset pad per die IS the die reset
+# root pin.  reset.source.pad names a die_io entry {kind die_root_pad, iface reset, part = the root partition, rect over
+# the gen_phys.die_root_pins 'rst_n' pin, pad_port = the as-built top port}.  The raw pad has exactly these loads, all in
+# the root partition: the root synchroniser u_rst_root async input (the ONLY digital reset false path) and the declared
+# analog loads (reset.source.analog_loads, e.g. the PLL por_n: the clock source cannot be synchronised to itself).
+# The PLL lock (reset.source.lock {inst, pin, stable_cycles}) enters through its own 2-flop synchroniser + lock-stable
+# counter (ot_dp_lockq u_rst_lockq) and qualifies the root release SYNCHRONOUSLY (sticky: a later loss of lock is HOST
+# status, never a die reset); no combinational por_n & locked.  Every other leaf input on the pad, and every leaf
+# input matching reset.source.por_pins, is rebound by the binder to its partition's delivered wavefront reset (and its
+# type must be start_role bootstrap: a power-on reset cannot wait for START).  tools/die_plan/por_gate.py checks it.
+LOCKQ_EXTRA = 3        # ot_dp_lockq: 2 lock-synchroniser stages + the qualifier flop on top of STABLE counted cycles
+
+
+def die_io_entries(P):
+    """the plan's die.io windows, else the PLANDIR/die_io.json sidecar (check.py rule: the plan's die.io wins)."""
+    io = P.die.get("io")
+    if io:
+        return io
+    if getattr(P, "path", None) is not None:
+        sc = Path(P.path).resolve().parent / "die_io.json"
+        if sc.is_file():
+            return json.loads(sc.read_text())
+    return []
+
+
+def pad_spec(P):
+    """None, or the declared die reset pad: {pad, port, io, analog_loads, por_pins, lock}."""
+    src = P.reset.get("source") or {}
+    if not src.get("pad"):
+        return None
+    io = next((w for w in die_io_entries(P) if w.get("name") == src["pad"]), None)
+    return dict(pad=src["pad"], port=(io or {}).get("pad_port", src["pad"]), io=io,
+                analog_loads=list(src.get("analog_loads", [])), por_pins=src.get("por_pins"),
+                lock=src.get("lock"))
+
+
+def die_reset_port(P):
+    """the die / bound-top reset input: the as-built pad port of a declared pad, else rst_n."""
+    ps = pad_spec(P)
+    return ps["port"] if ps else "rst_n"
+
+
+def lock_stages(P):
+    """root-entry stages added by the PLL lock qualifier (ot_dp_lockq): 0 without a declared lock."""
+    ps = pad_spec(P)
+    if not ps or not ps.get("lock"):
+        return 0
+    return int(ps["lock"].get("stable_cycles", 16)) + LOCKQ_EXTRA
+
+
+def pad_false_path_pins(P, tn):
+    """root type of a pad plan: the ONLY pins the raw pad may reach (kit SDC set_false_path -from arst_n -to them)."""
+    ps = pad_spec(P)
+    if not ps or not wavefront(P) or tn != wf_solve(P)["root_type"]:
+        return []
+    return ["u_rst_root/async_rst_n"] + [f"{a['inst']}/{a['pin']}" for a in ps["analog_loads"]]
+
+
+def check_pad(P):
+    """G0 errors of a declared die reset pad (empty when none is declared)."""
+    ps = pad_spec(P)
+    if ps is None:
+        return []
+    errs = []
+    w = ps["io"]
+    if w is None:
+        return [f"reset.source.pad {ps['pad']}: no die_io entry of that name"]
+    if w.get("kind") != "die_root_pad" or w.get("iface") != "reset":
+        errs.append(f"reset pad {w['name']}: kind {w.get('kind')} / iface {w.get('iface')}, expected die_root_pad / reset")
+    pads = [x["name"] for x in die_io_entries(P) if x.get("kind") == "die_root_pad" or x.get("iface") == "reset"]
+    if pads != [w["name"]]:
+        errs.append(f"die reset pads {pads}: exactly ONE external reset pad per die (two async reset inputs = two "
+                    "reset false paths)")
+    if not wavefront(P):
+        errs.append("reset.source.pad needs reset.release wavefront")
+        return errs
+    root = wf_solve(P)["root"]
+    if w.get("part") != root:
+        errs.append(f"reset pad {w['name']}: part {w.get('part')} is not the reset root partition {root}")
+    x, y = die_root_um(P)
+    r = w["rect_um"]
+    if not (r[0] - 1e-6 <= x <= r[2] + 1e-6 and r[1] - 1e-6 <= y <= r[3] + 1e-6):
+        errs.append(f"reset pad {w['name']}: rect {r} does not cover the die rst_n root pin ({x:.3f}, {y:.3f})")
+    if not ps["analog_loads"]:
+        errs.append(f"reset pad {w['name']}: reset.source.analog_loads empty (declare the PLL por_n, or drop the pad)")
+    for a in ps["analog_loads"]:
+        if not (isinstance(a, dict) and a.get("inst") and a.get("pin")):
+            errs.append(f"reset pad analog load {a}: needs inst + pin")
+    lk = ps.get("lock")
+    if ps["analog_loads"] and not (lk and lk.get("inst") and lk.get("pin")):
+        errs.append("reset.source.lock {inst, pin} missing: the PLL lock must qualify the root release through its "
+                    "own synchroniser (CLOCK-RESET amendment A), never a combinational por_n & locked")
+    if lk and int(lk.get("stable_cycles", 16)) < 1:
+        errs.append("reset.source.lock.stable_cycles must be >= 1")
+    return errs
+
+
 def regions(P):
     """[{name, parts, root_um}] covering every partition exactly once."""
     allp = list(P.parts)
@@ -167,6 +265,23 @@ def _free(p, boxes, box_out):
     return not any(a < x < c and b < y < d for a, b, c, d in boxes)
 
 
+def _edge_ok(p, q, boxes):
+    """one of the two L routes p -> q stays outside every blockage (a relay hop is a wire: a hard core obstructs it;
+    KV-PLAN2 10-25).  _seg_hits is defined with the WALL helpers below."""
+    for m in ((q[0], p[1]), (p[0], q[1])):
+        if not _seg_hits(p, m, boxes) and not _seg_hits(m, q, boxes):
+            return True
+    return False
+
+
+def _crosses(nodes, root, boxes):
+    for nd in nodes:
+        u = nd["par"]
+        if not _edge_ok(root if u is None or u < 0 else nodes[u]["xy"], nd["xy"], boxes):
+            return True
+    return False
+
+
 def push_off(p, boxes, box_out, step=2.16):
     """nearest point outside every blockage and inside box_out: candidates are the projections onto the faces of the
     boxes holding the point (repeated while a projection lands in another box), nearest free one wins."""
@@ -211,22 +326,71 @@ def push_off(p, boxes, box_out, step=2.16):
     return best[1] if best else p
 
 
+def _seg_hits(p, q, walls):
+    """the axis-parallel segment p -> q runs through the interior of a wall box."""
+    lx, hx = min(p[0], q[0]), max(p[0], q[0])
+    ly, hy = min(p[1], q[1]), max(p[1], q[1])
+    return any(lx < c and hx > a and ly < d and hy > b for a, b, c, d in walls)
+
+
+def _lfree(a, b, walls):
+    """a wall-free L route a -> b exists (x-then-y or y-then-x): the hop routes at its Manhattan length."""
+    if not walls:
+        return True
+    for k in ((b[0], a[1]), (a[0], b[1])):
+        if not _seg_hits(a, k, walls) and not _seg_hits(k, b, walls):
+            return True
+    return False
+
+
+def walls(P, tn):
+    """WIRE walls of a type (CLOCK-RESET 10-25, S81 col_h9_r1 u_rrl_73 -> 74): blockages whose routing obstruction
+    reaches the type's top signal layer (S81 ROM elem / BF col views: LEF OBS M1-M7 under MAX_ROUTING_LAYER M7).  A
+    partition wire cannot cross them on any layer it owns (M8/M9 are the die's: BRIEFING decision 12), so a relay hop
+    over one is a ~2x detour in the kit, not its planned Manhattan length.  Same obstruction convention as the G2 /
+    PROTO probe (g2.probe_blockages obs_max).  Un-grown core outlines: relay sites already keep CLEAR_UM off them."""
+    import g2                                  # lazy: g2 -> gen_phys -> reset_tree
+    t = P.types[tn]
+    top = int(P.type_top_layer(tn)[1:])
+    out = []
+    for c in g2.probe_blockages(t, P.type_top_layer(tn)):
+        if "origin_um" not in c or "outline_um" not in c or int(str(c.get("obs_max", "M5"))[1:]) < top:
+            continue
+        (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
+        if c.get("orient") in ("R90", "R270", "MXR90", "MYR90"):
+            cw, ch = ch, cw
+        out.append((ox, oy, ox + cw, oy + ch))
+    return out
+
+
+def walled_hops(nodes, root, walls):
+    """hops (child node, parent xy) with no wall-free L route."""
+    out = []
+    for v, nd in enumerate(nodes):
+        pu = root if nd["par"] < 0 else nodes[nd["par"]]["xy"]
+        if not _lfree(nd["xy"], pu, walls):
+            out.append(v)
+    return out
+
+
 # ----------------------------------------------------------------------------------------------- the tree
-def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, prefix=""):
+def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, prefix="", walls=(),
+          avoid_cores=False):
     """taps [(name, x, y)] (tap index = list index); root_xy = the entry stage (reset pin).
     Topology: a shortest-hop tree over the taps (ties: fewer intermediate relays, then shorter wire) with intermediate
     relays on the x-then-y L path, pushed off `boxes`; when a push-off breaks the reach, a shortest-hop tree over a
-    grid of free relay sites (wires may cross blockages, relays may not).  Equal depth: every tap is padded to D =
+    grid of free relay sites (wires may cross blockages that leave the top signal layer open -- never a wall() --, relays may not).  Equal depth: every tap is padded to D =
     max(own depth, `depth`); pads go as HIGH in the tree as possible (on the edge into the subtree that has slack), so
     one pad serves every tap below it.
     Returns {root, depth, own_depth, relays[{name, xy, d, q, depth, tap, kind}], reach_um, max_hop_um, ...}."""
-    topo = topology(taps, root_xy, reach, margin, boxes, box_out)
+    topo = topology(taps, root_xy, reach, margin, boxes, box_out, walls, avoid_cores)
     return assign(topo, depth, prefix)
 
 
-def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None):
+def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, walls=(), avoid_cores=False):
     """the depth-independent part of build(): relay sites and parents.  A tap (or the entry) over a blockage gets its
-    relay site at the nearest free point (tap_offset_um records how far)."""
+    relay site at the nearest free point (tap_offset_um records how far).  `walls` (see walls()): every hop must have
+    a wall-free L route, else the grid topology routes around them; a remaining walled hop fails closed."""
     if not taps:
         raise ResetError("reset tree: no taps")
     root = (float(root_xy[0]), float(root_xy[1]))
@@ -238,11 +402,21 @@ def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=
         off = max(_man(a, b) for a, b in zip(pts, sites))
         pts = sites
     plan_reach = reach - margin
+    walls = list(walls or ())
     nodes, method = _topo_taps(pts, root, plan_reach, boxes, box_out), "taps"
-    if _maxhop(nodes, root) > reach + 1e-6 and boxes:
-        nodes, method = _topo_grid(pts, root, plan_reach, boxes, box_out), "grid"
+    # WALL rule (CLOCK-RESET 10-25): never a hop without a wall-free L route.  avoid_cores (plan reset.relay_avoid_cores,
+    # KV-PLAN2 10-25): no hop whose both L routes cross ANY blockage (G2 kv3_pc: rrl_13 -> rrl_14 straight through
+    # kvpc0, 1272 M3 overflow)
+    hb = boxes if avoid_cores else ()
+    if ((_maxhop(nodes, root) > reach + 1e-6 and boxes) or walled_hops(nodes, root, walls)
+            or (hb and _crosses(nodes, root, hb))):
+        nodes, method = _topo_grid(pts, root, plan_reach, boxes, box_out, walls=walls, hop_boxes=hb), "grid"
+    bad = walled_hops(nodes, root, walls)
+    if bad:
+        raise ResetError(f"reset tree: {len(bad)} relay hop(s) cross a wall (blockage closed to the top signal layer) "
+                         f"with no wall-free L route, e.g. node {bad[0]} at {nodes[bad[0]]['xy']}")
     return dict(nodes=nodes, root=root, ntap=len(pts), reach=reach, plan_reach=plan_reach, method=method,
-                taps=[n for n, _, _ in taps], tap_offset_um=round(off, 1))
+                taps=[n for n, _, _ in taps], tap_offset_um=round(off, 1), walls=len(walls))
 
 
 def assign(topo, depth=None, prefix=""):
@@ -296,7 +470,7 @@ def _topo_taps(pts, root, reach, boxes, box_out):
     return nodes
 
 
-def _topo_grid(pts, root, reach, boxes, box_out, pitch=None):
+def _topo_grid(pts, root, reach, boxes, box_out, pitch=None, walls=(), hop_boxes=()):
     """shortest-hop tree over the taps + a grid of free relay sites (pitch um); ties: fewer hops, then less wire."""
     x0, y0, x1, y1 = box_out
     pitch = pitch or max(21.6, reach / 4)
@@ -332,7 +506,7 @@ def _topo_grid(pts, root, reach, boxes, box_out, pitch=None):
         for dx in (-1, 0, 1):
             for dy in (-1, 0, 1):
                 for k in buckets.get((cx + dx, cy + dy), ()):
-                    if _man(q, allp[k]) <= reach:
+                    if _man(q, allp[k]) <= reach and _lfree(q, allp[k], walls) and _edge_ok(q, allp[k], hop_boxes):
                         yield k
     dist = {}
     par = {}
@@ -504,7 +678,8 @@ def _type_tree0(P, tn, depth, reach):
         w, h = t["outline_um"]
         cache[("topo", tn, reach)] = topology(_taps(P, tn), reset_pin(P, tn), reach=reach,
                                               boxes=blockages(t), box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM,
-                                                                           h - CLEAR_UM))
+                                                                           h - CLEAR_UM), walls=walls(P, tn),
+                                              avoid_cores=bool(P.reset.get("relay_avoid_cores")))
     return assign(cache[("topo", tn, reach)], depth)
 
 
@@ -531,8 +706,25 @@ def for_type(P, tn, reach=None):
         T = _wf_type_tree(P, tn)
         T.update(entry="sync" if tn == wf_solve(P)["root_type"] else "relayed", sync_stages=sync_stages(P, tn),
                  type=tn, start=start_broadcast(P))
+        if T["entry"] == "sync" and lock_stages(P):
+            lk = pad_spec(P)["lock"]
+            T["lock"] = dict(inst=lk["inst"], pin=lk["pin"], stable=int(lk.get("stable_cycles", 16)),
+                             stages=lock_stages(P))
+        role, core_roles = start_roles(P, tn)
         if T["start"]:
             T["start_in"] = list(start_in_pin(P, tn))
+            known = {c["inst"] for c in T.get("core_resets", [])}
+            bad = sorted(set(core_roles) - known)
+            if bad:
+                raise ResetError(f"type {tn}: reset.core_start_roles names {bad}, not hard-core reset targets {sorted(known)}")
+            nck = T.get("n_clock_taps", len(T["taps"]))
+            T["start_role"] = role
+            T["tap_roles"] = {i: role for i in range(nck)}
+            for c in T.get("core_resets", []):
+                T["tap_roles"][c["tap"]] = core_roles.get(c["inst"], role)
+            # BOOTSTRAP types publish ONE registered local START tap (start_t<leaf tap>, = what a MISSION tap would be:
+            # registered reset AND run at the same site/depth) for the contents' explicit mission-admission input
+            T["start_tap"] = leaf_tap(P, tn) if role == "bootstrap" else None
         return T
     if pipelined(P):
         K = part_depth(P)
@@ -549,7 +741,9 @@ def for_type(P, tn, reach=None):
 
 
 def entry_stages(T):
-    return T["sync_stages"] if T["entry"] == "sync" else 1
+    """pin -> release of the entry: the root synchroniser (+ the PLL lock qualifier ot_dp_lockq when declared) or one
+    pin register."""
+    return T["sync_stages"] + int((T.get("lock") or {}).get("stages", 0)) if T["entry"] == "sync" else 1
 
 
 def release_clocks(T):
@@ -796,7 +990,7 @@ def wf_solve(P):
     rtype = P.parts[root]["type"]
 
     def entry(p):
-        return N if P.parts[p]["type"] == rtype else 1
+        return N + lock_stages(P) if P.parts[p]["type"] == rtype else 1
 
     def solve(choice):
         adj = {}
@@ -950,6 +1144,35 @@ def _start_sites(P, tn):
     return cache[key]
 
 
+START_ROLES = ("bootstrap", "mission")
+
+
+def start_roles(P, tn):
+    """(type role, {hard-core inst: role}) of a START-broadcast plan (reset fix 10-25, KV/QC bootstrap deadlock).
+    Declared explicitly in the plan type's reset block, never inferred from names:
+      reset.start_role "mission" (default): every consumer tap = registered (reset AND run) -- control state waits for
+        START (decision 13c as before);
+      reset.start_role "bootstrap": consumer taps = the registered RAW delivered wavefront reset (same depth, same
+        published release offset, measured from rst_n), so boot / program-load / PHY calibration runs BEFORE the one
+        global START; the type also publishes ONE registered local START tap start_t<leaf> (reset AND run, i.e. the
+        exact release a MISSION tap would have) which the contents' declared mission-admission input must use.
+      reset.core_start_roles {inst: role}: per hard-core reset target override.
+    No second START, no timer, no raw die-reset bypass (the bootstrap reset is still the delivered wavefront relay),
+    and private core reset stages are untouched (core targets keep their equal-depth relay)."""
+    r = P.types[tn].get("reset", {})
+    role = r.get("start_role", "mission")
+    cores = dict(r.get("core_start_roles", {}))
+    for v in [role] + list(cores.values()):
+        if v not in START_ROLES:
+            raise ResetError(f"type {tn}: start role {v!r} not in {START_ROLES}")
+    if ("start_role" in r or cores) and not start_broadcast(P):
+        raise ResetError(f"type {tn}: reset.start_role / core_start_roles need a wavefront plan with "
+                         "reset.start = broadcast")
+    if ("start_role" in r or cores) and P.types[tn].get("hard"):
+        raise ResetError(f"type {tn}: hard partitions carry no generated reset tree (no start role)")
+    return role, cores
+
+
 def start_in_pin(P, tn):
     """the START IN pin (start_i) of a soft type of a start-broadcast plan (type frame), beside arst_n."""
     return tuple(_start_sites(P, tn)[0])
@@ -1034,7 +1257,8 @@ def _wf_type_tree(P, tn):
             c["tap"] = len(pts)
             pts.append((f"core_rst{k}", *c["xy"]))
         topo = topology(pts, in_pin(P, tn), reach=relay_um(P), boxes=blockages(t),
-                        box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM))
+                        box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
+                        avoid_cores=bool(P.reset.get("relay_avoid_cores")))
         T = assign(topo, None)
         T.update(n_clock_taps=len(taps), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
         cache[key] = T
@@ -1057,6 +1281,9 @@ def wf_plan(P):
                          for o in out_pins(P, tn)], depth_K=T["depth"], entry=T["entry"],
                          entry_stages=entry_stages(T), release_after_pin=release_clocks(T), relays=len(T["relays"]),
                          max_hop_um=T["max_hop_um"], core_resets=T.get("core_resets", []))
+        if T.get("start_role"):
+            types[tn].update(start_role=T["start_role"], start_tap=T["start_tap"],
+                             core_start_roles={c["inst"]: T["tap_roles"][c["tap"]] for c in T.get("core_resets", [])})
     kids = {}
     for p, pr in sol["parent"].items():
         if pr is not None:
@@ -1078,7 +1305,8 @@ def wf_plan(P):
             row["core_release"] = {c["inst"] + "." + c["pin"]: rel + c["internal_depth"]
                                    for c in types[tn].get("core_resets", [])}
         if pr is None:
-            row.update(source="die rst_n (asynchronous: the ONE root synchroniser)")
+            row.update(source=f"die {die_reset_port(P)} (asynchronous: the ONE root synchroniser" +
+                       (f" + PLL lock qualifier, +{lock_stages(P)} stages)" if lock_stages(P) else ")"))
         else:
             q = pr[0]
             k = sol["outs"][P.parts[q]["type"]].index(pr[1])
@@ -1103,6 +1331,11 @@ def wf_plan(P):
                             outs=[[o[0], round(o[1], 4), round(o[2], 4)] for o in start_out_pins(P, tn)])
                    for tn in types},
             hard_parts_raw_reset=hard_parts,
+            bootstrap_types=sorted(tn for tn, ty in types.items() if ty.get("start_role") == "bootstrap"),
+            roles_note="start_role mission: taps release at max(release[p], S + release[p]); start_role bootstrap: "
+                       "taps (and core resets with role bootstrap) release at release[p] (raw delivered wavefront, "
+                       "boot runs before START), the local START tap start_t<start_tap> at S + release[p] gates the "
+                       "contents' declared mission admission.  One START, no timer, no die-reset bypass.",
             note="OWNER DECISION 13c: START rides the reset wavefront (start_i / start_o_<k> beside arst_n / "
                  "rst_o_<k>, run relays on the reset relay sites).  Soft partition p's control state (leaves, "
                  "boundary epochs, hard-core resets) releases at  max(release[p], S + release[p])  clocks, S = the "
@@ -1121,7 +1354,7 @@ def wf_die_rtl(P, ind="    "):
     arst, outs = {}, {}
     for p, r in W["parts"].items():
         if r["parent"] is None:
-            arst[p] = "rst_n"
+            arst[p] = die_reset_port(P)
         else:
             net = "rstw_" + re.sub(r"\W", "_", r["source"])
             if net not in {n for d in outs.values() for n in d.values()}:
@@ -1180,13 +1413,23 @@ def start_relays(T):
     def run(n):
         return "run_root" if n == "rst_root_n" else "rn_" + raw(n)
     used = {raw(r["d"]) for r in T["relays"]} | {f"rr_t{i}" for i in outs}
+    roles = T.get("tap_roles", {})
     out = []
     for r in T["relays"]:
         m = _TAPQ.match(r["q"])
         base = dict(xy=r["xy"], kind=r["kind"], depth=r["depth"], dlab=r["d"], tap=r.get("tap"))
         srl = r["name"].replace("u_rrl", "u_srl", 1)
         if m and int(m.group(1)) not in outs:
-            out.append(dict(base, name=r["name"], d=f"{raw(r['d'])} & {run(r['d'])}", q=r["q"], role="gated"))
+            i = int(m.group(1))
+            if roles.get(i, "mission") == "bootstrap":
+                # BOOTSTRAP consumer: the registered raw delivered reset (same flop count => same release offset)
+                out.append(dict(base, name=r["name"], d=raw(r["d"]), q=r["q"], role="boot"))
+            else:
+                out.append(dict(base, name=r["name"], d=raw(r["d"]), run=run(r["d"]), q=r["q"], role="gated"))
+            if T.get("start_tap") == i:
+                # the type's ONE local START tap: registered (reset AND run) beside the leaf tap relay
+                out.append(dict(base, name=r["name"] + "_g", d=raw(r["d"]), run=run(r["d"]), q=f"start_t{i}",
+                                role="gated"))
             if raw(r["q"]) in used:
                 out.append(dict(base, name=r["name"] + "_r", d=raw(r["d"]), q=raw(r["q"]), role="raw"))
                 out.append(dict(base, name=srl, d=run(r["d"]), q=run(r["q"]), role="run"))
@@ -1196,11 +1439,28 @@ def start_relays(T):
     return out
 
 
-def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i"):
+LOCK_SRC = "pll_locked_i"     # the root type's PLL lock net (bind.py aliases the declared lock leaf output to it)
+
+
+def _root_entry_lines(T, ind, src, lock_src, note):
+    """root entry: u_rst_root (async input = the raw pad ONLY) [-> u_rst_lockq PLL lock qualifier] -> rst_root_n."""
+    ns = T["sync_stages"]
+    lk = T.get("lock")
+    if not lk:
+        return [f"{ind}ot_dp_rsync_s{ns} u_rst_root (.clk(clk), .async_rst_n({src}), .sync_rst_n(rst_root_n));  // {note}"]
+    return [f"{ind}wire rst_por_n;",
+            f"{ind}ot_dp_rsync_s{ns} u_rst_root (.clk(clk), .async_rst_n({src}), .sync_rst_n(rst_por_n));  // {note} "
+            "(async input = the die reset pad ONLY)",
+            f"{ind}ot_dp_lockq #(.STABLE({lk['stable']})) u_rst_lockq (.clk(clk), .d(rst_por_n), .locked({lock_src}), "
+            f".q(rst_root_n));  // PLL lock qualifier ({lk['inst']}.{lk['pin']}): 2-flop sync + {lk['stable']}-cycle "
+            "stable count, sticky synchronous release (loss of lock after boot = HOST status, not a die reset)"]
+
+
+def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SRC):
     """SystemVerilog body lines: entry stage + relays.  Declares rst_n_t<i> for every tap.  With T['start'] (decision
     13c START broadcast) the run entry / relays and the gated taps (start_relays) are emitted as well."""
     if T.get("start"):
-        return _rtl_lines_start(T, ind, src, start_src)
+        return _rtl_lines_start(T, ind, src, start_src, lock_src)
     ns = T["sync_stages"]
     if T["entry"] == "sync" and ns not in (2, 3):
         raise ResetError(f"reset_tree: sync_stages {ns} (root synchronisers exist for 2 or 3)")
@@ -1210,8 +1470,8 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i"):
            f"clocks after the entry pin",
            f"{ind}wire rst_root_n;"]
     if T["entry"] == "sync":
-        out.append(f"{ind}ot_dp_rsync_s{ns} u_rst_root (.clk(clk), .async_rst_n({src}), .sync_rst_n(rst_root_n));  "
-                   "// the region's ONE root synchroniser: its async input is the only reset false path")
+        out += _root_entry_lines(T, ind, src, lock_src, "the region's ONE root synchroniser: its async input is the "
+                                 "only reset false path")
     else:
         out.append(f"{ind}ot_dp_rrelay u_rst_in (.clk(clk), .d({src}), .q(rst_root_n));  "
                    "// pin register of the SYNCHRONOUS reset input (die reset tree)")
@@ -1228,7 +1488,7 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i"):
     return out
 
 
-def _rtl_lines_start(T, ind, src, start_src):
+def _rtl_lines_start(T, ind, src, start_src, lock_src=LOCK_SRC):
     ns = T["sync_stages"]
     if T["entry"] == "sync" and ns not in (2, 3):
         raise ResetError(f"reset_tree: sync_stages {ns} (root synchronisers exist for 2 or 3)")
@@ -1239,8 +1499,8 @@ def _rtl_lines_start(T, ind, src, start_src):
            "entry reset release and the entry START",
            f"{ind}wire rst_root_n, run_root;"]
     if T["entry"] == "sync":
-        out.append(f"{ind}ot_dp_rsync_s{ns} u_rst_root (.clk(clk), .async_rst_n({src}), .sync_rst_n(rst_root_n));  "
-                   "// the die's ONE root reset synchroniser: its async input is the only reset false path")
+        out += _root_entry_lines(T, ind, src, lock_src, "the die's ONE root reset synchroniser: its async input is "
+                                 "the only reset false path")
         out.append(f"{ind}ot_dp_rsync_s{ns} u_run_root (.clk(clk), .async_rst_n({start_src}), .sync_rst_n(run_root));  "
                    "// the die's ONE START synchroniser (die start pin, asynchronous level): the only START false path")
     else:
@@ -1250,13 +1510,22 @@ def _rtl_lines_start(T, ind, src, start_src):
                    "// pin register of the SYNCHRONOUS START input (neighbour's start_o)")
     nck = T.get("n_clock_taps", len(taps))
     outs = set(range(nck, nck + len(T.get("outs", []))))
-    out += [f"{ind}wire rst_n_t{i};" for i in taps if i not in outs]     # consumer taps (gated)
+    out += [f"{ind}wire rst_n_t{i};" for i in taps if i not in outs]     # consumer taps (gated / boot)
+    if T.get("start_role"):
+        out.append(f"{ind}// START role {T['start_role']}" + (
+            f": consumer taps = registered RAW wavefront reset (boot before START); start_t{T['start_tap']} = the "
+            "local registered START tap (reset AND run) for the declared mission-admission input"
+            if T["start_role"] == "bootstrap" else ": consumer taps = registered (reset AND run)") +
+            ("; core overrides " + ", ".join(f"t{k}:{v}" for k, v in sorted(T["tap_roles"].items())
+                                             if v != T["start_role"]) if any(v != T["start_role"] for v in
+                                                                              T["tap_roles"].values()) else ""))
     declared = {f"rst_n_t{i}" for i in taps} | {"rst_root_n", "run_root"}
     for r in start_relays(T):
         if r["q"] not in declared:
             out.append(f"{ind}wire {r['q']};")
             declared.add(r["q"])
-        out.append(f"{ind}ot_dp_rrelay {r['name']} (.clk(clk), .d({r['d']}), .q({r['q']}));  "
+        cell, run = ("ot_dp_rgate", f", .run({r['run']})") if r["role"] == "gated" else ("ot_dp_rrelay", "")
+        out.append(f"{ind}{cell} {r['name']} (.clk(clk), .d({r['d']}){run}, .q({r['q']}));  "
                    f"// {r['role']} {r['kind']} tap {r['tap']} depth {r['depth']} @ ({r['xy'][0]:.1f}, {r['xy'][1]:.1f})")
     for k in range(len(T.get("outs", []))):
         out.append(f"{ind}assign rst_o_{k} = rr_t{nck + k};  // registered reset out (wavefront) at "
@@ -1269,8 +1538,11 @@ def leaf_tap(P, tn):
     """the tap whose relay drives the leaf contents' rst_n: nearest the outline centre (halves the leaf reset reach
     vs tap 0 in the SW corner)."""
     w, h = P.types[tn]["outline_um"]
+    # optional plan point reset.leaf_um = the planned leaf-logic region (HEAD-SPINE2 10-25: the spine node spo / spr
+    # sit under the N face, so the centre tap left their control flops ~1.5 mm from their relay)
+    cx, cy = P.types[tn].get("reset", {}).get("leaf_um", (w / 2, h / 2))
     taps = _taps(P, tn)
-    return min(range(len(taps)), key=lambda i: (abs(taps[i][1] - w / 2) + abs(taps[i][2] - h / 2), i))
+    return min(range(len(taps)), key=lambda i: (abs(taps[i][1] - cx) + abs(taps[i][2] - cy), i))
 
 
 TCL_HEAD = """# GENERATED by tools/die_plan/reset_tree.py (OWNER RESET RULE 10-24): FIRM sites of the reset entry stage (root
@@ -1357,7 +1629,7 @@ def tcl_text(T):
               "$rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
               f"dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
               f"puts \"OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}\""]
-    edges = " ".join(f"{r['q']} {r['d'].split(' & ')[0]}" for r in rel)
+    edges = " ".join(f"{r['q']} {r['d']}" for r in rel)
     edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
     t += ["close $rtr_fh",
           "# placed hop check (driver relay -> relay, Manhattan between placed sites)",
@@ -1393,6 +1665,7 @@ def check(P):
     errs, warns = [], []
     if wavefront(P):
         try:
+            errs += check_pad(P)
             for tn, t in sorted(P.types.items()):
                 if t.get("hard") or not any(p["type"] == tn for p in P.parts.values()):
                     continue

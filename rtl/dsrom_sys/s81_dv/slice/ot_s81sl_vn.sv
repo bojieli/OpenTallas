@@ -487,7 +487,9 @@ endmodule
 
 module ot_s81sl_vn_b #(
     parameter integer LM = 5,
-    parameter integer LA = 6
+    parameter integer LA = 6,
+    // F6 SRAM-side write stage; 0 external cycles via exact read forwarding.
+    parameter integer HW_STAGE = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -546,11 +548,20 @@ module ot_s81sl_vn_b #(
 
     reg run; reg [2:0] nj; reg g_go, g_inv, g_inv0; reg [511:0] g_x;
     integer i, k;
-    wire [255:0] hm1;
+    wire [255:0] hm1, hm1_mem;
+    wire mem_we; wire [6:0] mem_wa; wire [255:0] mem_wd;
     wire         hre = hr_v_c || run;
     wire [6:0]   hra = run ? {4'd0, nj} : {4'd0, hr_j_c};
-    ot_sram_1r1w_128x256_m1_r2c2 u_h1 (.clk(clk), .r_ce_in(hre && (run || hr_hf_c)), .r_addr_in(hra), .rd_out(hm1),
-        .w_ce_in(hw_v_c && hw_hf_c), .w_addr_in({4'd0, hw_j_c}), .wd_in(hw_d_c), .w_mask_in({256{1'b1}}),
+    generate if (HW_STAGE != 0) begin : g_hwif
+        ot_s81sl_hw_write_stage u_stage (.clk(clk), .re(hre && (run || hr_hf_c)), .ra(hra),
+            .we(hw_v_c && hw_hf_c), .wa({4'd0, hw_j_c}), .wd(hw_d_c), .mem_q(hm1_mem),
+            .mw(mem_we), .ma(mem_wa), .md(mem_wd), .q(hm1));
+    end else begin : g_hw_direct
+        assign mem_we = hw_v_c && hw_hf_c;
+        assign mem_wa = {4'd0, hw_j_c}; assign mem_wd = hw_d_c; assign hm1 = hm1_mem;
+    end endgenerate
+    ot_sram_1r1w_128x256_m1_r2c2 u_h1 (.clk(clk), .r_ce_in(hre && (run || hr_hf_c)), .r_addr_in(hra), .rd_out(hm1_mem),
+        .w_ce_in(mem_we), .w_addr_in(mem_wa), .wd_in(mem_wd), .w_mask_in({256{1'b1}}),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     reg hrv1, hrhf1;
     always @(posedge clk or negedge rs_o) if (!rs_o) begin hrv1 <= 1'b0; hq_v <= 1'b0; end
@@ -730,4 +741,37 @@ module ot_s81sl_vn_sp #(
     assign hq_d = hqd_a | hqd_b;
     assign y = {y_b, y_a};
     assign fault = f_a | f_b;
+endmodule
+
+// SRAM-side write register with read-before-write forwarding. A write commits
+// one edge later internally; the pending word is forwarded on a matching read,
+// preserving every externally observed read edge. No reset may discard a
+// pending write: the upstream valid is already reset, and SRAM state survives it.
+module ot_s81sl_hw_write_stage (
+    input wire clk,
+    input wire re,
+    input wire [6:0] ra,
+    input wire we,
+    input wire [6:0] wa,
+    input wire [255:0] wd,
+    input wire [255:0] mem_q,
+    output reg mw,
+    output reg [6:0] ma,
+    (* keep *) output reg [255:0] md,
+    output wire [255:0] q
+);
+    reg hit;
+    reg [255:0] forwarded;
+    always @(posedge clk) begin
+        mw <= we; ma <= wa; md <= wd;
+        if (re) begin
+`ifdef OT_VNB_MUT_HW_FORWARD
+            hit <= 1'b0;
+`else
+            hit <= mw && ma == ra;
+`endif
+            forwarded <= md;
+        end
+    end
+    assign q = hit ? forwarded : mem_q;
 endmodule

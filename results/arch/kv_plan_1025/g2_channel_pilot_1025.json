@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.kv_g2_channel_pilot.v1",
+ "date": "2026-10-25",
+ "lane": "KV-PLAN",
+ "tool": "physical/die_plan/qwen_kvsys/g3/channel_lattice_pilot.py on plan v3.9 (main 7c33a7a81) + tools/die_plan/g2.py @6d5e36713 (hard cores without content leaf now obstruct)",
+ "host": "epyc2 docker --memory 24g --cpus 8 (diagnostic probe, BRIEFING checks-bypass-admission)",
+ "baseline_codex_centroid": {"kv3_pv_v6": {"grt_overflow": 421216}, "kv3_hgi_v6": {"congestion_total": 1283236, "verdict": "FAIL"}},
+ "channel_pins_per_bit_obsM7": {
+  "kv3_hgi_v6": {"overflow": 0, "usage_pct": 12.93, "noap": 0},
+  "kv3_hgi_v6_centred": {"overflow": 0, "usage_pct": 12.93, "noap": 0},
+  "kv3_pv_v6": {"overflow": 0, "usage_pct": 4.33, "noap": 0},
+  "kv3_hgi_v8": {"overflow": 0, "usage_pct": 10.88, "noap": 0},
+  "kv3_pv_v4": {"overflow": 0, "usage_pct": 4.24, "noap": 0},
+  "kv3_hub_C": {"overflow": 0, "usage_pct": 2.57, "noap": 0},
+  "kv3_hub_Wi": {"overflow": 0, "usage_pct": 7.26, "noap": 0},
+  "kv3_hub_Wo": {"overflow": 0, "usage_pct": 4.42, "noap": 0},
+  "kv3_hg": {"overflow": 1137, "dir": "vertical", "usage_pct": 2.34, "cause": "qkd_ectlk core (881x216 at y=1287) spans the N/S channel lattice"}
+ },
+ "channel_pins_per_bit_obsM5": {"kv3_hgi_v6_centred": {"overflow": 0}, "kv3_pv_v6": {"overflow": 0}},
+ "controls_orig_pins": {"h0 hgi orig+regs, h1 hgi orig+perbit, p0 pv orig+regs, p1 pv orig+perbit, h4/p4 orig+perbit obsM5": "all still in GRT congestion-removal extra iterations (5-13 of 30) after 35+ min; channel variants finished with overflow 0. Killed at park: pin placement, not station sites, is the cause."},
+ "verdict": "structural cause = face pins in front of M1-M7 hard cores; channel-mouth pins + per-bit stations route clean on every probed type except kv3_hg (ectl core blocks the vertical channels)"
+}

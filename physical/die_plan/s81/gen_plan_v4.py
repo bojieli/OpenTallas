@@ -437,6 +437,9 @@ NONFRAME_HC = {
                             "u_eng.u_h1": (round(1209.6 - d_, 4), 432.0)} for d_ in (86.4 * k_ for k_ in range(1, 7))],
                 mirrors=((False, False),)),
 }
+# PORTFIX r4: keep existing hard-core pins facing their real partners.
+from core_layout_r4 import apply as apply_core_layout_r4
+apply_core_layout_r4(NONFRAME_HC)
 HC_REPORT = {}
 # declared port pairs where width / nearest matching is ambiguous: {key: {(core, port): partner port}}
 CORE_PORT_PAIRS = {k_: {("u_c.u_eg", "g"): "eg_d", ("u_c.u_eg", "g_c"): "eg_c", ("u_c.u_eg", "g_v"): "eg_v",
@@ -547,6 +550,12 @@ def derived_core_conns(types):
             if inst not in hcs:
                 continue
             for port, tgs in ports.items():
+                # S81-PLAN3/CCONN2 10-25: a core port on the contents' CLOCK net (target port:clk -- the landed frames'
+                # bf_front_roots io_clk / io_e / io_n / io_w and cfg7 cr / cr_s / xk pins sit on the frame clk) is clock
+                # distribution (CTS / MSCTS clock gate), not a reg-reg data hop: ~4,000 of the 4,299 R3 'core bundle'
+                # findings were these one-sided clock-net fan-outs (the partners' clk pins are not listed).
+                if any(tg in ("port:clk", "port:ck") for tg in tgs):
+                    continue
                 out = []
                 for tg in tgs:
                     k, _, n = tg.partition(":")
@@ -557,7 +566,28 @@ def derived_core_conns(types):
                 if out:
                     ent.setdefault(inst, {})[port] = sorted(set(out))
         if ent:
-            CORE_CONNS_OUT[tn] = ent
+            # A shared soft-driven input net is not a register-to-register core hop (Codex codex/s81-plan2-1025@f5d465536,
+            # adopted S81-PLAN3/CCONN2 10-25): drop ONLY proven INPUT/INPUT aliases; unknown directions and every real
+            # driver/sink pair stay fail closed.
+            from core_conns_directions import filter_shared_inputs
+            ent = filter_shared_inputs(t, ent, Path(__file__).resolve().parents[3])
+            if ent:
+                CORE_CONNS_OUT[tn] = ent
+
+
+# PATH-S81 10-25 (Codex S81-bind 14:13 EMIT finding): the slice hub's xrt master follows the slice's HB parameter, not
+# its plan master name.  As built (die top die_b178.v): u_s_3S = ot_s81sl_slice_iq_w3 #(.HB(1)) -> u_sl.g_c3.u_xr =
+# ot_s81sl_xrt3; u_s_4S = ot_s81sl_slice_c3x_k8_cap5r_w (HB=1 by construction) -> xrt3; every other normal slice HB=0
+# -> xrt1.  The old 'c3x' substring test planned xrt1 for dsdv_slice_iq (s_3S_C).  Fail closed if a c3x master ever
+# appears outside this set.
+SLICE_HB1 = ("s_3S", "s_4S")
+
+
+def slice_xrt(p, m):
+    hb = getattr(p, "group", None) in SLICE_HB1
+    if "c3x" in m and not hb:
+        raise SystemExit("slice_xrt: c3x master %s on %s outside SLICE_HB1 %s" % (m, p.name, SLICE_HB1))
+    return "xrt3" if hb else "xrt1"
 
 
 def nonframe_hc_key(p):
@@ -567,7 +597,7 @@ def nonframe_hc_key(p):
     if p.kind == "slice":
         role = getattr(p, "role", "X")
         if role == "C":
-            return "C:xrt3" if "c3x" in m else "C:xrt1"
+            return "C:" + slice_xrt(p, m)
         if role.startswith("L") and "kv_leaf" not in m:
             return "leaf"
         return None
@@ -978,8 +1008,12 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
                 # the outline height: R0 pins sit at y = 0.012 (mod 0.048) after the [., 0.012] offset, so the mirrored
                 # pin y' = dy + ch - 0.012 must be 0.024 (mod 0.048) (the core frame M6 tracks follow the same rule)
                 to[1] = round((0.036 - ch) % 0.048, 4)
-            if oc in ("MY", "R180") and spec.get("place"):
-                raise SystemExit("S81-CORES: x-mirrored explicit cores need a V-layer track shift (not implemented)")
+            if spec.get("place") and oc != "R0":
+                # Reuse the frame-core orient-aware lattice search for fixed
+                # non-frame placements. This preserves the actual LEF pins;
+                # mirrored orientations need both V- and H-layer residues.
+                to = core_track_offset(dict(c, size_um=[cw, ch],
+                                            origin_um=[round(x_, 4), round(y_, 4)], orient=oc))
             o.append(dict(c, origin_um=[round(x_, 4), round(y_, 4)], orient=oc, track_offset_um=to))
         return o
 
@@ -1081,7 +1115,7 @@ FT_MACRO_ADD = []
 NF_HC_TYPES = []
 STATION_BITS_PER_CYCLE = 4096   # S81/LEAFPLAN: placement ranking prices 4096 station flop bits like one added cycle
 CORES_405_KEYS = ("leaf", "svc", "eng")
-INT_STATION_KEYS = CORES_405_KEYS + ("C:xrt1", "C:xrt3")   # R3-INTERNAL stations (core_conns bundles > 405 um)
+INT_STATION_KEYS = CORES_405_KEYS + ("C:xrt1", "C:xrt3", "gunit", "bk_sel")   # R3-INTERNAL stations (core_conns bundles > 405 um)
 FT_HALO = 8.64
 
 
@@ -1717,7 +1751,7 @@ def cells_core_plan(p):
         role = getattr(p, "role", "X")
         m = p.contents[0]["module"] if p.contents else ""
         if role == "C":
-            k = "xrt3" if "c3x" in m else "xrt1"
+            k = slice_xrt(p, m)
             return C_CORES[k], 60000, "slice hub: xgt_xo/xrt/xfin/capc5r/eg measured; landing ~40k flops (glue est)"
         if role == "LP":
             mm = m.split(".")[0]
@@ -2614,7 +2648,10 @@ def emit(parts, lanes, routes, chans, fmap, out):
     # landed col_h* frames + bk_sel + gunit (Codex faultfinal G0C: 4766 + 84 ERRORs, all pre-existing core-pair hops
     # > 405 um with no internal_stations[] entry; the missing-cores / core-relay lane owns them).  It is a separate
     # gate expansion, not part of the fault-feeder plan delta: opt-in until that lane adopts it.
-    if os.environ.get("OT_S81_DERIVED_CORE_CONNS") == "1":
+    # S81-PLAN3/CCONN2 10-25: still opt-in.  delta_cconn_1025.py closes every R3 internal_station hop (moves +
+    # FIRM stations, bk_sel deferred to COORD), but the derived pin-face rule leaves ~60-80 face-away core ports per
+    # col_h* frame (+44 gunit) that need core re-pins (S81-CORES), so the default flips only after those land.
+    if os.environ.get("OT_S81_DERIVED_CORE_CONNS", "0") == "1":
         derived_core_conns(plan["partition_types"])
     if CORE_CONNS_OUT:
         json.dump(CORE_CONNS_OUT, open(out / "core_conns.json", "w"), indent=0, sort_keys=True)

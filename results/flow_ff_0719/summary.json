@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.ff_repair.v1",
+ "vehicle": "head elemB s4",
+ "clock_ps": 833,
+ "scope": "placement RC isolated FF repair plus independent TT setup; not route/signoff",
+ "input": "epyc2:/srv/opentallas-scratch2/claude/s81-head-elem/kits/elemB_rb_s4",
+ "output": "epyc2:/srv/opentallas-scratch2/claude/codex-flow-0719/elemB/result_v2_m0",
+ "before": {
+  "ff_hold_ps": -56.9942845,
+  "ff_endpoints": 1026
+ },
+ "m0": {
+  "ff_hold_ps": 0.01160183,
+  "ff_endpoints": 0,
+  "tt_setup_ps": 122.2096,
+  "tt_endpoints": 0,
+  "passes": 2
+ },
+ "m5": {
+  "ff_hold_ps": 5.0040527,
+  "ff_endpoints": 0,
+  "tt_setup_ps": 122.3222,
+  "tt_endpoints": 0,
+  "passes": 2
+ },
+ "failed_v1": {
+  "m0_after_legalization_ps": -1.9886,
+  "m0_endpoints": 69,
+  "m5_after_legalization_ps": -1.5047,
+  "m5_endpoints": 1
+ },
+ "method": "Fresh FF-only process, original FF SDC+fitted RC, repair/legalize to stable result; separate fresh TT-only original SDC timing; old two-scene MM stall not used",
+ "model_cycles_added": 0,
+ "remaining": [
+  "postCTS actual F6/clock geometry review",
+  "routed TT/FF signoff"
+ ]
+}

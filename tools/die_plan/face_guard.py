@@ -305,7 +305,43 @@ def _ft1_pair(bs, ft1):
             and {m[0].group(2), m[1].group(2)} == {"i", "o"})
 
 
-def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=()):
+STRAP_RE = re.compile(r"^strap_[A-Za-z0-9_]+$")   # = straps.STRAP_RE (kept inline: kits copy this file alone)
+
+
+def strap_list(names):
+    """declared ID strap bus names (OWNER 10-25 option B rule 1: strap_*, unique); anything else -> ValueError"""
+    sl = list(names or [])
+    bad = [n for n in sl if not isinstance(n, str) or not STRAP_RE.match(n)]
+    if bad or len(set(sl)) != len(sl):
+        raise ValueError(f"straps must be unique strap_<id> names (OWNER 10-25 option B): {bad or sl}")
+    return sl
+
+
+def kit_strap_list(kitdir):
+    """the kit's declared straps: straps.json, else sdc_lint.json "straps", else core.json report.straps
+    kind == id_strap (same order as straps.kit_straps).  [] when none."""
+    kd = Path(kitdir)
+    if (kd / "straps.json").is_file():
+        d = json.loads((kd / "straps.json").read_text())
+        return strap_list(d.get("straps", []) if isinstance(d, dict) else d)
+    if (kd / "sdc_lint.json").is_file():
+        s = json.loads((kd / "sdc_lint.json").read_text()).get("straps")
+        if s:
+            return strap_list(s)
+    if (kd / "core.json").is_file():
+        rep = (json.loads((kd / "core.json").read_text()).get("report") or {}).get("straps") or []
+        return strap_list([x["port"] for x in rep if isinstance(x, dict) and x.get("kind") == "id_strap"])
+    return []
+
+
+def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=()):
+    """straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
+    parent need no pin register -> exempt (recorded in the result); any other name is refused (ValueError)."""
+    if straps:
+        sl = strap_list(straps)
+        skip_re = r"(?:" + skip_re + r")|^(?:" + "|".join(re.escape(x) for x in sl) + r")$"
+        if pins is not None:
+            pins = [x for x in pins if str(x.get("bus")) not in set(sl)]
     mods = parse(text)
     if top is None:
         used = {typ for M in mods.values() for typ, _, _ in M.cells}
@@ -328,12 +364,15 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=()):
     roots_ports = defaultdict(list)
     for b, r in port_root.items():
         roots_ports[r].append(b)
-    res = dict(top=top, checked=0, ok=0, fails=defaultdict(list), flops={})
+    res = dict(top=top, checked=0, ok=0, fails=defaultdict(list), flops={}, straps_exempt=sorted(straps or ()))
     claimed = defaultdict(list)
 
     def fail(cls, b, why):
         res["fails"][cls].append(f"{b}: {why}")
 
+    for x in (straps or ()):                     # an exempt strap must be an input port of this block (rule 1)
+        if T.dirs.get(x) != "input":
+            fail("strap", x, f"declared ID strap is not an input port ({T.dirs.get(x)})")
     for p in T.ports:
         if re.match(skip_re, p):
             continue
@@ -454,11 +493,14 @@ def main(argv=None):
     ap.add_argument("--pins")
     ap.add_argument("--out")
     ap.add_argument("--ft", help="kit ft_stations.txt (default: beside --pins): 1-station slots share one register")
+    ap.add_argument("--straps", help="kit straps.json (default: beside --pins): declared ID straps, exempt")
     a = ap.parse_args(argv)
+    stf = a.straps or (str(Path(a.pins).parent) if a.pins else None)
+    sl = kit_strap_list(Path(stf).parent if stf.endswith(".json") else stf) if stf else []
     pins = json.loads(Path(a.pins).read_text()) if a.pins else None
     ftf = a.ft or (str(Path(a.pins).with_name("ft_stations.txt")) if a.pins else None)
     ft1 = read_ft1(ftf) if ftf and Path(ftf).exists() else set()
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1)
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl)
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")

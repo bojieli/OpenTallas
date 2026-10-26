@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.kv_g2_type_table.v1",
+ "rule": "COORD KV RULING 2026-10-25 05:07 (a)",
+ "use_max_pct": 60.0,
+ "types": {
+  "kv3_hub_Wi": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 22.32,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": null,
+   "leaf_blockages": null,
+   "wirelength_um": 7341565.0,
+   "probe": "/srv/opentallas-scratch2/claude/path-kv/hubwi/g2t/kv3_hub_Wi/part_kv3_hub_Wi"
+  }
+ },
+ "summary": {
+  "pass": [
+   "kv3_hub_Wi"
+  ],
+  "fail": []
+ }
+}

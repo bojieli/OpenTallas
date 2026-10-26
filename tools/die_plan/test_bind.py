@@ -671,3 +671,169 @@ def test_kit_inline_includes(tmp_path):
         raise AssertionError("missing include must raise")
     except bind.BindError:
         pass
+
+
+def test_bump_ports(tmp_path):
+    """B2 (PATH-QC-B12 10-25): a hard core's declared line side (contents[].bump_ports) is absent from the as-built die
+    and becomes die-top ports <partition>_<pin>, wired straight to the hard core's pins through partition ports
+    bump_<leaf>_<pin> (no register, no constant); bind_verify proves the line-side input is driven by its die port.
+    The same plan without the declaration binds byte-identically except for those lines."""
+    src = tmp_path / "src"
+    src.mkdir()
+    for f in ("leaves.sv", "par.sv"):
+        shutil.copy(EX / f, src / f)
+    (src / "phy.sv").write_text(
+        "module lf_phy (input wire clk, input wire [7:0] i, output reg [7:0] o,\n"
+        "               output wire [7:0] link, input wire [7:0] far);\n"
+        "    assign link = i;\n    always @(posedge clk) o <= far;\nendmodule\n")
+    die = (EX / "die.v").read_text().replace("  lf_sink snk", "  wire [7:0] po;\n  lf_phy phy (.clk(ck), .i(y1), .o(po));\n"
+                                              "  lf_sink snk")
+    (src / "die.v").write_text(die)
+
+    def plan(declare):
+        p = json.loads((EX / "die_plan.json").read_text())
+        a = p["asbuilt"]
+        a["base"] = str(src)
+        a["files"] = a["files"] + ["phy.sv"]
+        a["map"]["parts"]["phy"] = "S"
+        c = dict(inst="phy", module="lf_phy", status="reuse")
+        if declare:
+            c["bump_ports"] = [dict(pin="link", dir="output", width=8), dict(pin="far", dir="input", width=8)]
+        p["partition_types"]["ts"]["contents"] = [c]
+        f = tmp_path / f"die_plan_{int(declare)}.json"
+        f.write_text(json.dumps(p))
+        return f
+
+    o0, o1 = tmp_path / "o0", tmp_path / "o1"
+    assert run(plan(False), o0, "elab", "bind") == 0, report(o0)["errors"][:5]
+    assert run(plan(True), o1, "elab", "bind", "verify") == 0, (report(o1)["errors"][:5], verify(o1).get("mismatches", [])[:3])
+    r, v = report(o1), verify(o1)
+    assert r["n_errors"] == 0 and r["proof"]["unbound"] == 0 and r["proof"]["tied"] == 0
+    assert v["verdict"] == "PASS", (v["counts"], v["mismatches"][:3])
+    assert {(b["die_port"], b["dir"], b["width"], b["leaf"], b["pin"]) for b in r["bump_ports"]} == {
+        ("S_link", "output", 8, "S.u_phy", "link"), ("S_far", "input", 8, "S.u_phy", "far")}
+    top = (o1 / "rtl" / "tiny_bound_top.sv").read_text() if (o1 / "rtl" / "tiny_bound_top.sv").exists() else \
+        next((o1 / "rtl").glob("*_bound_top.sv")).read_text()
+    assert "output wire [7:0] S_link;" in top and "input  wire [7:0] S_far;" in top
+    assert ".bump_phy_link(S_link)" in top and ".bump_phy_far(S_far)" in top
+    ts = (o1 / "rtl" / "bt_ts.sv").read_text()
+    assert "output wire [7:0] bump_phy_link" in ts and "input  wire [7:0] bump_phy_far" in ts
+    assert re.search(r"lf_phy u_phy \([^;]*\.link\(bump_phy_link\)", ts, re.S)
+    assert re.search(r"lf_phy u_phy \([^;]*\.far\(bump_phy_far\)", ts, re.S)
+    sinks = json.loads((o1 / "bind_sinks.json").read_text())
+    assert all(sinks[f"phy.far[{i}]"] == ["top", "S_far"] for i in range(8))
+    # without the declaration: no die port, and every generated file equals the declared bind minus the bump lines
+    assert "bump_ports" not in report(o0)
+    for f0 in sorted((o0 / "rtl").glob("*.sv")):
+        a = f0.read_text()
+        b = (o1 / "rtl" / f0.name).read_text()
+        assert "bump_" not in a and "S_link" not in a and "S_far" not in a
+        def strip(t):
+            t = re.sub(r", S_(?:link|far)\b", "", t)
+            return [ln.rstrip(",") for ln in t.splitlines() if not re.search(r"bump_phy_|S_(?:link|far)\b", ln)]
+        assert strip(a) == strip(b), f0.name
+
+    # a declared bump pin that the as-built netlist already connects is refused (it is not the line side)
+    p = json.loads(plan(True).read_text())
+    p["partition_types"]["ts"]["contents"][0]["bump_ports"] = [dict(pin="i", dir="input", width=8)]
+    f = tmp_path / "die_plan_bad.json"
+    f.write_text(json.dumps(p))
+    run(f, tmp_path / "o2", "elab", "bind")
+    assert any("as-built pin" in e for e in report(tmp_path / "o2")["errors"])
+
+
+@pytest.mark.parametrize("enabled,named_tie", [(False, False), (True, False), (True, True)])
+def test_internal_primitive_constants_preserve_boundary_audit(tmp_path, enabled, named_tie):
+    """Arithmetic literals survive emission; named boundary constants remain forbidden."""
+    src = tmp_path / "src"
+    shutil.copytree(EX, src)
+    par = src / "par.sv"
+    text = par.read_text().replace(".i(x)", ".i(x + 8'h01)")
+    if named_tie:
+        text = text.replace(".i(a_o)", ".i(8'h01)")
+    par.write_text(text)
+    plan = json.loads((src / "die_plan.json").read_text())
+    plan["asbuilt"]["base"] = str(src)
+    plan["asbuilt"]["internal_primitive_constants"] = enabled
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    out = tmp_path / "out"
+    assert run(pf, out, "elab") == 0
+    rc = run(pf, out, "bind")
+    r = report(out)
+    if enabled and not named_tie:
+        assert rc == 0 and r["proof"]["tied"] == 0
+        assert r["internal_primitive_literals"] > 0
+        assert run(pf, out, "verify") == 0
+        assert verify(out)["verdict"] == "PASS"
+    else:
+        assert r["n_errors"] > 0 and r["proof"]["tied"] > 0
+        assert bind.main(["bind", str(pf), "--out", str(out), "--strict"]) != 0
+        if enabled:
+            assert any("lf_b.i" in str(x) for x in r.get("tied_by_port", [])) or r["proof"]["tied"] >= 16
+
+
+def test_repeated_phy_io_roles_keep_separate_pads_and_outputs(tmp_path):
+    """One hardened PHY type may share a port ABI, while its die pads stay distinct."""
+    src = tmp_path / 'phy_src'
+    src.mkdir()
+    (src / 'phy.sv').write_text('''
+module ck_source(output wire ck); endmodule
+module rs_source(output wire rn); endmodule
+module tiny_phy(input wire clk,rst_n,input wire [3:0] pma_rx,output reg [3:0] pma_tx);
+always @(posedge clk) if(!rst_n)pma_tx<=0;else pma_tx<=pma_rx^4'h5;
+endmodule
+''')
+    (src / 'die.v').write_text('''
+module phy_die(input wire [3:0] a_pma_rx,b_pma_rx,output wire [3:0] a_pma_tx,b_pma_tx);
+wire ck,rn;
+ck_source c(.ck(ck));rs_source r(.rn(rn));
+tiny_phy u0(.clk(ck),.rst_n(rn),.pma_rx(a_pma_rx),.pma_tx(a_pma_tx));
+tiny_phy u1(.clk(ck),.rst_n(rn),.pma_rx(b_pma_rx),.pma_tx(b_pma_tx));
+endmodule
+''')
+    p = dict(schema='opentallas.die_plan.v1', die=dict(name='phy_io'),
+             partition_types=dict(phy=dict(module='bound_phy', reset=dict(sync_stages=2))),
+             partitions=[dict(name='P0', type='phy'), dict(name='P1', type='phy')], ports=[], lanes=[],
+             asbuilt=dict(base=str(src), netlist=['die.v'], top='phy_die', files=['phy.sv'], rtl_roots=[],
+                          sources=[dict(module='ck_source', kind='clock', outputs=dict(ck='core')),
+                                   dict(module='rs_source', kind='reset', outputs=dict(rn='low'))],
+                          map=dict(parts=dict(u0='P0', u1='P1')),
+                          io_roles=[[r'[ab]_(pma_.*)', r'\1']]))
+    f = tmp_path / 'phy.json'
+    f.write_text(json.dumps(p))
+    out = tmp_path / 'bound'
+    assert run(f, out, 'elab', 'bind', 'verify') == 0, report(out)['errors']
+    assert report(out)['type_splits'] == []
+    assert verify(out)['verdict'] == 'PASS'
+    body = (out / 'rtl/bound_phy.sv').read_text()
+    top = (out / 'rtl/phy_io_bound_top.sv').read_text()
+    assert 'input wire [3:0] io_pma_rx' in body and 'output wire [3:0] io_pma_tx' in body
+    assert 'assign io_pma_tx =' in body
+    assert '.io_pma_rx(a_pma_rx)' in top and '.io_pma_rx(b_pma_rx)' in top
+    assert '.io_pma_tx(a_pma_tx)' in top and '.io_pma_tx(b_pma_tx)' in top
+    assert 'output wire [3:0] a_pma_tx;' in top and 'output wire [3:0] b_pma_tx;' in top
+    # Causal control: without roles these two different external names must still split.
+    del p['asbuilt']['io_roles']
+    f2 = tmp_path / 'no_roles.json'
+    f2.write_text(json.dumps(p))
+    out2 = tmp_path / 'no_roles'
+    assert run(f2, out2, 'elab') == 0
+    assert bind.main(['bind', str(f2), '--out', str(out2), '--mem', '4', '--strict']) == 1
+    assert report(out2)['type_splits']
+
+
+def test_glue_source_names_share_only_same_typed_source(tmp_path):
+    src = tmp_path / "src"
+    shutil.copytree(EX, src)
+    p = src / "par.sv"
+    p.write_text(p.read_text().replace(".i(x)", ".i(x + 8'h01)"))
+    plan = json.loads((src / "die_plan.json").read_text())
+    plan["asbuilt"].update(base=str(src), internal_primitive_constants=True, glue_source_names=True)
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    out = tmp_path / "out"
+    assert run(pf, out, "elab") == 0
+    assert bind.main(["bind", str(pf), "--out", str(out), "--strict"]) == 0
+    assert not report(out)["type_splits"]
+    assert run(pf, out, "verify") == 0 and verify(out)["verdict"] == "PASS"

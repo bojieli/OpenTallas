@@ -93,6 +93,34 @@ def planned_sinks(P, tn):
                 out.append((xy[0], xy[1], f"ft_s{j}"))
         else:
             out.append(_inset(x, y, face, w, h) + ("face",))
+    out += per_bit_station_sites(t, pins)
+    return out
+
+
+def per_bit_station_sites(t, pins):
+    """[(x, y, 'ist')] sites of the internal stations with bit_route "per_bit" (HEAD-SPINE2 10-25), exactly as
+    kit_istations.is_bits places them: bit b of station k (k = 0 next to the face for an in bus, next to the leaf for an
+    out bus) at L_b * (k + 1) / (n + 1) along its own L leaf_um <-> pin b, the segment at the pin perpendicular to the
+    face.  Entries without bit_route are not FIRM per bit and stay out (other plans unchanged)."""
+    buses = {b["name"]: b for b in t.get("buses", [])}
+    at = {}
+    for name, bit, _ln, x, y, face in pins:
+        at.setdefault(name, {})[bit] = (x, y, face)
+    out = []
+    for e in t.get("internal_stations", []):
+        if e.get("bit_route") != "per_bit" or not e.get("conn", "").startswith("bus:"):
+            continue
+        bus = e["conn"][4:]
+        lx, ly = e["leaf_um"]
+        n = len(e["regs_um"])
+        d_in = buses[bus]["dir"] == "in"
+        for bit, (px, py, face) in sorted(at.get(bus, {}).items()):
+            cx, cy = (lx, py) if face in ("E", "W") else (px, ly)
+            pts = [(px, py), (cx, cy), (lx, ly)] if d_in else [(lx, ly), (cx, cy), (px, py)]
+            L = abs(px - cx) + abs(py - cy) + abs(cx - lx) + abs(cy - ly)
+            for k in range(n):
+                xy = _point_at(pts, L * (k + 1) / (n + 1))
+                out.append((xy[0], xy[1], "ist"))
     return out
 
 
@@ -188,18 +216,25 @@ def _bisect(pts, target, radius, blocked=lambda x, y: False, min_sinks=1):
             if acc >= n / 2:
                 break
         pending += [g[k:], g[:k]]
-    return _absorb(_merge(leaves, target, radius, blocked), target, min_sinks)
+    return _absorb(_merge(leaves, target, radius, blocked), target, min_sinks, radius)
 
 
-def _absorb(leaves, target, min_sinks):
-    """a leaf of < min_sinks (stray registers far from any cluster) is no tap of its own: its sinks join the nearest
-    leaf with room (the kit hangs them on that tap's tree; a long, light branch), largest-first deterministic."""
+def _absorb(leaves, target, min_sinks, radius):
+    """Merge light clusters only while every sink stays within the tap radius.
+
+    A remote control bank needs its own spine drop even when it has few sinks;
+    attaching it to a data band creates a long clock arm and delays that band.
+    """
     leaves = sorted(leaves, key=lambda a: (-a[2], round(a[1], 3), round(a[0], 3)))
     keep = [q for q in leaves if q[2] >= min_sinks]
     if not keep:
         return leaves
     for x, y, n, _, g in (q for q in leaves if q[2] < min_sinks):
-        room = [k for k, q in enumerate(keep) if q[2] + n <= target] or list(range(len(keep)))
+        room = [k for k, q in enumerate(keep) if q[2] + n <= target
+                and all(abs(p[0]-q[0])+abs(p[1]-q[1]) <= radius for p in g)]
+        if not room:
+            keep.append((x, y, n, max(abs(p[0]-x)+abs(p[1]-y) for p in g), g))
+            continue
         k = min(room, key=lambda k: (abs(keep[k][0] - x) + abs(keep[k][1] - y), k))
         a = keep[k]
         keep[k] = (a[0], a[1], a[2] + n, max(a[3], max(abs(p[0] - a[0]) + abs(p[1] - a[1]) for p in g)), a[4] + g)
@@ -277,19 +312,37 @@ def density_taps(P, tn):
         return xy
     # refine (capacitated k-medians seeded by the leaves): the kit splits the netlist by NEAREST tap + cap
     # (clock_taps.tcl, mirrored by assign()), so re-centre every tap on the sinks that split gives it, re-legalise,
-    # and drop a tap left with < min_sinks; a few rounds make the plan's clusters the kit's split.
+    # Drop only empty taps. A light, isolated control cluster must keep its tap:
+    # its radius cannot be traded for reaching a preferred minimum sink count.
     xy = place([(q[0], q[1]) for q in leaves])
     for _ in range(int(ck.get("tap_refine_iters", 6))):
-        _, _, asg = assign([(None, x, y) for x, y in xy], pts, target, radius)
+        _, _, asg = assign([(None, x, y) for x, y in xy], pts, target, radius,
+                           max_distance_um=radius)
         groups = [[] for _ in xy]
         for p, j in zip(pts, asg):
             groups[j].append(p)
-        keep = [j for j, g in enumerate(groups) if sum(p[2] for p in g) >= min_sinks] or list(range(len(xy)))
+        keep = [j for j, g in enumerate(groups) if g]
         nxt = place([(_wmedian(groups[j], 0), _wmedian(groups[j], 1)) if groups[j] else xy[j] for j in keep])
         if nxt == xy:
             break
         xy = nxt
-    load, far, _ = assign([(None, x, y) for x, y in xy], pts, cap, radius)
+    # Legalising a centre away from a face or a macro may uncover sinks that
+    # fitted before it moved. Preserve the physical radius after legalisation,
+    # rather than publishing the old pre-legalisation radius as a guarantee.
+    while True:
+        load, far, asg = assign([(None, x, y) for x, y in xy], pts, cap, radius,
+                                max_distance_um=radius)
+        uncovered = [(abs(p[0]-xy[j][0])+abs(p[1]-xy[j][1]), i)
+                     for i, (p, j) in enumerate(zip(pts, asg))
+                     if abs(p[0]-xy[j][0])+abs(p[1]-xy[j][1]) > radius+1e-6]
+        if not uncovered:
+            break
+        _, i = max(uncovered)
+        p = pts[i]
+        nxt = place(xy + [(p[0], p[1])])[-1]
+        if nxt in xy or abs(p[0]-nxt[0])+abs(p[1]-nxt[1]) > radius+1e-6:
+            raise ValueError(f"type {tn}: sink {p[:2]} has no legal clock tap within {radius} um")
+        xy.append(nxt)
     out = sorted(((x, y, int(round(n)), round(r, 1)) for (x, y), n, r in zip(xy, load, far) if n > 0),
                  key=lambda q: (q[1], q[0]))
     root = ck.get("tap_um", [w / 2, h / 2])
@@ -300,7 +353,7 @@ def density_taps(P, tn):
     return res
 
 
-def assign(taps, sinks, cap, max_extra_um):
+def assign(taps, sinks, cap, max_extra_um, max_distance_um=None):
     """Python mirror of clock_taps.tcl (the kit's sink -> tap split, for G0 / review): every sink (x, y, w) to its
     NEAREST tap (Manhattan, ties to the lower tap index), then capacity-constrained re-assignment: while a tap holds
     > cap, its sinks that cost the least extra distance move to the best other tap with room, at most max_extra_um
@@ -320,7 +373,9 @@ def assign(taps, sinks, cap, max_extra_um):
         for i, s in enumerate(sinks):
             if asg[i] != over:
                 continue
-            best = min(((d(s, j) - d(s, over), j) for j in range(len(xy)) if j != over and load[j] < cap),
+            best = min(((d(s, j) - d(s, over), j) for j in range(len(xy))
+                        if j != over and load[j] < cap
+                        and (max_distance_um is None or d(s, j) <= max_distance_um)),
                        default=None)
             if best and best[0] <= max_extra_um:
                 cand.append((best[0], i, best[1]))

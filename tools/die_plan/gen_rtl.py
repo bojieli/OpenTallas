@@ -114,6 +114,37 @@ endmodule
 module ot_dp_rrelay (input wire clk, input wire d, output reg q);
     always @(posedge clk) q <= d;
 endmodule
+// ot_dp_rgate: the consumer-tap reset relay of a START-broadcast plan (OWNER DECISION 13c): one flop of
+// (reset AND run).  Releases with the same depth as ot_dp_rrelay, measured from the later of reset and START.
+(* keep_hierarchy, keep *)
+module ot_dp_rgate (input wire clk, input wire d, input wire run, output reg q);
+    always @(posedge clk) q <= d & run;
+endmodule
+// ot_dp_lockq: PLL lock qualification of the die ROOT reset release (PATH-KV-POR 10-25, CLOCK-RESET amendment A).
+// d = the root synchroniser output (synchronous, active low); locked = the PLL lock flag (analog status, asynchronous):
+// own 2-flop synchroniser + STABLE consecutive synchronised-locked cycles, then a STICKY qualifier flop
+// q <= d & (q | stable): the root releases synchronously after sync(por) AND lock-stable; a later loss of lock never
+// re-asserts the die reset (HOST status).  No combinational path from locked (or the pad) into any reset; every flop
+// is cleared synchronously by d.  Release = STABLE + 3 clocks after d (lock already steady).
+(* keep_hierarchy, keep *)
+module ot_dp_lockq #(parameter integer STABLE = 16) (input wire clk, input wire d, input wire locked, output reg q);
+    localparam integer CW = $clog2(STABLE + 1);
+    (* async_reg = "true" *) reg [1:0] ls;
+    reg [CW-1:0] cnt;
+    wire stable = (cnt == STABLE);
+    always @(posedge clk) begin
+        if (!d) begin
+            ls <= 2'b00;
+            cnt <= {CW{1'b0}};
+            q <= 1'b0;
+        end else begin
+            ls <= {ls[0], locked};
+            if (!ls[1]) cnt <= {CW{1'b0}};
+            else if (!stable) cnt <= cnt + 1'b1;
+            q <= q | stable;
+        end
+    end
+endmodule
 `default_nettype wire
 """
 
@@ -364,6 +395,8 @@ def wrapper(P, tn, epochs, rtl_root=None):
         decl.append(f"    wire [{nt['width'] - 1}:0] n_{sv_id(nt['name'])};")
         sig[f"net:{nt['name']}"] = f"n_{sv_id(nt['name'])}"
     sig["clk"], sig["rst_n"], sig["rst"] = "clk", "rst_n", "rst"
+    if rtree is not None and rtree.get("start_tap") is not None:
+        sig["start"] = f"start_t{rtree['start_tap']}"     # bootstrap type: local registered START (reset AND run)
     # leaf bindings: contents[].bind plus bus.leaf
     binds = {c["inst"]: dict(c.get("bind", {})) for c in t.get("contents", [])}
     for b in buses:

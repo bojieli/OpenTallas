@@ -1,0 +1,9 @@
+read_liberty -lib -ignore_miss_func /work/old_macro_tt.lib
+read_slang --keep-hierarchy --compat=vcs --ignore-assertions --top qfd_native59_qbank -G QB_ALIGN=1 -G QB_LOCAL32=1 --blackboxed-module ot_sram_1r1w_32x512_m1 -DSYNTHESIS /work/new_qbank_lecgate.sv
+setattr -unset init
+hierarchy -check -top qfd_native59_qbank
+proc
+flatten -noscopeinfo
+opt_clean
+select qfd_native59_qbank
+write_verilog -noattr -selected /out/gate.v

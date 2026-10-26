@@ -1,0 +1,7 @@
+S81C_LOAD_PROFILE load_transport=1 reset_release=2 stage_bad=0 load_words=5316
+S81C_HGRP_BENCH FAIL gid=1 seed=1 cycles=20000 mismatches=19954 ov=14790 ov_nonzero=14790
+S81C_LOAD_PROFILE load_transport=1 reset_release=2 stage_bad=0 load_words=5316
+S81C_HGRP_BENCH FAIL gid=1 seed=2 cycles=20000 mismatches=19954 ov=14790 ov_nonzero=14790
+S81C_LOAD_PROFILE load_transport=1 reset_release=2 stage_bad=0 load_words=5316
+S81C_HGRP_BENCH FAIL gid=1 seed=3 cycles=20000 mismatches=19954 ov=14790 ov_nonzero=14790
+ot-run: RAN on localhost (unit oth-ubuntu-3705894-1792940154): exit 0

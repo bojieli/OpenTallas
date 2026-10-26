@@ -548,11 +548,38 @@ def check_pg_domains(P, R):
                 if not any(inside(e, x) for x in bx):
                     R.err("pg_domain", f"pg domain {d['name']}: io window {n} bump_exclude_um {e} not in the domain's "
                           f"bumps.exclude_um (power bumps in the die-corner stress zone)")
+        mac = d.get("phy_macro_um")
+        if mac:
+            # S81.IR split form (coordinator 10-25): macro inside the domain, the windows on the macro, the domain inside
+            # its serdes partition (no VDDPHY straps over a core-VDD neighbour), core strips outside the domain
+            if not inside(mac, r):
+                R.err("pg_domain", f"pg domain {d['name']}: phy_macro_um {mac} outside the domain rect {r}")
+            for n in d["io"]:
+                w = io.get(n)
+                if w is not None and not inside(w["rect_um"], mac):
+                    R.err("pg_domain", f"pg domain {d['name']}: io window {n} {w['rect_um']} not on the PHY macro {mac}")
+                pn = (w or {}).get("part")
+                if pn in P.parts and not inside(r, P.rect(pn)):
+                    R.err("pg_domain", f"pg domain {d['name']}: rect {r} leaves its serdes partition {pn} "
+                          f"{[round(v, 4) for v in P.rect(pn)]}")
+            for s_ in d.get("core_strip_um") or []:
+                if s_[0] < r[2] - 0.01 and s_[2] > r[0] + 0.01 and s_[1] < r[3] - 0.01 and s_[3] > r[1] + 0.01:
+                    R.err("pg_domain", f"pg domain {d['name']}: core strip {s_} overlaps the domain rect")
+            tgt = d.get("phy_area_target_mm2")
+            a = (mac[2] - mac[0]) * (mac[3] - mac[1]) / 1e6
+            if tgt and a < tgt - 1e-6:
+                R.warn("pg_domain", f"pg domain {d['name']}: PHY macro {a:.2f} mm2 < target {tgt:g} mm2 (PHY_SHORT: the "
+                       "partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)")
         for g in d["grid"]:
             if die_layers and g["layer"] not in die_layers:
                 R.err("pg_domain", f"pg domain {d['name']}: strap layer {g['layer']} not a die layer {sorted(die_layers)}")
             if g["width_um"] >= g["pitch_um"] / 2:
                 R.err("pg_domain", f"pg domain {d['name']}: {g['layer']} width {g['width_um']} >= half pitch (two nets)")
+    for i, a in enumerate(doms):
+        for b in doms[i + 1:]:
+            ra, rb = a["rect_um"], b["rect_um"]
+            if ra[0] < rb[2] - 0.01 and ra[2] > rb[0] + 0.01 and ra[1] < rb[3] - 0.01 and ra[3] > rb[1] + 0.01:
+                R.err("pg_domain", f"pg domains {a['name']} / {b['name']} overlap (two supplies on the same straps)")
     for n, w in io.items():
         if w.get("iface") == "serdes" and n not in covered:
             R.warn("pg_domain", f"serdes window {n}: no separate PHY supply / bump rows (OWNER decision 7)")

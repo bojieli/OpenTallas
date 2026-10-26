@@ -1,0 +1,15 @@
+OT_RT sinks: 13097 registers, 2 macro clock pins, 0 other (kept on the root)
+OT_RT macro group u_l.u_lb.g_m\[0\].u_m: 146 interface registers
+OT_RT macro group u_l.u_la.g_m\[0\].u_m: 175 interface registers
+OT_RT H-tree: 4 levels, 16 leaf nodes (taps), region 54.0 x 54.0 um, 31 spine buffers
+OT_RT macro tap u_l.u_lb.g_m\[0\].u_m at (101.6,113.1) from region 6 node (85.3,139.3)
+OT_RT macro tap u_l.u_la.g_m\[0\].u_m at (101.6,72.1) from region 3 node (85.3,85.3)
+OT_RT tap loads: 15 129 5 961 8 1134 9 283 3 993 7 1317 2 1190 6 1072 4 1723 1 1756 10 573 11 26 12 183 14 16 13 884 0 602; macro groups 2
+OT_RT CTS_ARGS -sink_clustering_enable -obstruction_aware -sink_clustering_size 24 -sink_clustering_max_diameter 30 -delay_buffer_derate 1.0 -repair_clock_nets -clk_nets {ot_rt_h4_0_n ot_rt_h4_1_n ot_rt_h4_2_n ot_rt_h4_3_n ot_rt_h4_4_n ot_rt_h4_5_n ot_rt_h4_6_n ot_rt_h4_7_n ot_rt_h4_8_n ot_rt_h4_9_n ot_rt_h4_10_n ot_rt_h4_11_n ot_rt_h4_12_n ot_rt_h4_13_n ot_rt_h4_14_n ot_rt_h4_15_n ot_rt_mtap0_n ot_rt_mtap1_n}
+OT_RT_BAL it0: ot_rt_h4_0=315(308-322,602) ot_rt_h4_1=335(333-338,1756) ot_rt_h4_2=323(318-329,1190) ot_rt_h4_3=327(322-332,993) ot_rt_h4_4=335(330-339,1723) ot_rt_h4_5=316(312-322,961) ot_rt_h4_6=325(321-332,1072) ot_rt_h4_7=322(318-326,1317) ot_rt_h4_8=391(386-397,1134) ot_rt_h4_9=367(365-370,283) ot_rt_h4_10=388(383-392,573) ot_rt_h4_11=336(336-337,26) ot_rt_h4_12=368(366-369,183) ot_rt_h4_13=387(385-391,884) ot_rt_h4_14=336(336-336,16) ot_rt_h4_15=378(375-381,129) ot_rt_mtap0=345(280-353,81) ot_rt_mtap1=373(316-381,176)
+OT_RT_BAL it1: ot_rt_h4_0=383(376-390,602) ot_rt_h4_1=381(379-385,1756) ot_rt_h4_2=391(386-397,1190) ot_rt_h4_3=393(389-399,993) ot_rt_h4_4=380(375-385,1723) ot_rt_h4_5=384(379-389,961) ot_rt_h4_6=392(387-398,1072) ot_rt_h4_7=389(386-394,1317) ot_rt_h4_8=390(385-396,1134) ot_rt_h4_9=392(390-395,283) ot_rt_h4_10=387(382-391,573) ot_rt_h4_11=383(382-383,26) ot_rt_h4_12=392(391-394,183) ot_rt_h4_13=386(384-390,884) ot_rt_h4_14=382(382-382,16) ot_rt_h4_15=401(398-404,129) ot_rt_mtap0=387(321-395,81) ot_rt_mtap1=392(334-400,176)
+OT_RT_BAL it2: ot_rt_h4_0=383(376-390,602) ot_rt_h4_1=381(379-385,1756) ot_rt_h4_2=391(386-397,1190) ot_rt_h4_3=393(389-399,993) ot_rt_h4_4=402(397-406,1723) ot_rt_h4_5=384(379-389,961) ot_rt_h4_6=392(387-398,1072) ot_rt_h4_7=389(386-394,1317) ot_rt_h4_8=390(385-396,1134) ot_rt_h4_9=392(390-395,283) ot_rt_h4_10=387(382-391,573) ot_rt_h4_11=383(382-383,26) ot_rt_h4_12=392(391-394,183) ot_rt_h4_13=386(384-390,884) ot_rt_h4_14=382(382-382,16) ot_rt_h4_15=401(398-404,129) ot_rt_mtap0=387(321-395,81) ot_rt_mtap1=392(334-400,176)
+OT_RT_BAL done: 33 pad cells; tap means 381..402 ps (window 21 vs 20)
+OT_RT_INS all registers 13099: min 321.4 p50 389.5 max 406.4 (placement RC, TT)
+OT_RT_HOLD_PRE_REPAIR worst -200.58 ps; viol 618
+[INFO RSZ-0032] Inserted 7292 hold buffers.

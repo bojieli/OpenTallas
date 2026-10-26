@@ -1,0 +1,130 @@
+{
+ "counts": {
+  "shared": 307,
+  "feedthrough": 1,
+  "missing_port": 1
+ },
+ "groups": {
+  "feedthrough o_grp": {
+   "n": 1,
+   "ranges": [
+    [
+     294,
+     294
+    ]
+   ],
+   "sample": [
+    "o_grp[294]: buffered from port pc__fo[0]"
+   ]
+  },
+  "missing_port rst_n": {
+   "n": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "sample": [
+    "rst_n[0]: planned pin bit not a netlist port"
+   ]
+  },
+  "shared ck": {
+   "n": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "sample": [
+    "ck[0]: 42162 loads on u_leaf.u_pc.u_pce.u_path.u_return.g_storage[3].g_rq[3].u_rq/clk"
+   ]
+  },
+  "shared hrst_n": {
+   "n": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "sample": [
+    "hrst_n[0]: 8 loads on hrst_n[0]"
+   ]
+  },
+  "shared o_grp": {
+   "n": 296,
+   "ranges": [
+    [
+     0,
+     293
+    ],
+    [
+     295,
+     296
+    ]
+   ],
+   "sample": [
+    "o_grp[0]: net _029775_ has 1 loads besides the port chain",
+    "o_grp[1]: net _029776_ has 1 loads besides the port chain",
+    "o_grp[2]: net _029777_ has 1 loads besides the port chain"
+   ]
+  },
+  "shared o_next": {
+   "n": 5,
+   "ranges": [
+    [
+     275,
+     278
+    ],
+    [
+     281,
+     281
+    ]
+   ],
+   "sample": [
+    "o_next[275]: net _175752_ has 64 loads besides the port chain",
+    "o_next[276]: net _175752_ has 64 loads besides the port chain",
+    "o_next[277]: net _175752_ has 64 loads besides the port chain"
+   ]
+  },
+  "shared pc__cfg_stack": {
+   "n": 2,
+   "ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "sample": [
+    "pc__cfg_stack[0]: 2 loads on pc__cfg_stack[0]",
+    "pc__cfg_stack[1]: 2 loads on pc__cfg_stack[1]"
+   ]
+  },
+  "shared pc__fo": {
+   "n": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "sample": [
+    "pc__fo[0]: net pc__fo[0] has 1 loads besides the port chain"
+   ]
+  },
+  "shared pc__pi": {
+   "n": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "sample": [
+    "pc__pi[0]: 2 loads on pc__pi[0]"
+   ]
+  }
+ }
+}

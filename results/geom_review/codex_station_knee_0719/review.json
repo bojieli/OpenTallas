@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS-COND planned geometry only",
+ "viewed": "slice_station__t14.png",
+ "findings": [
+  "Fixed H/V stage bands and common knee stages replace fractional arclength diagonal bands. Exact perbit footprint placement, monotone logical bit assignment, 42slots max402.03um.",
+  "Extra depth: t14 ft5+2,ft2+1,ft6+1; t48 ft3+1; +1743FF total. Other three selected types including connected-path t18 retain depth. Must price fullplan lane cycles and review actual placement before route.",
+  "Actual ot_dp_st data+epoch minimumcomponent delayed lockstep3000cycles at 0,+1,+2cycles PASS; wrong alignment mutant caught. Initial harness history index mismatch fixed, failed receipt retained scratch.",
+  "No G2, CTS, route or SIGNED claim for this mechanism. Pending mainplan integration owns final types."
+ ],
+ "scope": "standalone optional site generator; existing RTL unchanged"
+}

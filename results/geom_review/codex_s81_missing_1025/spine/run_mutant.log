@@ -1,0 +1,7 @@
+MISMATCH cycle=211 port=b_o
+MISMATCH cycle=212 port=b_o
+MISMATCH cycle=274 port=b_o
+MISMATCH cycle=275 port=b_o
+[30056000] %Fatal: tb.sv:99: Assertion failed in tb: SPINE_LOCKSTEP_FAIL mismatches=68
+%Error: tb.sv:99: Verilog $stop
+Aborting...

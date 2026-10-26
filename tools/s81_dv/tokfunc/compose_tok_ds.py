@@ -485,6 +485,20 @@ def transform_offchip(dag, comps, log, direct=True):
         log['offchip'][cls] += sv * bool(n.get('critical'))
 
 
+VSW_LR_CYCLES = 1  # current ot_s81sl_vsw LR=1; one added output edge, owner 10-25 11:59
+
+
+def transform_current_profile(dag, comps, log):
+    # Included in both final composition and the calendar's pre-release input;
+    # dv_mu_calendar_phys does not add this hardware pipeline edge itself.
+    for n in dag['nodes']:
+        op, cl = n.get('op') or '', comps[n['id']]
+        if re.fullmatch(r'ffn\.(?:shared_)?swiglu(?:\.r\d+)?', op):
+            cl.append(comp(VSW_LR_CYCLES, PRICED, 'logic',
+                           'vsw LR=1 input register: +1 output edge (owner 10-25 11:59)'))
+            log['release']['vsw.LR1'] += VSW_LR_CYCLES * bool(n.get('critical'))
+
+
 def transform_release(dag, comps, log, attn='G4'):
     av = ATTN.get(attn) or {}
     for n in dag['nodes']:
@@ -666,6 +680,7 @@ def compose(wl, opts, layer_rx=None, receipts=None):
         transform_release(dag, comps, log, opts.get('attn', 'G4'))
     if receipts:
         transform_components(dag, comps, receipts, log)
+    transform_current_profile(dag, comps, log)
     if layer_rx:
         transform_layers(dag, comps, extra, layer_rx, log)
     apply_hooks(dag, comps, hooks, ops)

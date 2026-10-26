@@ -117,9 +117,12 @@ def test_preroute_insertion_gate():
     seg = rk[i_gate:rk.index("\\$M $GOAL")]
     assert "rc=6" in seg and "rc=5" not in seg
     g = (HERE / "postcts_gate.tcl").read_text()
-    for k in ("estimate_parasitics -global_routing", "OT_POSTCTS_TOL", "20.0", "OT_VCLK_FF", "all_inputs -no_clocks",
-              "ot_cf_wire", "LAYER_PARASITICS_FILE"):
+    for k in ("estimate_parasitics -global_routing", "OT_POSTCTS_TOL", "20.0", "OT_VCLK_FF", "pinreg_measure.tcl",
+              "ot_pinreg_set", "ot_pinreg_arr", "LAYER_PARASITICS_FILE"):
         assert k in g, k
+    m = (HERE / "pinreg_measure.tcl").read_text()   # the pin-register set + measure, shared with pinreg_pad.tcl
+    for k in ("all_inputs -no_clocks", "ot_cf_wire"):
+        assert k in m, k
     with tempfile.TemporaryDirectory() as d:
         kd = gen_phys.write_type_kit(_plan(), "src", d, [], hold_ff_margin=gen_phys.HOLD_FF_MARGIN_DEFAULT)
         assert (kd / "postcts_gate.tcl").is_file()
@@ -203,7 +206,39 @@ def test_leaf_affinity_state_is_global_when_sourced_from_a_proc():
     t = (HERE / "leaf_affinity.tcl").read_text()
     first_set = t.index("set la_um")
     import re
-    m = re.search(r"^global (la_\w+ ?){3}$", t, re.M)
-    assert m and set(m.group(0).split()[1:]) == {"la_ck", "la_d", "la_par"}
+    m = re.search(r"^global (la_\w+ ?)+$", t, re.M)
+    assert m and set(m.group(0).split()[1:]) == {"la_ck", "la_d", "la_par", "la_clock"}
     decl = m.start()
     assert decl < first_set
+
+
+def _code_lines(text):
+    return [ln.split("#", 1)[0] for ln in text.splitlines() if not ln.lstrip().startswith("#")]
+
+
+def test_postcts_gate_propagates_clocks_before_estimating_parasitics():
+    # FLOW 10-25 (GEOM-REVIEW-2 09:41): rsz estimate_parasitics skips nets driven from an ideal clock, so estimating
+    # before set_propagated_clock left the clock tree without wire RC (pin-reg CK ve_m 193 vs 316 ps TT).
+    lines = _code_lines((HERE / "postcts_gate.tcl").read_text())
+    i_prop = next(i for i, ln in enumerate(lines) if "set_propagated_clock" in ln)
+    i_est = next(i for i, ln in enumerate(lines) if "estimate_parasitics" in ln)
+    assert i_prop < i_est
+
+
+@pytest.mark.parametrize("name", ["postcts_gate.tcl", "hold_gate.tcl", "repair_ff.tcl", "rc_calib_probe.tcl"])
+def test_top_level_gate_scripts_propagate_before_first_estimate(name):
+    # every stand-alone measuring script (read_db, no ORFS session) must propagate clocks before its first estimate
+    lines = _code_lines((HERE / name).read_text())
+    est = [i for i, ln in enumerate(lines) if "estimate_parasitics" in ln]
+    prop = [i for i, ln in enumerate(lines) if "set_propagated_clock" in ln]
+    assert est and prop and min(prop) < min(est), name
+
+
+def test_ff_grt_step_runs_cts_in_kit_corners_first():
+    """CLOCK-RESET 10-25 (KV core canary TT -222.85): `make grt CORNERS=bc` builds every missing prerequisite, so the
+    floorplan .. CTS repair must already exist (built in the kit's own tc+bc corners) before the FF-only GRT step."""
+    import core_flow
+    s = core_flow.FF_GRT_STEP
+    assert s.index("\\$M cts;") < s.index("\\$M grt CORNER=BC CORNERS=bc")
+    kv = (Path(__file__).resolve().parents[2] / "physical/die_plan/qwen_kvsys/cores/harden/run_kit_kv.sh").read_text()
+    assert kv.index("\\$M cts;") < kv.index("\\$M grt CORNER=BC CORNERS=bc")

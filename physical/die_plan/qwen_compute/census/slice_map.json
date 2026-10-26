@@ -338,5 +338,4404 @@
   "E5/su_l0": "sl_E5_su_l0",
   "E5/su_l1": "sl_E5_su_l1"
  },
- "groups": {}
+ "groups": {},
+ "unloaded_removed": [
+  {
+   "src": "W5/r_fw",
+   "src_bus": "scu_q",
+   "dst": "W5/r_sc",
+   "dst_bus": "scu_q",
+   "kind": "data",
+   "bits": 48,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_sc"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_sc"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "W5/r_st0",
+   "dst_bus": "nb_r0",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W5/r_st0",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_r1",
+   "dst": "W5/r_st1",
+   "dst_bus": "nb_r1",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W5/r_st1",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_r2",
+   "dst": "W5/r_st2",
+   "dst_bus": "nb_r2",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W5/r_st2",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_r3",
+   "dst": "W5/r_st3",
+   "dst_bus": "nb_r3",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W5/r_st3",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "W5/r_st4",
+   "dst_bus": "nb_r4",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W5/r_st4",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_r5",
+   "dst": "W5/r_st5",
+   "dst_bus": "nb_r5",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W5/r_st5",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_r6",
+   "dst": "W5/r_st6",
+   "dst_bus": "nb_r6",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W5/r_st6",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_r7",
+   "dst": "W5/r_st7",
+   "dst_bus": "nb_r7",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W5/r_st7",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W5_fw",
+    "sl_W5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "W3/r_st0",
+   "dst_bus": "nb_r0",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W3/r_st0",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_r1",
+   "dst": "W3/r_st1",
+   "dst_bus": "nb_r1",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W3/r_st1",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_r2",
+   "dst": "W3/r_st2",
+   "dst_bus": "nb_r2",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W3/r_st2",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_r3",
+   "dst": "W3/r_st3",
+   "dst_bus": "nb_r3",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W3/r_st3",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "W3/r_st4",
+   "dst_bus": "nb_r4",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W3/r_st4",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_r5",
+   "dst": "W3/r_st5",
+   "dst_bus": "nb_r5",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W3/r_st5",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_r6",
+   "dst": "W3/r_st6",
+   "dst_bus": "nb_r6",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W3/r_st6",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_r7",
+   "dst": "W3/r_st7",
+   "dst_bus": "nb_r7",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W3/r_st7",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W3_fw",
+    "sl_W3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "W1/r_st0",
+   "dst_bus": "nb_r0",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W1/r_st0",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_r1",
+   "dst": "W1/r_st1",
+   "dst_bus": "nb_r1",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W1/r_st1",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_r2",
+   "dst": "W1/r_st2",
+   "dst_bus": "nb_r2",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W1/r_st2",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_r3",
+   "dst": "W1/r_st3",
+   "dst_bus": "nb_r3",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W1/r_st3",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "W1/r_st4",
+   "dst_bus": "nb_r4",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W1/r_st4",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_r5",
+   "dst": "W1/r_st5",
+   "dst_bus": "nb_r5",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W1/r_st5",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_r6",
+   "dst": "W1/r_st6",
+   "dst_bus": "nb_r6",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W1/r_st6",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_r7",
+   "dst": "W1/r_st7",
+   "dst_bus": "nb_r7",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "W1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "W1/r_st7",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_W1_fw",
+    "sl_W1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_W1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "E1/r_st0",
+   "dst_bus": "nb_r0",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E1/r_st0",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_r1",
+   "dst": "E1/r_st1",
+   "dst_bus": "nb_r1",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E1/r_st1",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_r2",
+   "dst": "E1/r_st2",
+   "dst_bus": "nb_r2",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E1/r_st2",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_r3",
+   "dst": "E1/r_st3",
+   "dst_bus": "nb_r3",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E1/r_st3",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "E1/r_st4",
+   "dst_bus": "nb_r4",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E1/r_st4",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_r5",
+   "dst": "E1/r_st5",
+   "dst_bus": "nb_r5",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E1/r_st5",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_r6",
+   "dst": "E1/r_st6",
+   "dst_bus": "nb_r6",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E1/r_st6",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_r7",
+   "dst": "E1/r_st7",
+   "dst_bus": "nb_r7",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E1/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E1/r_st7",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E1_fw",
+    "sl_E1_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E1_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "E3/r_st0",
+   "dst_bus": "nb_r0",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E3/r_st0",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_r1",
+   "dst": "E3/r_st1",
+   "dst_bus": "nb_r1",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E3/r_st1",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_r2",
+   "dst": "E3/r_st2",
+   "dst_bus": "nb_r2",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E3/r_st2",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_r3",
+   "dst": "E3/r_st3",
+   "dst_bus": "nb_r3",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E3/r_st3",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "E3/r_st4",
+   "dst_bus": "nb_r4",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E3/r_st4",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_r5",
+   "dst": "E3/r_st5",
+   "dst_bus": "nb_r5",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E3/r_st5",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_r6",
+   "dst": "E3/r_st6",
+   "dst_bus": "nb_r6",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E3/r_st6",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_r7",
+   "dst": "E3/r_st7",
+   "dst_bus": "nb_r7",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E3/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E3/r_st7",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E3_fw",
+    "sl_E3_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E3_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fe",
+   "src_bus": "chu_q",
+   "dst": "E5/r_fw",
+   "dst_bus": "chu_q",
+   "kind": "data",
+   "bits": 1095,
+   "census": 1,
+   "pair": [
+    "sl_E5_fe",
+    "sl_E5_fw"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fe__x_fe_fw",
+    "sl_E5_fe__x_fe_fw_p1"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fe",
+   "src_bus": "agu_q",
+   "dst": "E5/r_fw",
+   "dst_bus": "agu_q",
+   "kind": "data",
+   "bits": 10,
+   "census": 1,
+   "pair": [
+    "sl_E5_fe",
+    "sl_E5_fw"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fe__x_fe_fw",
+    "sl_E5_fe__x_fe_fw_p1"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fe",
+   "src_bus": "scd_q",
+   "dst": "E5/r_sc",
+   "dst_bus": "scd_q",
+   "kind": "data",
+   "bits": 48,
+   "census": 1,
+   "pair": [
+    "sl_E5_fe",
+    "sl_E5_sc"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fe__x_fe_sc",
+    "sl_E5_fe__flt"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fe",
+   "src_bus": "se_q",
+   "dst": "E5/r_stm",
+   "dst_bus": "se_q",
+   "kind": "data",
+   "bits": 1088,
+   "census": 1,
+   "pair": [
+    "sl_E5_fe",
+    "sl_E5_stm"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fe__x_fe_stm",
+    "sl_E5_fe__x_fe_stm_p1"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "E5/r_st0",
+   "dst_bus": "nb_r0",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E5/r_st0",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_r1",
+   "dst": "E5/r_st1",
+   "dst_bus": "nb_r1",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E5/r_st1",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_r2",
+   "dst": "E5/r_st2",
+   "dst_bus": "nb_r2",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E5/r_st2",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_r3",
+   "dst": "E5/r_st3",
+   "dst_bus": "nb_r3",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E5/r_st3",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_a"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_a"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "E5/r_st4",
+   "dst_bus": "nb_r4",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E5/r_st4",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_r5",
+   "dst": "E5/r_st5",
+   "dst_bus": "nb_r5",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E5/r_st5",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_r6",
+   "dst": "E5/r_st6",
+   "dst_bus": "nb_r6",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E5/r_st6",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_r7",
+   "dst": "E5/r_st7",
+   "dst_bus": "nb_r7",
+   "kind": "data",
+   "bits": 64,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  },
+  {
+   "src": "E5/r_fw",
+   "src_bus": "nb_c",
+   "dst": "E5/r_st7",
+   "dst_bus": "nb_c",
+   "kind": "data",
+   "bits": 2,
+   "census": 1,
+   "pair": [
+    "sl_E5_fw",
+    "sl_E5_st_b"
+   ],
+   "dropped_lanes": [
+    "sl_E5_fw__x_fw_st_b"
+   ],
+   "evidence": "bind_carried_pairs.json: 0 bound bits 7c6ae1e9ad7f"
+  }
+ ],
+ "bind_narrowed": [
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_stm",
+    "sl_W5_fw"
+   ],
+   "src": "W5/r_stm",
+   "src_bus": "so_w",
+   "dst": "W5/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_st_a",
+    "sl_W5_ctl"
+   ],
+   "src": "W5/r_st0",
+   "src_bus": "r_d0",
+   "dst": "W5/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_fe",
+    "sl_W5_sc"
+   ],
+   "src": "W5/r_fe",
+   "src_bus": "scd_q",
+   "dst": "W5/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_ctl",
+    "sl_W5_stm"
+   ],
+   "src": "W5/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "W5/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_ctl",
+    "sl_W5_st_a"
+   ],
+   "src": "W5/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "W5/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_hc1",
+    "sl_W5_st_a"
+   ],
+   "src": "W5/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "W5/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_ctl",
+    "sl_W5_st_b"
+   ],
+   "src": "W5/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W5/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_ctl",
+    "sl_W5_st_b"
+   ],
+   "src": "W5/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W5/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_ctl",
+    "sl_W5_st_b"
+   ],
+   "src": "W5/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W5/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_st_a",
+    "sl_W5_st_b"
+   ],
+   "src": "W5/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "W5/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_hc1",
+    "sl_W5_st_b"
+   ],
+   "src": "W5/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "W5/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_hc1",
+    "sl_W5_ctl"
+   ],
+   "src": "W5/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "W5/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_hc2",
+    "sl_W5_ctl"
+   ],
+   "src": "W5/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "W5/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_su_c",
+    "sl_W5_su_l1"
+   ],
+   "src": "W5/su_c",
+   "src_bus": "gb",
+   "dst": "W5/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W5_su_l0",
+    "sl_W5_su_c"
+   ],
+   "src": "W5/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "W5/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_stm",
+    "sl_W4_fw"
+   ],
+   "src": "W4/r_stm",
+   "src_bus": "so_w",
+   "dst": "W4/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_st_a",
+    "sl_W4_ctl"
+   ],
+   "src": "W4/r_st0",
+   "src_bus": "r_d0",
+   "dst": "W4/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_fe",
+    "sl_W4_sc"
+   ],
+   "src": "W4/r_fe",
+   "src_bus": "scd_q",
+   "dst": "W4/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_ctl",
+    "sl_W4_stm"
+   ],
+   "src": "W4/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "W4/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_ctl",
+    "sl_W4_st_a"
+   ],
+   "src": "W4/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "W4/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_hc1",
+    "sl_W4_st_a"
+   ],
+   "src": "W4/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "W4/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_fw",
+    "sl_W4_st_a"
+   ],
+   "src": "W4/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "W4/r_st0",
+   "dst_bus": "nb_r0",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_ctl",
+    "sl_W4_st_b"
+   ],
+   "src": "W4/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W4/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_ctl",
+    "sl_W4_st_b"
+   ],
+   "src": "W4/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W4/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_ctl",
+    "sl_W4_st_b"
+   ],
+   "src": "W4/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W4/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_st_a",
+    "sl_W4_st_b"
+   ],
+   "src": "W4/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "W4/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_hc1",
+    "sl_W4_st_b"
+   ],
+   "src": "W4/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "W4/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_fw",
+    "sl_W4_st_b"
+   ],
+   "src": "W4/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "W4/r_st4",
+   "dst_bus": "nb_r4",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_hc1",
+    "sl_W4_ctl"
+   ],
+   "src": "W4/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "W4/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_hc2",
+    "sl_W4_ctl"
+   ],
+   "src": "W4/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "W4/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_su_c",
+    "sl_W4_su_l1"
+   ],
+   "src": "W4/su_c",
+   "src_bus": "gb",
+   "dst": "W4/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W4_su_l0",
+    "sl_W4_su_c"
+   ],
+   "src": "W4/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "W4/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_stm",
+    "sl_W3_fw"
+   ],
+   "src": "W3/r_stm",
+   "src_bus": "so_w",
+   "dst": "W3/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_st_a",
+    "sl_W3_ctl"
+   ],
+   "src": "W3/r_st0",
+   "src_bus": "r_d0",
+   "dst": "W3/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_fe",
+    "sl_W3_sc"
+   ],
+   "src": "W3/r_fe",
+   "src_bus": "scd_q",
+   "dst": "W3/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_ctl",
+    "sl_W3_stm"
+   ],
+   "src": "W3/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "W3/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_ctl",
+    "sl_W3_st_a"
+   ],
+   "src": "W3/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "W3/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_hc1",
+    "sl_W3_st_a"
+   ],
+   "src": "W3/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "W3/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_ctl",
+    "sl_W3_st_b"
+   ],
+   "src": "W3/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W3/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_ctl",
+    "sl_W3_st_b"
+   ],
+   "src": "W3/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W3/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_ctl",
+    "sl_W3_st_b"
+   ],
+   "src": "W3/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W3/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_st_a",
+    "sl_W3_st_b"
+   ],
+   "src": "W3/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "W3/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_hc1",
+    "sl_W3_st_b"
+   ],
+   "src": "W3/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "W3/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_hc1",
+    "sl_W3_ctl"
+   ],
+   "src": "W3/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "W3/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_hc2",
+    "sl_W3_ctl"
+   ],
+   "src": "W3/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "W3/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_su_c",
+    "sl_W3_su_l1"
+   ],
+   "src": "W3/su_c",
+   "src_bus": "gb",
+   "dst": "W3/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W3_su_l0",
+    "sl_W3_su_c"
+   ],
+   "src": "W3/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "W3/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_stm",
+    "sl_W2_fw"
+   ],
+   "src": "W2/r_stm",
+   "src_bus": "so_w",
+   "dst": "W2/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_st_a",
+    "sl_W2_ctl"
+   ],
+   "src": "W2/r_st0",
+   "src_bus": "r_d0",
+   "dst": "W2/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_fe",
+    "sl_W2_sc"
+   ],
+   "src": "W2/r_fe",
+   "src_bus": "scd_q",
+   "dst": "W2/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_ctl",
+    "sl_W2_stm"
+   ],
+   "src": "W2/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "W2/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_ctl",
+    "sl_W2_st_a"
+   ],
+   "src": "W2/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "W2/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_hc1",
+    "sl_W2_st_a"
+   ],
+   "src": "W2/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "W2/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_fw",
+    "sl_W2_st_a"
+   ],
+   "src": "W2/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "W2/r_st0",
+   "dst_bus": "nb_r0",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_ctl",
+    "sl_W2_st_b"
+   ],
+   "src": "W2/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W2/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_ctl",
+    "sl_W2_st_b"
+   ],
+   "src": "W2/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W2/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_ctl",
+    "sl_W2_st_b"
+   ],
+   "src": "W2/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W2/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_st_a",
+    "sl_W2_st_b"
+   ],
+   "src": "W2/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "W2/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_hc1",
+    "sl_W2_st_b"
+   ],
+   "src": "W2/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "W2/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_fw",
+    "sl_W2_st_b"
+   ],
+   "src": "W2/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "W2/r_st4",
+   "dst_bus": "nb_r4",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_hc1",
+    "sl_W2_ctl"
+   ],
+   "src": "W2/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "W2/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_hc2",
+    "sl_W2_ctl"
+   ],
+   "src": "W2/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "W2/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_su_c",
+    "sl_W2_su_l1"
+   ],
+   "src": "W2/su_c",
+   "src_bus": "gb",
+   "dst": "W2/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W2_su_l0",
+    "sl_W2_su_c"
+   ],
+   "src": "W2/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "W2/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_stm",
+    "sl_W1_fw"
+   ],
+   "src": "W1/r_stm",
+   "src_bus": "so_w",
+   "dst": "W1/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_st_a",
+    "sl_W1_ctl"
+   ],
+   "src": "W1/r_st0",
+   "src_bus": "r_d0",
+   "dst": "W1/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_fe",
+    "sl_W1_sc"
+   ],
+   "src": "W1/r_fe",
+   "src_bus": "scd_q",
+   "dst": "W1/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_ctl",
+    "sl_W1_stm"
+   ],
+   "src": "W1/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "W1/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_ctl",
+    "sl_W1_st_a"
+   ],
+   "src": "W1/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "W1/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_hc1",
+    "sl_W1_st_a"
+   ],
+   "src": "W1/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "W1/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_ctl",
+    "sl_W1_st_b"
+   ],
+   "src": "W1/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W1/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_ctl",
+    "sl_W1_st_b"
+   ],
+   "src": "W1/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W1/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_ctl",
+    "sl_W1_st_b"
+   ],
+   "src": "W1/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W1/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_st_a",
+    "sl_W1_st_b"
+   ],
+   "src": "W1/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "W1/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_hc1",
+    "sl_W1_st_b"
+   ],
+   "src": "W1/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "W1/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_hc1",
+    "sl_W1_ctl"
+   ],
+   "src": "W1/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "W1/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_hc2",
+    "sl_W1_ctl"
+   ],
+   "src": "W1/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "W1/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_su_c",
+    "sl_W1_su_l1"
+   ],
+   "src": "W1/su_c",
+   "src_bus": "gb",
+   "dst": "W1/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W1_su_l0",
+    "sl_W1_su_c"
+   ],
+   "src": "W1/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "W1/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_stm",
+    "sl_W0_fw"
+   ],
+   "src": "W0/r_stm",
+   "src_bus": "so_w",
+   "dst": "W0/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_st_a",
+    "sl_W0_ctl"
+   ],
+   "src": "W0/r_st0",
+   "src_bus": "r_d0",
+   "dst": "W0/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_fe",
+    "sl_W0_sc"
+   ],
+   "src": "W0/r_fe",
+   "src_bus": "scd_q",
+   "dst": "W0/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_ctl",
+    "sl_W0_stm"
+   ],
+   "src": "W0/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "W0/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_ctl",
+    "sl_W0_st_a"
+   ],
+   "src": "W0/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "W0/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_hc1",
+    "sl_W0_st_a"
+   ],
+   "src": "W0/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "W0/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_fw",
+    "sl_W0_st_a"
+   ],
+   "src": "W0/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "W0/r_st0",
+   "dst_bus": "nb_r0",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_ctl",
+    "sl_W0_st_b"
+   ],
+   "src": "W0/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W0/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_ctl",
+    "sl_W0_st_b"
+   ],
+   "src": "W0/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W0/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_ctl",
+    "sl_W0_st_b"
+   ],
+   "src": "W0/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "W0/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_st_a",
+    "sl_W0_st_b"
+   ],
+   "src": "W0/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "W0/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_hc1",
+    "sl_W0_st_b"
+   ],
+   "src": "W0/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "W0/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_fw",
+    "sl_W0_st_b"
+   ],
+   "src": "W0/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "W0/r_st4",
+   "dst_bus": "nb_r4",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_hc1",
+    "sl_W0_ctl"
+   ],
+   "src": "W0/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "W0/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_hc2",
+    "sl_W0_ctl"
+   ],
+   "src": "W0/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "W0/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_su_c",
+    "sl_W0_su_l1"
+   ],
+   "src": "W0/su_c",
+   "src_bus": "gb",
+   "dst": "W0/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_W0_su_l0",
+    "sl_W0_su_c"
+   ],
+   "src": "W0/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "W0/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_stm",
+    "sl_E0_fw"
+   ],
+   "src": "E0/r_stm",
+   "src_bus": "so_w",
+   "dst": "E0/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_st_a",
+    "sl_E0_ctl"
+   ],
+   "src": "E0/r_st0",
+   "src_bus": "r_d0",
+   "dst": "E0/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_fe",
+    "sl_E0_sc"
+   ],
+   "src": "E0/r_fe",
+   "src_bus": "scd_q",
+   "dst": "E0/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_ctl",
+    "sl_E0_stm"
+   ],
+   "src": "E0/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "E0/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_ctl",
+    "sl_E0_st_a"
+   ],
+   "src": "E0/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "E0/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_hc1",
+    "sl_E0_st_a"
+   ],
+   "src": "E0/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "E0/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_fw",
+    "sl_E0_st_a"
+   ],
+   "src": "E0/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "E0/r_st0",
+   "dst_bus": "nb_r0",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_ctl",
+    "sl_E0_st_b"
+   ],
+   "src": "E0/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E0/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_ctl",
+    "sl_E0_st_b"
+   ],
+   "src": "E0/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E0/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_ctl",
+    "sl_E0_st_b"
+   ],
+   "src": "E0/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E0/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_st_a",
+    "sl_E0_st_b"
+   ],
+   "src": "E0/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "E0/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_hc1",
+    "sl_E0_st_b"
+   ],
+   "src": "E0/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "E0/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_fw",
+    "sl_E0_st_b"
+   ],
+   "src": "E0/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "E0/r_st4",
+   "dst_bus": "nb_r4",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_hc1",
+    "sl_E0_ctl"
+   ],
+   "src": "E0/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "E0/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_hc2",
+    "sl_E0_ctl"
+   ],
+   "src": "E0/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "E0/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_su_c",
+    "sl_E0_su_l1"
+   ],
+   "src": "E0/su_c",
+   "src_bus": "gb",
+   "dst": "E0/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E0_su_l0",
+    "sl_E0_su_c"
+   ],
+   "src": "E0/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "E0/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_stm",
+    "sl_E1_fw"
+   ],
+   "src": "E1/r_stm",
+   "src_bus": "so_w",
+   "dst": "E1/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_st_a",
+    "sl_E1_ctl"
+   ],
+   "src": "E1/r_st0",
+   "src_bus": "r_d0",
+   "dst": "E1/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_fe",
+    "sl_E1_sc"
+   ],
+   "src": "E1/r_fe",
+   "src_bus": "scd_q",
+   "dst": "E1/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_ctl",
+    "sl_E1_stm"
+   ],
+   "src": "E1/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "E1/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_ctl",
+    "sl_E1_st_a"
+   ],
+   "src": "E1/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "E1/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_hc1",
+    "sl_E1_st_a"
+   ],
+   "src": "E1/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "E1/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_ctl",
+    "sl_E1_st_b"
+   ],
+   "src": "E1/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E1/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_ctl",
+    "sl_E1_st_b"
+   ],
+   "src": "E1/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E1/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_ctl",
+    "sl_E1_st_b"
+   ],
+   "src": "E1/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E1/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_st_a",
+    "sl_E1_st_b"
+   ],
+   "src": "E1/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "E1/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_hc1",
+    "sl_E1_st_b"
+   ],
+   "src": "E1/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "E1/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_hc1",
+    "sl_E1_ctl"
+   ],
+   "src": "E1/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "E1/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_hc2",
+    "sl_E1_ctl"
+   ],
+   "src": "E1/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "E1/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_su_c",
+    "sl_E1_su_l1"
+   ],
+   "src": "E1/su_c",
+   "src_bus": "gb",
+   "dst": "E1/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E1_su_l0",
+    "sl_E1_su_c"
+   ],
+   "src": "E1/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "E1/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_stm",
+    "sl_E2_fw"
+   ],
+   "src": "E2/r_stm",
+   "src_bus": "so_w",
+   "dst": "E2/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_st_a",
+    "sl_E2_ctl"
+   ],
+   "src": "E2/r_st0",
+   "src_bus": "r_d0",
+   "dst": "E2/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_fe",
+    "sl_E2_sc"
+   ],
+   "src": "E2/r_fe",
+   "src_bus": "scd_q",
+   "dst": "E2/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_ctl",
+    "sl_E2_stm"
+   ],
+   "src": "E2/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "E2/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_ctl",
+    "sl_E2_st_a"
+   ],
+   "src": "E2/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "E2/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_hc1",
+    "sl_E2_st_a"
+   ],
+   "src": "E2/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "E2/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_fw",
+    "sl_E2_st_a"
+   ],
+   "src": "E2/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "E2/r_st0",
+   "dst_bus": "nb_r0",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_ctl",
+    "sl_E2_st_b"
+   ],
+   "src": "E2/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E2/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_ctl",
+    "sl_E2_st_b"
+   ],
+   "src": "E2/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E2/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_ctl",
+    "sl_E2_st_b"
+   ],
+   "src": "E2/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E2/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_st_a",
+    "sl_E2_st_b"
+   ],
+   "src": "E2/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "E2/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_hc1",
+    "sl_E2_st_b"
+   ],
+   "src": "E2/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "E2/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_fw",
+    "sl_E2_st_b"
+   ],
+   "src": "E2/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "E2/r_st4",
+   "dst_bus": "nb_r4",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_hc1",
+    "sl_E2_ctl"
+   ],
+   "src": "E2/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "E2/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_hc2",
+    "sl_E2_ctl"
+   ],
+   "src": "E2/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "E2/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_su_c",
+    "sl_E2_su_l1"
+   ],
+   "src": "E2/su_c",
+   "src_bus": "gb",
+   "dst": "E2/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E2_su_l0",
+    "sl_E2_su_c"
+   ],
+   "src": "E2/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "E2/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_stm",
+    "sl_E3_fw"
+   ],
+   "src": "E3/r_stm",
+   "src_bus": "so_w",
+   "dst": "E3/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_st_a",
+    "sl_E3_ctl"
+   ],
+   "src": "E3/r_st0",
+   "src_bus": "r_d0",
+   "dst": "E3/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_fe",
+    "sl_E3_sc"
+   ],
+   "src": "E3/r_fe",
+   "src_bus": "scd_q",
+   "dst": "E3/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_ctl",
+    "sl_E3_stm"
+   ],
+   "src": "E3/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "E3/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_ctl",
+    "sl_E3_st_a"
+   ],
+   "src": "E3/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "E3/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_hc1",
+    "sl_E3_st_a"
+   ],
+   "src": "E3/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "E3/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_ctl",
+    "sl_E3_st_b"
+   ],
+   "src": "E3/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E3/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_ctl",
+    "sl_E3_st_b"
+   ],
+   "src": "E3/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E3/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_ctl",
+    "sl_E3_st_b"
+   ],
+   "src": "E3/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E3/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_st_a",
+    "sl_E3_st_b"
+   ],
+   "src": "E3/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "E3/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_hc1",
+    "sl_E3_st_b"
+   ],
+   "src": "E3/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "E3/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_hc1",
+    "sl_E3_ctl"
+   ],
+   "src": "E3/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "E3/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_hc2",
+    "sl_E3_ctl"
+   ],
+   "src": "E3/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "E3/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_su_c",
+    "sl_E3_su_l1"
+   ],
+   "src": "E3/su_c",
+   "src_bus": "gb",
+   "dst": "E3/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E3_su_l0",
+    "sl_E3_su_c"
+   ],
+   "src": "E3/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "E3/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_stm",
+    "sl_E4_fw"
+   ],
+   "src": "E4/r_stm",
+   "src_bus": "so_w",
+   "dst": "E4/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_st_a",
+    "sl_E4_ctl"
+   ],
+   "src": "E4/r_st0",
+   "src_bus": "r_d0",
+   "dst": "E4/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_fe",
+    "sl_E4_sc"
+   ],
+   "src": "E4/r_fe",
+   "src_bus": "scd_q",
+   "dst": "E4/r_sc",
+   "dst_bus": "scd_q",
+   "template_bits": 48,
+   "bound_bits": 47,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_ctl",
+    "sl_E4_stm"
+   ],
+   "src": "E4/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "E4/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_ctl",
+    "sl_E4_st_a"
+   ],
+   "src": "E4/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "E4/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_hc1",
+    "sl_E4_st_a"
+   ],
+   "src": "E4/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "E4/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_fw",
+    "sl_E4_st_a"
+   ],
+   "src": "E4/r_fw",
+   "src_bus": "nb_r0",
+   "dst": "E4/r_st0",
+   "dst_bus": "nb_r0",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_ctl",
+    "sl_E4_st_b"
+   ],
+   "src": "E4/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E4/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_ctl",
+    "sl_E4_st_b"
+   ],
+   "src": "E4/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E4/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_ctl",
+    "sl_E4_st_b"
+   ],
+   "src": "E4/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E4/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_st_a",
+    "sl_E4_st_b"
+   ],
+   "src": "E4/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "E4/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_hc1",
+    "sl_E4_st_b"
+   ],
+   "src": "E4/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "E4/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_fw",
+    "sl_E4_st_b"
+   ],
+   "src": "E4/r_fw",
+   "src_bus": "nb_r4",
+   "dst": "E4/r_st4",
+   "dst_bus": "nb_r4",
+   "template_bits": 64,
+   "bound_bits": 58,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_hc1",
+    "sl_E4_ctl"
+   ],
+   "src": "E4/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "E4/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_hc2",
+    "sl_E4_ctl"
+   ],
+   "src": "E4/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "E4/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_su_c",
+    "sl_E4_su_l1"
+   ],
+   "src": "E4/su_c",
+   "src_bus": "gb",
+   "dst": "E4/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E4_su_l0",
+    "sl_E4_su_c"
+   ],
+   "src": "E4/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "E4/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_stm",
+    "sl_E5_fw"
+   ],
+   "src": "E5/r_stm",
+   "src_bus": "so_w",
+   "dst": "E5/r_fw",
+   "dst_bus": "so_w",
+   "template_bits": 1088,
+   "bound_bits": 1087,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_st_a",
+    "sl_E5_ctl"
+   ],
+   "src": "E5/r_st0",
+   "src_bus": "r_d0",
+   "dst": "E5/r_ctl",
+   "dst_bus": "r_d0",
+   "template_bits": 64,
+   "bound_bits": 62,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_ctl",
+    "sl_E5_stm"
+   ],
+   "src": "E5/r_ctl",
+   "src_bus": "stm_cfg",
+   "dst": "E5/r_stm",
+   "dst_bus": "stm_cfg",
+   "template_bits": 31,
+   "bound_bits": 30,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_ctl",
+    "sl_E5_st_a"
+   ],
+   "src": "E5/tree_ctl",
+   "src_bus": "tw_data",
+   "dst": "E5/tree_st_a",
+   "dst_bus": "tw_data",
+   "template_bits": 1051,
+   "bound_bits": 964,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_hc1",
+    "sl_E5_st_a"
+   ],
+   "src": "E5/r_hc1",
+   "src_bus": "rsn_r0",
+   "dst": "E5/r_st0",
+   "dst_bus": "rsn_r0",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_ctl",
+    "sl_E5_st_b"
+   ],
+   "src": "E5/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E5/r_st4",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_ctl",
+    "sl_E5_st_b"
+   ],
+   "src": "E5/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E5/r_st5",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_ctl",
+    "sl_E5_st_b"
+   ],
+   "src": "E5/r_ctl",
+   "src_bus": "stn_cfg",
+   "dst": "E5/r_st6",
+   "dst_bus": "stn_cfg",
+   "template_bits": 29,
+   "bound_bits": 0,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_st_a",
+    "sl_E5_st_b"
+   ],
+   "src": "E5/r_st0",
+   "src_bus": "rss_r4",
+   "dst": "E5/r_st4",
+   "dst_bus": "rss_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_hc1",
+    "sl_E5_st_b"
+   ],
+   "src": "E5/r_hc1",
+   "src_bus": "rsn_r4",
+   "dst": "E5/r_st4",
+   "dst_bus": "rsn_r4",
+   "template_bits": 128,
+   "bound_bits": 116,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_hc1",
+    "sl_E5_ctl"
+   ],
+   "src": "E5/r_hc1",
+   "src_bus": "lqb1",
+   "dst": "E5/r_tap",
+   "dst_bus": "lqb1",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_hc2",
+    "sl_E5_ctl"
+   ],
+   "src": "E5/r_hc2",
+   "src_bus": "lqb2",
+   "dst": "E5/r_tap",
+   "dst_bus": "lqb2",
+   "template_bits": 8,
+   "bound_bits": 7,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_su_c",
+    "sl_E5_su_l1"
+   ],
+   "src": "E5/su_c",
+   "src_bus": "gb",
+   "dst": "E5/su_l1",
+   "dst_bus": "gb",
+   "template_bits": 500,
+   "bound_bits": 499,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  },
+  {
+   "census": 1,
+   "pair": [
+    "sl_E5_su_l0",
+    "sl_E5_su_c"
+   ],
+   "src": "E5/su_l0",
+   "src_bus": "L_l_out",
+   "dst": "E5/su_c",
+   "dst_bus": "L_l_out",
+   "template_bits": 128,
+   "bound_bits": 127,
+   "evidence": "bind_lane_widths.json 7c6ae1e9ad7f"
+  }
+ ]
 }

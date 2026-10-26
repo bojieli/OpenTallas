@@ -1,0 +1,29 @@
+{
+  "design": "ot_s81sl_vn_b",
+  "kits": {
+    "vn_b_f6s": "epyc2:/srv/opentallas-scratch2/claude/s81-cores3-sw/vn_b_f6s (variant 1: F6 macro_if_flops + split clock, geometric 4x2 regions)",
+    "vn_b_f6c": "epyc2:/srv/opentallas-scratch2/claude/s81-cores3-sw/vn_b_f6c (variant 2 = f6s + OT_RT_SPLIT=count load-balanced regions + anchor_regs.tcl pre_c block at the core centre)"
+  },
+  "stage": "4_cts.odb, kit setRC_rcx.tcl (F2), probe with propagated clock",
+  "images": ["results/geom_review/s81_cores3_sw_1025/vn_b_f6s_postcts_clock.png", "results/geom_review/s81_cores3_sw_1025/vn_b_f6c_postcts_clock.png"],
+  "vn_b_f6s": {
+    "tap_loads": {"h3_0": 810, "h3_1": 2397, "h3_2": 3949, "h3_3": 4519, "h3_4": 4544, "h3_5": 3686, "h3_6": 5735, "h3_7": 3605, "mtap0_u_h1": 703},
+    "tap_means_tt": [331.1, 351.6], "tap_window_tt": 20.5, "tap_means_ff": [261.0, 278.0], "tap_window_ff": 17.0,
+    "within_tap_range_tt_max": 24.6,
+    "all_regs_tt": [320.6, 340.6, 358.7], "all_regs_ff": [251.6, 275.8, 285.7],
+    "u_h1_clk_vs_regs": "TT tap 350.7, macro clk 358.7",
+    "pre_c": "W face x8-26 y111-159 (not addressed in this variant)",
+    "cts_hold_ff": "-59.00 / 1175"
+  },
+  "vn_b_f6c": {
+    "tap_loads": "3644-3663 per tap (count split; t42 1.9k-5.6k)",
+    "tap_means_tt": [338, 345], "tap_window_tt": 7,
+    "all_regs_tt": [311.4, 339.4, 419.3], "all_regs_ff": [248.7, 274.7, 352.2],
+    "defect": "region 0 (count split) tap h3_0 range 311-416: a 400-419 ps block at x105-145 / y85-110 (u_g.g_lane[1].u_mix) hangs on long leaves; the count-split box centre of region 0 lands on/near u_h1, the tap is not moved to the sink centroid off the macro -> fix = tap point at the region's register centroid off macros",
+    "pre_c": "128/128 anchored at x168-187 y85-88 (u_g centroid 171,87), I 336-344: PASS",
+    "u_h1_clk_vs_regs": "+8 (352 vs 345)",
+    "cts_hold_ff_pre_repair": "-67.86 / 2253 (flow), gate see log"
+  },
+  "F6_both": "u_h1: 446-455 IF pin->reg pairs, p50 10.2, but 190-199 > 20 um (p90 131, max 157): the IF regs that are ALSO partition pin registers (hw_j_c, hw_d_c, ... FIRM at their faces, 259 skipped by macro_if_flops) sit 71-157 um from the u_h1 pins. FAIL: needs a structural change (second register stage at the macro for the pin->SRAM write path, RTL +1 on that path, or u_h1 against the face that carries hw_d/hw_j) -- not done in this round",
+  "author_verdict": "vn_b_f6s: clock structure OK, F6 FAIL (pin-reg IF regs), tap-6 imbalance and pre_c unaddressed. vn_b_f6c: pre_c PASS, load balance PASS, region-0 long-leaf defect FAIL, F6 FAIL. Neither should route; next round = f6c + tap point at sink centroid + the hw_d/hw_j SRAM-side register stage."
+}

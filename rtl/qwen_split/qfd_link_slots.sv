@@ -91,8 +91,12 @@ module qfd_ckbump #(parameter real HALF_NS = 0.41667, parameter real RST_NS = 20
     always #(HALF_NS) pll_ck = ~pll_ck;
 endmodule
 
-// UCIe-A x64 PHY = HARD-MACRO MODEL (port-bind --allow-model ot_qkvd_ucie_x64_phy): exactly the abstract's die ports
-// (clk, rst_n, FDI); the far die is not on this die's netlist, so the lanes end in the model (no received flits).
+// UCIe-A x64 PHY = HARD-MACRO MODEL (port-bind --allow-model ot_qkvd_ucie_x64_phy): the abstract's die ports (clk,
+// rst_n, FDI) plus the macro's LINE SIDE (its bumps): link_v/link_flit = this die's TX lanes to the far die, far_v /
+// far_flit = the far die's TX lanes arriving here (ot_qkvd_ucie_x64_phy_model names).  The as-built die netlists
+// connect only the FDI; the die binder exports the line side as die-top ports when the plan declares it (hard core
+// bump_ports, tools/die_plan/bind.py), so a 2-die bench joins QC.link_* -> KV.far_* and back with no hierarchical
+// reference.  An instance that leaves far_* open receives nothing (no constant is tied inside the model).
 // PW = the 583-b llr PHY flit (kvsys LINK v1b).
 module ot_qkvd_ucie_x64_phy #(parameter integer PW = 583) (
     input  wire          clk,
@@ -101,12 +105,14 @@ module ot_qkvd_ucie_x64_phy #(parameter integer PW = 583) (
     input  wire          tx_v,
     input  wire [PW-1:0] tx_flit,
     output wire          rx_v,
-    output wire [PW-1:0] rx_flit
+    output wire [PW-1:0] rx_flit,
+    output wire          link_v,
+    output wire [PW-1:0] link_flit,
+    input  wire          far_v,
+    input  wire [PW-1:0] far_flit
 );
-    wire          lv;
-    wire [PW-1:0] lf;
     ot_qkvd_ucie_x64_phy_model #(.FW(PW)) u_m (.clk(clk), .rst_n(rst_n), .tx_up(tx_up), .tx_v(tx_v), .tx_flit(tx_flit),
-        .rx_v(rx_v), .rx_flit(rx_flit), .link_v(lv), .link_flit(lf), .far_v(1'b0), .far_flit({PW{1'b0}}));
+        .rx_v(rx_v), .rx_flit(rx_flit), .link_v(link_v), .link_flit(link_flit), .far_v(far_v), .far_flit(far_flit));
 endmodule
 
 module qfd_rstsync (

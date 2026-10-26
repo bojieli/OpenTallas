@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS-COND PLACE ONLY",
+  "pictures": [
+    "results/geom_review/a0v8/codex_1025/qfd_tile_nk_a0cv8c_nk_k2rs_placed.png",
+    "tools/qwen_romleaf/a0core/a0c8_nk_reset_paths.png"
+  ],
+  "findings": [
+    "Viewed NK k2rs data placement: peak density0.766, no bins>0.8, every measured data hop<=405um; macros retain channelled MY Ecolumn.",
+    "Viewed reset4 successor: equallydeep paths with registered intermediate cells in macro-free bands, maximum352.064um; prior reset2 FAIL retained.",
+    "Pins/macros/PDN unchanged; reset branches avoid macro walls and use sparse existing channels. Clock taps retain v8 source geometry; extracted balance remains unmeasured."
+  ],
+  "conditions": [
+    "PLACE ONLY; collect actual reset cell count, hop reach, macro clearance, density before any CTS/GRT/route.",
+    "Reset boot latency+2cycles; data latency unchanged.",
+    "Control-only reset semantics remain subject to actual synthesis/netlist review; RTL miter+wrong-depth mutant passed in reset helper."
+  ]
+}

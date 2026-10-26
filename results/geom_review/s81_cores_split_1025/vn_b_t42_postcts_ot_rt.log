@@ -1,0 +1,14 @@
+OT_RT sinks: 29947 registers, 1 macro clock pins, 0 other (kept on the root)
+OT_RT macro group u_h1: 626 interface registers
+OT_RT H-tree: 3 levels, 8 leaf nodes (taps), region 86.9 x 82.1 um, 15 spine buffers
+OT_RT macro tap u_h1 at (67.4,65.6) from region 0 node (47.8,45.4)
+OT_RT tap loads: 6 5589 7 3650 1 2781 4 4674 5 4314 0 2123 3 2944 2 3246; macro groups 1
+OT_RT CTS_ARGS -sink_clustering_enable -obstruction_aware -sink_clustering_size 24 -sink_clustering_max_diameter 30 -delay_buffer_derate 1.0 -repair_clock_nets -clk_nets {ot_rt_h3_0_n ot_rt_h3_1_n ot_rt_h3_2_n ot_rt_h3_3_n ot_rt_h3_4_n ot_rt_h3_5_n ot_rt_h3_6_n ot_rt_h3_7_n ot_rt_mtap0_n}
+OT_RT_BAL it0: ot_rt_h3_0=277(271-284,2123) ot_rt_h3_1=274(270-282,2781) ot_rt_h3_2=302(296-309,3246) ot_rt_h3_3=289(282-298,2944) ot_rt_h3_4=363(355-372,4674) ot_rt_h3_5=360(354-368,4314) ot_rt_h3_6=361(350-373,5589) ot_rt_h3_7=356(347-363,3650) ot_rt_mtap0=286(202-299,627)
+OT_RT_BAL it1: ot_rt_h3_0=367(361-373,2123) ot_rt_h3_1=364(359-372,2781) ot_rt_h3_2=369(363-375,3246) ot_rt_h3_3=358(351-367,2944) ot_rt_h3_4=363(355-372,4674) ot_rt_h3_5=360(354-368,4314) ot_rt_h3_6=361(350-373,5589) ot_rt_h3_7=356(347-363,3650) ot_rt_mtap0=353(269-367,627)
+OT_RT_MACRO pass0 u_h1 clk 269 vs interface regs mean 353 (626 regs): -84 ps
+OT_RT_MACRO pass1 u_h1 clk 367 vs interface regs mean 353 (626 regs): +14 ps
+OT_RT_BAL done: 21 pad cells; tap means 353..369 ps (window 15 vs 20)
+OT_RT_INS all registers 29948: min 335.5 p50 361.3 max 375.4 (placement RC, TT)
+OT_RT_HOLD_PRE_REPAIR worst -171.32 ps; viol 1770
+[INFO RSZ-0032] Inserted 7393 hold buffers.

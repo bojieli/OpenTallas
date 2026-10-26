@@ -18,6 +18,10 @@ foreach bt [$ct_blk getBTerms] {
     $bt connect $net
   }
   $net setSigType CLOCK
+  # PATH-QC-NK 10-25: a CORE-ONLY tap (OT_CORE_ONLY_TAPS, space-separated port names) carries only the hard-core clock
+  # pins OT_CORE_TAPS hangs on it; it is no grid tap, so the nearest-tap split and the cap pass never move a flop onto it
+  # (a register sharing a tap with a core is balanced by CTS to core pin + ETM insertion: nk_r4 ck_t28 396 ps).
+  if {[info exists ::env(OT_CORE_ONLY_TAPS)] && $n in $::env(OT_CORE_ONLY_TAPS)} { puts "OT_CLOCK_TAPS core-only tap $n"; continue }
   lappend ct_taps [list $n $net [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]]
 }
 # CP2 (COORD 10-23): EARLY core taps (gen.py phys core_taps.txt, env OT_CORE_TAPS; plan clock.taps[] kind 'core' with
@@ -88,7 +92,12 @@ if {[llength $ct_taps] < 2} {
 # pinned: the cap pass and the small-tap merge below move whole taps or ungrouped sinks only.
 global ct_taps ct_k ct_pinned  ;# sourced from inside an ORFS proc: procs below read these as globals
 set ct_pinned {}
-set ct_gre [expr {[info exists ::env(OT_TAP_GROUP_RE)] ? $::env(OT_TAP_GROUP_RE) : {(?:^|[/.])(u_ft_[A-Za-z0-9]+_s[0-9]+)[/.]}}]
+# FLOW-CANARY 10-25: OPT-IN (default off = the 202a nearest-sink assignment).  On by default it regressed every
+# gen_phys canary (s81 t12 / KV io_ft / QC coll_ftm structural FF hold -311.8/-152.0/-144.8 vs 202a PASS; a whole
+# long station row on the tap nearest its centroid left 4-8 taps EMPTY and grew 460-556 ps trees; A/B with 202a
+# clock_taps on the same kits: 0 empty taps, hold gate PASS).  Opt in with OT_TAP_GROUP_RE (the station form is
+# OT_TAP_GROUP_RE='(?:^|[/.])(u_ft_[A-Za-z0-9]+_s[0-9]+)[/.]') once a variant passes the canaries.
+set ct_gre [expr {[info exists ::env(OT_TAP_GROUP_RE)] ? $::env(OT_TAP_GROUP_RE) : {}}]
 set ct_fre [expr {[info exists ::env(OT_TAP_FOLLOW_RE)] ? $::env(OT_TAP_FOLLOW_RE) : {(?:^|[/.])(u_rrl_[0-9]+)[/.]}}]
 proc ct_tapnets {} { global ct_taps; set d {}; foreach tp $ct_taps { dict set d [[lindex $tp 1] getName] $tp }; return $d }
 proc ct_clk_iterm {inst} {
@@ -182,6 +191,8 @@ if {[llength $ct_taps] >= 2} {
   foreach tp $ct_taps {
     set l {}
     foreach it [[lindex $tp 1] getITerms] {
+      # PATH-QC-NK 10-25: a hard core's clock pin stays on the tap OT_CORE_TAPS / the split chose (never a cap move)
+      if {[info exists ::env(OT_CORE_TAPS)] && [[[$it getInst] getMaster] isBlock]} continue
       if {[[$it getMTerm] getIoType] eq "INPUT"} { lappend l $it }
     }
     dict set ct_by [lindex $tp 0] $l
@@ -206,6 +217,7 @@ if {[llength $ct_taps] >= 2} {
       foreach tp $ct_taps {
         if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] >= $ct_cap} continue
         set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3]) - $d0}]
+        if {[info exists ::env(OT_TAP_REASSIGN_UM)] && $d+$d0 > $ct_maxx} continue
         if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
       }
       if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $it $best] }
@@ -223,6 +235,14 @@ if {[llength $ct_taps] >= 2} {
         foreach tp $ct_taps {
           if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] + [llength $its] > $ct_cap} continue
           set d [expr {abs($cx - [lindex $tp 2]) + abs($cy - [lindex $tp 3]) - $d0}]
+          if {[info exists ::env(OT_TAP_REASSIGN_UM)]} {
+            set far 0
+            foreach it $its {
+              lassign [[$it getInst] getLocation] gx gy
+              if {abs($gx-[lindex $tp 2])+abs($gy-[lindex $tp 3]) > $ct_maxx} {set far 1; break}
+            }
+            if {$far} continue
+          }
           if {$d <= $ct_maxx && ($gbest eq "" || $d < $gbd)} { set gbest $g; set gbd $d; set gtgt $tp }
         }
       }
@@ -269,11 +289,12 @@ if {[llength $ct_taps] >= 2} {
     puts "OT_CLOCK_TAPS followers after cap pass: $ct_fmoved of $ct_fn re-hung on their sinks' tap"
   }
 }
-# CLOCK-RESET 10-25 (GEOM-REVIEW-4 06:16 item 5): a tap with fewer than OT_TAP_MIN_SINKS (default 50) sinks is a
+# CLOCK-RESET 10-25 (GEOM-REVIEW-4 06:16 item 5): a tap with fewer than OT_TAP_MIN_SINKS (opt-in; 50 was the default) sinks is a
 # nearly empty tree that tap_balance must pad (t18: 42 -> 246 ps with 49 delay cells) and that launches early into
 # its neighbours: its sinks (whole groups included) join the nearest tap that has >= the minimum, if that tap lies
 # within one tap pitch; otherwise it stays (WARN).  The emptied tap is then dropped like any tap without sinks.
-set ct_min [expr {[info exists ::env(OT_TAP_MIN_SINKS)] ? $::env(OT_TAP_MIN_SINKS) : 50}]
+# FLOW-CANARY 10-25: OPT-IN too (default 0 = off, as 202a); part of the same canary regression (merged taps -> deep trees).
+set ct_min [expr {[info exists ::env(OT_TAP_MIN_SINKS)] ? $::env(OT_TAP_MIN_SINKS) : 0}]
 if {[llength $ct_taps] >= 2 && $ct_min > 0} {
   set ct_k {}
   foreach tp $ct_taps {
@@ -294,6 +315,20 @@ if {[llength $ct_taps] >= 2 && $ct_min > 0} {
     if {$best eq "" || $bd > 2.0 * $ct_maxx} {
       puts "OT_CLOCK_TAPS WARN [lindex $tp 0] keeps $n sinks < $ct_min: no tap with >= $ct_min sinks within one pitch"
       continue
+    }
+    # Density radius is a physical reach bound, including sparse control flops.
+    # Tap-to-tap distance alone can hide a long arm at the far end of a bank.
+    if {[info exists ::env(OT_TAP_REASSIGN_UM)]} {
+      set far 0
+      foreach it [dict get $ct_k [lindex $tp 0]] {
+        lassign [[$it getInst] getLocation] sx sy
+        set d [expr {abs($sx-[lindex $best 2])+abs($sy-[lindex $best 3])}]
+        if {$d > $ct_maxx} { set far 1; break }
+      }
+      if {$far} {
+        puts "OT_CLOCK_TAPS keeps sparse [lindex $tp 0]($n): merge exceeds density sink radius"
+        continue
+      }
     }
     foreach it [dict get $ct_k [lindex $tp 0]] { $it disconnect; $it connect [lindex $best 1] }
     dict set ct_k [lindex $best 0] [concat [dict get $ct_k [lindex $best 0]] [dict get $ct_k [lindex $tp 0]]]

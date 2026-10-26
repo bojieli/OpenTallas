@@ -1,0 +1,8 @@
+read_verilog -sv /d/v1eq.sv /d/pr_old.sv /d/pr_mut.sv
+hierarchy -check
+proc; flatten; opt_clean
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_simple -seq 2
+equiv_induct
+equiv_status -assert

@@ -1,5 +1,5 @@
 library (ot_sram_1r1w_32x512_m1_ff) {
-  comment : "ot_sram_1r1w_32x512_m1: ASAP7 1R1W SRAM 32 x 512, mux 1, 1 bank(s), 0 spare row(s), 0 spare IO column(s); OpenTallas tools/mem_compiler/sram_gen.py v1.0";
+  comment : "ot_sram_1r1w_32x512_m1: ASAP7 1R1W SRAM 32 x 512, mux 1, 1 bank(s), 0 spare row(s), 0 spare IO column(s); write enable per 32 bits; pin faces rw; OpenTallas tools/mem_compiler/sram_gen.py v1.0";
   technology (cmos);
   delay_model : table_lookup;
   revision : "1.0";
@@ -84,17 +84,17 @@ library (ot_sram_1r1w_32x512_m1_ff) {
   type (ot_sram_1r1w_32x512_m1_w_mask_in_t) {
     base_type : array;
     data_type : bit;
-    bit_width : 512;
-    bit_from : 511;
+    bit_width : 16;
+    bit_from : 15;
     bit_to : 0;
     downto : true;
   }
   cell (ot_sram_1r1w_32x512_m1) {
-    area : 12745.8360;
+    area : 8858.8080;
     dont_use : true;
     dont_touch : true;
     interface_timing : true;
-    cell_leakage_power : 63729.1800;
+    cell_leakage_power : 44294.0400;
     pg_pin (VDD) { voltage_name : VDD; pg_type : primary_power; }
     pg_pin (VSS) { voltage_name : VSS; pg_type : primary_ground; }
     memory () {

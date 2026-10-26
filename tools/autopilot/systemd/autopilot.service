@@ -7,6 +7,9 @@ WorkingDirectory=%h/coord
 Environment=AP_DIR=%h/coord/autopilot
 Environment=AP_COORD=%h/coord
 # repo copy once merged to main (hub-git-sync keeps ~/OpenTallas at origin/main); until then the installed copy
+# hub_git_sync.sh: merge-based ~/coord sync before every tick (commit dirty append-only logs, merge origin coord/state,
+# union-resolve the logs, push); a failure writes autopilot/HUB-SYNC-FAILED -> first line of LOOP-GAPS.txt ('-': the tick still runs)
+ExecStartPre=-/bin/sh -c 'f=%h/OpenTallas/tools/autopilot/hub_git_sync.sh; [ -f "$f" ] || f=%h/bin/hub-git-sync.sh; exec /bin/bash "$f" coord'
 ExecStart=/bin/sh -c 'f=%h/OpenTallas/tools/autopilot/autopilot.py; [ -f "$f" ] || f=%h/.local/lib/autopilot/autopilot/autopilot.py; exec /usr/bin/python3 -I "$f" tick'
 Nice=10
 TimeoutStartSec=3000

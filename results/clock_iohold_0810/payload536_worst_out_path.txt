@@ -1,0 +1,36 @@
+Startpoint: o[166]$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: o[166] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  14.43   14.43 ^ ck_tb0_d0/Y (BUFx4_ASAP7_75t_R)
+  16.28   30.71 ^ ck_tb0_d1/Y (BUFx4_ASAP7_75t_R)
+  16.33   47.05 ^ ck_tb0_d2/Y (BUFx4_ASAP7_75t_R)
+  16.25   63.29 ^ ck_tb0_d3/Y (BUFx4_ASAP7_75t_R)
+  16.40   79.70 ^ ck_tb0_d4/Y (BUFx4_ASAP7_75t_R)
+  16.40   96.10 ^ ck_tb0_d5/Y (BUFx4_ASAP7_75t_R)
+  21.39  117.49 ^ ck_tb0_d6/Y (BUFx4_ASAP7_75t_R)
+  23.10  140.59 ^ clkbuf_0_ck/Y (BUFx16f_ASAP7_75t_R)
+  22.09  162.68 ^ clkbuf_2_1__f_ck/Y (BUFx16f_ASAP7_75t_R)
+  24.21  186.89 ^ clkbuf_leaf_6_ck/Y (BUFx24_ASAP7_75t_R)
+   0.40  187.29 ^ o[166]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  33.65  220.95 v o[166]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   6.23  227.18 ^ _1770_/Y (INVx1_ASAP7_75t_R)
+  15.95  243.12 ^ output615/Y (BUFx2_ASAP7_75t_R)
+   0.60  243.72 ^ o[166] (out)
+         243.72   data arrival time
+
+   0.00    0.00   clock vclk (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+  12.50  262.50   inter-clock uncertainty
+   0.00  262.50   clock reconvergence pessimism
+   0.00  262.50   output external delay
+         262.50   data required time
+---------------------------------------------------------
+         262.50   data required time
+        -243.72   data arrival time

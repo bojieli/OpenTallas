@@ -31,6 +31,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               PLANDIR/{r8,bind}/bus_groups.json): one added delay per as-built bus, equal across replicated consumers, no
               as-built order inversion, one landing pad per site of a replicated type (r8.py); depth = the R8 landing
               table (--landing, else PLANDIR/**/<die>_r8_landing.json from gen.py latency --groups) or the bound top
+  hard_pinreg registered-pin hard types (hard_pinreg.py): single hard core with registered_pins + lib, no ft slots;
+              every lib corner view has setup+hold on every input and clk->q on every output (fail closed)
   clock/reset every non-hard type has a clock tap inside its outline on a die layer and a reset synchronizer;
               data_reset false, epoch bit true (schema)
   G0C (--completeness): hard_cores, core_faces, complete; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
@@ -105,6 +107,54 @@ def on_track(c, L):
 
 
 # --------------------------------------------------------------------------------------------------- geometry
+def check_ft_macro_sites(P, R):
+    """Reject station cells inside placed SRAM/ROM/core footprints at actual bit sites."""
+    import gen_phys
+    import ft_bit_sites
+    count = 0
+    for tn, t in P.types.items():
+        try:
+            boxes = S.placed_macro_boxes(t)
+        except ValueError as exc:
+            R.err('geometry', f'type {tn}: {exc}', type=tn)
+            continue
+        if not boxes or not t.get('ft_slots'):
+            continue
+        pins = defaultdict(dict)
+        for bus, bit, _layer, x, y, face in gen_phys.type_pins(P, tn):
+            pins[bus][bit] = (x, y, face)
+        for slot in t['ft_slots']:
+            try:
+                ft_bit_sites.validate_slot(slot)
+            except ValueError as exc:
+                R.err('geometry', f'type {tn} slot {slot["name"]}: {exc}', type=tn)
+                continue
+            name = slot['name']; stages = int(slot.get('stations', 1)); hits = 0; example = None
+            pi, po = pins[name+'_i'], pins[name+'_o']
+            for bit in sorted(set(pi) | set(po)):
+                ap = pi.get(bit) or po[bit]; bp = po.get(bit) or pi[bit]
+                def inset(p):
+                    x, y, face = p
+                    return {'E': (x-1,y), 'W': (x+1,y), 'N': (x,y-1), 'S': (x,y+1)}[face]
+                a, b = inset(ap), inset(bp); route = zroute(a, b, ap[2], bp[2]); length = plen(route)
+                for j in range(stages):
+                    if slot.get('bit_sites_um') and j > 0:
+                        x, y = slot['bit_sites_um'][j-1][bit]; w, h = slot['bit_site_cell_um']
+                        rect = (x, y, x+w, y+h)
+                    else:
+                        xy = a if slot.get('bit_sites_um') else tuple(slot['regs_um'][j]) if slot.get('regs_um') else point_at(route, length*j/stages)
+                        x, y = xy; rect = (x, y, x, y)
+                    for macro, (x0,y0,x1,y1) in boxes.items():
+                        # Centres have no extent; explicit cells must clear with their whole envelope.
+                        hit = (x0+EPS < rect[0] < x1-EPS and y0+EPS < rect[1] < y1-EPS) if rect[0] == rect[2] else (min(rect[2],x1)-max(rect[0],x0)>EPS and min(rect[3],y1)-max(rect[1],y0)>EPS)
+                        if hit:
+                            hits += 1; example = example or (j, bit, macro); break
+            if hits:
+                j, bit, macro = example; count += hits
+                R.err('geometry', f'type {tn} slot {name}: {hits} actual-bit station cells/sites intersect physical macros (stage {j}, bit {bit}, macro {macro})', type=tn)
+    return count
+
+
 def check_geometry(P, R):
     g = P.grid
     for nm, base in [("ORFS base lattice", S.BASE_LATTICE_UM)] + \
@@ -170,8 +220,9 @@ def check_geometry(P, R):
             if span > P.reach * sl.get("stations", 1) + EPS:
                 R.warn("geometry", f"type {tn} slot {sl['name']}: crossing ~{span:.0f} um > {sl.get('stations', 1)} "
                        f"station(s) x reach {P.reach:.0f} (see hops)", type=tn)
+    macro_hits = check_ft_macro_sites(P, R)
     return dict(partition_area_mm2=area / 1e6, channel_area_mm2=chan / 1e6, uncovered_mm2=max(gap, 0) / 1e6,
-                fill=area / (W * H), planned_channels=chans)
+                fill=area / (W * H), planned_channels=chans, station_macro_intersections=macro_hits)
 
 
 def fmt_rect(r):
@@ -335,7 +386,13 @@ def check_faces(P, R, face_pins):
         # budget, COORD 10-23 07:43) gets the per-layer budget on each layer: face_pins_per_um * n / face_pin_layers
         fl = P.ptype(part).get("face_layers", {}).get(P.type_face(part, df))
         nl = max(B["face_pin_layers"], len(fl) if fl else 0)
-        lim = B["face_pins_per_um"] * nl / B["face_pin_layers"] * win + 2 * nl
+        # per-type budget (G2-proven, KV RULING 10-25 (a)) where the type declares one, never above the hard cap
+        tb = P.ptype(part).get("face_pins_per_um")
+        per = min(float(tb), S.FACE_PINS_HARD_CAP) if tb else B["face_pins_per_um"]
+        if tb and not P.ptype(part).get("face_budget_g2"):
+            R.err("faces", f"{part}: type face_pins_per_um {tb:g} without face_budget_g2 (the G2 probe that proves "
+                  "it)", part=part)
+        lim = per * nl / B["face_pin_layers"] * win + 2 * nl
         cs = sorted(c for c, _, _ in pins)
         mx, at = 0, None
         for i, c in enumerate(cs):
@@ -345,7 +402,7 @@ def check_faces(P, R, face_pins):
         worst.append((mx / win, part, df))
         if mx > lim + EPS:
             R.err("faces", f"{part}.{df}: {mx} pins in the {win:g}-um window at {at:.2f} "
-                  f"({mx / win:.2f}/um > {B['face_pins_per_um']:g})", part=part)
+                  f"({mx / win:.2f}/um > {per:g})", part=part)
     for pid, pr in P.ports.items():
         if len(pr["layers"]) > B["face_pin_layers"]:
             ends = [(pr[k]["part"], pr["face"] if k == "src" else OPP[pr["face"]]) for k in ("src", "dst")
@@ -779,6 +836,12 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
             if not pins:
                 R.err("hard_cores", f"type {tn} core {hc['inst']}: no pins listed (pins / pins_file): the core pins "
                       "must be proven on the kit tracks", type=tn)
+            if hc.get("straps") or hc.get("parent_id_straps"):
+                from parent_id_straps import validate_parent_id_straps
+                try:
+                    validate_parent_id_straps(hc, pins=pins)
+                except ValueError as e:
+                    R.err("hard_cores", f"type {tn} core {hc['inst']}: {e}", type=tn)
             insts = [n for n, p_ in P.parts.items() if p_["type"] == tn]
             bad = 0
             for nm, ln, x, y in pins:
@@ -1282,6 +1345,18 @@ def check_types(P, R):
                 near_duplicate_types=sum(len(g) for g in groups), mergeable_saving=sum(len(g) - 1 for g in groups))
 
 
+def check_registered_pins(P, R, plan_dir=None):
+    """REGISTERED-PIN hard partitions (COORD 10-25 11:31; hard_pinreg.py): declaration (hard type, single hard core,
+    lib, no ft slots) and the lib claim (setup+hold on every input, clk->q on every output, every corner view).  Fails
+    closed: an ERROR, the binder then refuses the type too."""
+    import hard_pinreg as HP
+    errs, summ = HP.check_plan(P.raw, (plan_dir,) if plan_dir else ())
+    for e in errs:
+        m = re.match(r"type (\S+):", e)
+        R.err("hard_pinreg", e, **({"type": m.group(1)} if m else {}))
+    return summ
+
+
 def check_r8(P, R, plan_dir=None, groups=None, landing=None):
     """COORD R8 (r8.py) on BINDER2's bus groups.  No bus groups -> WARN (R8 cannot be judged without the bind)."""
     import r8
@@ -1362,6 +1437,9 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
+    rp = check_registered_pins(P, R, plan_dir)
+    if rp:
+        summ["registered_pins"] = rp
     check_clock_reset(P, R)
     summ["reset"] = check_reset(P, R)
     summ["seams"] = check_seams(P, R)

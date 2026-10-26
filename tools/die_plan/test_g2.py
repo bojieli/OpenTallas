@@ -275,7 +275,7 @@ def test_kit_places_content_macros(tmp_path):
     (tmp_path / "m_ff.lib").write_text("library(m_ff) {}\n")
     t = raw["partition_types"]["src"]
     t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m_tt.lib",
-                                             origin_um=[17.28, 25.92], orient="MX"))
+                                             origin_um=[17.28, 25.92], outline_um=[8.64, 8.64], orient="MX"))
     t["hard_cores"] = [dict(inst="u_core", module="core_m", origin_um=[8.64, 8.64], outline_um=[8.64, 8.64],
                             track_offset_um=[0.0, 0.012], lef="m.lef", lib="m_tt.lib")]
     P = schema.Plan(raw)
@@ -377,7 +377,10 @@ def test_per_tap_reset_synchronisers():
             r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
-            assert re.search(r"ot_dp_rsync_s2\s+2", r.stdout), r.stdout       # identical copies are NOT merged
+            # identical copies are NOT merged.  Yosys <= 0.9 prints `<cell> <count>`, newer Yosys (0.4x+, the ORFS image
+            # ot-run uses) prints `<count> <cell>`: the old one-format regex made this test fail only under ot-run.
+            n = re.findall(r"(?m)^\s*(?:ot_dp_rsync_s2\s+(\d+)|(\d+)\s+ot_dp_rsync_s2)\s*$", r.stdout)
+            assert n and {int(a or b) for a, b in n} == {2}, r.stdout
     ff = (HERE / "face_flops.tcl").read_text()
     assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
 
@@ -564,6 +567,34 @@ def test_die_sta_reports_face_flop_spread():
     assert "FFSPREAD" in t and "u_(bin|bout)_" in t and t.index("FFSPREAD") < t.index("close $fh")
 
 
+def test_part_probe_uses_explicit_internal_bit_sites():
+    import copy
+    raw=copy.deepcopy(PAIR)
+    slot=raw['partition_types']['fa']['ft_slots'][0]
+    slot['bit_site_cell_um']=[1.4,.28]
+    slot['bit_sites_um']=[[[100+j*100+b*.02,20+j] for b in range(slot['width']+1)] for j in range(slot['stations']-1)]
+    # Deliberately inconsistent old centroid table must not override per-bit LLs.
+    slot['regs_um']=[[777,777]]*slot['stations']
+    with tempfile.TemporaryDirectory() as d:
+        out=g2.part_probe(schema.Plan(raw),'fa',d)
+        text=(out/'probe.tcl').read_text()
+        assert 'st_fz_7_1 -location {100.140 20.000}' in text
+        assert 'st_fz_7_2 -location {200.140 21.000}' in text
+        assert '777.000 777.000' not in text
+        # Payload and epoch bit both use their own allocated cell envelope.
+        assert 'st_fz_64_1 -location {101.280 20.000}' in text
+
+
+def test_part_probe_rejects_incomplete_bit_site_stage():
+    import copy
+    import pytest
+    raw=copy.deepcopy(PAIR)
+    slot=raw['partition_types']['fa']['ft_slots'][0]
+    slot['bit_site_cell_um']=[1.4,.28]
+    slot['bit_sites_um']=[[[100,20]]]*(slot['stations']-1)
+    with tempfile.TemporaryDirectory() as d:
+        with pytest.raises(ValueError,match='width\\+1'):
+            g2.part_probe(schema.Plan(raw),'fa',d)
 def test_part_probe_wavefront_outputs_have_registered_drivers():
     """The IO script's scalar rst_o pins must exist in the probe netlist."""
     import copy
@@ -607,11 +638,11 @@ def test_part_probe_uses_explicit_internal_bit_sites():
     with tempfile.TemporaryDirectory() as d:
         out=g2.part_probe(schema.Plan(raw),'fa',d)
         text=(out/'probe.tcl').read_text()
-        assert 'st_fz_7_1 -location {100.840 20.140}' in text
-        assert 'st_fz_7_2 -location {200.840 21.140}' in text
+        assert 'st_fz_7_1 -location {100.140 20.000}' in text
+        assert 'st_fz_7_2 -location {200.140 21.000}' in text
         assert '777.000 777.000' not in text
         # Payload and epoch bit both use their own allocated cell envelope.
-        assert 'st_fz_64_1 -location {101.980 20.140}' in text
+        assert 'st_fz_64_1 -location {101.280 20.000}' in text
 
 
 def test_part_probe_rejects_incomplete_bit_site_stage():
@@ -637,3 +668,11 @@ def test_probe_blockages_keeps_hard_cores_no_leaf_names():
                         {"inst": "e1", "module": "d", "origin_um": [300, 0], "outline_um": [9, 9], "obs_max": "M5"}]}
     obs = {o["inst"]: o.get("obs_max") for o in g2.probe_blockages(t, "M7")}
     assert obs == {"bq_0": "M5", "head2_e0": "M7", "e1": "M5"}
+
+
+def test_station_out_of_cores():
+    boxes = [(100.0, 100.0, 300.0, 200.0), (301.0, 100.0, 400.0, 200.0)]
+    assert g2.out_of_cores((50.0, 50.0), boxes, 500, 500) == (50.0, 50.0)
+    assert g2.out_of_cores((150.0, 190.0), boxes, 500, 500) == (150.0, 202.0)
+    # the nearest edge (x1 + m = 302) lies in the neighbour core -> next nearest outside point
+    assert g2.out_of_cores((295.0, 150.0), boxes, 500, 500) == (295.0, 98.0)

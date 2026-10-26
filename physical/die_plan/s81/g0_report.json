@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/srv/opentallas-scratch2/claude/s81-ports-regen/out_ff/gen/die_plan.json",
+ "plan": "/srv/opentallas-scratch2/claude/s81-plan3/int/g0c/die_plan.json",
  "verdict": "PASS",
  "mode": "G0C",
  "errors": 0,
- "warnings": 1280,
+ "warnings": 1287,
  "summary": {
   "die": "s81",
   "partitions": 398,
@@ -19,7 +19,7 @@
   },
   "ports": 2302,
   "lanes": 869,
-  "bits": 1093678,
+  "bits": 1105393,
   "taps_cores": {
    "taps": 74,
    "hard_cores": 4094,
@@ -28,7 +28,7 @@
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/srv/opentallas-scratch2/claude/s81-ports-regen/out_ff/gen/cells_est.json"
+    "/srv/opentallas-scratch2/claude/s81-plan3/int/g0c/cells_est.json"
    ],
    "no_cells": []
   },
@@ -248,12 +248,42 @@
    {
     "part": "svc_15",
     "face": "S",
-    "pins_per_um": 5.6
+    "pins_per_um": 8.9
    },
    {
     "part": "svc_14",
     "face": "N",
-    "pins_per_um": 5.6
+    "pins_per_um": 8.9
+   },
+   {
+    "part": "svc_7",
+    "face": "S",
+    "pins_per_um": 8.3
+   },
+   {
+    "part": "svc_6",
+    "face": "N",
+    "pins_per_um": 8.3
+   },
+   {
+    "part": "svc_5",
+    "face": "S",
+    "pins_per_um": 8.3
+   },
+   {
+    "part": "svc_4",
+    "face": "N",
+    "pins_per_um": 8.3
+   },
+   {
+    "part": "svc_3",
+    "face": "S",
+    "pins_per_um": 8.3
+   },
+   {
+    "part": "svc_2",
+    "face": "N",
+    "pins_per_um": 8.3
    },
    {
     "part": "svc_15",
@@ -262,36 +292,6 @@
    },
    {
     "part": "s_7S_x05",
-    "face": "S",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_x05",
-    "face": "N",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_L2",
-    "face": "S",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_L2",
-    "face": "N",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_L0",
-    "face": "S",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_L0",
-    "face": "N",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_C",
     "face": "S",
     "pins_per_um": 5.5
    }
@@ -2625,14 +2625,14 @@
    "xo_W0_in_a": 2,
    "xo_W0_in_b": 2,
    "rt_W0_in_0": 25,
-   "rt_W0_in_1": 30,
-   "rt_W0_in_2": 35,
-   "x_W0_out": 50,
-   "xo_W0_out_a": 2,
-   "xo_W0_out_b": 2,
-   "rt_W0_out_0": 40,
-   "rt_W0_out_1": 45,
-   "rt_W0_out_2": 50,
+   "rt_W0_in_1": 31,
+   "rt_W0_in_2": 36,
+   "x_W0_out": 51,
+   "xo_W0_out_a": 3,
+   "xo_W0_out_b": 3,
+   "rt_W0_out_0": 41,
+   "rt_W0_out_1": 46,
+   "rt_W0_out_2": 51,
    "fi_W1_p1_r0r1": 7,
    "fi_W1_p1_r1r0": 6,
    "fi_W1_p1_r1r2": 6,
@@ -2661,14 +2661,14 @@
    "xo_W1_in_a": 2,
    "xo_W1_in_b": 2,
    "rt_W1_in_0": 25,
-   "rt_W1_in_1": 30,
-   "rt_W1_in_2": 35,
-   "x_W1_out": 48,
-   "xo_W1_out_a": 2,
-   "xo_W1_out_b": 2,
-   "rt_W1_out_0": 40,
-   "rt_W1_out_1": 45,
-   "rt_W1_out_2": 50,
+   "rt_W1_in_1": 31,
+   "rt_W1_in_2": 36,
+   "x_W1_out": 49,
+   "xo_W1_out_a": 3,
+   "xo_W1_out_b": 3,
+   "rt_W1_out_0": 41,
+   "rt_W1_out_1": 46,
+   "rt_W1_out_2": 51,
    "fi_W2_p1_r0r1": 7,
    "fi_W2_p1_r1r0": 6,
    "fi_W2_p1_r1r2": 6,
@@ -2697,14 +2697,14 @@
    "xo_W2_in_a": 2,
    "xo_W2_in_b": 2,
    "rt_W2_in_0": 18,
-   "rt_W2_in_1": 23,
-   "rt_W2_in_2": 28,
-   "x_W2_out": 46,
-   "xo_W2_out_a": 2,
-   "xo_W2_out_b": 2,
-   "rt_W2_out_0": 44,
-   "rt_W2_out_1": 49,
-   "rt_W2_out_2": 55,
+   "rt_W2_in_1": 24,
+   "rt_W2_in_2": 29,
+   "x_W2_out": 47,
+   "xo_W2_out_a": 3,
+   "xo_W2_out_b": 3,
+   "rt_W2_out_0": 45,
+   "rt_W2_out_1": 50,
+   "rt_W2_out_2": 56,
    "fi_W3_p1_r0r1": 6,
    "fi_W3_p1_r1r0": 6,
    "fi_W3_p1_r1r2": 6,
@@ -2732,15 +2732,15 @@
    "x_W3_in": 23,
    "xo_W3_in_a": 2,
    "xo_W3_in_b": 2,
-   "rt_W3_in_0": 19,
-   "rt_W3_in_1": 24,
-   "rt_W3_in_2": 29,
-   "x_W3_out": 50,
-   "xo_W3_out_a": 2,
-   "xo_W3_out_b": 2,
-   "rt_W3_out_0": 43,
-   "rt_W3_out_1": 48,
-   "rt_W3_out_2": 53,
+   "rt_W3_in_0": 20,
+   "rt_W3_in_1": 25,
+   "rt_W3_in_2": 30,
+   "x_W3_out": 51,
+   "xo_W3_out_a": 3,
+   "xo_W3_out_b": 3,
+   "rt_W3_out_0": 44,
+   "rt_W3_out_1": 49,
+   "rt_W3_out_2": 54,
    "fi_W4_p1_r0r1": 6,
    "fi_W4_p1_r1r0": 6,
    "fi_W4_p1_r1r2": 6,
@@ -2768,15 +2768,15 @@
    "x_W4_in": 28,
    "xo_W4_in_a": 2,
    "xo_W4_in_b": 2,
-   "rt_W4_in_0": 22,
-   "rt_W4_in_1": 28,
-   "rt_W4_in_2": 33,
-   "x_W4_out": 42,
-   "xo_W4_out_a": 2,
-   "xo_W4_out_b": 2,
-   "rt_W4_out_0": 38,
-   "rt_W4_out_1": 43,
-   "rt_W4_out_2": 48,
+   "rt_W4_in_0": 23,
+   "rt_W4_in_1": 29,
+   "rt_W4_in_2": 34,
+   "x_W4_out": 43,
+   "xo_W4_out_a": 3,
+   "xo_W4_out_b": 3,
+   "rt_W4_out_0": 39,
+   "rt_W4_out_1": 44,
+   "rt_W4_out_2": 49,
    "fi_W5_p1_r0r1": 6,
    "fi_W5_p1_r1r0": 6,
    "fi_W5_p1_r1r2": 6,
@@ -2804,15 +2804,15 @@
    "x_W5_in": 23,
    "xo_W5_in_a": 2,
    "xo_W5_in_b": 2,
-   "rt_W5_in_0": 26,
-   "rt_W5_in_1": 31,
-   "rt_W5_in_2": 36,
-   "x_W5_out": 44,
-   "xo_W5_out_a": 2,
-   "xo_W5_out_b": 2,
-   "rt_W5_out_0": 41,
-   "rt_W5_out_1": 46,
-   "rt_W5_out_2": 50,
+   "rt_W5_in_0": 27,
+   "rt_W5_in_1": 32,
+   "rt_W5_in_2": 37,
+   "x_W5_out": 45,
+   "xo_W5_out_a": 3,
+   "xo_W5_out_b": 3,
+   "rt_W5_out_0": 42,
+   "rt_W5_out_1": 47,
+   "rt_W5_out_2": 51,
    "fi_E0_p1_r0r1": 7,
    "fi_E0_p1_r1r0": 6,
    "fi_E0_p1_r1r2": 6,
@@ -2841,14 +2841,14 @@
    "xo_E0_in_a": 2,
    "xo_E0_in_b": 2,
    "rt_E0_in_0": 27,
-   "rt_E0_in_1": 32,
-   "rt_E0_in_2": 37,
-   "x_E0_out": 49,
-   "xo_E0_out_a": 2,
-   "xo_E0_out_b": 2,
-   "rt_E0_out_0": 42,
-   "rt_E0_out_1": 47,
-   "rt_E0_out_2": 53,
+   "rt_E0_in_1": 33,
+   "rt_E0_in_2": 38,
+   "x_E0_out": 50,
+   "xo_E0_out_a": 3,
+   "xo_E0_out_b": 3,
+   "rt_E0_out_0": 43,
+   "rt_E0_out_1": 48,
+   "rt_E0_out_2": 54,
    "fi_E1_p1_r0r1": 7,
    "fi_E1_p1_r1r0": 6,
    "fi_E1_p1_r1r2": 6,
@@ -2877,14 +2877,14 @@
    "xo_E1_in_a": 2,
    "xo_E1_in_b": 2,
    "rt_E1_in_0": 27,
-   "rt_E1_in_1": 32,
-   "rt_E1_in_2": 36,
-   "x_E1_out": 49,
-   "xo_E1_out_a": 2,
-   "xo_E1_out_b": 2,
-   "rt_E1_out_0": 41,
-   "rt_E1_out_1": 46,
-   "rt_E1_out_2": 51,
+   "rt_E1_in_1": 33,
+   "rt_E1_in_2": 37,
+   "x_E1_out": 50,
+   "xo_E1_out_a": 3,
+   "xo_E1_out_b": 3,
+   "rt_E1_out_0": 42,
+   "rt_E1_out_1": 47,
+   "rt_E1_out_2": 52,
    "fi_E2_p1_r0r1": 7,
    "fi_E2_p1_r1r0": 6,
    "fi_E2_p1_r1r2": 6,
@@ -2913,14 +2913,14 @@
    "xo_E2_in_a": 2,
    "xo_E2_in_b": 2,
    "rt_E2_in_0": 18,
-   "rt_E2_in_1": 23,
-   "rt_E2_in_2": 29,
-   "x_E2_out": 45,
-   "xo_E2_out_a": 2,
-   "xo_E2_out_b": 2,
-   "rt_E2_out_0": 43,
-   "rt_E2_out_1": 48,
-   "rt_E2_out_2": 53,
+   "rt_E2_in_1": 24,
+   "rt_E2_in_2": 30,
+   "x_E2_out": 46,
+   "xo_E2_out_a": 3,
+   "xo_E2_out_b": 3,
+   "rt_E2_out_0": 44,
+   "rt_E2_out_1": 49,
+   "rt_E2_out_2": 54,
    "fi_E3_p1_r0r1": 6,
    "fi_E3_p1_r1r0": 6,
    "fi_E3_p1_r1r2": 6,
@@ -2948,15 +2948,15 @@
    "x_E3_in": 25,
    "xo_E3_in_a": 2,
    "xo_E3_in_b": 2,
-   "rt_E3_in_0": 22,
-   "rt_E3_in_1": 27,
-   "rt_E3_in_2": 32,
-   "x_E3_out": 52,
-   "xo_E3_out_a": 2,
-   "xo_E3_out_b": 2,
-   "rt_E3_out_0": 44,
-   "rt_E3_out_1": 49,
-   "rt_E3_out_2": 54,
+   "rt_E3_in_0": 23,
+   "rt_E3_in_1": 28,
+   "rt_E3_in_2": 33,
+   "x_E3_out": 53,
+   "xo_E3_out_a": 3,
+   "xo_E3_out_b": 3,
+   "rt_E3_out_0": 45,
+   "rt_E3_out_1": 50,
+   "rt_E3_out_2": 55,
    "fi_E4_p1_r0r1": 6,
    "fi_E4_p1_r1r0": 6,
    "fi_E4_p1_r1r2": 6,
@@ -2984,15 +2984,15 @@
    "x_E4_in": 26,
    "xo_E4_in_a": 2,
    "xo_E4_in_b": 2,
-   "rt_E4_in_0": 24,
-   "rt_E4_in_1": 29,
-   "rt_E4_in_2": 34,
-   "x_E4_out": 40,
-   "xo_E4_out_a": 2,
-   "xo_E4_out_b": 2,
-   "rt_E4_out_0": 39,
-   "rt_E4_out_1": 45,
-   "rt_E4_out_2": 50,
+   "rt_E4_in_0": 25,
+   "rt_E4_in_1": 30,
+   "rt_E4_in_2": 35,
+   "x_E4_out": 41,
+   "xo_E4_out_a": 3,
+   "xo_E4_out_b": 3,
+   "rt_E4_out_0": 40,
+   "rt_E4_out_1": 46,
+   "rt_E4_out_2": 51,
    "fi_E5_p1_r0r1": 6,
    "fi_E5_p1_r1r0": 6,
    "fi_E5_p1_r1r2": 6,
@@ -3020,15 +3020,15 @@
    "x_E5_in": 23,
    "xo_E5_in_a": 2,
    "xo_E5_in_b": 2,
-   "rt_E5_in_0": 26,
-   "rt_E5_in_1": 31,
-   "rt_E5_in_2": 36,
-   "x_E5_out": 44,
-   "xo_E5_out_a": 2,
-   "xo_E5_out_b": 2,
-   "rt_E5_out_0": 41,
-   "rt_E5_out_1": 46,
-   "rt_E5_out_2": 50,
+   "rt_E5_in_0": 27,
+   "rt_E5_in_1": 32,
+   "rt_E5_in_2": 37,
+   "x_E5_out": 45,
+   "xo_E5_out_a": 3,
+   "xo_E5_out_b": 3,
+   "rt_E5_out_0": 42,
+   "rt_E5_out_1": 47,
+   "rt_E5_out_2": 51,
    "dn_s_0S_L2": 8,
    "up_s_0S_L2": 7,
    "dn_s_0S_L0": 2,
@@ -3290,7 +3290,7 @@
    "attn__svc_1__svc_0": 2,
    "coll__lk_WN3__s_0N_LP": 18,
    "xtier__gunit__s_3S_C": 45,
-   "xtier__s_3S_C__gunit": 59,
+   "xtier__s_3S_C__gunit": 60,
    "coll__s_0N_LP__lk_WN3": 18,
    "attn__svc_7__svc_6": 2,
    "attn__svc_11__svc_10": 2,
@@ -3482,7 +3482,7 @@
   },
   "seams": {
    "nets": {
-    "abutted": 1095980,
+    "abutted": 1107695,
     "channel": 0
    },
    "pairs": {
@@ -4855,7 +4855,7 @@
      "channel": 0
     },
     "svc_0|svc_1": {
-     "abutted": 5246,
+     "abutted": 6311,
      "channel": 0
     },
     "iqf|svc_0": {
@@ -5103,23 +5103,23 @@
      "channel": 0
     },
     "svc_2|svc_3": {
-     "abutted": 6876,
+     "abutted": 9006,
      "channel": 0
     },
     "svc_6|svc_7": {
-     "abutted": 6876,
+     "abutted": 9006,
      "channel": 0
     },
     "svc_8|svc_9": {
-     "abutted": 4730,
+     "abutted": 5795,
      "channel": 0
     },
     "svc_14|svc_15": {
-     "abutted": 7209,
+     "abutted": 9339,
      "channel": 0
     },
     "svc_4|svc_5": {
-     "abutted": 6876,
+     "abutted": 9006,
      "channel": 0
     },
     "svc_10|svc_8": {
@@ -5143,7 +5143,7 @@
      "channel": 0
     },
     "svc_10|svc_11": {
-     "abutted": 4730,
+     "abutted": 5795,
      "channel": 0
     },
     "svc_5|svc_7": {
@@ -5624,11 +5624,11 @@
     },
     {
      "at_um": 3784.32,
-     "bits": 70748,
-     "abutted_bits": 70748,
+     "bits": 82463,
+     "abutted_bits": 82463,
      "route_bits": 0,
      "tracks": 698922,
-     "ratio": 0.1012
+     "ratio": 0.118
     },
     {
      "at_um": 5011.2,
@@ -5811,17 +5811,17 @@
    ],
    "top_horizontal": [
     {
+     "at_um": 3784.32,
+     "bits": 82463,
+     "abutted_bits": 82463,
+     "route_bits": 0,
+     "tracks": 698922,
+     "ratio": 0.118
+    },
+    {
      "at_um": 18506.88,
      "bits": 70761,
      "abutted_bits": 70761,
-     "route_bits": 0,
-     "tracks": 698922,
-     "ratio": 0.1012
-    },
-    {
-     "at_um": 3784.32,
-     "bits": 70748,
-     "abutted_bits": 70748,
      "route_bits": 0,
      "tracks": 698922,
      "ratio": 0.1012
@@ -5852,8 +5852,8 @@
     }
    ],
    "worst": {
-    "ratio": 0.1012,
-    "at": "horizontal@18506.9"
+    "ratio": 0.118,
+    "at": "horizontal@3784.32"
    },
    "lines": 44,
    "model": "face line: abutted port bits + ft/die routes strictly crossing; tracks = partition pin layers x pin_track_max (M4-M7; M8/M9 carry no signals, ruling 9.3)"
@@ -6009,6 +6009,28 @@
      ]
     },
     {
+     "part": "svc_15",
+     "face": "S",
+     "ratio": 0.22,
+     "on": "M7",
+     "allowed": [
+      "M3",
+      "M5",
+      "M7"
+     ]
+    },
+    {
+     "part": "svc_14",
+     "face": "N",
+     "ratio": 0.22,
+     "on": "M7",
+     "allowed": [
+      "M3",
+      "M5",
+      "M7"
+     ]
+    },
+    {
      "part": "s_0N_C",
      "face": "E",
      "ratio": 0.214,
@@ -6021,26 +6043,6 @@
     {
      "part": "s_1N_C",
      "face": "W",
-     "ratio": 0.214,
-     "on": "M6",
-     "allowed": [
-      "M4",
-      "M6"
-     ]
-    },
-    {
-     "part": "svc_14",
-     "face": "W",
-     "ratio": 0.214,
-     "on": "M6",
-     "allowed": [
-      "M4",
-      "M6"
-     ]
-    },
-    {
-     "part": "svc_12",
-     "face": "E",
      "ratio": 0.214,
      "on": "M6",
      "allowed": [
@@ -13781,6 +13783,41 @@
    "check": "schema",
    "msg": "type eng__t1: bus unit_o0 has no leaf binding",
    "type": "eng__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_WS0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_WS1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_WN0: PHY macro 1.85 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_WN3: PHY macro 2.16 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_EN0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_EN1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_EN2: PHY macro 1.94 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
   },
   {
    "level": "WARN",

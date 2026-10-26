@@ -1,0 +1,23 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "Planned clock geometry only; no CTS/GRT or route authorization",
+ "image": "coll_ftm_clock.png",
+ "viewed": true,
+ "source_raw_sha256": "917e77e249b4850ae5b3cfb4e83a3ebcb3da70be99758e97efda100a0228e244",
+ "old_actual_clock_ports": 8,
+ "new_taps": 21,
+ "sinks": 9041,
+ "max_load": 621,
+ "max_sink_distance_um": 89.2,
+ "findings": [
+  "Clock taps follow the three FT station bands and N/S face groups",
+  "The empty east region has no tap",
+  "No macro or data/RTL/cycle changes",
+  "All planned groups are nonempty and below1000sink cap"
+ ],
+ "required": [
+  "Integrate into ONE production QC plan batch",
+  "Fresh placed/CTS actual load, radius and related-pair/TTFF proof before route",
+  "No canary-only patched plan pretending production was fixed"
+ ]
+}

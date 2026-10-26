@@ -5,6 +5,7 @@
 # baseimm = base with the legacy op 5 NORM (hc_pre in the imm) instead of op 7 NORMR (hc_pre = the G-unit's leaf row R);
 # mutpostlast / mutnormimm = vp RTL mutants (old POST row order / NORMR ignoring the row), must FAIL.
 # A 5th argument 'raw' reports a mutant's own verdict instead (prints SLBEAT, exit 1 on FAIL: an expect=fail bench).
+# S81-PLAN R3: S81SL_CST="-GCS_HI_D=2 ... +define+OT_S81SL_CST_MUT_*" = leaf station depths / station mutants
 set -u; O=$1; M=${2:-base}; B=${3:-37}; L=${4:-L0}; mkdir -p $O/run
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 CASES=${S81_SU_CASES:-tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl}
@@ -14,7 +15,7 @@ DEF=""; [ "$M" = muttree ] && DEF="+define+OT_S81SL_MUT_TREE"; [ "$M" = mutcoef 
 NR=1; [ "$M" = baseimm ] && NR=0
 MACV="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"
 srcs="$(sort -u physical/hbm_norm_split_20261008/sources.f | tr '\n' ' ') rtl/hdc/v41x/ot_dsrom_su_add6.sv $MACV rtl/lib/ot_rst_relay.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv"
-/usr/bin/time -v -o $O/time.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GBEAT=$B -GNORMR=$NR -GVQ_XMEM=${S81SL_VQ_XMEM:-0} --top-module tb_s81sl_beat -Mdir $O/obj $srcs \
+/usr/bin/time -v -o $O/time.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD ${S81SL_CST:-} $DEF -GBEAT=$B -GNORMR=$NR -GVQ_XMEM=${S81SL_VQ_XMEM:-0} --top-module tb_s81sl_beat -Mdir $O/obj $srcs \
   --build-jobs ${J:-4} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 || { echo "BUILD_FAILED"; tail -n 8 $O/build.log; exit 3; }
 (cd $O/run && ../obj/Vtb_s81sl_beat > ../run.log 2>&1)
 grep -E "MISMATCH" $O/run.log | head -12; grep -E "^SLBEAT" $O/run.log   # SLBEAT apart: >13 mismatches hid it behind head (s81sl_vq a58a22ede)

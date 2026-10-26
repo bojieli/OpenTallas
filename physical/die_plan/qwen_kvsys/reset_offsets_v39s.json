@@ -1,0 +1,3739 @@
+{
+ "release": "wavefront",
+ "sync_stages": 2,
+ "root": "hub_C",
+ "root_type": "kv3_hub_C",
+ "hop_um": 405.0,
+ "relay_um": 405.0,
+ "unreachable": [],
+ "max_release": 96,
+ "max_die_hop_um": 377.3,
+ "long_hops": [],
+ "types": {
+  "kv3_hg": {
+   "in_um": [
+    799.712,
+    1511.968
+   ],
+   "outs": [],
+   "depth_K": 5,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 6,
+   "relays": 65,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hg_v1": {
+   "in_um": [
+    1269.6,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     159.328,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     479.008,
+     8.608
+    ]
+   ],
+   "depth_K": 8,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 9,
+   "relays": 94,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hg_v3": {
+   "in_um": [
+    1269.6,
+    760.352
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     159.328,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     159.328,
+     1511.968
+    ],
+    [
+     "rst_o_2",
+     8.16,
+     456.288
+    ]
+   ],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 87,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hgi": {
+   "in_um": [
+    799.712,
+    1511.968
+   ],
+   "outs": [],
+   "depth_K": 5,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 6,
+   "relays": 54,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hgi_v1": {
+   "in_um": [
+    799.712,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     159.328,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     479.008,
+     8.608
+    ],
+    [
+     "rst_o_2",
+     1119.392,
+     8.608
+    ]
+   ],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 73,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hgi_v2": {
+   "in_um": [
+    1269.6,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     159.328,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     479.008,
+     8.608
+    ],
+    [
+     "rst_o_2",
+     8.16,
+     456.288
+    ]
+   ],
+   "depth_K": 8,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 9,
+   "relays": 86,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hgi_v3": {
+   "in_um": [
+    799.712,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     159.328,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     479.008,
+     8.608
+    ]
+   ],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 70,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hgi_v4": {
+   "in_um": [
+    799.712,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     159.328,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     479.008,
+     8.608
+    ],
+    [
+     "rst_o_2",
+     1119.392,
+     8.608
+    ]
+   ],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 73,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hgi_v5": {
+   "in_um": [
+    1269.6,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     159.328,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     479.008,
+     8.608
+    ],
+    [
+     "rst_o_2",
+     8.16,
+     456.288
+    ]
+   ],
+   "depth_K": 8,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 9,
+   "relays": 86,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hgi_v6": {
+   "in_um": [
+    799.712,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     159.328,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     479.008,
+     8.608
+    ],
+    [
+     "rst_o_2",
+     1119.392,
+     8.608
+    ]
+   ],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 73,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hgi_v7": {
+   "in_um": [
+    799.712,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     159.328,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     479.008,
+     8.608
+    ]
+   ],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 70,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hgi_v8": {
+   "in_um": [
+    1269.6,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     159.328,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     479.008,
+     8.608
+    ],
+    [
+     "rst_o_2",
+     8.16,
+     456.288
+    ]
+   ],
+   "depth_K": 8,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 9,
+   "relays": 86,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hroot": {
+   "in_um": [
+    1891.68,
+    8.608
+   ],
+   "outs": [],
+   "depth_K": 7,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 8,
+   "relays": 77,
+   "max_hop_um": 366.5,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hub_C": {
+   "in_um": [
+    1260.0,
+    8.608
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     180.0,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     900.0,
+     8.608
+    ],
+    [
+     "rst_o_2",
+     1980.0,
+     8.608
+    ],
+    [
+     "rst_o_3",
+     2150.88,
+     502.752
+    ],
+    [
+     "rst_o_4",
+     2150.88,
+     1508.576
+    ],
+    [
+     "rst_o_5",
+     180.0,
+     1667.488
+    ],
+    [
+     "rst_o_6",
+     900.0,
+     1667.488
+    ],
+    [
+     "rst_o_7",
+     8.16,
+     502.752
+    ]
+   ],
+   "depth_K": 8,
+   "entry": "sync",
+   "entry_stages": 21,
+   "release_after_pin": 29,
+   "relays": 159,
+   "max_hop_um": 389.4,
+   "core_resets": [
+    {
+     "inst": "kvs_ctl",
+     "pin": "rst_n",
+     "pin_um": [
+      1041.768,
+      138.282
+     ],
+     "xy": [
+      1041.768,
+      133.91
+     ],
+     "internal_depth": 1,
+     "tap": 38
+    }
+   ],
+   "start_role": "bootstrap",
+   "start_tap": 14,
+   "core_start_roles": {
+    "kvs_ctl": "bootstrap"
+   }
+  },
+  "kv3_hub_Ei": {
+   "in_um": [
+    8.16,
+    838.112
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     1269.6,
+     502.752
+    ]
+   ],
+   "depth_K": 5,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 6,
+   "relays": 49,
+   "max_hop_um": 375.4,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hub_Eo": {
+   "in_um": [
+    8.16,
+    838.112
+   ],
+   "outs": [],
+   "depth_K": 5,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 6,
+   "relays": 48,
+   "max_hop_um": 375.4,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_hub_Wi": {
+   "in_um": [
+    1269.6,
+    838.112
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     8.16,
+     502.752
+    ]
+   ],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 89,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "bootstrap",
+   "start_tap": 9,
+   "core_start_roles": {}
+  },
+  "kv3_hub_Wo": {
+   "in_um": [
+    1269.6,
+    838.112
+   ],
+   "outs": [],
+   "depth_K": 5,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 6,
+   "relays": 48,
+   "max_hop_um": 375.1,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_io_cor": {
+   "in_um": [
+    799.712,
+    8.608
+   ],
+   "outs": [],
+   "depth_K": 4,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 5,
+   "relays": 27,
+   "max_hop_um": 373.8,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_io_cor_v1": {
+   "in_um": [
+    799.712,
+    8.608
+   ],
+   "outs": [],
+   "depth_K": 4,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 5,
+   "relays": 27,
+   "max_hop_um": 373.8,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_io_ft": {
+   "in_um": [
+    1269.6,
+    8.608
+   ],
+   "outs": [],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 36,
+   "max_hop_um": 345.6,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_io_ft_v1": {
+   "in_um": [
+    1269.6,
+    8.608
+   ],
+   "outs": [],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 36,
+   "max_hop_um": 345.6,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_pc": {
+   "in_um": [
+    517.92,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     172.32,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     8.16,
+     456.288
+    ]
+   ],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 74,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_pc_v1": {
+   "in_um": [
+    1027.68,
+    1368.608
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     172.32,
+     8.608
+    ],
+    [
+     "rst_o_1",
+     8.16,
+     456.288
+    ]
+   ],
+   "depth_K": 7,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 8,
+   "relays": 70,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_pc_v3": {
+   "in_um": [
+    1027.68,
+    760.352
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     8.16,
+     456.288
+    ]
+   ],
+   "depth_K": 5,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 6,
+   "relays": 49,
+   "max_hop_um": 380.0,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_pv": {
+   "in_um": [
+    2150.88,
+    1368.608
+   ],
+   "outs": [],
+   "depth_K": 9,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 10,
+   "relays": 152,
+   "max_hop_um": 380.0,
+   "core_resets": [
+    {
+     "inst": "pv__u_g0_j",
+     "pin": "rst_n",
+     "pin_um": [
+      138.336,
+      790.5360000000001
+     ],
+     "xy": [
+      133.91,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 24
+    },
+    {
+     "inst": "pv__u_g1_j",
+     "pin": "rst_n",
+     "pin_um": [
+      708.576,
+      790.5360000000001
+     ],
+     "xy": [
+      704.15,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 25
+    },
+    {
+     "inst": "pv__u_g2_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1278.816,
+      790.5360000000001
+     ],
+     "xy": [
+      1274.39,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 26
+    },
+    {
+     "inst": "pv__u_g3_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1849.056,
+      790.5360000000001
+     ],
+     "xy": [
+      1844.63,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 27
+    }
+   ],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {
+    "pv__u_g0_j": "mission",
+    "pv__u_g1_j": "mission",
+    "pv__u_g2_j": "mission",
+    "pv__u_g3_j": "mission"
+   }
+  },
+  "kv3_pv_v1": {
+   "in_um": [
+    2150.88,
+    1368.608
+   ],
+   "outs": [],
+   "depth_K": 9,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 10,
+   "relays": 152,
+   "max_hop_um": 380.0,
+   "core_resets": [
+    {
+     "inst": "pv__u_g0_j",
+     "pin": "rst_n",
+     "pin_um": [
+      138.336,
+      790.5360000000001
+     ],
+     "xy": [
+      133.91,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 24
+    },
+    {
+     "inst": "pv__u_g1_j",
+     "pin": "rst_n",
+     "pin_um": [
+      708.576,
+      790.5360000000001
+     ],
+     "xy": [
+      704.15,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 25
+    },
+    {
+     "inst": "pv__u_g2_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1278.816,
+      790.5360000000001
+     ],
+     "xy": [
+      1274.39,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 26
+    },
+    {
+     "inst": "pv__u_g3_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1849.056,
+      790.5360000000001
+     ],
+     "xy": [
+      1844.63,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 27
+    }
+   ],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {
+    "pv__u_g0_j": "mission",
+    "pv__u_g1_j": "mission",
+    "pv__u_g2_j": "mission",
+    "pv__u_g3_j": "mission"
+   }
+  },
+  "kv3_pv_v12": {
+   "in_um": [
+    1260.0,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     900.0,
+     8.608
+    ]
+   ],
+   "depth_K": 7,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 8,
+   "relays": 125,
+   "max_hop_um": 380.0,
+   "core_resets": [
+    {
+     "inst": "pv__u_g0_j",
+     "pin": "rst_n",
+     "pin_um": [
+      138.336,
+      790.5360000000001
+     ],
+     "xy": [
+      133.91,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 25
+    },
+    {
+     "inst": "pv__u_g1_j",
+     "pin": "rst_n",
+     "pin_um": [
+      708.576,
+      790.5360000000001
+     ],
+     "xy": [
+      704.15,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 26
+    },
+    {
+     "inst": "pv__u_g2_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1278.816,
+      790.5360000000001
+     ],
+     "xy": [
+      1274.39,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 27
+    },
+    {
+     "inst": "pv__u_g3_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1849.056,
+      790.5360000000001
+     ],
+     "xy": [
+      1844.63,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 28
+    }
+   ],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {
+    "pv__u_g0_j": "mission",
+    "pv__u_g1_j": "mission",
+    "pv__u_g2_j": "mission",
+    "pv__u_g3_j": "mission"
+   }
+  },
+  "kv3_pv_v2": {
+   "in_um": [
+    2150.88,
+    1368.608
+   ],
+   "outs": [],
+   "depth_K": 9,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 10,
+   "relays": 152,
+   "max_hop_um": 380.0,
+   "core_resets": [
+    {
+     "inst": "pv__u_g0_j",
+     "pin": "rst_n",
+     "pin_um": [
+      138.336,
+      790.5360000000001
+     ],
+     "xy": [
+      133.91,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 24
+    },
+    {
+     "inst": "pv__u_g1_j",
+     "pin": "rst_n",
+     "pin_um": [
+      708.576,
+      790.5360000000001
+     ],
+     "xy": [
+      704.15,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 25
+    },
+    {
+     "inst": "pv__u_g2_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1278.816,
+      790.5360000000001
+     ],
+     "xy": [
+      1274.39,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 26
+    },
+    {
+     "inst": "pv__u_g3_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1849.056,
+      790.5360000000001
+     ],
+     "xy": [
+      1844.63,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 27
+    }
+   ],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {
+    "pv__u_g0_j": "mission",
+    "pv__u_g1_j": "mission",
+    "pv__u_g2_j": "mission",
+    "pv__u_g3_j": "mission"
+   }
+  },
+  "kv3_pv_v3": {
+   "in_um": [
+    2150.88,
+    1368.608
+   ],
+   "outs": [],
+   "depth_K": 9,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 10,
+   "relays": 152,
+   "max_hop_um": 380.0,
+   "core_resets": [
+    {
+     "inst": "pv__u_g0_j",
+     "pin": "rst_n",
+     "pin_um": [
+      138.336,
+      790.5360000000001
+     ],
+     "xy": [
+      133.91,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 24
+    },
+    {
+     "inst": "pv__u_g1_j",
+     "pin": "rst_n",
+     "pin_um": [
+      708.576,
+      790.5360000000001
+     ],
+     "xy": [
+      704.15,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 25
+    },
+    {
+     "inst": "pv__u_g2_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1278.816,
+      790.5360000000001
+     ],
+     "xy": [
+      1274.39,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 26
+    },
+    {
+     "inst": "pv__u_g3_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1849.056,
+      790.5360000000001
+     ],
+     "xy": [
+      1844.63,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 27
+    }
+   ],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {
+    "pv__u_g0_j": "mission",
+    "pv__u_g1_j": "mission",
+    "pv__u_g2_j": "mission",
+    "pv__u_g3_j": "mission"
+   }
+  },
+  "kv3_pv_v4": {
+   "in_um": [
+    2150.88,
+    1368.608
+   ],
+   "outs": [],
+   "depth_K": 9,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 10,
+   "relays": 152,
+   "max_hop_um": 380.0,
+   "core_resets": [
+    {
+     "inst": "pv__u_g0_j",
+     "pin": "rst_n",
+     "pin_um": [
+      138.336,
+      790.5360000000001
+     ],
+     "xy": [
+      133.91,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 24
+    },
+    {
+     "inst": "pv__u_g1_j",
+     "pin": "rst_n",
+     "pin_um": [
+      708.576,
+      790.5360000000001
+     ],
+     "xy": [
+      704.15,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 25
+    },
+    {
+     "inst": "pv__u_g2_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1278.816,
+      790.5360000000001
+     ],
+     "xy": [
+      1274.39,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 26
+    },
+    {
+     "inst": "pv__u_g3_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1849.056,
+      790.5360000000001
+     ],
+     "xy": [
+      1844.63,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 27
+    }
+   ],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {
+    "pv__u_g0_j": "mission",
+    "pv__u_g1_j": "mission",
+    "pv__u_g2_j": "mission",
+    "pv__u_g3_j": "mission"
+   }
+  },
+  "kv3_pv_v5": {
+   "in_um": [
+    2150.88,
+    1368.608
+   ],
+   "outs": [],
+   "depth_K": 9,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 10,
+   "relays": 152,
+   "max_hop_um": 380.0,
+   "core_resets": [
+    {
+     "inst": "pv__u_g0_j",
+     "pin": "rst_n",
+     "pin_um": [
+      138.336,
+      790.5360000000001
+     ],
+     "xy": [
+      133.91,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 24
+    },
+    {
+     "inst": "pv__u_g1_j",
+     "pin": "rst_n",
+     "pin_um": [
+      708.576,
+      790.5360000000001
+     ],
+     "xy": [
+      704.15,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 25
+    },
+    {
+     "inst": "pv__u_g2_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1278.816,
+      790.5360000000001
+     ],
+     "xy": [
+      1274.39,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 26
+    },
+    {
+     "inst": "pv__u_g3_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1849.056,
+      790.5360000000001
+     ],
+     "xy": [
+      1844.63,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 27
+    }
+   ],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {
+    "pv__u_g0_j": "mission",
+    "pv__u_g1_j": "mission",
+    "pv__u_g2_j": "mission",
+    "pv__u_g3_j": "mission"
+   }
+  },
+  "kv3_pv_v6": {
+   "in_um": [
+    1260.0,
+    1511.968
+   ],
+   "outs": [],
+   "depth_K": 7,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 8,
+   "relays": 121,
+   "max_hop_um": 380.0,
+   "core_resets": [
+    {
+     "inst": "pv__u_g0_j",
+     "pin": "rst_n",
+     "pin_um": [
+      138.336,
+      790.5360000000001
+     ],
+     "xy": [
+      133.91,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 24
+    },
+    {
+     "inst": "pv__u_g1_j",
+     "pin": "rst_n",
+     "pin_um": [
+      708.576,
+      790.5360000000001
+     ],
+     "xy": [
+      704.15,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 25
+    },
+    {
+     "inst": "pv__u_g2_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1278.816,
+      790.5360000000001
+     ],
+     "xy": [
+      1274.39,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 26
+    },
+    {
+     "inst": "pv__u_g3_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1849.056,
+      790.5360000000001
+     ],
+     "xy": [
+      1844.63,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 27
+    }
+   ],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {
+    "pv__u_g0_j": "mission",
+    "pv__u_g1_j": "mission",
+    "pv__u_g2_j": "mission",
+    "pv__u_g3_j": "mission"
+   }
+  },
+  "kv3_pv_v7": {
+   "in_um": [
+    1260.0,
+    1511.968
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     900.0,
+     8.608
+    ]
+   ],
+   "depth_K": 7,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 8,
+   "relays": 125,
+   "max_hop_um": 380.0,
+   "core_resets": [
+    {
+     "inst": "pv__u_g0_j",
+     "pin": "rst_n",
+     "pin_um": [
+      138.336,
+      790.5360000000001
+     ],
+     "xy": [
+      133.91,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 25
+    },
+    {
+     "inst": "pv__u_g1_j",
+     "pin": "rst_n",
+     "pin_um": [
+      708.576,
+      790.5360000000001
+     ],
+     "xy": [
+      704.15,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 26
+    },
+    {
+     "inst": "pv__u_g2_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1278.816,
+      790.5360000000001
+     ],
+     "xy": [
+      1274.39,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 27
+    },
+    {
+     "inst": "pv__u_g3_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1849.056,
+      790.5360000000001
+     ],
+     "xy": [
+      1844.63,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 28
+    }
+   ],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {
+    "pv__u_g0_j": "mission",
+    "pv__u_g1_j": "mission",
+    "pv__u_g2_j": "mission",
+    "pv__u_g3_j": "mission"
+   }
+  },
+  "kv3_pv_v8": {
+   "in_um": [
+    2150.88,
+    1368.608
+   ],
+   "outs": [],
+   "depth_K": 9,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 10,
+   "relays": 152,
+   "max_hop_um": 380.0,
+   "core_resets": [
+    {
+     "inst": "pv__u_g0_j",
+     "pin": "rst_n",
+     "pin_um": [
+      138.336,
+      790.5360000000001
+     ],
+     "xy": [
+      133.91,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 24
+    },
+    {
+     "inst": "pv__u_g1_j",
+     "pin": "rst_n",
+     "pin_um": [
+      708.576,
+      790.5360000000001
+     ],
+     "xy": [
+      704.15,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 25
+    },
+    {
+     "inst": "pv__u_g2_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1278.816,
+      790.5360000000001
+     ],
+     "xy": [
+      1274.39,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 26
+    },
+    {
+     "inst": "pv__u_g3_j",
+     "pin": "rst_n",
+     "pin_um": [
+      1849.056,
+      790.5360000000001
+     ],
+     "xy": [
+      1844.63,
+      790.536
+     ],
+     "internal_depth": 1,
+     "tap": 27
+    }
+   ],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {
+    "pv__u_g0_j": "mission",
+    "pv__u_g1_j": "mission",
+    "pv__u_g2_j": "mission",
+    "pv__u_g3_j": "mission"
+   }
+  },
+  "kv3_sys_SD": {
+   "in_um": [
+    1108.768,
+    8.608
+   ],
+   "outs": [],
+   "depth_K": 5,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 6,
+   "relays": 56,
+   "max_hop_um": 370.6,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_sys_SD_v1": {
+   "in_um": [
+    1108.768,
+    8.608
+   ],
+   "outs": [],
+   "depth_K": 5,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 6,
+   "relays": 56,
+   "max_hop_um": 370.6,
+   "core_resets": [],
+   "start_role": "mission",
+   "start_tap": null,
+   "core_start_roles": {}
+  },
+  "kv3_sys_c": {
+   "in_um": [
+    8.16,
+    8.608
+   ],
+   "outs": [],
+   "depth_K": 8,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 9,
+   "relays": 69,
+   "max_hop_um": 360.0,
+   "core_resets": [],
+   "start_role": "bootstrap",
+   "start_tap": 8,
+   "core_start_roles": {}
+  }
+ },
+ "parts": {
+  "hg_EN_0": {
+   "type": "kv3_hg",
+   "parent": "hg_EN_1",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 88,
+   "core_release": {},
+   "source": "hg_EN_1.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hg_EN_1": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_EN_2",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 82,
+   "core_release": {},
+   "source": "hgi_EN_2.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_EN_2": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_EN_3",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 75,
+   "core_release": {},
+   "source": "hgi_EN_3.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_EN_3": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_EN_4",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 68,
+   "core_release": {},
+   "source": "hgi_EN_4.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_EN_4": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_EN_5",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 61,
+   "core_release": {},
+   "source": "hgi_EN_5.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_EN_5": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_EN_6",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 54,
+   "core_release": {},
+   "source": "hgi_EN_6.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_EN_6": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_EN_7",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 47,
+   "core_release": {},
+   "source": "hgi_EN_7.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_EN_7": {
+   "type": "kv3_hg_v3",
+   "parent": "hgi_EN_7",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 45,
+   "core_release": {},
+   "source": "hgi_EN_7.rst_o_2",
+   "hop_um": 321.3
+  },
+  "hg_ES_0": {
+   "type": "kv3_hg",
+   "parent": "hg_ES_1",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 88,
+   "core_release": {},
+   "source": "hg_ES_1.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hg_ES_1": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_ES_2",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 82,
+   "core_release": {},
+   "source": "hgi_ES_2.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_ES_2": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_ES_3",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 75,
+   "core_release": {},
+   "source": "hgi_ES_3.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_ES_3": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_ES_4",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 68,
+   "core_release": {},
+   "source": "hgi_ES_4.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_ES_4": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_ES_5",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 61,
+   "core_release": {},
+   "source": "hgi_ES_5.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_ES_5": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_ES_6",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 54,
+   "core_release": {},
+   "source": "hgi_ES_6.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_ES_6": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_ES_7",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 47,
+   "core_release": {},
+   "source": "hgi_ES_7.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_ES_7": {
+   "type": "kv3_hg_v3",
+   "parent": "hgi_ES_7",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 45,
+   "core_release": {},
+   "source": "hgi_ES_7.rst_o_2",
+   "hop_um": 321.3
+  },
+  "hg_WN_0": {
+   "type": "kv3_hg",
+   "parent": "hg_WN_1",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 88,
+   "core_release": {},
+   "source": "hg_WN_1.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hg_WN_1": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WN_2",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 82,
+   "core_release": {},
+   "source": "hgi_WN_2.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WN_2": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WN_3",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 75,
+   "core_release": {},
+   "source": "hgi_WN_3.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WN_3": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WN_4",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 68,
+   "core_release": {},
+   "source": "hgi_WN_4.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WN_4": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WN_5",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 61,
+   "core_release": {},
+   "source": "hgi_WN_5.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WN_5": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WN_6",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 54,
+   "core_release": {},
+   "source": "hgi_WN_6.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WN_6": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WN_7",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 47,
+   "core_release": {},
+   "source": "hgi_WN_7.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WN_7": {
+   "type": "kv3_hg_v3",
+   "parent": "hgi_WN_7",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 45,
+   "core_release": {},
+   "source": "hgi_WN_7.rst_o_2",
+   "hop_um": 321.3
+  },
+  "hg_WS_0": {
+   "type": "kv3_hg",
+   "parent": "hg_WS_1",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 88,
+   "core_release": {},
+   "source": "hg_WS_1.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hg_WS_1": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WS_2",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 82,
+   "core_release": {},
+   "source": "hgi_WS_2.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WS_2": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WS_3",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 75,
+   "core_release": {},
+   "source": "hgi_WS_3.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WS_3": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WS_4",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 68,
+   "core_release": {},
+   "source": "hgi_WS_4.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WS_4": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WS_5",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 61,
+   "core_release": {},
+   "source": "hgi_WS_5.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WS_5": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WS_6",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 54,
+   "core_release": {},
+   "source": "hgi_WS_6.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WS_6": {
+   "type": "kv3_hg_v1",
+   "parent": "hgi_WS_7",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 47,
+   "core_release": {},
+   "source": "hgi_WS_7.rst_o_0",
+   "hop_um": 185.7
+  },
+  "hg_WS_7": {
+   "type": "kv3_hg_v3",
+   "parent": "hgi_WS_7",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 45,
+   "core_release": {},
+   "source": "hgi_WS_7.rst_o_2",
+   "hop_um": 321.3
+  },
+  "hgi_EN_0": {
+   "type": "kv3_hgi_v3",
+   "parent": "hgi_EN_1",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 87,
+   "core_release": {},
+   "source": "hgi_EN_1.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_EN_1": {
+   "type": "kv3_hgi_v4",
+   "parent": "hgi_EN_2",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 80,
+   "core_release": {},
+   "source": "hgi_EN_2.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_EN_2": {
+   "type": "kv3_hgi_v4",
+   "parent": "hgi_EN_3",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 73,
+   "core_release": {},
+   "source": "hgi_EN_3.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_EN_3": {
+   "type": "kv3_hgi_v4",
+   "parent": "hgi_EN_4",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 66,
+   "core_release": {},
+   "source": "hgi_EN_4.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_EN_4": {
+   "type": "kv3_hgi_v4",
+   "parent": "hgi_EN_5",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 59,
+   "core_release": {},
+   "source": "hgi_EN_5.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_EN_5": {
+   "type": "kv3_hgi_v4",
+   "parent": "hgi_EN_6",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 52,
+   "core_release": {},
+   "source": "hgi_EN_6.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_EN_6": {
+   "type": "kv3_hgi_v4",
+   "parent": "hgi_EN_7",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 45,
+   "core_release": {},
+   "source": "hgi_EN_7.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_EN_7": {
+   "type": "kv3_hgi_v5",
+   "parent": "hub_C",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 38,
+   "core_release": {},
+   "source": "hub_C.rst_o_4",
+   "hop_um": 194.5
+  },
+  "hgi_ES_0": {
+   "type": "kv3_hgi",
+   "parent": "hgi_ES_1",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 86,
+   "core_release": {},
+   "source": "hgi_ES_1.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_ES_1": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_ES_2",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 80,
+   "core_release": {},
+   "source": "hgi_ES_2.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_ES_2": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_ES_3",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 73,
+   "core_release": {},
+   "source": "hgi_ES_3.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_ES_3": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_ES_4",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 66,
+   "core_release": {},
+   "source": "hgi_ES_4.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_ES_4": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_ES_5",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 59,
+   "core_release": {},
+   "source": "hgi_ES_5.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_ES_5": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_ES_6",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 52,
+   "core_release": {},
+   "source": "hgi_ES_6.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_ES_6": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_ES_7",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 45,
+   "core_release": {},
+   "source": "hgi_ES_7.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_ES_7": {
+   "type": "kv3_hgi_v2",
+   "parent": "hub_C",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 38,
+   "core_release": {},
+   "source": "hub_C.rst_o_2",
+   "hop_um": 206.4
+  },
+  "hgi_WN_0": {
+   "type": "kv3_hgi_v6",
+   "parent": "hgi_WN_1",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 87,
+   "core_release": {},
+   "source": "hgi_WN_1.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WN_1": {
+   "type": "kv3_hgi_v7",
+   "parent": "hgi_WN_2",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 80,
+   "core_release": {},
+   "source": "hgi_WN_2.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WN_2": {
+   "type": "kv3_hgi_v7",
+   "parent": "hgi_WN_3",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 73,
+   "core_release": {},
+   "source": "hgi_WN_3.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WN_3": {
+   "type": "kv3_hgi_v7",
+   "parent": "hgi_WN_4",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 66,
+   "core_release": {},
+   "source": "hgi_WN_4.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WN_4": {
+   "type": "kv3_hgi_v7",
+   "parent": "hgi_WN_5",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 59,
+   "core_release": {},
+   "source": "hgi_WN_5.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WN_5": {
+   "type": "kv3_hgi_v7",
+   "parent": "hgi_WN_6",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 52,
+   "core_release": {},
+   "source": "hgi_WN_6.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WN_6": {
+   "type": "kv3_hgi_v7",
+   "parent": "hgi_WN_7",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 45,
+   "core_release": {},
+   "source": "hgi_WN_7.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WN_7": {
+   "type": "kv3_hgi_v8",
+   "parent": "hub_C",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 38,
+   "core_release": {},
+   "source": "hub_C.rst_o_5",
+   "hop_um": 206.5
+  },
+  "hgi_WS_0": {
+   "type": "kv3_hgi",
+   "parent": "hgi_WS_1",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 86,
+   "core_release": {},
+   "source": "hgi_WS_1.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WS_1": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_WS_2",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 80,
+   "core_release": {},
+   "source": "hgi_WS_2.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WS_2": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_WS_3",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 73,
+   "core_release": {},
+   "source": "hgi_WS_3.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WS_3": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_WS_4",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 66,
+   "core_release": {},
+   "source": "hgi_WS_4.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WS_4": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_WS_5",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 59,
+   "core_release": {},
+   "source": "hgi_WS_5.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WS_5": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_WS_6",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 52,
+   "core_release": {},
+   "source": "hgi_WS_6.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WS_6": {
+   "type": "kv3_hgi_v1",
+   "parent": "hgi_WS_7",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 45,
+   "core_release": {},
+   "source": "hgi_WS_7.rst_o_1",
+   "hop_um": 338.0
+  },
+  "hgi_WS_7": {
+   "type": "kv3_hgi_v2",
+   "parent": "hub_C",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 38,
+   "core_release": {},
+   "source": "hub_C.rst_o_0",
+   "hop_um": 206.4
+  },
+  "hroot_EN": {
+   "type": "kv3_hroot",
+   "parent": "hg_EN_7",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 53,
+   "core_release": {},
+   "source": "hg_EN_7.rst_o_1",
+   "hop_um": 185.7
+  },
+  "hroot_ES": {
+   "type": "kv3_hroot",
+   "parent": "hg_ES_7",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 53,
+   "core_release": {},
+   "source": "hg_ES_7.rst_o_1",
+   "hop_um": 185.7
+  },
+  "hroot_WN": {
+   "type": "kv3_hroot",
+   "parent": "hg_WN_7",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 53,
+   "core_release": {},
+   "source": "hg_WN_7.rst_o_1",
+   "hop_um": 185.7
+  },
+  "hroot_WS": {
+   "type": "kv3_hroot",
+   "parent": "hg_WS_7",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 53,
+   "core_release": {},
+   "source": "hg_WS_7.rst_o_1",
+   "hop_um": 185.7
+  },
+  "hub_C": {
+   "type": "kv3_hub_C",
+   "parent": null,
+   "entry_stages": 21,
+   "depth_K": 8,
+   "release": 29,
+   "core_release": {
+    "kvs_ctl.rst_n": 30
+   },
+   "source": "die pad_por_n (asynchronous: the ONE root synchroniser + PLL lock qualifier, +19 stages)"
+  },
+  "hub_Ei": {
+   "type": "kv3_hub_Ei",
+   "parent": "hub_C",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 35,
+   "core_release": {},
+   "source": "hub_C.rst_o_3",
+   "hop_um": 352.6
+  },
+  "hub_Eo": {
+   "type": "kv3_hub_Eo",
+   "parent": "hub_Ei",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 41,
+   "core_release": {},
+   "source": "hub_Ei.rst_o_0",
+   "hop_um": 352.6
+  },
+  "hub_Wi": {
+   "type": "kv3_hub_Wi",
+   "parent": "hub_C",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 36,
+   "core_release": {},
+   "source": "hub_C.rst_o_7",
+   "hop_um": 352.6
+  },
+  "hub_Wo": {
+   "type": "kv3_hub_Wo",
+   "parent": "hub_Wi",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 42,
+   "core_release": {},
+   "source": "hub_Wi.rst_o_0",
+   "hop_um": 352.6
+  },
+  "io_E5": {
+   "type": "kv3_io_cor_v1",
+   "parent": "hgi_EN_0",
+   "entry_stages": 1,
+   "depth_K": 4,
+   "release": 92,
+   "core_release": {},
+   "source": "hgi_EN_0.rst_o_1",
+   "hop_um": 337.9
+  },
+  "io_E6": {
+   "type": "kv3_io_ft_v1",
+   "parent": "hgi_EN_0",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 94,
+   "core_release": {},
+   "source": "hgi_EN_0.rst_o_0",
+   "hop_um": 185.7
+  },
+  "io_W2": {
+   "type": "kv3_io_ft",
+   "parent": "hgi_WN_0",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 94,
+   "core_release": {},
+   "source": "hgi_WN_0.rst_o_0",
+   "hop_um": 185.7
+  },
+  "io_W3": {
+   "type": "kv3_io_cor",
+   "parent": "hgi_WN_0",
+   "entry_stages": 1,
+   "depth_K": 4,
+   "release": 92,
+   "core_release": {},
+   "source": "hgi_WN_0.rst_o_1",
+   "hop_um": 337.9
+  },
+  "pc_EN_0": {
+   "type": "kv3_pc",
+   "parent": "pc_EN_1",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 90,
+   "core_release": {},
+   "source": "pc_EN_1.rst_o_0",
+   "hop_um": 362.9
+  },
+  "pc_EN_1": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_EN_2",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 83,
+   "core_release": {},
+   "source": "hg_EN_2.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_EN_2": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_EN_3",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 76,
+   "core_release": {},
+   "source": "hg_EN_3.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_EN_3": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_EN_4",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 69,
+   "core_release": {},
+   "source": "hg_EN_4.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_EN_4": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_EN_5",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 62,
+   "core_release": {},
+   "source": "hg_EN_5.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_EN_5": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_EN_6",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 55,
+   "core_release": {},
+   "source": "hg_EN_6.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_EN_6": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_EN_7",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 53,
+   "core_release": {},
+   "source": "hg_EN_7.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_EN_7": {
+   "type": "kv3_pc_v3",
+   "parent": "hg_EN_7",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 51,
+   "core_release": {},
+   "source": "hg_EN_7.rst_o_2",
+   "hop_um": 321.3
+  },
+  "pc_ES_0": {
+   "type": "kv3_pc",
+   "parent": "pc_ES_1",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 90,
+   "core_release": {},
+   "source": "pc_ES_1.rst_o_0",
+   "hop_um": 362.9
+  },
+  "pc_ES_1": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_ES_2",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 83,
+   "core_release": {},
+   "source": "hg_ES_2.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_ES_2": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_ES_3",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 76,
+   "core_release": {},
+   "source": "hg_ES_3.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_ES_3": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_ES_4",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 69,
+   "core_release": {},
+   "source": "hg_ES_4.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_ES_4": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_ES_5",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 62,
+   "core_release": {},
+   "source": "hg_ES_5.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_ES_5": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_ES_6",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 55,
+   "core_release": {},
+   "source": "hg_ES_6.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_ES_6": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_ES_7",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 53,
+   "core_release": {},
+   "source": "hg_ES_7.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_ES_7": {
+   "type": "kv3_pc_v3",
+   "parent": "hg_ES_7",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 51,
+   "core_release": {},
+   "source": "hg_ES_7.rst_o_2",
+   "hop_um": 321.3
+  },
+  "pc_WN_0": {
+   "type": "kv3_pc",
+   "parent": "pc_WN_1",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 90,
+   "core_release": {},
+   "source": "pc_WN_1.rst_o_0",
+   "hop_um": 362.9
+  },
+  "pc_WN_1": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WN_2",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 83,
+   "core_release": {},
+   "source": "hg_WN_2.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WN_2": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WN_3",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 76,
+   "core_release": {},
+   "source": "hg_WN_3.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WN_3": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WN_4",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 69,
+   "core_release": {},
+   "source": "hg_WN_4.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WN_4": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WN_5",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 62,
+   "core_release": {},
+   "source": "hg_WN_5.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WN_5": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WN_6",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 55,
+   "core_release": {},
+   "source": "hg_WN_6.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WN_6": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WN_7",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 53,
+   "core_release": {},
+   "source": "hg_WN_7.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WN_7": {
+   "type": "kv3_pc_v3",
+   "parent": "hg_WN_7",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 51,
+   "core_release": {},
+   "source": "hg_WN_7.rst_o_2",
+   "hop_um": 321.3
+  },
+  "pc_WS_0": {
+   "type": "kv3_pc",
+   "parent": "pc_WS_1",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 90,
+   "core_release": {},
+   "source": "pc_WS_1.rst_o_0",
+   "hop_um": 362.9
+  },
+  "pc_WS_1": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WS_2",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 83,
+   "core_release": {},
+   "source": "hg_WS_2.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WS_2": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WS_3",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 76,
+   "core_release": {},
+   "source": "hg_WS_3.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WS_3": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WS_4",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 69,
+   "core_release": {},
+   "source": "hg_WS_4.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WS_4": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WS_5",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 62,
+   "core_release": {},
+   "source": "hg_WS_5.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WS_5": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WS_6",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 55,
+   "core_release": {},
+   "source": "hg_WS_6.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WS_6": {
+   "type": "kv3_pc_v1",
+   "parent": "hg_WS_7",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 53,
+   "core_release": {},
+   "source": "hg_WS_7.rst_o_0",
+   "hop_um": 329.1
+  },
+  "pc_WS_7": {
+   "type": "kv3_pc_v3",
+   "parent": "hg_WS_7",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 51,
+   "core_release": {},
+   "source": "hg_WS_7.rst_o_2",
+   "hop_um": 321.3
+  },
+  "phy_EN_0": {
+   "type": "kv3_phy",
+   "parent": "pc_EN_0",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 91,
+   "source": "pc_EN_0.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_EN_1": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_EN_1",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 84,
+   "source": "pc_EN_1.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_EN_2": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_EN_2",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 77,
+   "source": "pc_EN_2.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_EN_3": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_EN_3",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 70,
+   "source": "pc_EN_3.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_EN_4": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_EN_4",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 63,
+   "source": "pc_EN_4.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_EN_5": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_EN_5",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 56,
+   "source": "pc_EN_5.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_EN_6": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_EN_6",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 54,
+   "source": "pc_EN_6.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_EN_7": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_EN_7",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 52,
+   "source": "pc_EN_7.rst_o_0",
+   "hop_um": 333.8
+  },
+  "phy_ES_0": {
+   "type": "kv3_phy",
+   "parent": "pc_ES_0",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 91,
+   "source": "pc_ES_0.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_ES_1": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_ES_1",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 84,
+   "source": "pc_ES_1.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_ES_2": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_ES_2",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 77,
+   "source": "pc_ES_2.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_ES_3": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_ES_3",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 70,
+   "source": "pc_ES_3.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_ES_4": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_ES_4",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 63,
+   "source": "pc_ES_4.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_ES_5": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_ES_5",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 56,
+   "source": "pc_ES_5.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_ES_6": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_ES_6",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 54,
+   "source": "pc_ES_6.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_ES_7": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_ES_7",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 52,
+   "source": "pc_ES_7.rst_o_0",
+   "hop_um": 333.8
+  },
+  "phy_WN_0": {
+   "type": "kv3_phy",
+   "parent": "pc_WN_0",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 91,
+   "source": "pc_WN_0.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WN_1": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WN_1",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 84,
+   "source": "pc_WN_1.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WN_2": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WN_2",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 77,
+   "source": "pc_WN_2.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WN_3": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WN_3",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 70,
+   "source": "pc_WN_3.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WN_4": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WN_4",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 63,
+   "source": "pc_WN_4.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WN_5": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WN_5",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 56,
+   "source": "pc_WN_5.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WN_6": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WN_6",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 54,
+   "source": "pc_WN_6.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WN_7": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WN_7",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 52,
+   "source": "pc_WN_7.rst_o_0",
+   "hop_um": 333.8
+  },
+  "phy_WS_0": {
+   "type": "kv3_phy",
+   "parent": "pc_WS_0",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 91,
+   "source": "pc_WS_0.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WS_1": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WS_1",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 84,
+   "source": "pc_WS_1.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WS_2": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WS_2",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 77,
+   "source": "pc_WS_2.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WS_3": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WS_3",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 70,
+   "source": "pc_WS_3.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WS_4": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WS_4",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 63,
+   "source": "pc_WS_4.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WS_5": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WS_5",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 56,
+   "source": "pc_WS_5.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WS_6": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WS_6",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 54,
+   "source": "pc_WS_6.rst_o_1",
+   "hop_um": 333.8
+  },
+  "phy_WS_7": {
+   "type": "kv3_phy_v1",
+   "parent": "pc_WS_7",
+   "entry_stages": 1,
+   "depth_K": 0,
+   "release": 52,
+   "source": "pc_WS_7.rst_o_0",
+   "hop_um": 333.8
+  },
+  "pv_N_0": {
+   "type": "kv3_pv_v8",
+   "parent": "hgi_EN_1",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 90,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 91,
+    "pv__u_g1_j.rst_n": 91,
+    "pv__u_g2_j.rst_n": 91,
+    "pv__u_g3_j.rst_n": 91
+   },
+   "source": "hgi_EN_1.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_N_1": {
+   "type": "kv3_pv_v1",
+   "parent": "hgi_EN_2",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 83,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 84,
+    "pv__u_g1_j.rst_n": 84,
+    "pv__u_g2_j.rst_n": 84,
+    "pv__u_g3_j.rst_n": 84
+   },
+   "source": "hgi_EN_2.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_N_2": {
+   "type": "kv3_pv_v2",
+   "parent": "hgi_EN_3",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 76,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 77,
+    "pv__u_g1_j.rst_n": 77,
+    "pv__u_g2_j.rst_n": 77,
+    "pv__u_g3_j.rst_n": 77
+   },
+   "source": "hgi_EN_3.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_N_3": {
+   "type": "kv3_pv_v3",
+   "parent": "hgi_EN_4",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 69,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 70,
+    "pv__u_g1_j.rst_n": 70,
+    "pv__u_g2_j.rst_n": 70,
+    "pv__u_g3_j.rst_n": 70
+   },
+   "source": "hgi_EN_4.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_N_4": {
+   "type": "kv3_pv_v4",
+   "parent": "hgi_EN_5",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 62,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 63,
+    "pv__u_g1_j.rst_n": 63,
+    "pv__u_g2_j.rst_n": 63,
+    "pv__u_g3_j.rst_n": 63
+   },
+   "source": "hgi_EN_5.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_N_5": {
+   "type": "kv3_pv_v5",
+   "parent": "hgi_EN_6",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 55,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 56,
+    "pv__u_g1_j.rst_n": 56,
+    "pv__u_g2_j.rst_n": 56,
+    "pv__u_g3_j.rst_n": 56
+   },
+   "source": "hgi_EN_6.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_N_6": {
+   "type": "kv3_pv_v6",
+   "parent": "pv_N_7",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 45,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 46,
+    "pv__u_g1_j.rst_n": 46,
+    "pv__u_g2_j.rst_n": 46,
+    "pv__u_g3_j.rst_n": 46
+   },
+   "source": "pv_N_7.rst_o_0",
+   "hop_um": 377.3
+  },
+  "pv_N_7": {
+   "type": "kv3_pv_v12",
+   "parent": "hub_C",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 37,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 38,
+    "pv__u_g1_j.rst_n": 38,
+    "pv__u_g2_j.rst_n": 38,
+    "pv__u_g3_j.rst_n": 38
+   },
+   "source": "hub_C.rst_o_6",
+   "hop_um": 377.3
+  },
+  "pv_S_0": {
+   "type": "kv3_pv",
+   "parent": "hgi_ES_1",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 90,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 91,
+    "pv__u_g1_j.rst_n": 91,
+    "pv__u_g2_j.rst_n": 91,
+    "pv__u_g3_j.rst_n": 91
+   },
+   "source": "hgi_ES_1.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_S_1": {
+   "type": "kv3_pv_v1",
+   "parent": "hgi_ES_2",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 83,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 84,
+    "pv__u_g1_j.rst_n": 84,
+    "pv__u_g2_j.rst_n": 84,
+    "pv__u_g3_j.rst_n": 84
+   },
+   "source": "hgi_ES_2.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_S_2": {
+   "type": "kv3_pv_v2",
+   "parent": "hgi_ES_3",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 76,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 77,
+    "pv__u_g1_j.rst_n": 77,
+    "pv__u_g2_j.rst_n": 77,
+    "pv__u_g3_j.rst_n": 77
+   },
+   "source": "hgi_ES_3.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_S_3": {
+   "type": "kv3_pv_v3",
+   "parent": "hgi_ES_4",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 69,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 70,
+    "pv__u_g1_j.rst_n": 70,
+    "pv__u_g2_j.rst_n": 70,
+    "pv__u_g3_j.rst_n": 70
+   },
+   "source": "hgi_ES_4.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_S_4": {
+   "type": "kv3_pv_v4",
+   "parent": "hgi_ES_5",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 62,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 63,
+    "pv__u_g1_j.rst_n": 63,
+    "pv__u_g2_j.rst_n": 63,
+    "pv__u_g3_j.rst_n": 63
+   },
+   "source": "hgi_ES_5.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_S_5": {
+   "type": "kv3_pv_v5",
+   "parent": "hgi_ES_6",
+   "entry_stages": 1,
+   "depth_K": 9,
+   "release": 55,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 56,
+    "pv__u_g1_j.rst_n": 56,
+    "pv__u_g2_j.rst_n": 56,
+    "pv__u_g3_j.rst_n": 56
+   },
+   "source": "hgi_ES_6.rst_o_2",
+   "hop_um": 329.1
+  },
+  "pv_S_6": {
+   "type": "kv3_pv_v6",
+   "parent": "pv_S_7",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 45,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 46,
+    "pv__u_g1_j.rst_n": 46,
+    "pv__u_g2_j.rst_n": 46,
+    "pv__u_g3_j.rst_n": 46
+   },
+   "source": "pv_S_7.rst_o_0",
+   "hop_um": 377.3
+  },
+  "pv_S_7": {
+   "type": "kv3_pv_v7",
+   "parent": "hub_C",
+   "entry_stages": 1,
+   "depth_K": 7,
+   "release": 37,
+   "core_release": {
+    "pv__u_g0_j.rst_n": 38,
+    "pv__u_g1_j.rst_n": 38,
+    "pv__u_g2_j.rst_n": 38,
+    "pv__u_g3_j.rst_n": 38
+   },
+   "source": "hub_C.rst_o_1",
+   "hop_um": 377.3
+  },
+  "sys_SE": {
+   "type": "kv3_sys_SD_v1",
+   "parent": "pc_EN_0",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 96,
+   "core_release": {},
+   "source": "pc_EN_0.rst_o_0",
+   "hop_um": 89.7
+  },
+  "sys_SW": {
+   "type": "kv3_sys_SD",
+   "parent": "pc_WN_0",
+   "entry_stages": 1,
+   "depth_K": 5,
+   "release": 96,
+   "core_release": {},
+   "source": "pc_WN_0.rst_o_0",
+   "hop_um": 89.7
+  },
+  "sys_c": {
+   "type": "kv3_sys_c",
+   "parent": "hgi_WN_0",
+   "entry_stages": 1,
+   "depth_K": 8,
+   "release": 96,
+   "core_release": {},
+   "source": "hgi_WN_0.rst_o_2",
+   "hop_um": 184.7
+  }
+ },
+ "note": "OWNER DECISION 13 (2026-10-24): one root 2-flop synchroniser; neighbour wavefront; release = clocks after die rst_n deasserts at which the partition's taps (and its rst_o) release; the static schedule starts with an explicit start broadcast after reset",
+ "start": {
+  "mode": "broadcast",
+  "die_pin": "start",
+  "sync_stages": 2,
+  "types": {
+   "kv3_hg": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": []
+   },
+   "kv3_hg_v1": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v3": {
+    "in_um": [
+     1269.6,
+     762.976
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      161.504,
+      1511.968
+     ],
+     [
+      "start_o_2",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hgi": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": []
+   },
+   "kv3_hgi_v1": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1121.568,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v2": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hgi_v3": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v4": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1121.568,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v5": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hgi_v6": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1121.568,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v7": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v8": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hroot": {
+    "in_um": [
+     1891.68,
+     10.272
+    ],
+    "outs": []
+   },
+   "kv3_hub_C": {
+    "in_um": [
+     1262.176,
+     8.608
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      182.176,
+      8.608
+     ],
+     [
+      "start_o_1",
+      902.176,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1982.176,
+      8.608
+     ],
+     [
+      "start_o_3",
+      2150.88,
+      504.928
+     ],
+     [
+      "start_o_4",
+      2150.88,
+      1510.752
+     ],
+     [
+      "start_o_5",
+      182.176,
+      1667.488
+     ],
+     [
+      "start_o_6",
+      902.176,
+      1667.488
+     ],
+     [
+      "start_o_7",
+      10.336,
+      502.752
+     ]
+    ]
+   },
+   "kv3_hub_Ei": {
+    "in_um": [
+     10.336,
+     838.112
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      1269.6,
+      504.928
+     ]
+    ]
+   },
+   "kv3_hub_Eo": {
+    "in_um": [
+     10.336,
+     838.112
+    ],
+    "outs": []
+   },
+   "kv3_hub_Wi": {
+    "in_um": [
+     1269.6,
+     840.736
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      10.336,
+      502.752
+     ]
+    ]
+   },
+   "kv3_hub_Wo": {
+    "in_um": [
+     1269.6,
+     840.736
+    ],
+    "outs": []
+   },
+   "kv3_io_cor": {
+    "in_um": [
+     801.888,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_io_cor_v1": {
+    "in_um": [
+     801.888,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_io_ft": {
+    "in_um": [
+     1269.6,
+     10.272
+    ],
+    "outs": []
+   },
+   "kv3_io_ft_v1": {
+    "in_um": [
+     1269.6,
+     10.272
+    ],
+    "outs": []
+   },
+   "kv3_pc": {
+    "in_um": [
+     520.096,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      174.496,
+      8.608
+     ],
+     [
+      "start_o_1",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_pc_v1": {
+    "in_um": [
+     1027.68,
+     1370.784
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      174.496,
+      8.608
+     ],
+     [
+      "start_o_1",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_pc_v3": {
+    "in_um": [
+     1027.68,
+     762.976
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_pv": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v1": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v12": {
+    "in_um": [
+     1262.176,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      902.176,
+      8.608
+     ]
+    ]
+   },
+   "kv3_pv_v2": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v3": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v4": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v5": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v6": {
+    "in_um": [
+     1262.176,
+     1511.968
+    ],
+    "outs": []
+   },
+   "kv3_pv_v7": {
+    "in_um": [
+     1262.176,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      902.176,
+      8.608
+     ]
+    ]
+   },
+   "kv3_pv_v8": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_sys_SD": {
+    "in_um": [
+     1110.944,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_sys_SD_v1": {
+    "in_um": [
+     1110.944,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_sys_c": {
+    "in_um": [
+     10.336,
+     8.608
+    ],
+    "outs": []
+   }
+  },
+  "hard_parts_raw_reset": [
+   "phy_EN_0",
+   "phy_EN_1",
+   "phy_EN_2",
+   "phy_EN_3",
+   "phy_EN_4",
+   "phy_EN_5",
+   "phy_EN_6",
+   "phy_EN_7",
+   "phy_ES_0",
+   "phy_ES_1",
+   "phy_ES_2",
+   "phy_ES_3",
+   "phy_ES_4",
+   "phy_ES_5",
+   "phy_ES_6",
+   "phy_ES_7",
+   "phy_WN_0",
+   "phy_WN_1",
+   "phy_WN_2",
+   "phy_WN_3",
+   "phy_WN_4",
+   "phy_WN_5",
+   "phy_WN_6",
+   "phy_WN_7",
+   "phy_WS_0",
+   "phy_WS_1",
+   "phy_WS_2",
+   "phy_WS_3",
+   "phy_WS_4",
+   "phy_WS_5",
+   "phy_WS_6",
+   "phy_WS_7"
+  ],
+  "bootstrap_types": [
+   "kv3_hub_C",
+   "kv3_hub_Wi",
+   "kv3_sys_c"
+  ],
+  "roles_note": "start_role mission: taps release at max(release[p], S + release[p]); start_role bootstrap: taps (and core resets with role bootstrap) release at release[p] (raw delivered wavefront, boot runs before START), the local START tap start_t<start_tap> at S + release[p] gates the contents' declared mission admission.  One START, no timer, no die-reset bypass.",
+  "note": "OWNER DECISION 13c: START rides the reset wavefront (start_i / start_o_<k> beside arst_n / rst_o_<k>, run relays on the reset relay sites).  Soft partition p's control state (leaves, boundary epochs, hard-core resets) releases at  max(release[p], S + release[p])  clocks, S = the die start pin's rising edge relative to rst_n deassert; i.e. the START offsets ARE the published release offsets.  Hard partitions (prebuilt, no start pin) see the raw reset only."
+ }
+}

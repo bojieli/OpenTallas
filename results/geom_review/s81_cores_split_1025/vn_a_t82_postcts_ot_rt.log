@@ -1,0 +1,12 @@
+OT_RT sinks: 24767 registers, 1 macro clock pins, 0 other (kept on the root)
+OT_RT macro group u_h0: 652 interface registers
+OT_RT H-tree: 4 levels, 16 leaf nodes (taps), region 43.5 x 77.8 um, 31 spine buffers
+OT_RT macro tap u_h0 at (67.4,61.3) from region 2 node (69.5,43.2)
+OT_RT tap loads: 14 729 15 2255 1 1009 13 2057 11 2091 2 1065 0 863 3 1128 5 1064 9 2187 7 1430 8 2183 6 1338 4 983 10 2204 12 1529; macro groups 1
+OT_RT CTS_ARGS -sink_clustering_enable -obstruction_aware -sink_clustering_size 24 -sink_clustering_max_diameter 30 -delay_buffer_derate 1.0 -repair_clock_nets -clk_nets {ot_rt_h4_0_n ot_rt_h4_1_n ot_rt_h4_2_n ot_rt_h4_3_n ot_rt_h4_4_n ot_rt_h4_5_n ot_rt_h4_6_n ot_rt_h4_7_n ot_rt_h4_8_n ot_rt_h4_9_n ot_rt_h4_10_n ot_rt_h4_11_n ot_rt_h4_12_n ot_rt_h4_13_n ot_rt_h4_14_n ot_rt_h4_15_n ot_rt_mtap0_n}
+OT_RT_BAL it0: ot_rt_h4_0=275(270-279,863) ot_rt_h4_1=279(273-285,1009) ot_rt_h4_2=280(272-287,1065) ot_rt_h4_3=279(273-285,1128) ot_rt_h4_4=303(300-307,983) ot_rt_h4_5=294(290-299,1064) ot_rt_h4_6=318(311-324,1338) ot_rt_h4_7=317(312-322,1430) ot_rt_h4_8=364(360-371,2183) ot_rt_h4_9=367(355-372,2187) ot_rt_h4_10=363(359-367,2204) ot_rt_h4_11=366(357-378,2091) ot_rt_h4_12=360(354-367,1529) ot_rt_h4_13=365(358-373,2057) ot_rt_h4_14=350(345-355,729) ot_rt_h4_15=366(355-375,2255) ot_rt_mtap0=318(233-330,653)
+OT_RT_BAL it1: ot_rt_h4_0=365(360-369,863) ot_rt_h4_1=369(363-375,1009) ot_rt_h4_2=368(360-376,1065) ot_rt_h4_3=368(362-374,1128) ot_rt_h4_4=369(366-373,983) ot_rt_h4_5=363(359-368,1064) ot_rt_h4_6=361(355-367,1338) ot_rt_h4_7=361(356-366,1430) ot_rt_h4_8=364(360-371,2183) ot_rt_h4_9=367(355-372,2187) ot_rt_h4_10=363(359-367,2204) ot_rt_h4_11=366(357-378,2091) ot_rt_h4_12=360(354-367,1529) ot_rt_h4_13=365(358-373,2057) ot_rt_h4_14=374(369-378,729) ot_rt_h4_15=365(354-375,2255) ot_rt_mtap0=363(277-374,653)
+OT_RT_BAL done: 29 pad cells; tap means 360..374 ps (window 14 vs 20)
+OT_RT_INS all registers 24768: min 277.0 p50 364.6 max 378.3 (placement RC, TT)
+OT_RT_HOLD_PRE_REPAIR worst -168.81 ps; viol 1718
+[INFO RSZ-0032] Inserted 7012 hold buffers.

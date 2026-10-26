@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Parent-plan footprint and pin table only; native hard-core P&R/signoff still owed",
+  "findings": [
+    "Measured75438.654um2 cells need >125731um2 at60percent.362.88square gives131681.8944um2 and57.29percent preCTS fill.",
+    "All16parent types accept same outline using corridor-aware search. Copy-eg remains north of xfin with17.28um channel; both avoid FT station polyline bands and cap/xrt cores.",
+    "Viewed R0c1xt1 and high-N-rowt8: wide xfin->eg link short and facing, FT corridors remain around cores; parent outlines and buses unchanged.",
+    "Parent die clock/reset/PG obligations unchanged. No core physical signoff claim; owner approval already covers outline growth."
+  ],
+  "images": [
+    "dsdv_slice_iq_C__t1_xf362.png",
+    "dsdv_slice_c1x_C__t1_xf362.png",
+    "dsdv_slice_c1x_C__t8_xf362.png",
+    "dsdv_slice_lepw_mu_C__t1_xf362.png"
+  ],
+  "latency_delta_cycles": 0
+}

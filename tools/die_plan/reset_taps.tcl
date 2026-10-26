@@ -27,7 +27,7 @@ proc rt_is_buf {inst} {
 }
 # Terminal relays can move away from clock pins to clear a hard macro. Use
 # the real reset launch flop, not the clock BTerm, for the final-hop reach.
-proc rt_launch_xy {net seen} {
+proc rt_launch_source {net seen} {
   if {$net eq "NULL" || [dict exists $seen [$net getName]]} { return {} }
   dict set seen [$net getName] 1
   set drivers {}
@@ -36,17 +36,29 @@ proc rt_launch_xy {net seen} {
   }
   if {[llength $drivers] != 1} { return {} }
   set ins [lindex $drivers 0]
-  if {[string match "*DFF*" [[$ins getMaster] getName]]} { return [$ins getLocation] }
+  if {[string match "*DFF*" [[$ins getMaster] getName]]} { return [list $net 0 [$ins getLocation]] }
   if {![rt_is_inv $ins] && ![rt_is_buf $ins]} { return {} }
   set inputs {}
   foreach it [$ins getITerms] {
     if {[[$it getMTerm] getIoType] eq "INPUT"} { lappend inputs [$it getNet] }
   }
   if {[llength $inputs] != 1} { return {} }
-  return [rt_launch_xy [lindex $inputs 0] $seen]
+  set source [rt_launch_source [lindex $inputs 0] $seen]
+  if {[llength $source] != 3} { return {} }
+  lassign $source source_net parity xy
+  return [list $source_net [expr {$parity ^ [rt_is_inv $ins]}] $xy]
+}
+proc rt_launch_xy {net seen} {
+  set source [rt_launch_source $net $seen]
+  if {[llength $source] != 3} { return {} }
+  return [lindex $source 2]
 }
 # Bound kits nest the partition below u_bound. Resolve the actual hierarchical
 # net names once; findNet rst_n_tN alone silently skipped all local resets.
+# ORFS sources PRE_CTS / PRE_GLOBAL_PLACE hooks inside a procedure: rt_tapnet reads rt_named_nets via 'global', so
+# the table must live at global scope ('global' is a no-op at true top level). (canary s81_head 0372e55a4:
+# cts.tcl 6 can't read "rt_named_nets": no such variable)
+global rt_named_nets
 set rt_named_nets {}; set rt_zero_aliases {}
 foreach net [$rt_blk getNets] {
   set name [$net getName]
@@ -57,8 +69,38 @@ foreach net [$rt_blk getNets] {
     dict set rt_named_nets $i $net
   } elseif {[regexp {(^|[/.])rst_n$} $name]} { lappend rt_zero_aliases $net }
 }
-if {![dict exists $rt_named_nets 0] && [llength $rt_zero_aliases] == 1} {
-  dict set rt_named_nets 0 [lindex $rt_zero_aliases 0]
+# Yosys may keep the shared leaf alias rst_n and drop rst_n_t<leaf>,
+# which is often a central tap rather than tap0. Use the generated identity;
+# old kits are recoverable only if exactly one clock tap is missing its net.
+if {[llength $rt_zero_aliases] == 1} {
+  set rt_alias_tap ""
+  if {[info exists rt_leaf_tap]} {
+    set rt_alias_tap $rt_leaf_tap
+  } else {
+    set rt_missing {}
+    foreach tp $rt_taps {
+      set i [lindex $tp 0]
+      if {![dict exists $rt_named_nets $i]} { lappend rt_missing $i }
+    }
+    if {[llength $rt_missing] == 1} { set rt_alias_tap [lindex $rt_missing 0] }
+    if {![llength $rt_taps] && ![dict exists $rt_named_nets 0]} { set rt_alias_tap 0 }
+  }
+  if {$rt_alias_tap ne "" && ![dict exists $rt_named_nets $rt_alias_tap]} {
+    dict set rt_named_nets $rt_alias_tap [lindex $rt_zero_aliases 0]
+  }
+}
+# HEAD-SPINE2 10-25: the leaf alias `wire rst_n = rst_n_t<leaf>` (gen_rtl, reset_tree.leaf_tap) merges into ONE net that
+# keeps the name rst_n, so tap <leaf> had no named net, its FIRM flops (internal-station epoch flops) were never
+# re-pointed and stayed on the leaf relay up to 2 mm away.  Bind the unique alias to the unique tap without a named net.
+set rt_unnamed {}
+foreach bt [$rt_blk getBTerms] {
+  set n [$bt getName]
+  if {$n eq "clk"} { set i 0 } elseif {![regexp {^clk_t([0-9]+)$} $n -> i]} { continue }
+  if {![dict exists $rt_named_nets $i]} { lappend rt_unnamed $i }
+}
+if {[llength $rt_unnamed] == 1 && [llength $rt_zero_aliases] == 1} {
+  dict set rt_named_nets [lindex $rt_unnamed 0] [lindex $rt_zero_aliases 0]
+  puts "OT_RESET_TAPS leaf alias [[lindex $rt_zero_aliases 0] getName] -> tap [lindex $rt_unnamed 0]"
 }
 proc rt_tapnet {blk i} {
   global rt_named_nets
@@ -76,10 +118,11 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     if {$i eq "" && [dict exists $rt_named_nets 0]} { set i 0 }
     if {$i eq ""} { error "OT_RESET_LEAF no reset terminal net (rst_n_t<i> / rst_n) in a pipelined/wavefront kit" }
     set n0 [rt_tapnet $rt_blk $i]
+    set source [rt_launch_source $n0 {}]
     set xy [rt_launch_xy $n0 {}]
     if {[llength $xy] != 2} { error "OT_RESET_LEAF terminal [$n0 getName] has no single reset launch flop" }
     lassign $xy lx ly
-    set seen {}; set todo [list $n0]
+    set seen {}; set todo [list [lindex $source 0]]
     while {[llength $todo]} {
       set net [lindex $todo 0]; set todo [lrange $todo 1 end]
       if {[dict exists $seen [$net getName]]} continue
@@ -126,7 +169,17 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     set i [lindex $tp 0]
     set n0 [rt_tapnet $rt_blk $i]
     if {$n0 eq "NULL"} { lappend rt_bad $i; continue }
-    set todo [list [list $n0 0]]
+    # ORFS insbuf may leave the preserved rst_n_tN name on a dangling
+    # buffered alias. Traverse from its actual launch net, carrying polarity
+    # relative to the named terminal, so functional reset sinks are included.
+    set source [rt_launch_source $n0 {}]
+    if {[llength $source] == 3} {
+      lassign $source source_net source_parity xy
+      set todo [list [list $source_net $source_parity]]
+    } else {
+      if {[info exists rt_leaf_reach_um]} { error "OT_RESET_LEAF terminal [$n0 getName] has no single reset launch flop" }
+      set todo [list [list $n0 0]]
+    }
     while {[llength $todo]} {
       lassign [lindex $todo 0] net par
       set todo [lrange $todo 1 end]
@@ -142,6 +195,13 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
           if {[[$o getMTerm] getIoType] ne "OUTPUT" || [$o getNet] eq "NULL"} continue
           lappend todo [list [$o getNet] [expr {$par ^ $inv}]]
         }
+      }
+    }
+  }
+  if {[info exists rt_leaf_reach_um]} {
+    foreach alias $rt_zero_aliases {
+      if {![dict exists $rt_cls [$alias getName]]} {
+        error "OT_RESET_LEAF shared leaf alias [$alias getName] has no unambiguous reset terminal"
       }
     }
   }
