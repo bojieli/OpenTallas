@@ -7,10 +7,48 @@ including the declared per-corner core insertion. Reroute and remeasure required
 """
 import argparse
 import itertools
+import gzip
+import re
 import json
 from pathlib import Path
 import die_clock_mesh as M
 
+
+interp = M.interp
+TRIM_CELLS = ["BUFx24_ASAP7_75t_R", "BUFx16f_ASAP7_75t_R", "BUFx12f_ASAP7_75t_R", "BUFx12_ASAP7_75t_R",
+              "BUFx10_ASAP7_75t_R", "BUFx8_ASAP7_75t_R", "BUFx6f_ASAP7_75t_R", "BUFx5_ASAP7_75t_R", "BUFx4f_ASAP7_75t_R",
+              "BUFx4_ASAP7_75t_R", "BUFx3_ASAP7_75t_R", "BUFx2_ASAP7_75t_R"]   # 24.7-37.3 ps each into a BUFx24 pin (TT)
+
+def lib_cells(corner, libdir, names=TRIM_CELLS):
+    """{cell: (slews, loads, rise delay rows, rise transition rows, A rise cap)} from the INVBUF liberty."""
+    f = Path(libdir) / f"asap7sc7p5t_INVBUF_RVT_{corner}_nldm_220122.lib.gz"
+    txt = gzip.open(f, "rt").read()
+    out = {}
+    for nm in names:
+        i = txt.index(f"cell ({nm})")
+        j = txt.find("cell (", i + 10)
+        blk = txt[i:j if j > 0 else len(txt)]
+        tab = {}
+        for key in ("cell_rise", "rise_transition"):
+            m = re.search(key + r" \(\w+\) \{\s*index_1 \(\"([^\"]+)\"\);\s*index_2 \(\"([^\"]+)\"\);\s*values \((.*?)\);",
+                          blk, re.S)
+            tab[key] = ([float(v) for v in m.group(1).split(",")], [float(v) for v in m.group(2).split(",")],
+                        [[float(v) for v in r.split(",")] for r in re.findall(r"\"([^\"]+)\"", m.group(3))])
+        cap = float(re.search(r"pin \(A\).*?rise_capacitance : ([\d.]+)", blk, re.S).group(1))
+        out[nm] = (tab, cap)
+    return out
+
+def _bilin(t, slew, load):
+    sl, ld, rows = t
+    return interp(sl, [interp(ld, r, load) for r in rows], slew)
+
+def chain_delay(L, chain, slew, final_load, wire_ff=1.0):
+    d = 0.0
+    for k, c in enumerate(chain):
+        load = (L[chain[k + 1]][1] if k + 1 < len(chain) else final_load) + wire_ff
+        d += _bilin(L[c][0]["cell_rise"], slew, load)
+        slew = _bilin(L[c][0]["rise_transition"], slew, load)
+    return d, slew
 
 def taps(path):
     return {f[1]: tuple(map(float, f[2:5])) for line in path.read_text().splitlines() if (f := line.split()) and f[0] == 'T'}
@@ -26,7 +64,7 @@ def run(a):
     data = json.loads((src/'nets.json').read_text())
     early = M.DC.plan_tap_early(plan)
     arr = {c: taps(src/f'taps_{c}.txt') for c in ('TT','FF')}
-    libs = {c: M.lib_cells(c, a.libdir) for c in ('TT','FF')}
+    libs = {c: lib_cells(c, a.libdir) for c in ('TT','FF')}
     mesh_rc = {c: json.loads((src/f'mesh_{c}.json').read_text()) for c in ('TT','FF')}
     options = [M.BUF, 'BUFx12f_ASAP7_75t_R', 'BUFx4f_ASAP7_75t_R', 'BUFx2_ASAP7_75t_R']
     chains = [[M.BUF]+list(comb) for n in range(a.max_cells) for comb in itertools.combinations_with_replacement(options,n)]
@@ -34,7 +72,7 @@ def run(a):
     # exactly its mesh capacitance, and the final new cell drives the original.
     table = []
     for ch in chains:
-        ds = {c: M.chain_delay(libs[c],ch,40.0,libs[c][M.BUF][1],wire_ff=0.05)[0] for c in ('TT','FF')}
+        ds = {c: chain_delay(libs[c],ch,40.0,libs[c][M.BUF][1],wire_ff=0.05)[0] for c in ('TT','FF')}
         table.append((ch,ds))
     off = lambda t,c: early.get((t['part'],t['tap']),{}).get(c,t.get('early_ps',0.0))
     targets = {c:max(arr[c][t['port']][0]+off(t,c) for t in mesh['taps']) + a.reserve_ps*(1 if c=='TT' else .8) for c in ('TT','FF')}
@@ -57,7 +95,7 @@ def run(a):
         shortlist=sorted(table,key=lambda x:max(abs(x[1][c]-need[c]) for c in ('TT','FF')))[:24]
         actual=[]
         for ch,_ in shortlist:
-            ds={c:M.chain_delay(libs[c],ch,mesh_rc[c]['stubs'][old]['slew_late'],libs[c][M.BUF][1],wire_ff=.05)[0] for c in ('TT','FF')}
+            ds={c:chain_delay(libs[c],ch,mesh_rc[c]['stubs'][old]['slew_late'],libs[c][M.BUF][1],wire_ff=.05)[0] for c in ('TT','FF')}
             actual.append((max(abs(ds[c]-need[c]) for c in ('TT','FF')),len(ch),ch,ds))
         err,_,ch,ds=min(actual)
         base=cells[old]; names=[]

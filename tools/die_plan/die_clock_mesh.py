@@ -856,8 +856,10 @@ def cmd_stubsta(a):
     outs = [t["port"] for t in M["taps"]]
     L = ["module die_stubs (" + ", ".join(ins + outs) + ");"] + [f"  input {p};" for p in ins] + \
         [f"  output {p};" for p in outs] + [f"  wire {w};" for w in sorted(set(nets) - set(outs))]
+    cell_info = json.loads((d / "place.json").read_text())
     for c, port, y in cells:
-        L.append(f"  {BUF} {c} (.A({port or in_net[c]}), .Y({y}));")
+        lib = cell_info[c].get("lib", BUF)
+        L.append(f"  {lib} {c} (.A({port or in_net[c]}), .Y({y}));")
     L.append("endmodule")
     (d / "stubs.v").write_text("\n".join(L) + "\n")
     (d / "stub_nets.txt").write_text("\n".join(sorted(set(nets))) + "\n")
@@ -938,6 +940,11 @@ def cmd_report(a):
             arr[f[1]] = (float(f[2]), float(f[3]), float(f[4]))   # T port late early slew
         late = {p: v[0] for p, v in arr.items()}
         early = {p: v[1] for p, v in arr.items()}
+        core_offsets = DC.plan_tap_early(P)
+        for tap in M["taps"]:
+            offset = core_offsets.get((tap["part"], tap["tap"]), {}).get(corner, tap.get("early_ps", 0.0))
+            late[tap["port"]] += offset
+            early[tap["port"]] += offset
         slew = {p: v[2] for p, v in arr.items()}
 
         def dmg(pa, pb):
