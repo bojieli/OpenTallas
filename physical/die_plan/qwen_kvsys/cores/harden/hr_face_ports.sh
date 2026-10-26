@@ -84,3 +84,12 @@ equiv_status -assert
 YS
 set +e; $Y -q -l $O/eq_v.log $O/eq_v.ys > /dev/null 2>&1; echo "emitted_v rc=$?" >> $O/eq_rc.txt; set -e
 cat $O/eq_rc.txt
+# The job status must report failed or incomplete proofs; the generator checks
+# the same receipt before consuming the emitted RTL.
+python3 - "$O/eq_rc.txt" <<'PY'
+import pathlib, sys
+actual = pathlib.Path(sys.argv[1]).read_text().split()
+expected = ['post', 'rc=0', 'mut', 'rc=1', 'emitted_v', 'rc=0']
+if actual != expected:
+    raise SystemExit('HR face proof FAIL or incomplete: ' + ' '.join(actual))
+PY
