@@ -159,6 +159,7 @@ def census(P):
                         layers = list(b.get("layers", []))
             length = sum(IS.seg_len(a, b) for a, b in zip(pts, pts[1:]))
             paths.append(dict(id=f"{part}:istn{k}", kind="internal", bits=bits, ports=0, src=f"{part}.{st.get('conn')}",
+                              group=f"{part}|{st.get('launch')}|{st['from_um'][0]},{st['from_um'][1]}",
                               dst=f"{part}.{st.get('capture', '')}", length_um=r3(length),
                               legs=[dict(part=part, slot=f"istn{k}", pts=pts, band_um=band, layers=layers,
                                          bit_sites=None)]))
@@ -1591,7 +1592,8 @@ def static_ir(files):
 def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entries=None, sites_json=None,
         reach=None, detour=405.0, core_obs_top="M5", lower_pg_frac=0.25, fill_max=0.6, bay_fill=0.5,
         track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, skew_gate_ps=80.0, render=True, log=print,
-        core_islands=None, tree_lattice=None, tree_comm_form="die", onramp_bays=False, drop_mesh_early=False):
+        core_islands=None, tree_lattice=None, tree_comm_form="die", onramp_bays=False, drop_mesh_early=False,
+        tree_roads=False):
     reach = float(reach or P.reach)
     out = Path(out)
     (out / "slices").mkdir(parents=True, exist_ok=True)
@@ -1644,10 +1646,21 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
 
     # ---- roads + rest stops
     segs_all = []                         # (bits, path, leg index, a, b, band, layers, part)
+    seg_group = {}                        # segs_all index -> multi-sink tree group (PATH-HBM-R8 --tree-roads)
     bays_die = []                         # dict(part, xy, kind, bits, horiz, band, path, rect)
     gap_fail, in_core = [], []
     gap_max = (0.0, None)
     route_cache = {}
+    seen_stop = set()                     # PATH-HBM-R8 --tree-roads: one rest stop per (tree, site)
+
+    def _dup_stop(pth, xy):
+        if not tree_roads or not pth.get("group"):
+            return False
+        key = (pth["group"], round(xy[0], 1), round(xy[1], 1))
+        if key in seen_stop:
+            return True
+        seen_stop.add(key)
+        return False
     for pth in paths:
         for li, lg in enumerate(pth["legs"]):
             part = lg["part"]
@@ -1661,7 +1674,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                 # station register at a (k > 0) -> station bay
                 if 0 < k:
                     grp, face = station_sites(P, part, a, lg["bit_sites"])
-                    if not face:          # a face register is the partition's registered pin (rest stop, no bay)
+                    if not face and not _dup_stop(pth, a):   # face register = registered pin (no bay)
                         bays_die.append(dict(part=part, xy=a, kind="station", bits=pth["bits"], band=band,
                                              horiz=abs(b[1] - a[1]) < abs(b[0] - a[0]), path=pth["id"],
                                              sites=grp))
@@ -1693,6 +1706,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                             horiz = abs(p1[1] - p0[1]) < 1e-9
                             break
                         acc += L
+                    if _dup_stop(pth, xy):
+                        continue
                     bays_die.append(dict(part=part, xy=xy, kind="repeater", bits=pth["bits"], band=band,
                                          horiz=horiz, path=pth["id"], sites=None))
                 gap_max = max(gap_max, (T - prev, pth["id"]))
@@ -1713,13 +1728,18 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                 for p0, p1 in zip(route, route[1:]):
                     if IS.seg_len(p0, p1) > 1e-6:
                         segs_all.append((pth["bits"], pth["id"], li, p0, p1, band, lg["layers"], part))
+                        seg_group[len(segs_all) - 1] = pth.get("group")
     log(f"roads: {len(segs_all)} segments, {len(bays_die)} rest stops, {len(gap_fail)} reach gaps")
 
     # ---- layer assignment (greedy by bits)
     roads = []
     m89_segs = []
     blocked = []
-    for bits, pid, li, a, b, band, decl, part in sorted(segs_all, key=lambda s: -s[0]):
+    tree_cells = {}                       # (group, layer) -> set of flat gcell ids already carrying that tree
+    order = sorted(range(len(segs_all)), key=lambda k: -segs_all[k][0])
+    for kseg in order:
+        bits, pid, li, a, b, band, decl, part = segs_all[kseg]
+        grp = seg_group.get(kseg) if tree_roads else None
         sl, horiz = grid.band(a, b, band)
         d = "H" if horiz else "V"
         top = lnum(P.type_top_layer(P.parts[part]["type"]))
@@ -1732,6 +1752,12 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             add = grid.load(L, sl, horiz, bits)
             if add is None:
                 continue
+            if grp is not None and (grp, L) in tree_cells:     # a tree branch shares the gcells it already uses
+                i0, j0, i1, j1 = sl
+                jj, ii = grid.np.mgrid[j0:j1, i0:i1]
+                fl_ = (jj * grid.nx + ii).ravel()
+                have = grid.np.isin(fl_, grid.np.fromiter(tree_cells[(grp, L)], dtype=grid.np.int64))
+                add = grid.np.where(have.reshape(add.shape), 0.0, add).astype(grid.np.float32)
             u = grid.worst(L, sl, add)
             if best is None or (u <= track_max and best[1] > track_max) or (u < best[1] and best[1] > track_max):
                 best = (L, u, add)
@@ -1742,6 +1768,10 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             continue
         L, u, add = best
         grid.commit(L, sl, add)
+        if grp is not None:
+            i0, j0, i1, j1 = sl
+            jj, ii = grid.np.nonzero(add > 0)
+            tree_cells.setdefault((grp, L), set()).update(((jj + j0) * grid.nx + (ii + i0)).tolist())
         roads.append(dict(path=pid, part=part, layer=L, bits=bits, a=[r3(v) for v in a], b=[r3(v) for v in b],
                           band_um=r3(band), leg=li))
         if lnum(L) >= 8:
@@ -2203,7 +2233,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     write_slices.extra = dict(phy=phy, die_tree=tree_comm, clock_reps=rep_by_type, reach=reach)
     write_slices(P, out / "slices", bays, pins, roads, islands, entry, core_types, in_core, gates, common,
                  plan_sha, mp_sha)
-    (out / "master_plan.json").write_text(json.dumps(dict(mp, paths=[{k: v for k, v in p.items() if k != "legs"}
+    (out / "master_plan.json").write_text(json.dumps(dict(mp, paths=[{k: v for k, v in p.items() if k not in ("legs", "group")}
                                                                     for p in paths]), indent=1, default=str))
     (out / "gates.json").write_text(json.dumps(dict(die=P.name, verdict=verdict, plan_sha256=plan_sha,
                                                     master_plan_sha256=mp_sha, gates=gates), indent=1, default=str))
@@ -2473,6 +2503,8 @@ def add_args(p):
     p.add_argument("--onramp-bays", action="store_true", help="opt-in R4 12.7a on-ramp repeater bays on M8/M9 legs")
     p.add_argument("--drop-mesh-early", action="store_true", help="opt-in R4 12.8: drop input-mesh early tap offsets "
                                                                   "from the plan (listed for the clock owner)")
+    p.add_argument("--tree-roads", action="store_true", help="opt-in PATH-HBM-R8: route each multi-sink internal "
+                   "station group (one launch) as ONE tree: shared gcells counted once per layer, one rest stop per site")
     p.add_argument("--tree-commensurate", default="die", choices=("die", "regional"),
                    help="tree_commensurate gate form: die-wide core lattice (R5 default) or REGIONAL (MASTER-PLAN-R6, "
                         "COORD 13:05: per clock region tree lattice == region island lattice)")
@@ -2499,7 +2531,8 @@ def cmd(a):
                     render=not a.no_render,
                     core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None,
                     tree_lattice=parse_tree_lattice(a.tree_lattice) if a.tree_lattice else None,
-                    tree_comm_form=a.tree_commensurate, onramp_bays=a.onramp_bays, drop_mesh_early=a.drop_mesh_early)
+                    tree_comm_form=a.tree_commensurate, onramp_bays=a.onramp_bays, drop_mesh_early=a.drop_mesh_early,
+                    tree_roads=a.tree_roads)
     print(json.dumps(dict(die=mp["die"], verdict=mp["verdict"], gates=mp["gates"], census=mp["census"]), indent=1))
     return 0 if mp["verdict"] == "PASS" else 1
 

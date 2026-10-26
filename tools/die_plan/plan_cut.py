@@ -38,7 +38,7 @@ def _nets(t):
     out = []
     for (launch, _), ss in src.items():
         out.append(dict(bits=max(s["bits"] for s in ss), pts=[list(ss[0]["from_um"])] + [list(s["to_um"]) for s in ss],
-                        face=str(launch or "").startswith("face"), sinks=len(ss)))
+                        face=str(launch or "").startswith("face"), sinks=len(ss), sink_bits=[s["bits"] for s in ss]))
     return out
 
 
@@ -47,12 +47,28 @@ def _cores(t):
                         h["origin_um"][1] + h["outline_um"][1]) for h in t.get("hard_cores", [])}
 
 
-def _cut_profile(W, H, nets, cores, lower_pg_frac=0.25, blocked=True):
+def _cut_profile(W, H, nets, cores, lower_pg_frac=0.25, blocked=True, per_sink=False):
+    """per_sink (PATH-HBM-R8 opt-in): a net with slices of different width (a face bus feeding several cores)
+    crosses a cut with the WIDEST SLICE WHOSE OWN source->sink span crosses it (max over sinks; still a lower
+    bound), instead of the widest slice of the whole net wherever its endpoints are."""
     import numpy as np
     X = np.arange(STEP, W - 1e-6, STEP)
     Y = np.arange(STEP, H - 1e-6, STEP)
     dx, dy = np.zeros(len(X)), np.zeros(len(Y))
     dxc, dyc = np.zeros(len(X)), np.zeros(len(Y))
+    if per_sink:
+        for n in nets:
+            a = n["pts"][0]
+            mx, my = np.zeros(len(X)), np.zeros(len(Y))
+            for p, b in zip(n["pts"][1:], n["sink_bits"]):
+                mx = np.maximum(mx, np.where((X > min(a[0], p[0])) & (X < max(a[0], p[0])), b, 0))
+                my = np.maximum(my, np.where((Y > min(a[1], p[1])) & (Y < max(a[1], p[1])), b, 0))
+            dx += mx
+            dy += my
+            if not n["face"]:
+                dxc += mx
+                dyc += my
+        nets = ()
     for n in nets:
         xs = [p[0] for p in n["pts"]]
         ys = [p[1] for p in n["pts"]]
