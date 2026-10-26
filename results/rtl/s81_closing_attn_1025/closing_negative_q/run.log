@@ -1,0 +1,14 @@
+SC MISMATCH job 0 row 0 head 0 got 00000000 f0 exp 42f073c8
+SC MISMATCH job 0 row 0 head 1 got 00000000 f0 exp 44beb1ac
+SC MISMATCH job 0 row 0 head 2 got 00000000 f0 exp 429f87e0
+SC MISMATCH job 0 row 0 head 3 got 00000000 f0 exp 448ff764
+SC MISMATCH job 0 row 0 head 4 got 00000000 f0 exp c35dc808
+SC MISMATCH job 0 row 0 head 5 got 00000000 f0 exp c4742dee
+SC MISMATCH job 0 row 0 head 6 got 00000000 f0 exp c425ac62
+V41XJOB job=0 T=32 qk_first=23 qk_last=30 qk_beats=8 pv_first=90 pv_last=97 pv_beats=8 last_score=80 last_p=89 last_pv=172
+V41XJOB job=1 T=128 qk_first=51 qk_last=82 qk_beats=32 pv_first=142 pv_last=173 pv_beats=32 last_score=132 last_p=165 last_pv=248
+V41XATTN jobs=2 sc_checked=2560 sc_errors=2560 pv_checked=1024 pv_errors=0 faults=0 lat_score_max=23 lat_score_min=23 lat_pv_max=83 cycles=248 timeout=0
+V41XPOS job=0 accept=4 su_start=80 p_first=82 p_last=89
+V41XPOS job=1 accept=32 su_start=132 p_first=134 p_last=165
+V41XILV su_l0=0 qk_beats=40 pv_beats=40 busy=80 cycles=248
+- /srv/opentallas-scratch2/claude/wt/codex-attn-profile-2224/rtl/test/tb_hdc_v41x_attn_s.sv:335: Verilog $finish

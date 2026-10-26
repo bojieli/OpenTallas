@@ -1,0 +1,7 @@
+V41XJOB job=0 T=32 qk_first=23 qk_last=30 qk_beats=8 pv_first=78 pv_last=85 pv_beats=8 last_score=68 last_p=77 last_pv=137
+V41XJOB job=1 T=128 qk_first=51 qk_last=90 qk_beats=32 pv_first=138 pv_last=169 pv_beats=32 last_score=128 last_p=161 last_pv=221
+V41XATTN jobs=2 sc_checked=2560 sc_errors=0 pv_checked=1024 pv_errors=0 faults=0 lat_score_max=11 lat_score_min=11 lat_pv_max=60 cycles=221 timeout=0
+V41XPOS job=0 accept=4 su_start=68 p_first=70 p_last=77
+V41XPOS job=1 accept=32 su_start=128 p_first=130 p_last=161
+V41XILV su_l0=0 qk_beats=40 pv_beats=40 busy=80 cycles=221
+- /srv/opentallas-scratch2/claude/wt/codex-attn-profile-2224/rtl/test/tb_hdc_v41x_attn_s.sv:335: Verilog $finish

@@ -10,9 +10,11 @@ SOURCES=['rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv','rtl/hdc/v41x/ot_hdc_v41x_att
 TB='rtl/test/tb_hdc_v41x_attn_s.sv';HARNESS='rtl/test/hdc_v41_harness.cpp'
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--profile',choices=['fg3','closing'],required=True);ap.add_argument('--jobs',type=int,default=8);a=ap.parse_args();o=a.out.resolve();o.mkdir(parents=True,exist_ok=True)
+ ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--profile',choices=['fg3','closing'],required=True);ap.add_argument('--jobs',type=int,default=8);ap.add_argument('--reuse-binary',type=Path);ap.add_argument('--mutate-input',choices=['q','p']);a=ap.parse_args();o=a.out.resolve();o.mkdir(parents=True,exist_ok=True)
  rng=np.random.default_rng(20261025);js=[C.random_job(rng,16,32,t,min(t,64),'coarse') for t in (32,128)]
  counts,stats=C.write_jobs(o/'vectors',js,16,32,32)
+ if a.mutate_input:
+  f=o/'vectors'/f'{a.mutate_input}.hex';f.write_text(''.join('0'*len(line)+'\n' for line in f.read_text().splitlines()))
  params=dict(H=16,D=32,TD=32,NL=4,TROWS=640,SRAM_MACRO=0,PWORDS=2,ILV=1,REPL=2,NSTAGE=2,SC_CRED=0,PV_CRED=0)
  params.update({('NJOBMAX' if k=='NJOB' else k):1<<max(4,int(v-1).bit_length()) for k,v in counts.items()})
  closing=a.profile=='closing';params.update(FPL=4 if closing else 3,FML=6 if closing else 3,TILE_S=int(closing),NARROW=int(closing),MFAN=int(closing),TRX=int(closing),F12=int(closing),FPLX=5 if closing else 0)
@@ -25,12 +27,16 @@ def main():
  cmd=[v,'--cc','--exe','--build','--hierarchical','--top-module','tb_hdc_v41x_attn','--prefix','Vtb','-Mdir',str(o/'obj'),'-j',str(a.jobs),'-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD','--output-split','20000','--output-split-cfuncs','2000','--unroll-count','16','--unroll-limit','131072','-MAKEFLAGS','OPT_SLOW=-O0','-CFLAGS','-O1',*[f'-G{k}={v}' for k,v in params.items()],*[f'-D{d}' for d in defs],str(hier),*[str(ROOT/s) for s in sources],str(ROOT/TB),str(ROOT/HARNESS)]
  rec=dict(profile=a.profile,params=params,defines=defs,source_commit=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'],text=True).strip(),source_sha256={s:sha(ROOT/s) for s in sources+[TB,HARNESS]},scope='actual production engine shape; isolated arithmetic/cycle qualification, not a full service or die token gate',counts=counts)
  (o/'record.json').write_text(json.dumps(rec,indent=2)+'\n')
- with (o/'build.log').open('w') as f:r=subprocess.run(cmd,cwd=ROOT,stdout=f,stderr=subprocess.STDOUT)
- if r.returncode:raise SystemExit(r.returncode)
- exe=o/'obj/Vtb'
+ if not a.reuse_binary:
+  with (o/'build.log').open('w') as f:r=subprocess.run(cmd,cwd=ROOT,stdout=f,stderr=subprocess.STDOUT)
+  if r.returncode:raise SystemExit(r.returncode)
+ exe=a.reuse_binary.resolve() if a.reuse_binary else o/'obj/Vtb'
+ rec['binary_sha256']=sha(exe);rec['mutate_input']=a.mutate_input
  with (o/'run.log').open('w') as f:r=subprocess.run([str(exe),f'+dir={o/"vectors"}','+seed=1','+njob=2'],stdout=f,stderr=subprocess.STDOUT)
  text=(o/'run.log').read_text();m=C.ENG_RE.search(text)
  rec['returncode']=r.returncode;rec['summary']=m.group(0) if m else None;rec['jobs']=[dict(zip(('job','T','qk_first','qk_last','qk_beats','pv_first','pv_last','pv_beats','last_score','last_p','last_pv'),map(int,x.groups()))) for x in C.JOB_RE.finditer(text)]
  rec['pass']=bool(m and int(m.group(3))==0 and int(m.group(5))==0 and int(m.group(11))==0 and int(m.group(1))==2)
+ if a.mutate_input:
+  rec['negative_control_caught']=bool(m and int(m.group(3 if a.mutate_input=='q' else 5))>0);rec['pass']=rec['negative_control_caught']
  (o/'record.json').write_text(json.dumps(rec,indent=2)+'\n');print(json.dumps(rec['summary']));raise SystemExit(0 if rec['pass'] else 1)
 if __name__=='__main__':main()

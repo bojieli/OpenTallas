@@ -1,0 +1,44 @@
+{
+  "scope": "Isolated actual production attention-engine shape arithmetic and logical cycles; not a whole service/fabric/token/STA gate",
+  "per_job": [
+    {
+      "job": 0,
+      "T": 0,
+      "qk_first": 0,
+      "qk_last": 0,
+      "qk_beats": 0,
+      "pv_first": 12,
+      "pv_last": 12,
+      "pv_beats": 0,
+      "last_score": 12,
+      "last_p": 12,
+      "last_pv": 35
+    },
+    {
+      "job": 0,
+      "T": 0,
+      "qk_first": 0,
+      "qk_last": -8,
+      "qk_beats": 0,
+      "pv_first": 4,
+      "pv_last": 4,
+      "pv_beats": 0,
+      "last_score": 4,
+      "last_p": 4,
+      "last_pv": 27
+    }
+  ],
+  "score_latency": {
+    "fg3": 11,
+    "closing": 23
+  },
+  "max_pv_latency": {
+    "fg3": 60,
+    "closing": 83
+  },
+  "finish_cycles": {
+    "fg3": 221,
+    "closing": 248
+  },
+  "next_required": "Derive actual full service programme from selected closing engine and full source/path dates; legacy lower_svc PVS0/KPV/PV_LAT/PIO0/P_ARR are not proven by this isolated cut. TILE_S changes qk last beat, so avoid one uniform timestamp offset."
+}
