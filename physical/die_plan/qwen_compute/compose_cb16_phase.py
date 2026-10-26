@@ -32,18 +32,25 @@ def compose(args):
                 current[old['id']]=copy.deepcopy(old)
     table['members']=[current[m['id']] for m in table['members']]
     effective=args.out/'effective_r8.json';effective.write_text(json.dumps(table,indent=1)+'\n')
-    support=module(HERE/'apply_r8_support_classes.py','support')
-    cbtypes={next(p['type'] for p in raw['partitions'] if p['name']==m['sink_part']) for m in table['members'] if m['sink'].startswith('c16_')}
-    sr=copy.deepcopy(report);sr['type_splits']=[s for s in report.get('type_splits',[]) if s['type'] not in cbtypes]
-    raw,smanifest=support.apply(raw,sr,table)
-    dag=module(HERE/'bind/cb16_dag.py','dag');overlay=dag.align(args.bound,effective,args.out/'dag_overlay.json')
-    phase=module(HERE/'apply_cb16_phase_types.py','phase');manifest=phase.classify(raw,table,overlay);raw=phase.apply(raw,manifest)
     ancestry={}
     for path in args.family_manifest:
         old=json.loads(path.read_text());ancestry.update(old.get('family_ancestry',{}));ancestry.update({c['type']:c['family'] for c in old['classes'] if c['type']!=c['family']})
     if args.landing_table:
         landing=json.loads(args.landing_table.read_text());collector=landing.get('landing_table',landing)['collector']
         ancestry.update({name:v['base_type'] for name,v in collector['types'].items() if name!=v['base_type']})
+    support=module(HERE/'apply_r8_support_classes.py','support')
+    cbtypes={next(p['type'] for p in raw['partitions'] if p['name']==m['sink_part']) for m in table['members'] if m['sink'].startswith('c16_')}
+    sr=copy.deepcopy(report);sr['type_splits']=[s for s in report.get('type_splits',[]) if s['type'] not in cbtypes]
+    def support_root(name):
+        seen=set()
+        while name in ancestry:
+            if name in seen:raise ValueError('cyclic support ancestry')
+            seen.add(name);name=ancestry[name]
+        return name
+    allowed={x['type'] for x in sr['type_splits'] if support_root(x['type']) in ('sle_ctl','sle_fw_v1')}
+    raw,smanifest=support.apply(raw,sr,table,allowed)
+    dag=module(HERE/'bind/cb16_dag.py','dag');overlay=dag.align(args.bound,effective,args.out/'dag_overlay.json')
+    phase=module(HERE/'apply_cb16_phase_types.py','phase');manifest=phase.classify(raw,table,overlay);raw=phase.apply(raw,manifest)
     phase.refresh_parent_ids(raw,manifest,ids,ancestry)
     (args.out/'support_classes.json').write_text(json.dumps(smanifest,indent=1)+'\n')
     (args.out/'phase_classes.json').write_text(json.dumps(manifest,indent=1)+'\n')
