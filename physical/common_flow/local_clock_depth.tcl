@@ -23,7 +23,7 @@ proc ::ot_local_depth::sinks {net {depth 0}} {
   }
   return $out
 }
-proc ::ot_local_depth::site_near {x y radius} {
+proc ::ot_local_depth::site_near {x y radius {buffer_master ""}} {
   # Reuse the planned-clock runtime's actual row/site/orientation/footprint guard.
   # This works on occupied geometry, never on a guessed utilization estimate.
   set candidates {}
@@ -42,7 +42,10 @@ proc ::ot_local_depth::site_near {x y radius} {
   }
   foreach c [lsort -integer -index 0 $candidates] {
     lassign $c d xx yy orient
-    if {![catch {::ot_dtsh::check_site $xx $yy $orient}]} { return [list $xx $yy $orient] }
+    if {$buffer_master ne ""} {set saved_master $::ot_dtsh::master;set ::ot_dtsh::master $buffer_master}
+    set illegal [catch {::ot_dtsh::check_site $xx $yy $orient}]
+    if {$buffer_master ne ""} {set ::ot_dtsh::master $saved_master}
+    if {!$illegal} { return [list $xx $yy $orient] }
   }
   error "OT_LOCAL_DEPTH no free legal buffer footprint within compact radius"
 }
@@ -55,8 +58,11 @@ proc ::ot_local_depth::pad_short_taps {tap_list} {
   if {![string is integer -strict $target] || $target < 1 || $target > 3 || ![string is integer -strict $maxs] || $maxs < 1 || $maxs > 16 || $radius_um <= 0 || $radius_um > 10} {
     error "OT_LOCAL_DEPTH requires depth1..3, sinks1..16, compact radius(0,10]um"
   }
-  set blk $::ot_dtsh::blk; set master $::ot_dtsh::master
-  if {![string match BUF* [$master getName]]} { error "OT_LOCAL_DEPTH only non-inverting BUF masters are allowed" }
+  set blk $::ot_dtsh::blk
+  # The local compensator is always same-polarity BUF24, independent of an
+  # experimental inverted trunk master and its different footprint.
+  set master [[ord::get_db] findMaster BUFx24_ASAP7_75t_R]
+  if {$master eq "NULL" || $master eq ""} { error "OT_LOCAL_DEPTH BUFx24 master missing" }
   set dbu [$blk getDbUnitsPerMicron]; set radius [expr {int($radius_um*$dbu)}]
   # Local CTS has added cells since the runtime captured the original placement.
   # Refresh ONLY the occupancy index; original placement/data audits stay intact.
@@ -84,7 +90,7 @@ proc ::ot_local_depth::pad_short_taps {tap_list} {
     for {set j 0} {$j < $stages} {incr j} {
       set pn ot_local_depth_${name}_$j
       if {[$blk findInst $pn] ne "NULL"} {error "OT_LOCAL_DEPTH repeated application $pn"}
-      lassign [site_near $x $y $radius] xx yy orient
+      lassign [site_near $x $y $radius $master] xx yy orient
       set pi [odb::dbInst_create $blk $master $pn]
       $pi setOrient $orient; $pi setLocation $xx $yy; $pi setPlacementStatus FIRM
       if {[lrange [::ot_dtsh::box $pi] 0 1] ne [list $xx $yy]} {error "OT_LOCAL_DEPTH actual footprint moved from checked site"}
@@ -94,18 +100,30 @@ proc ::ot_local_depth::pad_short_taps {tap_list} {
     }
     set prev [odb::dbNet_create $blk ot_local_depth_${name}_in]
     $prev setSigType CLOCK
+    set new_root $prev;set new_nets [list $prev]
+    set tap_dnt [$inst isDoNotTouch];set old_dnt [$old isDoNotTouch]
+    if {$tap_dnt} {$inst setDoNotTouch false}
+    if {$old_dnt} {$old setDoNotTouch false}
     $op disconnect; $op connect $prev
     set j 0
     foreach pi $pads {
       set ips [::ot_dtsh::sigpins $pi INPUT];set ops [::ot_dtsh::sigpins $pi OUTPUT]
       if {[llength $ips]!=1 || [llength $ops]!=1} {error "OT_LOCAL_DEPTH buffer pin interface changed"}
       [lindex $ips 0] connect $prev
-      if {$j == $stages-1} {set next $old} else {set next [odb::dbNet_create $blk ot_local_depth_${name}_$j];$next setSigType CLOCK}
+      if {$j == $stages-1} {set next $old} else {set next [odb::dbNet_create $blk ot_local_depth_${name}_$j];$next setSigType CLOCK;lappend new_nets $next}
       [lindex $ops 0] connect $next
       set prev $next;incr j;incr made
       lassign [$pi getLocation] xx yy
       lappend records [list [$pi getName] $name $count $mind $maxd $stages [expr {$xx/double($dbu)}] [expr {$yy/double($dbu)}]]
     }
+    if {$tap_dnt} {$inst setDoNotTouch true}
+    if {$old_dnt} {$old setDoNotTouch true}
+    foreach pi $pads {$pi setDoNotTouch true}
+    foreach n $new_nets {$n setDoNotTouch true}
+    # The tap's declared local root now includes the compensator.  Preserve
+    # output_pin and the existing tree, so the full runtime audit still applies.
+    dict set ::ot_dtsh::taps $name output $new_root
+    unset -nocomplain ::ot_dtsh::sink_pins
     puts "OT_LOCAL_DEPTH $name sinks$count prior_depth$mind..$maxd added$stages compact_radius${radius_um}um"
   }
   if {[info exists ::env(OT_DTAP_PAD_OUT)]} {
