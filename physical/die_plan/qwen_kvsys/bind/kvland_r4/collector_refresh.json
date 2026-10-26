@@ -1,0 +1,46 @@
+{
+ "fixes": [
+  {
+   "type": "kv3_hg_v1p4",
+   "source": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+   "xy_um": [
+    306.72,
+    21.6
+   ],
+   "old_tap": 1,
+   "old_hop_um": 423.36,
+   "new_tap": 16,
+   "new_hop_um": 160.38400000000001,
+   "data_cycles_added": 0
+  },
+  {
+   "type": "kv3_hgi_v4__clc1fb42d2",
+   "source": "ft12_i",
+   "xy_um": [
+    263.52,
+    21.6
+   ],
+   "old_tap": 0,
+   "old_hop_um": 408.24,
+   "new_tap": 16,
+   "new_hop_um": 228.48,
+   "data_cycles_added": 0
+  },
+  {
+   "type": "kv3_hgi_v7__clcaa41f88",
+   "source": "ft13_i",
+   "xy_um": [
+    263.52,
+    21.6
+   ],
+   "old_tap": 0,
+   "old_hop_um": 408.24,
+   "new_tap": 16,
+   "new_hop_um": 228.48,
+   "data_cycles_added": 0
+  }
+ ],
+ "boot_ready_before": 259,
+ "boot_ready_after": 259,
+ "data_cycles_added": 0
+}
