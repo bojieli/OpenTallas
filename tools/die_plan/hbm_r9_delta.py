@@ -54,11 +54,19 @@ def _on(rect, p, tol=0.5):
     return None
 
 
-def plan_quadrants(t, S, tree_re=r"coll_q\w*_body", tree_bits=2470):
-    """topology only: replicate / distribute, segment assignment, rewritten station list with abstract ends."""
+def plan_quadrants(t, S, tree_re=r"coll_q\w*_body", tree_bits=2470, bounds=None, dist_by_x=False):
+    """topology only: replicate / distribute, segment assignment, rewritten station list with abstract ends.
+    bounds (PATH-HBM-R10 opt-in): S-1 interior segment boundaries (x um) instead of W/S equal widths.
+    dist_by_x (PATH-HBM-R10 opt-in): a distributed instance starts in the segment of its own centre x (its lanes were
+    assigned to it by position, so no count/S balance is forced) before the swap improvement."""
     W, H = t["outline_um"]
     seg_w = W / S
     seg = lambda x: min(S - 1, max(0, int(x // seg_w)))  # noqa: E731
+    if bounds is not None:
+        import bisect
+        bounds = [float(b) for b in bounds]
+        assert len(bounds) == S - 1 and bounds == sorted(bounds)
+        seg = lambda x: bisect.bisect_right(bounds, x)  # noqa: E731
     hc = {h["inst"]: h for h in t["hard_cores"]}
     rect = {i: HR._core_rect(h) for i, h in hc.items()}
     cnt = collections.Counter(h["module"] for h in hc.values())
@@ -85,6 +93,8 @@ def plan_quadrants(t, S, tree_re=r"coll_q\w*_body", tree_bits=2470):
         per = len(L) / S
         for n, i in enumerate(L):
             segof[i] = min(S - 1, int(n // per))
+            if dist_by_x:
+                segof[i] = seg(hc[i]["origin_um"][0] + hc[i]["outline_um"][0] / 2)
     adj = collections.defaultdict(collections.Counter)    # inst -> {('F',k)|inst: bits}
     for s, (a, b) in zip(st0, ends):
         for me, ot in ((a, b), (b, a)):
@@ -200,8 +210,11 @@ def plan_quadrants(t, S, tree_re=r"coll_q\w*_body", tree_bits=2470):
     sego = dict(segof)
     for (m, k), n in copy_name.items():
         sego[n] = k
-    return dict(S=S, seg_w=seg_w, cores=cores, segof=sego, stations=stn, rep_mod=rep_mod, share=share,
-                swaps=swaps, chain_links=nchain, cnt=cnt)
+    Q = dict(S=S, seg_w=seg_w, cores=cores, segof=sego, stations=stn, rep_mod=rep_mod, share=share,
+             swaps=swaps, chain_links=nchain, cnt=cnt)
+    if bounds is not None:
+        Q["bounds"] = bounds
+    return Q
 
 
 def boundary_bits(Q):
@@ -219,9 +232,14 @@ def realise(t, Q, H_new, kx=1, reach=360.0, route=True, log=print):
     S, seg_w = Q["S"], Q["seg_w"]
     byname = {h["inst"]: h for h in Q["cores"]}
     place, infos = {}, {}
+    bnd = Q.get("bounds")
     for k in range(S):
-        x0 = HR.sn(k * seg_w) if k else 0.0
-        x1 = HR.sn((k + 1) * seg_w) if k < S - 1 else W
+        if bnd is None:
+            x0 = HR.sn(k * seg_w) if k else 0.0
+            x1 = HR.sn((k + 1) * seg_w) if k < S - 1 else W
+        else:
+            x0 = HR.sn(bnd[k - 1]) if k else 0.0
+            x1 = HR.sn(bnd[k]) if k < S - 1 else W
         mem = [byname[n] for n, sk in Q["segof"].items() if sk == k]
         cs = [dict(inst=h["inst"], w=h["outline_um"][0], h=h["outline_um"][1],
                    ocx=min(max(h["origin_um"][0] + h["outline_um"][0] / 2 - x0, 0), x1 - x0),

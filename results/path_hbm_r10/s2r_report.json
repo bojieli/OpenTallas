@@ -1,0 +1,442 @@
+{
+ "schema": "opentallas.hbm_r10_delta.v1",
+ "source_plan_sha256": "0e83c52e3400246b8c04e4cb8071ffc1c41f33c6d7e3778157ea037168bbc482",
+ "segments": 2,
+ "pins_per_um": 6.0,
+ "hubs": {
+  "q_hub_nw": {
+   "lanes": {
+    "old_face_bits_S": 222879,
+    "old_face_bits_N": 206854,
+    "old_face_bits_W": 36570,
+    "old_face_bits_E": 78754,
+    "new_face_bits_N": 21166,
+    "new_face_bits_S": 24674,
+    "new_face_bits_W": 9475,
+    "new_face_bits_E": 18366,
+    "core_pins": 631,
+    "core_pin_bits": 73681,
+    "bus_supply_bits": 84746,
+    "unused_bus_bits": 21195,
+    "broadcast_bits": 10130,
+    "lane_slices": 683,
+    "old_face_stations": 3365
+   },
+   "pin_density_max_over_cap": 0.932,
+   "base_cut_blocked": {
+    "x": {
+     "cuts": 1901,
+     "max_use": 2.571,
+     "at_um": 3516.48,
+     "bits": 130562,
+     "face_bits": 89817,
+     "tracks": 50776,
+     "core_core_max_use": 0.977,
+     "cuts_over_0p6": 1497
+    },
+    "y": {
+     "cuts": 675,
+     "max_use": 1.004,
+     "at_um": 1585.44,
+     "bits": 134954,
+     "face_bits": 87332,
+     "tracks": 134400,
+     "core_core_max_use": 0.354,
+     "cuts_over_0p6": 351
+    }
+   },
+   "S": 2,
+   "k": 8,
+   "k_table": [
+    {
+     "k": 1,
+     "cut_x": 1.033,
+     "cut_y": 0.669,
+     "we_chain": 0,
+     "inter_segment_serialised": 0
+    },
+    {
+     "k": 2,
+     "cut_x": 0.86,
+     "cut_y": 0.623,
+     "we_chain": 232,
+     "inter_segment_serialised": 307
+    },
+    {
+     "k": 3,
+     "cut_x": 0.814,
+     "cut_y": 0.608,
+     "we_chain": 232,
+     "inter_segment_serialised": 307
+    },
+    {
+     "k": 4,
+     "cut_x": 0.796,
+     "cut_y": 0.6,
+     "we_chain": 232,
+     "inter_segment_serialised": 307
+    },
+    {
+     "k": 5,
+     "cut_x": 0.786,
+     "cut_y": 0.596,
+     "we_chain": 232,
+     "inter_segment_serialised": 307
+    },
+    {
+     "k": 6,
+     "cut_x": 0.779,
+     "cut_y": 0.593,
+     "we_chain": 232,
+     "inter_segment_serialised": 307
+    },
+    {
+     "k": 7,
+     "cut_x": 0.774,
+     "cut_y": 0.591,
+     "we_chain": 232,
+     "inter_segment_serialised": 307
+    },
+    {
+     "k": 8,
+     "cut_x": 0.77,
+     "cut_y": 0.589,
+     "we_chain": 232,
+     "inter_segment_serialised": 307
+    }
+   ],
+   "outline_um_new": [
+    8216.64,
+    3525.12
+   ],
+   "hub_growth_y_um": 604.8,
+   "bounds_um": [
+    2531.52
+   ],
+   "cut_per_sink": {
+    "blocked": {
+     "x": {
+      "cuts": 1901,
+      "max_use": 0.77,
+      "at_um": 6518.88,
+      "bits": 43461,
+      "face_bits": 2595,
+      "tracks": 56446,
+      "core_core_max_use": 0.724,
+      "cuts_over_0p6": 473
+     },
+     "y": {
+      "cuts": 815,
+      "max_use": 0.589,
+      "at_um": 1481.76,
+      "bits": 73991,
+      "face_bits": 17652,
+      "tracks": 125625,
+      "core_core_max_use": 0.462,
+      "cuts_over_0p6": 0
+     }
+    },
+    "unblocked": {
+     "x": {
+      "cuts": 1901,
+      "max_use": 0.558,
+      "at_um": 6160.32,
+      "bits": 53741,
+      "face_bits": 6853,
+      "tracks": 96390,
+      "core_core_max_use": 0.486,
+      "cuts_over_0p6": 0
+     },
+     "y": {
+      "cuts": 815,
+      "max_use": 0.421,
+      "at_um": 1775.52,
+      "bits": 94512,
+      "face_bits": 19316,
+      "tracks": 224673,
+      "core_core_max_use": 0.34,
+      "cuts_over_0p6": 0
+     }
+    }
+   },
+   "segments": [
+    {
+     "x_um": [
+      0.0,
+      2531.52
+     ],
+     "cut_x": 0.444,
+     "cut_y": 0.803,
+     "at_x": 1671.84,
+     "at_y": 2039.04
+    },
+    {
+     "x_um": [
+      2531.52,
+      8216.64
+     ],
+     "cut_x": 0.77,
+     "cut_y": 0.55,
+     "at_x": 3987.36,
+     "at_y": 1931.04
+    }
+   ],
+   "boundary_bits_serialised": [
+    4998
+   ],
+   "stations": {
+    "stations": 2764,
+    "inter_segment": 307,
+    "serialised": 307,
+    "regs_old": 22406,
+    "regs_new": 23693,
+    "latency_up": 845,
+    "failed": 0,
+    "chain_links": 1,
+    "latency_up_hist": {
+     "1": 278,
+     "2": 291,
+     "3": 110,
+     "4": 73,
+     "5": 15,
+     "6": 27,
+     "7": 6,
+     "8": 10,
+     "9": 2,
+     "10": 1,
+     "11": 8,
+     "13": 7,
+     "14": 1,
+     "15": 3,
+     "16": 3,
+     "17": 3,
+     "18": 2,
+     "19": 2,
+     "22": 3
+    },
+    "we_chain": 232
+   },
+   "latency_cycles": {
+    "serialised_transfer_added": 7,
+    "note": "each serialised lane slice: +k-1 cycles (k beats) and 1/k of its parallel bandwidth; extra station registers in stations.latency_up_hist"
+   },
+   "bounds_mode": "lanes"
+  },
+  "q_hub_ne": {
+   "lanes": {
+    "old_face_bits_S": 194225,
+    "old_face_bits_N": 180100,
+    "old_face_bits_W": 27840,
+    "old_face_bits_E": 67488,
+    "new_face_bits_N": 20985,
+    "new_face_bits_S": 25868,
+    "new_face_bits_W": 8068,
+    "new_face_bits_E": 13139,
+    "core_pins": 618,
+    "core_pin_bits": 68060,
+    "bus_supply_bits": 78491,
+    "unused_bus_bits": 20617,
+    "broadcast_bits": 10186,
+    "lane_slices": 666,
+    "old_face_stations": 3287
+   },
+   "pin_density_max_over_cap": 0.932,
+   "base_cut_blocked": {
+    "x": {
+     "cuts": 1901,
+     "max_use": 2.397,
+     "at_um": 2570.4,
+     "bits": 125747,
+     "face_bits": 91453,
+     "tracks": 52467,
+     "core_core_max_use": 1.001,
+     "cuts_over_0p6": 1578
+    },
+    "y": {
+     "cuts": 675,
+     "max_use": 1.021,
+     "at_um": 1278.72,
+     "bits": 133386,
+     "face_bits": 85540,
+     "tracks": 130693,
+     "core_core_max_use": 0.375,
+     "cuts_over_0p6": 323
+    }
+   },
+   "S": 2,
+   "k": 8,
+   "k_table": [
+    {
+     "k": 1,
+     "cut_x": 1.022,
+     "cut_y": 0.681,
+     "we_chain": 0,
+     "inter_segment_serialised": 0
+    },
+    {
+     "k": 2,
+     "cut_x": 0.771,
+     "cut_y": 0.65,
+     "we_chain": 113,
+     "inter_segment_serialised": 379
+    },
+    {
+     "k": 3,
+     "cut_x": 0.753,
+     "cut_y": 0.64,
+     "we_chain": 113,
+     "inter_segment_serialised": 379
+    },
+    {
+     "k": 4,
+     "cut_x": 0.744,
+     "cut_y": 0.635,
+     "we_chain": 113,
+     "inter_segment_serialised": 379
+    },
+    {
+     "k": 5,
+     "cut_x": 0.738,
+     "cut_y": 0.632,
+     "we_chain": 113,
+     "inter_segment_serialised": 379
+    },
+    {
+     "k": 6,
+     "cut_x": 0.735,
+     "cut_y": 0.63,
+     "we_chain": 113,
+     "inter_segment_serialised": 379
+    },
+    {
+     "k": 7,
+     "cut_x": 0.732,
+     "cut_y": 0.629,
+     "we_chain": 113,
+     "inter_segment_serialised": 379
+    },
+    {
+     "k": 8,
+     "cut_x": 0.73,
+     "cut_y": 0.627,
+     "we_chain": 113,
+     "inter_segment_serialised": 379
+    }
+   ],
+   "outline_um_new": [
+    8216.64,
+    3412.8
+   ],
+   "hub_growth_y_um": 492.48,
+   "bounds_um": [
+    2760.48
+   ],
+   "cut_per_sink": {
+    "blocked": {
+     "x": {
+      "cuts": 1901,
+      "max_use": 0.73,
+      "at_um": 6752.16,
+      "bits": 47366,
+      "face_bits": 2448,
+      "tracks": 64887,
+      "core_core_max_use": 0.692,
+      "cuts_over_0p6": 168
+     },
+     "y": {
+      "cuts": 789,
+      "max_use": 0.627,
+      "at_um": 1395.36,
+      "bits": 81069,
+      "face_bits": 16997,
+      "tracks": 129208,
+      "core_core_max_use": 0.496,
+      "cuts_over_0p6": 1
+     }
+    },
+    "unblocked": {
+     "x": {
+      "cuts": 1901,
+      "max_use": 0.552,
+      "at_um": 6570.72,
+      "bits": 51537,
+      "face_bits": 2993,
+      "tracks": 93318,
+      "core_core_max_use": 0.52,
+      "cuts_over_0p6": 0
+     },
+     "y": {
+      "cuts": 789,
+      "max_use": 0.372,
+      "at_um": 1499.04,
+      "bits": 83623,
+      "face_bits": 15976,
+      "tracks": 224673,
+      "core_core_max_use": 0.301,
+      "cuts_over_0p6": 0
+     }
+    }
+   },
+   "segments": [
+    {
+     "x_um": [
+      0.0,
+      2760.48
+     ],
+     "cut_x": 0.573,
+     "cut_y": 0.744,
+     "at_x": 1969.92,
+     "at_y": 1373.76
+    },
+    {
+     "x_um": [
+      2760.48,
+      8216.64
+     ],
+     "cut_x": 0.73,
+     "cut_y": 0.663,
+     "at_x": 3991.68,
+     "at_y": 2242.08
+    }
+   ],
+   "boundary_bits_serialised": [
+    5747
+   ],
+   "stations": {
+    "stations": 2697,
+    "inter_segment": 379,
+    "serialised": 379,
+    "regs_old": 23424,
+    "regs_new": 23545,
+    "latency_up": 534,
+    "failed": 0,
+    "chain_links": 1,
+    "latency_up_hist": {
+     "1": 202,
+     "2": 107,
+     "3": 115,
+     "4": 37,
+     "5": 15,
+     "6": 24,
+     "7": 4,
+     "8": 13,
+     "9": 6,
+     "12": 2,
+     "14": 3,
+     "16": 1,
+     "17": 4,
+     "18": 1
+    },
+    "we_chain": 113
+   },
+   "latency_cycles": {
+    "serialised_transfer_added": 7,
+    "note": "each serialised lane slice: +k-1 cycles (k beats) and 1/k of its parallel bandwidth; extra station registers in stations.latency_up_hist"
+   },
+   "bounds_mode": "lanes"
+  }
+ },
+ "note": "plan arithmetic, UNCHECKED until NUMBER-CHECK (12.9f); lane transport is a plan MODEL of the core_conns cross-product (needs the hub glue bit map to confirm)",
+ "die_growth_um": 604.8,
+ "plan_sha256": "a4cfa9bf2f42e62ae3f8db434c4376940f10ba5e4187cb01467a0447578c8e93"
+}

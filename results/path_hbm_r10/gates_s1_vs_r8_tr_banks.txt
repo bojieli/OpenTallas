@@ -1,0 +1,44 @@
+reach_gap |REF {"verdict": "PASS", "max_gap_um": 404.726, "worst_path": "L50", "in_core_bays_proposed": 0}
+   |R10 {"verdict": "PASS", "max_gap_um": 404.771, "worst_path": "NW_hub:istn2206", "in_core_bays_proposed": 0}
+bay_fill |REF {"verdict": "FAIL", "bays": 54951, "max_fill": 0.957, "bay_fails": 3490, "partition_fill_fails": 0}
+   |R10 {"verdict": "FAIL", "bays": 48465, "max_fill": 0.957, "bay_fails": 3153, "partition_fill_fails": 0}
+corridor_tracks |REF {"verdict": "FAIL", "limit": 0.6, "blocked_sections": 852, "m89_roads": 834}
+   |R10 {"verdict": "FAIL", "limit": 0.6, "blocked_sections": 792, "m89_roads": 698}
+entry_pins |REF {"verdict": "PASS", "pins": 1594988, "max_per_gcell": 35, "unplaced": 0, "failed_drops": 0, "max_drop_reach_um": 405.0, "limit_per_gcell": 35}
+   |R10 {"verdict": "PASS", "pins": 1246048, "max_per_gcell": 35, "unplaced": 0, "failed_drops": 0, "max_drop_reach_um": 405.0, "limit_per_gcell": 35}
+clock_shield |REF {"verdict": "NOT RUN", "note": "no --mesh"}
+   |R10 {"verdict": "NOT RUN", "note": "no --mesh"}
+static_ir |REF {"verdict": "NOT RUN", "note": "no PDNSim region result (--ir); PG lane = INFRA-FIRST-R2"}
+   |R10 {"verdict": "NOT RUN", "note": "no PDNSim region result (--ir); PG lane = INFRA-FIRST-R2"}
+lot_fit |REF {"verdict": "PASS", "n": 0}
+   |R10 {"verdict": "PASS", "n": 0}
+clock_entry |REF {"verdict": "FAIL", "cores": 578}
+   |R10 {"verdict": "FAIL", "cores": 578}
+core_reach |REF {"verdict": "FAIL", "limit_um": 200.0}
+   |R10 {"verdict": "FAIL", "limit_um": 200.0}
+early_taps |REF {"verdict": "PASS", "mesh_taps_early": 0}
+   |R10 {"verdict": "PASS", "mesh_taps_early": 0}
+tree_balance |REF {"verdict": "NOT RUN", "note": "no --mesh"}
+   |R10 {"verdict": "NOT RUN", "note": "no --mesh"}
+core_insertion_model |REF {"verdict": "FAIL", "cores": 159}
+   |R10 {"verdict": "FAIL", "cores": 159}
+die_pair_skew_model |REF {"verdict": "NOT RUN", "diagnostic_only": true, "note": "no --mesh (clock plan geometry)"}
+   |R10 {"verdict": "NOT RUN", "diagnostic_only": true, "note": "no --mesh (clock plan geometry)"}
+tree_commensurate |REF {"verdict": "FAIL", "form": "regional", "regions": 88, "regions_fail": 69, "regions_from": "partition instance (one region per partition)", "regions_with_tree_points": 88, "regions_irregular_islands": 3, "inter_region_lanes": 58, "rule": "COORD 13:05 RULING HB
+   |R10 {"verdict": "FAIL", "form": "regional", "regions": 88, "regions_fail": 69, "regions_from": "partition instance (one region per partition)", "regions_with_tree_points": 88, "regions_irregular_islands": 3, "inter_region_lanes": 58, "rule": "COORD 13:05 RULING HB
+clock_sites |REF {"verdict": "FAIL", "note": "no --mesh"}
+   |R10 {"verdict": "FAIL", "note": "no --mesh"}
+island_lattice |REF {"verdict": "NOT RUN", "note": "no --mesh"}
+   |R10 {"verdict": "NOT RUN", "note": "no --mesh"}
+tree_on_islands |REF {"verdict": "FAIL", "leaves": 1002, "nodes": 2003, "internal_nodes": 1001, "nodes_off_island": 0, "spread_tol_um": 20.0, "legs": 2002, "leg_repeater_gap_fails": 396, "worst_leg_island_gap_um": 4052.16, "rule": "12.2a1/12.2c: die tree nodes, leg repeaters and m
+   |R10 {"verdict": "FAIL", "leaves": 1002, "nodes": 2003, "internal_nodes": 1001, "nodes_off_island": 0, "spread_tol_um": 20.0, "legs": 2002, "leg_repeater_gap_fails": 396, "worst_leg_island_gap_um": 4052.16, "rule": "12.2a1/12.2c: die tree nodes, leg repeaters and m
+infra_sites |REF {"verdict": "FAIL", "source": "infra_sites.run (INFRA-FIRST-R2)", "error": null, "islands": 51}
+   |R10 {"verdict": "FAIL", "source": "infra_sites.run (INFRA-FIRST-R2)", "error": null, "islands": 51}
+clock_rep_sites |REF {"verdict": "NOT RUN", "note": "no --mesh (die H-tree)"}
+   |R10 {"verdict": "NOT RUN", "note": "no --mesh (die H-tree)"}
+tap_region_containment |REF {"verdict": "NOT RUN", "note": "no --mesh"}
+   |R10 {"verdict": "NOT RUN", "note": "no --mesh"}
+footless_stubs |REF {"verdict": "NOT RUN", "note": "no --mesh"}
+   |R10 {"verdict": "NOT RUN", "note": "no --mesh"}
+island_ft_inputs |REF {"verdict": "NOT RUN", "note": "no --mesh"}
+   |R10 {"verdict": "NOT RUN", "note": "no --mesh"}
