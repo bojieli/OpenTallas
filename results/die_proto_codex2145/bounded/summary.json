@@ -1,0 +1,87 @@
+{
+  "a18_t53": {
+    "verdict": "PASS",
+    "overflow": 0,
+    "boundary": {
+      "outside_canvas_rectangles": 0,
+      "rectangles": 61310,
+      "max_boundary_quantization_um": 6.48
+    },
+    "core_obs": {
+      "ot_s81sl_leaf__t53": {
+        "original_pins": 3801,
+        "core_obs_layers": [
+          "M4",
+          "M5",
+          "M7"
+        ],
+        "station_data_pins": 16400
+      }
+    },
+    "plan_sha256": "d8d3dd75ef4188060508115a1abab364a03324d3e8a0499e6d2bf3f82a95169d"
+  },
+  "a19_t24": {
+    "verdict": "FAIL",
+    "overflow": 26571,
+    "boundary": {
+      "outside_canvas_rectangles": 0,
+      "rectangles": 90090,
+      "max_boundary_quantization_um": 8.64
+    },
+    "core_obs": {
+      "ot_s81sl_leaf__t24": {
+        "original_pins": 5463,
+        "core_obs_layers": [
+          "M4",
+          "M5",
+          "M7"
+        ],
+        "station_data_pins": 25818
+      }
+    },
+    "plan_sha256": "d115f3aa7bdd72385bcceaf0efb48ea64865ebd319b4edb3a465fed6f53d5e31"
+  },
+  "a19_t29": {
+    "verdict": "PASS",
+    "overflow": 0,
+    "boundary": {
+      "outside_canvas_rectangles": 0,
+      "rectangles": 66130,
+      "max_boundary_quantization_um": 2.16
+    },
+    "core_obs": {
+      "ot_s81sl_leaf__t29": {
+        "original_pins": 4355,
+        "core_obs_layers": [
+          "M4",
+          "M5",
+          "M7"
+        ],
+        "station_data_pins": 17420
+      }
+    },
+    "plan_sha256": "d115f3aa7bdd72385bcceaf0efb48ea64865ebd319b4edb3a465fed6f53d5e31"
+  },
+  "a19_t44": {
+    "verdict": "FAIL",
+    "overflow": 47247,
+    "boundary": {
+      "outside_canvas_rectangles": 0,
+      "rectangles": 88253,
+      "max_boundary_quantization_um": 2.16
+    },
+    "core_obs": {
+      "ot_s81sl_leaf__t44": {
+        "original_pins": 4909,
+        "core_obs_layers": [
+          "M4",
+          "M5",
+          "M7"
+        ],
+        "station_data_pins": 21386
+      }
+    },
+    "plan_sha256": "d115f3aa7bdd72385bcceaf0efb48ea64865ebd319b4edb3a465fed6f53d5e31"
+  },
+  "supersedes": "Prior unboundedM5-only coupon positives are isolated diagnostics. Current bounded coupons use only the original gcell hull and conservative declared/view obstruction union. No detailedroute/signoff claim."
+}
