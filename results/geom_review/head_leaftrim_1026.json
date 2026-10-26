@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND TRIAL ONLY",
+  "scope": "die clock residual compensation; no data RTL or cycles",
+  "images": [
+    "/srv/opentallas-scratch/claude/codex-head-clock-1026/leaf1/mesh.png",
+    "/srv/opentallas-scratch/claude/codex-head-clock-1026/leaf1/leaftrim_zoom.png"
+  ],
+  "findings": [
+    "Original SerDes macro bands require driver moves; existing legal footprints retained, all new cells checked against hard keepouts and each previously occupied conservative clock footprint.",
+    "New stub delay chains stay in local row islands adjacent to the existing stub, about20um span; no new long hop or data bus crossing.",
+    "Clock footprint now32802 additional cells, per-type reservation must be composed before freeze. Existing PG/clock connectivity is a separate open infra gate.",
+    "Library prediction72/64ps is not a physical verdict; actual50-iteration combined GRT and two-corner clock reconstruction required."
+  ],
+  "gate": "50-iteration combined GRT plus TT/FF related-pair <=80ps; NOT RUN"
+}
