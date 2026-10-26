@@ -5,7 +5,7 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
 - Line form: `- [ ] ID task · OWNER · STATUS · current fact → DEP.ID` ; "→ X" means this item waits on X (each → is a link).
-- Gate ids per die are PFX.BIND / PFX.GRT / PFX.CLK / PFX.STA (die gate = GRT0 incl. clock -> FROZEN; release gate = die STA on real views).
+- Gate ids per die are PFX.BIND / PFX.GRT / PFX.CLK / PFX.STA (die gate = GRT0 incl. clock + related-pair skew <=80 TT/FF (owner 10-26) -> FROZEN; release gate = die STA on real views).
 - Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS FROZEN BLOCKED NOT RUN.
 
 ## DIE s81 · S81 (DeepSeek ROM layer die) · rev main 9101a4f1 · est. after FT re-lay
