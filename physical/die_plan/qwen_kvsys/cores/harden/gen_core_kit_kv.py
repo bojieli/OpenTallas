@@ -751,7 +751,7 @@ def main():
         astk_storage_enable.apply_kit(kd / "rtl")
         exp = astk_storage_enable.replica_expect(json.loads((kd / "replica_expect.json").read_text()))
         (kd / "replica_expect.json").write_text(json.dumps(exp, indent=1) + "\n")
-        (kd / "astk_storage_enable_delta.json").write_text(json.dumps(dict(added_cycles=0, control_ff_added=256, static_id_ff_removed=2, net_master_ff_added=254, net_die_ff_added=1016, row_modules=64, ff_per_row=4, sd_bits_per_enable=32), indent=1) + "\n")
+        (kd / "astk_storage_enable_delta.json").write_text(json.dumps(dict(added_cycles=0, control_ff_added=256, static_id_ff_removed=(2 if a.astk_strap_master else 0), net_master_ff_added=(254 if a.astk_strap_master else 256), net_die_ff_added=(1016 if a.astk_strap_master else 1024), row_modules=64, ff_per_row=4, sd_bits_per_enable=32), indent=1) + "\n")
     if a.astk_strap_master:
         src = kd / "rtl" / f"{mod}.sv"
         (kd / "rtl" / f"{astk_strap_master.MASTER}.sv").write_text(astk_strap_master.transform(src.read_text(), mod))
