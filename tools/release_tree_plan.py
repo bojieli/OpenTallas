@@ -9,6 +9,11 @@ Per die plan on origin/main:
     (KIT/signoff/signoff.json, <kit>/signoff_tt_ff/signoff.json, ...). A record counts for a type when its
     face_guard top (or its name without the dp_/kr_ prefix) is the type's module/key, for a hard core when it is the
     core's module.
+Closure order rule 3 (owner 2026-10-25 18:45, INFRA2): a SIGNED record counts only when it names its source commit +
+flow release tag -- 'src_commit'/'flow_tag' in the signoff.json itself, else in the nearest PROVENANCE.json (verdict
+SIGNED, written by the autopilot archive) or AUTOPILOT.json up to 6 directories above it.  Every record carries
+'versioned'; signed_types/signed_cores hold versioned records only, unversioned_types/unversioned_cores the rest;
+the cache says provenance_rule 'v1' (tools/autopilot/ownership.py counts only such caches).
 Cached in ~/.local/state/fleet-viz/release_tree_plan_cache.json; refreshed when older than REFRESH_S (the hourly
 release-tree-render.timer calls this through release_tree_render.py). On any failure the last good per-die values are
 kept and the error is reported (the page keeps rendering).
@@ -24,8 +29,33 @@ PLANS = [('s81', 's81'), ('s81', 's81_head'), ('qwen_compute', 'qwen_compute'), 
          ('hbm', 'hbm_arch/B2l')]
 HOSTS = ['local', 'epyc1', 'epyc2', 'epyc3', 'intel1', 'intel2']
 SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2'
+PROV_PY = r'''
+def prov(p, d, load):
+    if d.get('src_commit') and d.get('flow_tag'):
+        return dict(src_commit=d['src_commit'], flow_tag=d['flow_tag'], prov_file=p)
+    q = os.path.dirname(p)
+    for _ in range(6):
+        for n in ('PROVENANCE.json', 'AUTOPILOT.json'):
+            f = os.path.join(q, n)
+            try:
+                x = load(f)
+            except Exception:
+                continue
+            if not isinstance(x, dict):
+                continue
+            if n == 'PROVENANCE.json' and x.get('verdict') not in (None, 'SIGNED'):
+                return {}
+            if x.get('src_commit') and x.get('flow_tag'):
+                return dict(src_commit=x['src_commit'], flow_tag=x['flow_tag'], prov_file=f)
+            return {}
+        nq = os.path.dirname(q)
+        if nq == q: break
+        q = nq
+    return {}
+'''
 SCAN_PY = r'''
 import json, os, sys
+''' + PROV_PY + r'''
 out = []
 for p in sys.stdin.read().split():
     try:
@@ -34,8 +64,11 @@ for p in sys.stdin.read().split():
     except Exception: continue
     if not isinstance(d, dict) or d.get('verdict') != 'SIGNED': continue
     fg = d.get('face_guard') or {}
-    out.append(dict(path=p, name=d.get('name'), top=fg.get('top') if isinstance(fg, dict) else None,
-                    generated=d.get('generated'), host=d.get('host')))
+    r = dict(path=p, name=d.get('name'), top=fg.get('top') if isinstance(fg, dict) else None,
+             generated=d.get('generated'), host=d.get('host'))
+    r.update(prov(p, d, lambda f: json.load(open(f))))
+    r['versioned'] = bool(r.get('src_commit') and r.get('flow_tag'))
+    out.append(r)
 print(json.dumps(out))
 '''
 
@@ -64,6 +97,10 @@ def shlex_quote(s):
     return shlex.quote(s)
 
 
+_PROV_NS = {'os': os}
+exec(PROV_PY, _PROV_NS)
+
+
 def main_records(tree):
     out = []
     for p in tree.rglob('*signoff.json'):
@@ -71,8 +108,13 @@ def main_records(tree):
         except Exception: continue
         if isinstance(d, dict) and d.get('verdict') == 'SIGNED':
             fg = d.get('face_guard') or {}
-            out.append(dict(path='origin/main:' + str(p.relative_to(tree)), name=d.get('name'), top=fg.get('top') if isinstance(fg, dict) else None,
-                            generated=d.get('generated'), host=d.get('host'), scan_host='origin/main'))
+            r = dict(path='origin/main:' + str(p.relative_to(tree)), name=d.get('name'), top=fg.get('top') if isinstance(fg, dict) else None,
+                     generated=d.get('generated'), host=d.get('host'), scan_host='origin/main')
+            r.update(_PROV_NS['prov'](str(p), d, lambda f: json.loads(pathlib.Path(f).read_text())))
+            if r.get('prov_file', '').startswith(str(tree)):
+                r['prov_file'] = 'origin/main:' + str(pathlib.Path(r['prov_file']).relative_to(tree))
+            r['versioned'] = bool(r.get('src_commit') and r.get('flow_tag'))
+            out.append(r)
     return out
 
 
@@ -89,7 +131,7 @@ def rec_keys(r):
 
 def refresh(log=lambda *a: None):
     errs = []
-    res = dict(generated=time.time(), errors=errs, dies={}, plans={})
+    res = dict(generated=time.time(), errors=errs, dies={}, plans={}, provenance_rule='v1')
     sha = None
     r = sh(['git', '-C', str(REPO), 'fetch', '-q', 'origin', 'main'], 180)
     if r.returncode: errs.append('git fetch origin main failed: %s' % r.stderr.strip()[-200:])
@@ -139,14 +181,20 @@ def refresh(log=lambda *a: None):
         for d, ent in res['plans'].items():
             if 'types' not in ent: continue
             tm = ent.pop('type_modules')
-            st, sc = {}, {}
+            st, sc, ut, uc = {}, {}, {}, {}
             for r_ in recs:
                 ks = rec_keys(r_)
+                ref = r_['scan_host'] + ':' + r_['path'] if r_['scan_host'] != 'origin/main' else r_['path']
+                if r_.get('versioned'):
+                    ref += ' src %s flow %s' % (str(r_['src_commit'])[:12], r_['flow_tag'])
+                T, C = (st, sc) if r_.get('versioned') else (ut, uc)
                 for k, m in tm.items():
-                    if k in ks or m in ks: st.setdefault(k, []).append(r_['scan_host'] + ':' + r_['path'] if r_['scan_host'] != 'origin/main' else r_['path'])
+                    if k in ks or m in ks: T.setdefault(k, []).append(ref)
                 for m in ent['hard_cores']:
-                    if m in ks: sc.setdefault(m, []).append(r_['scan_host'] + ':' + r_['path'] if r_['scan_host'] != 'origin/main' else r_['path'])
+                    if m in ks: C.setdefault(m, []).append(ref)
             ent['signed_types'] = st; ent['signed_cores'] = sc
+            ent['unversioned_types'] = {k: v for k, v in ut.items() if k not in st}
+            ent['unversioned_cores'] = {k: v for k, v in uc.items() if k not in sc}
     except Exception as e:
         errs.append('refresh: %s' % e)
     finally:
@@ -160,7 +208,12 @@ def merge_with_cache(new, old):
     for d, ent in (old.get('plans') or {}).items():
         n = new['plans'].get(d)
         if (not n or 'g0c_clean' not in n) and 'g0c_clean' in ent:
-            new['plans'][d] = dict(ent, stale_since=ent.get('stale_since') or old.get('generated'))
+            ent = dict(ent, stale_since=ent.get('stale_since') or old.get('generated'))
+            if old.get('provenance_rule') != new.get('provenance_rule'):   # pre-rule-3 lists are not sign-offs
+                for a in ('types', 'cores'):
+                    ent['unversioned_' + a] = dict(ent.get('unversioned_' + a) or {}, **(ent.get('signed_' + a) or {}))
+                    ent['signed_' + a] = {}
+            new['plans'][d] = ent
     return new
 
 
