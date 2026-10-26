@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.hbm_tkm_face_cost_note.v1",
+  "status": "ANALYTICAL_SENSITIVITY_NOT_ADOPTED",
+  "source_cohort": "27edd341cc1f2778aff7f626f5dcfa62617ca497",
+  "selected_source": {
+    "KMAX": 2048,
+    "NT": 32,
+    "HOP": 2,
+    "FRT": 4,
+    "CB": 21,
+    "CLRB": 0,
+    "SETTLE0": 104,
+    "SETTLE": 145,
+    "XL": 87
+  },
+  "stage_attribution": {
+    "root_face_in_out": 2,
+    "two_settle_increases": 82,
+    "two_conversion_stream_extra_ages": 174,
+    "face_total": 258,
+    "PIPE_split": 2,
+    "forward_with_PR_endpoints": 9,
+    "return_edges": 2,
+    "selected_component_total": 271,
+    "proposed_hub_internal_out_and_return": 52
+  },
+  "runtime_counter_evidence": {
+    "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv",
+    "busy_body": "tick<=tick+1;stat_cycles<=tick+1",
+    "accepted_start": "busy<=1;tick<=0;stat_cycles<=0",
+    "meaning": "The 256 internal shell-growth edges are scheduled on each accepted operation; root face adds two further edges. These counts are not global simulation time or boot reset latency."
+  },
+  "existing_ledger": {
+    "group": "COLL.TKX_Q_HUB_NW",
+    "status": "proposed",
+    "edges": 52,
+    "source": "results/token_pass/toksched_1025/hbm_tkx_measure.json",
+    "warning": "This row describes q_hub_nw internal stations. It must not be silently replaced by the separate component age 271."
+  },
+  "scenarios": [
+    {
+      "name": "face_only_if_not_already_priced",
+      "edges_per_operation": 258,
+      "conditional_critical_merges": 9,
+      "added_cycles": 2322,
+      "baseline_cycles": 576702.4,
+      "rate_loss_pct": 0.40101936982275704
+    },
+    {
+      "name": "face_and_PR_endpoints_if_neither_priced",
+      "edges_per_operation": 262,
+      "conditional_critical_merges": 9,
+      "added_cycles": 2358,
+      "baseline_cycles": 576702.4,
+      "rate_loss_pct": 0.40721140661665
+    },
+    {
+      "name": "measured_selected_component_vs_direct_core",
+      "edges_per_operation": 271,
+      "conditional_critical_merges": 9,
+      "added_cycles": 2439,
+      "baseline_cycles": 576702.4,
+      "rate_loss_pct": 0.4211406747989351
+    },
+    {
+      "name": "selected_component_plus_proposed_hub_internal_stations",
+      "edges_per_operation": 323,
+      "conditional_critical_merges": 9,
+      "added_cycles": 2907,
+      "baseline_cycles": 576702.4,
+      "rate_loss_pct": 0.5015446609389013
+    }
+  ],
+  "scope": [
+    "The nine critical merges and 576702.4-cycle baseline are assumptions copied from the existing S2 proposed ledger row, not a new die binding or rate of record.",
+    "The selected component bench omits q_hub_nw internal 26 out + 26 return stations.",
+    "Do not add the full 271 or 323 edges to the model until existing split, e86, PHY and transport terms are reconciled; they may already charge some stages.",
+    "The internal shell term is analytically recurring, but matched cold/warm operation launch-to-write/done measurement is pending the current connected stageB vehicle.",
+    "No physical SIGNED view, final G5 or new headline rate is established."
+  ]
+}
