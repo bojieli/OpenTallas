@@ -19,6 +19,15 @@ case "$PROFILE" in
  legacy_fg3) ENGDEF=(-DSVCQ_ENG_FG3);;
  *) echo "unknown SVC engine profile $PROFILE" >&2;exit 2;;
 esac
+# Missing metadata denotes the historical FG3 calendar. Refuse to run it on
+# closing libraries: matching image dates and source is part of this bench.
+python3 - "$IMG/base/image.json" "$PROFILE" <<'PYPROFILE'
+import json,sys
+rec=json.load(open(sys.argv[1]))
+image_profile=rec.get('engine_profile','legacy_fg3')
+if image_profile != sys.argv[2]:
+    raise SystemExit(f'service image profile {image_profile} != compiled engine profile {sys.argv[2]}; regenerate images with the matching --timing-profile')
+PYPROFILE
 O=${O}_${PROFILE} # qualified libraries are never reused across source profiles
 mkdir -p "$O"
 "$VL" --version > "$O/verilator.version"
