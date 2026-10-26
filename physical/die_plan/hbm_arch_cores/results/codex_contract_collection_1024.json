@@ -1,0 +1,1460 @@
+[
+ {
+  "kit": "ot_hgi_sfu_core_split3__lane14_66f75664efb4",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "[INFO DRT-0082]   Complete 90000 groups.",
+   "[INFO DRT-0082]   Complete 100000 groups."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_sfu_core_split3__lane2_2ba0e7ec37ee",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "---------------------------------------------------------------",
+   ""
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_sfu_core_split3__lane4_ef3314d95b46",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "---------------------------------------------------------------",
+   ""
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_sfu_core_split3__lane6_c8a5f8831c4a",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "[INFO DRT-0082]   Complete 90000 groups.",
+   "[INFO DRT-0082]   Complete 100000 groups."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_hc_bankq0_static__lanes0_2_3201a56cbe8d",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "     1210 |       0 |    2821 |            0 |    +1.3% | -41.480 | -23034.807 | u_core.u_lg1.x_in[25]$_DFF_P_/D",
+   "     1220 |       0 |    2841 |            0 |    +1.3% | -41.434 | -22689.707 | u_core.u_lg1.w_in[250]$_DFF_P_/D"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_hc_bankq_static__lanes0_2_e6588042a5d1",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "      250 |       0 |     498 |            0 |    +0.1% | -46.842 | -76135.828 | u_core.u_lg0.x_in[28]$_DFF_P_/D",
+   "      260 |       0 |     518 |            0 |    +0.2% | -46.798 | -75791.969 | u_core.u_lg0.w_in[85]$_DFF_P_/D"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_hc_bankq_static__lanes3_5_60b283a425e3",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "      250 |       0 |     498 |            0 |    +0.1% | -52.343 | -78831.906 | u_core.u_lg0.sum_q[6]$_DFF_P_/D",
+   "      260 |       0 |     518 |            0 |    +0.2% | -52.132 | -78489.328 | u_core.u_lg0.w_in[179]$_DFF_P_/D"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_qcore_r13_30cedff7c089",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "      110 |       0 |     236 |            0 |    +0.1% | -129.493 | -67339.477 | e_f[10]$_DFF_P_/D",
+   "      120 |       0 |     264 |            0 |    +0.1% | -127.131 | -66560.609 | g_osel[0].u_oh/q[1]$_DFF_P_/D"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_svc_sm_xcal_rel_t_9ee64da70704",
+  "stage": "5_1_grt.log",
+  "last": [
+   "Error: global_route.tcl, 175 GRT-0116",
+   "Elapsed time: 52:00.88[h:]min:sec. CPU time: user 3378.23 sys 14.06 (108%). Peak memory: 816932KB."
+  ],
+  "errs": [
+   "[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.",
+   "Error: global_route.tcl, 175 GRT-0116"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_svc_sm_xcal_rel_t_afccc19766de",
+  "stage": "5_1_grt.log",
+  "last": [
+   "Error: global_route.tcl, 175 GRT-0116",
+   "Elapsed time: 24:49.16[h:]min:sec. CPU time: user 1712.35 sys 7.63 (115%). Peak memory: 810368KB."
+  ],
+  "errs": [
+   "[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.",
+   "Error: global_route.tcl, 175 GRT-0116"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_95777efcb2fa",
+  "stage": "5_1_grt.log",
+  "last": [
+   "Error: global_route.tcl, 175 GRT-0116",
+   "Elapsed time: 11:18.89[h:]min:sec. CPU time: user 1443.07 sys 24.82 (216%). Peak memory: 1157024KB."
+  ],
+  "errs": [
+   "[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.",
+   "Error: global_route.tcl, 175 GRT-0116"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_idx_vm_query_static_n12_2cc6e51647e9",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "     3320 |       0 |    7625 |            0 |    +5.1% | -32.314 | -22022.100 | qi_r[6]$_DFF_P_/D",
+   "     3330 |       0 |    7649 |            0 |    +5.1% | -32.314 | -22022.100 | qi_r[6]$_DFF_P_/D"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_31be7c8a3d52",
+  "stage": "5_2_route.tmp.log",
+  "last": [
+   "    Completing 50% with 13995 violations.",
+   "    elapsed time = 00:02:48, memory = 7482.46 (MB)."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_3ffaa44bcbd4",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "     4310 |       0 |    7079 |            0 |    +3.7% | -90.280 | -24909.332 | g_phy_return.v$_SDFF_PN0_/D",
+   "     4320 |       0 |    7089 |            0 |    +3.7% | -90.280 | -24909.332 | g_phy_return.v$_SDFF_PN0_/D"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_sm_xload_cl2_bdring_709af958dd74",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "     2270 |       0 |    4535 |            0 |    +3.3% | -34.352 | -15106.803 | u_core.wr_hi[177]$_DFF_P_/D",
+   "     2280 |       0 |    4555 |            0 |    +3.3% | -34.352 | -15106.803 | u_core.wr_hi[177]$_DFF_P_/D"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hfd_coll_q2_hard_v8g__reduce_2dd283ef041e",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          318           1737 a839fe10a7747009e8d5"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 115 delay cells; tap mean insertion 235..276 ps (spread 41, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: {clk_reduce[23]=307} {clk_reduce[24]=296} {clk_reduce[25]=298} {clk_reduce[27]=297} {clk_reduce[28]=294} {clk_reduce[29]=302} {clk_reduce[32]=302}; re-pitch taps to <= 631 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_hc_bankq_ft_static__lanes0_2_43d2a3be8b5a",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          473           2362 00a6971b364f44f1f114"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 326..326 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: clk=339; re-pitch taps to <= 534 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          472           2371 9b0df4d263894701aa54"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 362..362 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: clk=374; re-pitch taps to <= 481 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_hc_bankq_ft_static__lanes3_5_20947a7cbdde",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          452           2376 c8373c17e470c2e5c7d8"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 362..362 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: clk=375; re-pitch taps to <= 481 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp0_f4260de3a745",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:44.85[h:]min:sec. CPU time: user 122.94 sys 4.14 (121%). Peak memory: 1512932KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp1_26b9599d5540",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:43.41[h:]min:sec. CPU time: user 120.83 sys 4.24 (120%). Peak memory: 1472124KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp10_3902ba786f1f",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:45.47[h:]min:sec. CPU time: user 124.12 sys 4.00 (121%). Peak memory: 1410820KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp11_41000f85c440",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:45.11[h:]min:sec. CPU time: user 123.72 sys 4.03 (121%). Peak memory: 1421824KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp11_cd46a885af6c",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:45.84[h:]min:sec. CPU time: user 124.23 sys 3.95 (121%). Peak memory: 1437932KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp12_f9b7578c2d46",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:43.53[h:]min:sec. CPU time: user 121.36 sys 4.15 (121%). Peak memory: 1461468KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp13_d2d04c202775",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:49.21[h:]min:sec. CPU time: user 127.42 sys 4.01 (120%). Peak memory: 1430392KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp14_0aa5ae0c4a16",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:44.45[h:]min:sec. CPU time: user 123.07 sys 4.17 (121%). Peak memory: 1442436KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp14_ae74e585c4b2",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:45.51[h:]min:sec. CPU time: user 123.53 sys 4.12 (120%). Peak memory: 1357840KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp2_de562e97562d",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:44.38[h:]min:sec. CPU time: user 121.59 sys 4.02 (120%). Peak memory: 1391252KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp3_7637efd0080a",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:46.44[h:]min:sec. CPU time: user 124.11 sys 4.06 (120%). Peak memory: 1422504KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp4_3bbe6b04b241",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:47.65[h:]min:sec. CPU time: user 124.94 sys 4.08 (119%). Peak memory: 1472516KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp4_e2edf8618205",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:44.74[h:]min:sec. CPU time: user 122.01 sys 4.03 (120%). Peak memory: 1390612KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp5_ffeb082cfe27",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:45.52[h:]min:sec. CPU time: user 123.16 sys 4.09 (120%). Peak memory: 1455328KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp7_059f6ce06578",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:44.29[h:]min:sec. CPU time: user 121.60 sys 4.11 (120%). Peak memory: 1463600KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp7_4bcaf4f8b16b",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:48.68[h:]min:sec. CPU time: user 126.26 sys 4.39 (120%). Peak memory: 1520060KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp9_7b5a181caac3",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:43.94[h:]min:sec. CPU time: user 121.04 sys 4.22 (120%). Peak memory: 1396280KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp9_b20af5f8bd8a",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:49.38[h:]min:sec. CPU time: user 126.63 sys 4.19 (119%). Peak memory: 1475800KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp_l_4c0a010fe678",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:46.16[h:]min:sec. CPU time: user 123.74 sys 4.19 (120%). Peak memory: 1435144KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes0_3_edae47abf4e2",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "---------------------------------------------------------------",
+   "     1160 |   0.6197 |  2.590507e+06 |   -1.82% |  2.38e-08 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes12_15_aee690bf3444",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "    74400 |     -0.5% |   12982 |     5735 |    174328",
+   "    99200 |     -0.6% |   16343 |     7384 |    149528"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes20_23_f5958ea07f29",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "---------------------------------------------------------------",
+   "      970 |   0.6062 |  2.751822e+06 |   -2.02% |  3.24e-08 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes20_23_f62fbff895b8",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "      950 |   0.4571 |  3.163765e+06 |   +2.36% |  1.72e-07 |      ",
+   "      960 |   0.4278 |  3.053249e+06 |   -3.49% |  2.52e-07 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes24_27_53fde75129b8",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "      970 |   0.5724 |  2.923250e+06 |   -5.00% |  3.53e-08 |      ",
+   "      980 |   0.5401 |  3.085594e+06 |   +5.55% |  5.12e-08 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes24_27_ac922fae577a",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "      960 |   0.4959 |  3.551053e+06 |   -0.71% |  6.45e-08 |      ",
+   "      970 |   0.4659 |  3.627992e+06 |   +2.17% |  9.25e-08 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes28_31_4ce1cba54fb1",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "      900 |   0.2671 |  5.079476e+06 |   -2.32% |  1.24e-07 |      ",
+   "      910 |   0.2587 |  4.800257e+06 |   -5.50% |  1.82e-07 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes8_11_1516af9871b4",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "      940 |   0.4323 |  4.058069e+06 |   -1.03% |  5.89e-08 |      ",
+   "      950 |   0.4192 |  4.152058e+06 |   +2.32% |  8.53e-08 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes8_11_a1c0c37ab566",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "      950 |   0.3800 |  2.919007e+06 |   -0.86% |  4.63e-07 |      ",
+   "      960 |   0.3488 |  2.886192e+06 |   -1.12% |  6.82e-07 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15_871944876423",
+  "stage": "2_4_floorplan_pdn.log",
+  "last": [
+   "Error: pdn.tcl, 7 PDN-0179",
+   "Elapsed time: 0:10.20[h:]min:sec. CPU time: user 9.35 sys 0.83 (99%). Peak memory: 785228KB."
+  ],
+  "errs": [
+   "[ERROR PDN-0179] Unable to repair all channels.",
+   "Error: pdn.tcl, 7 PDN-0179"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7_80ba81b7a4cd",
+  "stage": "3_4_place_resized.tmp.log",
+  "last": [
+   "Floating nets: ",
+   "Report metrics stage 3, resizer..."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7_9e7c6dac470e",
+  "stage": "3_5_place_dp.tmp.log",
+  "last": [
+   "[INFO FLW-0012] Placement violations .",
+   "estimate_parasitics -placement"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11_1fc3e25183d3",
+  "stage": "3_5_place_dp.tmp.log",
+  "last": [
+   "Took 26 seconds: estimate_parasitics -placement",
+   "Report metrics stage 3, detailed place..."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__pretree_0132854c0b0e",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          330           2428 feaf994f4da5e5e86430"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 595..595 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: clk_ctl=717; re-pitch taps to <= 292 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__pretree_44645377c174",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          340           2422 37c6e4c80c04c403b931"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 599..599 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: clk_ctl=721; re-pitch taps to <= 291 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile11_47960378a8ad",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          374           2221 52b8e6148b058970c744"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile13_d00ff08e9841",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          358           2225 73f5e59e7ee8ad5a927c"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile17_8437c583e4f0",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          380           2250 6a5547c8eaa649c3461b"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile18_c7139f82aecf",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          394           2259 0fb29d9b7f16a2e85deb"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 438..438 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 398 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile22_feecce322145",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          367           2251 d75805946831a54e2584"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile24_b7916fb5dabc",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          382           2271 4a438ca71b001d5ae9d9"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile25_7bf25f6b6c74",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          398           2293 61a685468204a0eb41c9"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile26_e47e5e350b53",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          372           2279 5e55f528a2e8e9807103"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile28_4494998617f3",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "OT_TAP_BALANCE it0 target 250: tile_clk=441(426-480,6799)",
+   "[WARNING STA-0450] virtual clock vclk can not be propagated."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile3_2b0f4ceb4ad6",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "OT_TAP_BALANCE it0 target 250: tile_clk=441(426-480,6799)",
+   "[WARNING STA-0450] virtual clock vclk can not be propagated."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile5_013474666cdc",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "OT_TAP_BALANCE it0 target 250: tile_clk=441(426-480,6799)",
+   "[WARNING STA-0450] virtual clock vclk can not be propagated."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile8_c150bb2151e4",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "source /work/tap_balance.tcl",
+   "[WARNING STA-0450] virtual clock vclk can not be propagated."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile9_163b97071551",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "Took 13 seconds: estimate_parasitics -placement",
+   "Report metrics stage 4, cts final..."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "localhost"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp10_cdab528a3523",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 2:05.19[h:]min:sec. CPU time: user 140.91 sys 4.48 (116%). Peak memory: 1466068KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "epyc2"
+ },
+ {
+  "kit": "ot_hgi_sfu_core_split3__lane15_ed3d202ade36",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "[INFO DRT-0082]   Complete 70000 groups.",
+   "[INFO DRT-0082]   Complete 80000 groups."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_sfu_core_split3__lane5_9818e0f96722",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "[INFO DRT-0082]   Complete 40000 groups.",
+   "[INFO DRT-0082]   Complete 50000 groups."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_hc_bankq0_static__lanes3_5_6c5ad9844cef",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "     1090 |       0 |    2427 |            0 |    +1.1% | -43.340 | -24016.693 | u_core.u_lg0.w_in[14]$_DFF_P_/D",
+   "     1100 |       0 |    2448 |            0 |    +1.1% | -43.302 | -23982.467 | u_core.u_lg0.w_in[166]$_DFF_P_/D"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_svc_sm_xcal_rel_t_2fe24f8b638c",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "[INFO GRT-0102] Start extra iteration 28/30",
+   "[INFO GRT-0102] Start extra iteration 29/30"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_svc_sm_xcal_rel_t_f9e949331096",
+  "stage": "5_1_grt.log",
+  "last": [
+   "Error: global_route.tcl, 175 GRT-0116",
+   "Elapsed time: 53:00.62[h:]min:sec. CPU time: user 3539.20 sys 13.41 (111%). Peak memory: 839832KB."
+  ],
+  "errs": [
+   "[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.",
+   "Error: global_route.tcl, 175 GRT-0116"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_3b586cbb332d",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "     6430 |       0 |    9566 |            0 |    +5.0% | -116.860 | -44199.812 | g_phy_return.data[64]$_DFF_P_/D",
+   "     6440 |       0 |    9576 |            0 |    +5.0% | -116.860 | -44199.812 | g_phy_return.data[64]$_DFF_P_/D"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_9467d1b02397",
+  "stage": "5_2_route.tmp.log",
+  "last": [
+   "[INFO DRT-0081]   Complete 279 unique inst patterns.",
+   "[INFO DRT-0082]   Complete 10000 groups."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_a4d8b0938055",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "check_placement -verbose",
+   "global_route -end_incremental -resistance_aware -congestion_report_file /work/run/reports/asap7/hbc_ot_hbm_svc_pc_ctrl_leaf_cfg_h9b/base/congestion_post_repair_timing.rpt"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hfd_coll_q2_hard_v8g__ring_ag_79b4607b3be2",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          401           1844 38f1969d6ed0e1a74e98"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 27 delay cells; tap mean insertion 235..312 ps (spread 76, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: {clk_ring[0]=344} {clk_ring[2]=310} {clk_ring[3]=290} {clk_ring[5]=307} {clk_ring[7]=300}; re-pitch taps to <= 558 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          458           2542 23d72d8ebcce5c642554"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 360..360 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: clk=373; re-pitch taps to <= 483 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp1_1f3670ca53a4",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:59.94[h:]min:sec. CPU time: user 144.30 sys 4.36 (123%). Peak memory: 1470760KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp12_832f35030626",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 2:03.60[h:]min:sec. CPU time: user 149.02 sys 4.59 (124%). Peak memory: 1476372KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp13_ee054eacab0f",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 2:00.33[h:]min:sec. CPU time: user 146.07 sys 4.04 (124%). Peak memory: 1456580KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp2_c09772cac4ee",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:57.58[h:]min:sec. CPU time: user 142.59 sys 3.75 (124%). Peak memory: 1498360KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp3_953ddd655d82",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 2:02.63[h:]min:sec. CPU time: user 147.48 sys 4.76 (124%). Peak memory: 1479848KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp5_fa5d09aa2efe",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:58.69[h:]min:sec. CPU time: user 143.94 sys 3.97 (124%). Peak memory: 1475196KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp6_885c0bb0d945",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:59.14[h:]min:sec. CPU time: user 144.72 sys 4.24 (125%). Peak memory: 1514296KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp8_acad9084ae48",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:57.87[h:]min:sec. CPU time: user 142.55 sys 4.04 (124%). Peak memory: 1508936KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp_l_49e428ab0c53",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 1:59.93[h:]min:sec. CPU time: user 145.88 sys 4.50 (125%). Peak memory: 1471672KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes12_15_eb590bc5e9de",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "    24800 |     -0.4% |    6905 |      479 |    223928",
+   "    49600 |     -0.8% |   12657 |     1372 |    199128"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes16_19_6930bb464143",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "     1100 |   0.4913 |  3.595176e+06 |   -9.58% |  7.32e-08 |      ",
+   "     1110 |   0.4428 |  3.894636e+06 |   +8.33% |  1.03e-07 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes28_31_97095470da01",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "    final |     -1.3% |   68907 |    49885 |         0",
+   "-------------------------------------------------------"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes4_7_3b8d20184137",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "      970 |   0.5846 |  2.625451e+06 |   -0.36% |  3.62e-08 |      ",
+   "      980 |   0.5530 |  2.655643e+06 |   +1.15% |  5.33e-08 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15_a15494473cec",
+  "stage": "3_5_place_dp.tmp.log",
+  "last": [
+   "[INFO FLW-0012] Placement violations .",
+   "estimate_parasitics -placement"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile0_e77e9f31fd71",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "source /work/tap_balance.tcl",
+   "[WARNING STA-0450] virtual clock vclk can not be propagated."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile10_4359446a8364",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          425           2288 5226acdb0056d3ad2c3b"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile14_fde0a1547cfc",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          445           2274 9479a3a9404b3e7438a0"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile16_861132514fdf",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          435           2284 0ee02600d661a7478f87"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile2_566da47db519",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "OT_TAP_BALANCE it0 target 250: tile_clk=441(426-480,6799)",
+   "[WARNING STA-0450] virtual clock vclk can not be propagated."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile21_ae84af0cb5bb",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "source /work/tap_balance.tcl",
+   "[WARNING STA-0450] virtual clock vclk can not be propagated."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile27_c97f9d5d198f",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "Design area 17779 um^2 17% utilization.",
+   "source /work/tap_balance.tcl"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile30_dce17b95dec8",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "source /work/tap_balance.tcl",
+   "[WARNING STA-0450] virtual clock vclk can not be propagated."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile4_03585f43d182",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "Took 19 seconds: estimate_parasitics -placement",
+   "Report metrics stage 4, cts final..."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel1"
+ },
+ {
+  "kit": "ot_hgi_sfu_core_split3__lane9_9617422dda57",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "OT_TAP_BALANCE it0 target 451: clk_lane=449(429-514,46523) clk_map=445(431-505,2992)",
+   "[WARNING STA-0450] virtual clock vclk can not be propagated."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hgi_coll_gq_issue_620157ecc938",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "[WARNING RSZ-0104] Net _129577_ only has one pin. Check if it is intended to be dangling.",
+   "    54000 |     +0.0% |       0 |       1 |             1 |    112112"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hgi_sm_xload_cl2_bdring_2f4ce4cfb609",
+  "stage": "5_1_grt.tmp.log",
+  "last": [
+   "     1690 |       0 |    3377 |            0 |    +2.4% | -31.720 | -15167.039 | u_core.wr_hi[262]$_DFF_P_/D",
+   "     1700 |       0 |    3397 |            0 |    +2.5% | -31.720 | -15167.039 | u_core.wr_hi[262]$_DFF_P_/D"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lane_exp6_02295511db66",
+  "stage": "1_2_yosys.log",
+  "last": [
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS",
+   "Elapsed time: 2:25.75[h:]min:sec. CPU time: user 172.92 sys 4.60 (121%). Peak memory: 1510468KB."
+  ],
+  "errs": [
+   "ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS"
+  ],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes16_19_0d1ec45f866e",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "[INFO GPL-0063] New Target Density:             0.5090",
+   "[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes4_7_7c5136131e9e",
+  "stage": "3_3_place_gp.tmp.log",
+  "last": [
+   "      660 |   0.5869 |  2.578788e+06 |   -4.74% |  3.63e-08 |      ",
+   "      670 |   0.5532 |  2.599620e+06 |   +0.81% |  5.34e-08 |      "
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3_835991219cf1",
+  "stage": "3_4_place_resized.tmp.log",
+  "last": [
+   "Perform buffer insertion and gate resizing...",
+   "repair_design -verbose"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile1_f472a40b7dc3",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "Took 16 seconds: estimate_parasitics -placement",
+   "Report metrics stage 4, cts final..."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile12_6509cff81da0",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "Took 26 seconds: estimate_parasitics -placement",
+   "Report metrics stage 4, cts final..."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile19_7d83f8dfb874",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "[INFO CTS-0102]  Path depth 8 - 9",
+   "[INFO CTS-0207]  Dummy loads inserted 428"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile20_1cd8b1c36b12",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "Took 19 seconds: estimate_parasitics -placement",
+   "Report metrics stage 4, cts final..."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile23_f42432a6082d",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "Took 56 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets",
+   "estimate_parasitics -placement"
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile31_b9df46e5cb89",
+  "stage": "4_1_cts.tmp.log",
+  "last": [
+   "OT_TAP_BALANCE it0 target 250: tile_clk=445(427-500,6454)",
+   "[WARNING STA-0450] virtual clock vclk can not be propagated."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile6_b50737ab7213",
+  "stage": "3_5_place_dp.tmp.log",
+  "last": [
+   "Took 37 seconds: estimate_parasitics -placement",
+   "Report metrics stage 3, detailed place..."
+  ],
+  "errs": [],
+  "signoff": [],
+  "host": "intel2"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile15_b6c8d7e338eb",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          263           2314 14b61e60061b467721cf"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "epyc3"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile29_37de3681d47c",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          259           2312 3aa0cf346f94427f853c"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "epyc3"
+ },
+ {
+  "kit": "ot_hgi_coll_tkm_m_tp192__tile7_848ba9cab29e",
+  "stage": "4_1_cts.log",
+  "last": [
+   "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+   "4_1_cts                   .odb          259           2314 c1c58fa084780628b135"
+  ],
+  "errs": [
+   "OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 441..441 ps (spread 0, target 250); empty taps 0 ",
+   "OT_TAP_CHECK WARN trees over 290 ps: tile_clk=480; re-pitch taps to <= 395 um (partition clock.tap_pitch_um)"
+  ],
+  "signoff": [],
+  "host": "epyc3"
+ }
+]

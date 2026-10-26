@@ -412,7 +412,12 @@ def main():
         a.wrapper = str(HERE / "wrappers" / f"{module}.sv")     # hand-checked split wrapper (exactness record beside it)
     if not rk or rk not in R:
         raise SystemExit(f"NO_RECIPE {a.view}")
-    rec = R[rk]
+    rec = dict(R[rk])
+    # The exp-lane descriptor table is 256 x 61 bits in the proven
+    # split wrapper (Yosys inventory: 15616 bits). Keep that full table;
+    # the ORFS default 4096-bit inference guard rejects it before mapping.
+    if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)", module):
+        rec["synth_memory_max_bits"] = max(256 * 61, rec.get("synth_memory_max_bits", 0))
     canon = None
     if v.get("canonical_type"):
         ct = json.load(open(HARDEN / "canonical_ports_split.json"))["types"][v["canonical_type"]]
