@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 `default_nettype none
 // TOK-HBM q3prog stage A (2026-10-25): actual COLL.ARGMAX_MERGE static programme (tools/hbm_coll_static/argmax_rows.py,
 // --start-reg --arg-pr-source: the edge core's argmax_m_tp192_pr contract) on the ACTUAL five-core q3 producer assembly
@@ -21,7 +21,7 @@ module tb_q3stageb;
  reg [11:0] cfg_addr=0;reg [255:0] cfg_data=0;reg [12:0] limit=0;
  wire configured,init_busy,program_fault,busy,done,hf,fault;wire [15:0] fault_cause;
  reg [1535:0] rows[0:255];reg [63:0] meta[0:255];
- integer NR=0,P=1,MAXC=100000,drain_extra=0,WARMAT=150,HOLD=64;
+ integer NR=0,P=1,MAXC=100000,drain_extra=0,WARMAT=150,HOLD=64,MISSION_AT=4097;
  string dir,tracef;integer tfd;
  function automatic [31:0] mix(input [31:0] x);
   reg [31:0] h;h=x*32'h9e3779b1;h=h^(h>>15);h=h*32'h85ebca6b;h=h^(h>>13);return h;
@@ -129,7 +129,8 @@ module tb_q3stageb;
   if(!$value$plusargs("DIR=%s",dir)||!$value$plusargs("NR=%d",NR))$fatal(1,"DIR NR required");
   for(integer r=0;r<256;r++)begin rows[r]=0;meta[r]=0;end
   $readmemh({dir,"/d0q0.rows.hex"},rows,0,NR-1);$readmemh({dir,"/d0q0.meta.hex"},meta,0,NR-1);limit=13'(NR);
-  repeat(64)@(negedge clk);rst_n=1;repeat(16)@(negedge clk);boot_start=1;@(negedge clk);boot_start=0;
+  repeat(64)@(negedge clk);rst_n=1;repeat(16)@(negedge clk);boot_start=1;
+  $display("BOOT_ABS cycle%0d",cyc);@(negedge clk);boot_start=0;
   for(integer r=0;r<NR;r++)begin
    for(integer s=0;s<7;s++)begin @(negedge clk);cv=1;cfg_addr=12'(r*8+s);cfg_data=s<6?rows[r][256*s+:256]:{192'd0,meta[r]};end
    @(negedge clk);cv=0;repeat(55)@(negedge clk);while(init_busy)@(negedge clk);
@@ -137,8 +138,10 @@ module tb_q3stageb;
   end
   @(negedge clk);dvc=1;@(negedge clk);dvc=0;repeat(ROWS+8)@(negedge clk);
   if(!configured||program_fault)$fatal(1,"descriptor fail");
-  while(!slot0)@(negedge clk);
-  if($test$plusargs("PHASE_OFFSET"))@(negedge clk);
+  void'($value$plusargs("MISSION_AT=%d",MISSION_AT));
+  if(cyc>=MISSION_AT)$fatal(1,"host programme not ready before static mission start");
+  while(cyc<MISSION_AT)@(negedge clk);
+  $display("MISSION_ABS cycle%0d slot0%0d clock833ps",cyc,slot0);
   launch=1;@(negedge clk);launch=0;
   repeat(800)@(negedge clk);
   $display("STAGEB_SUMMARY producer_start%0d producer_flits%0d words%0d root_done%0d qdone%0d errors%0d fault%0d",producer_start,producer_flits,words,root_done,qdone,errors,firstfault);
