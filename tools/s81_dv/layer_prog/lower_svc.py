@@ -623,11 +623,36 @@ def so_schedule(t_se_last_row, nv, nframes_words=534):
                 edges_after_den=last_op + SO_LAT - den)
 
 
-def _ages(die):
+BOUND_SVC_ROUTES = {('u_seqhost', 's_j', 'u_rsv_05', 'j'): 'j_w', ('u_seqhost', 's_j', 'u_rsv_11', 'j'): 'j_e',
+                    ('u_rsv_05', 'jd', 'u_seqhost', 's_jd_w'): 'jd_w', ('u_rsv_11', 'jd', 'u_seqhost', 's_jd_e'): 'jd_e',
+                    ('u_s_3S', 'bo', 'u_rsv_05', 'q'): 'q_w', ('u_s_4S', 'bo', 'u_rsv_11', 'q'): 'q_e'}
+
+
+def bound_ages(path):
+    """TOK-DS-CMP: the svc job / done / q transport ages of the strict-bound die (bound_die.py --routes receipt, every
+    bit's exact source identity and stage count).  Every key must be PASS; pv ages are not in the receipt (the pv
+    return lands on the slice bi subword) and stay out of the returned dict."""
+    rec = json.loads(Path(path).read_text())
+    out = dict(die_sha256=rec['die_sha256'], source=str(path))
+    for r in rec['routes']:
+        k = BOUND_SVC_ROUTES.get((r.get('source'), r.get('source_port'), r.get('target'), r.get('target_port')))
+        if k and r['status'] == 'PASS':
+            out[k] = int(r['age_edges'])
+    miss = [k for k in BOUND_SVC_ROUTES.values() if k not in out]
+    if miss:
+        raise ValueError(f'bound svc route receipt lacks PASS ages {miss}')
+    return out
+
+
+def _ages(die, bound=None):
     lk = getattr(die, 'links', {}) if die is not None else {}
     g = lambda k, d: (lk.get(k) or {}).get('age_edges', d)
-    return dict(j_w=g('jw_W_l0', 34), j_e=g('jw_E_l0', 24), jd_w=g('jd_W', 32), jd_e=g('jd_E', 25),
-                q_w=g('q_W_l0', 4), q_e=g('q_E_l0', 4), pv_w=g('pv_W', 4), pv_e=g('pv_E', 4))
+    ag = dict(j_w=g('jw_W_l0', 34), j_e=g('jw_E_l0', 24), jd_w=g('jd_W', 32), jd_e=g('jd_E', 25),
+              q_w=g('q_W_l0', 4), q_e=g('q_E_l0', 4), pv_w=g('pv_W', 4), pv_e=g('pv_E', 4), basis='legacy die tree')
+    if bound:                                      # the bound 877 die's exact ages replace every legacy one it has
+        b = bound_ages(bound)
+        ag.update({k: b[k] for k in BOUND_SVC_ROUTES.values()}, basis=f'bound die {b["die_sha256"][:12]} (pv legacy)')
+    return ag
 
 
 def _op_t(sched, name, key):
@@ -688,14 +713,14 @@ def sot_booking_for(job, s):
 
 
 def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None, allq=None, timing_profile="legacy_fg3",
-          pio_extra=0):
+          pio_extra=0, bound_routes=None):
     """the job + its static schedule at the layer's cycles (layer entry = 0)"""
     job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq, timing_profile=timing_profile,
               pio_extra=pio_extra)
     if sot_booking is not None:
         from sot_program import attach_to_job
         attach_to_job(job, sot_booking)
-    ag = _ages(die)
+    ag = _ages(die, bound_routes or os.environ.get('OT_SVC_BOUND_ROUTES') or None)
     t_own = int(np.ceil(_op_t(sched, 'attn.own_row_write', 'start') or 1805))
     t_q = int(np.ceil(_op_t(sched, 'attn.q_rope', 'end') or 3001))
     t_exp = int(np.ceil(_op_t(sched, 'attn.exp', 'end') or 3763))
@@ -810,7 +835,7 @@ def lower(die, op, ctx):
         r['svc_jobs'] = [dict(layer=ctx.get('layer'), tag=job.tag, timing_profile=job.timing_profile,
                               engine_profile=job.timing['engine_profile'], arg=arg, j_word=f'{jw:09x}', s_j=s['s_j'],
                               j_pin=dict(u_rsv_05=s['j_w'], u_rsv_11=s['j_e']),
-                              source_owner=job.owner, source_owner_field='CFG[52:33], valid[53]; latch before GO',
+                              ages=s['ages'], source_owner=job.owner, source_owner_field='CFG[52:33], valid[53]; latch before GO',
                               source_owner_qualification='SOURCE ABI ONLY; stamp/transpose consumer binding pending', frames=s['at'], go=s['go'],
                               pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pv_first=s['pv_first'], pv_last=s['pv_last'],
                               done_pin=dict(u_rsv_05=s['done_w'], u_rsv_11=s['done_e']), ls=s['ls'], hbm_sectors=len(job.hbm_image()),

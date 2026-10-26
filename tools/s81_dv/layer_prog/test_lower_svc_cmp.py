@@ -66,3 +66,16 @@ def test_mutants_change_words():
 def test_pio_scales_with_rows():
     assert L.pio_for(297, 128) == 297
     assert L.pio_for(297, 640) > L.pio_for(297, 256) > 297
+
+
+def test_bound_ages_need_every_route(tmp_path):
+    import json
+    import pytest
+    rec = json.loads((L.ROOT / 'results/token_pass/bound_die_1026/svc_routes.json').read_text())
+    ag = L._ages(None, L.ROOT / 'results/token_pass/bound_die_1026/svc_routes.json')
+    assert (ag['j_w'], ag['j_e'], ag['q_w'], ag['q_e']) == (6, 12, 20, 23)
+    rec['routes'] = [r for r in rec['routes'] if r.get('target_port') != 's_jd_e']
+    p = tmp_path / 'r.json'
+    p.write_text(json.dumps(rec))
+    with pytest.raises(ValueError):
+        L.bound_ages(p)
