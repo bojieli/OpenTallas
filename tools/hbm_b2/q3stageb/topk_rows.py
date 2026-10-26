@@ -8,7 +8,7 @@ import argparse, json, pathlib, sys
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[2]/'hbm_coll_static'))
 import argmax_rows as A
 
-def compile_rows(start=86, slot=94, done=608, halt=620, mutant=None):
+def compile_rows(start=84, slot=94, done=608, halt=620, mutant=None):
  A.set_rows(256);A.LIDS.clear()
  fs=json.loads(A.LAYOUT.read_text())['fields']
  config=dict(tkm_cfg_n=1,tkm_cfg_k=1,tkm_cfg_nout=1,tkm_cfg_g=4,tkm_cfg_gbase=0,tkm_cfg_pf=1,tkm_cfg_obase=64,tkm_cfg_rbase=128,tkm_cfg_has_r=0)
@@ -44,7 +44,7 @@ def compile_rows(start=86, slot=94, done=608, halt=620, mutant=None):
  return words,meta,dict(rows=len(words),halt=halt,tkm_start_instr=start,tkm_slot_instr=slot,tkm_done_instr=done,profile='NLINK3 TP192 ROWS256 VM_RT81 G4 N1 K1',qualification='MECHANISM_ONLY',predicted_path_age=271)
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('out',type=pathlib.Path);p.add_argument('--start',type=int,default=86);p.add_argument('--slot',type=int,default=94);p.add_argument('--done',type=int,default=608);p.add_argument('--halt',type=int,default=620);p.add_argument('--mutant',choices=['no_start']);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('out',type=pathlib.Path);p.add_argument('--start',type=int,default=84);p.add_argument('--slot',type=int,default=94);p.add_argument('--done',type=int,default=608);p.add_argument('--halt',type=int,default=620);p.add_argument('--mutant',choices=['no_start']);a=p.parse_args()
  w,m,info=compile_rows(a.start,a.slot,a.done,a.halt,a.mutant);a.out.mkdir(parents=True,exist_ok=False)
  (a.out/'d0q0.rows.hex').write_text(''.join(f'{x:0384x}\n' for x in w));(a.out/'d0q0.meta.hex').write_text(''.join(f'{x:016x}\n' for x in m));(a.out/'manifest.json').write_text(json.dumps(info,indent=2)+'\n');print('TOPK_ROWS PASS',info)
 if __name__=='__main__':main()
