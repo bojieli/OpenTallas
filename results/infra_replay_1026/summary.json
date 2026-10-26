@@ -29,5 +29,35 @@
     "incremental_grt.tcl"
   ],
   "routed_to_fixed_status": "PASS: native status conversion then fresh GRT50 preserves exact actual wire/via/terminal data",
-  "routed_to_fixed_unit": "epyc1:oth-ubuntu-3346202-1793007480"
+  "routed_to_fixed_unit": "epyc1:oth-ubuntu-3346202-1793007480",
+  "actual_footprint_reservations": {
+    "actual_shapes": 14,
+    "via_enclosures": 8,
+    "layers": {
+      "M1": 4,
+      "M2": 6,
+      "M3": 4
+    },
+    "global_route_overflow": 0,
+    "physical_preservation": "PASS"
+  },
+  "capacity_control": {
+    "metal_free_original": {
+      "M1": 498,
+      "M2": 500,
+      "M3": 497
+    },
+    "actual_fixed_metal_original": {
+      "M1": 494,
+      "M2": 492,
+      "M3": 492
+    },
+    "actual_fixed_metal_with_footprint_obs_original": {
+      "M1": 494,
+      "M2": 492,
+      "M3": 492
+    },
+    "interpretation": "Native GRT already consumes actual FIXED metal in this vehicle; explicit matching footprint OBS does not double-count in this vehicle.",
+    "unit": "epyc1:oth-ubuntu-219875-1793008010"
+  }
 }

@@ -80,7 +80,85 @@ def pin_shapes(term):
                   for p in term.getBPins() for b in p.getBoxes())
 
 
-def replay(source, target, names, output, report=None):
+def route_shapes(net):
+    """Actual metal rectangles, including every routing-layer via enclosure."""
+    import odb
+
+    def via_boxes(via, x, y):
+        for box in via.getBoxes():
+            layer = box.getTechLayer()
+            if layer and layer.getRoutingLevel() > 0:
+                yield layer, (box.xMin()+x, box.yMin()+y, box.xMax()+x, box.yMax()+y), "via_enclosure"
+
+    wire = net.getWire()
+    if wire:
+        iterator = odb.dbWirePathItr()
+        iterator.begin(wire)
+        path, item = odb.dbWirePath(), odb.dbWirePathShape()
+        while iterator.getNextPath(path):
+            while iterator.getNextShape(item):
+                shape = item.shape
+                if shape.isVia():
+                    via = shape.getTechVia() or shape.getVia()
+                    yield from via_boxes(via, *shape.getViaXY())
+                else:
+                    layer = shape.getTechLayer()
+                    if layer and layer.getRoutingLevel() > 0:
+                        yield layer, (shape.xMin(), shape.yMin(), shape.xMax(), shape.yMax()), "wire"
+    for swire in net.getSWires():
+        for box in swire.getWires():
+            if box.isVia():
+                via = box.getTechVia() or box.getBlockVia()
+                yield from via_boxes(via, *box.getViaXY())
+            else:
+                layer = box.getTechLayer()
+                if layer and layer.getRoutingLevel() > 0:
+                    yield layer, (box.xMin(), box.yMin(), box.xMax(), box.yMax()), "special_wire"
+
+
+def reserve_actual_routes(block, names, tcl_path, extra_clearance_um=0.0):
+    """Materialize real wire/via footprints as GRT obstacles (special wires alone
+    are not subtracted from GRT capacity). Clearance is max(tech, NDR, caller).
+    This is a conservative physical reservation, not a post-route DRC claim.
+    """
+    import odb
+    dbu = block.getDbUnitsPerMicron()
+    area = block.getDieArea()
+    existing = {(o.getTechLayer().getName(), o.getBBox().xMin(), o.getBBox().yMin(),
+                 o.getBBox().xMax(), o.getBBox().yMax()) for o in block.getObstructions()}
+    result = dict(actual_shapes=0, new_obstructions=0, layers={}, kinds={},
+                  clearance="max(technology spacing, net NDR spacing, explicit extra clearance)",
+                  extra_clearance_um=extra_clearance_um)
+    with Path(tcl_path).open("w") as f:
+        f.write("# Actual OpenDB infrastructure wire/via footprints plus required spacing; no guides.\n")
+        for name in sorted(names):
+            net = block.findNet(name)
+            rule = net.getNonDefaultRule()
+            for layer, rect, kind in route_shapes(net):
+                spacing = max(layer.getSpacing(), round(extra_clearance_um * dbu))
+                lr = rule.getLayerRule(layer) if rule else None
+                if lr:
+                    spacing = max(spacing, lr.getSpacing())
+                x0, y0, x1, y1 = rect
+                rect = (max(area.xMin(), x0-spacing), max(area.yMin(), y0-spacing),
+                        min(area.xMax(), x1+spacing), min(area.yMax(), y1+spacing))
+                if rect[0] >= rect[2] or rect[1] >= rect[3]:
+                    raise ValueError(f"infrastructure shape outside die: {name} {layer.getName()}")
+                result["actual_shapes"] += 1
+                result["layers"][layer.getName()] = result["layers"].get(layer.getName(), 0) + 1
+                result["kinds"][kind] = result["kinds"].get(kind, 0) + 1
+                key = (layer.getName(), *rect)
+                if key in existing:
+                    continue
+                odb.dbObstruction.create(block, layer, *rect)
+                existing.add(key)
+                result["new_obstructions"] += 1
+                coords = " ".join(f"{v/dbu:.6f}" for v in rect)
+                f.write(f"create_obstruction -region {{{coords}}} -layer {layer.getName()}\n")
+    return result
+
+
+def replay(source, target, names, output, report=None, extra_clearance_um=0.0):
     import odb
     # The infrastructure database is the physical base. OpenROAD's incremental
     # DEF reader updates placement/pins but silently ignores routed NETS and
@@ -204,11 +282,12 @@ def replay(source, target, names, output, report=None):
             net.setDoNotTouch(True)
         output = Path(output)
         output.parent.mkdir(parents=True, exist_ok=True)
+        reservations = reserve_actual_routes(block, names, output.with_suffix(".infra_obs.tcl"), extra_clearance_um)
         odb.write_db(source_db, str(output))
         odb.write_def(block, str(output.with_suffix(".infra.def")))
     result = dict(schema="opentallas.infra_replay.v1", source=str(source), target=str(target), output=str(output),
                   verdict="IMPORTED", freeze_qualified=False, nets=selected, signals=signals,
-                  fixed_status_changes=sorted(fixed_status_changes),
+                  fixed_status_changes=sorted(fixed_status_changes), reservations=reservations,
                   wire_geometry_sha256=hashlib.sha256(json.dumps(selected, sort_keys=True).encode()).hexdigest(),
                   note="Infrastructure ODB retained; target signal connectivity appended; physical freeze gates remain separate")
     Path(report or output.with_suffix(".replay.json")).write_text(json.dumps(result, indent=2) + "\n")
@@ -237,6 +316,8 @@ def main(argv=None):
     p.add_argument("--nets", help="One exact infrastructure net name per line")
     p.add_argument("--out")
     p.add_argument("--report")
+    p.add_argument("--extra-clearance-um", type=float, default=0.0,
+                   help="Nonnegative extra metal clearance; maxed with technology/NDR spacing")
     p.add_argument("--verify", metavar="ROUTED_ODB", help="Verify preservation after signal routing")
     p.add_argument("--against", metavar="REPLAY_JSON", help="Original import receipt for --verify")
     a = p.parse_args(argv)
@@ -249,7 +330,9 @@ def main(argv=None):
     if not all((a.source, a.target, a.nets, a.out)):
         p.error("import requires --source, --target, --nets and --out")
     names = [line.strip() for line in Path(a.nets).read_text().splitlines() if line.strip() and not line.startswith("#")]
-    result = replay(a.source, a.target, names, a.out, a.report)
+    if a.extra_clearance_um < 0:
+        p.error("--extra-clearance-um must be nonnegative")
+    result = replay(a.source, a.target, names, a.out, a.report, a.extra_clearance_um)
     print("INFRA_REPLAY IMPORTED", len(result["nets"]), "nets; actual fixed routes, no freeze qualification")
 
 
