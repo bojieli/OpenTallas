@@ -1,0 +1,10 @@
+edge gen rc=0
+vm legacy rc=0
+ring_ag legacy rc=1
+edge legacy rc=0
+reduce legacy rc=1
+ring_ag gen rc=1
+body gen rc=1
+vm gen rc=0
+reduce gen rc=1
+body legacy rc=1

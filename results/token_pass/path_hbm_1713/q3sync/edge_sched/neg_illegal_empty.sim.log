@@ -1,0 +1,32 @@
+# Sun Oct 25 20:58:54 PDT 2026 host=tender-ray commit=766902b86348a5e3be1711982f06066668acdbfa variant=illegal_empty runs=40 seed=1
+# build rc=0
+WARM_RESET n=1 cyc=110 phase_target=0 hold=38
+FAULT cyc=168 L=1 S=1
+GOLDEN_UNEXPECTED_PUBLISH cyc=168 id=9a22993d
+FAULT cyc=169 L=1 S=1
+FAULT cyc=170 L=1 S=1
+FAULT cyc=171 L=1 S=1
+WARM_RESET n=2 cyc=173 phase_target=1 hold=37
+WARM_RESET n=3 cyc=387 phase_target=2 hold=38
+WARM_RESET n=4 cyc=706 phase_target=3 hold=17
+WARM_RESET n=5 cyc=845 phase_target=4 hold=11
+WARM_RESET n=6 cyc=982 phase_target=5 hold=4
+WARM_RESET n=7 cyc=1188 phase_target=6 hold=1
+DONTCARE cyc=1190 arg_out_flit v=0 fault=0 nreset=7
+WARM_RESET n=8 cyc=1190 phase_target=7 hold=1
+WARM_RESET n=9 cyc=1487 phase_target=8 hold=13
+WARM_RESET n=10 cyc=1631 phase_target=0 hold=41
+WARM_RESET n=11 cyc=2002 phase_target=1 hold=25
+DONTCARE cyc=2028 arg_out_flit v=0 fault=0 nreset=11
+DONTCARE cyc=2029 arg_out_flit v=0 fault=0 nreset=11
+DONTCARE cyc=2030 arg_out_flit v=0 fault=0 nreset=11
+DONTCARE cyc=2031 arg_out_flit v=0 fault=0 nreset=11
+DONTCARE cyc=2032 arg_out_flit v=0 fault=0 nreset=11
+EDGE_SCHED runs_started=40 runs_published=31 aborted_by_reset=9 warm_resets=11 compared=1742 mismatches=0 dontcare_flit_v0=6 (of which fault=1: 0) golden_ok=31 golden_bad=1 fault_cycles=6 in_reset_diff=42 pending=0
+EDGE_SCHED warm_reset_phase_hits dlv=2 flush_pub=2 on_pub=1 pub+1=1 idle=1 on_start=1 b2b_first=1 b2b_second=1 pub+2=1
+EDGE_SCHED FAIL
+- /srv/opentallas-scratch2/claude/tok-hbm-2010/edge_sched_r6/neg/illegal_empty/tb.sv:463: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.220 s; speed 18.519 us/s
+- Verilator: cpu 0.220 s on 1 threads; allocated 7 MB
+# sim rc=0 Sun Oct 25 20:59:10 PDT 2026
