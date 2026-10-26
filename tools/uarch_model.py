@@ -159,6 +159,38 @@ def qwen_central_vm_control_leaf_model(observer=False):
         token_latency_change_edges=0, qualification='sizing only; actual mapped area/CTS/route/native pins pending')
 
 
+def s81_head_l4_retime_model(adder_latency=4):
+    """Opt-in native head retime; source/core-cycle estimates, not SIGNED timing.
+
+    The existing SK=11 layout is retained by default. A successor must regenerate
+    both ROM lane skew and x skew from this SK; changing only the adder is invalid.
+    """
+    sk = int(adder_latency)
+    if sk not in (4, 11):
+        raise ValueError('this head retime study covers legacy11 and standardf12_l4 only')
+    return dict(kind='S81_HEAD_F12_L4_RETIME_PROPOSAL', default_enabled=False,
+        arithmetic='same golden binary32 RNE reduction order; nonfinite/overflow failclosed',
+        clock_ps=833, macs_per_cycle=16, products_per_word=16,
+        weights_bits_per_cycle=256, raw_rom_bits_per_read=274,
+        input_x_bits_per_cycle=256, macro_count=2, macro_depth=4096,
+        logical_words_per_scan=8192, physical_words_per_scan=8192+7*sk,
+        adder_latency=sk, old_adder_latency=11,
+        adders_per_B=25, adders_per_A=26, B_elements_per_tile=1, A_elements_per_tile=4,
+        first_B_core_root_cycle=13+63+17*sk,
+        first_A_core_root_cycle=13+255+17*sk,
+        component_pipeline_cycle_delta=17*(sk-11),
+        tile_position_gap_est_cycles=8213+18*sk,
+        tile_position_gap_legacy_cycles=8411,
+        tile_position_gap_delta_cycles=18*(sk-11),
+        area_fit='same2ROM277.652umB slot; mappedstdcell/FF census required before physicalbuild',
+        traffic='same ports and sustained1word/cycle; shorter SK changesROMlogicalword permutation, not checkpointweights',
+        requirements=['aligned result/err exactness plus seeded mutant',
+            'regenerateROMskew and xskew together; price nativehead transport schedule',
+            'whole selected element/token exactness and immutable native LEC',
+            'review actual placement/F6/reset before CTS; TTsetup/FFhold833 signoff'],
+        measured=False, physical_signed=False)
+
+
 def qwen_native_head_packet_stage_model(width=519, copies=1, orientation="H"):
     """Physical ECTL/head staging; 2026-10-15 q_kv_die slot contract.
 
