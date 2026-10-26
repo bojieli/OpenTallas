@@ -23,6 +23,13 @@ launch points and core-edge capture landings) move with their core; internal-sta
 are pulled to the nearest macro-free point and re-sited with the SAME station count if a hop breaks. Station counts never
 change (0 cycles; lane latency delta recorded). Geometry proposal only, never a route receipt.
 Usage: path_hbm_b100_escape.py --src <plan dir> --out <new plan dir> [--type q_b100] [--cols 8.64,250.56,492.48]
+
+b1n6 (2026-10-26) generalisation for q_b101 / q_b101_nw: --slot none skips the W->E re-stage; --recentre SLOT moves that
+unsited slot's planned station points regs_um[1:] (census_complete sites the bits around them) to the centre x of the
+nearest FF-bearing core channel (C01/C12), y unchanged. q_b101 L12x1 (E->W, 2,997 bits, 3 stations) had no legal chain
+because the idx columns 8.64/241.92/475.2 leave C01 = C12 = 14.688 um (no FF column inside the two 8.64 halos); cols
+8.64/250.56/492.48 give C01 = C12 = 23.328 um (2 FF columns each), E strip 31.968 -> 14.688 um (no per-bit site uses the
+E strip beside the cores; the E face pin escape stays 14.688 um, as q_b100 after its escape pass).
 """
 import argparse, json, math, shutil, sys
 from pathlib import Path
@@ -71,7 +78,8 @@ def main():
     ap.add_argument('--src', required=True, type=Path); ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--type', default='q_b100'); ap.add_argument('--cols', default='17.28,259.2,501.12')
     ap.add_argument('--stages', default='W,C01,C12', help='channel per per-bit stage of --slot')
-    ap.add_argument('--slot', default='L5x2', help='W->E per-bit slot re-staged one stage per channel (C01, C12, E)')
+    ap.add_argument('--slot', default='L5x2', help='W->E per-bit slot re-staged one stage per channel (C01, C12, E); none = skip')
+    ap.add_argument('--recentre', default='', help='comma list of unsited slots whose regs_um[1:] move to the nearest opened channel centre')
     a = ap.parse_args()
     if a.out.exists(): raise SystemExit('output must be new')
     raw = json.loads((a.src / 'die_plan.json').read_text()); before = S.Plan(json.loads(json.dumps(raw)))
@@ -88,7 +96,7 @@ def main():
     keep_w = [r for r in enum if r['ff_cols']['W'] >= 2 and r['ff_cols']['C01'] >= 2 and r['ff_cols']['C12'] >= 2]
     keep_w.sort(key=lambda r: (-r['gaps']['E'], -min(r['ff_cols']['C01'], r['ff_cols']['C12'])))
     e17 = [r for r in enum if r['gaps']['E'] >= ESC_MIN and r['ff_cols']['C01'] >= 2 and r['ff_cols']['C12'] >= 2]
-    if len(st_new['W'][1]) < 2 or len(st_new['C01'][1]) < 2 or len(st_new['C12'][1]) < 2:
+    if len(st_new['W'][1]) < min(2, len(st_old['W'][1])) or len(st_new['C01'][1]) < 2 or len(st_new['C12'][1]) < 2:
         raise SystemExit(f'--cols {new_cols}: W {st_new["W"][1]} / C01 {st_new["C01"][1]} / C12 {st_new["C12"][1]} not legal')
     rep = dict(type=tn, src=str(a.src / 'die_plan.json'), cols_before=old_cols, cols_after=new_cols,
                east_escape_um=dict(before=st_old['E'][0], after=st_new['E'][0]),
@@ -150,8 +158,24 @@ def main():
                 ist['restationed'].append(e.get('conn'))
             else: ist['fails'].append(e.get('conn'))
 
-    # ---- 2) re-stage the wide W->E slot: one stage per channel (C01, C12, E)
+    # ---- 2a) recentre planned station points of unsited slots onto the opened channels
     boxes = list(S.placed_macro_boxes(t, halo=HALO).values())
+    chc = {k: float(np.mean(st_new[k][1]) + CELL[0] / 2) for k in ('C01', 'C12') if st_new[k][1]}
+    rep['recentred'] = []
+    for nm in [v for v in a.recentre.split(',') if v]:
+        s = [s for s in t['ft_slots'] if s['name'] == nm][0]; assert not s.get('bit_sites_um'), nm
+        before_r = [list(r) for r in s['regs_um']]
+        for j in range(1, len(s['regs_um'])):
+            r = s['regs_um'][j]; k = min(chc, key=lambda k: abs(chc[k] - r[0])); s['regs_um'][j] = [round(chc[k], 4), r[1]]
+        s['note'] = (s.get('note', '') + f' | B1N6 CHANNEL-OPEN: planned stations recentred to opened channels {before_r[1:]} -> {s["regs_um"][1:]}').lstrip(' |')
+        rep['recentred'].append(dict(slot=nm, before=before_r, after=s['regs_um']))
+    if a.slot == 'none': rep['restaged_slot'] = None
+    else: _restage(a, t, tn, raw, boxes, st_new, rep)
+    _finish(a, t, tn, raw, before, hcs, cw, ist, rep)
+
+
+def _restage(a, t, tn, raw, boxes, st_new, rep):
+    # ---- 2) re-stage the wide W->E slot: one stage per channel (C01, C12, E)
     alloc = RowAllocator((INSET, INSET, W - INSET, H - INSET), blocked=boxes, cell_size=CELL, column_pitch=CP, row_pitch=.27, origin=(INSET, INSET))
     s5 = [s for s in t['ft_slots'] if s['name'] == a.slot][0]
     assert s5['in_face'] == 'W' and s5['out_face'] == 'E' and len(s5['bit_sites_um']) == 3
@@ -192,6 +216,9 @@ def main():
                                 stage_sites_per_channel=[{k: int(sum(1 for q in stg if any(abs(q[0] - CELL[0] / 2 - c) < 1e-3 for c in st_new[k][1])))
                                                           for k in st_new} for stg in new5])
 
+
+
+def _finish(a, t, tn, raw, before, hcs, cw, ist, rep):
     # ---- 3) every other halo-colliding per-bit site: nearest legal free site (path_hbm_perbit_nudge)
     rep['perbit_nudge'] = NU.nudge_type(raw, tn)
 
@@ -231,7 +258,7 @@ def main():
     rep['scope'] = 'geometry proposal; not a route receipt'
     shutil.copytree(a.src, a.out)
     (a.out / 'die_plan.json').write_text(json.dumps(raw, indent=1) + '\n')
-    (a.out / 'b100_escape_report.json').write_text(json.dumps(rep, indent=1, default=str) + '\n')
+    (a.out / ('b100_escape_report.json' if tn == 'q_b100' else f'{tn}_escape_report.json')).write_text(json.dumps(rep, indent=1, default=str) + '\n')
     print('COMPLETE', json.dumps({k: rep[k] for k in ('cols_before', 'cols_after', 'east_escape_um', 'stations_unchanged', 'lane_cycle_delta',
                                                        'census', 'core_overlap_or_halo_clash', 'lattice_ok', 'restaged_slot')}, default=str))
     print('internal', json.dumps({k: (len(v) if isinstance(v, list) else v) for k, v in ist.items()}), 'fails', ist['fails'][:5])
