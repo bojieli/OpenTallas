@@ -1,0 +1,189 @@
+{
+ "verdict": "FAIL",
+ "unchecked_by_number_check": true,
+ "unit": "oth-ubuntu-3028858-1793032376",
+ "source_commit": "9793d4280",
+ "ndr_implementation": "PASS: native2WM4/M5 and0fallbackTT/FF",
+ "corners": {
+  "TT": {
+   "sinks": 2790,
+   "min_ps": 229.813354,
+   "mean_ps": 245.33412046989247,
+   "max_ps": 293.677948,
+   "leaf_mean_window_ps": 25.973969651162804,
+   "leaves": 64,
+   "max_leaf_load": 44,
+   "min_leaf_load": 43,
+   "grt_lines": []
+  },
+  "FF": {
+   "sinks": 2790,
+   "min_ps": 168.119904,
+   "mean_ps": 180.50614919318997,
+   "max_ps": 232.34761,
+   "leaf_mean_window_ps": 24.833193526427067,
+   "leaves": 64,
+   "max_leaf_load": 44,
+   "min_leaf_load": 43,
+   "grt_lines": []
+  },
+  "qualification": "UNCHECKED; native TT/FF GRT RC diagnostics only, no detail route/signoff;2W Cx1.1 model assumption before build"
+ },
+ "diagnosis": "Mean bias largely explained by model40ps versus diagnostic ideal0 input slew. Leaf-window mismatch remains actualGRTtopology/cap-range versusnominalMSTmodel; no measuredretuning authorized.",
+ "relative_residuals": {
+  "TT": {
+   "common_bias_ps": 2.062248617295699,
+   "largest_relative_residuals": [
+    {
+     "net": "mp_core_Q2B3L3_out",
+     "native_mean_ps": 233.61808534090903,
+     "model0_mean_ps": 243.358986665271,
+     "residual_after_common_ps": -11.80314994165767
+    },
+    {
+     "net": "mp_core_Q3B3L0_out",
+     "native_mean_ps": 233.09011413953493,
+     "model0_mean_ps": 239.08659650202947,
+     "residual_after_common_ps": -8.058730979790232
+    },
+    {
+     "net": "mp_core_Q2B2L1_out",
+     "native_mean_ps": 242.15200629545458,
+     "model0_mean_ps": 248.00655923961543,
+     "residual_after_common_ps": -7.916801561456543
+    },
+    {
+     "net": "mp_core_Q3B3L3_out",
+     "native_mean_ps": 240.08814793181816,
+     "model0_mean_ps": 245.6451389151271,
+     "residual_after_common_ps": -7.619239600604635
+    },
+    {
+     "net": "mp_core_Q3B1L2_out",
+     "native_mean_ps": 240.13307047727275,
+     "model0_mean_ps": 245.67933407236058,
+     "residual_after_common_ps": -7.608512212383522
+    },
+    {
+     "net": "mp_core_Q3B3L1_out",
+     "native_mean_ps": 236.1427265,
+     "model0_mean_ps": 241.6150469664046,
+     "residual_after_common_ps": -7.534569083700296
+    },
+    {
+     "net": "mp_core_Q3B1L0_out",
+     "native_mean_ps": 239.5254240232558,
+     "model0_mean_ps": 244.8950305409221,
+     "residual_after_common_ps": -7.431855134962012
+    },
+    {
+     "net": "mp_core_Q3B1L3_out",
+     "native_mean_ps": 245.8029733409092,
+     "model0_mean_ps": 250.9819343230168,
+     "residual_after_common_ps": -7.241209599403282
+    },
+    {
+     "net": "mp_core_Q3B3L2_out",
+     "native_mean_ps": 235.98175670454546,
+     "model0_mean_ps": 241.0683355414885,
+     "residual_after_common_ps": -7.148827454238733
+    },
+    {
+     "net": "mp_core_Q1B3L2_out",
+     "native_mean_ps": 252.52869179545453,
+     "model0_mean_ps": 243.41179136226208,
+     "residual_after_common_ps": 7.054651815896756
+    },
+    {
+     "net": "mp_core_Q2B2L2_out",
+     "native_mean_ps": 242.9108276511628,
+     "model0_mean_ps": 247.78396217622114,
+     "residual_after_common_ps": -6.935383142354032
+    },
+    {
+     "net": "mp_core_Q1B0L1_out",
+     "native_mean_ps": 256.71965025000003,
+     "model0_mean_ps": 247.84190276870115,
+     "residual_after_common_ps": 6.8154988640031835
+    }
+   ]
+  },
+  "FF": {
+   "common_bias_ps": 2.474098854419809,
+   "largest_relative_residuals": [
+    {
+     "net": "mp_core_Q2B3L3_out",
+     "native_mean_ps": 179.15136756818183,
+     "model0_mean_ps": 189.6922911593382,
+     "residual_after_common_ps": -13.01502244557618
+    },
+    {
+     "net": "mp_core_Q3B3L3_out",
+     "native_mean_ps": 177.1364413181818,
+     "model0_mean_ps": 182.65798263678312,
+     "residual_after_common_ps": -7.9956401730211315
+    },
+    {
+     "net": "mp_core_Q3B3L0_out",
+     "native_mean_ps": 171.80689783720925,
+     "model0_mean_ps": 177.2541417424575,
+     "residual_after_common_ps": -7.921342759668066
+    },
+    {
+     "net": "mp_core_Q3B3L1_out",
+     "native_mean_ps": 174.60763581818182,
+     "model0_mean_ps": 179.92163716632584,
+     "residual_after_common_ps": -7.788100202563827
+    },
+    {
+     "net": "mp_core_Q3B3L2_out",
+     "native_mean_ps": 173.64341636363636,
+     "model0_mean_ps": 178.56509386180892,
+     "residual_after_common_ps": -7.395776352592366
+    },
+    {
+     "net": "mp_core_Q2B2L1_out",
+     "native_mean_ps": 178.72003904545457,
+     "model0_mean_ps": 183.302996599335,
+     "residual_after_common_ps": -7.0570564083002285
+    },
+    {
+     "net": "mp_core_Q3B1L2_out",
+     "native_mean_ps": 175.8922535681818,
+     "model0_mean_ps": 180.31125564917642,
+     "residual_after_common_ps": -6.89310093541444
+    },
+    {
+     "net": "mp_core_Q0B0L3_out",
+     "native_mean_ps": 183.59321729545456,
+     "model0_mean_ps": 174.2706918099235,
+     "residual_after_common_ps": 6.84842663111125
+    },
+    {
+     "net": "mp_core_Q3B1L3_out",
+     "native_mean_ps": 180.59697134090908,
+     "model0_mean_ps": 184.827012705622,
+     "residual_after_common_ps": -6.704140219132727
+    },
+    {
+     "net": "mp_core_Q3B0L3_out",
+     "native_mean_ps": 174.14129086363636,
+     "model0_mean_ps": 178.36095315130112,
+     "residual_after_common_ps": -6.69376114208457
+    },
+    {
+     "net": "mp_core_Q3B1L0_out",
+     "native_mean_ps": 175.10842320930232,
+     "model0_mean_ps": 179.25275912022232,
+     "residual_after_common_ps": -6.618434765339815
+    },
+    {
+     "net": "mp_core_Q3B0L1_out",
+     "native_mean_ps": 174.13915636363637,
+     "model0_mean_ps": 178.06173673726892,
+     "residual_after_common_ps": -6.396679228052351
+    }
+   ]
+  }
+ }
+}
