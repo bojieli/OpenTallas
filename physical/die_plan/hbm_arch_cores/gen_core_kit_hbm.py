@@ -559,7 +559,10 @@ def infra_islands_hook(kd, cfg, path, module, w, h):
     (kd / "infra_islands.tcl").write_text(infra_islands_tcl(ent, w, h))
     shutil.copyfile(TOOL / "keepout_phys.tcl", kd / "keepout_phys.tcl")
     shutil.copyfile(HERE / "island_abstract.py", kd / "island_abstract.py")
-    (kd / "infra_islands.json").write_text(json.dumps(dict(module=module, outline_um=[w, h], **ent), indent=1) + "\n")
+    eo = ent.get("outline_um")
+    if eo and (abs(eo[0] - w) > 1e-3 or abs(eo[1] - h) > 1e-3):
+        raise SystemExit(f"--infra-islands: island outline {eo} != kit outline {[w, h]} for {module} (stale island slice)")
+    (kd / "infra_islands.json").write_text(json.dumps({**ent, "module": module, "outline_um": [w, h]}, indent=1) + "\n")
     gpl = [ln for ln in cfg if re.match(r"^\s*(override\s+)?export\s+PRE_GLOBAL_PLACE_TCL\s*=", ln)]
     prev = gpl[-1].split("=", 1)[1].strip() if gpl else None
     (kd / "infra_islands_gpl.tcl").write_text("source /work/infra_islands.tcl\n" + (f"source {prev}\n" if prev else ""))
