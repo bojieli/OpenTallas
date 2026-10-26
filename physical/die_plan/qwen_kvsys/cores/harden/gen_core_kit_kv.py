@@ -541,7 +541,7 @@ def main():
                          "S band (zone_fence.tcl, released before DPL) and one regional clock tap per zone + ctl "
                          "(astk_zone_taps.tcl, CTS -balance_levels); needs --astk-write-decode")
     ap.add_argument("--astk-storage-enable", action="store_true",
-                    help="ASTK6 kept row-bank storage enables,32loads/output,+64FF/0cycles; needs --astk-path4")
+                    help="ASTK6 kept row-bank storage enables,32loads/output,+256FF/master/0cycles; needs --astk-path4")
     ap.add_argument("--astk-path4", action="store_true",
                     help="PATH-KV-ASTK4 10-25 (COORD rulings (a)/(b), GEOM-REVIEW-2 14:46): zn_0 pin landing stage zl/tl + "
                          "16 kept read-address replicas (+1 cycle on zn_0, KV-TOK reprices) and ctl z_k slices with the "
@@ -751,7 +751,7 @@ def main():
         astk_storage_enable.apply_kit(kd / "rtl")
         exp = astk_storage_enable.replica_expect(json.loads((kd / "replica_expect.json").read_text()))
         (kd / "replica_expect.json").write_text(json.dumps(exp, indent=1) + "\n")
-        (kd / "astk_storage_enable_delta.json").write_text(json.dumps(dict(added_cycles=0, control_ff_added=64, row_modules=16, ff_per_row=4, sd_bits_per_enable=32), indent=1) + "\n")
+        (kd / "astk_storage_enable_delta.json").write_text(json.dumps(dict(added_cycles=0, control_ff_added=256, row_modules=64, ff_per_row=4, sd_bits_per_enable=32), indent=1) + "\n")
     if a.astk_strap_master:
         src = kd / "rtl" / f"{mod}.sv"
         (kd / "rtl" / f"{astk_strap_master.MASTER}.sv").write_text(astk_strap_master.transform(src.read_text(), mod))

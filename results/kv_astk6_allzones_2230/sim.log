@@ -1,0 +1,6 @@
+ASTK6 MITER checks=15993 output_mis=0 enable_mis=0 store_mis=0 head_mutant_mis=23 general_mutant_mis=18 writes=7753 starts=46 resets=8
+ASTK6 ALLZONES PASS; head+general drain mutants CAUGHT
+- tb.sv:55: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 0.155 s; speed 102.918 us/s
+- Verilator: cpu 0.155 s on 1 threads; allocated 8 MB

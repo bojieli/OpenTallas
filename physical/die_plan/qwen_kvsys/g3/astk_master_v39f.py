@@ -36,7 +36,9 @@ def face(x, y):
 
 
 def key(q):
-    return q.get("name") or f"{q['bus']}[{q.get('bit', 0)}]"
+    if q.get("name"):
+        return q["name"]
+    return q["bus"] if q.get("bit") is None else f"{q['bus']}[{q['bit']}]"
 
 
 REACH = 405.0
