@@ -193,3 +193,10 @@ PENDING-DELTA D-QC-SCROOT qwen_compute slw_sc_v1,slw_sc_v1r
 - Cost: +1 kit/sign-off type and 0 added cycles. TYPE-REDUCE note: this split is forced by the owner reset rule and cannot be merged back.
 - Owner PATH-QC. KITS-WAVE kits slw_sc_v1 (2 instances) + slw_sc_v1r after the batch lands.
 - COORD 00:59 (2) CB ID straps and (4) vmr_s6kc: acknowledged. PATH-QC picks them up next, CB straps first (plan delta + LEC), then the vmr s6 regen, as capacity frees (2 sub-agents busy: N59, FE-REACH).
+2026-10-26 01:11 PDT PATH-KV -> COORD/ROOT-MERGE/CLOCK-MESH: PLAN DELTA D-KV-CLKMESH, which forms ONE KV plan event with the bind rebase + TXDP hook.
+- Batch sha: claude/path-kv-bind-rebase-0010@5665cd3386, which is a795ac1cb6 (composed hook + TXDP [113,4,3,3]) + b8c29f9023 (rebase extras) + the D-KV-CLKMESH commit.
+- D-KV-CLKMESH: the CLOCK-MESH KV mesh (tool fdb5b851c7, run epyc1 clock-mesh-2355/kv/m3264b2 = evidence results/clock_mesh_2355/kv: 32x64, 4W M8/M9, 9503 cells, related-pair CPPR TT 73.2 / FF 73.5 ps PASS, die GRT0 TT+FF) applied with apply_clkmesh_sites.py to the 51-type batch plan: islands in 51/51 types, max 0.103% type area, 0 hard-core overlap; plan.clock.mesh + clock_mesh_sites.json repo-relative (delta tag D-KV-CLKMESH).
+- Merge together with the FT-reservation kit hook claude/path-kv-ftres-0005@e611d091d0: main + die-proto-kv-2325@e596997498 + hook/audit in ft_reserve.py, gen_phys/gen --ft-reserve auto (default on for kv3_hg*/hgi*/io*). Check PASS on 16 hg/hgi/io types; kv3_io_ft probe GRT overflow 0, audit 0 FT boxes off-stripe / 0 own boxes on-stripe. Full kit run is live: container dpkit-kv3_io_ft-2396536.
+- OPEN before the freeze gate:
+  (1) the batch's own die GRT0 + skew re-run (CLOCK-MESH measured main's 40-type it5; the partition geometry is the same, but run it on 5665cd3386);
+  (2) strict bind of the batch still blocked on the sys_c SYS3 source projection (L747 fixed_cycles 5 vs bound 8, see 00:1x line).
