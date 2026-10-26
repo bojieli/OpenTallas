@@ -1351,10 +1351,11 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         skew_model = dict(verdict="PASS" if max(v["pair_with_core_ps"] for v in pr.values()) <= skew_gate_ps
                           else "FAIL",
                           gate_ps=skew_gate_ps, predicted=pr, calibration=SKEW_CAL,
-                          note="predicted FAIL = the clock plan cannot pass 12.4a by construction; fix the structure "
-                               "(more/denser drivers, deeper common node, shorter tree below the region root)")
+                          diagnostic_only=True,
+                          note="80 ps is the 12.4a clock design target, not the freeze gate. Prediction is diagnostic; "
+                               "freeze still requires real propagated-clock TT setup and FF hold STA.")
     else:
-        skew_model = dict(verdict="NOT RUN", note="no --mesh (clock plan geometry)")
+        skew_model = dict(verdict="NOT RUN", diagnostic_only=True, note="no --mesh (clock plan geometry)")
 
     gates = dict(
         reach_gap=dict(verdict="PASS" if not gap_fail else "FAIL", max_gap_um=r3(gap_max[0]),
@@ -1396,7 +1397,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         infra_sites=sites_gate,
         **rulings,
     )
-    verdict = "PASS" if all(g["verdict"] == "PASS" for g in gates.values()) else "FAIL"
+    verdict = "PASS" if all(g["verdict"] == "PASS" for g in gates.values() if not g.get("diagnostic_only")) else "FAIL"
 
     # ---- slices (type frame)
     mp = dict(schema=PLAN_SCHEMA, die=P.name, plan=str(P.path), plan_sha256=plan_sha, reach_um=reach,
