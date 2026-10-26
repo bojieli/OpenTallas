@@ -1,7 +1,10 @@
 """Resolve the selected slice's actual source components for native lowering.
 
 This follows existing wrapper instances. It does not change any master or
-qualify a physical binding. Materialized kit inventories remain authoritative
+qualify a physical binding. OT_S81_SELECTED_ASBUILT_MANIFEST selects the exact
+binder file/preference map. OT_S81_SELECTED_CHILD_FILES may explicitly name
+implementation children omitted by blackbox elaboration (comma-separated,
+repo-relative); they cannot replace any manifest module. Materialized kit inventories remain authoritative
 for a run; source-only programmes retain their explicit adoption hold.
 """
 import hashlib

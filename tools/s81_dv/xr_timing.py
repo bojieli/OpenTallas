@@ -32,7 +32,7 @@ def source_contract(tree, fallback, instances=None):
     if instances is not None:
         from layer_prog.slice_source import resolve
         root = Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or tree)
-        if not (root/'rtl/dsrom_sys/s81_dv/slice').exists():
+        if not (root/'rtl/dsrom_sys/s81_dv/slice').exists() and not os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST'):
             root = Path(fallback)
         die = SimpleNamespace(inst=instances)
         selected = {}
