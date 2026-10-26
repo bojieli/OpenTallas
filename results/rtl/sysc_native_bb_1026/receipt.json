@@ -16,5 +16,23 @@
   "positive_exit": 0,
   "unknown_parameter_exit": 1,
   "actual_sysc_gold_gate_AIGs": "PASS; full induction running, no equivalence claim"
+ },
+ "small_formal": {
+  "verdict": "EQUIVALENT",
+  "compare_points": 40,
+  "proved": 40,
+  "wrong_address_mutant": {
+   "verdict": "NOT EQUIVALENT",
+   "proved": 39,
+   "differs": 1
+  }
+ },
+ "actual_phy_pdn": {
+  "verdict": "PASS",
+  "runtime_s": 40.88,
+  "peak_MB": 921.048,
+  "grid": "VDDPHY separate regional M6/M7 and native M6 macro PG landing",
+  "macros": "exact PHY +4 SRAM +ROM, no prefixmatches",
+  "scope": "PDN generation only; IR and electrical continuity signoff not run"
  }
 }

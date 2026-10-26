@@ -1,0 +1,31 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib
+read_liberty /work/macros/ot_qkvd_ucie_x64_phy_tt.lib
+read_liberty /work/macros/ot_rom_64x32_m2_tt.lib
+read_db /work/run/results/asap7/dp_kv3_sys_c/base/2_3_floorplan_tapcell.odb
+read_sdc /work/run/results/asap7/dp_kv3_sys_c/base/2_1_floorplan.sdc
+source /work/setRC_rcx.tcl
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0001] Inserting grid: core_macros - u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[0\].u_store.g_p288.u_sram
+[INFO PDN-0001] Inserting grid: core_macros - u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[1\].u_store.g_p288.u_sram
+[INFO PDN-0001] Inserting grid: core_macros - u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[2\].u_store.g_p288.u_sram
+[INFO PDN-0001] Inserting grid: core_macros - u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[3\].u_store.g_p288.u_sram
+[INFO PDN-0001] Inserting grid: core_macros - u_bound.u_dcal.u_profile
+[INFO PDN-0001] Inserting grid: ot_phy_pg_0
+[INFO PDN-0001] Inserting grid: ot_phy_pg_0_macro - u_bound.u_ucie_rom
+[INFO PDN-0500] Runtime: 31.44s
+Design area 637073 um^2 29% utilization.
+write_db /work/run/results/asap7/dp_kv3_sys_c/base/2_4_floorplan_pdn.odb
+Elapsed time: 0:40.88[h:]min:sec. CPU time: user 39.97 sys 0.90 (99%). Peak memory: 921048KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_4_floorplan_pdn         .odb           40            899 c7698344cacfa473a534

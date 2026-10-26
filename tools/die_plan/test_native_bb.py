@@ -29,3 +29,26 @@ def test_only_generated_rom_stub_accepts_content_metadata():
     assert 'parameter VIAMAP = "", INSTANCE = "";' in rom
     assert "INSTNCE" not in rom
     assert "parameter" not in lec.stub_verilog({"other_macro": ports})
+
+
+def test_pdn_macro_patterns_match_exact_odb_names_not_prefixed_std_cells():
+    import subprocess
+    import gen_phys
+    patterns = gen_phys._pdn_inst_patterns(["u.phy", "u.g[0].mem"])
+    script = "set ps {" + patterns + "}\n"
+    names = [r"u.phy", r"u.phy_123", r"uXphy", r"u.g\[0\].mem", r"u.g0.mem"]
+    for name in names:
+        script += "set hit 0; foreach p $ps {if {[regexp -- $p {" + name + "}]} {incr hit}}; puts $hit\n"
+    r = subprocess.run(["tclsh"], input=script, text=True, capture_output=True, check=True)
+    assert r.stdout.split() == ["1", "0", "0", "1", "0"]
+
+
+def test_phy_macro_pg_landing_uses_actual_pin_layer_and_rejects_ambiguity(tmp_path):
+    import gen_phys
+    lef = tmp_path / "phy.lef"
+    for layer, expected in (("M5", "M5 M6"), ("M6", "M6 M7")):
+        lef.write_text("\n".join(f"PIN {p}\n PORT\n LAYER {layer} ;\n END\nEND {p}" for p in ("VDD", "VSS")))
+        assert gen_phys._macro_pg_layers(lef) == expected
+    lef.write_text(lef.read_text().replace("END VSS", "LAYER M5 ;\nEND VSS"))
+    with pytest.raises(ValueError, match="ambiguous"):
+        gen_phys._macro_pg_layers(lef)
