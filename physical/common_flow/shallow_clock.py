@@ -180,6 +180,7 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
     pruned where a quadrant has no tap; every tap gets a private leg from its
     H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
     if fanout<2 or leaf_fanout<1: raise ValueError('invalid clock fanout')
+    if not isinstance(min_rep,int) or min_rep<0: raise ValueError('min_rep must be a nonnegative integer')
     a,b,c,d=g['core']; u=g['dbu']
     if any(not (a<=t['xy'][0]<=c and b<=t['xy'][1]<=d) for t in g['taps']):
         raise ValueError('tap buffer lies outside the physical core')
