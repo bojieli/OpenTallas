@@ -11,11 +11,16 @@ cd /OpenROAD-flow-scripts/flow
 M=(make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=16)
 NICK=$(sed -n "s/^export DESIGN_NICKNAME = //p" /work/config.mk)
 R=/work/run/results/asap7/$NICK/base
-"${M[@]}" synth
-ODB_IN=$R/1_synth.odb openroad -exit /work/patch_synth.tcl
-cp /work/constraint_pd.sdc "$R/1_synth.sdc"
-touch "$R/1_synth.odb" "$R/1_synth.sdc"
-"${M[@]}" place
+if [ -f "$R/3_place.odb" ]; then
+  ODB=$R/3_place.odb openroad -exit /work/restore_c3q_reset.tcl
+  cp /work/constraint_pd.sdc "$R/3_place.sdc"
+else
+  "${M[@]}" synth
+  ODB_IN=$R/1_synth.odb openroad -exit /work/patch_synth.tcl
+  cp /work/constraint_pd.sdc "$R/1_synth.sdc"
+  touch "$R/1_synth.odb" "$R/1_synth.sdc"
+  "${M[@]}" place
+fi
 for p in prep WS WN ES EN M final; do
   OT_QPHASE=$p "${M[@]}" run RUN_SCRIPT=/work/cts_seq.tcl RUN_LOG_NAME_STEM=v4q_$p
 done
