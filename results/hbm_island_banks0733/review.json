@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND",
+  "qualification": "LOCAL RE-SITING PROPOSAL ONLY; no P&R or source plan adoption",
+  "picture": "results/hbm_island_banks0733/review.png",
+  "source_plan": "epyc1:/srv/opentallas-scratch2/claude/codex-hbm-native-1026/die_plan_b1_interfaces.json",
+  "source_sha256": "7aaba41cbe57ff38093369c2fdb65183d0d14dc3a8effbb62af0efb6856f14b9",
+  "findings": [
+    "LOOKED: 145 vsN4/L9x2 cells and144 vsN2/L153x2 cells move around the reserved clock/reset island, retaining their original bit and stage identities",
+    "Maximum lower-left displacement12.96um; all original cells and seven internal stage groups remain; zero added cycles/cells",
+    "Independent allocated-envelope intersections against every existing explicit FT cell:0; target types have no hard-core body blockers",
+    "All target-chain island-avoiding Manhattan/Z legs max207.036um; independently checked moved adjacent legs through canonical infra_sites.route_leg max182.52um",
+    "Full PG, clock shielding, routing capacity, unspecified internal station contracts and actual post-placement coordinates remain outside this proposal"
+  ],
+  "application": "Apply indexed old->new changes from proposal.json only to matching source SHA; reject stale old coordinates; HBM owner folds into one event and rechecks the two exact slots"
+}
