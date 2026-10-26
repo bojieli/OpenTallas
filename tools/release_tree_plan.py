@@ -244,7 +244,9 @@ def refresh(log=lambda *a: None):
 def merge_with_cache(new, old):
     """keep the last good per-plan values when this refresh failed for a plan or for the SIGNED scan"""
     if not old: return new
+    cur = {pd for _, pd in PLANS}
     for d, ent in (old.get('plans') or {}).items():
+        if d not in cur: continue   # plan dir no longer tracked (e.g. hbm_arch/B2l -> B2n): drop, never carry it forward
         n = new['plans'].get(d)
         if (not n or 'g0c_clean' not in n) and 'g0c_clean' in ent:
             ent = dict(ent, stale_since=ent.get('stale_since') or old.get('generated'))
