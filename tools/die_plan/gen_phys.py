@@ -942,8 +942,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # N59 physical publications need distinct driver cells, not just kept
         # wire aliases.  Convert processes and copy keep onto their drivers
         # before synth's first opt_merge can collapse the replicas.
-        cfg += ["export SYNTH_CANONICALIZE_TCL = /work/n59_keep_replicas.tcl"]
-        shutil.copyfile(Path(__file__).with_name("n59_keep_replicas.tcl"), kd / "n59_keep_replicas.tcl")
+        cfg += ["export SYNTH_CANONICALIZE_TCL = /work/n59_keep_replicas.tcl",
+                "export PRE_SYNTH_TCL = /work/n59_keep_odb.tcl",
+                "export POST_SYNTH_TCL = /work/n59_keep_odb_release.tcl"]
+        for helper in ("n59_keep_replicas.tcl", "n59_keep_odb.tcl", "n59_keep_odb_release.tcl"):
+            shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",

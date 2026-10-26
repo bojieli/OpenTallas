@@ -1,0 +1,17 @@
+results/qc_n59_2145/inputs/rtl/qfd_qc_native59_part.sv
+results/qc_n59_2145/inputs/rtl/qfd_qc_native59_part_bound.sv
+results/qc_n59_2145/inputs/rtl/kit_cells.sv
+results/qc_n59_2145/inputs/rtl/bind_cells_kit.sv
+results/qc_n59_2145/inputs/rtl/ot_reset_sync.sv
+results/qc_n59_2145/inputs/rtl/qfd_native59_dv_headprep_obs1.sv
+results/qc_n59_2145/inputs/rtl/qfd_native59_svc_obs1.sv
+results/qc_n59_2145/inputs/rtl/qfd_native59_static_service_obs1.sv
+results/qc_n59_2145/inputs/rtl/qfd_status_obs_hold_chunk.sv
+results/qc_n59_2145/inputs/rtl/qfd_native59_record_endpoint.sv
+results/qc_n59_2145/inputs/rtl/qkd_native_attention_record.sv
+results/qc_n59_2145/inputs/rtl/qfd_native59_q_export_control.sv
+results/qc_n59_2145/inputs/rtl/qfd_native59_mctx_helpers.sv
+results/qc_n59_2145/inputs/rtl/qfd_native59_command_context.sv
+results/qc_n59_2145/inputs/rtl/qfd_kvn_static_transport.sv
+results/qc_n59_2145/inputs/rtl/ot_qfd_su_kv_static_posted.sv
+results/qc_n59_2145/inputs/rtl/qfd_native59_qbank.sv
