@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "source_scope": "new off-default transport modules and source mapping only; whole head not bound",
+  "best64": {
+    "records": 1024,
+    "identity_mutants_caught": 1024,
+    "format_guard": "PASS",
+    "source_live_bits": 97,
+    "record_identity_bits": 81,
+    "lane_bits": 64,
+    "beats": 2,
+    "sampled_edge_delta": 2,
+    "extra_vs_one_beat": 1
+  },
+  "host276": {
+    "records": 1024,
+    "high_bit_mutants_caught": 1024,
+    "source_bits": 553,
+    "lane_bits": 276,
+    "beats": 3,
+    "sampled_edge_delta": 3,
+    "extra_vs_one_beat": 2
+  },
+  "rows": {
+    "coverage": {
+      "enabled_bundles": 1010,
+      "rows": 129280,
+      "duplicate_rows": 0,
+      "missing_rows": 0
+    },
+    "active": [
+      253,
+      253,
+      252,
+      252
+    ],
+    "dark": [
+      11,
+      11,
+      12,
+      12
+    ],
+    "controller_bases": [
+      0,
+      32384,
+      64768,
+      97024
+    ],
+    "broken_chain_mutant": "cycle in sp0W at ('tW0o0', 'i')"
+  },
+  "limitations": [
+    "component transport only: no whole-head G5",
+    "per-type placement and routed timing not run",
+    "compiled host/HBC slots and actual controller source composition still required",
+    "physical straps/weight images must consume row map at bind"
+  ]
+}

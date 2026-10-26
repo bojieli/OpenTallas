@@ -221,7 +221,7 @@
         {
           "inst": "u_phy",
           "module": "ot_pdie_serdes",
-          "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+          "source": null,
           "params": {},
           "bind": {}
         }
@@ -597,7 +597,7 @@
     "hd_mesh: historical real HSF0 BEST has81 live bits including user10+position21, so64-bit lane needs explicit multi-beat framing; safe8_ntf rx515 includes channel-board bit while plan carries514",
     "hd_host: real dsdv_hostb_stage_hbc1104-bit ring/context/status interface is not a drop-in276-bit endpoint; 553-bit record needs explicit N3 codec or279-bit N2 lane",
     "hd_lep0N: provider named dsdv_slice_lepw_mu.LP is nested historical source; exact current source extraction and input contracts required",
-    "tile position ROW0/TEN must be mapped from current264-slot/253-active plan, not copied from old253-tile17-SerDes top",
+    "tile position mapping available in head_row_map.py; physical mask masters and weight images must consume it at bind",
     "physical SerDes PMA boundary must remain explicit and status live"
   ],
   "rankmerge": {
@@ -610,6 +610,44 @@
     "checks": "identity equality,duplicate copies,NaN,overwrite",
     "added_cycles": 0,
     "physical_mapping": "unmeasured; current mesh64 codec remains external"
+  },
+  "transport": {
+    "best64": {
+      "provider": "rtl/dsrom_sys/s81_head/ot_s81hd_best64.sv",
+      "live_source_bits": 97,
+      "lane_bits": 64,
+      "beats": 2,
+      "extra_vs_one_beat": 1
+    },
+    "host276": {
+      "provider": "rtl/dsrom_sys/s81_head/ot_s81hd_host276.sv",
+      "source_bits": 553,
+      "lane_bits": 276,
+      "beats": 3,
+      "extra_vs_one_beat": 2
+    },
+    "gate": "results/arch/s81_head_source_1025/transport_1026/gate.json",
+    "integration": "pending actual controller/endpoints and compiled dates"
+  },
+  "row_mapping": {
+    "tool": "tools/s81_head/head_row_map.py",
+    "active_bundles": [
+      253,
+      253,
+      252,
+      252
+    ],
+    "rank_bases": [
+      0,
+      32384,
+      64768,
+      97024
+    ],
+    "slots_per_rank": 264,
+    "local_row0": "128*slot for active slots",
+    "weight_row0": "rank_base+local_row0",
+    "dark": "TEN0; no content image",
+    "added_cycles": 0
   },
   "historical_controller_component": "results/arch/s81_head_source_1025/hsf0_component.json",
   "wholehead_implementation_allowed": false
