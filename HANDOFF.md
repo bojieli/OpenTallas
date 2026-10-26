@@ -892,3 +892,4 @@ CODEX: 2026-10-25 18:25 TOK/LEC parked on explicit RESET. Main20b includes8497/e
 2026-10-25 20:54 PDT AUTOPILOT-FIX: frozen-die path-gate fix READY URGENT claude/autopilot-frozen-die-gate-1025@e584d366ec (s81_head/QC rows pass on FROZEN die; FAIL reopens); tests OK; done.
 2026-10-25 20:54 PDT ROM-MACRO: follow-up done -- D-ROM-2 allowlist claude/rom-macro-1025@211186de1 READY (0 FAIL over 758 kit mem.json); D-ROM-1 gate hook claude/rom-gate-flow-1025@0b6be8e6d READY at the next flow tag; D-ROM-3: KV dcal images dead -> no macro, D-ROM-3b batch proposal (PLAN-DELTA) to PATH-KV/TYPE-REDUCE-2. PARKED.
 2026-10-25 21:09 PDT ROM-MACRO: D-ROM-3 BMC 95 edges PASS (KV dcal images dead). PARKED.
+2026-10-25 21:10 PDT FLOW-CANARY: PARKED. QC canary re-baselined (design change b6322); KV core = flow regression, fix READY claude/flowcan-mem-1025@83b1839aa (TT -57.66 -> -5.91); tag still blocked by KV residual (COORD? in FLOW.md).
