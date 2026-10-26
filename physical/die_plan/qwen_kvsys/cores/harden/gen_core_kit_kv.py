@@ -437,7 +437,7 @@ def reached_modules(files, top):
         if m in seen:
             continue
         seen.add(m)
-        for mm in re.finditer(r"^\s*([A-Za-z_]\w*)\s*(?:#\s*\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s*([A-Za-z_]\w*)\s*\(",
+        for mm in re.finditer(r"^\s*([A-Za-z_]\w*)\s*(?:#\s*\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s*(?:[A-Za-z_]\w*|\\\S+\s)\s*\(",
                               body.get(m, ""), re.M):
             if mm.group(1) not in kw:
                 todo.append(mm.group(1))

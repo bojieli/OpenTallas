@@ -27,21 +27,22 @@ write_verilog -selected $O/$MOD.v
 YS
 $Y -q -l $O/emit.log $O/emit.ys
 # no absolute paths in the kit RTL (evidence reads repo-relative paths): drop the yosys src attributes; macro
-# instances get plain identifiers (gen_core_kit_kv reached_modules / the macro LEF+lib pick-up need `master inst (`)
+# escaped instance identities remain intact so equivalence merges the SAME macro, not independent free outputs.
 python3 - $O/$MOD.v <<'PY'
 import re, sys
 p = sys.argv[1]; t = open(p).read()
 t = re.sub(r'\(\* src = "[^"]*" \*\)\s*', '', t)
-t = re.sub(r'^(\s*)(ot_sram_\w+) \\(\S+)\s+\(', lambda m: m.group(1) + m.group(2) + ' ' + re.sub(r'\W', '_', m.group(3)) + ' (', t, flags=re.M)
 open(p, 'w').write(t)
 PY
 for V in post mut; do
 cat > $O/eq_$V.ys <<YS
 read_json $O/pre.json
+memory_share
 memory_map
 rename $MOD gold
 design -stash g
 read_json $O/$V.json
+memory_share
 memory_map
 rename $MOD gate
 design -copy-from g -as gold gold
@@ -60,6 +61,7 @@ BB=$(python3 -c "import json;print(' '.join(f for f in json.load(open('$CJ'))['f
 BBF=""; [ -n "$BB" ] && BBF="read_verilog -sv -DSYNTHESIS $BB"
 cat > $O/eq_v.ys <<YS
 read_json $O/pre.json
+memory_share
 memory_map
 rename $MOD gold
 design -stash g
@@ -68,6 +70,7 @@ $BBF
 hierarchy -top $MOD
 proc
 memory_collect
+memory_share
 memory_map
 rename $MOD gate
 design -copy-from g -as gold gold

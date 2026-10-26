@@ -28,3 +28,19 @@ different-clear rejection and identical-clear acceptance.
 Inherited large KVHR2 proofs remain active in cores-kits/kvhr2. Do not restart
 those jobs. Other raw cuts still report unregistered outputs, dead pins and
 feedthroughs; this zero-cycle mechanism does not waive those obligations.
+
+Follow-up: preserving escaped SRAM instance identifiers fixes phy_adp's 512
+spurious qp equivalence mismatches. The generator now recognizes escaped
+instance names when finding reached macro masters, rather than renaming them
+and losing same-instance identity in the proof. Actual phy_adp nominal post and
+emitted RTL proofs PASS and inverted-D mutant is caught; emitted proof used
+1263 MB peak. Its remaining r_cr logic-before-capture boundary is still FAIL;
+this proof is not physical qualification. Source inputs: the five reached
+current-repo source files from KVHR2, copied unchanged into the admitted job.
+
+memory_share before memory_map consolidates the per-bit write ports reconstructed
+by write_verilog/read_verilog. Without consolidation cdc_ch expanded a depth-8,
+546-bit memory into 2,384,928 write muxes and the emitted proof died with rc137.
+The repaired cdc_ch proof is running on intel2 unit2117761-1793006272; its nominal
+post proof passed in 92.7s at 282 MB, with mutant/emitted stages still pending
+when this note was written. No passing result is inferred for those stages.
