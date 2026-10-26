@@ -54,7 +54,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
   - [ ] S81.TILES Tile sign-offs · PATH-S81 / CORES-KITS · RUNNING · 4/171 types, 16/52 hard cores signed
 
 ## DIE hbm · HBM B2n (next release) · plan D-HBM-B1 (5fa3c6e64838)
-- [ ] HBM.B1 Plan event (native b1n4 39b34ade; G0C 36 core-face open) + 12.7 master plan (corridors/bays/M7 entry/PG/shield gates) + CORE-LAT strips + 250 ps zero-early · PATH-HBM · RUNNING · src claude/hbm-b1-event-1026
+- [ ] HBM.B1 Plan event (native b1n4 39b34ade; G0C 36 core-face open) + 12.7 master plan (corridors/bays/M7 entry/PG/shield gates) + CORE-LAT strips + 250 ps zero-early · PATH-HBM · RUNNING · hub cut FAIL: R8 distributed + R9 replicated-segment (S=2 x 2.14/y 1.32, UNCHECKED); banks k=4/4 PASS 0.50-0.55 → R10 top-down hub face pins over consumers + equal-lane segments + W/E serial chain
 - [ ] HBM.GRT Die GRT0 · PATH-HBM · PASS DIAGNOSTIC incl clock (r7 combo 50 it TT/FF overflow 0, native plan) → HBM.B1 freeze
 - [ ] HBM.CLK Mesh clock + skew under 12.8 · CLOCK-128 · FAIL/INVALID · r7 980/800 used early offsets; r8 build legal (183 island drivers, straps shielded) → IF.CLK128, → HBM-CORE-LAT-R2 (19 types >290 ps restructure)
 - [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
