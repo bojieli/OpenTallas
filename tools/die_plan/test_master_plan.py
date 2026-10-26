@@ -203,7 +203,7 @@ def test_fit_rect_narrow_channel_keeps_area_off_cores():
 def test_core_lattice_regular_and_irregular():
     c = [(176.0 + 354.24 * i, 160.0 + 371.52 * j) for i in range(4) for j in range(3)]
     L = MP.core_lattice(c)
-    assert L["x"]["pitch_um"] == 354.24 and not L["x"]["irregular"] and L["x"]["leaf_pitch_um"] == 708.48
+    assert L["x"]["pitch_um"] == 354.24 and not L["x"]["irregular"] and L["x"]["leaf_pitch_um"] == 354.24
     c.append((176.0 + 354.24 * 3 + 500.0, 160.0))       # a spine gap that is not a pitch multiple
     assert MP.core_lattice(c)["x"]["n_irregular"] == 1
 

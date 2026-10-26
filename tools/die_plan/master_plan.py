@@ -294,9 +294,22 @@ def core_lattice(centres, q=0.01, lat=8.64):
             continue
         p = min(gaps)
         bad = sorted({g for g in gaps if abs(g / p - round(g / p)) > 1e-3})
+
+        def cover(L):        # share of lines whose +L translate is a line too (or falls past the array end)
+            hit = sum(1 for v in vs if v + L > vs[-1] + lat or any(abs(v + L - u) <= lat / 2 for u in vs))
+            return hit / len(vs)
+        # commensurate leaf pitch: smallest pairwise line distance that maps >= 90 % of the core-centre lines onto
+        # lines (the repeat of the abutted core array); a tree node then lands on a centre when its half-span
+        # offset maps lines onto lines too
+        cands = sorted({round(b - a, 3) for i, a in enumerate(vs) for b in vs[i + 1:i + 12] if b - a > lat})
+        leaf = next((L for L in cands if cover(L) >= 0.9), None)
         res["xy"[ax]] = dict(pitch_um=r3(p), on_lattice=abs(p / lat - round(p / lat)) < 1e-3, lines=len(vs),
                              span_um=[r3(vs[0]), r3(vs[-1])], irregular=bad[:20], n_irregular=len(bad),
-                             leaf_pitch_um=r3(2 * p))
+                             leaf_pitch_um=r3(leaf) if leaf else None,
+                             leaf_cover=r3(cover(leaf)) if leaf else None,
+                             half_leaf_node_on_centre=r3(cover(leaf / 2)) if leaf else None,
+                             breaks=[[r3(a), r3(b)] for a, b in zip(vs, vs[1:])
+                                     if leaf and b - a > leaf + lat][:10])
     return res
 
 
@@ -1091,24 +1104,27 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         if io.get("kind") in ("phy_macro", "phy", "serdes") and io.get("rect_um"):
             macros_die.append(tuple(io["rect_um"]))
     lattice = core_lattice(centres) if centres else {}
-    irr = sum((v.get("n_irregular") or 0) for v in lattice.values())
-    off_lat = [a for a, v in lattice.items() if v.get("pitch_um") and not v.get("on_lattice")]
+    no_leaf = [a for a, v in lattice.items() if v.get("pitch_um") and not v.get("leaf_pitch_um")]
+    off_lat = [a for a, v in lattice.items() if v.get("leaf_pitch_um")
+               and abs(v["leaf_pitch_um"] / 8.64 - round(v["leaf_pitch_um"] / 8.64)) > 1e-3]
     mesh_mult = {}
     if mesh_dir and lattice:
         for ax, key in (("x", "xs"), ("y", "ys")):
             vs = sorted(M.get(key) or [])
-            p = lattice.get(ax, {}).get("pitch_um")
+            p = lattice.get(ax, {}).get("leaf_pitch_um")
             if len(vs) > 1 and p:
                 g = [b - a for a, b in zip(vs, vs[1:])]
                 mesh_mult[ax] = dict(mesh_pitch_um=[r3(min(g)), r3(max(g))],
-                                     multiple_of_core_pitch=all(abs(v / p - round(v / p)) < 1e-3 for v in g))
+                                     multiple_of_leaf_pitch=all(abs(v / p - round(v / p)) < 1e-3 for v in g))
     tree_comm = dict(
         verdict=("NOT RUN" if not centres else
-                 "FAIL" if irr or off_lat or any(not v["multiple_of_core_pitch"] for v in mesh_mult.values())
+                 "FAIL" if no_leaf or off_lat or any(not v["multiple_of_leaf_pitch"] for v in mesh_mult.values())
                  else "PASS"),
         core_lattice=lattice, mesh_vs_core=mesh_mult or None, phy_entries=len(phy),
-        rule="die H-tree node/leaf pitch = integer multiple of the core-centre island pitch (leaf 2 x pitch), "
-             "so every node and mesh driver lands on a core-centre island (COORD 06:23)")
+        rule="die H-tree leaf / mesh-driver pitch = the core-array repeat (leaf_pitch_um, an 8.64 multiple), tree "
+             "node spans = integer multiples of it, so every node and mesh driver lands on a core-centre island "
+             "(COORD 06:23); breaks = array gaps (e.g. a spine) the tree must bridge at a common node",
+        no_leaf_axes=no_leaf, off_lattice_axes=off_lat)
     sites = (clock_sites(M, isl_decl, glue_parts, macros_die) if mesh_dir else
              dict(verdict="NOT RUN", note="no --mesh"))
     tap_in_phy = sorted(tn for tn, v in phy.items() if v.get("plan_tap_inside_phy"))
