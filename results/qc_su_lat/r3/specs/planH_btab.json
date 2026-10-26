@@ -1,0 +1,167 @@
+{
+ "type": "btab",
+ "slice": "r2/specs/slice_btab.json",
+ "master_plan_sha256": "35ff80a2866fc16f39a603674b06d8f11697bfcfeb2d5228f58a1bc848ea1055",
+ "entry_pin": [
+  177.12,
+  135.0
+ ],
+ "island_source": "equal-load angular sector medoid, 4.32 lattice",
+ "leaf_islands": [
+  {
+   "name": "tree_leaf0",
+   "centre_um": [
+    108.0,
+    99.36
+   ],
+   "rect_um": [
+    103.68,
+    95.04,
+    112.32,
+    103.68
+   ],
+   "sinks": 1411,
+   "entry_to_island_um": 104.76,
+   "island_to_far_sink_um": 129.63,
+   "leg_cell": "BUFx24_ASAP7_75t_R"
+  },
+  {
+   "name": "tree_leaf1",
+   "centre_um": [
+    194.4,
+    17.28
+   ],
+   "rect_um": [
+    190.08,
+    12.96,
+    198.72,
+    21.6
+   ],
+   "sinks": 1411,
+   "entry_to_island_um": 135.0,
+   "island_to_far_sink_um": 101.39,
+   "leg_cell": "BUFx8_ASAP7_75t_R"
+  },
+  {
+   "name": "tree_leaf2",
+   "centre_um": [
+    259.2,
+    112.32
+   ],
+   "rect_um": [
+    254.88,
+    108.0,
+    263.52,
+    116.64
+   ],
+   "sinks": 1411,
+   "entry_to_island_um": 104.76,
+   "island_to_far_sink_um": 175.9,
+   "leg_cell": "BUFx8_ASAP7_75t_R"
+  },
+  {
+   "name": "tree_leaf3",
+   "centre_um": [
+    241.92,
+    198.72
+   ],
+   "rect_um": [
+    237.6,
+    194.4,
+    246.24,
+    203.04
+   ],
+   "sinks": 1411,
+   "entry_to_island_um": 128.52,
+   "island_to_far_sink_um": 66.77,
+   "leg_cell": "BUFx8_ASAP7_75t_R"
+  }
+ ],
+ "levels": {
+  "M": 4,
+  "Q": 4,
+  "B": 16,
+  "S": 64,
+  "leaves": 256,
+  "k": 2,
+  "tapmax": 24
+ },
+ "model_TT": {
+  "leaf_mean": 168.3,
+  "leaf_min": 151.6,
+  "leaf_max": 198.4,
+  "Q_in": [
+   60.2,
+   63.0,
+   60.7,
+   57.9
+  ],
+  "macro_min": 144.9,
+  "macro_max": 160.7,
+  "entry_chain": 5,
+  "entry_cell_ps": 16.5,
+  "pred_mean": 250.6
+ },
+ "fixed_cells": [
+  [
+   "ot_ms_root",
+   "BUFx24_ASAP7_75t_R",
+   178.62,
+   135.0
+  ],
+  [
+   "ot_ms_Q0_nd",
+   "BUFx24_ASAP7_75t_R",
+   108.0,
+   99.36
+  ],
+  [
+   "ot_ms_Q1_nd",
+   "BUFx24_ASAP7_75t_R",
+   194.4,
+   17.28
+  ],
+  [
+   "ot_ms_Q2_nd",
+   "BUFx24_ASAP7_75t_R",
+   259.2,
+   112.32
+  ],
+  [
+   "ot_ms_Q3_nd",
+   "BUFx24_ASAP7_75t_R",
+   241.92,
+   198.72
+  ],
+  [
+   "ot_ms_entry1",
+   "BUFx16f_ASAP7_75t_R",
+   169.12,
+   135.0
+  ],
+  [
+   "ot_ms_entry2",
+   "BUFx16f_ASAP7_75t_R",
+   170.42,
+   135.0
+  ],
+  [
+   "ot_ms_entry3",
+   "BUFx16f_ASAP7_75t_R",
+   171.72,
+   135.0
+  ],
+  [
+   "ot_ms_entry4",
+   "BUFx16f_ASAP7_75t_R",
+   173.02,
+   135.0
+  ],
+  [
+   "ot_ms_entry5",
+   "BUFx16f_ASAP7_75t_R",
+   174.32,
+   135.0
+  ]
+ ]
+}
