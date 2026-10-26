@@ -1,0 +1,45 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "PG-only corrected-bump-source PDNSim; not diefreeze or acceptedIRgrid",
+ "image": "qc_pg_candidate130_review.png",
+ "findings": [
+  "Viewed core/PHY fullwindow and24umseam; same-netground rails align everythirdPHYrail with explicit shortsame-netseamstitches.",
+  "PHYpower remains separate with144nmpowerisolation andM7powerpinendclearance; no extra PGsourceports.",
+  "PublishedC4escape130um range100-150coordinatorapprovedcandidate; PHYmicrobumps45umandPGsharesunchanged, no power or IRbudget relaxation.",
+  "CoreM8width.48/pitch2.16 offset1.08 andM9width.48/pitch1.728 offset.864 leavephysicalgaps.6/.384um, clockworker mustcheckactualNDRspacing before anywhole-die adoption.",
+  "M8tracks55.32percent/M970.14percent; localPHYgriddividespitches3 withlegal48nmspacing; allPHYmetal+stitchfootprints mustbe reserved.",
+  "864umcorewindow andPHYwindow600umcoremargin haveopenedges; comparewithin scope, nofull-die IRclaim."
+ ],
+ "bump_counts": {
+  "VDD": 70,
+  "VSS": 110,
+  "VDDPHY": 41
+ },
+ "pg_grid": [
+  {
+   "layer": "M8",
+   "width_um": 0.48,
+   "pitch_um": 2.16,
+   "offset_um": 1.08,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 0.48,
+   "pitch_um": 1.728,
+   "offset_um": 0.864,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  }
+ ],
+ "assumptions": [
+  "C4escape130um withinpublished100-150umrange; coordinator approved exploratorycandidate, no adoption",
+  "M8pitch2.16um instead2.88; M9unchanged1.728; no power or IRbudget relaxation",
+  "PHY45um micro-bump assumptions andPGsharesunchanged; explicitseparatePHYsupply"
+ ]
+}
