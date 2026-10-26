@@ -562,7 +562,11 @@ def cmd_submit(a):
         rfg = HERE.parent / "die_plan" / "reg_fanout_gate.py"
         if rfg.is_file():
             (run / "reg_fanout_gate.py").write_text(rfg.read_text())
-        (run / "canary_meta.json").write_text(json.dumps(dict(spec=c, kit=kit, src=str(src), src_commit=sha,
+        # --dry: the metadata goes to canary_meta.dry.json.  Every consumer (trigger live_dies / source unlock,
+        # autopilot canary_gate, summary) globs */canary_meta.json, so a dry run must never look like a live,
+        # verdict-less canary (FLOW-TAG 10-26: a dry submit into the real root held 3 dies for 12 h).
+        meta_name = "canary_meta.dry.json" if getattr(a, "dry", False) else "canary_meta.json"
+        (run / meta_name).write_text(json.dumps(dict(spec=c, kit=kit, src=str(src), src_commit=sha,
                                                               submitted=time.strftime("%F %T %Z")), indent=1) + "\n")
         genenv = "".join(f"{k}={shlex.quote(fmt(v, **kv))} " for k, v in c.get("gen_env", {}).items())
         job = JOB.format(die=die, item=c["item"], src=sha, run=run, kit=kit, top=c["top"], image=a.image,
