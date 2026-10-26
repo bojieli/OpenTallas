@@ -333,6 +333,66 @@ def footprint(layer, r, w, s):
     return (x0, y0 - s, x1, y1 + s) if horiz else (x0 - s, y0, x1 + s, y1)
 
 
+def clock_shields(P, pg_shapes, clock_shapes, shield_w=0.08, eps=1e-6):
+    """METHODOLOGY 12.7a clock shielding: for every clock wire rect (net, layer, x0, y0, x1, y1, ndr spacing) one PG shield on
+    each side at the clock NDR spacing s = the wire's footprint spacing.  A side whose shield track is already a
+    same-layer PG stripe running the whole wire length is satisfied by that stripe (any supply net); otherwise a
+    VSS shield wire of width shield_w is emitted.  A shield that would partly overlap a PG stripe of the same layer
+    (short / spacing clash) is a conflict -> shielding incomplete.  Returns (new shield shapes
+    [(net, layer, x0, y0, x1, y1)], report dict)."""
+    import bisect as _b
+    idx = {}
+    for net, layer, *box in pg_shapes:
+        horiz = P.layers[layer]["dir"] == "H"
+        lo, hi = (box[1], box[3]) if horiz else (box[0], box[2])
+        idx.setdefault(layer, []).append((lo, hi, net, box))
+    for layer, rows in idx.items():
+        rows.sort(key=lambda r: r[0])
+        idx[layer] = (rows, [r[0] for r in rows], max(r[1] - r[0] for r in rows))
+    out, n_seg, by_pg, conflicts, ex, mm = [], 0, 0, 0, [], 0.0
+    for cnet, layer, x0, y0, x1, y1, sp in clock_shapes:      # sp = the clock wire's NDR spacing
+        horiz = (x1 - x0) >= (y1 - y0)
+        n_seg += 1
+        for side in (-1, 1):
+            if horiz:
+                a, b = (y1 + sp, y1 + sp + shield_w) if side > 0 else (y0 - sp - shield_w, y0 - sp)
+                al0, al1 = x0, x1
+            else:
+                a, b = (x1 + sp, x1 + sp + shield_w) if side > 0 else (x0 - sp - shield_w, x0 - sp)
+                al0, al1 = y0, y1
+            hit, clash = None, None
+            if layer in idx:
+                rows, starts, widest = idx[layer]
+                for lo, hi, net, box in rows[_b.bisect_left(starts, a - widest - sp):_b.bisect_right(starts, b + sp)]:
+                    blo, bhi = (box[0], box[2]) if horiz else (box[1], box[3])
+                    if bhi < al0 - eps or blo > al1 + eps:
+                        continue
+                    # distance from the clock wire edge to this stripe's near edge on this side
+                    edge = (y1 if horiz else x1) if side > 0 else (y0 if horiz else x0)
+                    dist = (lo - edge) if side > 0 else (edge - hi)
+                    if dist < -eps and (hi < edge - eps if side > 0 else lo > edge + eps):
+                        continue                     # stripe lies on the other side of the wire
+                    full = blo <= al0 + eps and bhi >= al1 - eps
+                    if sp - eps <= dist < sp + SIG_W + SIG_S - eps and full:
+                        hit = net                    # PG stripe closer than one signal track: it IS the shield
+                    elif -eps < dist < sp - eps or (sp - eps <= dist < sp + shield_w + sp - eps and not full):
+                        clash = (net, box)           # spacing violation / partial stripe where the shield goes
+            if hit:
+                by_pg += 1
+            elif clash:
+                conflicts += 1
+                if len(ex) < 16:
+                    ex.append(dict(clock_net=cnet, layer=layer, side=side, shield_track=[a, b], pg=clash[0],
+                                   pg_rect_um=clash[1]))
+            else:
+                out.append(("VSS", layer) + ((al0, a, al1, b) if horiz else (a, al0, b, al1)))
+                mm += (al1 - al0) / 1000.0
+    rep_ = dict(rule="METHODOLOGY 12.7a", segments=n_seg, sides=2 * n_seg, shielded_by_pg_stripe=by_pg,
+                shield_wires=len(out), shield_wire_mm=round(mm, 2), conflicts=conflicts, examples=ex,
+                shield_w_um=shield_w, complete=conflicts == 0 and n_seg > 0)
+    return out, rep_
+
+
 def pg_clock_conflicts(P, pg_shapes, clock_shapes, clearance_um=0.08):
     """Intersect actual PG and mesh strap rectangles on the same metal layer.
 
@@ -429,6 +489,7 @@ def write_def(P, path, shapes):
             f.write(f"- {net}\n")
             first = True
             for L, x0, y0, x1, y1, shape in by[net]:
+                shape = "STRIPE" if shape == "SHIELD" else shape
                 horiz = (x1 - x0) >= (y1 - y0)
                 w = (y1 - y0) if horiz else (x1 - x0)
                 a = (u(x0), u((y0 + y1) / 2)) if horiz else (u((x0 + x1) / 2), u(y0))
@@ -470,6 +531,18 @@ def cmd_freeze(a):
             fp = footprint(L, (x0, y0, x1, y1), w, s)
             obs.append((L,) + fp)
             cls_rects.append(("clock", L) + fp)
+        if a.clock_shield:   # 12.7a: PG shields both sides; their footprint keeps signals out of the shield spacing
+            sh, srep = clock_shields(P, power_shapes, [r[:6] + (s,) for r in crs], a.shield_w)
+            meta["clock_shielding"] = srep
+            for net, L, x0, y0, x1, y1 in sh:
+                shapes.append((net, "pg", L, x0, y0, x1, y1, "SHIELD"))
+                fp = footprint(L, (x0, y0, x1, y1), a.shield_w, SIG_S)
+                obs.append((L,) + fp)
+                cls_rects.append(("shield", L) + fp)
+            if not srep["complete"]:
+                print(f"die_infra freeze: clock shielding INCOMPLETE ({srep['conflicts']} PG clashes)", file=sys.stderr)
+        else:
+            meta["clock_shielding"] = dict(rule="METHODOLOGY 12.7a", complete=False, note="freeze without --clock-shield")
     if a.reset:
         R = json.loads(Path(a.reset).read_text())
         meta["reset"] = dict(file=str(a.reset), nets=R["nets"], wire_mm=R["wire_mm"])
@@ -780,6 +853,8 @@ def main(argv=None):
     f.add_argument("--clock")
     f.add_argument("--guide")
     f.add_argument("--reset")
+    f.add_argument("--clock-shield", action="store_true", help="PG shields both sides of every clock wire (12.7a)")
+    f.add_argument("--shield-w", type=float, default=0.08, help="emitted VSS shield width um")
     g = sub.add_parser("grt")
     g.add_argument("plan")
     g.add_argument("--kit", required=True)
