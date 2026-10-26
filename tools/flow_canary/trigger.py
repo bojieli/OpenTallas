@@ -8,6 +8,7 @@ since the last canaried main touches a path in canaries.json "watch", checks the
 `canary.py submit` for every die whose previous canary is not still running.  State: last canaried sha + per-die run.
 """
 import argparse
+import importlib.util
 import fnmatch
 import glob
 import json
@@ -18,6 +19,10 @@ import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+_watch_spec = importlib.util.spec_from_file_location("flow_canary_watch", HERE / "flow_watch.py")
+_watch_module = importlib.util.module_from_spec(_watch_spec)
+_watch_spec.loader.exec_module(_watch_module)
+flow_paths = _watch_module.flow_paths
 STATE = Path.home() / ".local/state/flow_canary/state.json"
 LIVE_S = 12 * 3600
 LOCK_REASON = "FLOW-CANARY live source; release after all referencing clients finish"
@@ -123,7 +128,7 @@ def source_snapshot(src, sha, root):
     return dest
 
 
-def ready_dies(src, new, specs, watch, state, busy, force=False):
+def ready_dies(src, new, specs, watch, state, busy, force=False, spec=None):
     """One slow reference holds only its own die; remember each die's submitted revision."""
     revisions = dict(state.get("die_sha", {}))
     ready, hits_all = [], set()
@@ -135,7 +140,7 @@ def ready_dies(src, new, specs, watch, state, busy, force=False):
             revisions[die] = new
             continue
         diff = git(src, "diff", "--name-only", old, new) if old and not force else None
-        hits = touched(diff.stdout.split(), watch) if diff and diff.returncode == 0 else ["(first / forced / diff unavailable)"]
+        hits = flow_paths(diff.stdout.split(), spec or {"watch": watch}, die) if diff and diff.returncode == 0 else ["(first / forced / diff unavailable)"]
         if hits:
             ready.append(die)
             hits_all.update(hits)
@@ -164,7 +169,7 @@ def main(argv=None):
     spec = json.loads((HERE / "canaries.json").read_text())
     specs = [c["die"] for c in spec["canaries"]]
     busy = live_dies(a.root)
-    dies, revisions, hits = ready_dies(a.src, new, specs, spec["watch"], state, busy, a.force)
+    dies, revisions, hits = ready_dies(a.src, new, specs, spec["watch"], state, busy, a.force, spec=spec)
     print(f"FLOW_CANARY_TRIGGER main {new[:9]}: submit {dies}; existing live {sorted(busy)}; changes {hits[:8]}")
     if a.dry:
         return 0
