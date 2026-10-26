@@ -21,6 +21,9 @@ module tb_kvslice;
     always #0.521500 ck_phy  = ~ck_phy;
     always #5.0      ck_ref  = ~ck_ref;
     reg por_n = 0, rst_n = 0;
+    // Optional physical mission START after native bootstrap setup; reset and START are independent inputs.
+    reg mission_start = 0;
+    integer start_after_setup = 0, mission_start_delay = 130, mission_start_cycle = -1;
     reg [2:0] die_id = 3'd1;
     // ------------------------------------------------------------------ link far ends (read by the PHY models)
     wire         h2d_v;
@@ -34,7 +37,7 @@ module tb_kvslice;
     wire         kv_link_v;
     wire [582:0] kv_link_flit;
     qwen_kvsys_bound_top dut (
-        .pad_por_n(por_n), .start(rst_n), .clk_clk_phy(ck_phy), .clk_core(ck_core),
+        .pad_por_n(por_n), .start(start_after_setup ? mission_start : rst_n), .clk_clk_phy(ck_phy), .clk_core(ck_core),
         .pad_die_id(die_id), .pad_refclk(ck_ref),
         .sys_c_link_v(kv_link_v), .sys_c_link_flit(kv_link_flit), .sys_c_far_v(c2k_v), .sys_c_far_flit(c2k_flit));
     // ------------------------------------------------------------------ compute-die far end on the UCIe link (+FAR=1)
@@ -85,6 +88,11 @@ module tb_kvslice;
     string fpath, epath, phase;
     integer maxcyc = 200000, setup_wait = 20000, epoch_exp = -1;
     always @(posedge ck_core) cyc_core <= cyc_core + 1;
+    always @(negedge ck_core) if (start_after_setup && t_setup >= 0 && !mission_start &&
+                                cyc_core >= t_setup + mission_start_delay) begin
+        mission_start = 1; mission_start_cycle = cyc_core;
+        $display("KVSLICE_START cycle %0d setup_cycle %0d delay %0d", mission_start_cycle, t_setup, mission_start_delay);
+    end
     always @(posedge ck_host) begin
         cyc_host <= cyc_host + 1;
         hc_rx_cr <= hc_rx_v;                       // host consumes every die->host word at once (returns its credit)
@@ -189,6 +197,9 @@ module tb_kvslice;
         if (!$value$plusargs("SETUP_WAIT=%d", setup_wait)) setup_wait = 20000;
         if (!$value$plusargs("EPOCH=%d", epoch_exp)) epoch_exp = -1;
         if (!$value$plusargs("POST=%d", post)) post = 0;
+        start_after_setup = $test$plusargs("START_AFTER_SETUP");
+        void'($value$plusargs("MISSION_START_DELAY=%d", mission_start_delay));
+        if (mission_start_delay < 1) $fatal(1, "MISSION_START_DELAY must be positive");
         begin : farcfg integer x;
             if ($value$plusargs("FAR=%d", x)) far_en = (x != 0);
             if ($value$plusargs("EPB=%d", x)) far_epb = 5'(x);
