@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.s81_tokds6_pricing.v1",
+ "lane": "TOK-DS-6",
+ "date": "2026-10-26",
+ "ruling": "COORD tok-ds-5 ruling (COORD-REVIEW-QUEUE 14:16): (1) lower_idx at SHARD_K, (2) audit/price re-index L24-36, topk_local k=3, MTP query store, (3) param-only rg3 probe, (4) k=6 no-RTL if over 15 %",
+ "scan_k3_bench": {"evidence": "results/rtl/s81_l14_idx_k3_1026/check.json", "die2_keys": 43690, "die0_keys": 43691,
+   "hdr_to_last": 8720, "law_3N16_511": 8704, "grade": "CHECKED (bench PASS bit-exact, 6 mutants FAIL)"},
+ "topk_tree_k3": {
+   "tool": "tools/s81_dv/layer_prog/lower_bk.py job_rank_tree_rd(fx, rank, k_dies, layer='L14', t_q=READER_T0) on the L14 rank-3 fixture (golden topk_local of all 4 ranks)",
+   "root_last_egress_from_score_start": {"k3": {"r0": 14728, "r1": 14730, "r2": 14728, "r3": 14730}, "k6": {"r0": 14334, "r3": 14334}},
+   "k3_detail_r3": {"children_last_egress": [10157, 10154], "child_arrive_root_lanes": [[10816, 12416], [12417, 14017]], "root_window": [14657, 14732]},
+   "lane3_append_model_superseded": {"k3": {"r0": 14237, "r3": 14194}},
+   "dag_charge_after_rg3_k3": {"score": 10649, "topk_local": 2176, "sum": 12825},
+   "measured_for_row": 14862, "delta_per_layer": 2037, "grade": "compiler plan (interim), closure true every rank"},
+ "reidx_gather": {
+   "vehicle": "tb_dsdv_idx_rg3 synthetic +GATHER (base build of claude/tok-ds-6-1026, MUT 0, DQR 24, IQD 512), logs reidx_gather/",
+   "cases": {"g2048_p4_t500": "FAIL closed 4850", "g2048_p4_t900": "FAIL closed 5250", "g2048_p4_t1500": "PASS 5850",
+             "g541_p4_t500": "FAIL closed 1744", "g541_p4_t900": "FAIL closed 2144", "g541_p4_t1500": "PASS 2744",
+             "g541_p3_t800": "FAIL closed 1774", "g541_p3_t1500": "FAIL closed 2474", "g256_p3_t1500": "PASS 2027"},
+   "real_rank_blocks_golden": [485, 541, 517, 505], "real_source": "results/rtl/dsrom_reindex_candidates_20261004/gather.json",
+   "charged": 1656, "static_worst_case_measured": 5966, "real_worst_rank_measured": 2860,
+   "row": "static worst case (16,384 keys on one die): +4310 a layer x 4 = 2.038 % AR / 1.443 % MTP; real distribution would be +1204 = 0.578 % AR (data-dependent window, not allowed by the static rule)"},
+ "mtp_query_store": "dsdv_idx_rg3 holds one 64-word query; the token-path MTP DAG is a wavefront (each verify position takes the stage's busy period, scan included): no shared 6-query read is assumed in the DAG basis -> no ledger row. Composite verify-stage busy with every S81 row (hand-computed): V.S020 30239.8 + 12511 = 42751 < V.S029 33183.5 + 3693 + 5536 + 2776 = 45188 (S029 stays the wave stage). The B3.compose sensitivity of S81.L20_SPLIT (helper MTP filler) is unchanged.",
+ "k6_spread_L2_L8_L14": {"tree_span": 14334, "delta_vs_k3": -396, "e2e_ar_pct": -0.144, "e2e_mtp_pct": -0.101,
+   "helper_windows": "NOT CHECKED: the gain cannot bring s81 under 15 % (17.045 -> ~16.90), so the helper-die calendar check (dv_mu_calendar split_check with S003/S012/S021 helpers) was not run"},
+ "param_probe": "dsfd_ctrl_rg3 has initial $fatal for RFD > 31 (CW 5-bit landing count) and dsdv_idx_rg3 OW comment DQR <= 31: DQR/RFD 48 is NOT a parameter-only change; the in-range maximum DQR 30 + IQD 1024 was probed instead (see lane line)",
+ "s81_totals_after": {"accepted_plus_proposed_pct": 17.045, "limit_pct": 15.0, "before": 14.275}
+}

@@ -1,0 +1,106 @@
+{
+ "rows": 19,
+ "per_row": {
+  "BF.COL_PINREG": {
+   "ar": 870.0,
+   "mtp": 1056.0
+  },
+  "ENGRAM.LKP_STATIC14_ST6": {
+   "ar": 0.0,
+   "mtp": "not on this path (0)"
+  },
+  "ENGRAM.LKP_WRITE_POSEDGE": {
+   "ar": 0.0,
+   "mtp": "not on this path (0)"
+  },
+  "FIELD.CFG7_SEQ_PINREG": {
+   "ar": 1160.0,
+   "mtp": 1408.0
+  },
+  "FIELD.RETURN_NODE_R2": {
+   "ar": 5220.0,
+   "mtp": 6336.0
+  },
+  "MTP.p2.core_transaction": {
+   "ar": "not on this path (0)",
+   "mtp": 1875.0
+  },
+  "S81.L20_SPLIT": {
+   "ar": 5536.0,
+   "mtp": 33216.0
+  },
+  "S81.SCAN_STACKS_P4L": {
+   "ar": 14934.0,
+   "mtp": 33399.0
+  },
+  "S81.ADOPT178_FT_SITES": {
+   "ar": 4744.0,
+   "mtp": 5239.0
+  },
+  "S81.DV_LANDING_HALFCYCLE": {
+   "ar": 18275.5,
+   "mtp": 16281.0
+  },
+  "S81.FRAME_LANDED_RESCHEDULE": {
+   "ar": 12456.0,
+   "mtp": 14526.0
+  },
+  "S81.HEADB4_GO (ot_s81hd_elemB_l4_native v4 go_q ": {
+   "ar": 1.0,
+   "mtp": "not on this path (0)"
+  },
+  "S81.IDX_SCAN_RG3_K3": {
+   "ar": 14985.0,
+   "mtp": 14985.0
+  },
+  "S81.IDX_TOPK_TREE_K3": {
+   "ar": 6111.0,
+   "mtp": 6111.0
+  },
+  "S81.REIDX_GATHER_RG3": {
+   "ar": 17240.0,
+   "mtp": 17240.0
+  },
+  "S81.VSW_LR1 (ot_s81sl_vsw LR=1 default, main 8d6": {
+   "ar": 40.0,
+   "mtp": 50.0
+  },
+  "SVC.PV_DRAIN": {
+   "ar": 0.0,
+   "mtp": "not on this path (0)"
+  },
+  "SVC.ROWS_INGRESS.A": {
+   "ar": 11104.4,
+   "mtp": 24984.9
+  },
+  "SVC.ROWS_INGRESS.B": {
+   "ar": 11140.0,
+   "mtp": 11140.0
+  }
+ },
+ "workloads": {
+  "ar": {
+   "base_cycles": 828878.4,
+   "base_tok_s": 1447.74,
+   "added_cycles": 123816.9,
+   "cycles": 952695.3,
+   "tok_s": 1259.6,
+   "loss_pct": 12.996,
+   "tok_s_accepted_only": 1395.9
+  },
+  "mtp": {
+   "base_cycles": 1177528.1,
+   "base_tok_s": 4238.37,
+   "added_cycles": 187846.9,
+   "cycles": 1365375.0,
+   "tok_s": 3655.3,
+   "loss_pct": 13.758,
+   "tok_s_accepted_only": 4123.7
+  }
+ },
+ "floor": {
+  "rule": "OWNER 10-15 22:30: S81 >15 % OK if MTP > 3,000 tok/s",
+  "mtp_tok_s": 3655.3,
+  "pass_": true
+ }
+}
