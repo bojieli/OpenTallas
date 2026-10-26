@@ -1,0 +1,82 @@
+{
+ "schema": "opentallas.kv_die_grt_model_whatif.v1",
+ "plan_sha256_8": "e6326d34",
+ "kit": "DIE-FT it5 epyc1:/srv/opentallas-scratch2/claude/die-ft-1830/qwen_kvsys/kit (die_trial, main 20b4554a0f)",
+ "note": [
+  "plan; only the model differs) -> whatif_die_grt.json.",
+  "  base      = DIE-FT it5 as run: planned head cores OBS M4/M5 (die_trial.core_obs), M4-M7 adjustment 0.75",
+  "  strict75  = head cores OBS through M7 (as g2.probe_blockages / sigmax M7 harden), adjustment 0.75",
+  "  strict65  = strict cores, adjustment 0.65 (35 % of M4-M7 left for die feedthroughs)",
+  "  strict50  = strict cores, adjustment 0.50 (= g2.py part-probe own-logic model, --adjust 0.5)",
+  "usage: whatif_parse.py ROOT(base kit dir parent) WHATIF_ROOT OUT.json"
+ ],
+ "runs": {
+  "base": {
+   "overflow": {
+    "M5": 2,
+    "M6": 418373,
+    "M7": 397815,
+    "Total": 816190
+   },
+   "usage_pct": 7.05,
+   "wirelength_um": 300648769,
+   "grt_0113_0114": 0,
+   "elapsed": "15:52.52",
+   "congestion_src_columns": {
+    "hgi_WN": 7761,
+    "hg_WN": 2842,
+    "hg_EN": 280,
+    "hgi_EN": 117,
+    "hg_WS": 55,
+    "hgi_WS": 40
+   },
+   "exit_ok": true
+  },
+  "strict75": {
+   "overflow": {
+    "M4": 4,
+    "M5": 10,
+    "M6": 289515,
+    "M7": 775275,
+    "Total": 1064804
+   },
+   "usage_pct": 7.87,
+   "wirelength_um": 312047218,
+   "grt_0113_0114": 0,
+   "elapsed": "26:08.00",
+   "congestion_src_columns": {
+    "hgi_WN": 9574,
+    "hg_WN": 2180,
+    "hgi_EN": 664,
+    "hg_EN": 332,
+    "hg_WS": 281,
+    "hgi_WS": 209,
+    "hgi_ES": 99,
+    "pv_N": 3
+   },
+   "exit_ok": true
+  },
+  "strict65": {
+   "overflow": {
+    "Total": 0
+   },
+   "usage_pct": 5.37,
+   "wirelength_um": 296447234,
+   "grt_0113_0114": 0,
+   "elapsed": "1:39.50",
+   "congestion_src_columns": {},
+   "exit_ok": true
+  },
+  "strict50": {
+   "overflow": {
+    "Total": 0
+   },
+   "usage_pct": 3.74,
+   "wirelength_um": 295548166,
+   "grt_0113_0114": 0,
+   "elapsed": "0:55.08",
+   "congestion_src_columns": {},
+   "exit_ok": true
+  }
+ }
+}

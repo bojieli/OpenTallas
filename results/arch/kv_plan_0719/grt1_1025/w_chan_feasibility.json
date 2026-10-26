@@ -1,0 +1,240 @@
+{
+ "schema": "opentallas.kv_w_chan_feasibility.v1",
+ "boundary": "row 3|4 (all row boundaries identical)",
+ "cap_bits_per_um": 9.115,
+ "fixed_bits": {
+  "hg.c0": 44,
+  "hg.c1": 657,
+  "hg.c2": 656,
+  "hg.c3": 571,
+  "hg.c4": 523,
+  "hgi.c0": 39,
+  "hgi.c1": 32,
+  "hgi.c2": 0,
+  "hgi.c3": 0,
+  "hgi.c4": 0
+ },
+ "movable": {
+  "L350": 552,
+  "L354": 174,
+  "L663": 1044,
+  "L751": 549,
+  "L1524": 548,
+  "L2048": 523
+ },
+ "scenarios": {
+  "S0_whole_buses": {
+   "max_util": 1.133,
+   "assign": {
+    "L663": "hgi.c3",
+    "L350": "hgi.c1",
+    "L751": "hgi.c4",
+    "L1524": "hgi.c2",
+    "L2048": "hgi.c2",
+    "L354": "hg.c3"
+   },
+   "util": {
+    "hg.c0": 0.28,
+    "hg.c1": 0.7,
+    "hg.c2": 0.69,
+    "hg.c3": 0.79,
+    "hg.c4": 0.66,
+    "hgi.c0": 0.25,
+    "hgi.c1": 0.62,
+    "hgi.c2": 1.13,
+    "hgi.c3": 1.1,
+    "hgi.c4": 0.7
+   }
+  },
+  "S1_fdi_fork_at_hub_Wi": {
+   "max_util": 1.132,
+   "assign": {
+    "L350": "hgi.c1",
+    "L751": "hgi.c4",
+    "L1524": "hgi.c3",
+    "L2048": "hgi.c2",
+    "L663W": "hgi.c2",
+    "L663E": "hgi.c3",
+    "L354": "hg.c3"
+   },
+   "util": {
+    "hg.c0": 0.28,
+    "hg.c1": 0.7,
+    "hg.c2": 0.69,
+    "hg.c3": 0.79,
+    "hg.c4": 0.66,
+    "hgi.c0": 0.25,
+    "hgi.c1": 0.62,
+    "hgi.c2": 1.11,
+    "hgi.c3": 1.13,
+    "hgi.c4": 0.7
+   }
+  },
+  "S2_fdi_fork+L2048_split2": {
+   "max_util": 1.106,
+   "assign": {
+    "L350": "hgi.c3",
+    "L751": "hgi.c1",
+    "L1524": "hgi.c4",
+    "L663W": "hgi.c2",
+    "L663E": "hgi.c2",
+    "L2048a": "hgi.c3",
+    "L2048b": "hg.c3",
+    "L354": "hgi.c1"
+   },
+   "util": {
+    "hg.c0": 0.28,
+    "hg.c1": 0.7,
+    "hg.c2": 0.69,
+    "hg.c3": 0.88,
+    "hg.c4": 0.66,
+    "hgi.c0": 0.25,
+    "hgi.c1": 0.8,
+    "hgi.c2": 1.11,
+    "hgi.c3": 0.86,
+    "hgi.c4": 0.7
+   }
+  },
+  "S3_whole+hgi_one_more_103.68um_channel": {
+   "max_util": 1.105,
+   "assign": {
+    "L663": "hgi.c3",
+    "L350": "hgi.c5",
+    "L751": "hgi.c2",
+    "L1524": "hgi.c1",
+    "L2048": "hgi.c4",
+    "L354": "hgi.c2"
+   },
+   "util": {
+    "hg.c0": 0.28,
+    "hg.c1": 0.7,
+    "hg.c2": 0.69,
+    "hg.c3": 0.6,
+    "hg.c4": 0.66,
+    "hgi.c0": 0.25,
+    "hgi.c1": 0.61,
+    "hgi.c2": 0.77,
+    "hgi.c3": 1.1,
+    "hgi.c4": 0.66,
+    "hgi.c5": 0.58
+   }
+  },
+  "S4_fdi_fork+hgi_one_more_channel": {
+   "max_util": 1.106,
+   "assign": {
+    "L350": "hgi.c3",
+    "L751": "hgi.c5",
+    "L1524": "hgi.c1",
+    "L2048": "hgi.c2",
+    "L663W": "hgi.c4",
+    "L663E": "hgi.c2",
+    "L354": "hgi.c5"
+   },
+   "util": {
+    "hg.c0": 0.28,
+    "hg.c1": 0.7,
+    "hg.c2": 0.69,
+    "hg.c3": 0.6,
+    "hg.c4": 0.66,
+    "hgi.c0": 0.25,
+    "hgi.c1": 0.61,
+    "hgi.c2": 1.11,
+    "hgi.c3": 0.58,
+    "hgi.c4": 0.66,
+    "hgi.c5": 0.77
+   }
+  },
+  "S5_whole_buses_channel_share_0.30": {
+   "max_util": 0.944,
+   "assign": {
+    "L663": "hgi.c3",
+    "L350": "hgi.c1",
+    "L751": "hgi.c4",
+    "L1524": "hgi.c2",
+    "L2048": "hgi.c2",
+    "L354": "hg.c3"
+   },
+   "util": {
+    "hg.c0": 0.23,
+    "hg.c1": 0.58,
+    "hg.c2": 0.58,
+    "hg.c3": 0.66,
+    "hg.c4": 0.55,
+    "hgi.c0": 0.21,
+    "hgi.c1": 0.51,
+    "hgi.c2": 0.94,
+    "hgi.c3": 0.92,
+    "hgi.c4": 0.58
+   }
+  },
+  "S5_whole_buses_channel_share_0.35": {
+   "max_util": 0.81,
+   "assign": {
+    "L663": "hgi.c3",
+    "L350": "hgi.c1",
+    "L751": "hgi.c4",
+    "L1524": "hgi.c2",
+    "L2048": "hgi.c2",
+    "L354": "hg.c3"
+   },
+   "util": {
+    "hg.c0": 0.2,
+    "hg.c1": 0.5,
+    "hg.c2": 0.5,
+    "hg.c3": 0.56,
+    "hg.c4": 0.47,
+    "hgi.c0": 0.18,
+    "hgi.c1": 0.44,
+    "hgi.c2": 0.81,
+    "hgi.c3": 0.79,
+    "hgi.c4": 0.5
+   }
+  },
+  "S5_whole_buses_channel_share_0.40": {
+   "max_util": 0.708,
+   "assign": {
+    "L663": "hgi.c3",
+    "L350": "hgi.c1",
+    "L751": "hgi.c4",
+    "L1524": "hgi.c2",
+    "L2048": "hgi.c2",
+    "L354": "hg.c3"
+   },
+   "util": {
+    "hg.c0": 0.17,
+    "hg.c1": 0.43,
+    "hg.c2": 0.43,
+    "hg.c3": 0.49,
+    "hg.c4": 0.42,
+    "hgi.c0": 0.15,
+    "hgi.c1": 0.39,
+    "hgi.c2": 0.71,
+    "hgi.c3": 0.69,
+    "hgi.c4": 0.44
+   }
+  },
+  "S5_whole_buses_channel_share_0.50": {
+   "max_util": 0.567,
+   "assign": {
+    "L663": "hgi.c3",
+    "L350": "hgi.c1",
+    "L751": "hgi.c4",
+    "L1524": "hgi.c2",
+    "L2048": "hgi.c2",
+    "L354": "hg.c3"
+   },
+   "util": {
+    "hg.c0": 0.14,
+    "hg.c1": 0.35,
+    "hg.c2": 0.35,
+    "hg.c3": 0.39,
+    "hg.c4": 0.33,
+    "hgi.c0": 0.12,
+    "hgi.c1": 0.31,
+    "hgi.c2": 0.57,
+    "hgi.c3": 0.55,
+    "hgi.c4": 0.35
+   }
+  }
+ }
+}
