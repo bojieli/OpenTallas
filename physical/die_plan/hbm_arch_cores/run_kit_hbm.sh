@@ -33,7 +33,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=3; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ -n \"\$SP\" ]; then wait \$SP; sr=\$(cat /work/selrange.rc 2>/dev/null); echo \"selrange rc \$sr\"; \
     if [ \"\$sr\" = 1 ]; then echo 'FAIL_PREFLOOR selrange' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
-  if [ \$rc = 0 ] && [ $GOAL != synth ]; then \$M cts; rc=\$?; \
+  if [ \$rc = 0 ] && [ $GOAL != synth ] && [ $GOAL != floorplan ] && [ $GOAL != place ]; then \$M cts; rc=\$?; \
     C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); \
     if [ \$rc = 0 ] && [ -n \"\$C\" ] && [ -f /work/hold_gate.tcl ]; then \
       S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); S=\${S:-/work/constraint.sdc}; \
