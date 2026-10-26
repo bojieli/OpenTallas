@@ -1,0 +1,56 @@
+{
+ "source": "ae288ad295",
+ "bind": "b23h2 c6602a6ae8",
+ "status": "CANDIDATE_NOT_PHYSICALLY_ADOPTED",
+ "summary": {
+  "members": 944,
+  "additional_flops": 115581,
+  "additional_flops_by_part": {
+   "hub_C": 8853,
+   "pv_S_2": 6294,
+   "pv_S_3": 7038,
+   "pv_S_4": 6302,
+   "pv_S_5": 7786,
+   "pv_S_6": 8530,
+   "pv_S_7": 8534,
+   "pv_S_1": 5550,
+   "pv_S_0": 6290,
+   "pv_N_2": 5554,
+   "pv_N_3": 6298,
+   "pv_N_4": 5562,
+   "pv_N_5": 7046,
+   "pv_N_6": 7790,
+   "pv_N_7": 7794,
+   "pv_N_1": 4810,
+   "pv_N_0": 5550
+  },
+  "members_by_port": {
+   "a0": 2,
+   "a0t": 2,
+   "a0v": 2,
+   "a1": 2,
+   "a1t": 2,
+   "a1v": 2,
+   "b0": 2,
+   "b1": 2,
+   "a": 56,
+   "s": 56,
+   "y": 112,
+   "col_fault": 64,
+   "col_valid": 64,
+   "bc": 512,
+   "join_go": 64
+  },
+  "schedule_cycles_added_vs_asbuilt": 0
+ },
+ "checks": {
+  "restored": {
+   "verdict": "PASS",
+   "members": 944,
+   "schedule_cycles_added_vs_asbuilt": 0
+  },
+  "original_unpadded": "CAUGHT: PV calendar pvw_0__u_RH_r0.b0[0:257]<-pvw_0__u_T1Q0_45_r0.b@4: landed 2 != asbuilt 4",
+  "bypass_one": "CAUGHT: PV calendar pvw_0__u_RH_r0.a0[0:257]<-pvw_0__u_T0Q0_45_r0.b@2: landed 1 != asbuilt 2",
+  "lost_member": "CAUGHT: PV calendar missing members: ['pvw_0__u_RH_r0.a0[0:257]<-pvw_0__u_T0Q0_45_r0.b@2']"
+ }
+}
