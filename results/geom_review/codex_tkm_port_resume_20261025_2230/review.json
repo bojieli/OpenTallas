@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "ONE CTS-only retry per common/terminal no-ID tile from verified identical3_place, noGRT/DRT/signoff",
+  "image": "results/geom_review/codex_tkm_port_resume_20261025_2230/placed.png",
+  "source_commit": "2b7a14af1a692984de4621bdf25942d4097efc86",
+  "kits": {
+    "common": "4c4279232b37ab00",
+    "terminal": "fc75b9693c5d5b96"
+  },
+  "findings": [
+    "Both oldCTS attempts failed before building any tree: density helper searched absent clk because OT_DTAP_PORT was omitted. The actual proven port is tile_clk.",
+    "Actual common placement is a central datapath column with orderedN/S pin-register strips; macro-free21%fill. Terminal logic isS-heavy, with only two controls inNW island and an emptyupperregion; no newmacro wall or denseclockisland.",
+    "No dataorFFmovement: ODB,SDC,pinsandIOhashes gate reuse; sourceRTL and synthnetlists match existing EQUIVALENT receipts.",
+    "E-mid clockport explicit, firstBUF must remainwithin20um. Shallowclock setup will nowexecute; postCTS tree, TT/FF insertion250/202.5\u00b120, CPPRpairskew\u226480,hold,legreachand pin-to-reg reach remainrequired beforeGRT.",
+    "The simple dump direct-pinFF metric matched only theclocknet, so it is not a valid datapinregister-distance measurement and is not used as a gate."
+  ],
+  "data_cycle_delta": 0,
+  "controls": {
+    "clock_contract": "valid tile_clk PASS; missingenv/wrongclk/missingBTerm rejected",
+    "placement_resume": "valid PASS; wrongpins/changedODB/missingSDC/pathescape rejected"
+  },
+  "previous_failures": [
+    "22791dba0c4a",
+    "6df1037d6735"
+  ]
+}

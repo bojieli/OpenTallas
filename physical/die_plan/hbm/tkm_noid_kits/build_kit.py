@@ -112,7 +112,12 @@ def clean_head(paths):
 
 
 def place(entry, dst):
-    src = REPO / entry["path"]; b = src.read_bytes()
+    src = REPO / entry["path"]
+    if entry.get("source_commit"):
+        b = subprocess.run(["git", "-C", str(REPO), "show", entry["source_commit"] + ":" + entry["path"]],
+                           check=True, capture_output=True).stdout
+    else:
+        b = src.read_bytes()
     if sha(b) != entry["sha256"]:
         raise SystemExit(f"NOT BUILT: {entry['path']} sha {sha(b)[:12]} != manifest {entry['sha256'][:12]}")
     dst.parent.mkdir(parents=True, exist_ok=True); dst.write_bytes(b)
