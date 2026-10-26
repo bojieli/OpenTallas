@@ -9,6 +9,8 @@ foreach i [$blk getInsts] {
   set m [$i getMaster]
   if {[$m isBlock]} { set b [$i getBBox]; puts $fo "macro,[$i getName],[expr {[$b xMin]/double($u)}],[expr {[$b yMin]/double($u)}],[expr {[$b xMax]/double($u)}],[expr {[$b yMax]/double($u)}]"; continue }
 }
+foreach bl [$blk getBlockages] { set b [$bl getBBox]; puts $fo "island,blk,[expr {[$b xMin]/double($u)}],[expr {[$b yMin]/double($u)}],[expr {[$b xMax]/double($u)}],[expr {[$b yMax]/double($u)}]" }
+foreach bt [$blk getBTerms] { if {[$bt getName] eq "ck"} { set b [$bt getBBox]; puts $fo "ckpin,ck,[expr {[$b xMin]/double($u)}],[expr {[$b yMin]/double($u)}],[expr {[$b xMax]/double($u)}],[expr {[$b yMax]/double($u)}]" } }
 foreach n [$blk getNets] {
   if {[$n getSigType] ne "CLOCK"} continue
   set drv ""; foreach it [$n getITerms] { if {[$it isOutputSignal]} { set drv $it } }
