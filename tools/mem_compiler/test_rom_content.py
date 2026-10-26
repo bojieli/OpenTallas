@@ -32,3 +32,19 @@ def test_rejects_overflow_and_conflicting_sparse_images(tmp_path):
     with pytest.raises(ValueError):C.write_viamap(tmp_path/'bad.viamap.hex',[1<<72],'ot_rom_4096x72_m8')
     f=tmp_path/'logical.hex';f.write_text('@0\n1234\n@0\n4321\n')
     with pytest.raises(ValueError):C.read_sparse_hex(f)
+
+
+def test_actual_released_token_map_producer_matches_legacy(tmp_path):
+    import subprocess
+    source=C.ROOT/'tools/engram_token_map_image.py'
+    payload=C.ROOT/'results/uarch/h4_c0_ds_external_source_provenance_20261003/r1/payloads/fbc8c3ec76fc1143_L01_token_map.npy'
+    if not payload.exists():pytest.skip('released tokenizer payload not in sparse checkout')
+    legacy=subprocess.check_output(['git','-C',str(C.ROOT),'show','5e8ce49592:tools/engram_token_map_image.py'],text=True)
+    old={'__file__':str(source),'__name__':'legacy_content_producer'}
+    new={'__file__':str(source),'__name__':'current_content_producer'}
+    exec(compile(legacy,str(source),'exec'),old)
+    exec(compile(source.read_text(),str(source),'exec'),new)
+    old['prepare'](tmp_path/'old');new['prepare'](tmp_path/'new')
+    names=[f'tmap{i}.viamap.hex' for i in range(8)]+['expected.hex']
+    assert all((tmp_path/'old'/n).read_bytes()==(tmp_path/'new'/n).read_bytes() for n in names)
+    assert len(list((tmp_path/'new'/'.rom-personalisation').glob('*/verify.json')))==8
