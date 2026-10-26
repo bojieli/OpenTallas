@@ -114,6 +114,13 @@ SO_ORDER = [g for k in range(8) for g in (k, k + 8)]   # operand frames E / W in
 # P beats read pbuf from PIO+75 (2 edges/beat) -> PIO0 270 FAIL (P read before the first e row), 285 PASS; the PV frame
 # reaches the owners PIO+90 (W) / +85 (E) -> P_ARR 60 FAIL (PO before the frame: fault 00104000), 70 PASS.  Tight = 285 / 70.
 PIO0, P_ARR, P_PO_M, PIO_EARLY = 285, 70, 8, 150
+# Profiles select compiler dates, never arithmetic. The closing profile is
+# calibrated on the complete H16/D512/T128 ALLQ+SMT service programme.
+SERVICE_TIMING = {
+    'legacy_fg3': dict(pio=285, kpv=55, engine_profile='legacy_fg3'),
+    'closing_allq': dict(pio=297, kpv=78, engine_profile='closing'),
+}
+
 W_SLACK = 560                # WIN_LOAD -> GO: 64 code + 2 scale reads a PC at DQ 8 credits x <= 56-edge latency + margin
 Q_ARM = 4                    # j pin -> first q header (job pin flop + table push, ot_s81_svc_job.sv:31-32, 91-92)
 JD_LAT = 1                   # last P.V word at the pv pin -> jd done pulse (SVC-PV3 logs: end = pv_last + 1)
@@ -213,7 +220,11 @@ def f32bits(x):
 class Job:
     """the layer's svc attention job, built once per (layer, fixtures, tag, mutant)"""
 
-    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None, allq=None):
+    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None, allq=None, timing_profile="legacy_fg3"):
+        if timing_profile not in SERVICE_TIMING:
+            raise ValueError(f'unknown service timing profile {timing_profile!r}')
+        self.timing_profile = timing_profile
+        self.timing = SERVICE_TIMING[timing_profile]
         import rtl_hdc_v41x_attn_campaign as C
         self.C, V = C, C.V
         fx = Path(fx)
@@ -332,6 +343,8 @@ class Job:
         """t_q0: the CFG word's cycle (own row ready), t_q: q_rope done, t_exp: P (exp) ready -- all at the q pins.
         Returns {frame: first word cycle} and the job's derived cycles."""
         T = self.T
+        if self.timing_profile == 'closing_allq' and not (T == 128 and self.allq and self.so and PPATH):
+            raise ValueError('closing_allq timing requires the H16/D512/T128 ALLQ+SMT on-die-P programme')
         n = -(-T // 2)
         t = t_q0
         at, words, fw = {}, [], {}
@@ -346,7 +359,7 @@ class Job:
                     # on-die P: PIO after the SM's last e row (measured), the PV frame reaches the owners P_ARR after
                     # PIO, one word a cycle.  MUTANT 'pio_early': the GO frame's PIO PIO_EARLY cycles early, PO / PVO
                     # unchanged (the first P beats find no e row in pbuf: sticky slice fault)
-                    pio = PIO0
+                    pio = self.timing["pio"]
                     pvs = pio
                     po = pio + P_ARR + -(-n // 2) + P_PO_M
                     if self.mutant == 'pio_early':
@@ -354,7 +367,7 @@ class Job:
                 else:
                     pvs = max(-(-5 * T // 4) + PVS0, t_exp - go)
                     po = pvs + -(-n // 2) + -(-n // 250) + 4
-                pvo = po + 8 * -(-T // 32) + KPV
+                pvo = po + 8 * -(-T // 32) + self.timing["kpv"]
                 ws = [hdr(13, 0, self.tag, spec=(po & 0xFFFF) | ((pvo & 0xFFFF) << 16) | ((pio & 0xFFFF) << 32))]
                 self.pio = pio
                 t = go
@@ -566,9 +579,9 @@ def sot_booking_for(job, s):
     return rec
 
 
-def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None, allq=None):
+def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None, allq=None, timing_profile="legacy_fg3"):
     """the job + its static schedule at the layer's cycles (layer entry = 0)"""
-    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq)
+    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq, timing_profile=timing_profile)
     if sot_booking is not None:
         from sot_program import attach_to_job
         attach_to_job(job, sot_booking)
@@ -634,6 +647,7 @@ def bench_image(job, s, out, base=60):
     for k, v in files.items():
         (out / k).write_text(v)
     rec = dict(schema='opentallas.s81_dv.svc_bench_image.v1', tb_offset=off, mutant=job.mutant, tag=job.tag,
+               timing_profile=job.timing_profile, engine_profile=job.timing['engine_profile'],
                j_arg=arg, j_word=f'{jw:09x}', frames={k: v + off for k, v in s['at'].items()},
                go=s['go'] + off, pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pio=job.pio, ppath=PPATH, pv_first=s['pv_first'] + off,
                pv_last=s['pv_last'] + off, done_w=s['done_w'] + off, done_e=s['done_e'] + off, anchors=job.anchor, T=job.T, heads=[job.h0, job.h0 + H],
@@ -663,11 +677,12 @@ def lower(die, op, ctx):
     if ctx.get('svc_timing_profile') is None:
         raise ValueError('service programme requires an explicit svc_timing_profile')
     key = (str(fx), ctx.get('layer'), ctx.get('svc_tag', 0), ctx.get('svc_owner_epoch'),
-           json.dumps(ctx.get('svc_sot_booking'), sort_keys=True))
+           json.dumps(ctx.get('svc_sot_booking'), sort_keys=True), ctx.get('svc_timing_profile', 'legacy_fg3'))
     if key not in _CACHE:
         try:
             _CACHE[key] = build(fx, ctx.get('sched'), die, tag=ctx.get('svc_tag', 0),
-                                owner_epoch=ctx.get('svc_owner_epoch'), sot_booking=ctx.get('svc_sot_booking'))
+                                owner_epoch=ctx.get('svc_owner_epoch'), sot_booking=ctx.get('svc_sot_booking'),
+                                timing_profile=ctx.get('svc_timing_profile', 'legacy_fg3'))
         except AssertionError as e:
             _CACHE[key] = (None, str(e))
     job, s = _CACHE[key]
@@ -762,6 +777,7 @@ def main(argv=None):
     ap.add_argument('--out', required=True)
     ap.add_argument('--sched', default=None, help='schedule.json of dv_layer_compile (else the L0 priced defaults)')
     ap.add_argument('--tag', type=lambda x: int(x, 0), default=0)
+    ap.add_argument('--timing-profile', choices=tuple(SERVICE_TIMING), default='legacy_fg3')
     a = ap.parse_args(argv)
     sched = json.loads(Path(a.sched).read_text()) if a.sched else None
     die = None
@@ -774,7 +790,7 @@ def main(argv=None):
     if ALLQ and SMT:          # RTLGAP-SUKV: SOT programme negatives (each must FAIL with a target / gather fault)
         muts += ('no_sot', 'so_win_short', 'so_hm_shift')
     for mut in muts:
-        job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut)
+        job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut, timing_profile=a.timing_profile)
         rec = bench_image(job, s, Path(a.out) / (mut or 'base'))
         print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done_w', 'done_e', 'frames')}))
 
