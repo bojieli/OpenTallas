@@ -1037,3 +1037,4 @@ CODEX: 2026-10-26 02:22 PDT S81 B5 and hub-aligned signal trials both GRT0 with 
 CODEX: 2026-10-26 02:24 PDT mergedflowstaging93d4/nativePHY+B2toolc495/runtimebundle+LECretry22c9. Infraregionalcutfix1d5b87430 delivered; actualconnectedreplay engineering underway. CollectedS81B5signal50itGRT0; nativeHBMW128/KVPV/QCSU source-plan mismatches diagnosed and assigned.
 
 CODEX: 2026-10-26 02:24 PDT HBM native logical tooling recovered/source-onlyREADY8fe62c748 (CUT0/clock967PASS, exactroot/routercomponentgatesPASS); exposes nativeW128vsphysicalW64lane blocker. q_b10010FTslotsPASS348.57um; q_b110neighborlendingrepair active. Currentstable-sortM5root/topk synth and4coneH0latestLEC live.
+CODEX: 2026-10-26 02:25 PDT KV ASTK/e1: e1 full LEC29998EQ; place advanced. ASTK face-root ancestor~100ps diagnosed, cold CTS structural trial exit0; actual nativepairmeasure running. ExactJSONQaliasfix6bdc0ae25 tiny exhaustive+mutantsPASS/fullASTKLECrunning.
