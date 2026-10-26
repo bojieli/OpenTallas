@@ -1,5 +1,5 @@
 {
- "scope": "Opt-in physical F6 successor; exactness/geometry gates pending",
+ "scope": "Opt-in physical F6 successor; bank exactness PASS, actual physical closure pending",
  "lanes": 16,
  "macro": "ot_sram_1r1w_128x256_m1_r2c2",
  "macro_instances": 16,
@@ -21,8 +21,17 @@
   354.24
  ],
  "outline_area_delta_um2": 6121.26720000001,
- "physical_cell_area": "PENDING synthesis measurement; no claimed savings",
+ "physical_cell_area": "Incremental plain DFF estimate3284.5824um2/tile at DFFHQNx1. Actual mapping, combinational cells, CTS/hold area pending.",
  "macro_pin_contract": "Each live WD/mask/read bit has an independent kept interface flop; address/CE flops remain bank-local",
  "clock_ps": 833,
- "corners": "TT setup / FF hold, 60/25ps uncertainty"
+ "corners": "TT setup / FF hold, 60/25ps uncertainty",
+ "incremental_plain_DFF_per_bank": 704,
+ "DFFHQNx1_library_outline_um": [
+  1.08,
+  0.27
+ ],
+ "added_FF_area_estimate_um2_per_bank": 205.28640000000001,
+ "added_FF_area_estimate_um2_per_tile": 3284.5824000000002,
+ "stdlib_lef_sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+ "stdlib_lef_ORFS_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef"
 }
