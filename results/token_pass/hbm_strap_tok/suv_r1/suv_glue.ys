@@ -1,0 +1,64 @@
+read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fpu.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -sv -DSYNTHESIS rtl/proto/ot_fp32_add_rne_pipe.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_sfu.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fastfp.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fastfp_lat.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_mul_lat.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_add_lat.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_prefix.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41/ot_hdc_fsqrt.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41/ot_hdc_fdiv.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41/ot_hdc_softplus.sv
+chparam -set QID 0 ot_hbm_su_static_pgslice_lg_s
+chparam -set G 0 ot_hbm_su_static_pgslice_lg_s
+chparam -set MLAT 4 ot_hbm_su_static_pgslice_lg_s
+chparam -set ALAT 3 ot_hbm_su_static_pgslice_lg_s
+chparam -set LEAF 1 ot_hbm_su_static_pgslice_lg_s
+chparam -set MULTIRATE 1 ot_hbm_su_static_pgslice_lg_s
+chparam -set COLLPORT 1 ot_hbm_su_static_pgslice_lg_s
+chparam -set RF_LOCAL 1 ot_hbm_su_static_pgslice_lg_s
+chparam -set PIN_REG 1 ot_hbm_su_static_pgslice_lg_s
+chparam -set RSYNC 1 ot_hbm_su_static_pgslice_lg_s
+chparam -set PRETREE 1 ot_hbm_su_static_pgslice_lg_s
+hierarchy -check -top ot_hbm_su_static_pgslice_lg_s
+rename -top elab_top
+proc
+opt_clean
+setattr -mod -set keep_hierarchy 1 ot_hbm_su_static_lane_pinreg $paramod*\\ot_hbm_su_static_lane_pinreg*
+setattr -mod -set keep_hierarchy 1 ot_hbm_su_static_pinned_bank $paramod*\\ot_hbm_su_static_pinned_bank*
+setattr -mod -set keep_hierarchy 1 ot_hbm_su_red_pretree_s $paramod*\\ot_hbm_su_red_pretree_s*
+setattr -mod -set keep_hierarchy 1 ot_hbm_su_static_side_softplus_s $paramod*\\ot_hbm_su_static_side_softplus_s*
+flatten
+opt_clean
+splitnets
+opt_clean
+cd elab_top
+select -set ex c:u_slice.*u_lane c:u_slice.*u_bank c:u_slice.*u_pt c:u_slice.*u_sp
+tee -o /out/suv_glue.excl select -list @ex
+submod -name suv_glue c:* @ex %d
+cd ..
+select suv_glue
+write_verilog -selected -noattr /out/suv_glue.v
+select elab_top
+write_verilog -selected -noattr /out/suv_glue.parent.v
