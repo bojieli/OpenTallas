@@ -34,5 +34,12 @@
     "stage": "separate approved phantom fault interface batch",
     "findings": "Viewed exact before/after STA-S andFW-N window closeups. Removes only two colocated M5/M7 constant-only endpoints per master. All10remaining data pin tables and clock/reset pins+trees identical by exact generation; outline/FT/macros/PG unaffected. Real STM->FW fault retained.12pairs/48endpointpins/24phantomwirebits,+0actualcycles. ROOT explicitly approved separate interface correction; actual full placement review remains before route.",
     "verdict": "PASS-COND batch construction; independent current kit placement review remains"
+  },
+  {
+    "picture": "results/kits_wave_qc_2155/hc0_source_review.png",
+    "stage": "fresh HC0 fixed-source place-only prototype",
+    "source": "main69d23a6a includes xhead3 loop fix5ee, bind control keep186/8d",
+    "findings": "Viewed unchanged622.08x1339.2 footprint,5714boundary pins,5669FTstation points,8clocktaps and0macros. Open core and continuousboundary bands; no macro walls/choke. Local diagonal station bands correspond same-face legs; actualperbitreach/clockloads/cell density/reset census required atplacement. Prior sourcefixed8x5000 lockstep+mutantPASS,+0cycles. No CTS/route permitted until fresh fullplaced review.",
+    "verdict": "PASS-COND synth/place-only prototype"
   }
 ]
