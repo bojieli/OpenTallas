@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.hbm.q3_tkm_mechanism_model.v1",
+  "scope": "G4 N1 K1 mechanism gate on full selected TP192 physical core shapes; no production throughput claim",
+  "core_clock_ps": 833,
+  "instances": {"q3_body": 1, "q3_edge": 1, "q3_vm": 1, "q2_reduce": 1, "q2_ring_ag": 1, "tkm_root": 1, "tkm_common": 31, "tkm_terminal": 1},
+  "new_hardware": {"cycles": 0, "area_um2": 0, "reason": "New compiler/bench only. Every selected RTL byte is imported unchanged from its qualified source cohort."},
+  "interfaces": {
+    "VM": {"request_bits": 136, "reply_bits": 2056, "model_extra_latency": 81, "comment": "Real q3 VM assembly consumes the bank response; only external banks are modeled."},
+    "q3_to_tkm": {"raw_bits": 2341, "physical_beat_bits": 1171, "beats_per_raw": 2, "transport_II": 2, "reserved_lane_event_period": 8, "flits_per_event": 4},
+    "tkm_return": {"data_bits": 512, "address_bits": 40, "mask_bits": 16, "control_stages": 2, "data_stages": 2}
+  },
+  "selected_path_age_cycles": {"forward": 9, "split": 2, "face": 258, "return": 2, "total": 271},
+  "reset": "One externally delivered synchronous reset input to the q3 profile; actual root delivered-chain3 and existing per-operation tile clear transport. One explicit launch after native host programming; no forced internal controls.",
+  "physical_status": "Inherited selected core geometry and physical qualification remain separate; this bench does not establish SIGNED or a whole-die token gate."
+}
