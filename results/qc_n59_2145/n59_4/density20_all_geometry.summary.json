@@ -1,0 +1,661 @@
+{
+ "scope": "ACTUAL post-DPL complete FF data, macro F6 and reset cones; clock/timing remain separate gates",
+ "auxiliary_geometry": {
+  "macro_cones": {
+   "pins": 8416,
+   "empty_endpoint_cones": 0,
+   "limit_um": 20,
+   "max_um": 13.737,
+   "over_limit": 0,
+   "worst": [
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[26]",
+     "distance_um": 13.737,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[4\\].u_mem/wd_in[275]",
+     "distance_um": 11.607,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[1\\].u_mem/wd_in[20]",
+     "distance_um": 11.397,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[494]",
+     "distance_um": 11.163,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[5\\].u_mem/wd_in[302]",
+     "distance_um": 10.923,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[1\\].u_mem/wd_in[486]",
+     "distance_um": 10.905,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[7\\].u_mem/wd_in[171]",
+     "distance_um": 10.839,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[4\\].u_mem/wd_in[223]",
+     "distance_um": 10.695,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[41]",
+     "distance_um": 10.635,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[172]",
+     "distance_um": 10.635,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[5\\].u_mem/wd_in[310]",
+     "distance_um": 10.533,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[7\\].u_mem/rd_out[300]",
+     "distance_um": 10.503,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[7\\].u_mem/wd_in[305]",
+     "distance_um": 10.473,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[2\\].u_mem/wd_in[489]",
+     "distance_um": 10.401,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[7\\].u_mem/wd_in[24]",
+     "distance_um": 10.395,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[368]",
+     "distance_um": 10.359,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[2\\].u_mem/wd_in[494]",
+     "distance_um": 10.353,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[5\\].u_mem/wd_in[247]",
+     "distance_um": 10.293,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[7\\].u_mem/rd_out[12]",
+     "distance_um": 10.287,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[7\\].u_mem/wd_in[11]",
+     "distance_um": 10.281,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[1\\].u_mem/wd_in[470]",
+     "distance_um": 10.269,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[5\\].u_mem/wd_in[352]",
+     "distance_um": 10.251,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[7\\].u_mem/wd_in[470]",
+     "distance_um": 10.245,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[489]",
+     "distance_um": 10.239,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[5\\].u_mem/wd_in[277]",
+     "distance_um": 10.233,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[6\\].u_mem/wd_in[184]",
+     "distance_um": 10.161,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[1\\].u_mem/wd_in[226]",
+     "distance_um": 10.071,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[1\\].u_mem/wd_in[314]",
+     "distance_um": 10.071,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[226]",
+     "distance_um": 10.065,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[2\\].u_mem/wd_in[295]",
+     "distance_um": 10.053,
+     "endpoints": 1
+    }
+   ]
+  },
+  "reset_cones": {
+   "pins": 21109,
+   "empty_endpoint_cones": 8,
+   "limit_um": 405,
+   "max_um": 812.907,
+   "over_limit": 5411,
+   "worst": [
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_v$_DFF_PN0_/RESETN",
+     "distance_um": 812.907,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[48\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 807.098,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[49\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 806.342,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[50\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 805.509,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[0\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 804.429,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[47\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 803.75,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[46\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 802.994,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_generation\\[0\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 802.539,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[45\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 802.346,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[5\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 801.405,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[3\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 800.968,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[27\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 800.865,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[31\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 800.271,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[23\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 799.839,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_generation\\[1\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 799.785,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[34\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 798.813,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[1\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 798.782,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[30\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 798.759,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[35\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 798.543,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[4\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 798.188,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[29\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 798.026,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[2\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 797.702,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[36\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 797.139,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[13\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 796.81,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[21\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 796.298,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[22\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 796.059,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[51\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 796.028,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[32\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 795.974,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.hp_host_token\\[17\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 795.321,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_svc.head_descriptor_tag\\[43\\]$_DFFE_PN0P_/RESETN",
+     "distance_um": 795.195,
+     "endpoints": 1
+    }
+   ]
+  }
+ },
+ "registers": 42967,
+ "endpoint_arcs": 1380223,
+ "selected": 2227,
+ "missing_selected": [],
+ "max_hop_um": 797.4720000000001,
+ "over405": {
+  "other": 27290,
+  "selected": 274
+ },
+ "selected_groups": {
+  "f_dd": {
+   "count": 548,
+   "over405": 36,
+   "max_hop_um": 442.42199999999997
+  },
+  "f_lcv": {
+   "count": 1,
+   "over405": 0,
+   "max_hop_um": 222.372
+  },
+  "s1_w4": {
+   "count": 43,
+   "over405": 0,
+   "max_hop_um": 391.17600000000004
+  },
+  "dr_o": {
+   "count": 516,
+   "over405": 3,
+   "max_hop_um": 450.57599999999996
+  },
+  "pd": {
+   "count": 1119,
+   "over405": 0,
+   "max_hop_um": 391.31100000000004
+  }
+ },
+ "worst_edges": [
+  {
+   "src": "u_bound.u_core.u_svc.g_emb_relay.em_c\\[5\\]\\[3\\]$_DFF_PN0_",
+   "sink": "u_bound.u_bout_dr_o/q\\[515\\]$_DFF_P_",
+   "distance_um": 797.472,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_svc.g_emb_relay.em_c\\[5\\]\\[2\\]$_DFF_PN0_",
+   "sink": "u_bound.u_bout_dr_o/q\\[514\\]$_DFF_P_",
+   "distance_um": 794.61,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_svc.g_emb_relay.em_c\\[5\\]\\[0\\]$_DFF_PN0_",
+   "sink": "u_bound.u_bout_dr_o/q\\[512\\]$_DFF_P_",
+   "distance_um": 788.238,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_svc.g_emb_relay.em_c\\[5\\]\\[1\\]$_DFF_PN0_",
+   "sink": "u_bound.u_bout_dr_o/q\\[513\\]$_DFF_P_",
+   "distance_um": 785.484,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_rdq.g_w\\[7\\].u_rdq/q\\[1\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[1\\]$_DFF_P_",
+   "distance_um": 780.03,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp2_d\\[233\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[9\\]$_DFF_P_",
+   "distance_um": 778.842,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh2$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[1\\]$_DFF_P_",
+   "distance_um": 778.815,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp2_d\\[225\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[1\\]$_DFF_P_",
+   "distance_um": 777.222,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp_d\\[233\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[9\\]$_DFF_P_",
+   "distance_um": 775.98,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp_d\\[225\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[1\\]$_DFF_P_",
+   "distance_um": 774.198,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp_d\\[226\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[2\\]$_DFF_P_",
+   "distance_um": 773.604,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_rdq.g_w\\[7\\].u_rdq/q\\[2\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[2\\]$_DFF_P_",
+   "distance_um": 772.092,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp2_d\\[226\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[2\\]$_DFF_P_",
+   "distance_um": 771.66,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh2$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[2\\]$_DFF_P_",
+   "distance_um": 771.309,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_rdq.g_w\\[7\\].u_rdq/q\\[9\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[9\\]$_DFF_P_",
+   "distance_um": 767.772,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh2$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[9\\]$_DFF_P_",
+   "distance_um": 765.153,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp2_d\\[231\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[7\\]$_DFF_P_",
+   "distance_um": 764.586,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp_d\\[231\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[7\\]$_DFF_P_",
+   "distance_um": 763.398,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_rdq.g_w\\[7\\].u_rdq/q\\[7\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[7\\]$_DFF_P_",
+   "distance_um": 763.398,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh2$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[7\\]$_DFF_P_",
+   "distance_um": 762.183,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[1\\]$_DFF_P_",
+   "distance_um": 747.09,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[2\\]$_DFF_P_",
+   "distance_um": 739.584,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[9\\]$_DFF_P_",
+   "distance_um": 733.428,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp2_d\\[234\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[10\\]$_DFF_P_",
+   "distance_um": 730.944,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[7\\]$_DFF_P_",
+   "distance_um": 730.458,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_rdq.g_w\\[7\\].u_rdq/q\\[10\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[10\\]$_DFF_P_",
+   "distance_um": 728.73,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp_d\\[234\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[10\\]$_DFF_P_",
+   "distance_um": 727.542,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh2$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[10\\]$_DFF_P_",
+   "distance_um": 726.489,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp2_d\\[237\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[13\\]$_DFF_P_",
+   "distance_um": 717.12,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp_d\\[237\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[13\\]$_DFF_P_",
+   "distance_um": 714.582,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh2$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[13\\]$_DFF_P_",
+   "distance_um": 708.021,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_rdq.g_w\\[7\\].u_rdq/q\\[13\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[13\\]$_DFF_P_",
+   "distance_um": 706.536,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[10\\]$_DFF_P_",
+   "distance_um": 694.764,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp_d\\[201\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[9\\]$_DFF_P_",
+   "distance_um": 692.874,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_svc.hp_p1\\[15\\]$_DFF_PN0_",
+   "sink": "u_bound.u_core.u_svc.hp_host_fault$_DFFE_PN0P_",
+   "distance_um": 689.634,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_svc.hp_p1\\[16\\]$_DFF_PN0_",
+   "sink": "u_bound.u_core.u_svc.hp_host_fault$_DFFE_PN0P_",
+   "distance_um": 688.77,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp_d\\[194\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[2\\]$_DFF_P_",
+   "distance_um": 687.474,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_svc.hp_p1\\[13\\]$_DFF_PN0_",
+   "sink": "u_bound.u_core.u_svc.hp_host_fault$_DFFE_PN0P_",
+   "distance_um": 687.474,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_svc.hp_p1\\[14\\]$_DFF_PN0_",
+   "sink": "u_bound.u_core.u_svc.hp_host_fault$_DFFE_PN0P_",
+   "distance_um": 686.988,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp2_d\\[194\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[2\\]$_DFF_P_",
+   "distance_um": 686.232,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_svc.hp_p1\\[17\\]$_DFF_PN0_",
+   "sink": "u_bound.u_core.u_svc.hp_host_fault$_DFFE_PN0P_",
+   "distance_um": 685.908,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp2_d\\[201\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[9\\]$_DFF_P_",
+   "distance_um": 683.856,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_rdq.g_w\\[7\\].u_rdq/q\\[316\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[316\\]$_DFF_P_",
+   "distance_um": 679.806,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_read\\[0\\].g_gather\\[7\\].g_word\\[2\\].bh$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[13\\]$_DFF_P_",
+   "distance_um": 676.296,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp2_d\\[193\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[1\\]$_DFF_P_",
+   "distance_um": 673.596,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp_d\\[193\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[1\\]$_DFF_P_",
+   "distance_um": 673.164,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_rdq.g_w\\[6\\].u_rdq/q\\[1\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[1\\]$_DFF_P_",
+   "distance_um": 668.358,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp2_d\\[235\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[43\\]$_DFF_P_",
+   "distance_um": 667.332,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.byp_d\\[235\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[43\\]$_DFF_P_",
+   "distance_um": 665.172,
+   "category": "other"
+  },
+  {
+   "src": "u_bound.u_core.u_qb.u_qseat.g_rdq.g_w\\[6\\].u_rdq/q\\[2\\]$_DFF_P_",
+   "sink": "u_bound.u_core.u_qb.qb_row\\[2\\]$_DFF_P_",
+   "distance_um": 661.284,
+   "category": "other"
+  }
+ ]
+}
