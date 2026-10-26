@@ -31,7 +31,7 @@ def run(a):
         return offsets.get((t['part'],t['tap']),{}).get(c,t.get('early_ps',0.0))
     arr={c:L.taps(base/f'taps_{c}.txt') for c in ('TT','FF')};cur={c:L.taps(prev/f'taps_{c}.txt') for c in ('TT','FF')}
     libs={c:L.lib_cells(c,a.libdir) for c in ('TT','FF')}
-    opts=[M.BUF,'BUFx12f_ASAP7_75t_R','BUFx4f_ASAP7_75t_R','BUFx2_ASAP7_75t_R']
+    opts=[f'BUFx{k}_ASAP7_75t_R' for k in a.family.split(',')]
     chains=[[M.BUF]+list(q)+[M.BUF] for n in range(a.min_cells-2,a.max_cells-1) for q in itertools.combinations_with_replacement(opts,n)]
     def ds(ch,c):return L.chain_delay(libs[c],ch,40.,3.,wire_ff=4.)[0]
     pts=np.array([[ds(ch,'TT'),ds(ch,'FF')] for ch in chains]);hull=ConvexHull(pts)
@@ -64,7 +64,7 @@ def run(a):
     cost=np.full(gamma+1,1e-6);cost[gamma]=1.
     bounds=[(float(pts[:,0].min()),float(pts[:,0].max()))]*N+[(float(pts[:,1].min()),float(pts[:,1].max()))]*N+[(0.,a.target)]
     r=linprog(cost,A_ub=A,b_ub=np.array(rhs),bounds=bounds,method='highs')
-    out={'scope':'PLANNING ONLY: requires nearest physical chain and actual routed TT/FF','success':bool(r.success),'message':r.message,'ports':N,'unique_related_pairs':len(pairs),'constraints':len(rhs),'hull_vertices':len(hull.vertices),'current_uncommon_range_floor_ps':{c:[round(x[0],3),x[1],x[2]] for c,x in floor.items()},'target_limit_ps':a.target,'calibration':str(prev),'baseline':str(base),'min_cells':a.min_cells}
+    out={'scope':'PLANNING ONLY: requires nearest physical chain and actual routed TT/FF','success':bool(r.success),'message':r.message,'ports':N,'unique_related_pairs':len(pairs),'constraints':len(rhs),'hull_vertices':len(hull.vertices),'current_uncommon_range_floor_ps':{c:[round(x[0],3),x[1],x[2]] for c,x in floor.items()},'target_limit_ps':a.target,'calibration':str(prev),'baseline':str(base),'min_cells':a.min_cells,'max_cells':a.max_cells,'family':a.family}
     if r.success:
         out['maximum_constraint_residual_ps']=float(np.max(A@r.x-np.array(rhs)))
         if out['maximum_constraint_residual_ps']>.01:raise ValueError('phase LP has infeasible numeric residual')
@@ -74,4 +74,4 @@ def run(a):
     return 0 if r.success else 1
 
 if __name__=='__main__':
-    p=L.argparse.ArgumentParser(description=__doc__);p.add_argument('dir');p.add_argument('--calibration',required=True);p.add_argument('--plan',required=True);p.add_argument('--libdir',required=True);p.add_argument('--out',required=True);p.add_argument('--target',type=float,default=75.);p.add_argument('--min-ratio',type=float,default=.97);p.add_argument('--min-cells',type=int,default=2);p.add_argument('--max-cells',type=int,default=14);raise SystemExit(run(p.parse_args()))
+    p=L.argparse.ArgumentParser(description=__doc__);p.add_argument('dir');p.add_argument('--calibration',required=True);p.add_argument('--plan',required=True);p.add_argument('--libdir',required=True);p.add_argument('--out',required=True);p.add_argument('--target',type=float,default=75.);p.add_argument('--min-ratio',type=float,default=.97);p.add_argument('--family',default='24,12f,4f,2');p.add_argument('--min-cells',type=int,default=2);p.add_argument('--max-cells',type=int,default=14);raise SystemExit(run(p.parse_args()))

@@ -83,6 +83,8 @@ def run(a):
                 calibration[c][port]=measured[port][0]-arr[c][port][0]-predicted[port][f'{c}_added_ps']
 
     min_cells=a.min_cells
+    family=a.family
+    max_cells=a.max_cells
     phase_targets=None
     if a.phase_targets:
         phase=json.loads(Path(a.phase_targets).read_text())
@@ -92,8 +94,10 @@ def run(a):
             raise ValueError('phase targets require their exact measured calibration')
         phase_targets=phase['targets']
         min_cells=int(phase.get('min_cells',min_cells))
-    options = [M.BUF, 'BUFx12f_ASAP7_75t_R', 'BUFx4f_ASAP7_75t_R', 'BUFx2_ASAP7_75t_R']
-    chains = [[M.BUF]+list(comb)+[M.BUF] for n in range(min_cells-2,a.max_cells-1) for comb in itertools.combinations_with_replacement(options,n)]
+        max_cells=int(phase.get('max_cells',max_cells))
+        family=phase.get('family',family)
+    options = [f'BUFx{k}_ASAP7_75t_R' for k in family.split(',')]
+    chains = [[M.BUF]+list(comb)+[M.BUF] for n in range(min_cells-2,max_cells-1) for comb in itertools.combinations_with_replacement(options,n)]
     # Preserve the original stub and its routed load. The new first cell replaces
     # exactly its mesh capacitance, and the final new cell drives the original.
     table = []
@@ -154,7 +158,7 @@ def run(a):
         t['leaftrim']={'cells':names,'TT_added_ps':round(ds['TT'],3),'FF_added_ps':round(ds['FF'],3),'fit_error_ps':round(err,3),'calibration_ps':{c:round(calibration[c].get(t['port'],0.0),3) for c in ('TT','FF')}}
         residuals.append(err)
     mesh['meta']['cells']=len(cells)
-    mesh['meta']['leaftrim']={'source':str(src),'target_ps':targets,'max_prediction_error_ps':round(max(residuals),3),'added_cells':sum(len(t['leaftrim']['cells']) for t in mesh['taps']),'calibration':a.calibration,'phase_targets':a.phase_targets,'qualification':'NOT RUN: requires reviewed physical reroute and TT/FF skew gate'}
+    mesh['meta']['leaftrim']={'source':str(src),'target_ps':targets,'max_prediction_error_ps':round(max(residuals),3),'added_cells':sum(len(t['leaftrim']['cells']) for t in mesh['taps']),'calibration':a.calibration,'phase_targets':a.phase_targets,'min_cells':min_cells,'max_cells':max_cells,'family':family,'fixed_slot_count':min_cells==max_cells,'qualification':'NOT RUN: requires reviewed physical reroute and TT/FF skew gate'}
     out.mkdir(parents=True)
     ren=M.write_verilog(cells,data['nets'],data['ports'],out/'ctree.v')
     for n in data['nets']:n['name']=ren.get(n['name'],n['name'])
@@ -165,5 +169,5 @@ def run(a):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('dir');p.add_argument('--out',required=True);p.add_argument('--plan',required=True)
-    p.add_argument('--phase-targets',help='measured two-corner related-pair phase LP solution');p.add_argument('--calibration',help='prior routed endpoint-trim candidate from the same baseline');p.add_argument('--libdir',required=True);p.add_argument('--reserve-ps',type=float,default=65.0);p.add_argument('--min-cells',type=int,default=2);p.add_argument('--max-cells',type=int,default=14)
+    p.add_argument('--phase-targets',help='measured two-corner related-pair phase LP solution');p.add_argument('--calibration',help='prior routed endpoint-trim candidate from the same baseline');p.add_argument('--libdir',required=True);p.add_argument('--reserve-ps',type=float,default=65.0);p.add_argument('--family',default='24,12f,4f,2');p.add_argument('--min-cells',type=int,default=2);p.add_argument('--max-cells',type=int,default=14)
     run(p.parse_args())
