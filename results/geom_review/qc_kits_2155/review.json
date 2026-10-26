@@ -20,5 +20,13 @@
     "stage": "internal-macro plan proposal only",
     "findings": "See results/kits_wave_qc_2155/sram_proposal/REVIEW.txt;182/182 macros with real views and5.4um halos; no overlaps or moved clock/reset contracts. Existing FT station bands remain; actual cell packing/interface reach/PDN and batch G2/GRT0 are conditions.",
     "verdict": "PASS-COND for independent plan/G2 review; no route"
+  },
+  {
+    "pictures": [
+      "results/kits_wave_qc_2155/sram_proposal/all_types.png"
+    ],
+    "stage": "aligned-v2 exact asset correction before G2 rerun",
+    "findings": "Actual bound BBs select aligned-v2 for all4 masters. Corrected3 paths and roundedBTAB/codec heights by0.024um; all182origins identical,5.4um halos/FT/taps/reset sites stilllegal, all9clock/reset trees identical. Viewed revised all_types image: open channels, no walls, BTAB adjacent Ewidebus, local reducer clusters. No actualcellplacement orSTA claimed.",
+    "verdict": "PASS-COND construction/G2 only; fresh actual placement review required before route"
   }
 ]

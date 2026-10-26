@@ -16,9 +16,9 @@ import reset_tree as RT
 from check import zroute, plen, point_at
 VIEW_DIRS = {
  'ot_sram_1r1w_32x64_m1':'physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1',
- 'ot_sram_1r1w_128x256_m1_r2c2':'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2',
- 'ot_sram_1r1w_64x512_m1_r2c2':'physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2',
- 'ot_sram_1r1w2c_64x546_m1':'physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1'}
+ 'ot_sram_1r1w_128x256_m1_r2c2':'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2',
+ 'ot_sram_1r1w_64x512_m1_r2c2':'physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2',
+ 'ot_sram_1r1w2c_64x546_m1':'physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1'}
 HALO=5.4
 STEP=8.64
 
