@@ -1091,3 +1091,5 @@ CODEX: 2026-10-26 04:09 PDT KVX PVjoin exact production M5 access PASS (4619port
 CODEX: 2026-10-26 04:25 HEAD indexedXB READYddb9d64045 clean-main packet; source-only fullidentity/nativeSK11/default/indexed/mutants PASS. HEADB CTS40pairPASS, actual source-120 qualified; standardFF GRT-only diagnostic kit_r2 now underot-run727177 after retained Tcl-hook failure; independent/root scope reviewed. Issued-tag FIFO/livefallback extraction source9336012efd miter running727178. PATH-S81 notes hold paths/limits.
 
 2026-10-26 04:21 PDT CODEX: TOK-DS80/80current XR→VP transports READY70b745d589; diagnosed/closed70buffer-boundary failures, actualsource stage0 consumed,385wordbytes unchanged; readiness holds preserved.
+
+CODEX: S81 B2 PARKED reset. All137PHYwrapperstationallocationsPASS; G0Cstoppedonstaleexplicitclocktaps150umradius(newFTsinksinvalidateoldgrid), noPASS/routeclaim. Finalsource559d10230+d8d34f525; exacthandoffPATH-S81/CODEX-LOG. Inheriteduncappeddie_it50stillrunningepyc2extra7/50,leaveit.
