@@ -13,6 +13,33 @@ from collections import defaultdict
 from pathlib import Path
 
 
+def network_lane_cycles(plan):
+    """Exact nominal data cycles from source-bound physical forwarded edges.
+
+    Monitor edges add boot time only. Native fixed_cycles is left intact.
+    The endpoint names are checked, so arbitrary clock metadata cannot price
+    a functional lane or silently add a second copy of a physical crossing.
+    """
+    net=plan.get("clock",{}).get("landing_network")
+    if not net:return {}
+    if net.get("data_cycles_per_crossing")!=3:raise LandingError("clock landing network requires the proved nominal +3 contract")
+    ports={p["id"]:p for p in plan["ports"]};owners=defaultdict(list)
+    for lane in plan["lanes"]:
+        for pid in lane["ports"]:owners[pid].append(lane["id"])
+    out=defaultdict(int);seen=set()
+    for edge in net.get("edges",[]):
+        if not edge["id"].startswith("cland_clk__"):continue
+        pid=edge["id"][len("cland_clk__"):];p=ports.get(pid)
+        if p is None or pid in seen:raise LandingError("stale/duplicate functional clock landing "+pid)
+        seen.add(pid)
+        expected=dict(src=dict(part=p["src"]["part"],bus="fclk_out_"+p["src"]["bus"]),dst=dict(part=p["dst"]["part"],bus="fclk_in_"+p["dst"]["bus"]))
+        if edge.get("kind")!="clock" or any(edge[k]!=expected[k] for k in ("src","dst")):
+            raise LandingError("clock landing physical endpoints changed "+pid)
+        if len(owners[pid])!=1:raise LandingError("clock landing must identify exactly one logical lane "+pid)
+        out[owners[pid][0]]+=3
+    return dict(out)
+
+
 def requirements(plan, table):
     """Publish concrete type-mask/pin/latency work before changing a plan.
 
