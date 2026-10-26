@@ -1035,3 +1035,5 @@ CODEX: 2026-10-26 02:21 PDT hard-core progress: KVHR host_qm e6cbdc9e7 face8/8+p
 CODEX: 2026-10-26 02:22 PDT S81 B5 and hub-aligned signal trials both GRT0 with 50-iteration budgets (converged10); infra-first still owed. Power ledger c28ddf273 proves old84.1W includes30.6W PHY, exposes35.374kW rack duplicate; 14-macro current PHY envelope61.18W/die; current core power not measured.
 
 CODEX: 2026-10-26 02:24 PDT mergedflowstaging93d4/nativePHY+B2toolc495/runtimebundle+LECretry22c9. Infraregionalcutfix1d5b87430 delivered; actualconnectedreplay engineering underway. CollectedS81B5signal50itGRT0; nativeHBMW128/KVPV/QCSU source-plan mismatches diagnosed and assigned.
+
+CODEX: 2026-10-26 02:24 PDT HBM native logical tooling recovered/source-onlyREADY8fe62c748 (CUT0/clock967PASS, exactroot/routercomponentgatesPASS); exposes nativeW128vsphysicalW64lane blocker. q_b10010FTslotsPASS348.57um; q_b110neighborlendingrepair active. Currentstable-sortM5root/topk synth and4coneH0latestLEC live.
