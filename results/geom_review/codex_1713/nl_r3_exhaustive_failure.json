@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-10-25 17:36 PDT",
+  "source": "frozen4ad NL-R3",
+  "verdict": "FAIL80 inclhardchild/crossport; noGRT",
+  "pairs_each_corner": 205367,
+  "TT_setup_hold_ps": [
+    204.9,
+    215.68
+  ],
+  "FF_setup_hold_ps": [
+    161.16,
+    172.26
+  ],
+  "unbounded": 0,
+  "verify_ps": 0.0,
+  "cause": "HardchildROMclockpins raw~43ps versusparentFF250; child-internal insertion representation unresolved",
+  "evidence": "intel2:codex-qc-a0n59-1713/nl_r3_pairs",
+  "next": "RealSIGNEDpercornerchildcontract/ILM-expanded CPPR; no exclusion or artificialtapdelaymetricfix"
+}

@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-10-25 17:36 PDT",
+  "type": "kv3_head_eighth_e1",
+  "verdict": "NOTSIGNED exactnative diagnostic",
+  "TT_setup_ps": -57.66,
+  "TT_endpoints": 254,
+  "FF_hold_ps": -1.01,
+  "FF_endpoints": 1,
+  "pair_TT_FF_ps": [
+    33.92,
+    30.29
+  ],
+  "DRC": 0,
+  "antenna": 0,
+  "DRV": 0,
+  "libraries": "native/tt,libraries.json and native/ff/libraries.json exactORFS5+5/hashreceipts",
+  "TT_cause": "Internal line38DFF_PN0->u_ca.r105SDFF data810.47ps vs~752budget; QN138.87ps/slew229 plus fanout/decode cone",
+  "FF_cause": "u_cc.r65DFF->err0DFF_PN0 viaNOR2, soleinternalshortpath",
+  "noncauses": [
+    "Resetrecovery+257.81MET",
+    "IOmax+493.26MET",
+    "AsyncRemoval+3.86MET"
+  ],
+  "owner": "KVcores existingcurrente1 structural source; noPHYclockwaiver",
+  "conditions": [
+    "NoCANARYPASS/binding/repair/newPNR fromdiagnostic"
+  ]
+}
