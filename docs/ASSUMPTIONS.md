@@ -222,6 +222,19 @@ Activity energy and allocated steady power are not added. The simulator uses the
 larger, throttles the interval if it exceeds the cooling limit, and reports the
 thermal scale explicitly.
 
+## 7a. S81 die PHY, PHY power and bump contract (published assumptions, 2026-10-26)
+
+The owner has no vendor PHY data (2026-10-26). The S81 SerDes PHY dimensions, PHY power and signal/PG bump
+contract are therefore **ASSUMPTION (published)**, scaled to N7. The authoritative table, with a source per value, is
+[`physical/die_plan/s81/PHY_ASSUMPTIONS.md`](../physical/die_plan/s81/PHY_ASSUMPTIONS.md) (machine form
+`phy_assumptions.json`). The headline values:
+- a 6-lane 112G PAM4 LR macro is 3.36 mm2 (2.89-4.12), about 3.3 mm of shoreline in one row, and 4.37 W active
+  (6.5 pJ/b incl. DSP, excl. FEC);
+- C4 escape pitch 130 um (100-150), die micro-bumps 45 um (25-55), and at least one GND bump per high-speed signal.
+
+UCIe figures (A: 388.8 x 1043 um per x64 module, 0.25-0.6 pJ/b; S: 571.5 x 1320 um per x16 module) are recorded
+there for the package-mate links. The S81 die itself has no UCIe link.
+
 ## 8. What is not modeled
 
 - prompt prefill, prefix caching, prefill/decode disaggregation, or KV handoff;

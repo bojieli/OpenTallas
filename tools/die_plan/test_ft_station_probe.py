@@ -24,3 +24,15 @@ def test_exit_zero_never_overrides_routing_failure(tmp_path):
     assert probe.report(tmp_path)['verdict']=='FAIL'
     (tmp_path/'run.log').write_text('\n'.join(lines).replace('OT_DONE',''))
     assert probe.report(tmp_path)['verdict']=='NOT RUN'
+
+
+def test_bounded_coupon_rejects_escaping_guides_even_with_zero_overflow(tmp_path):
+    import json
+    (tmp_path/'grt').mkdir()
+    (tmp_path/'station_probe.json').write_text(json.dumps(dict(bounded=True,coupon_canvas_um=[0,0,10.8,10.8],part_bounds_um=[1,1,10,10])))
+    rows=['Final congestion report:']+[f'M{i} 123 100 1.00%             0 /  0 / 0' for i in range(1,8)]
+    rows+=['OT_DONE','ot-run: RAN on localhost (unit test): exit 0']
+    (tmp_path/'run.log').write_text('\n'.join(rows))
+    (tmp_path/'grt/route.guide').write_text('ft_p__a_1[0]\n(\n1000 1000 12000 2000 M6\n)\n')
+    result=probe.report(tmp_path)
+    assert result['verdict']=='FAIL' and result['boundary']['outside_canvas_rectangles']==1

@@ -1,0 +1,5 @@
+KEYS 23103 8205 6293 10065
+TWINS 3
+CF_HYP [(['gate', 'ff:u_dut.u_fcore.u_core.cf[1]'], ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.g_rgn[0].g_h[0].cf_o', 0)), (['gate', 'ff:u_dut.u_fcore.u_core.cf[2]'], ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.g_rgn[0].g_h[1].cf_o', 0)), (['gate', 'ff:u_dut.u_fcore.u_core.cf[3]'], ('eq', 'gold', 'ff:u_dut.u_fcore.u_core.g_rgn[1].g_h[0].cf_o', 0))]
+PROVING 33871
+{"counts": {"proved": 33871}, "failing": {}, "hypotheses": 10068, "note": "reused immutable AIG/maps + all re-proved old obligations; no re-elaboration; current KEEP1215/1215 from original"}

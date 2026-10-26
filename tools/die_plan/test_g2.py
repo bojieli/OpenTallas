@@ -549,6 +549,7 @@ def test_pair_drops_hard_cores():
     out, _ = pair.extract(raw, [p["name"] for p in raw["partitions"][:2]])
     assert all("hard_cores" not in t for t in out["partition_types"].values())
     assert "1 hard_cores dropped" in out["partition_types"][tn]["note"]
+    out.pop("proof_clock", None)    # extract() report key; pair.main pops it before writing pair_plan.json
     assert not schema.validate(out)
 
 

@@ -1,0 +1,30 @@
+{
+  "counts": {
+    "proved": 33871
+  },
+  "failing": {},
+  "hypotheses": 10068,
+  "note": "reused immutable AIG/maps + all re-proved old obligations; no re-elaboration; current KEEP1215/1215 from original",
+  "schema": "opentallas.lec.target.v1",
+  "source_commit": "687ef703ff",
+  "job": {
+    "host": "intel2",
+    "unit": "oth-ubuntu-2051940-1793006248",
+    "exit_code": 0,
+    "mem_gb": 24
+  },
+  "original": {
+    "verdict": "NOT EQUIVALENT",
+    "proved": 33867,
+    "total": 33871,
+    "kept_registers": 1215,
+    "source_commit": "UNKNOWN (original provenance ModuleNotFoundError)"
+  },
+  "inputs": {
+    "gold.aig": "8dbb00ed78f6d5cedd906270493558c9a4dae2666759cb7d6e0528dd8f913fec",
+    "gate.aig": "4b7d961b9ad26ecf15110c0a7d7fc55277187232cc7d99e6d62071b6c9ae9743",
+    "gold.map": "6b21317e6acf886c29f6457dba093540884013e7c276de3de1b6ea7d2fed7053",
+    "gate.map": "fdca19ec668d61b2dab896c7850f958f4677236faba675bc444ffc5bb2fc5c67",
+    "hyp.json": "39e805b8ceecf5908bad037111e84f74faafc5ec8813ec70c1a8a9655ce91a2c"
+  }
+}
