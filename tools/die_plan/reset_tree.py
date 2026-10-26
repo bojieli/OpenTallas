@@ -301,8 +301,8 @@ def push_off(p, boxes, box_out, step=2.16):
 
     def clampo(q):
         return (min(max(q[0], x0o), x1o), min(max(q[1], y0o), y1o))
-    # Project onto the legal grown face; an epsilon enters the opposite halo
-    # when the channel is exactly two CLEAR_UM halos wide.
+    # Project onto the legal grown face itself. An extra epsilon can land
+    # inside the opposite halo when two cores leave exactly 2*CLEAR_UM.
     eps = 0.0
     seen, front, best = set(), [p], None
     for _ in range(6):
@@ -322,9 +322,14 @@ def push_off(p, boxes, box_out, step=2.16):
                             best = (dd, r)
                     else:
                         nxt.append(r)
-        if best is not None:
-            return best[1]
+        # A free projection from this layer may be much farther than a point
+        # reached through another overlapping box. Keep exploring blocked
+        # projections before choosing the nearest legal candidate.
         front = nxt
+        if not front:
+            break
+    if best is not None:
+        return best[1]
     # fully tiled blockages (no channel between abutting cores): nearest free point of an 8.64 um scan
     best = None
     st = 8.64
@@ -336,6 +341,19 @@ def push_off(p, boxes, box_out, step=2.16):
             if (best is None or dd < best[0]) and _free(q, boxes, box_out):
                 best = (dd, q)
     return best[1] if best else p
+
+
+# ----------------------------------------------------------------------------------------------- the tree
+def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, prefix=""):
+    """taps [(name, x, y)] (tap index = list index); root_xy = the entry stage (reset pin).
+    Topology: a shortest-hop tree over the taps (ties: fewer intermediate relays, then shorter wire) with intermediate
+    relays on the x-then-y L path, pushed off `boxes`; when a push-off breaks the reach, a shortest-hop tree over a
+    grid of free relay sites (wires may cross blockages, relays may not).  Equal depth: every tap is padded to D =
+    max(own depth, `depth`); pads go as HIGH in the tree as possible (on the edge into the subtree that has slack), so
+    one pad serves every tap below it.
+    Returns {root, depth, own_depth, relays[{name, xy, d, q, depth, tap, kind}], reach_um, max_hop_um, ...}."""
+    topo = topology(taps, root_xy, reach, margin, boxes, box_out)
+    return assign(topo, depth, prefix)
 
 
 def _seg_hits(p, q, walls):
