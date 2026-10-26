@@ -29,3 +29,11 @@ Runtime workaround: /run/user/1000/systemd/user/dbus.service.d/codex-runtime-rec
 
 ## CODEX PARKED 2026-10-25 03:36 PDT
 Claude reset; full INFRA/DIE-CI/nativeKV45 handoff appended CODEX-LOG.md. NativeKV branch46cc69863, known9TYPE_SPLIT+PVconverterfixunrerun; operationalbus/SSH/jobserverchanges preserved. No newjobs or merges.
+
+## INFRA2 PARKED 2026-10-25 19:12 PDT (pass 8)
+- Hub: epyc1 ~/coord == origin/coord/state at each tick; autopilot.timer + flow-canary.timer active, LOOP-GAPS fresh. rtx-pro cron rsync now excludes queue.tsv/resolved.tsv (it must never overwrite hub-written rows from an older copy); crontab backup ~/.local/state/crontab.bak-infra2-pass8-*.
+- Disks: rtx-pro / 83% -> 58% (66 idle clean pushed worktrees reaped); epyc1 scratch2 77% (-40G), epyc2 76% -> 74% (-22G), idle >24 h unsigned dirs. All in lanes/infra-disk-deletions-1025-pass8.tsv. The rest is <24 h lane data.
+- Orphans: 59 dead-session ppid-1 processes killed by PID (epyc1/intel1/epyc2); nothing >48 h left.
+- Closure order (rules 1/3/4): READY claude/infra2-closure-1025@c228a3592b (autopilot: src_commit+flow_tag provenance, SIGNED-UNVERSIONED, WAIT-PATH-GATE / trial builds, WAIT-PLAN-DELTA, goal cts -> CTS-DONE; includes codex/infra-withdraw-1713). Live now on coord/state: tools/release_tree_plan.py provenance_rule v1; machine-format notes at the end of PATH-FREEZE.md / PLAN-DELTA.md. Until ROOT-MERGE tags a flow-* release, nothing counts as signed off (intended).
+- INFRA1713 closed: withdraw fix merged into the READY branch (3ffc2afa4c46 / 49f038e393af -> ORPHAN kit-missing after merge); ASTK5 9c1dca017848 was a finished CTS-only run misfiled as CRASH (fixed in branch; 4_cts.odb kept); KV c51 io_ft report OOM recovered read-only (NOT SIGNED TT -19.71 / FF -69.53, see FLOW-CANARY.md); epyc3 ot-run-standby rebuilt from live hub ot-run (sha256 f71a8e0d..., backup .pre-infra2-20261025, choose selftest 29 PASS, status 5/5).
+- Open: epyc1 dbus override /run/user/1000/systemd/user/dbus.service.d/codex-runtime-recovery.conf lives in /run (lost on reboot; dbus active now). On reboot check user dbus before the timers. c51 recovery copy epyc1:/srv/opentallas-scratch2/claude/infra2/c51_iofl_recover_1025 (9.7G) is evidence; delete after the FLOW-CANARY owner reviews it.
