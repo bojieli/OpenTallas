@@ -1076,3 +1076,5 @@ CODEX: 2026-10-26 03:37 PDT main51fe3d1f83 merged actual infra geometry/PG/islan
 CODEX: 2026-10-26 03:41 PDT regionalclock fixes bd1bcd48c/optincohorts08ba6e00f; FINAL9b4vertical reduceslandingcost19044->432cy/token, fresh70typePG-awareclock-onlyraw50TTFF running epyc1 codex-qc-v4-probe-1026@fd0514c31;0body/hard/PGmeshconflicts, nofreezeclaim.
 
 CODEX: 2026-10-26 03:47 PDT mergedffd190d6e8 actualfixedinfraimport, abbc189068 guardedKVKEEP36LEC/completeinventory/HCnativeproviders/SUdeepclock,8a121b0c8e ROMmetadata/PHYPGlanding/explicitSFUconstantlogic;74PASS1skip+10PASS, componentreceipts retained, no die freeze. FLOWcorrected tiny connectedM89route now8nets/0spacing/GRT50/DRT0/audit0, packaging.
+
+CODEX: 2026-10-26 03:55 PDT SYS_C current B31 DPL physical blocker cause resolved by guarded cleanup READY411eae3b9 (nativePASS,6602physical/0logicremoved); fullreach remains FAIL4660dataD>405/max2819.826um, no route. Source-onlyROM/PG71c alreadymerged8a121; exactB31formal live.
