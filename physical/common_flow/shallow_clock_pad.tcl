@@ -61,11 +61,15 @@ proc ::ot_dtsh_pad::unpad {blk tap} {
   variable chains
   if {![dict exists $chains $tap]} return
   set c [dict get $chains $tap]
-  set inp [sigpin [$blk findInst $tap] INPUT]
-  $inp disconnect
-  foreach i [dict get $c cells] { odb::dbInst_destroy $i }
+  set tinst [$blk findInst $tap]; set inp [sigpin $tinst INPUT]
+  set leaf [dict get $c net]
+  set tdt [$tinst isDoNotTouch]; $tinst setDoNotTouch 0
+  # the planned trunk leaf net is dont_touch (frozen trunk); only its load pin is exchanged, then the flag is restored
+  set dt [$leaf isDoNotTouch]; $leaf setDoNotTouch 0
+  foreach i [dict get $c cells] { $i setDoNotTouch 0; odb::dbInst_destroy $i }
   foreach n [dict get $c nets] { odb::dbNet_destroy $n }
-  $inp connect [dict get $c net]
+  $inp connect $leaf
+  $leaf setDoNotTouch $dt; $tinst setDoNotTouch $tdt
   dict unset chains $tap
 }
 proc ::ot_dtsh_pad::pad {blk tap n master pg} {
@@ -76,6 +80,8 @@ proc ::ot_dtsh_pad::pad {blk tap n master pg} {
   lassign [$inst getLocation] tx ty
   set h [$master getHeight]
   set cells {}; set nets {}; set drv $leaf
+  set dt [$leaf isDoNotTouch]; $leaf setDoNotTouch 0
+  set tdt [$inst isDoNotTouch]; $inst setDoNotTouch 0
   for {set k 0} {$k < $n} {incr k} {
     set c [odb::dbInst_create $blk $master "ot_dpad_${tap}_$k"]
     set o [odb::dbNet_create $blk "ot_dpad_${tap}_${k}_o"]; $o setSigType CLOCK
@@ -90,6 +96,7 @@ proc ::ot_dtsh_pad::pad {blk tap n master pg} {
     lappend cells $c; lappend nets $o; set drv $o
   }
   $inp disconnect; $inp connect $drv
+  $leaf setDoNotTouch $dt; $inst setDoNotTouch $tdt
   dict set chains $tap [dict create net $leaf cells $cells nets $nets]
 }
 proc ::ot_dtsh_pad::legalise {blk} {
@@ -99,7 +106,7 @@ proc ::ot_dtsh_pad::legalise {blk} {
     if {[string match ot_dpad_* [$i getName]] || [[$i getMaster] isBlock]} continue
     dict set before [$i getName] [$i getLocation]
   }
-  dict for {tap c} $chains { foreach i [dict get $c cells] { $i setPlacementStatus PLACED } }
+  dict for {tap c} $chains { foreach i [dict get $c cells] { $i setDoNotTouch 0; $i setPlacementStatus PLACED } }
   detailed_placement
   set moved 0; set maxd 0
   dict for {name xy} $before {
