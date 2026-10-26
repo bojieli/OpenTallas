@@ -159,7 +159,7 @@ def repair_type(raw,tn):
 
 def main():
     global REACH,AGGRESSIVE
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--types',required=True);ap.add_argument('--bank-corridors',action='store_true');ap.add_argument('--short-targets',action='store_true');ap.add_argument('--su-corridors',action='store_true');ap.add_argument('--reach-budget',type=float,default=323.0);a=ap.parse_args()
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--types',required=True);ap.add_argument('--bank-corridors',action='store_true');ap.add_argument('--placements',type=Path);ap.add_argument('--short-targets',action='store_true');ap.add_argument('--su-corridors',action='store_true');ap.add_argument('--reach-budget',type=float,default=323.0);a=ap.parse_args()
     if not 0<a.reach_budget<=403:raise SystemExit('reach budget must be in(0,403]')
     REACH=a.reach_budget
     AGGRESSIVE=a.short_targets
@@ -189,7 +189,13 @@ def main():
                 for c in raw['partition_types'][tn]['hard_cores']:
                     if c['outline_um'][0]<700:continue
                     x,y=c['origin_um'];c['origin_um'][0]=x+(17.28 if x in(803.52,1270.08) else 0)-(69.12 if y>400 else 0)
-                    c['origin_um'][1]=34.56 if y<400 else 803.52
+                    c['origin_um'][1]=8.64 if y<400 else 777.6
+    if a.placements:
+        placement=json.loads(a.placements.read_text());tn=placement['type']
+        if tn not in a.types.split(','):raise ValueError('placement type not selected')
+        cores=raw['partition_types'][tn]['hard_cores'];mapped=placement['placements']
+        if {c['inst'] for c in cores}!=set(mapped):raise ValueError('placement instance mismatch')
+        for c in cores:c['origin_um']=mapped[c['inst']]
     shutil.copytree(a.src,a.out)
     try:
         for tn in a.types.split(','):rep[tn]=repair_type(raw,tn)
