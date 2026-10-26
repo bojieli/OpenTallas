@@ -1,0 +1,4 @@
+2026-10-25 21:52 PDT CODEX plan review: DIAGNOSTIC MODEL PROBE ONLY.
+Picture plan.png viewed. Regular mirrored PC/HG/PV rows and continuous interface corridors remain; aligned N-S trunks and short adjacent functional buses visible. No new macro wall or die outline introduced. Approved sysc2 removes stations/taps from PHY supply rectangle; partition clock root moves off W turn-band. PHY metadata corrected to actual777.6um macro. Die clock/PG continuity must be measured in combined signal+clock GRT; no STA closure claim.
+Existing hgi_WN_7 dense face windows remain 4 G0 errors (W13.2/E6.9/N12.3/S12.2 pins/um >6 rule). No final GEOM PASS/freeze granted. sysc2 L664 table regenerated24->30 cycles (+6 already approved). FT share0.5 matches real G2 kit reservation per COORD21:16 ruling(a), head core OBS honors M7.
+Verdict PASS-COND for approved model-consistency diagnostic only; density errors and physical-path real-view timing stay open.
