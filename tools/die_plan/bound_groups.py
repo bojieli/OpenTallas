@@ -75,6 +75,14 @@ def materialize(binder, tn, frame):
             raise BoundGroupError('group module has inconsistent source across types '+hc['module'])
         out.write_text(rtl);products.append(out);text=new
         records.append(dict(inst=hc['inst'],module=hc['module'],reset_net=net,member_count=5,added_cycles=0,source_matches_committed=True))
+    binder.__dict__.setdefault('bound_group_records',{})[tn]=records
     frame.write_text(text)
     (frame.parent/(frame.stem+'.bound_groups.json')).write_text(json.dumps(dict(groups=records),indent=1)+'\n')
     return products
+
+
+def scope_for_member(t, rel):
+    found=[h['inst'] for h in t.get('hard_cores',[]) if any(m['inst']==rel for m in h.get('bound_group',{}).get('members',[]))]
+    if len(found)>1:
+        raise BoundGroupError('member occurs in multiple explicit groups '+rel)
+    return found[0]+'.' if found else ''

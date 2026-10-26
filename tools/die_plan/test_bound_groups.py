@@ -40,3 +40,11 @@ def test_cut_preserves_actual_scheduled_reset_and_committed_core_code():
     assert '.rst_n(rst_n_t10)' in frame and r['reset_source']=='rst_n_t10' and r['input_bits']==8
     bad=source.replace('.rst_n(rst_n_t10)','.rst_n(rst_n_t11)',1)
     with pytest.raises(ValueError,match='one exact delivered reset'):C.cut(bad,0)
+
+
+def test_original_leaf_identity_keeps_real_group_hierarchy():
+    t=dict(hard_cores=[dict(inst='u_lane0',bound_group=dict(members=[dict(inst='u_head0')]))])
+    assert G.scope_for_member(t,'u_head0')=='u_lane0.'
+    assert G.scope_for_member(t,'u_other')==''
+    t['hard_cores'].append(dict(inst='u_othergroup',bound_group=dict(members=[dict(inst='u_head0')])))
+    with pytest.raises(G.BoundGroupError,match='multiple'):G.scope_for_member(t,'u_head0')
