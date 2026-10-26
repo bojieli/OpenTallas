@@ -37,6 +37,8 @@ def side_depth(lm, la):
 def materialize(root, out, full_qid, wiring=None):
     if out.resolve().is_relative_to((root/'rtl').resolve()):
         raise ValueError('profile output must not overwrite released RTL')
+    if out.exists() and any(out.iterdir()):
+        raise ValueError('profile output must be a fresh directory')
     texts = {f:(root/f).read_text() for f in SOURCES}
     names = [n for text in texts.values()
              for n in re.findall(r'(?m)^\s*module\s+(\w+)', text)]
