@@ -107,6 +107,104 @@ def die_root_um(P):
     return (P.W / 2, P.H / 2)
 
 
+# ----------------------------------------------------------------------------------------------- die reset pad
+# PATH-KV DECISION 10-25 14:19 + CLOCK-RESET amendments A/B (14:32): ONE external reset pad per die IS the die reset
+# root pin.  reset.source.pad names a die_io entry {kind die_root_pad, iface reset, part = the root partition, rect over
+# the gen_phys.die_root_pins 'rst_n' pin, pad_port = the as-built top port}.  The raw pad has exactly these loads, all in
+# the root partition: the root synchroniser u_rst_root async input (the ONLY digital reset false path) and the declared
+# analog loads (reset.source.analog_loads, e.g. the PLL por_n: the clock source cannot be synchronised to itself).
+# The PLL lock (reset.source.lock {inst, pin, stable_cycles}) enters through its own 2-flop synchroniser + lock-stable
+# counter (ot_dp_lockq u_rst_lockq) and qualifies the root release SYNCHRONOUSLY (sticky: a later loss of lock is HOST
+# status, never a die reset); no combinational por_n & locked.  Every other leaf input on the pad, and every leaf
+# input matching reset.source.por_pins, is rebound by the binder to its partition's delivered wavefront reset (and its
+# type must be start_role bootstrap: a power-on reset cannot wait for START).  tools/die_plan/por_gate.py checks it.
+LOCKQ_EXTRA = 3        # ot_dp_lockq: 2 lock-synchroniser stages + the qualifier flop on top of STABLE counted cycles
+
+
+def die_io_entries(P):
+    """the plan's die.io windows, else the PLANDIR/die_io.json sidecar (check.py rule: the plan's die.io wins)."""
+    io = P.die.get("io")
+    if io:
+        return io
+    if getattr(P, "path", None) is not None:
+        sc = Path(P.path).resolve().parent / "die_io.json"
+        if sc.is_file():
+            return json.loads(sc.read_text())
+    return []
+
+
+def pad_spec(P):
+    """None, or the declared die reset pad: {pad, port, io, analog_loads, por_pins, lock}."""
+    src = P.reset.get("source") or {}
+    if not src.get("pad"):
+        return None
+    io = next((w for w in die_io_entries(P) if w.get("name") == src["pad"]), None)
+    return dict(pad=src["pad"], port=(io or {}).get("pad_port", src["pad"]), io=io,
+                analog_loads=list(src.get("analog_loads", [])), por_pins=src.get("por_pins"),
+                lock=src.get("lock"))
+
+
+def die_reset_port(P):
+    """the die / bound-top reset input: the as-built pad port of a declared pad, else rst_n."""
+    ps = pad_spec(P)
+    return ps["port"] if ps else "rst_n"
+
+
+def lock_stages(P):
+    """root-entry stages added by the PLL lock qualifier (ot_dp_lockq): 0 without a declared lock."""
+    ps = pad_spec(P)
+    if not ps or not ps.get("lock"):
+        return 0
+    return int(ps["lock"].get("stable_cycles", 16)) + LOCKQ_EXTRA
+
+
+def pad_false_path_pins(P, tn):
+    """root type of a pad plan: the ONLY pins the raw pad may reach (kit SDC set_false_path -from arst_n -to them)."""
+    ps = pad_spec(P)
+    if not ps or not wavefront(P) or tn != wf_solve(P)["root_type"]:
+        return []
+    return ["u_rst_root/async_rst_n"] + [f"{a['inst']}/{a['pin']}" for a in ps["analog_loads"]]
+
+
+def check_pad(P):
+    """G0 errors of a declared die reset pad (empty when none is declared)."""
+    ps = pad_spec(P)
+    if ps is None:
+        return []
+    errs = []
+    w = ps["io"]
+    if w is None:
+        return [f"reset.source.pad {ps['pad']}: no die_io entry of that name"]
+    if w.get("kind") != "die_root_pad" or w.get("iface") != "reset":
+        errs.append(f"reset pad {w['name']}: kind {w.get('kind')} / iface {w.get('iface')}, expected die_root_pad / reset")
+    pads = [x["name"] for x in die_io_entries(P) if x.get("kind") == "die_root_pad" or x.get("iface") == "reset"]
+    if pads != [w["name"]]:
+        errs.append(f"die reset pads {pads}: exactly ONE external reset pad per die (two async reset inputs = two "
+                    "reset false paths)")
+    if not wavefront(P):
+        errs.append("reset.source.pad needs reset.release wavefront")
+        return errs
+    root = wf_solve(P)["root"]
+    if w.get("part") != root:
+        errs.append(f"reset pad {w['name']}: part {w.get('part')} is not the reset root partition {root}")
+    x, y = die_root_um(P)
+    r = w["rect_um"]
+    if not (r[0] - 1e-6 <= x <= r[2] + 1e-6 and r[1] - 1e-6 <= y <= r[3] + 1e-6):
+        errs.append(f"reset pad {w['name']}: rect {r} does not cover the die rst_n root pin ({x:.3f}, {y:.3f})")
+    if not ps["analog_loads"]:
+        errs.append(f"reset pad {w['name']}: reset.source.analog_loads empty (declare the PLL por_n, or drop the pad)")
+    for a in ps["analog_loads"]:
+        if not (isinstance(a, dict) and a.get("inst") and a.get("pin")):
+            errs.append(f"reset pad analog load {a}: needs inst + pin")
+    lk = ps.get("lock")
+    if ps["analog_loads"] and not (lk and lk.get("inst") and lk.get("pin")):
+        errs.append("reset.source.lock {inst, pin} missing: the PLL lock must qualify the root release through its "
+                    "own synchroniser (CLOCK-RESET amendment A), never a combinational por_n & locked")
+    if lk and int(lk.get("stable_cycles", 16)) < 1:
+        errs.append("reset.source.lock.stable_cycles must be >= 1")
+    return errs
+
+
 def regions(P):
     """[{name, parts, root_um}] covering every partition exactly once."""
     allp = list(P.parts)
@@ -165,6 +263,23 @@ def _free(p, boxes, box_out):
     if not (x0 <= x <= x1 and y0 <= y <= y1):
         return False
     return not any(a < x < c and b < y < d for a, b, c, d in boxes)
+
+
+def _edge_ok(p, q, boxes):
+    """one of the two L routes p -> q stays outside every blockage (a relay hop is a wire: a hard core obstructs it;
+    KV-PLAN2 10-25).  _seg_hits is defined with the WALL helpers below."""
+    for m in ((q[0], p[1]), (p[0], q[1])):
+        if not _seg_hits(p, m, boxes) and not _seg_hits(m, q, boxes):
+            return True
+    return False
+
+
+def _crosses(nodes, root, boxes):
+    for nd in nodes:
+        u = nd["par"]
+        if not _edge_ok(root if u is None or u < 0 else nodes[u]["xy"], nd["xy"], boxes):
+            return True
+    return False
 
 
 def push_off(p, boxes, box_out, step=2.16):
@@ -259,7 +374,8 @@ def walled_hops(nodes, root, walls):
 
 
 # ----------------------------------------------------------------------------------------------- the tree
-def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, prefix="", walls=()):
+def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, prefix="", walls=(),
+          avoid_cores=False):
     """taps [(name, x, y)] (tap index = list index); root_xy = the entry stage (reset pin).
     Topology: a shortest-hop tree over the taps (ties: fewer intermediate relays, then shorter wire) with intermediate
     relays on the x-then-y L path, pushed off `boxes`; when a push-off breaks the reach, a shortest-hop tree over a
@@ -267,11 +383,11 @@ def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(),
     max(own depth, `depth`); pads go as HIGH in the tree as possible (on the edge into the subtree that has slack), so
     one pad serves every tap below it.
     Returns {root, depth, own_depth, relays[{name, xy, d, q, depth, tap, kind}], reach_um, max_hop_um, ...}."""
-    topo = topology(taps, root_xy, reach, margin, boxes, box_out, walls)
+    topo = topology(taps, root_xy, reach, margin, boxes, box_out, walls, avoid_cores)
     return assign(topo, depth, prefix)
 
 
-def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, walls=()):
+def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, walls=(), avoid_cores=False):
     """the depth-independent part of build(): relay sites and parents.  A tap (or the entry) over a blockage gets its
     relay site at the nearest free point (tap_offset_um records how far).  `walls` (see walls()): every hop must have
     a wall-free L route, else the grid topology routes around them; a remaining walled hop fails closed."""
@@ -288,8 +404,13 @@ def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=
     plan_reach = reach - margin
     walls = list(walls or ())
     nodes, method = _topo_taps(pts, root, plan_reach, boxes, box_out), "taps"
-    if (_maxhop(nodes, root) > reach + 1e-6 and boxes) or walled_hops(nodes, root, walls):
-        nodes, method = _topo_grid(pts, root, plan_reach, boxes, box_out, walls=walls), "grid"
+    # WALL rule (CLOCK-RESET 10-25): never a hop without a wall-free L route.  avoid_cores (plan reset.relay_avoid_cores,
+    # KV-PLAN2 10-25): no hop whose both L routes cross ANY blockage (G2 kv3_pc: rrl_13 -> rrl_14 straight through
+    # kvpc0, 1272 M3 overflow)
+    hb = boxes if avoid_cores else ()
+    if ((_maxhop(nodes, root) > reach + 1e-6 and boxes) or walled_hops(nodes, root, walls)
+            or (hb and _crosses(nodes, root, hb))):
+        nodes, method = _topo_grid(pts, root, plan_reach, boxes, box_out, walls=walls, hop_boxes=hb), "grid"
     bad = walled_hops(nodes, root, walls)
     if bad:
         raise ResetError(f"reset tree: {len(bad)} relay hop(s) cross a wall (blockage closed to the top signal layer) "
@@ -349,7 +470,7 @@ def _topo_taps(pts, root, reach, boxes, box_out):
     return nodes
 
 
-def _topo_grid(pts, root, reach, boxes, box_out, pitch=None, walls=()):
+def _topo_grid(pts, root, reach, boxes, box_out, pitch=None, walls=(), hop_boxes=()):
     """shortest-hop tree over the taps + a grid of free relay sites (pitch um); ties: fewer hops, then less wire."""
     x0, y0, x1, y1 = box_out
     pitch = pitch or max(21.6, reach / 4)
@@ -385,7 +506,7 @@ def _topo_grid(pts, root, reach, boxes, box_out, pitch=None, walls=()):
         for dx in (-1, 0, 1):
             for dy in (-1, 0, 1):
                 for k in buckets.get((cx + dx, cy + dy), ()):
-                    if _man(q, allp[k]) <= reach and _lfree(q, allp[k], walls):
+                    if _man(q, allp[k]) <= reach and _lfree(q, allp[k], walls) and _edge_ok(q, allp[k], hop_boxes):
                         yield k
     dist = {}
     par = {}
@@ -557,7 +678,8 @@ def _type_tree0(P, tn, depth, reach):
         w, h = t["outline_um"]
         cache[("topo", tn, reach)] = topology(_taps(P, tn), reset_pin(P, tn), reach=reach,
                                               boxes=blockages(t), box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM,
-                                                                           h - CLEAR_UM), walls=walls(P, tn))
+                                                                           h - CLEAR_UM), walls=walls(P, tn),
+                                              avoid_cores=bool(P.reset.get("relay_avoid_cores")))
     return assign(cache[("topo", tn, reach)], depth)
 
 
@@ -584,6 +706,10 @@ def for_type(P, tn, reach=None):
         T = _wf_type_tree(P, tn)
         T.update(entry="sync" if tn == wf_solve(P)["root_type"] else "relayed", sync_stages=sync_stages(P, tn),
                  type=tn, start=start_broadcast(P))
+        if T["entry"] == "sync" and lock_stages(P):
+            lk = pad_spec(P)["lock"]
+            T["lock"] = dict(inst=lk["inst"], pin=lk["pin"], stable=int(lk.get("stable_cycles", 16)),
+                             stages=lock_stages(P))
         role, core_roles = start_roles(P, tn)
         if T["start"]:
             T["start_in"] = list(start_in_pin(P, tn))
@@ -615,7 +741,9 @@ def for_type(P, tn, reach=None):
 
 
 def entry_stages(T):
-    return T["sync_stages"] if T["entry"] == "sync" else 1
+    """pin -> release of the entry: the root synchroniser (+ the PLL lock qualifier ot_dp_lockq when declared) or one
+    pin register."""
+    return T["sync_stages"] + int((T.get("lock") or {}).get("stages", 0)) if T["entry"] == "sync" else 1
 
 
 def release_clocks(T):
@@ -862,7 +990,7 @@ def wf_solve(P):
     rtype = P.parts[root]["type"]
 
     def entry(p):
-        return N if P.parts[p]["type"] == rtype else 1
+        return N + lock_stages(P) if P.parts[p]["type"] == rtype else 1
 
     def solve(choice):
         adj = {}
@@ -1129,7 +1257,8 @@ def _wf_type_tree(P, tn):
             c["tap"] = len(pts)
             pts.append((f"core_rst{k}", *c["xy"]))
         topo = topology(pts, in_pin(P, tn), reach=relay_um(P), boxes=blockages(t),
-                        box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn))
+                        box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
+                        avoid_cores=bool(P.reset.get("relay_avoid_cores")))
         T = assign(topo, None)
         T.update(n_clock_taps=len(taps), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
         cache[key] = T
@@ -1176,7 +1305,8 @@ def wf_plan(P):
             row["core_release"] = {c["inst"] + "." + c["pin"]: rel + c["internal_depth"]
                                    for c in types[tn].get("core_resets", [])}
         if pr is None:
-            row.update(source="die rst_n (asynchronous: the ONE root synchroniser)")
+            row.update(source=f"die {die_reset_port(P)} (asynchronous: the ONE root synchroniser" +
+                       (f" + PLL lock qualifier, +{lock_stages(P)} stages)" if lock_stages(P) else ")"))
         else:
             q = pr[0]
             k = sol["outs"][P.parts[q]["type"]].index(pr[1])
@@ -1224,7 +1354,7 @@ def wf_die_rtl(P, ind="    "):
     arst, outs = {}, {}
     for p, r in W["parts"].items():
         if r["parent"] is None:
-            arst[p] = "rst_n"
+            arst[p] = die_reset_port(P)
         else:
             net = "rstw_" + re.sub(r"\W", "_", r["source"])
             if net not in {n for d in outs.values() for n in d.values()}:
@@ -1309,11 +1439,28 @@ def start_relays(T):
     return out
 
 
-def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i"):
+LOCK_SRC = "pll_locked_i"     # the root type's PLL lock net (bind.py aliases the declared lock leaf output to it)
+
+
+def _root_entry_lines(T, ind, src, lock_src, note):
+    """root entry: u_rst_root (async input = the raw pad ONLY) [-> u_rst_lockq PLL lock qualifier] -> rst_root_n."""
+    ns = T["sync_stages"]
+    lk = T.get("lock")
+    if not lk:
+        return [f"{ind}ot_dp_rsync_s{ns} u_rst_root (.clk(clk), .async_rst_n({src}), .sync_rst_n(rst_root_n));  // {note}"]
+    return [f"{ind}wire rst_por_n;",
+            f"{ind}ot_dp_rsync_s{ns} u_rst_root (.clk(clk), .async_rst_n({src}), .sync_rst_n(rst_por_n));  // {note} "
+            "(async input = the die reset pad ONLY)",
+            f"{ind}ot_dp_lockq #(.STABLE({lk['stable']})) u_rst_lockq (.clk(clk), .d(rst_por_n), .locked({lock_src}), "
+            f".q(rst_root_n));  // PLL lock qualifier ({lk['inst']}.{lk['pin']}): 2-flop sync + {lk['stable']}-cycle "
+            "stable count, sticky synchronous release (loss of lock after boot = HOST status, not a die reset)"]
+
+
+def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SRC):
     """SystemVerilog body lines: entry stage + relays.  Declares rst_n_t<i> for every tap.  With T['start'] (decision
     13c START broadcast) the run entry / relays and the gated taps (start_relays) are emitted as well."""
     if T.get("start"):
-        return _rtl_lines_start(T, ind, src, start_src)
+        return _rtl_lines_start(T, ind, src, start_src, lock_src)
     ns = T["sync_stages"]
     if T["entry"] == "sync" and ns not in (2, 3):
         raise ResetError(f"reset_tree: sync_stages {ns} (root synchronisers exist for 2 or 3)")
@@ -1323,8 +1470,8 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i"):
            f"clocks after the entry pin",
            f"{ind}wire rst_root_n;"]
     if T["entry"] == "sync":
-        out.append(f"{ind}ot_dp_rsync_s{ns} u_rst_root (.clk(clk), .async_rst_n({src}), .sync_rst_n(rst_root_n));  "
-                   "// the region's ONE root synchroniser: its async input is the only reset false path")
+        out += _root_entry_lines(T, ind, src, lock_src, "the region's ONE root synchroniser: its async input is the "
+                                 "only reset false path")
     else:
         out.append(f"{ind}ot_dp_rrelay u_rst_in (.clk(clk), .d({src}), .q(rst_root_n));  "
                    "// pin register of the SYNCHRONOUS reset input (die reset tree)")
@@ -1341,7 +1488,7 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i"):
     return out
 
 
-def _rtl_lines_start(T, ind, src, start_src):
+def _rtl_lines_start(T, ind, src, start_src, lock_src=LOCK_SRC):
     ns = T["sync_stages"]
     if T["entry"] == "sync" and ns not in (2, 3):
         raise ResetError(f"reset_tree: sync_stages {ns} (root synchronisers exist for 2 or 3)")
@@ -1352,8 +1499,8 @@ def _rtl_lines_start(T, ind, src, start_src):
            "entry reset release and the entry START",
            f"{ind}wire rst_root_n, run_root;"]
     if T["entry"] == "sync":
-        out.append(f"{ind}ot_dp_rsync_s{ns} u_rst_root (.clk(clk), .async_rst_n({src}), .sync_rst_n(rst_root_n));  "
-                   "// the die's ONE root reset synchroniser: its async input is the only reset false path")
+        out += _root_entry_lines(T, ind, src, lock_src, "the die's ONE root reset synchroniser: its async input is "
+                                 "the only reset false path")
         out.append(f"{ind}ot_dp_rsync_s{ns} u_run_root (.clk(clk), .async_rst_n({start_src}), .sync_rst_n(run_root));  "
                    "// the die's ONE START synchroniser (die start pin, asynchronous level): the only START false path")
     else:
@@ -1518,6 +1665,7 @@ def check(P):
     errs, warns = [], []
     if wavefront(P):
         try:
+            errs += check_pad(P)
             for tn, t in sorted(P.types.items()):
                 if t.get("hard") or not any(p["type"] == tn for p in P.parts.values()):
                     continue

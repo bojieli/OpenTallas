@@ -18,6 +18,12 @@ Inputs (die_plan.json, key `asbuilt`; README "As-built binding"):
   resets        reset source pins replaced by the partition's own synchroniser (polarity low/high)
   substitute_inst  per-INSTANCE plan variant of a leaf master ({"inst": path regex, "module": variant}; ports a subset)
   internal_primitive_constants  opt-in: preserve existing literals inside Yosys glue primitives; named leaf pins stay strict
+  pack_by_sink  opt-in: a partition pair's crossing source pins are packed in the order of their sink pins (destination-
+                relative leaf, port), so every replica of a destination type receives one in-bus bit order
+  type_canon    opt-in: instances of one plan type whose signatures differ only by NAMES (Yosys/Slang auto glue names
+                such as $auto$opt_expr.cc:768:replace_const_cells$N / $N, or a whole-partition leaf-index prefix u_lf3 vs
+                u_lf4) are compared under structural names (canon_names) and, when the complete signature is equal
+                under that renaming, bind as one module; fails closed (ambiguous cells keep their names)
   straps        constant leaf inputs that are declared position straps (-> partition parameters); others are TIED
   map           {"parts": {path prefix: partition | [partition, local name]}, "rules": [[regex, partition], ...]}: every leaf / glue cell of the
                 as-built die maps to exactly one partition (longest prefix, then the first rule)
@@ -553,12 +559,16 @@ class Binder:
         self.extra_lib, self.variants = [], []
         if self.ab.get("substitute_inst"):
             self.substitute_inst(base or str(E.REPO))
+        if self.ab.get("compose"):
+            import bind_compose
+            bind_compose.apply(self, self.ab["compose"])
         self.G = Graph(self.F, self.R, self.errors)
         self.parts = {p["name"]: dict(p) for p in plan["partitions"]}
         self.types = {k: dict(v) for k, v in plan["partition_types"].items()}
         self.findings, self.type_splits = [], []
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
+        self.tied_pins = defaultdict(list)   # (path, port) -> [(bit, value, source)]; every tied bit, uncapped
         self.rewire, self.rewire_stats = {}, {}
         # as-built die-port names of RTL ports (GEN bundle-wrapper masters renamed 1:1), for plan-name affinity
         self.die_port_name = {}
@@ -995,6 +1005,7 @@ class Binder:
                 return ("strap", s[1])
             cnt["tied"] += 1
             self.tied_by_port[f"{self.F.cells[ci].module}.{pn} <- {s[2]}"] += 1
+            self.tied_pins[(self.F.cells[ci].path, pn, self.F.cells[ci].module)].append((i, s[1], s[2]))
             self.errors.append(f"TIED {pin}[{i}] = {s[1]} ({s[2]})") if cnt["tied"] <= 200 else None
             return ("tied", s[1])
         if k == "top":
@@ -1018,7 +1029,51 @@ class Binder:
             return ("err", k)
         return ("err", k)
 
+    # ---------------------------------------------------------------- die reset pad (PATH-KV-POR 10-25)
+    def _por_spec(self):
+        """reset_tree.pad_spec of a wavefront plan with a declared die reset pad, else None (cached)."""
+        if not hasattr(self, "_por"):
+            P = self.wavefront_plan()
+            import reset_tree as RT
+            self._por = RT.pad_spec(P) if P is not None else None
+            self.por_rebinds, self.por_analog = [], []
+        return self._por
+
+    def _por_inst_match(self, ci, inst):
+        rel = self.rel_of(ci)
+        return inst in {rel, "u_" + rel, short_id("u_" + rel, 90), self.F.cells[ci].path}
+
+    def _por_rule(self, p, ci, pn, i, s, cnt):
+        """PATH-KV DECISION 10-25 14:19 (3): the raw die reset pad reaches ONLY the root synchroniser (the partition's
+        arst_n) and the declared analog loads; every other sink of the pad, and every leaf input matching
+        reset.source.por_pins, is REBOUND to the partition's delivered wavefront reset rst_n (no raw pad net crosses
+        the die, no new face pins).  Returns the classified sink, or None when the rule does not apply."""
+        ps = self._por_spec()
+        if not ps:
+            return None
+        c = self.F.cells[ci]
+        on_pad = s[0] == "top" and s[1] == ps["port"]
+        analog = [a for a in ps["analog_loads"] if a["pin"] == pn and self._por_inst_match(ci, a["inst"])]
+        if analog:
+            if not on_pad:
+                raise BindError(f"die reset pad: declared analog load {c.path}.{pn}[{i}] is not driven by the pad "
+                                f"{ps['port']} (source {s[:2]})")
+            cnt["por_pad_analog"] += 1
+            self.por_analog.append(dict(part=p, pin=f"{c.path}.{pn}", bit=i, inst=analog[0]["inst"]))
+            return ("rootpad",)
+        is_por = bool(ps.get("por_pins")) and re.fullmatch(ps["por_pins"], pn) is not None and \
+            not c.module.startswith("$")
+        if on_pad or is_por:
+            cnt["por_rebind"] += 1
+            self.por_rebinds.append(dict(part=p, type=self.parts[p]["type"], pin=f"{c.path}.{pn}", bit=i,
+                                         module=c.module, source="pad" if on_pad else str(s[0])))
+            return ("rst", "low")
+        return None
+
     def _classify(self, p, ci, pn, i, s, cnt):
+        por = self._por_rule(p, ci, pn, i, s, cnt)
+        if por is not None:
+            return por
         if s[0] in ("or", "and"):
             subs = [self._src_desc(p, u, cnt, ci, pn, i) for u in s[1]]
             subs = [x for x in subs if x[0] in ("int", "x", "strap", "tied", "literal", "top")]
@@ -1147,8 +1202,16 @@ class Binder:
             # asbuilt.pack_by_rel (KV-P5 15:59 type-split ask): order a pair's source pins by their PARTITION-RELATIVE
             # leaf name, so replicas of one type pack the same pins onto the same lanes (full paths sort differently
             # per quadrant / instance and split the type by width packing)
-            items = sorted(groups.items(), key=(lambda kv: (self.rel_of(kv[0][0]), kv[0][1], F.cells[kv[0][0]].path))
-                           if self.ab.get("pack_by_rel") else (lambda kv: (F.cells[kv[0][0]].path, kv[0][1])))
+            # asbuilt.pack_by_sink (PATH-S81/SPLITS 10-25): order them by their SINK pins first (the destination's
+            # partition-relative (leaf, port), smallest first), so replicas of one destination type receive one bit
+            # order although their source partitions are different types (S81 col_h9 r1: the r0 vs r0_nx band below
+            # names the same 66-bit frame group differently, which rotated frame_int_i1 by 66 bits on p3/p6)
+            if self.ab.get("pack_by_sink"):
+                items = sorted(groups.items(), key=lambda kv: (min(self.cross_sinks[(sp, dp) + kv[0]], default=("", "")),
+                                                               self.rel_of(kv[0][0]), kv[0][1], F.cells[kv[0][0]].path))
+            else:
+                items = sorted(groups.items(), key=(lambda kv: (self.rel_of(kv[0][0]), kv[0][1], F.cells[kv[0][0]].path))
+                               if self.ab.get("pack_by_rel") else (lambda kv: (F.cells[kv[0][0]].path, kv[0][1])))
             if not use_lanes:
                 direct += [(sp, dp, sci, spn, sorted(bits)) for (sci, spn), bits in items]
                 continue
@@ -1305,6 +1368,9 @@ class Binder:
             if not m:
                 self.root[p] = ""
 
+        import native_istations
+        native_istations.annotate(self)
+
     def _route(self, srcs, dst, keys, out_of, heapq, only=None):
         """fewest-hop lane path from any partition holding `keys` to dst over lanes with room for the bits they do not
         already carry (ties: lane id).  Falls back to the widest path when no lane path has room for the whole block."""
@@ -1341,29 +1407,31 @@ class Binder:
         return best
 
     # -- types
-    def type_signature(self, p):
-        """canonical description of partition p (relative names); per-instance values separated out."""
+    def type_signature(self, p, names=None):
+        """canonical description of partition p (relative names); per-instance values separated out.
+        names: {ci: name} overrides rel_of (asbuilt.type_canon structural names; see canon_names)."""
         F = self.F
+        nm = (lambda ci: names.get(ci) or self.rel_of(ci)) if names else self.rel_of
         leaves = {}
         inst_vals = {}
         for ci in self.members[p]:
             c = F.cells[ci]
-            r = self.rel_of(ci)
+            r = nm(ci)
             leaves[r] = (c.module, tuple(sorted(c.params)), self.G.kind[ci], c.ytype if self.G.kind[ci] == "glue" else None)
             for k, v in sorted(c.params.items()):
                 inst_vals[("param", r, k)] = v
         conns = {}
         for ci in self.members[p]:
-            r = self.rel_of(ci)
+            r = nm(ci)
             for pn, bits in self.F.cells[ci].ports.items():
                 if self.G.dirs[ci].get(pn) != "input":
                     continue
                 row = []
                 for i in range(len(bits)):
                     d = self.sinks[(ci, pn, i)]
-                    row.append(self._rel_desc(p, d, inst_vals, (r, pn, i)))
+                    row.append(self._rel_desc(p, d, inst_vals, (r, pn, i), nm))
                 conns[(r, pn)] = tuple(row)
-        obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((self.rel_of(it[1]), it[2], it[3]) if it[0] == "leaf" else
+        obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((nm(it[1]), it[2], it[3]) if it[0] == "leaf" else
                                          ("fwd", it[1]["iname"], it[2]) for it in L["items"]))
                       for L in self.out_bus[p])
         ibus = sorted((L["iname"], L["width"], lane_pad(L)) for L in self.in_bus[p])     # the source is outside the module
@@ -1372,7 +1440,7 @@ class Binder:
                    clocks=tuple(sorted(self.cport(p, d) for d in self.clk_dom[p])))
         if self.ab.get("io_roles"):
             sig["die_io"] = tuple((role, v["direction"], v["width"],
-                                   tuple((self.rel_of(d[1]), d[2], d[3]) for d in v["drivers"]))
+                                   tuple((nm(d[1]), d[2], d[3]) for d in v["drivers"]))
                                   for role, v in sorted(self.io_bindings(p).items()))
         return sig, inst_vals
 
@@ -1850,10 +1918,10 @@ class Binder:
                                  replica_sets=len(replicas), replica_unequal=sum(1 for r in replicas if not r["equal"])),
                     landing=groups, replica=replicas)
 
-    def _rel_desc(self, p, d, inst_vals, where):
+    def _rel_desc(self, p, d, inst_vals, where, nm=None):
         k = d[0]
         if k == "int":
-            return ("int", self.rel_of(d[1]), d[2], d[3], d[4])
+            return ("int", (nm or self.rel_of)(d[1]), d[2], d[3], d[4])
         if k == "x":
             L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
             return ("bus", L["iname"], j) + ((d[7],) if len(d) > 7 else ())
@@ -1861,7 +1929,7 @@ class Binder:
             inst_vals[("strap",) + where] = d[1]
             return ("strap",)
         if k in ("or", "and"):
-            return (k, tuple(self._rel_desc(p, x, inst_vals, where + (j,)) for j, x in enumerate(d[1])))
+            return (k, tuple(self._rel_desc(p, x, inst_vals, where + (j,), nm) for j, x in enumerate(d[1])))
         if k == "clk":
             return ("clk", self.cport(p, d[1]))
         if k == "top" and self.ab.get("io_roles"):
@@ -1944,6 +2012,144 @@ class Binder:
         """the partition module's clock port that carries die clock domain d"""
         return "clk" if d == self.default_domain(p) else f"clk_{sv_id(self.clk_role(p, d))}"
 
+    def canon_names(self, p):
+        """asbuilt.type_canon: structural names for comparing partition p with the other instances of its type.
+
+        Named cells keep their relative name, minus the common parent prefix of all named cells ("@" marks a stripped
+        name), so a leaf partition rooted one level up (glue_follows_sinks moved a slice-level $buf in) compares equal
+        across leaf indices.  Auto-named cells (last path segment '$...': Yosys $auto$...$N, Slang $N) are named by a
+        Weisfeiler-Lehman hash of their type, parameters, port shape, parent and the complete per-bit fan-in and
+        intra-partition fan-out, refined to a fixpoint; cells still tied are individualised by the natural order of
+        their original names and refined again.  A cell whose final hash is still not unique keeps its (stripped)
+        original name.  The names only serve to FIND a correspondence: _canon_merge accepts it only when the complete
+        signature (every cell, parameter key and per-bit connection) is equal under it, so no guess can merge
+        different hardware."""
+        F, G = self.F, self.G
+        mem = self.members[p]
+        raw = {ci: self.rel_of(ci) for ci in mem}
+
+        def is_auto(r):             # '$...' hierarchy component ('.' may occur inside it: $auto$opt_expr.cc:768:...)
+            return r.startswith("$") or ".$" in r
+        named = [r for r in raw.values() if not is_auto(r)]
+        pre = common_root(named) if named else ""
+        base = {ci: ("@" + r[len(pre) + 1:] if pre and r.startswith(pre + ".") else r) for ci, r in raw.items()}
+        autos = sorted(ci for ci in mem if is_auto(raw[ci]))
+        if not autos:
+            return base
+        aset = set(autos)
+
+        def h(x):
+            return hashlib.sha256(repr(x).encode()).hexdigest()
+
+        def parent(ci):             # the hierarchy above the auto component ('@' = the stripped common prefix)
+            return base[ci][:base[ci].index("$")].rstrip(".")
+        lab = {}
+        for ci in autos:
+            c = F.cells[ci]
+            lab[ci] = h((parent(ci), c.module, getattr(c, "ytype", None), sorted(c.params.items()),
+                         sorted((pn, G.dirs[ci].get(pn), len(b)) for pn, b in c.ports.items())))
+        fan = defaultdict(list)
+
+        def refs(cj, pn, i, d):
+            if d and d[0] == "int" and d[1] in aset:
+                fan[d[1]].append((cj, pn, i, d[2], d[3], d[4]))
+            elif d and d[0] in ("or", "and"):
+                for u in d[1]:
+                    refs(cj, pn, i, u)
+        for cj in mem:
+            for pn, bits in F.cells[cj].ports.items():
+                if G.dirs[cj].get(pn) == "input":
+                    for i in range(len(bits)):
+                        refs(cj, pn, i, self.sinks[(cj, pn, i)])
+        ins = {ci: [(pn, i, self.sinks[(ci, pn, i)]) for pn, bits in sorted(F.cells[ci].ports.items())
+                    if G.dirs[ci].get(pn) == "input" for i in range(len(bits))] for ci in autos}
+        def refine(lab):
+            n = len(set(lab.values()))
+            for _ in range(64):
+                if n == len(autos):
+                    break
+                nm = (lambda c: lab[c] if c in aset else base[c])
+                new = {}
+                for ci in autos:
+                    fi = tuple((pn, i, self._rel_desc(p, d, {}, (), nm)) for pn, i, d in ins[ci])
+                    fo = sorted((nm(cj), pn, i, sp, sb, st) for cj, pn, i, sp, sb, st in fan[ci])
+                    new[ci] = h((lab[ci], fi, fo))
+                lab = new
+                m = len(set(lab.values()))
+                if m == n:
+                    break
+                n = m
+            return lab
+
+        def natural(r):
+            return [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", r)]
+        lab = refine(lab)
+        for _ in range(8):
+            # cells the refinement cannot tell apart (symmetric, e.g. two $procmux of one RTL case with the same
+            # fan-in and fan-out): individualise by the natural order of their original names ($procmux$46183 <
+            # $procmux$46186; Yosys numbers one module's cells in one order), then refine again.  Any wrong guess
+            # only yields unequal signatures (kept split); _canon_merge accepts nothing the signature does not.
+            tied = defaultdict(list)
+            for ci in autos:
+                tied[lab[ci]].append(ci)
+            tied = {k: v for k, v in tied.items() if len(v) > 1}
+            if not tied:
+                break
+            for k, v in tied.items():
+                for rank, ci in enumerate(sorted(v, key=lambda ci: natural(raw[ci]))):
+                    lab[ci] = h((k, "rank", rank))
+            lab = refine(lab)
+        count = defaultdict(int)
+        for ci in autos:
+            count[lab[ci]] += 1
+        out = dict(base)
+        for ci in autos:
+            if count[lab[ci]] == 1:
+                out[ci] = parent(ci) + "|$wl_" + lab[ci][:24]          # '|' never occurs in a cell path
+        return out
+
+    def _canon_merge(self, tn, ps, sigs):
+        """asbuilt.type_canon: re-group the instances of type tn under canon_names; an instance whose canonical
+        signature equals an earlier instance's takes that reference's relative names (self.local), after which its
+        ordinary signature must equal the reference's exactly (else the renaming is undone: fail closed)."""
+        cn = {p: self.canon_names(p) for p in ps}
+        for p in ps:
+            if len(set(cn[p].values())) != len(cn[p]):
+                self.warns.append(f"TYPE_CANON {tn}: {p} canonical names not unique; type compared by raw names")
+                return
+        cs = {p: self.type_signature(p, cn[p])[0] for p in ps}
+        refs = []
+        merged = getattr(self, "type_canon_merged", [])
+        self.type_canon_merged = merged
+        for p in ps:
+            ref = next((r for r in refs if cs[r] == cs[p]), None)
+            if ref is None:
+                refs.append(p)
+                continue
+            if sigs[p][0] == sigs[ref][0]:
+                continue
+            inv = {v: ci for ci, v in cn[ref].items()}
+            old = {}
+            for ci in self.members[p]:
+                tgt = self.rel_of(inv[cn[p][ci]])
+                if tgt != self.rel_of(ci):
+                    old[ci] = self.local.get(ci)
+                    self.local[ci] = tgt
+            s = self.type_signature(p)
+            if s[0] == sigs[ref][0]:
+                sigs[p] = s
+                merged.append(dict(type=tn, inst=p, ref=ref, renamed=len(old)))
+            else:
+                for ci, v in old.items():
+                    if v is None:
+                        self.local.pop(ci, None)
+                    else:
+                        self.local[ci] = v
+                self.warns.append(f"TYPE_CANON {tn}: {p} vs {ref} canonical match not confirmed by the signature; kept split")
+        if merged:
+            self.warns.append(f"TYPE_CANON {tn}: " + ", ".join(f"{m['inst']}->{m['ref']} ({m['renamed']} renamed)"
+                                                               for m in merged if m["type"] == tn))
+
     def check_types(self):
         self.tsig, self.tvals, self.tparams = {}, {}, {}
         split_more = []
@@ -1955,6 +2161,8 @@ class Binder:
             sigs = {}
             for p in ps:
                 sigs[p] = self.type_signature(p)
+            if self.ab.get("type_canon") and any(sigs[q][0] != sigs[ps[0]][0] for q in ps[1:]):
+                self._canon_merge(tn, ps, sigs)
             groups = []                 # instances with identical contents share one module
             for p in ps:
                 for g in groups:
@@ -2043,6 +2251,67 @@ class Binder:
             self._wavefront_plan = schema.Plan(self.plan, self.plan_dir / "die_plan.json")
         return self._wavefront_plan
 
+    def reg_hard(self):
+        """REGISTERED-PIN HARD PARTITIONS (COORD 2026-10-25 11:31, PATH-QC-PHYB; tools/die_plan/hard_pinreg.py): a plan
+        type marked hard whose single hard core declares `registered_pins` (+ its lib) is the bare macro, and the
+        macro's registered boundary pins ARE the partition's boundary registers (standard hard-PHY practice).  Such a
+        partition gets NO ot_dp_st station on its side of any crossing; the neighbour keeps its station.  Latency: the
+        macro's pin register takes the station's place in the lane's 2 boundary stages (latency table unchanged; its
+        cycle is inside the macro, so bind_verify's transport trace expects one stage less per registered end).
+        Fails closed: the lib must show setup+hold on every input and clock->q on every output (hard_pinreg.check_lib),
+        every as-built crossing pin must be in the lib, and the partition must hold nothing that needs a flop (the one
+        hard-core leaf only; no ft station, forwarding hop, lane pad, landing pad, kept transport stage, reset spine
+        landing or plan cell).  Data-driven, no names; a plan without the key binds byte-identically.
+        -> {part: dict(type, core, module, libs)}"""
+        if getattr(self, "_reg_hard", None) is not None:
+            return self._reg_hard
+        import hard_pinreg as HP
+        types, errs = HP.registered_types(self.plan)
+        if errs:
+            raise BindError("registered_pins: " + "; ".join(errs[:5]))
+        res = {}
+        if not types:
+            self._reg_hard = res
+            return res
+        F, G = self.F, self.G
+        ptype = {pp["name"]: pp["type"] for pp in self.plan["partitions"]}
+        for p in sorted(self.members):
+            tn = ptype.get(p)
+            if tn not in types:
+                continue
+            e = types[tn]
+            m = self.members[p]
+            if len(m) != 1 or G.kind[m[0]] != "leaf" or (e.get("module") and F.cells[m[0]].module != e["module"]):
+                raise BindError(f"registered_pins {p} ({tn}): the partition must hold exactly the hard core "
+                                f"{e.get('module')}, found {[(F.cells[c].path, G.kind[c]) for c in m][:5]}")
+            ci = m[0]
+            skip = {b["pin"] for b in e.get("bump_ports", [])}
+            ports = {pn: (G.dirs[ci].get(pn), len(bits)) for pn, bits in F.cells[ci].ports.items()}
+            libs = []
+            for lb, f in HP.lib_views(e, (self.base, self.plan_dir)):
+                if f is None:
+                    raise BindError(f"registered_pins {p} ({tn}): lib {lb} not found")
+                ee, s = HP.check_lib(f, F.cells[ci].module, ports, skip)
+                if ee:
+                    raise BindError(f"registered_pins {p} ({tn}): lib check FAIL: {'; '.join(ee[:4])}")
+                libs.append(dict(lib=lb, **s))
+            bad = []
+            if self.ft_bus.get(p):
+                bad.append(f"{len(self.ft_bus[p])} ft slot hop(s)")
+            if self.intra_dly.get(p):
+                bad.append(f"{len(self.intra_dly[p])} kept transport stage(s)")
+            for L in self.out_bus.get(p, []):
+                if L.get("plan") or any(it[0] != "leaf" for it in L["items"]):
+                    bad.append(f"out bus {L['oname']} forwards / plan-cell driven")
+            for L in self.in_bus.get(p, []):
+                if L.get("spine") or lane_pad(L):
+                    bad.append(f"in bus {L['iname']} {'reset spine landing' if L.get('spine') else 'lane pad'}")
+            if bad:
+                raise BindError(f"registered_pins {p} ({tn}): needs flops a bare macro does not have: {bad[:5]}")
+            res[p] = dict(type=tn, core=e["inst"], module=F.cells[ci].module, libs=libs)
+        self._reg_hard = res
+        return res
+
     def bump_pins(self):
         """declared HARD-IP LINE SIDE (B2, PATH-QC-B12 10-25): a plan type's contents[] / hard_cores[] entry may list
         `bump_ports` [{pin, dir, width}] = pins of that hard core that leave the die (its bumps, e.g. a UCIe PHY's
@@ -2096,7 +2365,7 @@ class Binder:
             import reset_tree as RT
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
-            for name in ("ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3"):
+            for name in ("ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"):
                 m = re.search(r"module " + name + r"\b.*?\nendmodule", gen_rtl.CELLS, re.S)
                 cells += "\n(* keep_hierarchy *)\n" + m.group(0) + "\n"
             W = RT.wf_plan(P)
@@ -2116,10 +2385,21 @@ class Binder:
             self.pnames[tn] = pnames
             f = out / f"{t['module']}.sv"
             f.write_text(txt)
+            import native_istations
+            native_istations.materialize(self, tn, f)
             files.append(f)
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
         f.write_text(self.emit_top())
         files.append(f)
+        if P is not None and self._por_spec():
+            # PATH-KV-POR 10-25: fail-closed die reset pad gate on the emitted RTL (por_gate.py G1-G4)
+            import por_gate
+            rec = dict(rebinds=self.por_rebinds, analog=self.por_analog)
+            (out.parent / "bind_por.json").write_text(json.dumps(rec, indent=1) + "\n")
+            g = por_gate.check(P, out, rec)
+            (out.parent / "bind_por_gate.json").write_text(json.dumps(g, indent=1) + "\n")
+            if g["verdict"] != "PASS":
+                raise BindError("die reset pad gate (por_gate.py): " + "; ".join(g["errors"][:6]))
         man = dict(schema="opentallas.parent_id_straps.v1", types=self.parent_id_ports,
                    instances=self.parent_id_values, added_data_cycles=0)
         if any(self.parent_id_ports.values()):
@@ -2230,7 +2510,10 @@ class Binder:
         decl, body = [], []
         P = self.wavefront_plan()
         rtree = None
-        if P is not None:
+        reg = p in self.reg_hard()          # registered-pin hard partition: no flop of ours inside (reg_hard)
+        if reg:
+            body.append("    wire rst_n = arst_n;  // registered-pin hard partition: the delivered reset, no synchroniser")
+        elif P is not None:
             import reset_tree as RT
             ptn = t.get("split_of", tn)
             if P.types[ptn].get("hard"):
@@ -2281,6 +2564,11 @@ class Binder:
                 body.append(f"    ot_dp_rsync #(.W({W}), .S({L['cycles']})) u_rs_{n} (.clk(clk), .a({n}), .q({n}_q));")
                 continue
             ports.append(f"    input  wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'in')}")
+            if reg:
+                decl.append(f"    wire [{W - 1}:0] {n}_q;")
+                body.append(f"    assign {n}_q = {n}[{W - 1}:0];  // registered hard pin: the macro's input register is "
+                            f"the boundary register (epoch [{W}] unread: no flop here)")
+                continue
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
             pad = lane_pad(L)
             if pad > 0:
@@ -2303,6 +2591,16 @@ class Binder:
                     nm = short_id(f"w_{self.rel_of(ci)}__{pn}", 90)
                     drv_w[(ci, pn)] = nm
                     decl.append(f"    wire [{len(bits) - 1}:0] {nm};")
+        if rtree is not None and rtree.get("lock"):
+            # PLL lock qualifier input of the root entry (reset_tree LOCK_SRC): the declared lock leaf output, as data
+            lk = rtree["lock"]
+            cand = [ci for ci in self.members[p] if (ci, lk["pin"]) in drv_w and self._por_inst_match(ci, lk["inst"])]
+            if len(cand) != 1:
+                raise BindError(f"reset lock {lk['inst']}.{lk['pin']} in root partition {p}: expected one bound leaf "
+                                f"output, found {len(cand)}")
+            decl.append(f"    wire {RT.LOCK_SRC};")
+            body.append(f"    assign {RT.LOCK_SRC} = {drv_w[(cand[0], lk['pin'])]}[0];  // PLL lock -> u_rst_lockq "
+                        "(own 2-flop synchroniser; data, never a reset)")
         if self.ab.get("io_roles"):
             for role, v in sorted(self.io_bindings(p).items()):
                 if v["direction"] == "output":
@@ -2326,6 +2624,13 @@ class Binder:
             if L.get("plan"):
                 body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), "
                             f".q({n}[{W - 1}:0]), .eq({n}[{W}]));  // plan-cell driven")
+                continue
+            if reg:
+                if getattr(self, "ptree", None) is not None and any(self.ptree[(id(L), k)] for k in range(W)):
+                    raise BindError(f"registered_pins {p}: PAD_TREE taps on out bus {n} need flops a bare macro lacks")
+                d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
+                body.append(f"    assign {n} = {{rst_n, {d}}};  // registered hard pin: the macro's output register is "
+                            f"the boundary register; epoch [{W}] = the delivered reset level (no flop here)")
                 continue
             if getattr(self, "ptree", None) is not None:
                 obus_tree.append(L)          # PAD_TREE: emitted after the tap helpers exist (below)
@@ -2392,6 +2697,9 @@ class Binder:
                 return f"{w}[{d[3]}]"
             if k == "x":
                 L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                if reg and len(d) > 7 and (d[7] if PT is None else d[7] - PT[(id(L), j)]):
+                    raise BindError(f"registered_pins {p}: landing pad on {F.cells[ci].path}.{pn}[{i}] needs flops a "
+                                    "bare macro lacks")
                 if len(d) > 7 and PT is not None:      # PAD_TREE: tap of the in-lane bit's line
                     return tap(f"{L['iname']}_q[{j}]", f"{L['iname']}_{j}", d[7] - PT[(id(L), j)])
                 if len(d) > 7:          # landing pad (land_align): shared per (in-bus bit, pad)
@@ -2414,6 +2722,14 @@ class Binder:
                     return f"~({reset})"
                 need_rst = True
                 return "rst"
+            if k == "rootpad":
+                # declared analog load of the raw die reset pad (PLL por_n): only in the reset ROOT partition, where
+                # arst_n IS the pad (its other load is the root synchroniser u_rst_root)
+                if rtree is None or rtree.get("entry") != "sync" or self.wavefront_plan() is None or \
+                        p != RT.wf_plan(self.wavefront_plan())["root"]:
+                    raise BindError(f"die reset pad analog load {F.cells[ci].path}.{pn}[{i}] in partition {p}: the raw "
+                                    "pad exists only in the reset root partition")
+                return "arst_n"
             if k == "start":
                 if rtree is None or rtree.get("start_tap") is None:
                     raise BindError(f"START consumer {F.cells[ci].path}.{pn}[{i}] in partition {p} (type {tn}): only "
@@ -2491,7 +2807,10 @@ class Binder:
         head = (f"// GENERATED by tools/die_plan/bind.py from die_plan {self.plan['die']['name']} + the as-built die "
                 f"({self.ab['top']}), partition type {tn}.  Do not edit.\n"
                 f"// {len(self.by_type[tn])} instance(s); leaves = the as-built modules unchanged; intra-partition nets as built;\n"
-                "// every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.\n"
+                + ("// REGISTERED-PIN HARD PARTITION (bind.py reg_hard): the macro's registered pins are the boundary registers;\n"
+                   "// no station on this side (the neighbour keeps its boundary station); out epoch = the delivered reset level.\n"
+                   if reg else
+                   "// every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.\n") +
                 "`timescale 1ns/1ps\n`default_nettype none\n")
         pblock = (" #(\n" + ",\n".join(pdecl) + "\n)") if pdecl else ""
         return head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
@@ -2508,10 +2827,13 @@ class Binder:
     def emit_top(self):
         die = sv_id(self.plan["die"]["name"])
         doms = sorted({d for p in self.members for d in self.clk_dom[p]} | {self.ab.get("default_clock", "core")})
-        ports = ["    input  wire rst_n"] + [f"    input  wire clk_{sv_id(d)}" for d in doms]
         P = self.wavefront_plan()
+        rst_port = "rst_n"
         if P is not None:
             import reset_tree as RT
+            rst_port = RT.die_reset_port(P)       # the die reset pad (PATH-KV-POR) or rst_n
+        ports = [f"    input  wire {sv_id(rst_port)}"] + [f"    input  wire clk_{sv_id(d)}" for d in doms]
+        if P is not None:
             if RT.start_broadcast(P):
                 ports.insert(1, "    input  wire start")
         if self.ab.get("io_roles"):
@@ -2619,14 +2941,18 @@ class Binder:
                     if len(open_list) < 50:
                         open_list.append(pin)
         lat = []
+        rh = getattr(self, "_reg_hard", None) or {}
         for L in self.links:
             st = L["stages"]
-            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L)
+            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0))
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
                             leaves=_seg_summary(L, F), forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
                             asbuilt_stages=[min(st), max(st)], bound_stages=bound,
                             plan_cycles=L.get("cycles", 2), delta=bound - max(st)))
+            if L["src"] in rh or L["dst"] in rh:
+                # the macro's registered pin is that end's boundary stage (bound_stages unchanged, 1:1)
+                lat[-1]["macro_pin_reg_ends"] = [e for e in ("src", "dst") if L[e] in rh]
             if L["lane"] and bound != L.get("cycles"):
                 self.errors.append(f"LANE_CYCLES {L['lane']}: bound {bound} != latency table {L.get('cycles')}")
         types = {tn: dict(instances=len(ps), module=self.types[tn]["module"],
@@ -2825,7 +3151,21 @@ def cmd_bind(a):
         files = B.emit(out)
     except BindError as e:
         B.errors.append(f"EMIT {e}")
+    n_tied = sum(len(v) for v in B.tied_pins.values())
+    if n_tied > 200:
+        # the per-bit TIED list is capped at 200 lines; state the true count so a strict report is honest
+        B.errors.append(f"TIED_TOTAL {n_tied} tied bits on {len(B.tied_pins)} leaf pins in "
+                        f"{len(B.tied_by_port)} (type.port <- source) classes (TIED lines capped at 200; "
+                        f"full list bind_tied.json)")
+    (out / "bind_tied.json").write_text(json.dumps(
+        [dict(path=k[0], port=k[1], module=k[2], bits=[b[0] for b in v], values="".join(str(b[1]) for b in v),
+              sources=sorted({b[2] for b in v})) for k, v in sorted(B.tied_pins.items())], indent=0) + "\n")
     rep, lat = B.report()
+    if getattr(B, "_reg_hard", None):
+        rep["registered_pins"] = {p: dict(v, stations_removed=len(B.in_bus.get(p, [])) + len(B.out_bus.get(p, [])),
+                                          station_bits_removed=sum(L["width"] + 1 for L in B.in_bus.get(p, []) +
+                                                                   B.out_bus.get(p, [])))
+                                  for p, v in sorted(B._reg_hard.items())}
     srcs = json.loads((out / "asbuilt_sources.json").read_text()) if (out / "asbuilt_sources.json").exists() else {}
     fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
     (out / "bind.f").write_text("\n".join(fl) + "\n")
@@ -2836,6 +3176,7 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    rep["type_canon_merged"] = getattr(B, "type_canon_merged", [])
     if B.param_regen:
         rep["param_regen"] = B.param_regen
         (out / "param_regen.json").write_text(json.dumps(B.param_regen, indent=1))
@@ -3326,7 +3667,7 @@ def cmd_kit_rtl(a):
         rep.get("extra_lib", []) + bindf_prefer(out, base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
-                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
     picks = {}
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks)
     if cl_missing:
@@ -3365,7 +3706,7 @@ def lane_pad(L):
     """the latency table's pad on a plan lane: table cycles - (2 boundary flops + ft stations), when positive"""
     if L.get("spine") or not L.get("lane") or "cycles" not in L:
         return 0
-    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])))
+    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0)))
 
 
 def _desc_json(B, d, ci_part=None):
@@ -3374,6 +3715,10 @@ def _desc_json(B, d, ci_part=None):
         return ["pin", f"{B.F.cells[d[1]].path}.{d[2]}[{d[3]}]", d[4], B.G.kind[d[1]] == "glue"]
     if k == "x":
         st = B.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)
+        # a registered-pin hard end (reg_hard): its boundary stage is the macro's own pin register, inside the leaf,
+        # so the transport trace (bind_verify) sees one ot_dp_st less per such end
+        rh = getattr(B, "_reg_hard", None) or {}
+        st -= (d[1] in rh) + (d[6] in rh)
         return ["pin", f"{B.F.cells[d[2]].path}.{d[3]}[{d[4]}]", st, B.G.kind[d[2]] == "glue"]
     if k in ("or", "and"):
         return [k, sorted(_desc_json(B, x)[1] for x in d[1] if x[0] in ("int", "x"))]

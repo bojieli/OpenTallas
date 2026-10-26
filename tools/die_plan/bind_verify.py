@@ -80,7 +80,7 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
         t = Path(f).read_text(errors="replace")
         mods = re.findall(r"^module\s+(\w+)", t, re.M)
         leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) -
-                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
+                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
         cl, _ = E.closure(leafm, idx, prefer)
         for m in mods:
             byfile[m] = [f] + cells + [str(rs)] + cl
@@ -161,6 +161,7 @@ def cmd_verify(a):
             return ["tied", s[1]]
         return [k]
 
+    reg_parts = {sv_id(p) for p in rep.get("registered_pins", {})}
     cnt = dict(compared=0, matched=0, mismatched=0, glue_unmatched=0, unbound=0, tied=0, undriven=0, multiply_driven=0, plan_driven=0)
     mism, tied_ex = [], []
     seen = set()
@@ -205,6 +206,10 @@ def cmd_verify(a):
                 if want[0] == "pin" and (want[3] or got[0] == "pin" and got[3]):
                     cnt["glue_unmatched"] += 1
                     continue
+                if want == ["rst", "low"] and got == ["top", "rst_n"] and c.path.split(".")[0] in reg_parts:
+                    # registered-pin hard partition (bind.py reg_hard): no synchroniser of ours inside the bare
+                    # macro, its leaf reset is the delivered die reset (arst_n) as in a wavefront hard partition
+                    got = want
                 if want == ["start"] and got == ["rst", "low"]:
                     # local START tap start_t<k> = ot_dp_rgate(raw reset, run): its reset leg traces to the die reset
                     # (run is dropped like on every gated tap); START timing is proven by the lockstep tests

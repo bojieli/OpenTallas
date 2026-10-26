@@ -9,6 +9,8 @@
 #   pin audit, corners, signoff only)
 #   run_kit_kv.sh KITDIR [GOAL=finish] [MEM_GB=32] [CPUS=16]     (heavy: call it through ot-run --mem MEM_GB)
 set -uo pipefail
+# CLOCK-RESET 10-25: `make cts` (kit corners tc+bc) BEFORE the FF-only `make grt CORNERS=bc`: make builds every missing
+# prerequisite, so without it floorplan..CTS repair ran on FF libraries only and TT setup was never repaired (canary -222.85).
 K=$(cd "$1" && pwd); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
@@ -24,16 +26,18 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \$M synth; rc=\$?; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py check --platform-dir \$PD --netlist \$N --report /work/dont_use_check.json; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/replica_expect.json ]; then python3 -I /work/replica_check.py --expect /work/replica_expect.json --netlist \$N --out /work/replica_check.json > /work/replica_check.log 2>&1; rc=\$?; cat /work/replica_check.log; [ \$rc = 0 ] || echo 'REPLICA CHECK FAILED: the kit stops before floorplan (replica_check.json)'; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then python3 -I /work/core_preflight.py /work \$N --out /work/face_guard.json > /work/face_guard.log 2>&1; rc=\$?; tail -3 /work/face_guard.log; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \
     test -n \"\$D\" || rc=103; \
     if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; fi; \
     if [ \$rc = 0 ]; then python3 -I /work/core_preflight.py /work /work/1_synth_odb.v --out /work/face_guard_odb.json > /work/face_guard_odb.log 2>&1; rc=\$?; tail -3 /work/face_guard_odb.log; fi; \
+    if [ \$rc = 0 ] && [ -f /work/replica_expect.json ]; then python3 -I /work/replica_check.py --expect /work/replica_expect.json --netlist /work/1_synth_odb.v --out /work/replica_check_odb.json > /work/replica_check_odb.log 2>&1; rc=\$?; tail -1 /work/replica_check_odb.log; fi; \
   fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/lec.py ] && [ -n \"\$N\" ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'LEC NOT EQUIVALENT: the kit stops (lec/lec.json)'; rc=1; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
-  HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); VF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk); if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ -n \"\$VF\" ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; if [ \$rc != 0 ]; then echo 'FF-only GRT hold repair (FF vclk frame) failed'; fi; fi; \
+  HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); VF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk); if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ -n \"\$VF\" ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then \$M cts; rc=\$?; if [ \$rc = 0 ]; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; if [ \$rc != 0 ]; then echo 'FF-only GRT hold repair (FF vclk frame) failed'; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ] || [ $GOAL = post ]; }; then \$M do-generate_abstract; rc=\$?; fi; \

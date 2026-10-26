@@ -16,7 +16,9 @@ Conventions (binding for every tool):
   DIE frame; the destination uses the opposite face.  `window_um` = [lo, hi] along that face in DIE coordinates
   (y for E/W faces, x for N/S faces).  For a port whose src is "@die", `face` is the dst partition's face on the
   die edge.  Both partitions get pins at exactly the same die coordinates (pin_positions()).
-- Every port is registered on both sides (a boundary flop at the source pin and at the destination pin).
+- Every port is registered on both sides (a boundary flop at the source pin and at the destination pin).  On the side
+  of a REGISTERED-PIN hard partition (its single hard core declares `registered_pins`, tools/die_plan/hard_pinreg.py)
+  that flop is the macro's own registered pin (lib: setup+hold / clk->q), not a generated station.
 - A feedthrough slot `S` of a partition type defines two buses `S_i` (in, on `in_face`) and `S_o` (out, on `out_face`),
   with `stations` reset-less data registers (+ one reset epoch bit) between them.
 - A lane is an ordered list of ports; consecutive ports meet inside a partition at the `_i`/`_o` buses of one ft slot.
@@ -63,6 +65,7 @@ ASAP7_LAYERS = [
 BASE_LATTICE_UM = 2.16
 GRID_UM = 8.64
 
+FACE_PINS_HARD_CAP = 16.0   # pins/um per face pin layer pair: no type budget above this (COORD KV RULING 10-25 (a))
 DEFAULT_BUDGETS = dict(face_pins_per_um=6.0, face_pin_layers=2, face_window_um=10.0, pin_track_max=0.6,
                        cut_ratio_max=0.6, cut_step_um=250.0, pin_reg_p90_um=30.0,
                        # R3 (METHODOLOGY 5.1 / ruling 9.4, 2026-10-24; was 750 COORD 10-23): ft stations at most
@@ -100,6 +103,20 @@ _lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3}   # 3 o
 _order = {"enum": ["lsb_low", "lsb_high"]}
 _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
         "properties": {"part": _name, "bus": _name}}
+# PATH-KV-POR 10-25 (reset_tree.py "die reset pad"): the die reset source may name its ONE external reset pad (a die_io
+# entry kind die_root_pad), the pad's declared analog loads (PLL por_n: {inst, pin} in the root partition), the leaf
+# power-on-reset pin regex the binder rebinds to the partition's wavefront reset, and the PLL lock that qualifies the
+# root release through its own synchroniser (ot_dp_lockq; stable_cycles consecutive locked cycles)
+_reset_source = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
+                 "properties": {"part": _name, "bus": _name, "pad": _name,
+                                "analog_loads": {"type": "array", "minItems": 1, "items": {
+                                    "type": "object", "required": ["inst", "pin"], "additionalProperties": False,
+                                    "properties": {"inst": _name, "pin": _name, "note": {"type": "string"}}}},
+                                "por_pins": {"type": "string"},
+                                "lock": {"type": "object", "required": ["inst", "pin"], "additionalProperties": False,
+                                         "properties": {"inst": _name, "pin": _name,
+                                                        "stable_cycles": {"type": "integer", "minimum": 1}}},
+                                "note": {"type": "string"}}}
 
 # B2 (PATH-QC-B12 10-25): hard-IP LINE SIDE of a hard core (its bumps, e.g. a UCIe PHY's link_* / far_*): pins absent
 # from the as-built die that the binder exports as die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins)
@@ -177,10 +194,13 @@ SCHEMA = {
                     # in-band ("in_band", with the on-die `host_route`; S81-XDIE 10-24)
                     "type": "object", "required": ["name", "kind", "rect_um", "sites", "part"],
                     "additionalProperties": False,
-                    "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro"]}, "rect_um": _rect,
+                    # die_root_pad (PATH-KV-POR 10-25): the die's ONE external reset pad = the die reset root pin
+                    # (iface reset, part = the reset root partition, pad_port = the as-built top port it carries)
+                    "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro", "die_root_pad"]},
+                                   "rect_um": _rect, "pad_port": _name,
                                    "sites": {"type": "integer", "minimum": 1}, "pitch_um": _pos, "layer": _layer,
                                    "part": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
-                                   "iface": {"enum": ["serdes", "ucie", "hbm_phy", "host", "refclk", "other"]},
+                                   "iface": {"enum": ["serdes", "ucie", "hbm_phy", "host", "refclk", "reset", "other"]},
                                    "signals": {"type": "integer", "minimum": 1}, "host": {"enum": [True, False, "in_band"]},
                                    "host_route": {"type": "string"},
                                    "basis": {"type": "string"}, "note": {"type": "string"},
@@ -273,7 +293,7 @@ SCHEMA = {
                                        "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
-                                       "layers": _lays, "order": _order}}},
+                                       "layers": _lays, "order": _order, "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
@@ -324,6 +344,9 @@ SCHEMA = {
                             "type": "object", "required": ["name", "xy"], "additionalProperties": False,
                             "properties": {"name": _name, "xy": _xy, "kind": {"enum": ["core", "glue", "leaf"]},
                                            "orient": {"enum": list(ORIENTS)}, "insertion_ps": _pos,
+                                           # CORELAT 10-25: the core's FF insertion (SIGNED FF pin-register mean,
+                                           # or the FF budget); absent -> FF_TT_INSERTION_RATIO x insertion_ps
+                                           "insertion_ff_ps": _pos,
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
                                            "from_root_um": _nonneg, "note": {"type": "string"}}}}}},
                     # hard cores built on PLATFORM tracks (macros inside): a per-core placement offset puts their
@@ -345,6 +368,10 @@ SCHEMA = {
                                        # hardened views (repo-relative): the partition kit places the core as a
                                        # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       # REGISTERED-PIN hard partition (COORD 10-25 11:31; hard_pinreg.py): the single
+                                       # hard core of a hard type whose registered boundary pins (lib: setup+hold on
+                                       # every input, clk->q on every output) are the partition's boundary registers
+                                       "registered_pins": {"type": "boolean"},
                                        # routing obstruction top layer of the core (its LEF OBS/PIN top; G2 probe
                                        # obstructs M1..obs_max, default partition_signal_max when absent)
                                        "obs_max": _layer,
@@ -372,6 +399,10 @@ SCHEMA = {
                                        # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
                                        # at origin_um (type frame) with orient (mandatory when lef is given)
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       # REGISTERED-PIN hard partition (COORD 10-25 11:31; hard_pinreg.py): the single
+                                       # hard core of a hard type whose registered boundary pins (lib: setup+hold on
+                                       # every input, clk->q on every output) are the partition's boundary registers
+                                       "registered_pins": {"type": "boolean"},
                                        "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
                                        "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf
@@ -403,6 +434,12 @@ SCHEMA = {
                     # ft_track_frac); M8 / M9 keys are G0 ERRORs (m89_signals: no over-the-top ft)
                     "ft_budget": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                              "maximum": 1}},
+                    # per-type face pin density budget (COORD KV RULING 10-25 05:07 (a)): above the die budget only
+                    # after the pins sit in channel gaps, up to the density a per-type G2 probe with hard cores
+                    # obstructing routes clean (face_budget_g2: the probe record), pin_track_max unchanged, hard cap
+                    # FACE_PINS_HARD_CAP pins/um
+                    "face_pins_per_um": {"type": "number", "exclusiveMinimum": 0, "maximum": 16.0},
+                    "face_budget_g2": {"type": "string", "minLength": 3},
                     # per-face pin layer sets (type frame faces); every layer <= M7 (an M8 / M9 face layer, e.g. the
                     # 10-23 S81 svc fold / rail faces, is a G0 ERROR since ruling 9.3)
                     "face_layers": {"type": "object", "additionalProperties": False, "properties": {
@@ -483,7 +520,7 @@ SCHEMA = {
                 "part_die_origin_um": {"type": "object", "additionalProperties": _xy},
                 "branch_ps_per_mm": _pos, "branch_leaf_um": _pos}}}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
-            "source": _end, "sync_stages": {"type": "integer", "minimum": 2},
+            "source": _reset_source, "sync_stages": {"type": "integer", "minimum": 2},
             "data_reset": {"const": False}, "epoch_bit": {"const": True},
             # OWNER RESET RULE 2026-10-24 (BRIEFING decision 2; tools/die_plan/reset_tree.py): "pipelined" = ONE root
             # synchroniser per die region, then synchronous relay flops every <= relay_um (405) with equal depth to every
@@ -499,6 +536,10 @@ SCHEMA = {
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},
+            # KV-PLAN2 10-25 (opt-in, default false = main wall-only rule): every relay hop keeps one L route outside
+            # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14
+            # through kvpc0 gave 1272 M3 overflow)
+            "relay_avoid_cores": {"type": "boolean"},
             # raw binder: the FUNCTIONAL top input that carries the mission START level to the sources' declared
             # mission-admission inputs (e.g. KV host mission_start); every such sink binds to its partition's local
             # registered START tap start_t<k> (bootstrap types only).  Unset: such a top port stays a die IO.
@@ -1007,9 +1048,39 @@ def core_taps(P, tn):
     return out
 
 
-def core_tap_early_ps(P, tp):
-    """how early the spine delivers a core tap: max(0, insertion_ps - the die common latency)."""
-    return max(0.0, float(tp.get("insertion_ps", 0.0)) - float(P.clock["insertion_ps"]))
+# = gen_phys.FF_TT_INSERTION_RATIO (routed RCX FF/TT pin-register mean ratio); used only when a plan gives no FF value
+FF_TT_INSERTION_RATIO = 0.81
+
+
+def _corner(corner):
+    c = str(corner).upper()
+    if c not in ("TT", "FF"):
+        raise ValueError(f"corner {corner!r}: sign-off is TT setup / FF hold only")
+    return c
+
+
+def common_latency_ps(P, corner="TT"):
+    """the die common (pin-register) latency at a corner: TT clock.insertion_ps; FF clock.insertion_ff_ps, absent ->
+    FF_TT_INSERTION_RATIO x TT (250 -> 202.5)."""
+    tt = float(P.clock["insertion_ps"])
+    if _corner(corner) == "TT":
+        return tt
+    return float(P.clock.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
+
+
+def core_tap_insertion_ps(tp, corner="TT"):
+    """a core tap's declared core insertion at a corner: TT insertion_ps; FF insertion_ff_ps, absent ->
+    FF_TT_INSERTION_RATIO x TT."""
+    tt = float(tp.get("insertion_ps", 0.0))
+    if _corner(corner) == "TT":
+        return tt
+    return float(tp.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
+
+
+def core_tap_early_ps(P, tp, corner="TT"):
+    """how early the spine delivers a core tap at a corner: max(0, core insertion - the die common latency), both
+    at that corner (CORELAT 10-25: FF = insertion_ff_ps - clock.insertion_ff_ps, never the TT number)."""
+    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner))
 
 
 def _grid_taps(P, tn):

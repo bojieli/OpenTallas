@@ -425,7 +425,7 @@ def _group_in_min(m):
 # ratio: ve_s 219.5/270.3 0.81, vmr_cqb 287.2/359.6 0.80, idx_vm 192/234 0.82, crh 240.6/292.5 0.82).  Sign-off
 # rebinds each corner to its routed RCX pin-register mean and FAILs when it is more than insertion_tol_ps away from
 # the bound value (signoff.py clock check).
-FF_TT_INSERTION_RATIO = 0.81
+FF_TT_INSERTION_RATIO = S.FF_TT_INSERTION_RATIO   # 0.81: one constant (schema)
 
 
 def insertion_binding(P, tn):
@@ -569,6 +569,14 @@ def sdc(P, tn, pins):
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
     out += (f"set_output_delay -min {t_lib(hold_out_min_ps(P)):.4f} -clock vclk [all_outputs]\n")
+    import reset_tree as RT
+    fp = RT.pad_false_path_pins(P, tn)
+    if fp:
+        # PATH-KV-POR 10-25 (CLOCK-RESET amendment): the reset ROOT type of a die reset pad plan: arst_n IS the raw pad.
+        # Its only false paths end at the root synchroniser's async pin and the declared PLL analog pin; everything
+        # downstream (rst_por_n, the lock qualifier, the wavefront relays) is timed (recovery / removal, data).
+        out += ("# die reset pad (reset_tree.pad_false_path_pins): raw pad -> u_rst_root async + PLL analog pin only\n"
+                f"set_false_path -from [get_ports arst_n] -to [get_pins {{{' '.join(fp)}}}]\n")
     return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -657,6 +665,20 @@ def clock_phase_tcl(P, tn, before_cts=False):
             f"set_clock_latency -clock clk {t_lib(P.clock['insertion_ps']):.4f} [get_ports {{{ports}}}]\n")
 
 
+
+def _corner_libs(mlib, kd, corner):
+    """kit macro timing views of CORNER (tt/ff) for the gate/sign-off lib lists; FAIL when a macro lacks that view."""
+    out = []
+    for f in mlib:
+        m = re.match(r"^(.*)_(tt|typ|ff|ss)(\.lib(?:\.gz)?)$", Path(f).name)
+        if not m:
+            raise ValueError(f"macro lib {f}: no corner suffix")
+        name = f"{m[1]}_{corner}{m[3]}"
+        if not (kd / "macros" / name).is_file():
+            raise ValueError(f"macro lib {f}: no {corner} view {name} in the kit")
+        out.append(str(Path(f).parent / name))
+    return out
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True):
     t = P.types[tn]
@@ -697,7 +719,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                 sibling = f.with_name(f"{match[1]}_{corner}{match[3]}")
                                 if sibling.is_file() and sibling != f:
                                     shutil.copyfile(sibling, kd / "macros" / sibling.name)
-            mplace.append(f"place_macro -macro_name {{{inst}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
+            # ODB keeps an escaped Verilog name's array brackets as \[ \] (a plan inst like g_writer[0].u_mem is not found
+            # otherwise: native59 MPL-0020, PATH-QC-A0N59 10-25); escape the bare ones
+            inst_db = re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)
+            mplace.append(f"place_macro -macro_name {{{inst_db}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
     srcs = []
     for f in rtl_files:
         dst = kd / "rtl" / Path(f).name
@@ -845,6 +870,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
+           # PATH-QC-A0N59 10-25: macro kits had no BC_LIB_FILES, so the post-CTS FF hold gate stopped NOT RUN
+           # ("hold gate: BC_LIB_FILES missing", native59).  Per-corner gate/sign-off lists only (implementation
+           # corner unchanged): std cells of the corner + each macro's sibling corner view copied into macros/.
+           *([f"export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) {' '.join(_corner_libs(mlib, kd, 'tt'))}",
+              f"export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) {' '.join(_corner_libs(mlib, kd, 'ff'))}"] if macros else []),
            # S81-P9 10-23: landing reset forest leaves re-clustered to identical branch flops by location after GPL
            # (forest_recluster.tcl; only kits whose sources hold ot_pl_land_reset_forest)
            *(["export POST_GLOBAL_PLACE_TCL = /work/forest_recluster.tcl"] if forest else []),
@@ -874,7 +904,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl"):
+              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
+              "pinreg_measure.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f

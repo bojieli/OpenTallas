@@ -57,15 +57,21 @@ class Timing:
 # LEF
 # ---------------------------------------------------------------------------
 
-def macro_outline(core_w: float, core_h: float, pins: list[Pin]) -> tuple[float, float, dict[str, Any]]:
+Faces = tuple  # (left, right): two lists of (Pin, bit name), bottom to top
+
+
+def macro_outline(core_w: float, core_h: float, pins: list[Pin],
+                  faces: Faces | None = None) -> tuple[float, float, dict[str, Any]]:
     """Snap the macro to the placement grid and grow it until the pins fit.
 
     Signal pins sit on both vertical edges at METAL['pin_pitch_um'], leaving one
     strap pitch free at the top and bottom.  A macro too short for its pins is
-    stretched and the stretch is reported, never hidden.
+    stretched and the stretch is reported, never hidden.  ``faces`` (optional)
+    gives an explicit per-edge pin plan; by default the flat pin list is split
+    in half (first half on the left edge).
     """
     n_pins = sum(p.width for p in pins)
-    per_edge = math.ceil(n_pins / 2)
+    per_edge = math.ceil(n_pins / 2) if faces is None else max(len(faces[0]), len(faces[1]))
     margin = METAL["strap_pitch_um"]
     pin_h = per_edge * METAL["pin_pitch_um"] + 2 * margin
     w = snap_up(core_w, METAL["width_snap_um"])
@@ -80,7 +86,8 @@ def macro_outline(core_w: float, core_h: float, pins: list[Pin]) -> tuple[float,
     return w, h, info
 
 
-def write_lef(name: str, w: float, h: float, pins: list[Pin], props: dict[str, int]) -> str:
+def write_lef(name: str, w: float, h: float, pins: list[Pin], props: dict[str, int],
+              faces: Faces | None = None) -> str:
     L = []
     L.append("# OpenTallas memory compiler (tools/mem_compiler), ASAP7 abstract view")
     L.append("VERSION 5.7 ;")
@@ -99,12 +106,16 @@ def write_lef(name: str, w: float, h: float, pins: list[Pin], props: dict[str, i
     L.append("  CLASS BLOCK ;")
     bits = [(p, b) for p in pins for b in p.bits()]
     per_edge = math.ceil(len(bits) / 2)
+    if faces is None:
+        placed = [(p, b, i < per_edge, i if i < per_edge else i - per_edge) for i, (p, b) in enumerate(bits)]
+    else:
+        assert sorted(b for _, b in faces[0] + faces[1]) == sorted(b for _, b in bits), "faces must hold every pin bit once"
+        placed = [(p, b, True, k) for k, (p, b) in enumerate(faces[0])] + \
+                 [(p, b, False, k) for k, (p, b) in enumerate(faces[1])]
     pitch = METAL["pin_pitch_um"]
     pw = METAL["pin_width_um"]
     y0 = METAL["strap_pitch_um"]
-    for i, (p, b) in enumerate(bits):
-        left = i < per_edge
-        k = i if left else i - per_edge
+    for p, b, left, k in placed:
         y = y0 + k * pitch
         x1, x2 = (0.0, pw) if left else (w - pw, w)
         L.append(f"  PIN {b}")

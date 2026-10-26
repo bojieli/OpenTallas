@@ -167,7 +167,23 @@ def make_tracks():
             "make_tracks M4 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048\n" + M123_TRACKS)
 
 
-def sdc(per, ins, tol, clks, rsts, tid, straps=()):
+def sender_min_ports(cj, clks, rsts, straps):
+    """IO-HOLD option A (COORD 10:23 ruling (1); PATH-KV ASTK4 COORD ruling (b)) for a hard core: env OT_IO_HOLD=sender_min
+    -> every vector data input's min input delay = the sender's guaranteed output-min, the plan contract
+    (1 - UNC_SPLIT) x UNC_HOLD_PS - 0 = 12.5 ps (every sender in the parent is a registered pin: register-every-pin rule).
+    Scalar inputs, clocks, resets and ID straps keep the flat -insertion_tol.  {} in legacy mode."""
+    import os
+    v = os.environ.get("OT_IO_HOLD") or "legacy"
+    if v not in ("legacy", "sender_min"):
+        raise SystemExit(f"OT_IO_HOLD '{v}' not in (legacy, sender_min)")
+    if v != "sender_min":
+        return {}
+    g = round((1 - UNC_SPLIT) * UNC_HOLD_PS, 4)
+    return {b: g for b, d in cj["port_decl"].items()
+            if d[0] == "input" and b not in clks and b not in rsts and b not in straps and int(d[1]) > int(d[2])}
+
+
+def sdc(per, ins, tol, clks, rsts, tid, straps=(), in_min_ports=None):
     """core SDC in the sdc_lint vocabulary (CP1-R10): one real clock 'clk' on the core clock pin(s), one virtual IO clock
     at the plan common latency, 60/25 ps uncertainty split once per seam, explicit max AND min delays on every port
     (min input = -insertion_tol: seam-hold padding as the partition kits; min output 0)."""
@@ -192,6 +208,11 @@ def sdc(per, ins, tol, clks, rsts, tid, straps=()):
          f"set_input_delay -min {-tol:.4f} -clock vclk $non_clk_in\n"
          f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n"
          f"set_output_delay -min 0.0000 -clock vclk [all_outputs]\n")
+    if in_min_ports:
+        s += "# IO-HOLD option A (OT_IO_HOLD=sender_min): sender output-min guarantee; parent io_hold_parent.py check required\n"
+        for v in sorted(set(in_min_ports.values())):
+            ps = sorted(p for p, x in in_min_ports.items() if x == v)
+            s += f"set_input_delay -min {v:.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ps)}}}]\n"
     if rsts:
         s += (f"# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)\n"
               f"set_input_delay -max {0.5 * per:.4f} -clock vclk [get_ports {{{' '.join(rsts)}}}]\n")
@@ -295,6 +316,22 @@ def write_core_contract(kd, cj, clks, rsts):
         data_pin_exemptions=[]), indent=1) + "\n")
 
 
+def static_refresh_kit(rtl, kd):
+    """--kvspc-static-refresh (PATH-KV-PC5 10-25): the PC path controller instance (u_ctrl in
+    qkd_static_kv_pc_path_nc.sv, the only place the PC path sets the controller parameters; every level below threads
+    STATIC_REFRESH down to ot_qkd_static_kv_timing, default 0) gets .STATIC_REFRESH(1)."""
+    p = rtl / "qkd_static_kv_pc_path_nc.sv"
+    s = p.read_text()
+    old = "qkd_ctrl_pc_host_static_nc #(.ROW0(64),"
+    if s.count(old) != 1 or "STATIC_REFRESH" in s:
+        raise SystemExit(f"--kvspc-static-refresh: expected one u_ctrl instance without STATIC_REFRESH in {p}")
+    p.write_text(s.replace(old, "qkd_ctrl_pc_host_static_nc #(.STATIC_REFRESH(1), .ROW0(64),"))
+    (kd / "kvspc_static_refresh.json").write_text(json.dumps(dict(
+        transform="u_ctrl .STATIC_REFRESH(1) (qkd_static_kv_pc_path_nc.sv)", refresh="REFpb every T_REFIPB at REF_PHASE "
+        "(unchanged); bank = refresh_rr round robin (was run-time argmin of s1k/s2k)", requires="PULLIN=0, REF_MODE=1",
+        source="PATH-KV-PC4 15:19 observation; COORD rules adoption"), indent=1) + "\n")
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and "run" not in p.relative_to(kd).parts[:1]
@@ -326,6 +363,60 @@ def reached_modules(files, top):
     return " ".join(sorted(seen))
 
 
+# PATH-KV-ASTK2 10-25 (GEOM 10:05 FAIL kv3_astk W2: zones in 2-3 islands each; the zn_1 u_cc adder spread over two leaf
+# regions = 29 ps intra-adder skew): zone boxes as fractions of the core.  Chain zn_0 (zi pins, N face x 6-39) NW ->
+# zn_1 NE -> zn_2 SE -> zn_3 SW -> ctl S band (aq/am/ap/cal pins on the S face, xi on E, qo/tc face flops on N stay
+# pinned at their pins by face_flops.tcl).
+ASTK_ZONES = (("zn0", r"^u_u_strip_u_strip_g_zn_0_u_zn[./]", 0.000, 0.606, 0.494, 1.000),
+              ("zn1", r"^u_u_strip_u_strip_g_zn_1_u_zn[./]", 0.506, 0.606, 1.000, 1.000),
+              ("zn2", r"^u_u_strip_u_strip_g_zn_2_u_zn[./]", 0.506, 0.212, 1.000, 0.594),
+              ("zn3", r"^u_u_strip_u_strip_g_zn_3_u_zn[./]", 0.000, 0.212, 0.494, 0.594),
+              ("ctl", r"^u_u_strip_u_strip_u_ctl[./]", 0.000, 0.000, 1.000, 0.200))
+ASTK_TAP_RE = r"^(u_u_strip_u_strip_g_zn_[0-9]_u_zn)[./]"
+
+
+def astk_zone_fences(kd, cfg, w, h, m, face_taps=False):
+    """GPL zone regions (zone_fence.tcl / zone_fence_release.tcl) + one clock tap per zone, the rest (ctl, strap, fault)
+    on one more tap (astk_zone_taps.tcl with OT_LANE_RE = the zone instance prefix); CTS -balance_levels."""
+    for f in ("zone_fence.tcl", "zone_fence_release.tcl", "zone_members.tcl", "astk_zone_taps.tcl") + (("astk_face_taps.tcl",) if face_taps else ()):
+        shutil.copyfile(HERE / f, kd / f)
+    x0, y0, cw, ch = m, m, w - 2 * m, h - 2 * m
+    spec = []
+    for nm, rx, fx0, fy0, fx1, fy1 in ASTK_ZONES:
+        spec.append(f"  {nm} {{{rx}}} {x0 + fx0 * cw:.2f} {y0 + fy0 * ch:.2f} {x0 + fx1 * cw:.2f} {y0 + fy1 * ch:.2f}")
+    (kd / "zone_pre_gpl.tcl").write_text("source /work/face_flops.tcl\nset ::ot_zone_spec {\n" + "\n".join(spec)
+                                         + "\n}\nsource /work/zone_fence.tcl\n")
+    (kd / "zone_pre_dpl.tcl").write_text("source /work/face_flops_release.tcl\nsource /work/zone_fence_release.tcl\n")
+    (kd / "zone_pre_cts.tcl").write_text("source /work/max_fanout.tcl\nset ::env(OT_LANE_RE) {" + ASTK_TAP_RE
+                                         + "}\nsource /work/" + ("astk_face_taps.tcl" if face_taps else "astk_zone_taps.tcl") + "\n")
+    sub = {"export PRE_GLOBAL_PLACE_TCL": "/work/zone_pre_gpl.tcl", "export PRE_DETAIL_PLACE_TCL": "/work/zone_pre_dpl.tcl",
+           "export PRE_CTS_TCL": "/work/zone_pre_cts.tcl"}
+    out, seen = [], set()
+    for line in cfg:
+        k = line.split(" = ", 1)[0]
+        if k in sub:
+            line = f"{k} = {sub[k]}"
+            seen.add(k)
+        out.append(line)
+    if seen != set(sub):
+        raise SystemExit(f"--astk-zone-fences: config lacks {sorted(set(sub) - seen)} (needs face_flops + flow basis)")
+    if any(l.startswith("export CTS_ARGS") for l in out):
+        raise SystemExit("--astk-zone-fences: CTS_ARGS already set")
+    # Fence membership is fixed for the GPL phase. Resize after GPL, when the
+    # fences are released; mid-GPL repair creates unowned cells outside the zones.
+    out.append("export GPL_TIMING_DRIVEN = 0")
+    # PATH-KV-ASTK4 (GEOM-REVIEW-2 14:46: CTS1 excess = tree DEPTH, 6 levels under each tap): larger leaf clusters
+    out.append("export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels"
+               + (" -sink_clustering_size 30 -sink_clustering_max_diameter 60" if face_taps else ""))
+    (kd / "astk_zone_delta.json").write_text(json.dumps(dict(
+        cause="GEOM 10:05 FAIL kv3_astk W2: zones fragmented (zn_1 2 islands, zn_2 2), adder skew 29 ps from one zone on 2 leaf regions",
+        regions={nm: [round(x0 + a * cw, 2), round(y0 + b * ch, 2), round(x0 + c * cw, 2), round(y0 + d * ch, 2)]
+                 for nm, _, a, b, c, d in ASTK_ZONES},
+        region_kind="INCLUSIVE GPL guide, released before DPL", taps="one per zone (zn_0..3) + rest (ctl/strap/fault)",
+        cts_args="-sink_clustering_enable -repair_clock_nets -balance_levels", added_cycles=0), indent=1) + "\n")
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core-json", required=True)
@@ -350,11 +441,41 @@ def main():
     ap.add_argument("--astk-rep-split", action="store_true",
                     help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
                          "<= 64 loads each; kept regs were merged back: B ES rc[0] 2048 loads) + ctl z_k copies kept the same way (0 cycles)")
+    ap.add_argument("--astk-write-decode", action="store_true",
+                    help="PATH-KV-ASTK 10-25: zn write-decode next-state threshold regs lo_r (15-b pb compare out of the "
+                         "sd write-enable cycle) + 4 ctl zh replicas per z_s slice + 17 zk_r slice copies; 0 cycles "
+                         "(astk_write_decode.py; needs --astk-timing-regs --astk-rep-split)")
+    ap.add_argument("--astk-zone-fences", action="store_true",
+                    help="PATH-KV-ASTK2 10-25 (GEOM 10:05): 4 contiguous zn zone GPL regions (2x2 over the upper core) + ctl "
+                         "S band (zone_fence.tcl, released before DPL) and one regional clock tap per zone + ctl "
+                         "(astk_zone_taps.tcl, CTS -balance_levels); needs --astk-write-decode")
+    ap.add_argument("--astk-path4", action="store_true",
+                    help="PATH-KV-ASTK4 10-25 (COORD rulings (a)/(b), GEOM-REVIEW-2 14:46): zn_0 pin landing stage zl/tl + "
+                         "16 kept read-address replicas (+1 cycle on zn_0, KV-TOK reprices) and ctl z_k slices with the "
+                         "start select inside each kept slice (0 cycles) (astk_path4.py; needs --astk-write-decode)")
+    ap.add_argument("--astk-face-taps", action="store_true",
+                    help="PATH-KV-ASTK4 10-25 (GEOM-REVIEW-2 ruling (a), LC1): face pin registers on their own taps (one per "
+                         "face chunk <= 500 sinks / 100 um), zone taps, one ctl tap (astk_face_taps.tcl); needs --astk-zone-fences")
+    ap.add_argument("--astk-strap-master", action="store_true",
+                    help="OWNER option B (COORD 10-25 07:01): ONE kv3_astk master from a corner core json; the corner ID "
+                         "constants (ctl st, zn zc[1:0]) come from input strap_corner[1:0] (EN 11 ES 10 WN 01 WS 00) via one "
+                         "kept landing register; false path from strap_*; needs --astk-face-ports --astk-timing-regs "
+                         "--astk-rep-split --am-g-drop (astk_strap_master.py)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
     ap.add_argument("--am-g-drop", action="store_true",
                     help="COORD ruling 2 (10-25): drop the constant LMAX head-group bit g (am[1]) from qkd_ahub am0..3 and the "
                          "ASTK am input (+ its qo[537] copy); ASTK ctl AM_G_PIN=0/G_CONST=0; plan pins renamed compactly "
                          "(old b -> b-1 above the dropped bit) in memory until the KV-PLAN3 delta lands (am_g_drop.py)")
+    ap.add_argument("--kvspc-face-ports", action="store_true", help="kvs_pc / kvs_pc_h_head_p boundary recut: one clock (hck + HBM data clocks := ck), dead-pin drop (land_er[258:1]; head ki[30:21]/[14:1]) as an in-memory plan delta until KV-PLAN3 lands it, ki/ko split (+1 hclk per kc station), fi landing (+1 fault edge), po / land_es private port flops (0 cycles); miter results/kvspc_face_1025")
+    ap.add_argument("--kvspc-private-ports", action="store_true", help="with --kvspc-face-ports: private output ports (kvspc_private_ports.py, PATH-KV-PC 10-25): return actual_* port flops with internal hold copy + actual_valid kept (0 cycles), o_grp[296:289] status pin flops (+1 fault/drain observation edge; o_grp[294] no longer a pc__fo feedthrough), o_prev private launch (+1 edge per o_prev hop, non-head), pi[0] single capture, pc/cfg_stack single landing (chain station reads the landed copy), head upo kept pin flops (0 cycles)")
+    ap.add_argument("--kvspc-static-refresh", action="store_true",
+                    help="with --kvspc-face-ports: PC controller u_ctrl (qkd_static_kv_pc_path_nc) instantiated with "
+                         "STATIC_REFRESH=1: REFpb bank = round-robin refresh_rr (compiler-known) instead of the run-time "
+                         "argmin of the bank-state keys; needs PULLIN=0 + REF_MODE=1 (ot_qkd_static_kv_timing $fatal "
+                         "otherwise; both hold on the PC path). PATH-KV-PC5 10-25 fallback variant, COORD rules adoption")
+    ap.add_argument("--lec-hints", default=None,
+                    help="untrusted LEC correspondence hints copied into the kit as lec_hints.json (lec.py proves each "
+                         "by induction and drops failing ones; never a waiver)")
     ap.add_argument("--stock-flow", action="store_true",
                     help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=0.6)
@@ -375,6 +496,11 @@ def main():
         if cj["module"].startswith("kv3_astk_") and not a.astk_face_ports:
             raise SystemExit("--am-g-drop on ASTK needs --astk-face-ports (repo qkd_astk_static_leaves.sv carries AM_G_PIN)")
         am_g_drop.core_json(cj)
+    if a.kvspc_face_ports:
+        if cj["module"] not in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
+            raise SystemExit("--kvspc-face-ports only applies to qkd_kvs_pc / qkd_kvs_pc_h_head_p")
+        import kvspc_face_ports as KVSPC
+        cj = KVSPC.core_json_update(cj)
     if a.ectlk_three_taps:
         if cj["module"] != "qkd_ectlk":
             raise SystemExit("--ectlk-three-taps only applies to qkd_ectlk")
@@ -397,6 +523,12 @@ def main():
     hc = next(h for h in plan["partition_types"][cj["type"]]["hard_cores"] if h["inst"] == cj["inst"])
     w, h = hc["outline_um"]
     tid = f"{mod}__{w:g}x{h:g}"
+    if a.astk_strap_master:
+        if not (mod.startswith("kv3_astk_") and a.astk_face_ports and a.astk_timing_regs and a.astk_rep_split and a.am_g_drop):
+            raise SystemExit("--astk-strap-master needs a kv3_astk_* core json + --astk-face-ports --astk-timing-regs "
+                             "--astk-rep-split --am-g-drop")
+        import astk_strap_master
+        tid = f"{astk_strap_master.MASTER}__{w:g}x{h:g}"
     recs = json.load(open(a.recipes)) if Path(a.recipes).is_file() else {}
     rec = dict(recs.get("_default", {}))
     rec.update(recs.get(mod, {}))
@@ -453,6 +585,51 @@ def main():
             ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL",
             rep_split=(dict(zn_replicas=16, slice_bits=8, max_select_loads=64, kept="keep_hierarchy qkd_astk_rep5/rep4",
                             miter="kv-cores-1025r/astk/G/tb") if a.astk_rep_split else None)), indent=1) + "\n")
+    if a.astk_write_decode:
+        if not (mod.startswith("kv3_astk_") and a.astk_timing_regs and a.astk_rep_split):
+            raise SystemExit("--astk-write-decode needs a kv3_astk_* core + --astk-timing-regs --astk-rep-split")
+        from astk_write_decode import apply_kit as wdec_apply
+        wdec_apply(kd / "rtl")
+        # PATH-KV-ASTK2 10-25: post-synth replica COUNT gate (run_kit_kv.sh runs it on 1_2_yosys.v and 1_synth_odb.v
+        # before floorplan; FAIL stops the kit).  LEC cannot see a merged replica (GEOM 10:05 FAIL on W2).
+        shutil.copyfile(HERE / "replica_check.py", kd / "replica_check.py")
+        shutil.copyfile(HERE / "astk_replica_expect.json", kd / "replica_expect.json")
+        (kd / "astk_wdec_delta.json").write_text(json.dumps(dict(added_cycles=0,
+            zn=dict(lo_r_per_zone=8, kt_ke_r_per_zone=32, cause="tq/zq -> 15-b cb<T compare -> 128-load sd row write enable (TT -61.24, 197 EP)",
+                    fix="lo_r[j] = ({S,sgam(L,j),000} < T[8:0]) registered from next state (zc, tc[9:1]); pb = kt_r[k] | ke_r[k] & lo_r[slot] (16:1, 16:1, 8:1 selects)"),
+            ctl=dict(zh_replicas=4, zk_r_copies=17, cause="zh -> z_s 4:1 select over z_hd -> ap (30 EP)"),
+            miter="core_miter old r3 corner kits vs master, --bias aq start rare; mutants lo_r / zh replica / ES swap"),
+            indent=1) + "\n")
+    if a.astk_path4:
+        if not a.astk_write_decode:
+            raise SystemExit("--astk-path4 needs --astk-write-decode")
+        import astk_path4
+        astk_path4.apply_kit(kd / "rtl")
+        exp = astk_path4.replica_expect(json.loads((kd / "replica_expect.json").read_text()))
+        (kd / "replica_expect.json").write_text(json.dumps(exp, indent=1) + "\n")
+        (kd / "astk_path4_delta.json").write_text(json.dumps(dict(
+            zn0=dict(added_cycles=1, ruling="COORD (a) 10-25 14:19 PATH-KV lead + GEOM-REVIEW-2 14:46 (c)",
+                     change="pin landing stage zl/tl (the face registers); zq/tq + 16 qkd_astk_rep5 read-address replicas one edge later",
+                     cause="zq[6:2] (pin landing) drove the 128-b oa/ob read select (up to 2073 loads)",
+                     proof="tb_astk4 lockstep: new == old with tc/zi delayed 1 edge (zo/fo/zq/tq), mutant caught"),
+            ctl=dict(added_cycles=0, change="17 kept qkd_astk_zks slices: q <= start ? zk_st : zk_cn (start-independent terms)",
+                     cause="start -> zst_n/sa_n select -> 16-b subtract -> 17 zk copies (TT -44.68, 19 EP)",
+                     proof="tb_astk4 lockstep 0-cycle (all ctl outputs + 17 zk_r), mutant caught"),
+            tok="KV-TOK: zn_0 chain +1 cycle (zo/fo of zn_0 one edge later -> Z start age +1)"), indent=1) + "\n")
+    if a.astk_strap_master:
+        src = kd / "rtl" / f"{mod}.sv"
+        (kd / "rtl" / f"{astk_strap_master.MASTER}.sv").write_text(astk_strap_master.transform(src.read_text(), mod))
+        src.unlink()
+        srcs = [s.replace(f"/{mod}.sv", f"/{astk_strap_master.MASTER}.sv") for s in srcs]
+        files = [f.replace(f"/{mod}.sv", f"/{astk_strap_master.MASTER}.sv") if Path(f).name == f"{mod}.sv" else f
+                 for f in files]
+        corner_mod = mod
+        astk_strap_master.core_json(cj)
+        (kd / "astk_strap_delta.json").write_text(json.dumps(dict(
+            rule="OWNER option B, COORD 2026-10-25 07:01", master=astk_strap_master.MASTER, from_corner=corner_mod,
+            strap_port=astk_strap_master.STRAP, values=astk_strap_master.CORNER_STRAP,
+            bound=["ctl st", "zn_1..3 zc[1:0]"], landing="one kept 2-b register (strap_q)", sdc="set_false_path -from [get_ports strap_*]",
+            added_cycles=0, settle="+1 edge after power-up (quasi-static)"), indent=1) + "\n")
     if a.ectlk_face_ports:
         if mod != "qkd_ectlk":
             raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
@@ -466,6 +643,26 @@ def main():
         (kd / "ectlk_clock_delta.json").write_text(json.dumps(dict(
             source_ports=["ck[0]", "ck[1]", "ck[2]"], related_clock="one die clock, all edges co-timed",
             clock_period_ps=833, added_cycles=0, pin_geometry="unchanged plan pins"), indent=1) + "\n")
+    if a.kvspc_face_ports:
+        KVSPC.apply_kit(kd / "rtl", mod)
+        if a.kvspc_private_ports:
+            import kvspc_private_ports as KVPP
+            for f in KVPP.apply_kit(kd / "rtl", mod):
+                srcs.append(f"/work/rtl/{f}")
+            (kd / "kvspc_private_delta.json").write_text(json.dumps(dict(
+                transform="kvspc_private_ports.py", cycles=dict(
+                    o_prev="n/a (head)" if mod.endswith("_h_head_p") else "+1 edge per o_prev chain hop (private launch flop)",
+                    o_grp_289_296="+1 edge (fault / drain observation flags: cal_fault_hbm, completion_fault, drain_fault_core, drain_fault_hbm, er[260], fo copy, front_fault_go_hbm, front_fault_overflow_hbm)",
+                    other=0), straps="pc__pc / pc__cfg_stack: one landing register per bit; strap_* rename = plan delta (STRAP_RENAME off)",
+                miter="results/kvspc_private_1025"), indent=1) + "\n")
+        if a.kvspc_static_refresh:
+            static_refresh_kit(kd / "rtl", kd)
+        hd = mod.endswith("_h_head_p")
+        (kd / "kvspc_face_delta.json").write_text(json.dumps(dict(
+            plan_dropped_pins=KVSPC.dropped_pins(hd), plan_delta="IN-MEMORY until KV-PLAN3 lands it",
+            renamed_buses=["pc__land_er[260:259] -> pc__land_er_259"] + (["pc__ki[20:15] -> pc__ki_15", "pc__ki[32:31] -> pc__ki_31"] if hd else []),
+            cycles=dict(kc_ko="n/a (head: no ko)" if hd else "+1 hclk per kc chain station", fi="n/a (head: no fi)" if hd else "+1 upstream-fault edge", other=0),
+            miter="results/kvspc_face_1025"), indent=1) + "\n")
     if a.astk_face_ports:
         (kd / "astk_face_delta.json").write_text(json.dumps(dict(
             extra_flops_estimate=78, command_cycles=0, local_fault_cycles=0, external_fault_cycles=1,
@@ -528,6 +725,8 @@ def main():
                    for p, d in am_g_drop.drops_for(mod).items()},
             plan_pins=("renamed in memory (KV-PLAN3 delta pending): dropped " + ", ".join(g_dropped)) if g_dropped
             else "plan already carries the delta"), indent=1) + "\n")
+    if a.kvspc_face_ports:
+        pins = KVSPC.plan_pins_update(pins, mod.endswith("_h_head_p"))
     have = {p["name"] for p in pins}
     names = []
     for n, c in cj["pin_class"].items():
@@ -549,6 +748,7 @@ def main():
     (kd / "pins_added.json").write_text(json.dumps(dict(module=mod, plan_pins=len(pins), added=added,
                                                         why=cj["report"]["added"], straps=cj["report"]["straps"],
                                                         gap_bits=cj["report"].get("gap_bits", [])), indent=1) + "\n")
+    mod = cj["module"]  # ASTK strap master after original corner pin placement
     clk_bits = [n for n, c in cj["pin_class"].items() if c == "clk"]
     if not clk_bits:
         raise SystemExit(f"{tid}: no clock pin")
@@ -578,14 +778,23 @@ def main():
     if straps:
         import straps as STR
         STR.write_kit(kd, straps, source=f"plan hard_cores[{cj['inst']}] straps/parent_id_straps + core.json id_strap")
-    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid, straps))
+    ioa = sender_min_ports(cj, clks, rsts, list(straps or ()))
+    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid, straps, ioa))
+    if ioa:
+        (kd / "io_hold.tcl").write_text(
+            "# GENERATED by gen_core_kit_kv.py: IO-HOLD option A per-port min input delays (OT_IO_HOLD=sender_min)\n"
+            "proc ot_io_hold_apply {vclk} {\n" + "".join(
+                f"  set_input_delay -min {v:.4f} -clock $vclk [get_ports {{{' '.join(p + '[*]' for p in sorted(q for q, x in ioa.items() if x == v))}}}]\n"
+                for v in sorted(set(ioa.values())))
+            + f"  puts \"OT_IO_HOLD sender_min ports {len(ioa)} fallback {-tol:g}\"\n}}\n")
     # CP1-R10 fail-closed SDC gate (tools/die_plan/sdc_lint.py): context = the core's ports (+ declared ID straps, written
     # AFTER strap handling so face_guard / signoff / lint_kit_files read the same list)
     ins_ports = [b for b, d in cj["port_decl"].items() if d[0] == "input" and b not in clks]
     outs = [b for b, d in cj["port_decl"].items() if d[0] == "output"]
     lctx = dict(period_ps=per, insertion_ps=ins, insertion_ff_ps=ibind["ff"], insertion_tol_ps=tol, clock_ports=clks, inputs=ins_ports, outputs=outs,
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
-                io_floor_ps={p: IO_BUDGET * per for p in ins_ports + outs}, port_latency_ps={}, straps=straps)
+                io_floor_ps={p: IO_BUDGET * per for p in ins_ports + outs}, port_latency_ps={}, straps=straps,
+                **({"hold_in_min_ports_ps": ioa} if ioa else {}))
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     shutil.copyfile(Path(a.tool) / "sdc_lint.py", kd / "sdc_lint.py")
     shutil.copyfile(Path(a.tool) / "straps.py", kd / "straps.py")
@@ -598,6 +807,8 @@ def main():
     shutil.copyfile(Path(a.tool) / "adder_map_dontuse.py", kd / "adder_map_dontuse.py")
     shutil.copyfile(Path(a.tool) / "selrange_gate.py", kd / "selrange_gate.py")
     shutil.copyfile(Path(a.tool) / "lec.py", kd / "lec.py")       # LEC 10-24: RTL vs netlist after synth (run_kit_kv.sh)
+    if a.lec_hints:
+        shutil.copyfile(a.lec_hints, kd / "lec_hints.json")         # lec.py reads KIT/lec_hints.json (PATH-KV-PC4)
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
     shutil.copyfile(Path(a.tool) / "signoff.py", kd / "signoff.py")
     shutil.copyfile(Path(a.tool) / "pair_skew.tcl", kd / "pair_skew.tcl")   # signoff.py reads it beside itself (crashed without it 10-25)
@@ -699,6 +910,12 @@ def main():
     cfg += core_flow.apply(kd, ibind, mod, time_unit_ps=1.0, rc_cal=not a.stock_rc, hold_ff_margin=a.hold_ff_margin,
                            grt_pre_extra=[v for k, v in own.items() if "PRE_" in k],
                            grt_post_extra=[v for k, v in own.items() if "POST_" in k])
+    if a.astk_zone_fences:
+        if not (mod == "kv3_astk" or mod.startswith("kv3_astk_")) or not a.astk_write_decode:
+            raise SystemExit("--astk-zone-fences needs a kv3_astk core + --astk-write-decode")
+        cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM, face_taps=a.astk_face_taps)
+    elif a.astk_face_taps:
+        raise SystemExit("--astk-face-taps needs --astk-zone-fences")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),

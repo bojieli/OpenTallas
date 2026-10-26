@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// ot_sram_1r1w_32x512_m1: ASAP7 1R1W SRAM 32 x 512, mux 1, 1 bank(s), 0 spare row(s), 0 spare IO column(s); OpenTallas tools/mem_compiler/sram_gen.py v1.0
+// ot_sram_1r1w_32x512_m1: ASAP7 1R1W SRAM 32 x 512, mux 1, 1 bank(s), 0 spare row(s), 0 spare IO column(s); write enable per 32 bits; pin faces rw; OpenTallas tools/mem_compiler/sram_gen.py v1.0
 // verilator lint_off BLKSEQ
 // verilator lint_off WIDTH
 // verilator lint_off UNUSED
@@ -11,7 +11,7 @@ module ot_sram_1r1w_32x512_m1 (
     input  wire w_ce_in,
     input  wire [4:0] w_addr_in,
     input  wire [511:0] wd_in,
-    input  wire [511:0] w_mask_in
+    input  wire [15:0] w_mask_in
 );
     localparam integer WORDS = 32;
     localparam integer BITS = 512;
@@ -178,10 +178,16 @@ module ot_sram_1r1w_32x512_m1 (
         end
     endtask
 
+    // write mask: w_mask_in[k] enables data bits [32*k +: 32]
+    wire [BITS-1:0] w_mask_bits;
+    genvar mg;
+    generate for (mg = 0; mg < BITS; mg = mg + 1) begin : g_mask
+        assign w_mask_bits[mg] = w_mask_in[mg / 32];
+    end endgenerate
     // read-before-write: a same-address read in the write cycle returns the old word
     always @(posedge clk) begin
         if (r_ce_in) rd_out <= word_read(r_addr_in);
-        if (w_ce_in) word_write(w_addr_in, wd_in, w_mask_in);
+        if (w_ce_in) word_write(w_addr_in, wd_in, w_mask_bits);
     end
 endmodule
 // verilator lint_on BLKSEQ

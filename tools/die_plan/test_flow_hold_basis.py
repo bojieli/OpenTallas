@@ -117,9 +117,12 @@ def test_preroute_insertion_gate():
     seg = rk[i_gate:rk.index("\\$M $GOAL")]
     assert "rc=6" in seg and "rc=5" not in seg
     g = (HERE / "postcts_gate.tcl").read_text()
-    for k in ("estimate_parasitics -global_routing", "OT_POSTCTS_TOL", "20.0", "OT_VCLK_FF", "all_inputs -no_clocks",
-              "ot_cf_wire", "LAYER_PARASITICS_FILE"):
+    for k in ("estimate_parasitics -global_routing", "OT_POSTCTS_TOL", "20.0", "OT_VCLK_FF", "pinreg_measure.tcl",
+              "ot_pinreg_set", "ot_pinreg_arr", "LAYER_PARASITICS_FILE"):
         assert k in g, k
+    m = (HERE / "pinreg_measure.tcl").read_text()   # the pin-register set + measure, shared with pinreg_pad.tcl
+    for k in ("all_inputs -no_clocks", "ot_cf_wire"):
+        assert k in m, k
     with tempfile.TemporaryDirectory() as d:
         kd = gen_phys.write_type_kit(_plan(), "src", d, [], hold_ff_margin=gen_phys.HOLD_FF_MARGIN_DEFAULT)
         assert (kd / "postcts_gate.tcl").is_file()
@@ -229,3 +232,13 @@ def test_top_level_gate_scripts_propagate_before_first_estimate(name):
     est = [i for i, ln in enumerate(lines) if "estimate_parasitics" in ln]
     prop = [i for i, ln in enumerate(lines) if "set_propagated_clock" in ln]
     assert est and prop and min(prop) < min(est), name
+
+
+def test_ff_grt_step_runs_cts_in_kit_corners_first():
+    """CLOCK-RESET 10-25 (KV core canary TT -222.85): `make grt CORNERS=bc` builds every missing prerequisite, so the
+    floorplan .. CTS repair must already exist (built in the kit's own tc+bc corners) before the FF-only GRT step."""
+    import core_flow
+    s = core_flow.FF_GRT_STEP
+    assert s.index("\\$M cts;") < s.index("\\$M grt CORNER=BC CORNERS=bc")
+    kv = (Path(__file__).resolve().parents[2] / "physical/die_plan/qwen_kvsys/cores/harden/run_kit_kv.sh").read_text()
+    assert kv.index("\\$M cts;") < kv.index("\\$M grt CORNER=BC CORNERS=bc")

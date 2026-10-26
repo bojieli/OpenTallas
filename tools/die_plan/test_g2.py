@@ -377,7 +377,10 @@ def test_per_tap_reset_synchronisers():
             r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
-            assert re.search(r"ot_dp_rsync_s2\s+2", r.stdout), r.stdout       # identical copies are NOT merged
+            # identical copies are NOT merged.  Yosys <= 0.9 prints `<cell> <count>`, newer Yosys (0.4x+, the ORFS image
+            # ot-run uses) prints `<count> <cell>`: the old one-format regex made this test fail only under ot-run.
+            n = re.findall(r"(?m)^\s*(?:ot_dp_rsync_s2\s+(\d+)|(\d+)\s+ot_dp_rsync_s2)\s*$", r.stdout)
+            assert n and {int(a or b) for a, b in n} == {2}, r.stdout
     ff = (HERE / "face_flops.tcl").read_text()
     assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
 
@@ -665,3 +668,11 @@ def test_probe_blockages_keeps_hard_cores_no_leaf_names():
                         {"inst": "e1", "module": "d", "origin_um": [300, 0], "outline_um": [9, 9], "obs_max": "M5"}]}
     obs = {o["inst"]: o.get("obs_max") for o in g2.probe_blockages(t, "M7")}
     assert obs == {"bq_0": "M5", "head2_e0": "M7", "e1": "M5"}
+
+
+def test_station_out_of_cores():
+    boxes = [(100.0, 100.0, 300.0, 200.0), (301.0, 100.0, 400.0, 200.0)]
+    assert g2.out_of_cores((50.0, 50.0), boxes, 500, 500) == (50.0, 50.0)
+    assert g2.out_of_cores((150.0, 190.0), boxes, 500, 500) == (150.0, 202.0)
+    # the nearest edge (x1 + m = 302) lies in the neighbour core -> next nearest outside point
+    assert g2.out_of_cores((295.0, 150.0), boxes, 500, 500) == (295.0, 98.0)

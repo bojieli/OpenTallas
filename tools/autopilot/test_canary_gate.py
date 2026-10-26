@@ -11,12 +11,14 @@ class Gate(unittest.TestCase):
     def setUp(self):
         self.t=tempfile.TemporaryDirectory(); self.root=Path(self.t.name)
         self.repo=self.root/'repo'; p=self.repo/'tools/flow_canary';p.mkdir(parents=True)
-        (p/'canaries.json').write_text(json.dumps({'watch':['tools/die_plan/*']}))
+        (p/'canaries.json').write_text(json.dumps({'watch':['tools/die_plan/*'],'canaries':[{'die':'hbm','item':'tkm@new'},{'die':'qwen_kvsys_core','item':'e1'}]}))
         self.row={'die':'s81','mode':'submit','src':'codex/kit@kit123456789'}
         self.git=lambda *a,**kw:(0,'','')
     def tearDown(self):self.t.cleanup()
-    def runref(self,name,verdict=None,src='abc123456789',die='s81'):
-        p=self.root/name;p.mkdir();(p/'canary_meta.json').write_text(json.dumps({'spec':{'die':die},'src_commit':src}))
+    def runref(self,name,verdict=None,src='abc123456789',die='s81',item=None):
+        sp={'die':die}
+        if item:sp['item']=item
+        p=self.root/name;p.mkdir();(p/'canary_meta.json').write_text(json.dumps({'spec':sp,'src_commit':src}))
         if verdict:(p/'canary.json').write_text(json.dumps({'verdict':verdict,'src':src}))
         q=p/"canary_meta.json"
         os.utime(q, ns=(1000000000+len(list(self.root.glob("*/canary_meta.json"))),)*2)
@@ -29,7 +31,7 @@ class Gate(unittest.TestCase):
         self.runref('new');self.assertFalse(self.gate())
     def test_pending_newer_run_with_completed_fail_holds(self):
         self.runref('bad','FAIL');self.runref('new',src='new123456789')
-        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('failed',why)
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('NO-BASELINE',why)
     def test_unbound_result_is_not_completed(self):
         p=self.runref('x');(p/'canary.json').write_text(json.dumps({'verdict':'PASS','src':'other'}));self.assertFalse(self.gate())
     def test_stale_corrective_older_fail_newer_fail_allowed(self):
@@ -38,7 +40,7 @@ class Gate(unittest.TestCase):
     def test_corrective_with_newer_pass_held(self):
         p=self.runref('bad','FAIL');self.runref('good','PASS',src='new123456789')
         self.row['canary_fix']='abc123456789@'+str(p/'canary.json')
-        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('newer PASS',why)
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('newer NO-REGRESSION',why)
     def test_corrective_branch_prefixed_string_resolved_by_path(self):
         p=self.runref('bad','FAIL');self.runref('pend',src='new123456789')
         self.row['canary_fix']='claude/path-qc-sramif-1025@90bf56dfa@'+str(p/'canary.json');self.assertTrue(self.gate())
@@ -68,11 +70,25 @@ class Gate(unittest.TestCase):
     def test_main_pass_does_not_clear_kit_from_different_flow(self):
         self.runref('ref','PASS')
         self.git=lambda args,**kw:(0,'tools/die_plan/gen_phys.py\n' if args[-1]=='kit123456789' else '', '')
-        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('differs from PASS canary',why)
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('differs from released canary',why)
     def test_cp1_uses_s81_reference_but_unknown_die_cannot_bypass(self):
         self.runref('s81_ref','PASS')
         self.row['die']='cp1';self.assertTrue(self.gate())
         self.row['die']='unknown';self.assertFalse(self.gate())
+    def test_retired_reference_item_neither_binds_nor_holds(self):
+        self.row['die']='hbm'
+        self.runref('old_cal','PASS',die='hbm',item='calendar@old')
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('item tkm@new',why)
+        self.runref('new_tkm',die='hbm',item='tkm@new')
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('pending',why)
+        self.assertIn('new_tkm',why)
+    def test_kv_core_kit_binds_core_canary(self):
+        self.runref('kvio','PASS',die='qwen_kvsys');self.runref('kvcore','FAIL',die='qwen_kvsys_core',item='e1')
+        self.row['die']='qwen_kvsys';self.assertTrue(self.gate())
+        self.row['runner']='/x/run_kit_kv.sh'
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('kvcore',why)
+        del self.row['runner'];k=self.root/'kit';k.mkdir();(k/'run_kit_kv.sh').write_text('')
+        self.row['kit']='epyc1:'+str(k);self.assertFalse(self.gate())
     def test_adopt_never_stalls_observation(self):
         self.row['mode']='adopt';self.assertTrue(self.gate())
 

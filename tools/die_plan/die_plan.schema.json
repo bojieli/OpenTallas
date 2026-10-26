@@ -182,7 +182,8 @@
         "enum": [
          "bump",
          "pad",
-         "phy_macro"
+         "phy_macro",
+         "die_root_pad"
         ]
        },
        "rect_um": {
@@ -192,6 +193,10 @@
         },
         "minItems": 4,
         "maxItems": 4
+       },
+       "pad_port": {
+        "type": "string",
+        "minLength": 1
        },
        "sites": {
         "type": "integer",
@@ -224,6 +229,7 @@
          "hbm_phy",
          "host",
          "refclk",
+         "reset",
          "other"
         ]
        },
@@ -758,6 +764,9 @@
           "lsb_low",
           "lsb_high"
          ]
+        },
+        "note": {
+         "type": "string"
         }
        }
       }
@@ -934,6 +943,10 @@
            ]
           },
           "insertion_ps": {
+           "type": "number",
+           "exclusiveMinimum": 0
+          },
+          "insertion_ff_ps": {
            "type": "number",
            "exclusiveMinimum": 0
           },
@@ -1307,6 +1320,9 @@
         "lib": {
          "type": "string"
         },
+        "registered_pins": {
+         "type": "boolean"
+        },
         "obs_max": {
          "type": "string",
          "pattern": "^M[1-9]$"
@@ -1608,6 +1624,9 @@
         "lib": {
          "type": "string"
         },
+        "registered_pins": {
+         "type": "boolean"
+        },
         "orient": {
          "enum": [
           "R0",
@@ -1776,6 +1795,15 @@
        "minimum": 0,
        "maximum": 1
       }
+     },
+     "face_pins_per_um": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 16.0
+     },
+     "face_budget_g2": {
+      "type": "string",
+      "minLength": 3
      },
      "face_layers": {
       "type": "object",
@@ -2272,6 +2300,63 @@
       "bus": {
        "type": "string",
        "minLength": 1
+      },
+      "pad": {
+       "type": "string",
+       "minLength": 1
+      },
+      "analog_loads": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "object",
+        "required": [
+         "inst",
+         "pin"
+        ],
+        "additionalProperties": false,
+        "properties": {
+         "inst": {
+          "type": "string",
+          "minLength": 1
+         },
+         "pin": {
+          "type": "string",
+          "minLength": 1
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "por_pins": {
+       "type": "string"
+      },
+      "lock": {
+       "type": "object",
+       "required": [
+        "inst",
+        "pin"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "inst": {
+         "type": "string",
+         "minLength": 1
+        },
+        "pin": {
+         "type": "string",
+         "minLength": 1
+        },
+        "stable_cycles": {
+         "type": "integer",
+         "minimum": 1
+        }
+       }
+      },
+      "note": {
+       "type": "string"
       }
      }
     },
@@ -2320,6 +2405,9 @@
       "none",
       "broadcast"
      ]
+    },
+    "relay_avoid_cores": {
+     "type": "boolean"
     },
     "start_port": {
      "type": "string",

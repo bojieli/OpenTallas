@@ -14,8 +14,11 @@ start only after that die's canary PASSes.
   canary.py check   --run RUN_DIR [--out canary.json]                    (inside the job, or again by hand)
   canary.py summary --root DIR                                           newest verdict per die
 
-Verdict per canary: PASS only when every required stage has evidence and passes and the sign-off is not worse than the
-golden record.  Missing evidence is a FAIL (NOT RUN is never a pass).
+Absolute verdict per canary (INFO): PASS only when every required stage has evidence and passes and the sign-off is not
+worse than the golden record.  Missing evidence is a FAIL (NOT RUN is never a pass).
+GATING verdict (COORD CANARY GATING RULING 10-25 14:38, baseline.py): REGRESSION / NO-REGRESSION of the run vs the
+reference's recorded baseline (canary.json "regression"); a reference with no baseline sets it on its first usable run
+(INFO, non-gating).  The autopilot canary gate reads that verdict, never the absolute one.
 """
 import argparse
 import glob
@@ -201,14 +204,34 @@ def configured_clock_ports(sdc):
     """Only literal ports named by create_clock are additional clock inputs, never arbitrary skip regexes."""
     out = set()
     text = sdc.replace("\\\n", " ")
-    for m in re.finditer(r"create_clock[^\n]*?\[get_ports\s+(?:\{([^}]+)\}|([A-Za-z_][A-Za-z0-9_$]*))\]", text):
+    for m in re.finditer(r"create_clock[^\n]*?\[get_ports\s+(?:\{([^}]+)\}|([A-Za-z_][A-Za-z0-9_$]*(?:\[\d+\])?))\]", text):
         for word in (m.group(1) or m.group(2)).split():
-            if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", word):
-                out.add(word)
+            # a literal vector bit (clk[0]) names its bus; a wildcard / range never does
+            mm = re.fullmatch(r"([A-Za-z_][A-Za-z0-9_$]*)(?:\[\d+\])?", word)
+            if mm:
+                out.add(mm.group(1))
     return sorted(out)
 
 
-def face_cover(netlist, pins_json, top=None, die_plan_dir=None, clock_ports=()):
+# core.json boundary roles (gen_core_kit_kv.py) that are clock / async reset inputs, never face-registered data:
+# 'clk' = the core clock root, 'clk_unused' = a merged sub-block clock port with no load (FLOW-CANARY 10-25: the KV
+# core canary reported g_t_*_u_{stin,stk,l8}__clk[0] as 'dropped' data pins), 'reset' = a sub-block async reset input
+# into its reset synchroniser (3 loads, reported 'shared').
+KIT_CLOCK_ROLES = ("clk", "clk_unused")
+KIT_RESET_ROLES = ("reset",)
+
+
+def kit_declared_ports(kit):
+    """(clock ports, reset ports) a kit generator declares in core.json boundary_role (bus names, literal only)"""
+    c = jload(Path(kit) / "core.json") or {}
+    role = c.get("boundary_role") if isinstance(c, dict) else None
+    if not isinstance(role, dict):
+        return [], []
+    ok = [k for k in role if isinstance(k, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", k)]
+    return (sorted(k for k in ok if role[k] in KIT_CLOCK_ROLES), sorted(k for k in ok if role[k] in KIT_RESET_ROLES))
+
+
+def face_cover(netlist, pins_json, top=None, die_plan_dir=None, clock_ports=(), reset_ports=()):
     """re-run tools/die_plan/face_guard.guard with clock/reset-input-only skips: every other port, incl. rst_o_* and
     start_o_*, must have its own face register."""
     if not netlist or not Path(netlist).is_file():
@@ -217,8 +240,9 @@ def face_cover(netlist, pins_json, top=None, die_plan_dir=None, clock_ports=()):
     import face_guard as FG
     pins = jload(pins_json) if pins_json else None
     skip = CLOCK_ONLY_SKIP_RE
-    if clock_ports:
-        skip = "(?:" + skip + "|^(?:" + "|".join(re.escape(p) for p in clock_ports) + ")$)"
+    named = list(clock_ports) + list(reset_ports)
+    if named:
+        skip = "(?:" + skip + "|^(?:" + "|".join(re.escape(p) for p in named) + ")$)"
     # Planned clock/reset pins are excluded from both wanted and present data-bit sets.
     # Otherwise the guard reports an excluded-but-present clock as a missing data port.
     if pins is not None:
@@ -231,6 +255,7 @@ def face_cover(netlist, pins_json, top=None, die_plan_dir=None, clock_ports=()):
     wave = [p for p in T.ports if re.match(r"^(rst_o_|start_o_)", p)]
     return st(r["verdict"] == "PASS", f"{r['verdict']} checked {r['checked']} ok {r['ok']} fails {r['fail_counts']} "
               f"(wavefront ports {len(wave)})", checked=r["checked"], wave_ports=wave[:20], clock_ports=list(clock_ports),
+              reset_ports=list(reset_ports),
               fails={k: v[:5] for k, v in r["fails"].items()})
 
 
@@ -333,13 +358,14 @@ def check_run(run, spec=None, die_plan_dir=None):
     fg = jload(kit / "face_guard.json")
     res["face_guard"] = st(None, "no face_guard.json") if not fg else st(fg.get("verdict") == "PASS",
                                                                          f"{fg.get('verdict')} checked {fg.get('checked')}")
-    clock_ports = configured_clock_ports(read(kit / "constraint.sdc"))
+    kclk, krst = kit_declared_ports(kit)
+    clock_ports = sorted(set(configured_clock_ports(read(kit / "constraint.sdc"))) | set(kclk))
     covs = []
     for nl in [ys, str(kit / "1_synth_odb.v") if (kit / "1_synth_odb.v").is_file() else None]:
         if nl:
             try:
                 c = face_cover(nl, kit / "pins.json" if (kit / "pins.json").is_file() else None,
-                               die_plan_dir=die_plan_dir, clock_ports=clock_ports)
+                               die_plan_dir=die_plan_dir, clock_ports=clock_ports, reset_ports=krst)
             except Exception as e:                       # a crash of the cover check is NOT RUN, never a pass
                 c = st(None, f"face_cover error {type(e).__name__}: {e}")
             c["netlist"] = Path(nl).name
@@ -420,13 +446,35 @@ def check_run(run, spec=None, die_plan_dir=None):
     return out
 
 
+def regression_verdict(run, root=None, seed=True):
+    """COORD CANARY GATING RULING 10-25: the gating verdict is REGRESSION / NO-REGRESSION vs the reference's baseline
+    (baseline.py); INFO = this run set the baseline (non-gating); NO-BASELINE = no baseline and unusable run."""
+    sys.path.insert(0, str(HERE))
+    import baseline as B
+    v = B.verdict(run, root or Path(run).resolve().parent, seed=seed)
+    return dict(verdict=v["verdict"], why=v["why"], rows=v["rows"], notes=v["notes"],
+                baseline=(v.get("baseline") or {}).get("source"),
+                baseline_path=str(B.store_path(root or Path(run).resolve().parent, v["metrics"]["die"], v["metrics"]["item"])))
+
+
 def cmd_check(a):
     r = check_run(a.run)
-    Path(a.out or Path(a.run) / "canary.json").write_text(json.dumps(r, indent=1) + "\n")
-    print(f"CANARY {r['verdict']} die={r['die']} item={r['item']} src={r['src']} failing={r['failing']}")
+    out = Path(a.out or Path(a.run) / "canary.json")
+    out.write_text(json.dumps(r, indent=1) + "\n")       # absolute result first: the baseline reads its stages
+    try:
+        r["regression"] = regression_verdict(a.run, a.root)
+    except Exception as e:                                 # never a release on a broken verdict
+        r["regression"] = dict(verdict="NO-BASELINE", why=f"regression verdict error {type(e).__name__}: {e}")
+    out.write_text(json.dumps(r, indent=1) + "\n")
+    print(f"CANARY {r['verdict']} die={r['die']} item={r['item']} src={r['src']} failing={r['failing']} (absolute; INFO)")
     for k in r["failing"]:
         print(f"  - {k}: {r['stages'][k]['verdict']} {r['stages'][k]['why'][:220]}")
-    return 0 if r["verdict"] == "PASS" else 1
+    g = r["regression"]
+    print(f"CANARY_REGRESSION {g['verdict']} {g['why'][:400]}")
+    for row in g.get("rows", []):
+        if row["verdict"] != "OK":
+            print(f"  - {row['verdict']} {row['ctx']} {row['metric']} base {row.get('base')} cur {row.get('cur')} {row['how']}")
+    return 0 if g["verdict"] in ("NO-REGRESSION", "INFO") else 1
 
 
 # ----------------------------------------------------------------------------------------------------------- submit
@@ -472,6 +520,7 @@ def cmd_submit(a):
         rtl = HERE.parent / "die_plan" / "rtl_lint.py"
         if rtl.is_file():
             (run / "rtl_lint.py").write_text(rtl.read_text())
+        (run / "baseline.py").write_text((HERE / "baseline.py").read_text())
         rfg = HERE.parent / "die_plan" / "reg_fanout_gate.py"
         if rfg.is_file():
             (run / "reg_fanout_gate.py").write_text(rfg.read_text())
@@ -518,7 +567,12 @@ def cmd_summary(a):
         if r:
             best[r.get("die")] = (r, p)
     for die, (r, p) in sorted(best.items()):
-        print(f"{die:13s} {r['verdict']:4s} {r.get('item')} src {r.get('src')} failing {r['failing']}  {p}")
+        try:
+            g = regression_verdict(Path(p).parent, a.root, seed=False)
+        except Exception as e:
+            g = dict(verdict="NO-BASELINE", why=f"{type(e).__name__}: {e}")
+        print(f"{die:15s} {g['verdict']:13s} (absolute {r['verdict']}) {r.get('item')} src {r.get('src')}  {p}\n"
+              f"{'':15s} {g['why'][:300]}")
     return 0
 
 
@@ -547,6 +601,7 @@ def main(argv=None):
     c = sub.add_parser("check")
     c.add_argument("--run", required=True)
     c.add_argument("--out")
+    c.add_argument("--root", help="canary runs root holding baselines/ (default: the run's parent)")
     m = sub.add_parser("summary")
     m.add_argument("--root", default="/srv/opentallas-scratch2/claude/flow-canary/runs")
     sub.add_parser("list")
