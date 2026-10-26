@@ -1,0 +1,2046 @@
+{
+  "schema": "opentallas.q3.common_clock.v1",
+  "status": "NEEDS_BIT_ID_PROOF",
+  "period_ps": 833,
+  "edge": "posedge",
+  "native_sha256": "75a0165d282fcb63145b3b1e3f9ee951d1212071133425f040eeeb91ac00a50a",
+  "testbench_sha256": "2bd0b90939d5f6f871ebdcbcc5ffe7cf03d56832fe447c793eb40d621af7119a",
+  "profile_census_sha256": "d378680e3000b73fe24ca09a26ab185a62ce7a247f2bedf631739744503b7a5d",
+  "profile_source_commit": "b1af31b58eb5a3ef39687809320107bc9df89ea5",
+  "profile_generated_files": {
+    "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_ring_ag_core.sv": "3e3ad9f08f23147bc27e408b81a0c59b56a4c5515a5b92f61522770770b0a7c0",
+    "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv": "35665e999178ec05d97a3cfec237b94d1eb4961a421c3763543beee22361dac4",
+    "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_vm_core.sv": "a8c69155969cca20db7f6a61c755ea1c477b9f0348ec5513a12cb08fad6cdcce",
+    "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_edge_core.sv": "7a0555f35d7b6617675f281033893c465433c2827b657c7fea367d4c4976f2ec",
+    "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_vmface2/ot_hfd_coll_q3_body_core.sv": "a77e6717d11330146eb0f0e1f97cb6230d396f5c14d90b1d1751aac37309098e",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv": "09af4d60f99ba3ffc1e192465adf3d82e0d846448b68ff6728f9c764bd889f8a",
+    "tools/hbm_b2/q3sync/inputs/rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv": "c8e231fcc819c2015f02075378b82cbd2f84a446d06f582907cf404d64832602",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv": "4207dc694bdf93cf16cece3b3862b87a5d3397bf9e3f7221baeff6b52091d242",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv": "fed5cadceb0f72e66f011d5149178ee0b36c050f5f0aaad8991bfe5f48132320",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static_pr.sv": "ccedae2554c4b99c9993cc5d396a64b810ea5bb0096032c7b7d93c108f653177",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "649b67cb51d261ecd3e2089535160324db2485f13d31e87e5b27f38cf0c6ca23",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv": "8e2e5ff4671e3263285fe23b6fe4b680046ba765128296fabe5d9a0497e7d51a",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "e97590e5513246fbdbd14d83ac96225a1c087e7fd62259134ab353140f987de4",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv": "f5baa877d808a95e2cdbe58f2e237935b59c4ec094b3f3941b22d6b6c949ee8f",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv": "ba7967547190bc1534065f5b7e8e44ef92391c1d4a9cf81979955ccaba1b8270",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv": "f5eb398545a6962d236ca94363234817141b95b6ce3552b4047b3dfa6456e685",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv": "a653cdb0505e81b0cb0af0f14d05883b460e2a63e6c2af89b933c0eca43419a1",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv": "d11e38fa6f43fd5537de3b827bf8126ed40963e10846dab974bf86e7c0f0a450",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "788c17c903ae76e053e123cfc4a4f64b0b768239235fd1ceb33bd35aab67f720",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv": "124605e99347b51d9924a7f97c7fc2e3a58ccafd001a210c048d54cd6490b162",
+    "tools/hbm_b2/q3sync/inputs/rtl/hdc/ot_hdc_fastfp.sv": "98b130cf7827a7f9cd2dc85450c1d54b7b0a8c8991206a883a544c53366d6027",
+    "rtl/hdc/ot_hdc_prefix.sv": "866d4a6784d49364a8312608905178508ed6c1292d1eaf9b860d86f5fd1351ee",
+    "tools/hbm_b2/q3sync/inputs/rtl/hdc/ot_hdc_fp32_add_lat.sv": "58f0b0e8393fd1e3a70354a7f458b5797d451cac0421d1f6eeefcd275ec2d58c",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv": "4f97a0386a2b4d52446ddee9c42471aeb19a21d7eb0adffdab1043b2612d9cfc"
+  },
+  "native_clock_bindings": {
+    "clk_program": "clk",
+    "clk_control": "clk",
+    "clk_issue": "clk",
+    "clk_arg": "clk",
+    "clk_vmasm": "{16{clk}}",
+    "clk_upipe": "{16{clk}}",
+    "clk_qslots": "{(NLINK+8+18){clk}}",
+    "clk_ring": "{17{clk}}",
+    "clk_reduce": "{33{clk}}",
+    "clk_vmwrite": "{16{clk}}",
+    "clk_link": "{(5*NLINK){clk}}"
+  },
+  "cores": {
+    "body": {
+      "top": "ot_hfd_coll_q3_body_core__q3sync",
+      "wrapper": "ot_hfd_coll_q3_body_core__q3sync__oneclk",
+      "source_sha256": "a77e6717d11330146eb0f0e1f97cb6230d396f5c14d90b1d1751aac37309098e",
+      "wrapper_sha256": "16936db64aac92652cf9b828924db15ad46d5ee7587dd778f35b9d63a289dad7",
+      "clocks": [
+        {
+          "name": "clk_control",
+          "width": 1,
+          "native_connection": "clk_control"
+        },
+        {
+          "name": "clk_program",
+          "width": 1,
+          "native_connection": "clk_program"
+        },
+        {
+          "name": "clk_upipe",
+          "width": 16,
+          "native_connection": "{ clk_upipe[15], clk_upipe[14], clk_upipe[13], clk_upipe[12], clk_upipe[11], clk_upipe[10], clk_upipe[9], clk_upipe[8], clk_upipe[7], clk_upipe[6], clk_upipe[5], clk_upipe[4], clk_upipe[3], clk_upipe[2], clk_upipe[1], clk_upipe[0] }"
+        },
+        {
+          "name": "clk_issue",
+          "width": 1,
+          "native_connection": "clk_issue"
+        },
+        {
+          "name": "clk_qslots",
+          "width": 29,
+          "native_connection": "{ clk_qslots[28], clk_qslots[27], clk_qslots[26], clk_qslots[25], clk_qslots[24], clk_qslots[23], clk_qslots[22], clk_qslots[21], clk_qslots[20], clk_qslots[19], clk_qslots[18], clk_qslots[17], clk_qslots[16], clk_qslots[15], clk_qslots[14], clk_qslots[13], clk_qslots[12], clk_qslots[11], clk_qslots[10], clk_qslots[9], clk_qslots[8], clk_qslots[7], clk_qslots[6], clk_qslots[5], clk_qslots[4], clk_qslots[3], clk_qslots[2], clk_qslots[1], clk_qslots[0] }"
+        },
+        {
+          "name": "clk_reduce",
+          "width": 1,
+          "native_connection": "clk_reduce[0]"
+        }
+      ],
+      "data_ports": [
+        {
+          "name": "u_body_g_qout_17_g3_n_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[11:0]",
+          "width": 12
+        },
+        {
+          "name": "u_body_g_qout_16_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[383:0]",
+          "width": 384
+        },
+        {
+          "name": "u_body_g_qout_15_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_14_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_13_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_12_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_5_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_4_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_11_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_10_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_9_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_8_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_7_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_6_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_u_upipe_SL_3_u_d3",
+          "direction": "output",
+          "signed": "",
+          "dims": "[5:0]",
+          "width": 6
+        },
+        {
+          "name": "u_body_u_upipe_SL_4_u_d3",
+          "direction": "output",
+          "signed": "",
+          "dims": "[13:0]",
+          "width": 14
+        },
+        {
+          "name": "u_body_u_upipe_SL_6_u_d3",
+          "direction": "output",
+          "signed": "",
+          "dims": "[87:0]",
+          "width": 88
+        },
+        {
+          "name": "u_body_u_upipe_SL_7_u_d3",
+          "direction": "output",
+          "signed": "",
+          "dims": "[74:0]",
+          "width": 75
+        },
+        {
+          "name": "u_body_u_upipe_SL_8_u_d3",
+          "direction": "output",
+          "signed": "",
+          "dims": "[95:0]",
+          "width": 96
+        },
+        {
+          "name": "u_body_u_upipe_SL_9_u_d3",
+          "direction": "output",
+          "signed": "",
+          "dims": "[9:0]",
+          "width": 10
+        },
+        {
+          "name": "u_body_u_upipe_SL_15_u_d3",
+          "direction": "output",
+          "signed": "",
+          "dims": "[14:0]",
+          "width": 15
+        },
+        {
+          "name": "u_body_g_q3_arg_out_data",
+          "direction": "input",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "u_body_g_ariter_t_idx",
+          "direction": "output",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "u_body_g_ariter_t_pb",
+          "direction": "output",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "u_body_g_ariter_t_pa",
+          "direction": "output",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "u_body_g_ariter_t_read",
+          "direction": "output",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "u_body_g_ariter_t_load",
+          "direction": "output",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "u_body_vm_as_il",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2047:0]",
+          "width": 2048
+        },
+        {
+          "name": "u_body_g_qout_3_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_2_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_1_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_0_g3_w_o_u_out_u_dst_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "u_body_g_qout_0_g3_w_o_u_out_u_dst_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "u_body_g_qcap_10_u_cap_src_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "u_body_g_qcap_9_u_cap_src_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "u_body_g_qcap_9_u_cap_src_d",
+          "direction": "input",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "u_body_g_qcap_4_u_cap_src_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "u_body_g_qcap_4_u_cap_src_d",
+          "direction": "input",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "u_body_g_qcap_3_u_cap_src_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "u_body_g_qcap_3_u_cap_src_d",
+          "direction": "input",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "u_body_g_qcap_2_u_cap_src_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "u_body_g_qcap_2_u_cap_src_d",
+          "direction": "input",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "fault_cause",
+          "direction": "output",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "u_body_g_q3_n_u_fj_u_fj_u_link_abort",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2:0]",
+          "width": 3
+        },
+        {
+          "name": "inj_rd",
+          "direction": "output",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "inj_idx",
+          "direction": "output",
+          "signed": "",
+          "dims": "[31:0]",
+          "width": 32
+        },
+        {
+          "name": "hgi_inj_addr",
+          "direction": "output",
+          "signed": "",
+          "dims": "[159:0]",
+          "width": 160
+        },
+        {
+          "name": "hgi_del_obase",
+          "direction": "output",
+          "signed": "",
+          "dims": "[159:0]",
+          "width": 160
+        },
+        {
+          "name": "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_rgx_addr_pin",
+          "direction": "output",
+          "signed": "",
+          "dims": "[159:0]",
+          "width": 160
+        },
+        {
+          "name": "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_wr_sequence_pin",
+          "direction": "output",
+          "signed": "",
+          "dims": "[47:0]",
+          "width": 48
+        },
+        {
+          "name": "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_rd_sequence_pin",
+          "direction": "output",
+          "signed": "",
+          "dims": "[47:0]",
+          "width": 48
+        },
+        {
+          "name": "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_rx_sequence_pin",
+          "direction": "output",
+          "signed": "",
+          "dims": "[47:0]",
+          "width": 48
+        },
+        {
+          "name": "stat_cycles",
+          "direction": "output",
+          "signed": "",
+          "dims": "[31:0]",
+          "width": 32
+        },
+        {
+          "name": "vm_rq",
+          "direction": "output",
+          "signed": "",
+          "dims": "[127:0]",
+          "width": 128
+        },
+        {
+          "name": "vm_rq_",
+          "direction": "output",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_vm_select_pipe_80",
+          "direction": "output",
+          "signed": "",
+          "dims": "[23:0]",
+          "width": 24
+        },
+        {
+          "name": "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_link_epoch_0",
+          "direction": "output",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_link_epoch_1",
+          "direction": "output",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_link_epoch_2",
+          "direction": "output",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "qid",
+          "direction": "input",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "cfg_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "cfg_target",
+          "direction": "input",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "cfg_addr",
+          "direction": "input",
+          "signed": "",
+          "dims": "[11:0]",
+          "width": 12
+        },
+        {
+          "name": "cfg_data",
+          "direction": "input",
+          "signed": "",
+          "dims": "[255:0]",
+          "width": 256
+        },
+        {
+          "name": "desc_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "desc_base",
+          "direction": "input",
+          "signed": "",
+          "dims": "[11:0]",
+          "width": 12
+        },
+        {
+          "name": "desc_limit",
+          "direction": "input",
+          "signed": "",
+          "dims": "[12:0]",
+          "width": 13
+        },
+        {
+          "name": "desc_loops",
+          "direction": "input",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "launch_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "rc_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "rc_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2:0]",
+          "width": 3
+        },
+        {
+          "name": "inj_d",
+          "direction": "input",
+          "signed": "",
+          "dims": "[1023:0]",
+          "width": 1024
+        },
+        {
+          "name": "vm_rr",
+          "direction": "input",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "tkx_busy",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "tkx_done",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "tkx_fault",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "program_configured",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "program_init_busy",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "program_fault",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "u_body_g_q3_n_u_fj_u_fj_u_reduce_fault",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "u_body_g_q3_n_u_fj_u_fj_u_writer_fault",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "u_body_g_q3_n_u_fj_u_fj_u_ring_fault",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "hgi_busy",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "done",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "u_body_arg_fault",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        }
+      ],
+      "nonclock_bits": 15983,
+      "dropped_clock_bits": 49,
+      "new_clock_bits": 1,
+      "data_cycle_delta": 0,
+      "boot_cycle_delta": 0,
+      "defines_delta": [],
+      "physical": "NOT_BUILT: apply clock pin delta to HBM plan batch then review new common-root stage"
+    },
+    "edge": {
+      "top": "ot_hfd_coll_q3_edge_core__q3sync",
+      "wrapper": "ot_hfd_coll_q3_edge_core__q3sync__oneclk",
+      "source_sha256": "7a0555f35d7b6617675f281033893c465433c2827b657c7fea367d4c4976f2ec",
+      "wrapper_sha256": "abad1bad0b46b64546b9e782786f4a8a5da3d8d499d40af3ad2ece994deb1bfc",
+      "clocks": [
+        {
+          "name": "arg_clk",
+          "width": 1,
+          "native_connection": "clk_arg"
+        },
+        {
+          "name": "link0_ck",
+          "width": 5,
+          "native_connection": "{ clk_link[4], clk_link[3], clk_link[2], clk_link[1], clk_link[0] }"
+        },
+        {
+          "name": "link1_ck",
+          "width": 5,
+          "native_connection": "{ clk_link[9], clk_link[8], clk_link[7], clk_link[6], clk_link[5] }"
+        },
+        {
+          "name": "link2_ck",
+          "width": 5,
+          "native_connection": "{ clk_link[14], clk_link[13], clk_link[12], clk_link[11], clk_link[10] }"
+        }
+      ],
+      "data_ports": [
+        {
+          "name": "arg_rst_n",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "arg_start",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "arg_mode",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "arg_cfg_g",
+          "direction": "input",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "arg_cfg_gbase",
+          "direction": "input",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "arg_cfg_rank",
+          "direction": "input",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "arg_in_slot",
+          "direction": "input",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "arg_in_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "arg_in_key",
+          "direction": "input",
+          "signed": "",
+          "dims": "[255:0]",
+          "width": 256
+        },
+        {
+          "name": "arg_in_meta",
+          "direction": "input",
+          "signed": "",
+          "dims": "[131:0]",
+          "width": 132
+        },
+        {
+          "name": "arg_flush_slot",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "arg_publish_slot",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_epoch_begin",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_epoch_new",
+          "direction": "input",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "link0_held_epoch",
+          "direction": "input",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "link0_wr_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_wr_observed_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_wr_seq",
+          "direction": "input",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "link0_wr_flit",
+          "direction": "input",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "link0_rd_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_rd_seq",
+          "direction": "input",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "link0_rx_expect_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_rx_expect_seq",
+          "direction": "input",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "link0_phy_up",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_rx_pin_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_rx_pin_flit",
+          "direction": "input",
+          "signed": "",
+          "dims": "[611:0]",
+          "width": 612
+        },
+        {
+          "name": "link1_epoch_begin",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_held_epoch",
+          "direction": "input",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "link1_wr_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_wr_observed_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_wr_seq",
+          "direction": "input",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "link1_wr_flit",
+          "direction": "input",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "link1_rd_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_rd_seq",
+          "direction": "input",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "link1_rx_expect_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_rx_expect_seq",
+          "direction": "input",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "link1_phy_up",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_rx_pin_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_rx_pin_flit",
+          "direction": "input",
+          "signed": "",
+          "dims": "[611:0]",
+          "width": 612
+        },
+        {
+          "name": "link2_epoch_begin",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_held_epoch",
+          "direction": "input",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "link2_wr_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_wr_observed_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_wr_seq",
+          "direction": "input",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "link2_wr_flit",
+          "direction": "input",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "link2_rd_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_rd_seq",
+          "direction": "input",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "link2_rx_expect_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_rx_expect_seq",
+          "direction": "input",
+          "signed": "",
+          "dims": "[15:0]",
+          "width": 16
+        },
+        {
+          "name": "link2_phy_up",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_rx_pin_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_rx_pin_flit",
+          "direction": "input",
+          "signed": "",
+          "dims": "[611:0]",
+          "width": 612
+        },
+        {
+          "name": "arg_out_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "arg_out_flit",
+          "direction": "output",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "arg_fault",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_tx_pin_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_tx_pin_flit",
+          "direction": "output",
+          "signed": "",
+          "dims": "[611:0]",
+          "width": 612
+        },
+        {
+          "name": "link0_rx_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_rx_flit",
+          "direction": "output",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "link0_epoch_abort",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link0_retry_requested",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_tx_pin_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_tx_pin_flit",
+          "direction": "output",
+          "signed": "",
+          "dims": "[611:0]",
+          "width": 612
+        },
+        {
+          "name": "link1_rx_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_rx_flit",
+          "direction": "output",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "link1_epoch_abort",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link1_retry_requested",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_tx_pin_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_tx_pin_flit",
+          "direction": "output",
+          "signed": "",
+          "dims": "[611:0]",
+          "width": 612
+        },
+        {
+          "name": "link2_rx_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_rx_flit",
+          "direction": "output",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "link2_epoch_abort",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "link2_retry_requested",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        }
+      ],
+      "nonclock_bits": 8123,
+      "dropped_clock_bits": 16,
+      "new_clock_bits": 1,
+      "data_cycle_delta": 0,
+      "boot_cycle_delta": 0,
+      "defines_delta": [],
+      "physical": "NOT_BUILT: apply clock pin delta to HBM plan batch then review new common-root stage"
+    },
+    "vm": {
+      "top": "ot_hfd_coll_q3_vm_core__q3sync",
+      "wrapper": "ot_hfd_coll_q3_vm_core__q3sync__oneclk",
+      "source_sha256": "a8c69155969cca20db7f6a61c755ea1c477b9f0348ec5513a12cb08fad6cdcce",
+      "wrapper_sha256": "4eb6ecdfbdd908ffca26e82e2267a30be79b70f6be4d3a3536a15871764cc6f5",
+      "clocks": [
+        {
+          "name": "vmasm_clk",
+          "width": 16,
+          "native_connection": "{ clk_vmasm[15], clk_vmasm[14], clk_vmasm[13], clk_vmasm[12], clk_vmasm[11], clk_vmasm[10], clk_vmasm[9], clk_vmasm[8], clk_vmasm[7], clk_vmasm[6], clk_vmasm[5], clk_vmasm[4], clk_vmasm[3], clk_vmasm[2], clk_vmasm[1], clk_vmasm[0] }"
+        },
+        {
+          "name": "writer_clk_rgx_data0",
+          "width": 1,
+          "native_connection": "clk_vmwrite[0]"
+        },
+        {
+          "name": "writer_clk_rgx_data1",
+          "width": 1,
+          "native_connection": "clk_vmwrite[1]"
+        },
+        {
+          "name": "writer_clk_rgx_data2",
+          "width": 1,
+          "native_connection": "clk_vmwrite[2]"
+        },
+        {
+          "name": "writer_clk_rgx_data3",
+          "width": 1,
+          "native_connection": "clk_vmwrite[3]"
+        },
+        {
+          "name": "writer_clk_rgx_ctrl",
+          "width": 1,
+          "native_connection": "clk_vmwrite[4]"
+        },
+        {
+          "name": "writer_clk_tkw",
+          "width": 1,
+          "native_connection": "clk_vmwrite[5]"
+        },
+        {
+          "name": "writer_clk_meta",
+          "width": 1,
+          "native_connection": "clk_vmwrite[6]"
+        },
+        {
+          "name": "writer_clk_body",
+          "width": 1,
+          "native_connection": "clk_vmwrite[7]"
+        },
+        {
+          "name": "writer_clk_bank0",
+          "width": 1,
+          "native_connection": "clk_vmwrite[8]"
+        },
+        {
+          "name": "writer_clk_bank1",
+          "width": 1,
+          "native_connection": "clk_vmwrite[9]"
+        },
+        {
+          "name": "writer_clk_bank2",
+          "width": 1,
+          "native_connection": "clk_vmwrite[10]"
+        },
+        {
+          "name": "writer_clk_bank3",
+          "width": 1,
+          "native_connection": "clk_vmwrite[11]"
+        },
+        {
+          "name": "writer_clk_bank4",
+          "width": 1,
+          "native_connection": "clk_vmwrite[12]"
+        },
+        {
+          "name": "writer_clk_bank5",
+          "width": 1,
+          "native_connection": "clk_vmwrite[13]"
+        },
+        {
+          "name": "writer_clk_bank6",
+          "width": 1,
+          "native_connection": "clk_vmwrite[14]"
+        },
+        {
+          "name": "writer_clk_bank7",
+          "width": 1,
+          "native_connection": "clk_vmwrite[15]"
+        }
+      ],
+      "data_ports": [
+        {
+          "name": "vmasm_sel",
+          "direction": "input",
+          "signed": "",
+          "dims": "[23:0]",
+          "width": 24
+        },
+        {
+          "name": "vmasm_rd_il",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2047:0]",
+          "width": 2048
+        },
+        {
+          "name": "writer_rst_n",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "writer_sid",
+          "direction": "input",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "writer_rgx_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "writer_rgx_addr",
+          "direction": "input",
+          "signed": "",
+          "dims": "[159:0]",
+          "width": 160
+        },
+        {
+          "name": "writer_rgx_data0",
+          "direction": "input",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "writer_rgx_data1",
+          "direction": "input",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "writer_rgx_data2",
+          "direction": "input",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "writer_rgx_data3",
+          "direction": "input",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "writer_rgx_vm",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "writer_tkw_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "writer_tkw_d",
+          "direction": "input",
+          "signed": "",
+          "dims": "[567:0]",
+          "width": 568
+        },
+        {
+          "name": "writer_ingress_slot",
+          "direction": "input",
+          "signed": "",
+          "dims": "[4:0]",
+          "width": 5
+        },
+        {
+          "name": "writer_slot_valid",
+          "direction": "input",
+          "signed": "",
+          "dims": "[7:0]",
+          "width": 8
+        },
+        {
+          "name": "writer_slot_owner",
+          "direction": "input",
+          "signed": "",
+          "dims": "[31:0]",
+          "width": 32
+        },
+        {
+          "name": "vmasm_as_il",
+          "direction": "output",
+          "signed": "",
+          "dims": "[2047:0]",
+          "width": 2048
+        },
+        {
+          "name": "writer_kq0",
+          "direction": "output",
+          "signed": "",
+          "dims": "[280:0]",
+          "width": 281
+        },
+        {
+          "name": "writer_kq1",
+          "direction": "output",
+          "signed": "",
+          "dims": "[280:0]",
+          "width": 281
+        },
+        {
+          "name": "writer_kq2",
+          "direction": "output",
+          "signed": "",
+          "dims": "[280:0]",
+          "width": 281
+        },
+        {
+          "name": "writer_kq3",
+          "direction": "output",
+          "signed": "",
+          "dims": "[280:0]",
+          "width": 281
+        },
+        {
+          "name": "writer_kq4",
+          "direction": "output",
+          "signed": "",
+          "dims": "[280:0]",
+          "width": 281
+        },
+        {
+          "name": "writer_kq5",
+          "direction": "output",
+          "signed": "",
+          "dims": "[280:0]",
+          "width": 281
+        },
+        {
+          "name": "writer_kq6",
+          "direction": "output",
+          "signed": "",
+          "dims": "[280:0]",
+          "width": 281
+        },
+        {
+          "name": "writer_kq7",
+          "direction": "output",
+          "signed": "",
+          "dims": "[280:0]",
+          "width": 281
+        },
+        {
+          "name": "writer_fault",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        }
+      ],
+      "nonclock_bits": 9199,
+      "dropped_clock_bits": 32,
+      "new_clock_bits": 1,
+      "data_cycle_delta": 0,
+      "boot_cycle_delta": 0,
+      "defines_delta": [],
+      "physical": "NOT_BUILT: apply clock pin delta to HBM plan batch then review new common-root stage"
+    },
+    "reduce": {
+      "top": "ot_hfd_coll_q2_reduce_core__q3sync",
+      "wrapper": "ot_hfd_coll_q2_reduce_core__q3sync__oneclk",
+      "source_sha256": "35665e999178ec05d97a3cfec237b94d1eb4961a421c3763543beee22361dac4",
+      "wrapper_sha256": "36af6501a28820ed3d366f14d14b3de5ece666300f2ea3c633c3c125c543faf8",
+      "clocks": [
+        {
+          "name": "reduce_clk_control",
+          "width": 1,
+          "native_connection": "clk_reduce[0]"
+        },
+        {
+          "name": "reduce_clk_state",
+          "width": 16,
+          "native_connection": "{ clk_reduce[16], clk_reduce[15], clk_reduce[14], clk_reduce[13], clk_reduce[12], clk_reduce[11], clk_reduce[10], clk_reduce[9], clk_reduce[8], clk_reduce[7], clk_reduce[6], clk_reduce[5], clk_reduce[4], clk_reduce[3], clk_reduce[2], clk_reduce[1] }"
+        },
+        {
+          "name": "reduce_clk_add",
+          "width": 16,
+          "native_connection": "{ clk_reduce[32], clk_reduce[31], clk_reduce[30], clk_reduce[29], clk_reduce[28], clk_reduce[27], clk_reduce[26], clk_reduce[25], clk_reduce[24], clk_reduce[23], clk_reduce[22], clk_reduce[21], clk_reduce[20], clk_reduce[19], clk_reduce[18], clk_reduce[17] }"
+        }
+      ],
+      "data_ports": [
+        {
+          "name": "reduce_rst_n",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_clear",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_in_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_in_flit",
+          "direction": "input",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "reduce_load_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_load_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "reduce_add_read",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_read_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "reduce_add_issue",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_pub_read",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_pub_tag_a",
+          "direction": "input",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "reduce_pub_tag_b",
+          "direction": "input",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "reduce_pub_bf16",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_pub_meta",
+          "direction": "input",
+          "signed": "",
+          "dims": "[23:0]",
+          "width": 24
+        },
+        {
+          "name": "reduce_pub_release",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_pub_issue",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_out_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "reduce_out_flit",
+          "direction": "output",
+          "signed": "",
+          "dims": "[544:0]",
+          "width": 545
+        },
+        {
+          "name": "reduce_fault",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        }
+      ],
+      "nonclock_bits": 1142,
+      "dropped_clock_bits": 33,
+      "new_clock_bits": 1,
+      "data_cycle_delta": 0,
+      "boot_cycle_delta": 0,
+      "defines_delta": [],
+      "physical": "NOT_BUILT: apply clock pin delta to HBM plan batch then review new common-root stage"
+    },
+    "ring_ag": {
+      "top": "ot_hfd_coll_q2_ring_ag_core__q3sync",
+      "wrapper": "ot_hfd_coll_q2_ring_ag_core__q3sync__oneclk",
+      "source_sha256": "3e3ad9f08f23147bc27e408b81a0c59b56a4c5515a5b92f61522770770b0a7c0",
+      "wrapper_sha256": "3942bbae94fd05b4fdaee239aebab6ec9ac4a865cc1f217bf7cf4b1604754073",
+      "clocks": [
+        {
+          "name": "ring_clk",
+          "width": 1,
+          "native_connection": "clk_ring[0]"
+        },
+        {
+          "name": "ring_clk_state",
+          "width": 8,
+          "native_connection": "{ clk_ring[8], clk_ring[7], clk_ring[6], clk_ring[5], clk_ring[4], clk_ring[3], clk_ring[2], clk_ring[1] }"
+        },
+        {
+          "name": "ring_clk_add",
+          "width": 8,
+          "native_connection": "{ clk_ring[16], clk_ring[15], clk_ring[14], clk_ring[13], clk_ring[12], clk_ring[11], clk_ring[10], clk_ring[9] }"
+        }
+      ],
+      "data_ports": [
+        {
+          "name": "ring_rst_n",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_qid",
+          "direction": "input",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "ring_cw_i",
+          "direction": "input",
+          "signed": "",
+          "dims": "[279:0]",
+          "width": 280
+        },
+        {
+          "name": "ring_ccw_i",
+          "direction": "input",
+          "signed": "",
+          "dims": "[279:0]",
+          "width": 280
+        },
+        {
+          "name": "ring_lp_we",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_lp_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2:0]",
+          "width": 3
+        },
+        {
+          "name": "ring_lp_data",
+          "direction": "input",
+          "signed": "",
+          "dims": "[255:0]",
+          "width": 256
+        },
+        {
+          "name": "ring_state_read_add",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_state_read_tx",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_state_read_rr",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_state_add_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2:0]",
+          "width": 3
+        },
+        {
+          "name": "ring_state_tx_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2:0]",
+          "width": 3
+        },
+        {
+          "name": "ring_state_rr_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2:0]",
+          "width": 3
+        },
+        {
+          "name": "ring_state_add_src",
+          "direction": "input",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "ring_state_add_rhs_acc",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_state_tx_acc",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_add_v",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_add_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2:0]",
+          "width": 3
+        },
+        {
+          "name": "ring_add_src",
+          "direction": "input",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "ring_add_rhs_acc",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_tx_inject",
+          "direction": "input",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "ring_tx_forward",
+          "direction": "input",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "ring_tx_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2:0]",
+          "width": 3
+        },
+        {
+          "name": "ring_tx_dst",
+          "direction": "input",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "ring_tx_result",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_tx_acc",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_tx_gather",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_tx_ttl",
+          "direction": "input",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "ring_rx_slot",
+          "direction": "input",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "ring_rx_kind",
+          "direction": "input",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "ring_rx_src",
+          "direction": "input",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "ring_rx_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[5:0]",
+          "width": 6
+        },
+        {
+          "name": "ring_rr_local",
+          "direction": "input",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_rr_local_tag",
+          "direction": "input",
+          "signed": "",
+          "dims": "[2:0]",
+          "width": 3
+        },
+        {
+          "name": "ring_cw_o",
+          "direction": "output",
+          "signed": "",
+          "dims": "[279:0]",
+          "width": 280
+        },
+        {
+          "name": "ring_ccw_o",
+          "direction": "output",
+          "signed": "",
+          "dims": "[279:0]",
+          "width": 280
+        },
+        {
+          "name": "ring_rr_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        },
+        {
+          "name": "ring_rr_tag",
+          "direction": "output",
+          "signed": "",
+          "dims": "[2:0]",
+          "width": 3
+        },
+        {
+          "name": "ring_rr_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[255:0]",
+          "width": 256
+        },
+        {
+          "name": "ring_ag_v",
+          "direction": "output",
+          "signed": "",
+          "dims": "[1:0]",
+          "width": 2
+        },
+        {
+          "name": "ring_ag_src",
+          "direction": "output",
+          "signed": "",
+          "dims": "[3:0]",
+          "width": 4
+        },
+        {
+          "name": "ring_ag_tag",
+          "direction": "output",
+          "signed": "",
+          "dims": "[5:0]",
+          "width": 6
+        },
+        {
+          "name": "ring_ag_d",
+          "direction": "output",
+          "signed": "",
+          "dims": "[511:0]",
+          "width": 512
+        },
+        {
+          "name": "ring_fault",
+          "direction": "output",
+          "signed": "",
+          "dims": "",
+          "width": 1
+        }
+      ],
+      "nonclock_bits": 2227,
+      "dropped_clock_bits": 17,
+      "new_clock_bits": 1,
+      "data_cycle_delta": 0,
+      "boot_cycle_delta": 0,
+      "defines_delta": [],
+      "physical": "NOT_BUILT: apply clock pin delta to HBM plan batch then review new common-root stage"
+    }
+  },
+  "signoff": "NOT_RUN",
+  "phase_scope": "qualified q3 NLINK3 native scalar aliases only; H0/H1 excluded"
+}
