@@ -1,0 +1,13 @@
+{
+ "source": "71ce451910",
+ "verdict": "PASS source/plan contract; full QC bind awaits composed event",
+ "types": 9,
+ "declarations": 72,
+ "added_cycles": 0,
+ "schema_errors": 0,
+ "focused_tests_pass": 21,
+ "bind_tests_pass": 2,
+ "proof": "4-bit original + 16-bit partial-literal ID exact leaf connectivity against golden; two IDs; wrong-ID mutants rejected; internal low bits retained",
+ "failure1": "emit_top required complete literal ID port; fixed to exact original per-replica parameter mask",
+ "native_primitive": "cbf_q00 S_u_fab_not_*_A remains invariant literal1 across23 instances, not promoted"
+}

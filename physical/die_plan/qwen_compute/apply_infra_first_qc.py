@@ -14,7 +14,7 @@ d4ae52687 + DEAD-FAULT 773a8e2ad + D-QC-STM-ROM-INVENTORY). This script adds, in
 NOT in this script (recorded in the report as pending):
   D-QC-CLKMESH    driver islands: CLOCK-MESH / INFRA-FIRST apply them with tools/die_plan/apply_clkmesh_sites.py once the
                   QC regional mesh exists (plan.clock.mesh + clock_mesh_sites.json); run it AFTER this script.
-  CB ID straps    cbf_q00/cbf_q11/cbn_q11 (COORD 00:59 (2), owner straps option B): no PATH-QC branch yet.
+  CB ID straps    all nine CB types: existing tile_id/sidx parameter bits become parent-tied ID inputs (zero cycles).
 Usage: apply_infra_first_qc.py die_plan.json [--report infra_first_qc_report.json]   (in place)
 Then: tools/die_plan/gen.py latency --inplace; die_io.py plan; check.py --completeness (G0C).
 """
@@ -28,6 +28,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT / "tools" / "die_plan"))
+import cb_id_straps as CBIDS
 import gen_plan as G          # noqa: E402
 import schema as S            # noqa: E402
 import reset_tree as RT       # noqa: E402
@@ -71,6 +72,39 @@ def scroot_notes(path):
     if SC_BASE in ct and SC_ROOT not in ct:
         ct[SC_ROOT] = copy.deepcopy(ct[SC_BASE])
     path.write_text(json.dumps(n, indent=1) + "\n")
+
+
+def vmr_core_latency(raw):
+    """Measured s6kc insertion; D-INFRA-FIRST compensates at the die stub."""
+    rows = []
+    for tn in ("slw_su_c", "sle_su_c"):
+        for tap in raw["partition_types"][tn]["clock"]["taps"]:
+            if tap.get("name") not in {f"u_suvm_u_vm8q_u_v{v}.ck" for v in "abc"}:
+                continue
+            before = dict(TT=tap["insertion_ps"], FF=tap.get("insertion_ff_ps"))
+            tap.update(insertion_ps=395.7, insertion_ff_ps=302.7,
+                       budget_owner="vmr_s6kc measured routed native mean TT395.7/FF302.7; die compensates residual (D-INFRA-FIRST), no tile retap")
+            rows.append(dict(type=tn, tap=tap["name"], before=before, after=dict(TT=395.7, FF=302.7)))
+    if len(rows) != 6:
+        raise ValueError(f"expected six VMR core taps, found {len(rows)}")
+    return dict(taps=rows, cycles=0, note="absolute measured insertion, not an offset to the obsolete vmr_s6h budget")
+
+
+def fw_source_split(raw):
+    """The E2 FW has a different native ch_dn_i connection, so it is a real type."""
+    old, new, part = "sle_fw_v1", "sle_fw_v1_e2", "sl_E2_fw"
+    types = raw["partition_types"]
+    if new in types:
+        raise ValueError(f"{new} already exists; do not compose the source split twice")
+    t = copy.deepcopy(types[old]);t["module"] += "_e2"
+    t["note"] = t.get("note", "") + "; native E2 ch_dn_i connection differs from E0/E4; exact interface clone,0 cycles"
+    types[new] = t
+    ps = [p for p in raw["partitions"] if p["name"] == part]
+    if len(ps) != 1 or ps[0]["type"] != old:
+        raise ValueError(f"expected exactly one {part} with source type {old}")
+    ps[0]["type"] = new
+    return dict(base_type=old,new_type=new,part=part,cycles=0,
+                reason="strict native source signature ch_dn_i differs; no generic type waiver")
 
 
 def main(argv=None):
@@ -133,11 +167,12 @@ def main(argv=None):
 
     rep["deltas"]["D-QC-CLKMESH"] = dict(status="PENDING: apply tools/die_plan/apply_clkmesh_sites.py after the QC "
                                                 "regional mesh exists (CLOCK-MESH / INFRA-FIRST step 2)")
-    rep["deltas"]["D-QC-CB-STRAPS"] = dict(status="MISSING: no PATH-QC branch (cbf_q00/cbf_q11/cbn_q11, option B; "
-                                                  "sidx not yet in parent_id_straps.ID_PORTS)")
+    rep["deltas"]["D-QC-CB-STRAPS"] = CBIDS.apply(raw)
+    rep["deltas"]["D-QC-VMR-LATENCY"] = vmr_core_latency(raw)
+    rep["deltas"]["D-QC-FW-NATIVE-E2"] = fw_source_split(raw)
 
     # every type no delta names keeps its interface byte-identical
-    touched = set(fe["types"]) | {"coll_ftm", *IOHOLD_SENDERS, SC_ROOT}
+    touched = set(fe["types"]) | set(rep["deltas"]["D-QC-CB-STRAPS"]["types"]) | {"coll_ftm", *IOHOLD_SENDERS, SC_ROOT, "slw_su_c", "sle_su_c", "sle_fw_v1_e2"}
     for tn, bt in base["partition_types"].items():
         if tn not in touched:
             assert iface(types[tn]) == iface(bt), tn

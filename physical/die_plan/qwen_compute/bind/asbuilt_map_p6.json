@@ -132,7 +132,7 @@
    "sl_\\1_ctl"
   ],
   [
-   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_suvm",
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_suvm(?:\\..*)?",
    "sl_\\1_su_c"
   ],
   [
@@ -204,5 +204,5 @@
    "coll_core"
   ]
  ],
- "note": " | ELEMQK-BIND 10-24 (P6 main plan 4b7b2b3e64): u_tap -> sl_*_ctl (QC-P6-R8 1f5b9bee38), io_ucie + io_collective u_shared/g_six_five -> coll_ucie (census/coll_map.json)"
+ "note": " | ELEMQK-BIND 10-24 (P6 main plan 4b7b2b3e64): u_tap -> sl_*_ctl (QC-P6-R8 1f5b9bee38), io_ucie + io_collective u_shared/g_six_five -> coll_ucie (census/coll_map.json) | QC infra-first: source-exact SU structural descendants stay in their original su_c partition."
 }

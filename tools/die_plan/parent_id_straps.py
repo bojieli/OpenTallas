@@ -13,7 +13,7 @@ with TIEHI/TIELO next to the pin (gate side: straps.py).
 
 KV_ID_WIDTHS = {'strap_corner': 2, 'strap_hid': 2, 'strap_bsel': 2}
 PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6}
-ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', *PHYSICAL_ID_WIDTHS})
+ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', *PHYSICAL_ID_WIDTHS})
 
 
 def validate_parent_id_straps(descriptor, inputs=None, pins=None):
@@ -58,6 +58,8 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None):
         width, value = contract['width'], contract['value']
         if type(width) is not int or width < 1:
             raise ValueError(f'parent_id_straps {port}: width must be a positive integer')
+        if port == 'sidx' and width != 3:
+            raise ValueError('parent_id_straps sidx: identity width must be exactly 3 bits')
         if port in PHYSICAL_ID_WIDTHS and width != PHYSICAL_ID_WIDTHS[port]:
             raise ValueError(f'parent_id_straps {port}: identity width must be exactly {PHYSICAL_ID_WIDTHS[port]} bits')
         if type(value) is not int or value < 0 or value >= 1 << width:
@@ -97,3 +99,21 @@ def type_parent_id_straps(partition_type):
             raise ValueError(f'parent_id_straps: conflicting declaration for {inst}')
         out[inst] = ids
     return out
+
+
+def validate_bound_id_bits(bitsv, width, expected):
+    """Check only the literal bits represented by the old bound parameter.
+
+    An ID may contain internal tie-cell/logic bits as well as literals. Those
+    connections remain untouched: promoting its existing parameter to an input
+    must not turn internal connections into constants or waive unknown bits.
+    Unused parameter positions retain their canonical zero fill.
+    """
+    if not bitsv or any(type(i) is not int or not 0 <= i < width for i in bitsv):
+        raise ValueError('ID parameter requires existing in-range literal bits')
+    if any(not values or any(v not in ('0', '1') for v in values) for values in bitsv.values()):
+        raise ValueError('ID parameter contains an unknown/nonliteral bit')
+    representative = sum(int(values[0]) << i for i, values in bitsv.items())
+    if representative != expected:
+        raise ValueError(f'representative ID literal bits disagree with {expected}')
+    return representative
