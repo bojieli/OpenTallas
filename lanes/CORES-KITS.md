@@ -19,3 +19,6 @@ Flow: S81 kits = released canary 0f076c3f7 flow; KV = canary golden flow (flow-2
 - Constant member inputs (cdc_ch 482 b = u_done.i_d width pad of a 546-b FIFO carrying 64 b; cdc_pc 18 b u_tx.i_d pad; ingest_eng r_rdy=0): parent-exact u_host bindings inside the core, no open pins; declare under the dead-input ruling in the recut (cdc_ch also wastes FIFO width).
 - Low fill to watch at GEOM: host_qm 173 cells in 77.76x77.76; several cores 6-14% std-cell area of slot (macro area excluded).
 - Next: owner of the hr face recut (KV-CORE-RTL lineage) implements (1)-(5) from current sources, regenerates, then kit -> place -> render -> GEOM REQ -> enqueue --geom REQ.
+
+## CODEX notes 2026-10-26 02:08 PDT — takeover
+CODEX took over remaining hard-core work on codex/cores-1026. KVHR2 predecessor newer than handoff: remote claude/cores-kits-kvhr2@7540d0411b already implements zero-cycle private face recut/current-source preparation/reset classification; 10 kvhr2_fp proof containers live, child collecting in its OWN tree rather than duplicating. KVX q0/q1/q3 placement PASS (std-cell area 12,304/19,966/11,683 um2; utilization 36/59/34%); pv_join k2 LEC LIVE, newer k2r FAIL missing face_guard module in runner bundle. KVX child diagnosing/fixing bundle and reviewing placed images. S81 23-core lint/gen work assigned PATH-S81 child; no overlap.
