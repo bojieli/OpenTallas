@@ -149,6 +149,8 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--tree',type=Path,required=True)
     ap.add_argument('--fixtures',type=Path,required=True)
+    ap.add_argument('--entry-engram-inputs',type=Path,
+                    help='Checkpoint-derived Engram inputs for native attention-entry H rows')
     ap.add_argument('--mechanism-receipt',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--replay-job',type=int,action='append',default=[],help='also write job K as a dv_cut_replay prog dir')
@@ -157,7 +159,7 @@ def main():
                          '(recorded in manifest mechanism_source_drift); the measured ages become a hypothesis that only the '
                          'RTL cut replay of these jobs can confirm. Bench files outside the repo must still match.')
     a=ap.parse_args();die=D.Die(a.tree)
-    data=compile_jobs(die,compile_inputs(die,a.fixtures),json.loads(a.mechanism_receipt.read_text()),a.out,
+    data=compile_jobs(die,compile_inputs(die,a.fixtures,a.entry_engram_inputs),json.loads(a.mechanism_receipt.read_text()),a.out,
                       prog_jobs=set(a.replay_job), drift_to_replay=a.mechanism_drift_to_replay)
     print('ENTRY_NATIVE_JOBS',len(data['jobs']),'PARTIAL: real host/global route adoption held')
 

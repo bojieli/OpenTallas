@@ -90,7 +90,7 @@ module qfd_dv_stream_tile #(
         sw_q0 <= sw_i[1086:0]; se_q0 <= se_i[1086:0]; sw_q1 <= sw_q0; se_q1 <= se_q0;
         sid_q0 <= sid; sid_q1 <= sid_q0;
         cdir_q <= cfg_dir; ctag_q <= cfg_tag; ctag_q1 <= ctag_q;
-        for (gi = 0; gi < NRT; gi = gi + 1) begin ste_r[4*gi +: 4] <= sid; end
+        for (integer gi = 0; gi < NRT; gi = gi + 1) begin ste_r[4*gi +: 4] <= sid; end
         stw_r <= sid;
     end
     always @(posedge ck or negedge rst_n)
@@ -98,7 +98,7 @@ module qfd_dv_stream_tile #(
             vpe_r <= 0; vpw_r <= 0; hte_r <= 0; htw_r <= 0; hxe_r <= 0; hxw_r <= 0; ub_r <= 1'b0; cv_r <= 3'd0;
         end else begin
             vpe_r <= {NRT{sw_i[1087]}}; vpw_r <= {NRT{se_i[1087]}};
-            for (gi = 0; gi < NRT; gi = gi + 1) begin
+            for (integer gi = 0; gi < NRT; gi = gi + 1) begin
                 hte_r[8*gi +: 8] <= sw_i[1087:1080];
                 hxe_r[4*gi +: 4] <= sw_i[1087:1084];
                 hxw_r[4*gi +: 4] <= se_i[1087:1084];
@@ -124,11 +124,11 @@ module qfd_dv_stream_tile #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin pe_l <= 0; pw_l <= 0; te_l <= 0; xe_l <= 0; xw_l <= 0; tw_x <= 1'b0; ub_l <= 1'b0; end
         else begin
-            for (gi = 0; gi <= NGR; gi = gi + 1) begin
+            for (integer gi = 0; gi <= NGR; gi = gi + 1) begin
                 pe_l[gi] <= (MUT == 31 && gi == 17) ? vpw_r[gi * NRT / (NGR + 1)] : vpe_r[gi * NRT / (NGR + 1)];
                 pw_l[gi] <= vpw_r[gi * NRT / (NGR + 1)];
             end
-            for (gi = 0; gi <= NGT; gi = gi + 1) begin
+            for (integer gi = 0; gi <= NGT; gi = gi + 1) begin
                 te_l[gi] <= (MUT == 32 && gi == 5) ? thit_nosid(hte_r[8*(gi * NRT / (NGT + 1)) +: 8])
                                                    : thit(hte_r[8*(gi * NRT / (NGT + 1)) +: 8], ste_r[4*(gi * NRT / (NGT + 1)) +: 4]);
                 xe_l[gi] <= xhit(hxe_r[4*(gi * NRT / (NGT + 1)) +: 4]);
@@ -144,7 +144,7 @@ module qfd_dv_stream_tile #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin de_k <= 0; dw_k <= 0; cv_l <= 2'd0; tag <= 28'd0; end
         else begin
-            for (gi = 0; gi < NK; gi = gi + 1) begin
+            for (integer gi = 0; gi < NK; gi = gi + 1) begin
                 if (cv_r[0]) de_k[gi] <= cdir_q[0];
                 if (cv_r[1]) dw_k[gi] <= cdir_q[1];
             end
@@ -168,8 +168,8 @@ module qfd_dv_stream_tile #(
     reg [255:0] wd_q;
     (* keep = "true" *) reg        wy_r;                     // write-any root
     always @(posedge ck) begin
-        for (gi = 0; gi < 8; gi = gi + 1) begin
-            for (qi = 0; qi < 4; qi = qi + 1) wd_c[48*qi + 6*gi +: 6] <= xw_addr[24*gi +: 6];
+        for (integer gi = 0; gi < 8; gi = gi + 1) begin
+            for (integer qi = 0; qi < 4; qi = qi + 1) wd_c[48*qi + 6*gi +: 6] <= xw_addr[24*gi +: 6];
             wb_q[16*gi +: 16] <= xw_addr[24*gi + 6 +: 16];
         end
         wd_q <= xw_data;
@@ -224,15 +224,15 @@ module qfd_dv_stream_tile #(
 
     always @(posedge ck) begin
         selq <= sel_n; dupq <= |dup_n; bbq <= |beat_bad; w0q <= we_c[0]; abq <= wb_q[0 +: 16];
-        for (qi = 0; qi < NK; qi = qi + 1) shq_t[64*qi +: 64] <= sh_n;
+        for (integer qi = 0; qi < NK; qi = qi + 1) shq_t[64*qi +: 64] <= sh_n;
         shq_b <= {sh_n, sh_n};
-        for (qi = 0; qi < 4; qi = qi + 1)
-            for (li = 0; li < 8; li = li + 1)
+        for (integer qi = 0; qi < 4; qi = qi + 1)
+            for (integer li = 0; li < 8; li = li + 1)
                 lane_c[128*qi + 16*li +: 16] <= bf16(wd_q[32*li +: 32]);
     end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) wa1 <= 0;
-        else for (gi = 0; gi < NK + 2; gi = gi + 1) wa1[gi] <= (MUT == 34 && gi == 3) ? 1'b0 : wy_r;
+        else for (integer gi = 0; gi < NK + 2; gi = gi + 1) wa1[gi] <= (MUT == 34 && gi == 3) ? 1'b0 : wy_r;
     // ---------------------------------------------------------------------------------------------- P2
     reg [1023:0] xb;                                          // beat assembly (no reset; written only on slot hits)
     reg [15:0]   xbeat;
@@ -268,7 +268,7 @@ module qfd_dv_stream_tile #(
     endgenerate
     always @(posedge ck) begin
         xb <= nb;
-        for (gi = 0; gi < 16; gi = gi + 1) if (wa1[NK + gi / 8]) xbeat[gi] <= abq[gi];
+        for (integer gi = 0; gi < 16; gi = gi + 1) if (wa1[NK + gi / 8]) xbeat[gi] <= abq[gi];
     end
     // completion fault (combinational on the P2 cycle = the reference's pbad cycle), from tree 0's copies
     wire sbad = (MUT == 22) ? 1'b0 : ((op_k[0] && |(xm_k[63:0] & shq_t[63:0])) || dupq);
@@ -286,11 +286,11 @@ module qfd_dv_stream_tile #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin p2l[L2E0-1:0] <= 0; p2l[L2X] <= 1'b0; end
         else begin
-            for (gi = 0; gi < L2E0; gi = gi + 1) p2l[gi] <= p2d(gi, complete_k, de_k, dw_k);
+            for (integer gi = 0; gi < L2E0; gi = gi + 1) p2l[gi] <= p2d(gi, complete_k, de_k, dw_k);
             p2l[L2X] <= p2d(L2X, complete_k, de_k, dw_k);
         end
     always @(posedge ck)
-        for (gi = L2E0; gi < L2X; gi = gi + 1) p2l[gi] <= p2d(gi, complete_k, de_k, dw_k);
+        for (integer gi = L2E0; gi < L2X; gi = gi + 1) p2l[gi] <= p2d(gi, complete_k, de_k, dw_k);
     wire [NGR:0] ie_e = p2l[NGR:0];
     wire [NGR:0] ie_w = p2l[2*NGR+1:NGR+1];
     wire [NGB-1:0] cm_e = p2l[2*NGR+1+NGB:2*NGR+2];
@@ -319,7 +319,7 @@ module qfd_dv_stream_tile #(
             so_w[1087] <= pw_l[NGR] || ie_w[NGR];
         end
     always @(posedge ck)
-        for (gi = 0; gi < 1087; gi = gi + 1) begin
+        for (integer gi = 0; gi < 1087; gi = gi + 1) begin
             so_e[gi] <= pe_l[gi / G] ? sw_q1[gi] : ie_e[gi / G] ? own[gi] : 1'b0;
             so_w[gi] <= pw_l[gi / G] ? se_q1[gi] : ie_w[gi / G] ? own[gi] : 1'b0;
         end
@@ -333,8 +333,8 @@ module qfd_dv_stream_tile #(
     reg [1049:0] r_tw;
     reg [1047:0] r_xt;
     always @(posedge ck) begin
-        for (gi = 0; gi < 1050; gi = gi + 1) r_tw[gi] <= te_l[gi / G] ? tv_e[gi] : tv_w[gi];
-        for (gi = 0; gi < 1048; gi = gi + 1) r_xt[gi] <= xe_l[gi / G] ? xv_e[gi] : xw_l[gi / G] ? xv_w[gi] : xv_o[gi];
+        for (integer gi = 0; gi < 1050; gi = gi + 1) r_tw[gi] <= te_l[gi / G] ? tv_e[gi] : tv_w[gi];
+        for (integer gi = 0; gi < 1048; gi = gi + 1) r_xt[gi] <= xe_l[gi / G] ? xv_e[gi] : xw_l[gi / G] ? xv_w[gi] : xv_o[gi];
     end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin r_tw_we <= 1'b0; r_xt_v <= 1'b0; r_xt_bad <= 1'b0; end

@@ -147,23 +147,27 @@ def snake_index(sid):
     return col if tier == 0 else NS - 1 - col
 
 
-def entry_writes(die, fixtures, sid):
+def entry_writes(die, fixtures, sid, entry_engram_inputs=None):
     """the slice's layer-entry target-5 rows (entry_inputs.compile_inputs packing, hash-checked inputs)"""
     sys.path.insert(0, str(Path(__file__).parent))
     from entry_inputs import compile_inputs
-    img = compile_inputs(die, fixtures)
+    img = compile_inputs(die, fixtures, entry_engram_inputs)
     return [w for w in img['writes'] if w['sid'] == sid], img['input_sources']
 
 
-def emit(die, prog, smoke, fixtures, ctl_cycles):
+def emit(die, prog, smoke, fixtures, ctl_cycles, entry_engram_inputs=None):
     """entry-state CTL events + the NX flit output words for the norm-smoke slice; replaces the plan-only NX event.
     ctl_cycles = every CTL event cycle already on the smoke slice's tier (the entry writes end ENTRY_GUARD before them).
     Negative control: dv_cut_replay --mutant corrupt:<line lane>:<bit> flips a bit of the first entry write."""
     sl, sid = smoke['slice'], smoke['sid']
-    p = partials(fixtures)
+    h = None
+    if entry_engram_inputs is not None:
+        import entry_engram
+        h = entry_engram.entry_h(fixtures, entry_engram_inputs)
+    p = partials(fixtures, h_override=h)
     mine = p[NVL * sid:NVL * sid + NVL]
     data = sum(v << (32 * k) for k, v in enumerate(mine))
-    writes, sources = entry_writes(die, fixtures, sid)
+    writes, sources = entry_writes(die, fixtures, sid, entry_engram_inputs)
     port = smoke['ctl_latency']['entry_port']
     last = min(ctl_cycles) - ENTRY_GUARD
     n = len(writes)
@@ -228,7 +232,7 @@ def _lane0(die, inst, port):
     return lk, d[0], d[1], L['age_edges']
 
 
-def emit_all(die, prog, smoke, fixtures, D):
+def emit_all(die, prog, smoke, fixtures, D, entry_engram_inputs=None):
     """entry state of all 16 slices + their norm commands + the snake flit words (see the block comment above)"""
     S = die.slices()
     by_sid = {v['sid']: k for k, v in S.items()}
@@ -264,7 +268,11 @@ def emit_all(die, prog, smoke, fixtures, D):
     def window(sl, d):
         i4 = G + d - lat[sl]
         return [i4 - (4 - k) for k in range(5)]
-    p_all = partials(fixtures)
+    h = None
+    if entry_engram_inputs is not None:
+        import entry_engram
+        h = entry_engram.entry_h(fixtures, entry_engram_inputs)
+    p_all = partials(fixtures, h_override=h)
     used_words = {}
 
     def snake(o, d):
@@ -365,7 +373,7 @@ def emit_all(die, prog, smoke, fixtures, D):
     # entry state of every slice: round-robin over the tier's slices, one beat a free issue edge, ending ENTRY_GUARD
     # before the tier's first CTL issue (two-edge per-slice cadence holds: >= 4 slices interleave on a tier)
     from entry_inputs import compile_inputs
-    img = compile_inputs(die, fixtures)
+    img = compile_inputs(die, fixtures, entry_engram_inputs)
     n_entry = 0
     first = {}
     for t in ('S', 'N'):

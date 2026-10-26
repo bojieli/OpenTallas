@@ -562,6 +562,60 @@
       "type": "string",
       "minLength": 1
      },
+     "dead_inputs": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "module",
+        "parameters",
+        "ports",
+        "proof",
+        "source",
+        "module_sha256"
+       ],
+       "properties": {
+        "module": {
+         "type": "string",
+         "minLength": 1
+        },
+        "parameters": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "string"
+         }
+        },
+        "ports": {
+         "type": "object",
+         "minProperties": 1,
+         "additionalProperties": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+           "type": "array",
+           "minItems": 2,
+           "maxItems": 2,
+           "items": {
+            "type": "integer",
+            "minimum": 0
+           }
+          }
+         }
+        },
+        "proof": {
+         "type": "string"
+        },
+        "source": {
+         "type": "string"
+        },
+        "module_sha256": {
+         "type": "string",
+         "pattern": "^[0-9a-f]{64}$"
+        }
+       }
+      }
+     },
      "outline_um": {
       "type": "array",
       "items": {
@@ -832,6 +886,11 @@
         "type": "number",
         "exclusiveMinimum": 0
        },
+       "tap_recentre": {
+        "enum": [
+         "sinks"
+        ]
+       },
        "edge_clocks": {
         "type": "array",
         "items": {
@@ -1064,6 +1123,66 @@
           },
           "orient": {
            "type": "string"
+          },
+          "leg_repeaters": {
+           "type": "array",
+           "items": {
+            "type": "object",
+            "required": [
+             "name",
+             "tap",
+             "k",
+             "xy"
+            ],
+            "additionalProperties": false,
+            "properties": {
+             "name": {
+              "type": "string",
+              "minLength": 1
+             },
+             "tap": {
+              "type": "string",
+              "minLength": 1
+             },
+             "k": {
+              "type": "integer",
+              "minimum": 1
+             },
+             "xy": {
+              "type": "array",
+              "items": {
+               "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+             },
+             "cell": {
+              "type": "string"
+             },
+             "cell_ll_um": {
+              "type": "array",
+              "items": {
+               "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+             },
+             "cell_wh_um": {
+              "type": "array",
+              "items": {
+               "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+             },
+             "orient": {
+              "type": "string"
+             }
+            }
+           }
+          },
+          "leg_slew_probe": {
+           "type": "object"
           }
          }
         }
@@ -2415,6 +2534,40 @@
       "legacy",
       "sender_min"
      ]
+    },
+    "io_hold_driver_views": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "part",
+       "type",
+       "bus",
+       "out_hold_guarantee_ps",
+       "basis"
+      ],
+      "properties": {
+       "part": {
+        "type": "string"
+       },
+       "type": {
+        "type": "string"
+       },
+       "bus": {
+        "type": "string"
+       },
+       "out_hold_guarantee_ps": {
+        "type": "number"
+       },
+       "basis": {
+        "type": "string"
+       },
+       "source_plan": {
+        "type": "string"
+       }
+      }
+     }
     },
     "common_latency_ps": {
      "type": "number",

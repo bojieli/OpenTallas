@@ -7,8 +7,12 @@
            "tools/die_plan/reg_fanout_gate.py", "tools/die_plan/rtl_lint.py", "tools/die_plan/reset_tree.py", "tools/die_plan/setRC_rcx_asap7.tcl",
            "tools/die_plan/schema.py", "tools/die_plan/taps.py", "tools/die_plan/pin_audit.py",
            "physical/common_flow/*", "physical/die_plan/hbm_arch_cores/*", "physical/die_plan/qwen_kvsys/cores/harden/*",
-           "tools/flow_canary/*"],
+           "tools/flow_canary/canaries.json",
+           "tools/ref_tile/*.py", "tools/ref_tile/*.tcl", "tools/ref_tile/*.sh", "tools/ref_tile/*.mk", "tools/ref_tile/*.sdc",
+           "tools/ref_tile/*.cc", "tools/ref_tile/composition_gates.json", "tools/ref_tile/legacy_layer_kits.json"],
  "die_plans": {"s81": ["s81"], "s81_head": ["s81_head"], "qwen_compute": ["qwen_compute"], "qwen_kvsys": ["qwen_kvsys"], "qwen_kvsys_core": ["qwen_kvsys"], "hbm": ["hbm", "hbm_arch", "hbm_arch_cores"], "hbm_sram": ["hbm", "hbm_arch", "hbm_arch_cores"]},
+ "watch_exclude": ["*/test_*.py", "*/tests/*", "*/__pycache__/*", "*.md", "*/README*", "*.log", "*.png", "*/examples/*",
+                   "*/validation/*", "*/results/*", "*/review/*", "*/eco_failed/*", "*/wip_unverified/*", "*.service", "*.timer"],
  "canaries": [
   {"die": "s81", "item": "slice_station__t12", "flow": "type", "top": "s81p_slice_station__t12", "mem_gb": 40, "threads": 8,
    "why": "signed-off type (B_1024 kitsB, +18.24/+8.62); ft stations = keep-reg relays + rst_o reset relays; adopt178 plan on main. No SRAM: S81 type macros are hard cores (119/176 types).",
@@ -57,7 +61,8 @@
    "gen": "python3 -I physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py --core-json {inputs}/core/kv3_head_eighth_e1_core.json --plan {inputs}/plan/die_plan.json --kit-rtl {inputs}/kit_rtl --out {gen}",
    "vars": {"inputs": "/srv/opentallas-scratch2/claude/flow-canary/inputs/kv/20261025_head_e1"},
    "prep": ["if [ ! -f {inputs}/MANIFEST.json ]; then echo 'CANARY_INPUTS missing {inputs}'; python3 -I {run}/canary.py check --run {run}; exit 3; fi"],
-   "kit": "{gen}/kv3_head_eighth_e1__216x216", "run": "bash {kit}/run_kit_kv.sh {kit} finish {mem} {cpus}",
+   "kit": "{gen}/kv3_head_eighth_e1__216x216", "run": "bash {kit}/run_kit_kv.sh {kit} finish {mem} {cpus} && bash {src}/physical/die_plan/qwen_kvsys/cores/harden/eco/hold_step.sh {kit} {src} {cpus} {mem}",
+   "baseline_note": "FLOW-TAG 2026-10-26 (COORD FLOW-FANOUT ruling 00:41): RE-BASELINED on the ruled flow (fanout cap 64 9bca574fd, MCMM tc+bc GRT, FF vclk, rcx RC, leaf_affinity, hold margin 5) + the standard KV post-route FF hold step (eco/hold_step.sh, sign-off in signoff_hold/). The golden below (36.61 TT, TC-only 10-24 flow) stays a recorded REFERENCE only; the gating baseline is <runs>/baselines/qwen_kvsys_core__kv3_head_eighth_e1.json. Watch list unchanged.",
    "grt_gate": false,
    "golden": {"verdict": "NOT SIGNED", "setup_tt_wns": 36.61, "hold_ff_wns": -5.92,
               "source": "intel2:/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e1__216x216/signoff/signoff.json (2026-10-24 14:21, hold_ff 378 ep + DRV slew; copy in the inputs dir golden_signoff.json)"}}

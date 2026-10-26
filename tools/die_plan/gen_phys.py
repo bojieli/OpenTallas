@@ -142,6 +142,13 @@ def tap_points(P, tn):
     cks = [(x, y) for _, x, y in S.tap_grid(P, tn)] + [(x, y) for _, x, y, _ in S.core_taps(P, tn)]
     ck = list(cks[0])
     rs = list(t.get("reset", {}).get("tap_um", ck))
+    if (t.get("hard") and t.get("reset", {}).get("tap_um") is not None
+            and t.get("clock", {}).get("tap_um") is not None
+            and any(c.get("lef") and c.get("origin_um") is not None for c in t.get("contents", []))):
+        # These are native hard-macro terminal coordinates, not movable buffer
+        # sites. Distinct legal LEF pins can be192nm apart; the soft1um collision
+        # heuristic and partition-layer snapping must not move either terminal.
+        return [tuple(map(float, ck)), tuple(map(float, rs))]
     if any(abs(rs[0] - a) < 1.0 and abs(rs[1] - b) < 1.0 for a, b in cks):
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
         if t.get("hard_cores"):     # S81-P8 10-23: the reset tap also sits in a channel, off the clock taps
@@ -392,6 +399,13 @@ def input_hold_min(P, tn):
                 break
             for pid, pr in prs:
                 s = pr["src"]["part"]
+                dv = (P.clock.get("io_hold_driver_views") or {}).get(pid)
+                if s == DIE_PART and dv:
+                    # CP1 proof harness: explicit registered upstream driver view of the full plan (COORD 23:26 (3));
+                    # the seam itself is checked on the real parent (io_hold_parent.py)
+                    vals.append((float(dv["out_hold_guarantee_ps"]), f"driver view {dv['type']} ({dv['basis']})",
+                                 dv["type"]))
+                    continue
                 if s == DIE_PART or s not in P.parts:
                     why = f"{pid} from the die edge"
                 elif P.channel_of(pid) is not None:
@@ -446,6 +460,34 @@ def _group_in_min(m):
 # rebinds each corner to its routed RCX pin-register mean and FAILs when it is more than insertion_tol_ps away from
 # the bound value (signoff.py clock check).
 FF_TT_INSERTION_RATIO = S.FF_TT_INSERTION_RATIO   # 0.81: one constant (schema)
+
+
+ROOT_RESET_FALSE_PATH = (
+    r"set_false_path -from [get_ports {arst_n}] -to "
+    r"[get_pins -hierarchical -regexp {^u_rst_root[./]p\[[01]\]\$_DFF_PN0_/RESETN$}]"
+)
+
+
+def root_async_reset(P, tn):
+    """Owner reset rule: only the unique whole-die two-flop async root is exempt.
+
+    Every receiving partition's synchronous arst_n and all forwarded relays remain
+    timed. Do not infer a reset waiver from an input name or an RTL comment.
+    """
+    import reset_tree as RT
+    if not RT.wavefront(P) or P.types[tn].get("hard"):
+        return False
+    if RT.pad_false_path_pins(P, tn):
+        # a declared die reset pad plan (PATH-KV-POR) already emits the ONE root CDC exception (raw pad ->
+        # u_rst_root async + PLL analog); a second one would double the waiver (test_por_gate)
+        return False
+    if RT.wf_solve(P)["root_type"] != tn:
+        return False
+    if RT.sync_stages(P, tn) != 2:
+        raise ValueError("owner reset contract requires exactly two root synchronizer stages")
+    if sum(p["type"] == tn for p in P.parts.values()) != 1:
+        raise ValueError("async root reset exception requires a unique root partition type")
+    return True
 
 
 def insertion_binding(P, tn):
@@ -591,6 +633,9 @@ def sdc(P, tn, pins):
     for v, ports in _group_in_min(input_hold_min(P, tn)):
         out += (f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n"
                 f"set_input_delay -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
+    if root_async_reset(P, tn):
+        out += "# Sole asynchronous die-root reset CDC (owner reset rule); forwarded reset remains timed.\n"
+        out += ROOT_RESET_FALSE_PATH + "\n"
     # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
@@ -630,6 +675,100 @@ def type_macros(P, tn):
         out.append((c["inst"], c["module"], c["lef"], c.get("lib"), c["origin_um"][0], c["origin_um"][1],
                     c.get("orient", "R0")))
     return out
+
+
+def phy_pg_domains(P, tn):
+    """PATH-KV-SYSC 10-25 (OWNER decision 7, PHY PG hook): the die.pg.domains that fall inside partition type tn, as
+    [(name, power_net, ground_net, rect_type_um, [macro inst fully inside])].  Identical for every instance (a hardened
+    type cannot carry per-instance supply variants); empty for every type without a PHY domain (kits unchanged)."""
+    doms = P.die.get("pg", {}).get("domains", []) or []
+    if not doms:
+        return []
+    insts = [n for n, p in P.parts.items() if p["type"] == tn]
+    t = P.types[tn]
+    per = []
+    for inst in insts:
+        a = P.rect(inst)
+        got = []
+        for d in doms:
+            b = d["rect_um"]
+            r = [max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])]
+            if r[0] >= r[2] or r[1] >= r[3]:
+                continue
+            u, v = P.to_type(inst, r[:2]), P.to_type(inst, r[2:])
+            rt = [round(min(u[0], v[0]), 4), round(min(u[1], v[1]), 4), round(max(u[0], v[0]), 4),
+                  round(max(u[1], v[1]), 4)]
+            mac = []
+            for c in t.get("contents", []) + t.get("hard_cores", []):
+                if "origin_um" not in c or "outline_um" not in c:
+                    continue
+                x0, y0 = c["origin_um"]
+                cw, ch = c["outline_um"]
+                if c.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
+                    cw, ch = ch, cw
+                box = [x0, y0, x0 + cw, y0 + ch]
+                ov = box[0] < rt[2] and box[2] > rt[0] and box[1] < rt[3] and box[3] > rt[1]
+                if not ov:
+                    continue
+                if not (box[0] >= rt[0] and box[1] >= rt[1] and box[2] <= rt[2] and box[3] <= rt[3]):
+                    raise ValueError(f"type {tn}: macro {c['inst']} straddles PG domain {d['name']} {rt}")
+                mac.append(c["inst"])
+            if not mac:
+                raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
+            got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
+        per.append(got)
+    if any(json.dumps(g) != json.dumps(per[0]) for g in per):
+        raise ValueError(f"type {tn}: per-instance PHY PG domains differ; cannot harden one type for them")
+    return per[0]
+
+
+def _tcl_re(s):
+    return re.sub(r"([.\[\]()*+?^$|\\])", r"\\\1", s)
+
+
+def phy_pg_pdn(P, tn, doms, macros):
+    """Partition PDN with separate PHY supply regions (OWNER decision 7; OpenROAD voltage regions, the die-level form is
+    pg_regions.pdn_tcl).  CORE keeps the abutment-continuous grid of PDN everywhere outside the regions (pdngen cuts the
+    core domain at other domains' regions); each region gets its own net (VDDPHY) + VSS: M6/M7 straps at the same
+    die-phase widths / pitches (M7 exported as pins, so the abstract carries VDDPHY M7 only inside the region and the
+    die M8/M9 VDDPHY mesh of die.pg.domains lands on it), a macro grid landing M6 on the macro's top-layer PG pins, and
+    a hard placement blockage (no std cell in the region: it has no core followpins).  Content macros outside regions
+    get a CORE macro grid (their M4 PG pins -> core M5 straps)."""
+    phy_insts = sorted({i for d in doms for i in d[4]})
+    core_macros = [m[0] for m in macros if m[0] not in phy_insts]
+    excl = "|".join(_tcl_re(i) for i in phy_insts)
+    t = ["# GENERATED by tools/die_plan/gen.py phys: partition PDN with separate PHY supply regions (gen_phys.phy_pg_pdn).",
+         "set b [ord::get_db_block]", "set dbu [[ord::get_db_tech] getDbUnitsPerMicron]"]
+    for net in sorted({d[1] for d in doms} - {"VDD"}):
+        t += [f"set n [$b findNet {net}]", f'if {{$n eq "NULL"}} {{ set n [odb::dbNet_create $b {net}] }}',
+              "$n setSigType POWER; $n setSpecial"]
+    t += [f"add_global_connection -net {{VDD}} -inst_pattern {{^(?!({excl})$).*}} -pin_pattern {{^VDD$}} -power"]
+    for name, pw, gd, r, mac in doms:
+        t += [f"add_global_connection -net {{{pw}}} -inst_pattern {{^({'|'.join(_tcl_re(i) for i in mac)})$}} "
+              f"-pin_pattern {{^VDD$}} -power"]
+    t += ["add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground", "global_connect",
+          "set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}"]
+    for k, (name, pw, gd, r, mac) in enumerate(doms):
+        rn = f"ot_phy_pg_{k}"
+        t += [f"set region [odb::dbRegion_create $b {rn}]",
+              f"odb::dbBox_create $region " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r),
+              f"set_voltage_domain -name {{{rn}}} -region {{{rn}}} -power {{{pw}}} -ground {{{gd}}}"]
+    t += [ln for ln in PDN.splitlines()[5:] if ln.strip()]       # the CORE grid of PDN (after its global connects)
+    for k, (name, pw, gd, r, mac) in enumerate(doms):
+        rn = f"ot_phy_pg_{k}"
+        t += [f"# PHY supply region {name}: {pw}/{gd} over {' '.join(mac)} (die.pg.domains, OWNER decision 7)",
+              f"define_pdn_grid -name {{{rn}}} -voltage_domains {{{rn}}} -pins {{M7}}",
+              f"add_pdn_stripe -grid {{{rn}}} -layer {{M6}} -width {{0.288}} -spacing {{0.096}} -pitch {{4.32}} -offset {{1.968}}",
+              f"add_pdn_stripe -grid {{{rn}}} -layer {{M7}} -width {{0.288}} -spacing {{0.096}} -pitch {{8.64}} -offset {{4.128}}",
+              f"add_pdn_connect -grid {{{rn}}} -layers {{M6 M7}}",
+              f"define_pdn_grid -macro -name {{{rn}_macro}} -instances {{{' '.join(mac)}}} -voltage_domains {{{rn}}} -halo {{0}}",
+              f"add_pdn_connect -grid {{{rn}_macro}} -layers {{M5 M6}}",
+              f"odb::dbBlockage_create $b " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r)]
+    if core_macros:
+        t += ["# CORE content macros: M4 PG pins onto the core M5 straps",
+              f"define_pdn_grid -macro -name {{core_macros}} -instances {{{' '.join(core_macros)}}} -voltage_domains {{CORE}} -halo {{0}}",
+              "add_pdn_connect -grid {core_macros} -layers {M4 M5}"]
+    return "\n".join(t) + "\n"
 
 
 def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed=True):
@@ -782,6 +921,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                " ".join(f"[expr {{round({v:.4f}*$dbu)}}]" for v in r))
                 k += 1
         pdn = PDN + "\n".join(obs) + "\n"
+    phy_doms = phy_pg_domains(P, tn)
+    if phy_doms:
+        # PATH-KV-SYSC 10-25 PHY PG hook: separate VDDPHY region(s) of die.pg.domains inside this type
+        pdn = phy_pg_pdn(P, tn, phy_doms, macros) + pdn[len(PDN):]
+        (kd / "phy_pg.json").write_text(json.dumps([dict(name=d[0], power=d[1], ground=d[2], rect_type_um=d[3],
+                                                          macros=d[4]) for d in phy_doms], indent=1) + "\n")
     (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))

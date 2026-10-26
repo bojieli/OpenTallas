@@ -23,6 +23,15 @@ def script(kit, mount='/work'):
     sources = cfg.get('VERILOG_FILES', [])
     if len(top) != 1 or not sources:
         raise ValueError('config needs one DESIGN_NAME and nonempty VERILOG_FILES')
+    params = cfg.get('VERILOG_TOP_PARAMS', [])
+    if len(params) % 2:
+        raise ValueError('VERILOG_TOP_PARAMS needs name/value pairs')
+    if any(not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_$]*', name) for name in params[::2]):
+        raise ValueError('VERILOG_TOP_PARAMS contains an invalid parameter name')
+    parameter_args = ''.join(f' -set {name} {value}' for name, value in zip(params[::2], params[1::2]))
+    # Standalone chparam derives/replaces the top once. hierarchy -chparam can
+    # re-add a deferred module under its existing name (Yosys rtlil.cc assertion).
+    parameter_commands = [f'chparam{parameter_args} {top[0]}'] if params else []
     libs, seen = [], set()
     for p in sorted((kit / 'macros').glob('*.lib*'), key=lambda p: ('_tt.lib' not in p.name, p.name)):
         key = re.sub(r'_(tt|ff|ss)\.lib(?:\.gz)?$|\.lib(?:\.gz)?$', '', p.name)
@@ -37,7 +46,7 @@ def script(kit, mount='/work'):
                      # parameters -- qkd_static_k_issuer RESPONSE_LAT=0 -- and failed every KV head kit's lint);
                      # -noautowire still rejects implicit nets under -defer (checked on the orfs:asap7lock yosys).
                      ['read_verilog -defer -sv -noautowire ' + ' '.join(includes + [s]) for s in sources] +
-                     [f'hierarchy -check -top {top[0]}', 'proc', 'check -assert']) + '\n'
+                     parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc', 'check -assert']) + '\n'
 
 
 def run(kit, yosys='yosys'):
@@ -49,6 +58,7 @@ def run(kit, yosys='yosys'):
         log = result.stdout
         (kit / 'rtl_lint.log').write_text(log)
         record = dict(verdict='PASS' if result.returncode == 0 else 'FAIL', rc=result.returncode,
+                      top_params=config(kit).get('VERILOG_TOP_PARAMS', []),
                       errors=re.findall(r'^.*\bERROR:.*$', log, re.M), command=[yosys, '-q', '-s', str(ys)])
     except (OSError, ValueError) as error:
         record = dict(verdict='NOT RUN', rc=2, errors=[str(error)])

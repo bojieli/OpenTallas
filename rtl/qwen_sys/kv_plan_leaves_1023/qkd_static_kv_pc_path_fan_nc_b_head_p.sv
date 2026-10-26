@@ -8,6 +8,7 @@
 // class C chain head: predecessor ports fi removed; the body sees them as a zero localparam of the same name (no predecessor), folded by synthesis.
 module qkd_static_kv_pc_path_fan_nc_b_head_p #(
     parameter integer MU = 0,
+    parameter integer CORE_CLOCK = 0,
     parameter [4:0] PC = 0
 ) (
     input wire pll_hbm,
@@ -129,7 +130,7 @@ module qkd_static_kv_pc_path_fan_nc_b_head_p #(
         .emb_issue_v(s_emb_issue_v), .emb_token(s_emb_token), .emb_word_index(s_emb_word_index),
         .emb_half(s_emb_half), .emb_scale(s_emb_scale), .emb_epoch(s_emb_epoch), .emb_return_slot(s_emb_return_slot),
         .capture_slot(emb_capture_slot), .transfer_slot(emb_transfer_slot), .fault(chain_fault));
-    qkd_static_kv_pc_path_emb_nc_b #(.MU(MU)) u_pce (
+    qkd_static_kv_pc_path_emb_nc_b #(.MU(MU), .CORE_CLOCK(CORE_CLOCK)) u_pce (
         .pll_hbm(pll_hbm),
         .pll_hbm_port(pll_hbm_port),
         .pll_hbm_ecc(pll_hbm_ecc),

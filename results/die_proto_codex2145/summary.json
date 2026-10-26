@@ -1,0 +1,38 @@
+{
+  "plan_sha256": "c4f15d6ca4b1b9659aa052d6da11a7872d6442ab45e0b227827ab54694c39f44",
+  "flat": {
+    "overflow": 0,
+    "wire_segments": 1267,
+    "wire_um": 2798798
+  },
+  "segmented": {
+    "overflow": 17268,
+    "per_layer": {
+      "M4": 20,
+      "M5": 39,
+      "M6": 17012,
+      "M7": 197
+    },
+    "wire_segments": 9467,
+    "wire_um": 3253338
+  },
+  "capacity": "M4-M7 adjustment0.75, originalA8actualLEFcoreOBS M1-M5",
+  "data_cycles_added": 0,
+  "verdict": "SEGMENTED_FAIL; flattenedmodelwasoptimistic",
+  "next": "S81repackFT1mouthandrerunactualstationprototype",
+  "qc": {
+    "actual_ndr_grt_overflow": {
+      "TT": 0,
+      "FF": 0
+    },
+    "legalized_cells": 47412,
+    "overlaps": 0,
+    "standard_width_rc_only": true,
+    "standard_width_pair_ps": {
+      "TT": 462.942993,
+      "FF": 407.093628
+    },
+    "missing_modeled_clock_wire_um": 5217765.1,
+    "qualification": "NDRcorrectedmixedGRTtiming NOT RUN; no physicalclockPASS"
+  }
+}

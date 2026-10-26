@@ -1,0 +1,26 @@
+{
+ "verdict": "PASS",
+ "base_main": "9650ec980e",
+ "g2_source": "73c0e3044a",
+ "current_main_probe_inputs": "byte-identical",
+ "type": "kv3_hgi_v8",
+ "instance": "hgi_WN_7",
+ "changed_slots": [
+  "ft4",
+  "ft17",
+  "ft26",
+  "ft27"
+ ],
+ "pins_changed": 0,
+ "stations_added": 0,
+ "cycles_added": 0,
+ "face_budget": 13.2,
+ "g0_errors": 0,
+ "g0_warnings": 1367,
+ "g2_overflow": 0,
+ "g2_max_layer_usage_pct": 30.96,
+ "pin_access_no_ap": 0,
+ "actual_hop_max_um": 396.144,
+ "physical_signoff": "NOT RUN",
+ "next": "merge approved per-die station delta, then real-core kit/placement+CTS review and signoff"
+}

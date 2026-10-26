@@ -523,6 +523,10 @@ def main():
                          "head_eighth cores, odd heads opt in (PATH-KV e1 LT_COPY successor), --no-head-lane-taps = old single-tree CTS")
     ap.add_argument("--head-strap-master", action="store_true",
                     help="even head_eighth: BSEL constant + HID port -> strap_bsel / strap_hid input pins (OWNER 10-25 07:01 option B)")
+    ap.add_argument("--head-strap-odd", action="store_true",
+                    help="odd head_eighth master e1 / e5 (TYPE-REDUCE-2 10-25, OWNER option B): both ot_qkh_lane8 .bsel(2'bXX) "
+                         "constants -> input strap_bsel[1:0] (head_strap_odd.py; plan g3/head_master_odd_tr2.py ties e1 00 / "
+                         "e3 01 / e5 10 / e7 11); false path from strap_bsel, 0 cycles")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--astk-rep-split", action="store_true",
@@ -604,6 +608,14 @@ def main():
     mod = cj["module"]
     if a.astk_face_ports and not mod.startswith("kv3_astk_"):
         raise SystemExit("--astk-face-ports only applies to kv3_astk_* cores")
+    if a.head_strap_odd:
+        if not re.fullmatch(r"kv3_head_eighth_e[15]", mod):
+            raise SystemExit("--head-strap-odd applies to the odd masters kv3_head_eighth_e1 / e5 only")
+        cj["port_decl"]["strap_bsel"] = ["input", 1, 0]
+        for b in (0, 1):
+            cj["pin_class"][f"strap_bsel[{b}]"] = "in"   # as astk_strap_master.py: an input; straps are named in report.straps (id_strap)
+        cj["report"]["straps"] = [s for s in cj["report"].get("straps", []) if s.get("port") != "strap_bsel"] + [
+            dict(port="strap_bsel", width=2, kind="id_strap", was=".bsel(2'bXX) constant of both ot_qkh_lane8 lanes")]
     if a.head_lane_ltcopy and not re.fullmatch(r"kv3_head_eighth_e[0-7]", mod):
         raise SystemExit("--head-lane-ltcopy only applies to head_eighth cores e0..e7")
     if a.head_lane_ltcopy and mod[-1] in "0246" and not a.head_port_regs:
@@ -665,6 +677,9 @@ def main():
             dst.write_text(transform(dst.read_text()))
         if a.head_port_regs and dst.stem == mod:
             dst.write_text(head_port_regs(dst.read_text(), mod, kd))
+        if a.head_strap_odd and dst.stem == mod:
+            import head_strap_odd
+            dst.write_text(head_strap_odd.master(dst.read_text()))
         if a.head_lane_ltcopy and dst.stem == mod:
             dst.write_text(head_lane_ltcopy(dst.read_text(), mod, kd))
         if a.head_lane_s3copy and dst.stem == mod:
@@ -930,7 +945,8 @@ def main():
         text = (tool / name).read_text()
         text = text.replace("u_(bin|bout|ft)_[^/]*[/.]", "(u_(bin|bout|ft)_[^/]*[/.]|u_ric[/.])")
         (kd / name).write_text(text)
-    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
+    # OpenDB presents vector clock/reset pins as ck[0], while clks/rsts intentionally name buses.
+    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + r")(\[[0-9]+\])?$"
     ff = (tool / "face_flops.tcl").read_text()
     ff, replacements = re.subn(r"^set ff_skip_re \{[^}\n]*\}",
                                lambda _: "set ff_skip_re {" + skip + "}", ff, flags=re.M)
@@ -952,10 +968,11 @@ def main():
     if flow_basis:
         shutil.copyfile(tool / "setRC_rcx_asap7.tcl", kd / "setRC_rcx.tcl")
         shutil.copyfile(tool / "leaf_affinity.tcl", kd / "leaf_affinity.tcl")
-        # design-rule fit (PV-PC fd4_mc in-flow recipe, now the core default): fanout cap 24 for every repair_design
-        # (ASTK B: 134 nets > 64, max 162 -> ~1100 routed slew pins) + 20 % slew / cap margin for the routed RC
-        (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 24 for every repair_design (in-flow, not in the golden SDC)\n"
-                                           "set_max_fanout 24 [current_design]\nputs \"KVCORES max_fanout 24\"\n")
+        # Match the sign-off fanout ceiling at every repair_design stage. A tighter cap of 24
+        # split timing-critical decode broadcasts into serial weak-buffer chains (FLOW-FANOUT).
+        # Keep the routed slew/cap margins; timing-driven repair chooses the buffer tree.
+        (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 64 for every repair_design (in-flow, not in the golden SDC)\n"
+                                           "set_max_fanout 64 [current_design]\nputs \"KVCORES max_fanout 64\"\n")
     mcmm = flow_basis and (not lefs or all(libs_ff))
     for f in ("pin_audit_core.py", "corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)

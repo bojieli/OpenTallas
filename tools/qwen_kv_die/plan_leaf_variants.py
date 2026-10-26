@@ -69,7 +69,7 @@ VARIANTS = [
          libs=['rtl/lib/ot_rst_relay.sv', 'rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv']),
     dict(name='ot_qwen_tp8_pv_wide_ctl_tbf_p', src='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv',
          module='ot_qwen_tp8_pv_wide_ctl_tbf', die='ot_qwen_tp8_pv_wide_ctl_tbf.pair_id', param=[('pair_id', 'PAIR_ID')],
-         ov={'FIRST_INPUT_AGE': '127', 'END_FLOOR': '1', 'RESET_PIN': '1', 'MUT': '0', 'TRUNK_D': '54', 'FLAG_D': '58'},
+         ov={'FIRST_INPUT_AGE': '255', 'END_FLOOR': '1', 'RESET_PIN': '1', 'MUT': '0', 'TRUNK_D': '54', 'FLAG_D': '58'},
          vals=[[0], [1]], mut=[[0], [1]], libs=['rtl/lib/ot_rst_relay_bounded32.sv']),
     dict(name='qkd_astk_ctl_s_p', src='rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv', module='qkd_astk_ctl_s',
          die='qkd_astk_ctl_s.st', param=[('st', 'ST')], ov={'Z_STRIDE': '4'}, vals=[[0], [1], [2], [3]], mut=[[1], [0]],
@@ -118,7 +118,7 @@ VARIANTS = [
     # TILE level (KV-P3b-TILE 10-23): the as-built die masters.  qkd_kvs_pc_h comes from ..._n32_pj_nc32.sv (gen_source_ports
     # @ e33504a6f); its module text is byte-identical to the one in ..._n32_pj.sv used here.  qkd_kvs_grp_h_r2c is the mapped
     # structural copy (kv_grp_safe5.py) of qkd_kvs_grp_h_r2 (qkd_kvs_grp_r2.sv) whose u_core is qkd_kvs_grp_h of ..._n32_pj.sv.
-    dict(name='qkd_kvs_pc_h_head_p', src=TILE_SRC, module='qkd_kvs_pc_h',
+    dict(name='qkd_kvs_pc_h_head_p', src='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv', module='qkd_kvs_pc_h',
          die='qkd_kvs_pc_h.pc__pc (0) + pc__fi (chain head kvpc_*_0)', param=[('pc__pc', 'PC')], head=['pc__fi'],
          children=[dict(inst='u_pc', module='qkd_static_kv_pc_path_fan_nc_b', new='qkd_static_kv_pc_path_fan_nc_b_head_p',
                         params={'PC': 'PC'}, drop={'pc': 'PC', 'fi': 'pc__fi'})],

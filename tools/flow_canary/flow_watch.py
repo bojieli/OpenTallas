@@ -5,6 +5,9 @@ test data, examples, systemd units, evidence logs, the canary spec itself), and 
 physical/die_plan/<P>/ -- P is one of D's own plan trees ("die_plans").  Another die's plan files never hold a row:
 AUTOPILOT-FIX 10-25 21:22, a qwen_kvsys/cores/harden edit held every frozen QC and S81-HEAD row as "flow changed".
 die=None (no die known) or a die missing from "die_plans" keeps every die plan tree (fail closed).
+The watch list covers flow code and recipes only (die_plan generators + tcl, physical/common_flow, the core-kit
+generators, tools/ref_tile code/recipes, canaries.json); the canary harness, docs, logs, results, reviews and
+examples are not flow (AUTOPILOT-FIX 10-25 23:30).
 """
 import fnmatch
 
@@ -31,3 +34,27 @@ def flow_paths(paths, spec, die=None):
             continue
         out.add(p)
     return sorted(out)
+
+
+# Ignore only known metadata/admission fields. Any future implementation field
+# stays in the contract automatically rather than silently bypassing the gate.
+REFERENCE_METADATA = {"why", "golden", "mem_gb", "threads"}
+
+def reference_contract(spec, die):
+    item = next((c for c in spec.get("canaries", []) if c.get("die") == die), None)
+    if item is None:
+        return None
+    return {key: value for key, value in item.items() if key not in REFERENCE_METADATA}
+
+def spec_flow_changed(before, after, die):
+    """Unknown references stay conservative; resource/baseline edits are not flow edits."""
+    a, b = reference_contract(before, die), reference_contract(after, die)
+    if a is None or b is None:
+        return True
+    # "watch" / "watch_exclude" only say WHICH files make up the flow; every caller diffs those files themselves
+    # under the current spec, so editing the lists is not a flow change (AUTOPILOT-FIX 10-25 23:30: narrowing the
+    # fingerprint to flow code must not itself hold every row until a re-canary).
+    ignored = {"canaries", "die_plans", "note", "watch", "watch_exclude"}
+    extra_a = {k: v for k, v in before.items() if k not in ignored}
+    extra_b = {k: v for k, v in after.items() if k not in ignored}
+    return a != b or extra_a != extra_b or _plan_dirs(before, die) != _plan_dirs(after, die)

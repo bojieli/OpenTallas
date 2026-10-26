@@ -2,9 +2,8 @@
 
 Binding canary = the NEWEST COMPLETED canary run of the reference die (canary.json whose
 'src' equals canary_meta.json 'src_commit'); still-pending newer runs never mask it.
-A releasing run binds a kit only when the kit's watched flow files equal the released canary's, and
-main's watched flow is either the released canary's or already covered by a newer (pending)
-canary run.  A corrective kit names the reference failure by path (after the last '@').
+A releasing run binds a kit only when the kit's watched flow files equal the released canary's
+(main's flow is not consulted: a kit runs on the flow it was generated from, AUTOPILOT-FIX 10-25 23:30).  A corrective kit names the reference failure by path (after the last '@').
 Only runs of the die's CURRENT reference item (tools/flow_canary/canaries.json) count: after a reference switch the
 old item's results neither bind nor hold (FLOW-CANARY 10-25: HBM rows kept binding the retired B2l calendar FAIL).
 Reference die: cp1 -> s81; a qwen_kvsys hard-core kit (runner run_kit_kv.sh, or a kit dir holding one) ->
@@ -76,7 +75,19 @@ def _flow_diff(run_git, repo, a, b, watch, spec=None, die=None):
     module_spec = importlib.util.spec_from_file_location("flow_canary_watch", module_path)
     module = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(module)
-    return module.flow_paths(paths.splitlines(), spec or {"watch": watch}, die)
+    changed = module.flow_paths(paths.splitlines(), spec or {"watch": watch}, die)
+    if "tools/flow_canary/canaries.json" in changed and die:
+        snapshots = []
+        for revision in (a, b):
+            status, content, _ = run_git(['git', '-C', str(repo), 'show',
+                                          revision + ':tools/flow_canary/canaries.json'], timeout=60)
+            try:
+                snapshots.append(json.loads(content) if status == 0 else None)
+            except ValueError:
+                snapshots.append(None)
+        if all(isinstance(s, dict) for s in snapshots) and not module.spec_flow_changed(*snapshots, die):
+            changed.remove("tools/flow_canary/canaries.json")
+    return changed
 
 
 def _corrective(correction, runs, root, die, repo, seed):
@@ -160,18 +171,12 @@ def assess(row, root, repo, run_git, seed=True):
     if not spec or 'watch' not in spec:
         return False, 'flow canary watch specification missing'
     watch = spec['watch']
-    # main's watched flow is covered when a newer pending run already canaries it;
-    # otherwise main must still carry the released canary's flow.
-    covered = False
-    if newest is not bind and newest['src']:
-        covered = _flow_diff(run_git, repo, newest['src'], 'main', watch, spec, ref_die) == []
-    if not covered:
-        changed = _flow_diff(run_git, repo, bind['src'], 'main', watch, spec, ref_die)
-        if changed is None:
-            return False, 'cannot compare canary flow source to current main'
-        if changed:
-            return False, ('flow changed since newest released canary ' + bind['ref'] + ': ' + ', '.join(changed[:4])
-                           + '; no canary run on main\'s flow yet (trigger the flow canary)')
+    # AUTOPILOT-FIX 10-25 23:30 (rule 3: routes run on a released canary-passed flow): a row runs on the newest
+    # released canary's flow, judged by the KIT's own source (kits are self-contained: gen_phys copies the flow into
+    # the kit and the runner never reads main).  Main moving past the canary no longer holds rows: the old main check
+    # held every frozen QC / S81-HEAD row for hours as "flow changed since newest released canary" while main moved
+    # several times an hour.  A newer canary on main's flow, once completed, becomes the binding run and kits made
+    # from the older flow are then held below until regenerated.
     kit_source = row.get('src', '').rsplit('@', 1)[-1]
     if not kit_source:
         return False, 'queued kit source is missing'

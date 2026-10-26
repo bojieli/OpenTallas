@@ -57,10 +57,17 @@ class Gate(unittest.TestCase):
         self.runref('old','PASS');self.runref('new',src='new123456789')
         self.git=lambda args,**kw:(0,'tools/die_plan/gen_phys.py\n' if args[-2]=='abc123456789' and args[-1]=='main' else '','')
         self.assertTrue(self.gate())
-    def test_main_flow_changed_with_no_canary_on_it_held(self):
+    def test_main_moving_past_released_canary_does_not_hold_kit_on_canary_flow(self):
+        # AUTOPILOT-FIX 10-25 23:30: rows run on the newest released canary's flow; main's flow is not consulted
         self.runref('old','PASS');self.runref('new',src='new123456789')
         self.git=lambda args,**kw:(0,'tools/die_plan/gen_phys.py\n' if args[-1]=='main' else '','')
-        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('flow changed',why)
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertTrue(ok,why);self.assertIn('covers kit flow',why)
+        self.runref('only','PASS',src='abc123456789')
+        self.assertTrue(self.gate())
+    def test_newer_completed_canary_holds_kits_from_older_flow(self):
+        self.runref('old','PASS');self.runref('new','PASS',src='new123456789')
+        self.git=lambda args,**kw:(0,'tools/die_plan/gen_phys.py\n' if args[-2]=='new123456789' and args[-1]=='kit123456789' else '','')
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('differs from released canary new123456789',why)
     def test_fail_holds_and_correction_requires_known_path(self):
         p=self.runref('bad','FAIL');self.assertFalse(self.gate())
         self.row['canary_fix']='wrong@'+str(p.parent/'other/canary.json');self.assertFalse(self.gate())
@@ -103,6 +110,29 @@ class Gate(unittest.TestCase):
         for path in ['physical/die_plan/qwen_compute/cores/gen.py', 'tools/die_plan/gen_phys.py']:
             self.git=lambda *a,**kw:(0,path+'\n','')
             self.assertFalse(self.gate())
+
+    def test_live_spec_fingerprint_other_die_plan_and_docs_do_not_hold_ref_tile_does(self):
+        # the canaries.json on this checkout (the live fingerprint), frozen QC and S81-HEAD rows
+        live=Path(__file__).resolve().parents[1]/'flow_canary/canaries.json'
+        (self.repo/'tools/flow_canary/canaries.json').write_text(live.read_text())
+        spec=json.loads(live.read_text())
+        for die in ('qwen_compute','s81_head'):
+            self.row['die']=die
+            self.runref(die,'PASS',die=die,item=next(c['item'] for c in spec['canaries'] if c['die']==die))
+            for path in ['physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py',
+                         'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py',
+                         'physical/die_plan/qwen_kvsys/cores/harden/results/kv3_head_eighth_e1.json',
+                         'tools/flow_canary/trigger.py', 'tools/flow_canary/baseline.py',
+                         'tools/ref_tile/README.md', 'tools/ref_tile/tests/test_x.py', 'tools/ref_tile/examples/a.tcl',
+                         'tools/die_plan/README.md', 'physical/common_flow/x.log', 'tools/autopilot/autopilot.py',
+                         'results/fleet_viz/x.json', 'docs/x.md']:
+                self.git=lambda *a,**kw:(0,path+'\n','')
+                ok,why=assess(self.row,self.root,self.repo,self.git);self.assertTrue(ok,die+' '+path+': '+why)
+            for path in ['tools/ref_tile/ref_tile.py', 'tools/ref_tile/layout_dump.tcl', 'tools/ref_tile/ref_route.sh',
+                         'tools/die_plan/gen_phys.py', 'physical/common_flow/clock_spine.tcl']:
+                self.git=lambda *a,**kw:(0,path+'\n','')
+                ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok,die+' '+path)
+                self.assertIn(path,why)
 
     def test_adopt_never_stalls_observation(self):
         self.row['mode']='adopt';self.assertTrue(self.gate())

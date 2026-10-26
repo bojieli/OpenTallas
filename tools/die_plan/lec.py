@@ -239,8 +239,8 @@ SEQ_TAIL = [
 ]
 
 
-def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out):
-    s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False)
+def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extra=()):
+    s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False, slang_extra=slang_extra)
     s += [f"read_verilog -overwrite {stubs}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
           # declared kept registers (the kept-register check): (* keep *) wires and every wire of a keep_hierarchy
           # module (pin / replica flop cells), marked before the hierarchy attributes are dropped
@@ -262,10 +262,18 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out):
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
 
 
+# Formal preparation must retain every FF already present in the physical netlist.
+# Flatten discards wrapper keep attributes; opt_clean otherwise deletes unloaded
+# but physically required copies and produces a false KEEP failure. This does not
+# create a register or forgive a synthesis merge: a missing physical FF stays absent.
+GATE_PHYSICAL_FF_KEEP = "setattr -set keep 1 t:$*ff* t:$_*FF*_"
+
+
 def gate_script(env, netlist, stubs, wrap, lecff, out):
     s = [f"read_liberty -ignore_miss_func {NLDM}/{l}" for l in STD_LIBS]
     s += [f"read_verilog {stubs}", f"read_verilog {netlist}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
-          "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc", "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
+          "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc",
+          GATE_PHYSICAL_FF_KEEP, "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
 
 
@@ -649,6 +657,13 @@ class Lec:
         self.aliased = []
         for k in sorted(set(self.gp) - set(self.tp)):
             hit = sorted(galias.get(k, set()) & tfree)
+            # A scalar register can drive an unpacked array element. Slang flattens that
+            # Q-wire array in reverse element order, while read_verilog names the gate
+            # flop with the actual element index (cf_o -> cf[1] in the HBM indexer).
+            # Its flat alias bit is not an element identity. Leave scalar-to-indexed
+            # aliases for function-based correspondence and its inductive proof.
+            if not IDX.match(k):
+                hit = [a for a in hit if not IDX.match(a)]
             if len(hit) == 1 and hit[0] not in self.gp:
                 self.gp[hit[0]] = self.gp.pop(k)
                 self.gc[hit[0]] = self.gc.pop(k)
@@ -1816,7 +1831,81 @@ def structural_twin_closure(L, log):
 
 
 
-def alias_arrays(L, log, words=4):
+def slang_elements(aliases_file):
+    """slang lays an unpacked array out as one flat vector (`reg [3:0] x [0:N-1]`: element 0 at the MSB) and drives
+    each element from its own cell `$driver$x[i]` (the aldff / dff of that element).  -> {gold key 'ff:<scope>x[f]':
+    '[i]...[b]'}: the element index tuple and the bit within the element of every flat bit such a cell drives, read
+    from the gold design written before techmap (gold.aliases.json).  Empty when the file or the cells are absent."""
+    try:
+        d = json.loads(Path(aliases_file).read_text())
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for mod in d.get("modules", {}).values():
+        drv = {}                                    # (array name, bit id) -> '[i]..[b]'
+        for cn, c in mod.get("cells", {}).items():
+            mm = re.search(r"\$driver\$([^$\[\]]+)((?:\[\d+\])+)$", cn)
+            if not mm:
+                continue
+            for b, bit in enumerate(c.get("connections", {}).get("Q", ())):
+                if isinstance(bit, int):
+                    scope = cn[:mm.start()].removeprefix("$flatten\\").replace("\\", "")
+                    name = scope + mm[1]
+                    qwidth = len(c.get("connections", {}).get("Q", ()))
+                    drv[(name, bit)] = mm[2] + (f"[{b}]" if qwidth > 1 else "")
+        if not drv:
+            continue
+        by_bit = collections.defaultdict(list)
+        for (name, bit), suffix in drv.items():
+            by_bit[bit].append((name, suffix))
+        for nn, w in mod.get("netnames", {}).items():
+            if w.get("hide_name"):
+                continue
+            for f, bit in enumerate(w.get("bits", ())):
+                e = drv.get((nn.replace("\\", ""), bit)) if isinstance(bit, int) else None
+                if e is None and isinstance(bit, int):
+                    matches = {v for name, v in by_bit.get(bit, ())
+                               if nn == name or nn.endswith("." + name)}
+                    if len(matches) == 1:
+                        e = matches.pop()
+                if e:
+                    out[f"ff:{nn}[{f}]"] = e
+    return out
+
+
+def normalize_gold_elements(L, elements, log):
+    """Restore scalar unpacked element names before matching state.
+
+    A partial synthesized array may keep indices that happen to be flat gold
+    indices too (gold rv[0..18] versus real rv[1..19], with gate rv[2..4]).
+    Such accidental matches cannot be corrected by unmatched-only pairing.
+    Driver Q-net metadata supplies the names; all next-state checks still run.
+    """
+    ren = {}
+    for k, suffix in elements.items():
+        ix = IDX.match(k)
+        if k in L.gp and ix and suffix.count("[") == 1:
+            ren[k] = ix[1] + suffix
+    # Reject ambiguous metadata instead of silently collapsing registers.
+    names = [ren.get(k, k) for k in L.gp]
+    if len(names) != len(set(names)):
+        raise LecError("slang element names collide with another gold key point")
+    changed = sum(k != v for k, v in ren.items())
+    L.element_names = {v: v[len(IDX.match(v)[1]):] for v in ren.values()}
+    if not changed:
+        return 0
+    L.gp = {ren.get(k, k): v for k, v in L.gp.items()}
+    L.gc = {ren.get(k, k): v for k, v in L.gc.items()}
+    L.galias = {ren.get(k, k): {ren.get(a, a) for a in aliases}
+                for k, aliases in L.galias.items()}
+    L.matched = sorted(set(L.gp) & set(L.tp))
+    L.gonly = sorted(set(L.gp) - set(L.tp))
+    L.tonly = sorted(set(L.tp) - set(L.gp))
+    log.append(f"slang element names: {changed} gold register keys normalized from driver Q nets")
+    return changed
+
+
+def alias_arrays(L, log, words=4, work=None):
     """an RTL array whose gate flops synthesis named after an ALIAS array (`assign SX[i] = X[i]`: rename -wire picked
     the alias wire, so the gate holds SX[i][b] while the gold, read with the other frontend, holds X[h][flat]): the
     gold flops' own Q-net alias names carry the gate base, which is the evidence that pairs the two bases.  The index
@@ -1824,7 +1913,11 @@ def alias_arrays(L, log, words=4):
     names when the flattened gate set is a subset of the gold set (synthesis may have merged some elements into other
     registers: those gold flops stay gold-only and are paired by function in correspond); among the variants the one
     with the fewest disagreeing matched compare points in simulation is kept.  Sound: the re-key is a bijection of
-    key points and every next-state function is still proved (a wrong layout can only produce a difference)."""
+    key points and every next-state function is still proved (a wrong layout can only produce a difference).
+    The layout is read from slang's per-element driver cells when the gold has them (slang_elements); simulation
+    alone cannot tell (PATH-KV-LEC 10-25: calendar wait_q / left_q / burst_q [0:N-1], slang element 0 at the MSB vs
+    read_verilog x[0]: random patterns never reach wait_q == 0, both layouts mismatched equally, the first, element-
+    reversed one was kept -> 528 false differences on kvs_pc and its head kit)."""
     def split(keys):
         d = {}
         for k in keys:
@@ -1873,6 +1966,8 @@ def alias_arrays(L, log, words=4):
             elif isinstance(x, (list, tuple)):
                 held.update(y for y in x if isinstance(y, str))
     galias = getattr(L, "galias", {})
+    elem = slang_elements(Path(work) / "gold.aliases.json") if work is not None else {}
+    elem.update(getattr(L, "element_names", {}))
     G, T = split(k for k in L.gonly if k not in held), split(k for k in L.tonly if k not in held)
     for gb, g in sorted(G.items(), key=lambda x: -len(x[1])):
         votes = collections.Counter()
@@ -1897,14 +1992,39 @@ def alias_arrays(L, log, words=4):
                             cands.append(mp)
             if not cands:
                 continue
+            # A unique element-driver winner selects exactly the mapping the
+            # scored path below would select, independently of every simulation
+            # score. Avoid rebuilding/simulating the whole design for each
+            # small alias array (N59: thousands of arrays before the first SAT
+            # round). This changes candidate discovery only: simultaneous
+            # inductive proof/refinement still checks every selected relation.
+            structural = [sum(1 for tk, gk in mp.items() if elem.get(gk) == tk[len(tb):]) for mp in cands]
+            top = max(structural, default=0)
+            if top > 0 and structural.count(top) == 1:
+                mp = cands[structural.index(top)]
+                apply(mp)
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); unique slang element-driver layout "
+                           f"{top}/{len(mp)} bits (simulation scoring unnecessary; proof pending)")
+                continue
             base = mismatches()
-            best = None
+            scored = []
             for mp in cands:
                 apply(mp)
-                n_ = mismatches()
+                scored.append((mismatches(), mp))
                 apply({v: k for k, v in mp.items()})
-                if best is None or n_ < best[0]:
-                    best = (n_, mp)
+            best = min(scored, key=lambda x: x[0])
+            # slang's per-element driver cells name the element each flat gold bit belongs to: when they exist they
+            # decide the layout (structural evidence); simulation only orders variants without such evidence
+            agree = [sum(1 for tk, gk in mp.items() if elem.get(gk) == tk[len(tb):]) for _, mp in scored]
+            if max(agree, default=0) > 0:
+                j = max(range(len(scored)), key=lambda i: agree[i])
+                if scored[j] is not best:
+                    log.append(f"alias array: {gb.split('.')[-1]} layout from slang element drivers "
+                               f"({agree[j]} of {len(scored[j][1])} bits agree; simulation preferred another, "
+                               f"{best[0]} vs {scored[j][0]} mismatches)")
+                best = scored[j]
             # the alias evidence decides the pairing; simulation only orders the layout variants (a gold array
             # whose next state reads X sources or merged elements disagrees in raw simulation either way)
             if True:
@@ -1985,7 +2105,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     (u_tv.line[4] == u_k5.g_r.v == valid_out) is dropped while its upstream index-line constants are still being
     refined and needs adding rounds after them; 10 left it free -> false NOT EQUIVALENT (gunit_l4 895 points,
     EQUIVALENT at 24 rounds, 738 s)."""
-    alias_arrays(L, log)
+    normalize_gold_elements(L, slang_elements(Path(work) / "gold.aliases.json"), log)
+    alias_arrays(L, log, work=work)
     relayout(L, log)
     renamed(L, log)
     replica_proposals(L, log)
@@ -2323,7 +2444,12 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
-            tried[(side, k, "c") if h[0] == "const" else (side, k, str(h[2]), str(h[3]))] += 1
+            # Equality candidates are looked up with an integer polarity. Keep
+            # that key unchanged when recording rejection, or they are retried
+            # in every adding round. FSM cube tuples keep their textual key.
+            tried[(side, k, "c") if h[0] == "const" else
+                  (side, k, h[2], h[3]) if h[0] == "eq" else
+                  (side, k, str(h[2]), str(h[3]))] += 1
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
@@ -2404,6 +2530,22 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
 
 
 # ---------------------------------------------------------------------------------------------- driver
+def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
+    """gold AIG.  An unpacked array that memory_map cannot convert (write ports on several clocks, e.g. a
+    per-tap clocked delay line r[p] <= r[p+1] on clk[(p-1)/48], ot_hbm_su_static_ins) stays a $mem_v2 cell and the
+    AIGER backend rejects it; synthesis (read_verilog) turned the same array into named registers (mem2reg), so the
+    gold is re-read with read_slang --no-implicit-memories: every array becomes its registers, as written."""
+    args = (env, kit, gold_fe, lib_bbs, out / "stubs.v", out / "wrap_gold.v", out / "lecff.v", out / "gold")
+    try:
+        return run_yosys(gold_script(*args), out / "gold.ys", log)
+    except Unproven as e:
+        if gold_fe != "slang" or "Unsupported cell type: $mem_v2" not in str(e):
+            raise
+        log.append(f"gold: unmappable memory ({str(e)[-160:]}); re-reading with read_slang --no-implicit-memories")
+        rec["gold_no_implicit_memories"] = True
+        return run_yosys(gold_script(*args, slang_extra=["--no-implicit-memories"]), out / "gold.ys", log)
+
+
 def run_yosys(script, path, log):
     Path(path).write_text(script)
     y = ORFS + "/tools/install/yosys/bin/yosys"
@@ -2470,8 +2612,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         else:
             from concurrent.futures import ThreadPoolExecutor
             with ThreadPoolExecutor(2) as ex:
-                fg = ex.submit(run_yosys, gold_script(env, kit, gold_fe, lib_bbs, out / "stubs.v", out / "wrap_gold.v",
-                                                      out / "lecff.v", out / "gold"), out / "gold.ys", log)
+                fg = ex.submit(run_gold, env, kit, gold_fe, lib_bbs, out, log, rec)
                 ft = ex.submit(run_yosys, gate_script(env, netlist, out / "stubs.v", out / "wrap_gate.v",
                                                       out / "lecff.v", out / "gate"), out / "gate.ys", log)
                 fg.result()
@@ -2605,7 +2746,7 @@ def via_docker(args, image, mem):
     Path(out).mkdir(parents=True, exist_ok=True)
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
-           "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}"]
+           "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}"]
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     sol = os.environ.get("OT_LEC_SOLVER", "")
     if sol and os.path.isdir(sol):
