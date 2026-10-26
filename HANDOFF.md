@@ -1157,3 +1157,4 @@ CODEX: 2026-10-26 07:42 PDT HBM VM status orphan fixed in D-HBM-B1 candidate bb3
 
 2026-10-26 07:42 PDT CODEX: took over all81 lanes; clock128 default and explicit layer/lib contract merged main36488eead; QC R3 all4 collected FAIL, nearest-leaf reassignment discards planned equal loads, structural successor underway.
 2026-10-26 07:46 PDT CODEX: HEAD c3q FF hold FAIL-231.53/1492 diagnosed (wrong global quadrant size, unpriced root-clocked reset relay+face clone); structural V4 own baf0d1074 now CTS-only on intel1 unit3579310 after ROOT visual review.
+2026-10-26 07:56 PDT CODEX: shared core generator READY codex/shared-core-0733@e0ead1076; actual OpenROAD core coupon/idempotence+5-cycle lockstep PASS, reset inversion mutant caught,+0 data/reset cycles; root integrating, production adapters/frozen slices still required.
