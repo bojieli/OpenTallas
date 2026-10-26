@@ -1,0 +1,5 @@
+RESULT_EDGE position=0 merge_to_flit=3
+RESULT_EDGE position=1 merge_to_flit=3
+[17963000] %Fatal: tb_s81hd_result_landing_miter.sv:29: Assertion failed in tb_s81hd_ctl: fault miter live LEP state mismatch
+%Error: rtl/tb_s81hd_result_landing_miter.sv:29: Verilog $stop
+Aborting...
