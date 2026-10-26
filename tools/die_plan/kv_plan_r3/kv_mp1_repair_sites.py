@@ -46,7 +46,7 @@ def allocate_between(al,target,prev,nxt):
     al.used.add(int(ids[j]));return np.array([[x[j],y[j]]])
 
 
-def repair(raw, only_types=None, budget=395.):
+def repair(raw, only_types=None, budget=395., only_slots=None):
     P=S.Plan(raw); report=[]
     for tn,ty in raw['partition_types'].items():
         if only_types and tn not in only_types:continue
@@ -59,6 +59,7 @@ def repair(raw, only_types=None, budget=395.):
         _,chain_tables=D.type_tables(P,tn)
         badslots=[];implicit=set();originals={}
         for s in slots:
+            if only_slots and tn+'/'+s['name'] not in only_slots:continue
             name=s['name'];chains=chain_tables[name];cw,ch=s.get('bit_site_cell_um',U.CELL)
             sites=s.get('bit_sites_um')
             if not sites:
@@ -137,8 +138,8 @@ def repair(raw, only_types=None, budget=395.):
 
 
 def main():
-    ap=argparse.ArgumentParser(description=__doc__.splitlines()[0]);ap.add_argument('plan');ap.add_argument('--out',required=True);ap.add_argument('--report',required=True);ap.add_argument('--types');ap.add_argument('--budget',type=float,default=395.);a=ap.parse_args();assert 0<a.budget<=405.
-    raw=json.loads(Path(a.plan).read_text());rows=repair(raw,set(a.types.split(',')) if a.types else None,a.budget)
+    ap=argparse.ArgumentParser(description=__doc__.splitlines()[0]);ap.add_argument('plan');ap.add_argument('--out',required=True);ap.add_argument('--report',required=True);ap.add_argument('--types');ap.add_argument('--slots');ap.add_argument('--budget',type=float,default=395.);a=ap.parse_args();assert 0<a.budget<=405.
+    raw=json.loads(Path(a.plan).read_text());rows=repair(raw,set(a.types.split(',')) if a.types else None,a.budget,set(a.slots.split(',')) if a.slots else None)
     Path(a.out).write_text(json.dumps(raw,indent=1)+'\n');Path(a.report).write_text(json.dumps(rows,indent=1)+'\n')
     print(f"REPAIR slots={len(rows)} PASS={sum(x['status']=='PASS' for x in rows)} FAIL={sum(x['status']=='FAIL' for x in rows)}",flush=True)
 
