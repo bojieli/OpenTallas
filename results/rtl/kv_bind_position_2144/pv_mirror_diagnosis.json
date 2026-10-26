@@ -1,0 +1,180 @@
+{
+ "schema": "opentallas.kv.pv_mirror_diagnosis.v1",
+ "source": "b19 immutable emitted RTL; no functional adoption",
+ "cycles_delta": 0,
+ "types": [
+  {
+   "canonical": "kv3_pv_v1",
+   "new": "kv3_pv_v1n",
+   "cause": "different data packing, local/remote leaf wiring and internal delay populations",
+   "s_delay_cells": 52,
+   "n_delay_cells": 40,
+   "different_delay_cells": [
+    {
+     "inst": "u_d68_vport_W_out_v_lo",
+     "S": null,
+     "N": ".W(512), .D(68)"
+    },
+    {
+     "inst": "u_d73_vport_E_out_v_lo",
+     "S": null,
+     "N": ".W(512), .D(73)"
+    },
+    {
+     "inst": "u_d94_vport_W_out_v_lo",
+     "S": ".W(512), .D(94)",
+     "N": null
+    },
+    {
+     "inst": "u_d96_vport_E_out_v_lo",
+     "S": ".W(512), .D(96)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_128",
+     "S": ".W(1), .D(3)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_129",
+     "S": ".W(1), .D(3)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_130",
+     "S": ".W(1), .D(3)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_131",
+     "S": ".W(1), .D(3)",
+     "N": null
+    }
+   ]
+  },
+  {
+   "canonical": "kv3_pv_v2",
+   "new": "kv3_pv_v2n",
+   "cause": "different data packing, local/remote leaf wiring and internal delay populations",
+   "s_delay_cells": 24,
+   "n_delay_cells": 12,
+   "different_delay_cells": [
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_384",
+     "S": ".W(1), .D(3)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_385",
+     "S": ".W(1), .D(3)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_386",
+     "S": ".W(1), .D(3)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_387",
+     "S": ".W(1), .D(3)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_388",
+     "S": ".W(1), .D(3)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_389",
+     "S": ".W(1), .D(3)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_390",
+     "S": ".W(1), .D(3)",
+     "N": null
+    },
+    {
+     "inst": "u_pd3_i_vport_E_N_vo_391",
+     "S": ".W(1), .D(3)",
+     "N": null
+    }
+   ]
+  },
+  {
+   "canonical": "kv3_pv_v3",
+   "new": "kv3_pv_v3n",
+   "cause": "different data packing, local/remote leaf wiring and internal delay populations",
+   "s_delay_cells": 46,
+   "n_delay_cells": 46,
+   "different_delay_cells": [
+    {
+     "inst": "u_d62_vport_W_out_v_lo",
+     "S": null,
+     "N": ".W(512), .D(62)"
+    },
+    {
+     "inst": "u_d68_vport_E_out_v_lo",
+     "S": null,
+     "N": ".W(512), .D(68)"
+    },
+    {
+     "inst": "u_d72_vport_W_out_v_lo",
+     "S": ".W(512), .D(72)",
+     "N": null
+    },
+    {
+     "inst": "u_d78_vport_E_out_v_lo",
+     "S": ".W(512), .D(78)",
+     "N": null
+    }
+   ]
+  },
+  {
+   "canonical": "kv3_pv_v4",
+   "new": "kv3_pv_v4n",
+   "cause": "different data packing, local/remote leaf wiring and internal delay populations",
+   "s_delay_cells": 130,
+   "n_delay_cells": 130,
+   "different_delay_cells": []
+  },
+  {
+   "canonical": "kv3_pv_v5",
+   "new": "kv3_pv_v5n",
+   "cause": "different data packing, local/remote leaf wiring and internal delay populations",
+   "s_delay_cells": 46,
+   "n_delay_cells": 46,
+   "different_delay_cells": [
+    {
+     "inst": "u_d51_vport_W_out_v_hi",
+     "S": ".W(512), .D(51)",
+     "N": null
+    },
+    {
+     "inst": "u_d58_vport_E_out_v_hi",
+     "S": ".W(512), .D(58)",
+     "N": null
+    },
+    {
+     "inst": "u_d60_vport_W_out_v_hi",
+     "S": null,
+     "N": ".W(512), .D(60)"
+    },
+    {
+     "inst": "u_d67_vport_E_out_v_hi",
+     "S": null,
+     "N": ".W(512), .D(67)"
+    }
+   ]
+  },
+  {
+   "canonical": "kv3_pv_v6",
+   "new": "kv3_pv_v6n",
+   "cause": "different data packing, local/remote leaf wiring and internal delay populations",
+   "s_delay_cells": 14,
+   "n_delay_cells": 14,
+   "different_delay_cells": []
+  }
+ ],
+ "conclusion": "Six actual different physical glue masters. A uniform replacement needs data remapping logic, equal storage and exact proof, not ID or pin aliases alone."
+}

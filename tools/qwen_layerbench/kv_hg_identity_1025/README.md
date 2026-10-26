@@ -1,0 +1,7 @@
+HG declared-position decoder candidate
+
+`rtl/physical/kv_hg_identity_cfg.sv` maps existing HG row ID and existing hroot stack ID to the release identity cfg={logical_group,stack}. Physical row0..7 maps to logical group4,5,0,1,2,3,6,7. Hardware is one XNOR plus wires, zero FF, zero added cycles or ID pins. Preserve the existing 5-bit row chain: ASTK sq consumes its full width.
+
+Small exact gate: all32 legal identities match the explicit table; an instantiated decoder receiving the wrong row catches32/32 mismatches. Run with Verilator --binary --timing --top-module tb kv_hg_identity_cfg.sv tb_identity.sv. Fleet job oth-ubuntu-3431939-1792995439 passed on tender-ray; source/run /srv/opentallas-scratch2/claude/codex-kv-hg-id-2315.
+
+NOT installed in a bind or plan yet. Next: replace the old 5-to40-bit cfg daisy with a uniform2-bit stream driven by existing hroot u_id_stk.y[1:0], preserving each segment's stations; use the decoder to drive each ectl.cfg explicitly in plan_cells.rewired. This reduces36 segment widths from880 total bits to72 (-808), and collapses five HG position masters into existing kv3_hg_v1 if strict bind confirms identical logic. Preserve boot-image ABI, and reconcile configured cfg/fault behavior before adoption: this exact gate covers declared legal identities, not arbitrary boot configuration or startup transient behavior. Render/review the modified pin geometry before route. No route performed.
