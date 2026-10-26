@@ -147,3 +147,18 @@ def test_run_bundle_end_to_end(tmp_path):
             assert not any(r[0] - 4.32 < x < r[2] + 4.32 and r[1] - 4.32 < y < r[3] + 4.32 for r in rects)
     # the input bundle is untouched
     assert json.loads((d / "die_plan.json").read_text()) == P
+
+
+def test_lattice_tree_one_row_box_terminates():
+    # KV (ROOT-MERGE-20): leaves spread in y only (px ~ 0) -> the old split recursed on an empty j range forever
+    leaves = [(100.0, 100.0 + 50.0 * k) for k in range(40)]
+    gate, nodes = MP.lattice_tree([], leaves, [("A", (0, 0, 5000, 5000))], [], 8, 8)
+    assert gate["leaves"] == 64 and len(nodes) == 127
+
+
+def test_r4_r5_features_opt_in_by_default():
+    import argparse
+    ap = argparse.ArgumentParser()
+    MP.add_args(ap)
+    a = ap.parse_args(["plan.json", "--out", "x"])
+    assert a.tree_lattice is None and not a.onramp_bays and not a.drop_mesh_early

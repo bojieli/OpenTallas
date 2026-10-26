@@ -920,7 +920,8 @@ def lattice_tree(sites, leaf_xy, parts, cores, nx=8, ny=8, snap_um=8.64, spread_
             if axes:
                 wide = (xl[i1 - 1] - xl[i0]) >= (yl[j1 - 1] - yl[j0]) and i1 - i0 > 1 or j1 - j0 == 1
             else:
-                wide = (i1 - i0) * px >= (j1 - j0) * py and i1 - i0 > 1
+                # a 1-row box must split along i (KV: py >> px -> the old test split an empty j range forever)
+                wide = i1 - i0 > 1 and (j1 - j0 == 1 or (i1 - i0) * px >= (j1 - j0) * py)
             if wide:
                 m = (i0 + i1) // 2
                 kids = [(i0, m, j0, j1), (m, i1, j0, j1)]
@@ -1581,7 +1582,7 @@ def static_ir(files):
 def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entries=None, sites_json=None,
         reach=None, detour=405.0, core_obs_top="M5", lower_pg_frac=0.25, fill_max=0.6, bay_fill=0.5,
         track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, skew_gate_ps=80.0, render=True, log=print,
-        core_islands=None, tree_lattice=(8, 8), tree_comm_form="die"):
+        core_islands=None, tree_lattice=None, tree_comm_form="die", onramp_bays=False, drop_mesh_early=False):
     reach = float(reach or P.reach)
     out = Path(out)
     (out / "slices").mkdir(parents=True, exist_ok=True)
@@ -1738,8 +1739,10 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             m89_segs.append(roads[-1])
     use, worst_cells = grid.use_report(track_max)
     log(f"layers: {len(roads)} roads, {len(m89_segs)} on leftover M8/M9, {len(blocked)} blocked")
-    n_onramp = add_onramp_bays(m89_segs, bays_die, reach)
-    log(f"on-ramp bays: {n_onramp} added (M8/M9 segments with no rest stop of their path in reach)")
+    n_onramp = None
+    if onramp_bays:                   # MASTER-PLAN-R4 opt-in (--onramp-bays; QC plan event): ROOT-MERGE-20 byte-identity
+        n_onramp = add_onramp_bays(m89_segs, bays_die, reach)
+        log(f"on-ramp bays: {n_onramp} added (M8/M9 segments with no rest stop of their path in reach)")
 
     # ---- bays: rects, legality, fill
     bays = []
@@ -1947,11 +1950,13 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         # 12.8 (GEOM-REVIEW-3 10-26): early taps are banned as design; the plan does NOT carry the input mesh's early
         # offsets -- every tap is planned at the common latency, the dropped ones are listed for the clock owner's
         # rebuild (the mesh build itself is INFRA-FIRST's; MASTER-PLAN never edits the QC clock).
+        # opt-in (--drop-mesh-early; QC plan event); without it the main form (input early taps FAIL the gate) is kept
         mesh_early = [dict(name=t.get("name"), early_ps=t.get("early_ps"), xy=t.get("xy") or t.get("foot"))
                       for t in M.get("taps", []) if abs(float(t.get("early_ps") or 0.0)) > 1e-9]
-        for t in M.get("taps", []):
-            if "early_ps" in t:
-                t["early_ps"] = 0.0
+        if drop_mesh_early:
+            for t in M.get("taps", []):
+                if "early_ps" in t:
+                    t["early_ps"] = 0.0
     else:
         shield = dict(verdict="NOT RUN", note="no --mesh")
         bal = dict(verdict="NOT RUN", note="no --mesh")
@@ -2055,6 +2060,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                                       [q["xy"] for q in t_sites], [])
         tree_plan["island_lattice_of_plan_tree"] = dict(verdict=isl_lat_plan["verdict"],
                                                         displacement=isl_lat_plan["displacement"])
+    lat_gate, lat_nodes = None, []
+    if t_leaves and tree_lattice:     # MASTER-PLAN-R4/R5 opt-in (--tree-lattice NXxNY | cNXxNY): die H-tree lattice
         comm_mode = len(tree_lattice) == 3 and tree_lattice[0] == "c"
         lat_nx, lat_ny = tree_lattice[-2:]
         axes, comm = None, None
@@ -2081,14 +2088,17 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         dtp["consume"] = ("CLOCK-128: build the die H-tree from lattice.nodes (xy_um, binding); island_tree 'nodes' "
                           "kept as the R3 diagnostic")
         (out / "die_tree_plan.json").write_text(json.dumps(dtp, indent=None) + "\n")
-    else:
+    if not t_leaves:
         tree_plan = dict(verdict="NOT RUN", note="no declared islands")
-        lat_gate = dict(verdict="NOT RUN", note="no declared islands")
+        if tree_lattice:
+            lat_gate = dict(verdict="NOT RUN", note="no declared islands")
     if tree_comm_form == "regional":     # MASTER-PLAN-R6 opt-in (COORD 13:05): per clock region, plan tree = lattice nodes
         die_form = tree_comm
-        tpts = [(n_["tag"], tuple(n_["xy_um"])) for n_ in (lat_nodes if t_leaves else [])]
+        src = lat_nodes if lat_nodes else (tree_nodes if t_leaves else [])
+        tpts = [(n_["tag"], tuple(n_["xy_um"])) for n_ in src if n_.get("xy_um")]
         tree_comm = regional_tree_commensurate(P, centre_rows, tpts)
-        tree_comm["tree_source"] = "die_tree_plan.json lattice.nodes (the plan tree CLOCK-128 builds)"
+        tree_comm["tree_source"] = ("die_tree_plan.json lattice.nodes (the plan tree CLOCK-128 builds)" if lat_nodes
+                                    else "die_tree_plan.json nodes (island_tree; no --tree-lattice)")
         tree_comm["die_wide_form"] = dict(verdict=die_form["verdict"], no_leaf_axes=die_form.get("no_leaf_axes"),
                                           note="R5 die-wide form, INFO only under the regional ruling")
         tree_comm["core_lattice"] = die_form.get("core_lattice")
@@ -2120,7 +2130,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                        worst_path=gap_max[1], fails=len(gap_fail), in_core_bays_proposed=len(in_core),
                        examples=gap_fail[:30]),
         bay_fill=dict(verdict="PASS" if not bay_fail and not part_fill_fail else "FAIL", bays=len(bays),
-                      onramp_bays=n_onramp,
+                      **(dict(onramp_bays=n_onramp) if onramp_bays else {}),
                       max_fill=r3(max([b["fill"] for b in bays] or [0])), bay_fails=len(bay_fail),
                       bay_fail_kinds=dict(_count(i.split(":")[0] for b in bay_fail for i in b["issues"])),
                       partition_fill_fails=len(part_fill_fail), examples=bay_fail[:20] + part_fill_fail[:10]),
@@ -2143,7 +2153,9 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                         mesh_taps_early=0, mesh_input_early_dropped=len(mesh_early),
                         dropped=mesh_early[:200], examples=early_rows,
                         note="input-mesh early offsets dropped from the plan (12.8); the clock owner rebuilds the mesh "
-                             "from die_tree_plan.json without them" if mesh_early else None),
+                             "from die_tree_plan.json without them" if mesh_early else None) if drop_mesh_early else
+        dict(verdict="PASS" if not early and not mesh_early else "FAIL", plan_taps_offset=dict(early),
+             mesh_taps_early=len(mesh_early), examples=early_rows),
         tree_balance=bal,
         core_insertion_model=dict(
             verdict="PASS" if not ins_fail else "FAIL", fails=len(ins_fail), cores=len(ins_rows),
@@ -2157,7 +2169,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         clock_sites=sites,
         island_lattice=isl_lat,
         tree_on_islands=tree_plan,
-        tree_lattice=lat_gate,
+        **(dict(tree_lattice=lat_gate) if lat_gate is not None else {}),
         infra_sites=sites_gate,
         **rulings,
     )
@@ -2446,8 +2458,12 @@ def add_args(p):
     p.add_argument("--core-reach-um", type=float, default=200.0)
     p.add_argument("--no-render", action="store_true")
     p.add_argument("--core-islands", help="core_islands.py JSON {core module: SRAM-aware sited in-core islands}")
-    p.add_argument("--tree-lattice", default="8x8", help="die H-tree lattice: NXxNY regular bbox lattice (R4 default) or cNXxNY = "
+    p.add_argument("--tree-lattice", default=None, help="opt-in die H-tree lattice (die_tree_plan.json lattice + gate "
+                                                         "tree_lattice): NXxNY regular bbox lattice (R4) or cNXxNY = "
                                                          "channel-cross lattice, pitch = core-array multiple (R5)")
+    p.add_argument("--onramp-bays", action="store_true", help="opt-in R4 12.7a on-ramp repeater bays on M8/M9 legs")
+    p.add_argument("--drop-mesh-early", action="store_true", help="opt-in R4 12.8: drop input-mesh early tap offsets "
+                                                                  "from the plan (listed for the clock owner)")
     p.add_argument("--tree-commensurate", default="die", choices=("die", "regional"),
                    help="tree_commensurate gate form: die-wide core lattice (R5 default) or REGIONAL (MASTER-PLAN-R6, "
                         "COORD 13:05: per clock region tree lattice == region island lattice)")
@@ -2473,7 +2489,8 @@ def cmd(a):
                     lower_pg_frac=a.lower_pg_frac, bay_fill=a.bay_fill, core_reach_um=a.core_reach_um,
                     render=not a.no_render,
                     core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None,
-                    tree_lattice=parse_tree_lattice(a.tree_lattice), tree_comm_form=a.tree_commensurate)
+                    tree_lattice=parse_tree_lattice(a.tree_lattice) if a.tree_lattice else None,
+                    tree_comm_form=a.tree_commensurate, onramp_bays=a.onramp_bays, drop_mesh_early=a.drop_mesh_early)
     print(json.dumps(dict(die=mp["die"], verdict=mp["verdict"], gates=mp["gates"], census=mp["census"]), indent=1))
     return 0 if mp["verdict"] == "PASS" else 1
 
