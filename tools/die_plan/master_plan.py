@@ -602,7 +602,130 @@ def island_tree(sites, leaves, B=200.0, spread_tol_um=20.0, rep_um=None, band_um
                      "cells in cores/partitions); the die build consumes die_tree_plan.json sites, never free sites"), nodes
 
 
-def lattice_tree(sites, leaf_xy, parts, cores, nx=8, ny=8, snap_um=8.64, spread_tol_um=20.0):
+def array_repeat(cores, ax, lat=8.64, need=0.9):
+    """repeat (um) of the dominant hard-core array along axis ax: the smallest translation that maps >= need of the
+    dominant module's core lines onto lines (or past the array end).  QC: x 2471.04 (4 nk columns), y 5227.2
+    (4 nk rows; the two nk bands are NOT commensurate across the centre band)."""
+    from collections import Counter as _C
+    if not cores:
+        return None
+    dom = _C(c[6] for c in cores).most_common(1)[0][0]
+    vs = sorted({round(c[ax], 3) for c in cores if c[6] == dom})
+    if len(vs) < 2:
+        return None
+    # array bands: split where a line gap exceeds 3 x the median gap (QC y: the centre band between two nk bands);
+    # a translate past the end of its own band counts as covered (the repeat is a within-band property)
+    gaps = sorted(b - a for a, b in zip(vs, vs[1:]))
+    med = gaps[len(gaps) // 2]
+    band_end, end = {}, vs[-1]
+    for i in range(len(vs) - 1, -1, -1):
+        if i < len(vs) - 1 and vs[i + 1] - vs[i] > 3 * med:
+            end = vs[i]
+        band_end[vs[i]] = end
+
+    def cover(L):
+        return sum(1 for v in vs if v + L > band_end[v] + lat or any(abs(v + L - u) <= lat / 2 for u in vs)) / len(vs)
+    for L in sorted({round(b - a, 3) for i, a in enumerate(vs) for b in vs[i + 1:] if b - a > lat}):
+        if cover(L) >= need:
+            return L
+    return None
+
+
+def commensurate_axis(cores, lo, hi, ax, n, rep_um, grid=4.32, margin=8.64, kmax=12, bridge_root=True):
+    """MASTER-PLAN-R5 (COORD ruling R4 (5), 12.2a1): one axis of the die H-tree with every node coordinate inside a
+    full-extent core-free channel (so nodes sit on channel crosses and every straight H-tree leg, hence every equal-cut
+    leg repeater, runs in a channel).  Leaves = c + sum_l (+-d_l), levels l = 1..log2(n): symmetric arms per level ->
+    equal root->leaf length by construction.  Arms are integer multiples of rep_um / 2 (leaf pitch 2 d = k x the
+    core-array repeat); only the ROOT arm may be a 'bridge' (any grid value) when the axis has an array break the
+    repeat does not cross (QC y: centre band between the two nk bands).  Choice: smallest region half-width
+    (array end to outer leaf, half the largest leaf gap), then fewer bridges, then the largest channel margin, then
+    the root nearest the array centre.  Plan geometry only, deterministic."""
+    import numpy as _np
+    m = int(round(math.log2(n)))
+    if 2 ** m != n or not rep_um or n < 2:
+        return None
+    N = int(math.floor((hi - lo) / grid)) + 1
+    coord = lo + _np.arange(N) * grid
+    occ = _np.zeros(N, dtype=bool)
+    for c in cores:                                    # occupied = strictly inside a core span widened by margin
+        a = int(math.floor((c[ax] - margin - lo) / grid)) + 1
+        b = int(math.ceil((c[ax + 2] + margin - lo) / grid)) - 1
+        occ[max(0, a):min(N, b + 1)] = True
+    free = ~occ
+    amin = min(c[ax] for c in cores)
+    amax = max(c[ax + 2] for c in cores)
+    unit = rep_um / 2.0 / grid
+    if abs(unit - round(unit)) > 1e-6:
+        return None
+    unit = int(round(unit))
+    best = None
+
+    def margin_of(vals):
+        out = 1e18
+        for v in vals:
+            i = int(round((v - lo) / grid))
+            j = i
+            while j < N and free[j]:
+                j += 1
+            k = i
+            while k >= 0 and free[k]:
+                k -= 1
+            out = min(out, (min(j - i, i - k)) * grid + margin - grid)
+        return out
+
+    def expand(nodes, d):
+        return sorted({v + s * d for v in nodes for s in (-1, 1)})
+
+    def ok(vals):
+        idx = [int(round((v - lo) / grid)) for v in vals]
+        return all(0 <= i < N and free[i] for i in idx)
+
+    def rec(level, nodes, arms, bridges, c):
+        nonlocal best
+        if level == m:
+            lv = sorted(nodes)
+            if len(lv) != n or min(b - a for a, b in zip(lv, lv[1:])) < rep_um / 2 - 1e-6:
+                return                                # overlapping / sub-repeat leaves: not an H-tree lattice
+            gaps = [b - a for a, b in zip(lv, lv[1:])]
+            rad = max(lv[0] - amin, amax - lv[-1], max(gaps) / 2 if gaps else 0.0)
+            key = (int(rad // (rep_um / 4)), bridges, -margin_of(lv), round(rad / grid), abs(c - (amin + amax) / 2))
+            if best is None or key < best[0]:
+                best = (key, c, list(arms), lv)
+            return
+        prev = arms[-1] if arms else None
+        cand = [k * unit for k in range(1, kmax + 1)]
+        if level == 0 and bridge_root:              # vectorised: a with both c - a and c + a free
+            i0 = int(round((c - lo) / grid))
+            r = _np.arange(1, min(i0, N - 1 - i0) + 1)
+            cand += [int(a) for a in r[free[i0 + r] & free[i0 - r]]]
+        seen = set()
+        for a in cand:
+            if a in seen:
+                continue
+            seen.add(a)
+            d = a * grid
+            if prev is not None and d >= prev:       # arms shrink level by level (an H-tree, not a comb)
+                continue
+            if arms and any(arms[j] <= sum(arms[j + 1:]) + d for j in range(len(arms))):
+                continue                              # nested H-tree: each arm > sum of the arms below (no interleave)
+            nxt = expand(nodes, d)
+            if ok(nxt):
+                rec(level + 1, nxt, arms + [d], bridges + (1 if a % unit else 0), c)
+    for i in _np.nonzero(free)[0]:
+        c = float(coord[i])
+        rec(0, [c], [], 0, c)
+    if best is None:
+        return None
+    key, c, arms, lv = best
+    return dict(axis="xy"[ax], n=n, repeat_um=r3(rep_um), root_um=r3(c), arms_um=[r3(d) for d in arms],
+                arm_multiples_of_half_repeat=[r3(d / (rep_um / 2)) for d in arms],
+                bridge_arms=[l for l, d in enumerate(arms) if abs(d / (rep_um / 2) - round(d / (rep_um / 2))) > 1e-6],
+                leaves_um=[r3(v) for v in lv], leaf_gaps_um=[r3(b - a) for a, b in zip(lv, lv[1:])],
+                region_half_width_um=r3(key[3] * grid), channel_margin_um=r3(-key[2]),
+                array_um=[r3(amin), r3(amax)])
+
+
+def lattice_tree(sites, leaf_xy, parts, cores, nx=8, ny=8, snap_um=8.64, spread_tol_um=20.0, axes=None):
     """MASTER-PLAN-R4 (QC item 3): the die H-tree on a REGULAR lattice (12.2c / 12.8d), not on whatever islands the
     partitions happen to have.  island_tree() bisects the 1337 irregular leaf islands and cannot balance them (QC R3
     spread 8.4 mm).  Here the tree is fixed by geometry: an nx x ny lattice of region leaves over the bounding box of
@@ -615,11 +738,20 @@ def lattice_tree(sites, leaf_xy, parts, cores, nx=8, ny=8, snap_um=8.64, spread_
       * else (inside a hard core)                              -> listed as in_core_conflict (plan must move the
         lattice origin / pitch or the core; never a free die cell inside a core).
     Regional meshes (or the region's local tree) hang below each leaf and feed the core clock entries.
-    Plan geometry only; deterministic; no measured input."""
+    Plan geometry only; deterministic; no measured input.
+
+    axes (MASTER-PLAN-R5, opt-in): explicit per-axis leaf coordinates from commensurate_axis() (symmetric per-level
+    arms -> equal paths by construction, every node coordinate inside a core-free channel)."""
     xs = [p[0] for p in leaf_xy]
     ys = [p[1] for p in leaf_xy]
     X0, Y0, X1, Y1 = min(xs), min(ys), max(xs), max(ys)
     px, py = (X1 - X0) / nx, (Y1 - Y0) / ny
+    if axes:
+        xl, yl = list(axes[0]), list(axes[1])
+        nx, ny = len(xl), len(yl)
+        X0, X1, Y0, Y1 = xl[0], xl[-1], yl[0], yl[-1]
+        px = (X1 - X0) / max(1, nx - 1)
+        py = (Y1 - Y0) / max(1, ny - 1)
     bins = defaultdict(list)
     Bq = max(snap_um, 1.0)
     for q in sites:
@@ -647,10 +779,14 @@ def lattice_tree(sites, leaf_xy, parts, cores, nx=8, ny=8, snap_um=8.64, spread_
 
     def build(i0, i1, j0, j1, tag, parent, depth):
         if i1 - i0 == 1 and j1 - j0 == 1:
-            xy = (X0 + (i0 + 0.5) * px, Y0 + (j0 + 0.5) * py)
+            xy = (xl[i0], yl[j0]) if axes else (X0 + (i0 + 0.5) * px, Y0 + (j0 + 0.5) * py)
             kids = []
         else:
-            if (i1 - i0) * px >= (j1 - j0) * py and i1 - i0 > 1:
+            if axes:
+                wide = (xl[i1 - 1] - xl[i0]) >= (yl[j1 - 1] - yl[j0]) and i1 - i0 > 1 or j1 - j0 == 1
+            else:
+                wide = (i1 - i0) * px >= (j1 - j0) * py and i1 - i0 > 1
+            if wide:
                 m = (i0 + i1) // 2
                 kids = [(i0, m, j0, j1), (m, i1, j0, j1)]
             else:
@@ -1782,10 +1918,27 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                                       [q["xy"] for q in t_sites], [])
         tree_plan["island_lattice_of_plan_tree"] = dict(verdict=isl_lat_plan["verdict"],
                                                         displacement=isl_lat_plan["displacement"])
-        lat_nx, lat_ny = tree_lattice
+        comm_mode = len(tree_lattice) == 3 and tree_lattice[0] == "c"
+        lat_nx, lat_ny = tree_lattice[-2:]
+        axes, comm = None, None
+        if comm_mode:                 # MASTER-PLAN-R5 opt-in: nodes on channel crosses, pitch = core-array multiple
+            X1d = max(p_[2] for p_ in parts_die)
+            Y1d = max(p_[3] for p_ in parts_die)
+            comm = {}
+            for ax, n_, hi_ in ((0, lat_nx, X1d), (1, lat_ny, Y1d)):
+                rep_ = array_repeat(cores_die, ax)
+                comm["xy"[ax]] = commensurate_axis(cores_die, 0.0, hi_, ax, n_, rep_) or dict(
+                    axis="xy"[ax], n=n_, repeat_um=rep_, verdict="FAIL", note="no channel-cross solution")
+            if all(v.get("leaves_um") for v in comm.values()):
+                axes = (comm["x"]["leaves_um"], comm["y"]["leaves_um"])
         lat_gate, lat_nodes = lattice_tree(t_sites, [t_sites[i]["xy"] for i in t_leaves],
                                            [(pn, P.rect(pn)) for pn in P.parts], [c[:4] for c in cores_die],
-                                           lat_nx, lat_ny)
+                                           lat_nx, lat_ny, axes=axes,
+                                           **(dict(snap_um=0.5) if comm_mode else {}))
+        if comm_mode:
+            lat_gate["commensurate"] = comm
+            if axes is None:
+                lat_gate["verdict"] = "FAIL"
         dtp = json.loads((out / "die_tree_plan.json").read_text())
         dtp["lattice"] = dict(gate=lat_gate, nodes=lat_nodes)
         dtp["consume"] = ("CLOCK-128: build the die H-tree from lattice.nodes (xy_um, binding); island_tree 'nodes' "
@@ -2144,7 +2297,20 @@ def add_args(p):
     p.add_argument("--core-reach-um", type=float, default=200.0)
     p.add_argument("--no-render", action="store_true")
     p.add_argument("--core-islands", help="core_islands.py JSON {core module: SRAM-aware sited in-core islands}")
-    p.add_argument("--tree-lattice", default="8x8", help="regular die H-tree lattice NXxNY (lattice_tree, R4)")
+    p.add_argument("--tree-lattice", default="8x8", help="die H-tree lattice: NXxNY regular bbox lattice (R4 default) or cNXxNY = "
+                                                         "channel-cross lattice, pitch = core-array multiple (R5)")
+
+
+def parse_tree_lattice(v):
+    """'8x8' -> (8, 8) regular bbox lattice (R4 default); 'c8x4' / 'commensurate:8x4' -> ('c', 8, 4) channel-cross
+    commensurate lattice (MASTER-PLAN-R5, opt-in)."""
+    v = v.lower()
+    if v.startswith("commensurate:"):
+        v = "c" + v.split(":", 1)[1]
+    if v.startswith("c"):
+        nx, ny = (int(t) for t in v[1:].split("x"))
+        return ("c", nx, ny)
+    return tuple(int(t) for t in v.split("x"))
 
 
 def cmd(a):
@@ -2155,7 +2321,7 @@ def cmd(a):
                     lower_pg_frac=a.lower_pg_frac, bay_fill=a.bay_fill, core_reach_um=a.core_reach_um,
                     render=not a.no_render,
                     core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None,
-                    tree_lattice=tuple(int(v) for v in a.tree_lattice.lower().split("x")))
+                    tree_lattice=parse_tree_lattice(a.tree_lattice))
     print(json.dumps(dict(die=mp["die"], verdict=mp["verdict"], gates=mp["gates"], census=mp["census"]), indent=1))
     return 0 if mp["verdict"] == "PASS" else 1
 
