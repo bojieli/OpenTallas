@@ -32,3 +32,12 @@ def test_plain_default_and_external_direct_q():
     rtl='\n'.join(R.rtl_lines(t))
     assert 'ot_dp_rrelay u_rst_in' in rtl
     assert 'ot_dp_rrelay_drive u_rst_in' not in rtl
+
+
+def test_kit_driver_cells_and_replacement():
+    import kit_rsync as K
+    assert "module ot_dp_rrelay_drive" not in K.cells_text()
+    text = K.cells_text(driver=True)
+    assert "module ot_dp_rrelay_drive" in text and "module ot_dp_rgate_drive" in text
+    assert K.TREE.match("    ot_dp_rgate_drive u_rrl_2_g (.clk(clk), .d(a), .run(b), .q(c));")
+    assert K.TREE.match("    ot_dp_rrelay_drive u_srl_12 (.clk(clk), .d(a), .q(c));")
