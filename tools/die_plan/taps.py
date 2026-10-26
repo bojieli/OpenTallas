@@ -246,6 +246,10 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
     taps of a few hundred sinks next to each other).  Greedily merge the pair of leaves whose union still fits the
     target and radius with the smallest merged radius, until no pair fits.  Deterministic."""
     leaves = list(leaves)
+    # A merge changes only pairs touching its two removed leaves. Reusing the
+    # immutable pairs avoids re-sorting their sinks after every other merge.
+    # Keep every leaf alive so Python cannot recycle an identity in this cache.
+    retained, pair_cache = list(leaves), {}
     while True:
         best = None
         for i, a in enumerate(leaves):
@@ -253,14 +257,22 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
                 b = leaves[j]
                 if a[2] + b[2] > target or abs(a[0] - b[0]) + abs(a[1] - b[1]) > 2 * radius:
                     continue
-                g = a[4] + b[4]
-                x, y = _wmedian(g, 0), _wmedian(g, 1)
-                r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
-                if r <= radius and not blocked(x, y) and (best is None or (r, i, j) < best[:3]):
-                    best = (r, i, j, (x, y, a[2] + b[2], r, g))
+                key = (id(a), id(b))
+                if key not in pair_cache:
+                    g = a[4] + b[4]
+                    x, y = _wmedian(g, 0), _wmedian(g, 1)
+                    r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
+                    pair_cache[key] = ((r, (x, y, a[2] + b[2], r, g))
+                                       if r <= radius and not blocked(x, y) else None)
+                cached = pair_cache[key]
+                if cached is not None:
+                    r, merged = cached
+                    if best is None or (r, i, j) < best[:3]:
+                        best = (r, i, j, merged)
         if best is None:
             return leaves
         _, i, j, m = best
+        retained.append(m)
         leaves = [q for k, q in enumerate(leaves) if k not in (i, j)] + [m]
 
 

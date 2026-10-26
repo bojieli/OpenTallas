@@ -14,17 +14,17 @@ import traceback
 
 TYPES = tuple(f"slice_station__t{n}" for n in (28,29,45,50,51,31,43,44,49,52))
 
-def apply(raw, tools, controls, types=TYPES, checkpoint=None, include_st3=False, whole_die_ledger=False, plan_path=None):
+def apply(raw, tools, controls, types=TYPES, checkpoint=None, include_st3=False, whole_die_ledger=False, plan_path=None, prepared=None, prepared_report=None):
     sys.path.insert(0, str(tools))
     import ft_knee_sites as K
     sys.path.insert(0, str(controls))
     import delta_station_controls_1713 as D
     plan_path=plan_path or Path(__file__).resolve().parent/"die_plan.json"
     types=tuple(types)
-    candidate=copy.deepcopy(raw)
-    report={"types": list(types), "knee": [], "failures": {}}
-    census_types=types
-    if include_st3:
+    candidate=copy.deepcopy(raw if prepared is None else prepared)
+    report=copy.deepcopy(prepared_report) if prepared_report is not None else {"types": list(types), "knee": [], "failures": {}}
+    census_types=tuple(report["types"]) if prepared is not None else types
+    if include_st3 and prepared is None:
         import delta_kitsspare3_1025 as ST3
         legacy={}
         legacy_types=tuple(ST3.STATION_TYPES)+("slice_station__t46",)
@@ -37,7 +37,7 @@ def apply(raw, tools, controls, types=TYPES, checkpoint=None, include_st3=False,
     def progress():
         if checkpoint is not None:
             Path(checkpoint).with_name("geometry_progress.json").write_text(json.dumps(report,indent=1)+"\n")
-    for name in types:
+    for name in (() if prepared is not None else types):
         trial=copy.deepcopy(candidate)
         try:
             rows=K.place(trial,[name])
@@ -120,10 +120,16 @@ def main():
     ap.add_argument("--include-st3",action="store_true",help="also apply the original thirteen ST3 station treatments, preserving their five accepted clock-only geometries")
     ap.add_argument("--whole-die-ledger",action="store_true",help="compare every partition/core release and reset entry pin against the original plan; implied by --include-st3")
     ap.add_argument("--plan-context",type=Path,help="reference plan path whose directory contains the declared relative core pin tables (default: this script directory/die_plan.json)")
+    ap.add_argument("--geometry-input",type=Path,help="resume a retained pre-census geometry checkpoint without reallocating its banks")
+    ap.add_argument("--geometry-report",type=Path,help="the retained geometry_progress.json paired with --geometry-input")
     args=ap.parse_args()
+    if bool(args.geometry_input)!=bool(args.geometry_report):
+        ap.error("--geometry-input and --geometry-report must be supplied together")
     raw=json.loads(args.plan.read_text())
     args.out.mkdir(parents=True,exist_ok=True)
-    candidate,broadcast,report=apply(raw,args.tools,args.controls,args.types.split(",") if args.types else TYPES,args.out/"geometry_only.json",args.include_st3,args.whole_die_ledger or args.include_st3,args.plan_context)
+    candidate,broadcast,report=apply(raw,args.tools,args.controls,args.types.split(",") if args.types else TYPES,args.out/"geometry_only.json",args.include_st3,args.whole_die_ledger or args.include_st3,args.plan_context,
+                                     json.loads(args.geometry_input.read_text()) if args.geometry_input else None,
+                                     json.loads(args.geometry_report.read_text()) if args.geometry_report else None)
     for name,payload in (("die_plan.json",candidate),("broadcast_diagnostic.json",broadcast),("station_delta_report.json",report)):
         (args.out/name).write_text(json.dumps(payload,indent=1)+"\n")
     print(json.dumps({k:report[k] for k in ("types","failures","added_cycles_by_slot","added_flops","route_authorized")}),flush=True)
