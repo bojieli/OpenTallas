@@ -320,9 +320,19 @@ def hold_in_min_ps(P):
     return seam_hold(P)["in_min_ps"]
 
 
-def hold_out_min_ps(P):
-    """the kit's min output delay vs vclk (ps, <= 0): the sender's share of the seam hold contract."""
-    return seam_hold(P)["out_min_ps"]
+def hold_out_min_ps(P, tn=None):
+    """the kit's min output delay vs vclk (ps, <= 0): the sender's share of the seam hold contract.  With tn and a
+    declared types[tn].clock.out_hold_check_ps G (PATH-QC 10-26, COORD 00:19 two-sided budget) the type's own kit
+    checks G at its outputs: min output delay = min(contract, (1 - UNC_SPLIT) x UNC_HOLD_PS - G) (tightening only)."""
+    base = seam_hold(P)["out_min_ps"]
+    g = out_hold_check_ps(P, tn) if tn is not None else None
+    return base if g is None else min(base, (1 - UNC_SPLIT) * UNC_HOLD_PS - g)
+
+
+def out_hold_check_ps(P, tn):
+    """the sender hold guarantee (ps after vclk) type tn's own kit checks at its outputs, or None (contract only)."""
+    v = ((P.types.get(tn, {}) or {}).get("clock", {}) or {}).get("out_hold_check_ps")
+    return None if v is None else float(v)
 
 
 # IO-HOLD option A (COORD ruling 2026-10-25 10:23, KITS-SPARE PROPOSAL IO-HOLD-2; opt-in: plan clock.io_hold =
@@ -342,10 +352,13 @@ def hold_out_min_ps(P):
 IO_HOLD_MODES = ("legacy", "sender_min")
 
 
-def io_hold_mode(P):
-    """'legacy' (flat in_min on every input, default) or 'sender_min' (option A): plan clock.io_hold > env OT_IO_HOLD."""
+def io_hold_mode(P, tn=None):
+    """'legacy' (flat in_min on every input, default) or 'sender_min' (option A): types[tn].clock.io_hold > plan
+    clock.io_hold > env OT_IO_HOLD."""
     import os
-    v = P.clock.get("io_hold")
+    v = ((P.types.get(tn, {}) or {}).get("clock", {}) or {}).get("io_hold") if tn is not None else None
+    if v is None:
+        v = P.clock.get("io_hold")
     if v is None:
         v = os.environ.get("OT_IO_HOLD") or "legacy"
     if v not in IO_HOLD_MODES:
@@ -358,8 +371,11 @@ def sender_out_guarantee_ps(P, snd_type):
     signed-off output hold check guarantees: the signed view's published types[].clock.out_hold_guarantee_ps,
     else the plan contract (1 - UNC_SPLIT) x UNC_HOLD_PS - hold_out_min_ps."""
     ck = P.types.get(snd_type, {}).get("clock", {}) or {}
-    if ck.get("out_hold_guarantee_ps") is not None:
+    chk = out_hold_check_ps(P, snd_type)
+    if ck.get("out_hold_guarantee_ps") is not None and (chk is None or float(ck["out_hold_guarantee_ps"]) >= chk):
         return float(ck["out_hold_guarantee_ps"]), f"signed view {snd_type}"
+    if chk is not None:
+        return chk, f"sender kit check {snd_type}"
     return (1 - UNC_SPLIT) * UNC_HOLD_PS - hold_out_min_ps(P), "plan contract"
 
 
@@ -367,7 +383,7 @@ def input_hold_min(P, tn):
     """IO-HOLD option A: {sv input port: dict(in_min_ps, basis, senders)} for every bus / ft-slot input of type tn
     whose min input delay differs from the fallback hold_in_min_ps(P).  Empty in legacy mode.  One value per port
     (the type is hardened once): the minimum over every instance's driver."""
-    if io_hold_mode(P) != "sender_min":
+    if io_hold_mode(P, tn) != "sender_min":
         return {}
     import gen_rtl
     insts = sorted(n for n, p in P.parts.items() if p["type"] == tn)
@@ -625,7 +641,10 @@ def sdc(P, tn, pins):
     # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
-    out += (f"set_output_delay -min {t_lib(hold_out_min_ps(P)):.4f} -clock vclk [all_outputs]\n")
+    if out_hold_check_ps(P, tn) is not None:
+        out += (f"# PATH-QC 10-26 sender hold check: outputs change >= {out_hold_check_ps(P, tn):g} ps after vclk "
+                f"(clock.out_hold_check_ps; receivers take it as their IO-HOLD A min input delay)\n")
+    out += (f"set_output_delay -min {t_lib(hold_out_min_ps(P, tn)):.4f} -clock vclk [all_outputs]\n")
     import reset_tree as RT
     fp = RT.pad_false_path_pins(P, tn)
     if fp:
@@ -1014,7 +1033,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export OT_VCLK_FF = {t_lib(ib['ff']):.4f}",
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
-           f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_ps(P)):.4f}",
+           f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_ps(P, tn)):.4f}",
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
            # RCX (setRC_rcx_asap7.tcl; the stock setRC.tcl put clock sinks 11-57 ps above RCX).  ORFS reads
            # LAYER_PARASITICS_FILE (this image) / SET_RC_TCL (newer variables.yaml) instead of the platform setRC.tcl.
