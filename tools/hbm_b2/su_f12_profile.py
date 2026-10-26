@@ -53,6 +53,9 @@ def materialize(root, out, full_qid, wiring=None):
             text = replace_once(text, 'parameter integer QID=0,G=0,',
                 f'parameter integer FULL_QID={full_qid}, QID=0,G=0,', f)
             text = replace_once(text, 'MLAT=3,ALAT=3,', 'MLAT=4,ALAT=4,', f)
+            if 'parameter integer PIN_REG=0,' in text:
+                text = replace_once(text, 'parameter integer PIN_REG=0,',
+                                    'parameter integer PIN_REG=1,', f)
             if '_lg' in Path(f).stem:
                 text = replace_once(text, '.G(G),.READ_RETURN',
                     '.G(G),.FULL_QID(FULL_QID),.READ_RETURN', f)
@@ -79,6 +82,9 @@ def materialize(root, out, full_qid, wiring=None):
         module_map=module_map, sources=records,
         required_add_provider='rtl/hdc/ot_hdc_fastfp_lat_c12.sv (f12_l4, never lat4i)',
         core_clock_period_ps=833, lane_parameters=dict(MLAT=4,ALAT=4),
+        physical_lane_pin_registers=1,
+        pin_register_source_cycles=dict(requests=2,writes_and_reducer_operands=4,
+            scope='RTL documented local cost; compiler --pin-reg and composed route ledger must price it'),
         side_cycles=dict(legacy=old, candidate=new,
                         delta={k:new[k]-old[k] for k in old}),
         legacy_default_rtl_changed=False,
@@ -96,8 +102,12 @@ def materialize(root, out, full_qid, wiring=None):
                     raise ValueError(f'{n}: native {key} contract not migrated')
             if '.FULL_QID(' in cfg['params']:
                 raise ValueError(f'{n}: FULL role already selected')
+            if '.PIN_REG(' in cfg['params'] and '.PIN_REG(1)' not in cfg['params']:
+                raise ValueError(f'{n}: conflicting physical pin-register contract')
             cfg['master']=module_map[cfg['master']]
             cfg['params']+=f', .FULL_QID({full_qid})'
+            if '.PIN_REG(' not in cfg['params']:
+                cfg['params']+=', .PIN_REG(1)'
             changed.append(n)
         if len(changed)!=8:
             raise ValueError(f'expected eight native SU groups, got {changed}')
