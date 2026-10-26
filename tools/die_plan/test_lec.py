@@ -1031,7 +1031,7 @@ def test_json_q_alias_keeps_next_state_proof_and_catches_mutants(tmp_path, mutan
         'u_dut.en': {'bits': [10, 11]},
         'u_dut.we': {'bits': [11, 10] if mutant == 'swap_alias' else [10, 11]}}}}}))
     L = lec.Lec(g, gm, t, tm)
-    assert lec.json_alias_keys(L, [], work=tmp_path) == 2
+    assert lec.json_alias_keys(L, [], work=tmp_path) == (0 if mutant == "swap_alias" else 2)
     m, _ = L.build(with_compare=True, with_hyp=False)
     # Exhaust every assignment of inputs and current state, including illegal
     # states: aliases do not remove a D comparison or add any assumption.
@@ -1059,3 +1059,19 @@ def test_json_q_alias_rejects_ambiguous_and_constant_candidates(tmp_path):
         'u.a': {'bits': [10]}, 'u.b': {'bits': [10]}, 'u.y': {'bits': [10]},
         'u.const': {'bits': ['0']}, 'u.z': {'bits': ['0']}}}}}))
     assert lec.json_alias_keys(L, [], work=tmp_path) == 0
+
+
+def test_json_q_alias_rejects_scalar_unpacked_vector_slices(tmp_path):
+    # Slang flattened cf[0:4] reverses the gate element index convention.
+    # Its individual bit identity is insufficient evidence to rename cf[1]
+    # to h2.cf_o; scalar and full-vector aliases must be left to correspondence.
+    from types import SimpleNamespace
+    L = SimpleNamespace(hyp={}, gp={'ff:u.h0.cf_o': 2, 'ff:u.h2.cf_o': 4},
+        tp={'ff:u.cf[1]': 2, 'ff:u.cf[3]': 4}, tc={},
+        gonly=['ff:u.h0.cf_o', 'ff:u.h2.cf_o'], tonly=['ff:u.cf[1]', 'ff:u.cf[3]'])
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'top': {'netnames': {
+        'u.cf': {'bits': [20, 21, 22, 23, 24]},
+        'u.h0.cf_o': {'bits': [23]}, 'u.h2.cf_o': {'bits': [21]}}}}}))
+    before = dict(L.tp)
+    assert lec.json_alias_keys(L, [], work=tmp_path) == 0
+    assert L.tp == before

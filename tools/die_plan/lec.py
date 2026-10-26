@@ -1867,8 +1867,10 @@ def json_alias_keys(L, log, work=None):
     """Recover public Q-wire aliases omitted by write_aiger's latch map.
 
     gold.aliases.json is written from the same elaborated gold before techmap.
-    A gold-only and gate-only name denoting the SAME nonconstant bit there may
-    be paired when the relation is one-to-one. This only renames gate key
+    A gold-only and gate-only name at the same position of IDENTICAL public
+    net bit vectors may be paired when the relation is one-to-one. Requiring
+    the whole vector avoids confusing slang-flattened scalar unpacked arrays
+    with gate element names (cf[0:4] versus cf[1]/cf[3]). This only renames gate key
     points: every D function and every downstream comparison stays in the
     miter, so an incorrect implementation still fails induction. No simulated
     signatures or inferred name similarity establish this correspondence.
@@ -1889,7 +1891,8 @@ def json_alias_keys(L, log, work=None):
                 continue
             name = GENBLK.sub("", nn.replace("\\", "").replace(" ", "").replace("/", "."))
             offset = int(net.get("offset", 0))
-            for i, bit in enumerate(net.get("bits", ())):
+            vector = tuple(net.get("bits", ()))
+            for i, bit in enumerate(vector):
                 if not isinstance(bit, int):
                     continue
                 keys = [f"ff:{name}[{i + offset}]"]
@@ -1898,7 +1901,7 @@ def json_alias_keys(L, log, work=None):
                 for key in keys:
                     if key not in wanted or key in held:
                         continue
-                    value = (mn, bit)
+                    value = (mn, vector, i)
                     if key in bits and bits[key] != value:
                         ambiguous.add(key)
                     bits[key] = value
