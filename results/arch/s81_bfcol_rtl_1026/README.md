@@ -1,0 +1,5 @@
+S81-BFCOL-RTL 2026-10-26: ot_v41_bf_col kit rtl_lint 166 -> 0 (recipe claude/core-lat-r4-1026@350f81a352, kit regenerated, same rtl_lint.py in orfs:asap7lock).
+Root causes: (1) bf_col s_row_c/s_idx/s_n = dead declarations of the q-element QK=0 live tables, read only in the QK=0 arm (the column has only so_* shadow copies) -> removed, QP_P1!=0 added to the supported-config guard;
+(2) segtree5 module-scope ti/hi written by several always blocks -> per-loop integers (li unused, removed); (3) bterm4_w10 module-scope i (P1a/P1b clocked + P2 comb) -> per-loop;
+(4) bterm4_w10 first/last tag chain: constant-0 source since bterm2, never observed, P5 left undriven -> removed (declared proven-dead).
+Evidence: kit_lint/ (gold 166, new PASS), bench/receipt.json (Verilator 5.050, 30000 edges, 0 mismatches, mutant caught), lec/ (gold vs new 141091/141091 proven, ICG blackbox; mutant o_row^1 caught at o_row[0] with LEC-only functional ICG), mlec/ (bterm4_w10 P1S0/P1S1/P1S1+WD, segtree5 default/bf params: all proven, gate side check -assert clean).
