@@ -10,14 +10,16 @@ import copy
 import json
 from pathlib import Path
 import sys
+import traceback
 
 TYPES = tuple(f"slice_station__t{n}" for n in (28,29,45,50,51,31,43,44,49,52))
 
-def apply(raw, tools, controls, types=TYPES, checkpoint=None, include_st3=False, whole_die_ledger=False):
+def apply(raw, tools, controls, types=TYPES, checkpoint=None, include_st3=False, whole_die_ledger=False, plan_path=None):
     sys.path.insert(0, str(tools))
     import ft_knee_sites as K
     sys.path.insert(0, str(controls))
     import delta_station_controls_1713 as D
+    plan_path=plan_path or Path(__file__).resolve().parent/"die_plan.json"
     types=tuple(types)
     candidate=copy.deepcopy(raw)
     report={"types": list(types), "knee": [], "failures": {}}
@@ -32,12 +34,18 @@ def apply(raw, tools, controls, types=TYPES, checkpoint=None, include_st3=False,
         report["failures"].update(legacy["skipped"])
         census_types=tuple(dict.fromkeys(types+legacy_types))
         report["types"]=list(census_types)
+    def progress():
+        if checkpoint is not None:
+            Path(checkpoint).with_name("geometry_progress.json").write_text(json.dumps(report,indent=1)+"\n")
     for name in types:
         trial=copy.deepcopy(candidate)
         try:
             rows=K.place(trial,[name])
         except (ValueError,IndexError) as exc:
             report["failures"][name]=str(exc)
+            print("FAIL {}: {}".format(name,exc),flush=True)
+            traceback.print_exc()
+            progress()
             continue
         candidate=trial
         report["knee"].extend(rows)
@@ -45,6 +53,7 @@ def apply(raw, tools, controls, types=TYPES, checkpoint=None, include_st3=False,
         clock=candidate["partition_types"][name].setdefault("clock",{})
         clock.update(tap_mode="density",tap_target_sinks=600,
                      tap_max_sinks=1500,tap_radius_um=150.)
+        progress()
     names=[name for name in census_types if name not in report["failures"]]
     # Regenerate the inventory on final geometry, including the reset entry.
     # The current released plan has no START field; retain that contract and
@@ -57,13 +66,13 @@ def apply(raw, tools, controls, types=TYPES, checkpoint=None, include_st3=False,
     start_wave={} if whole_die_ledger else None
     if whole_die_ledger:
         print("Computing original whole-die wavefront contract",flush=True)
-        initial_wave=D.RT.wf_plan(D.S.Plan(raw))
+        initial_wave=D.RT.wf_plan(D.S.Plan(raw,path=plan_path))
     print("Computing joint RESET control-demand fixed point",flush=True)
-    report["reset_only"]=D.apply(reset_only,names,require_start=False,waveform=reset_wave)
+    report["reset_only"]=D.apply(reset_only,names,require_start=False,waveform=reset_wave,plan_path=plan_path)
     broadcast=copy.deepcopy(candidate)
     broadcast.setdefault("reset",{})["start"]="broadcast"
     print("Computing joint RESET+START diagnostic fixed point",flush=True)
-    report["broadcast_diagnostic"]=D.apply(broadcast,names,waveform=start_wave)
+    report["broadcast_diagnostic"]=D.apply(broadcast,names,waveform=start_wave,plan_path=plan_path)
     if whole_die_ledger:
         def delta(wave):
             rows={}
@@ -110,12 +119,15 @@ def main():
     ap.add_argument("--types",help="comma-separated types; default is the ten missing station types")
     ap.add_argument("--include-st3",action="store_true",help="also apply the original thirteen ST3 station treatments, preserving their five accepted clock-only geometries")
     ap.add_argument("--whole-die-ledger",action="store_true",help="compare every partition/core release and reset entry pin against the original plan; implied by --include-st3")
+    ap.add_argument("--plan-context",type=Path,help="reference plan path whose directory contains the declared relative core pin tables (default: this script directory/die_plan.json)")
     args=ap.parse_args()
     raw=json.loads(args.plan.read_text())
     args.out.mkdir(parents=True,exist_ok=True)
-    candidate,broadcast,report=apply(raw,args.tools,args.controls,args.types.split(",") if args.types else TYPES,args.out/"geometry_only.json",args.include_st3,args.whole_die_ledger or args.include_st3)
+    candidate,broadcast,report=apply(raw,args.tools,args.controls,args.types.split(",") if args.types else TYPES,args.out/"geometry_only.json",args.include_st3,args.whole_die_ledger or args.include_st3,args.plan_context)
     for name,payload in (("die_plan.json",candidate),("broadcast_diagnostic.json",broadcast),("station_delta_report.json",report)):
         (args.out/name).write_text(json.dumps(payload,indent=1)+"\n")
     print(json.dumps({k:report[k] for k in ("types","failures","added_cycles_by_slot","added_flops","route_authorized")}),flush=True)
+    if report["failures"]:
+        raise SystemExit(1)
 
 if __name__=="__main__": main()

@@ -31,7 +31,7 @@ def census(T):
     return sorted([x,y,n] for (x,y),n in cnt.items()),dict(Counter(r for _,_,r in entries))
 
 
-def apply(raw,types=STATIONS,rounds=16,require_start=True,waveform=None):
+def apply(raw,types=STATIONS,rounds=16,require_start=True,waveform=None,plan_path=None):
     # Simultaneous group rounds matter: reset contract depth can span types.
     # Work on a copy so failure never leaves a partially updated plan.
     trial=copy.deepcopy(raw);types=tuple(types)
@@ -41,7 +41,7 @@ def apply(raw,types=STATIONS,rounds=16,require_start=True,waveform=None):
             raise ValueError(f"{tn}: existing extra sink inventory requires explicit reconciliation")
     prev=None;seen=set();base_contract=None
     for k in range(rounds):
-        P=S.Plan(trial)
+        P=S.Plan(trial,path=plan_path)
         trees={tn:RT.for_type(P,tn) for tn in types}
         if require_start and any(not T.get("start") for T in trees.values()):
             raise ValueError("START broadcast is absent; reset-only census cannot qualify a START-enabled successor")
