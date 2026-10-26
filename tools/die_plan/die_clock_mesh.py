@@ -397,7 +397,8 @@ def write_verilog(cells, nets, ports, path):
         y = "ck_mesh" if k == "drv" else drv_net.get(c)
         if a is None or y is None:
             raise SystemExit(f"die_clock_mesh: unconnected cell {c} A={a} Y={y}")
-        L.append(f"  {BUF} {c} (.A({a}), .Y({y}));")
+        lib = cells[c].get("lib", BUF)
+        L.append(f"  {lib} {c} (.A({a}), .Y({y}));")
     L.append("endmodule")
     txt = "\n".join(L) + "\n"
     # a net that drives a tap port IS that port (no assign statements in the GRT netlist)
