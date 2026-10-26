@@ -447,6 +447,38 @@ def rect_overlap(a, b, eps=1e-6):
     return min(a[2], b[2]) - max(a[0], b[0]) > eps and min(a[3], b[3]) - max(a[1], b[1]) > eps
 
 
+def subtract_rectangles(rect, blockers):
+    """Disjoint legal pieces of a reserved bay; subtract real core/island holes."""
+    pieces = [tuple(rect)]
+    for c in blockers:
+        updated = []
+        for r in pieces:
+            if not rect_overlap(r, c[:4]):
+                updated.append(r)
+                continue
+            x0,y0,x1,y1 = r
+            a,b,d,e = max(x0,c[0]),max(y0,c[1]),min(x1,c[2]),min(y1,c[3])
+            if x0<a: updated.append((x0,y0,a,y1))
+            if d<x1: updated.append((d,y0,x1,y1))
+            if y0<b: updated.append((a,y0,d,b))
+            if e<y1: updated.append((a,e,d,y1))
+        pieces = updated
+    return pieces
+
+
+def explicit_bay_regions(rect, footprints, blockers):
+    """A scattered explicit bank is legal only if EVERY real FF footprint is legal.
+
+    Its enclosing bbox may cross several cores. Preserve the holes in the
+    reserved geometry, and charge fill against legal area only. An actual
+    cell/core collision remains FAIL; generated repeater bays do not use this.
+    """
+    relevant = [c for c in blockers if rect_overlap(rect,c[:4])]
+    hits = sorted({str(c[4]) if len(c)>4 else str(i) for f in footprints
+                   for i,c in enumerate(relevant) if rect_overlap(f,c[:4])})
+    return subtract_rectangles(rect,relevant),hits
+
+
 def rect_inside(a, b, eps=1e-6):
     return a[0] >= b[0] - eps and a[1] >= b[1] - eps and a[2] <= b[2] + eps and a[3] <= b[3] + eps
 
@@ -1090,19 +1122,33 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         else:
             r = fit_rect(bay_rect(bd["xy"], bd["horiz"], bd["band"], demand / bay_fill), P.rect(bd["part"]),
                          blk[bd["part"]], bd["horiz"])
-        area = (r[2] - r[0]) * (r[3] - r[1])
+        regions = [r]
+        actual_hits = None
+        if bd["sites"]:
+            footprints = []
+            for x,y in bd["sites"]:
+                pts = [P.to_die(bd["part"],c) for c in ((x,y),(x+1.404,y+ROW))]
+                footprints.append((min(p[0] for p in pts),min(p[1] for p in pts),
+                                   max(p[0] for p in pts),max(p[1] for p in pts)))
+            regions,actual_hits = explicit_bay_regions(r,footprints,blk[bd["part"]])
+        area = sum((q[2]-q[0])*(q[3]-q[1]) for q in regions)
         fill = demand / area if area > 0 else float("inf")
         bad = []
         if fill > fill_max + 1e-6:
             bad.append("fill")
         if not rect_inside(r, P.rect(bd["part"])):
             bad.append("outside_partition")
-        for c in blk[bd["part"]]:
-            if rect_overlap(r, c[:4]):
-                bad.append(f"overlaps:{c[4]}")
+        if actual_hits is not None:
+            bad.extend(f"actual_ff_overlaps:{name}" for name in actual_hits)
+        else:
+            for c in blk[bd["part"]]:
+                if rect_overlap(r, c[:4]):
+                    bad.append(f"overlaps:{c[4]}")
         row = dict(part=bd["part"], type=P.parts[bd["part"]]["type"], kind=bd["kind"], bits=bd["bits"],
                    rect_um=[r3(v) for v in r], xy_um=[r3(v) for v in bd["xy"]], cell_area_um2=r3(demand),
-                   fill=r3(fill), path=bd["path"], horiz=bd["horiz"], band=bd["band"], issues=bad)
+                   fill=r3(fill), path=bd["path"], horiz=bd["horiz"], band=bd["band"], issues=bad,
+                   regions_um=[[r3(v) for v in q] for q in regions], legal_area_um2=r3(area),
+                   explicit_sites=bool(bd["sites"]))
         bays.append(row)
         if bad:
             bay_fail.append(row)
@@ -1459,6 +1505,8 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
             s = seen.setdefault(key, dict(name=f"bay{len(seen)}", rect_um=rt, owner=tn, kind=b["kind"], bits=0,
                                           cell_area_um2=0.0, fill=0.0, layer="M7", paths=[]))
             bay_name[bi] = s["name"]
+            if b.get("regions_um"):
+                s["regions_um"] = [tr(b["part"],q) for q in b["regions_um"]]
             if b["bits"] > s["bits"]:
                 s["bits"], s["cell_area_um2"], s["fill"] = b["bits"], b["cell_area_um2"], b["fill"]
             if len(s["paths"]) < 8:

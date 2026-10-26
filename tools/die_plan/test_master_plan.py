@@ -303,3 +303,16 @@ def test_entry_pins_cannot_escape_partition_or_reach():
     assert all(0<=x<=21.6 and 0<=y<=21.6 for x,y in p)
     assert all(max(x-10,0)+max(y-10,0)<=10+1e-6 for x,y in p)
     assert M.place_pins(M.defaultdict(int),(0,0,10,10),1,0)==[]
+
+
+def test_disjoint_explicit_bank_keeps_core_holes_and_real_collision_gate():
+    import master_plan as M
+    rect=(0,0,10,30)
+    cores=[(0,8,10,22,"hc","core")]
+    ff=[(1,1,2.404,1.27),(1,27,2.404,27.27)]
+    pieces,hits=M.explicit_bay_regions(rect,ff,cores)
+    assert not hits and len(pieces)==2
+    assert sum((r[2]-r[0])*(r[3]-r[1]) for r in pieces)==160
+    assert not any(M.rect_overlap(r,cores[0]) for r in pieces)
+    _,hits=M.explicit_bay_regions(rect,ff+[(1,10,2.404,10.27)],cores)
+    assert hits==["hc"]
