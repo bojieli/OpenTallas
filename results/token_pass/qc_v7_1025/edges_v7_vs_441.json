@@ -1,0 +1,1 @@
+[{"label": "TOK-QK-QCV7 CB16 matvec path x-in -> c16 tree root -> slice rs: v7 final bind max 16 vs frozen-441 base R8 max 7 (+9 per matvec pass; v7 phase pads base->final +0)", "cycles": 9, "at": ["pre_qkv", "pre_o", "pre_gu", "pre_down"], "scope": "die", "grade": "PRICED", "source": "results/token_pass/qc_v7_1025/cb16_path.json (cb16_dag.baseline on bound bind_sinks)"}]
