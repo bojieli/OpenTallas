@@ -428,8 +428,12 @@ def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
     lines += [f"hierarchy {'-check ' if check else ''}-top {top}",
               f"select -set keep {sel}",
               "blackbox =* @keep %d",
-              "proc",
-              f"write_json {out_json}"]
+              "proc"]
+    if ab.get("collect_memories"):
+        if ab["collect_memories"] is not True:
+            raise ElabError("asbuilt.collect_memories must be true when enabled")
+        lines.append("memory_collect")
+    lines.append(f"write_json {out_json}")
     return "\n".join(x for x in lines if x) + "\n"
 
 
