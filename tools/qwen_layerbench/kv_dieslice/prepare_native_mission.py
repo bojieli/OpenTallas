@@ -9,6 +9,7 @@ import argparse,gzip,json,re
 from pathlib import Path
 from native_host_start_gate import patch
 from native_astk_source import close as close_astk
+from native_boot_ages import dispatch as ages_dispatch, control as ages_control
 
 def prepare(tree):
     tree=Path(tree).resolve();base=tree/'physical/die_plan/qwen_kvsys';d=base/'bind/kv45'
@@ -40,6 +41,10 @@ def prepare(tree):
     planpath.write_text(json.dumps(p,separators=(',',':'))+'\n')
     astk=d/'qkd_astk_ctl_s_g0.sv'
     if astk.exists():astk.write_text(close_astk(astk.read_text(),base/'cores/harden/astk_timing_regs.py'))
+    ctl=tree/'rtl/qwen_sys/static_kv_die_20261017'
+    for name,fn in [('qkd_kv_ctl_nc32_face.sv',ages_dispatch),('qkd_kvs_ctl_nc32.sv',ages_control)]:
+        path=ctl/name
+        if path.exists():path.write_text(fn(path.read_text()))
     return str(out)
 
 if __name__=='__main__':

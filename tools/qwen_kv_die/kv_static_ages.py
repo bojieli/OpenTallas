@@ -164,6 +164,12 @@ def derive(src):
                                           meta_hold_min=meta_min),
                                open='native CDC STA of the closed per-group control tile must confirm the window; token run starts '
                                     'must sit at a fixed HBM-beat phase or a launch can fall outside it (kv_static_programme reports)')
+    if __import__('os').environ.get('OT_KV_CONTROLLER_CORE', '0') == '1':
+        out['phase_launch'] = dict(PH0=0, SAFE_LOW_U=625, SAFE_HIGH_U=625,
+                                   META_HOLD_CORE=META_HOLD_BENCH, SAME_CLOCK=1,
+                                   cls='ONE_CORE_CLOCK_833PS',
+                                   basis='625/625 dimensionless ticks, same clock tree; no reset-relative phase origin',
+                                   open='propagated common-clock TT setup / FF hold STA')
     # ---- link / control ages for the programme compiler ----
     lst, lst_id = need(src, 'lprg_st')
     lp_seq, lp_id = need(src, 'seqst_lp')

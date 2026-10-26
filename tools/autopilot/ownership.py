@@ -60,7 +60,9 @@ import loopgaps as LG
 DIES = [("s81", "s81", "s81"), ("s81_head", "s81_head", "s81_head"), ("qwen_compute", "qwen_compute", "qwen_compute"),
         ("qwen_kvsys", "qwen_kvsys", "qwen_kvsys"), ("hbm", "hbm_arch/B2n", "B2n")]
 CANONICAL_SPLIT = "physical/die_plan/hbm/cores/harden/canonical_ports_split.json"   # HBM split piece -> RTL master
-STATES = ["PLAN-STRUCTURAL", "NEEDS-KIT", "KIT-PLACED", "GEOM-REQ", "ROUTING", "REVIEW", "FIX", "WAIT-PARENT", "SIGNED"]
+STATES = ["PLAN-STRUCTURAL", "NEEDS-KIT", "KIT-PLACED", "GEOM-REQ", "ROUTING", "REVIEW", "FIX", "WAIT-PARENT",
+          "SIGNED-UNVERSIONED", "SIGNED"]
+PROV_RULE = "v1"     # release tree cache whose records carry src_commit + flow_tag ('versioned'), closure order rule 3
 UNOWNED_S = 60 * 60
 OWNER_WINDOW_S = 24 * 3600
 NOT_LANES = re.compile(r"^(_|GEOM-REVIEW|COORD-REVIEW-QUEUE|AUTOPILOT|ROOT-MERGE)")
@@ -81,6 +83,7 @@ NEXT = {
     "REVIEW": "visual review of the bundle, structural fix, GEOM REQ",
     "FIX": "structural fix -> GEOM REQ -> rebuild",
     "WAIT-PARENT": "matching actual parent seam receipt required; preserve physical views",
+    "SIGNED-UNVERSIONED": "sign-off record lacks src commit + flow tag (closure order rule 3): re-run sign-off at a flow tag",
     "SIGNED": "-",
 }
 
@@ -351,11 +354,19 @@ def _names(items):
     return names
 
 
-def signed_items(items, cache):
-    """{(die, item): evidence} from the release tree cache (a record naming any member clears the design)"""
+def signed_items(items, cache, unversioned=None):
+    """{(die, item): evidence} from the release tree cache (a record naming any member clears the design).  Closure
+    order rule 3 (owner 2026-10-25): only a record that names its source commit + flow tag counts -- a cache from
+    release_tree_plan.py PROV_RULE v1 (per-plan lists hold versioned records only; records carry 'versioned').  Any
+    other match goes to `unversioned` (state SIGNED-UNVERSIONED, not counted)."""
     out = {}
+    unv = unversioned if unversioned is not None else {}
     if not cache:
         return out
+    # GRANDFATHER (COORD 2026-10-25 19:13): a pre-rule-3 cache (no provenance_rule) holds only pre-first-tag records,
+    # which count as SIGNED-LEGACY; a v1 cache's per-plan lists already hold versioned + SIGNED-LEGACY records
+    legacy_cache = cache.get("provenance_rule") is None
+    strict = legacy_cache or cache.get("provenance_rule") == PROV_RULE
     by_key = {(it["die"], it["item"]): it for it in items}
     names = _names(items)
     by_plan = {d: k for k, d, _ in DIES}
@@ -368,12 +379,20 @@ def signed_items(items, cache):
                 text = " ".join(map(str, ev)) if isinstance(ev, (list, tuple)) else str(ev or "")
                 cands = [x for x in names.get(k, []) if x[0] == die] or ([(die, k)] if (die, k) in by_key else [])
                 for key in pick(cands, text, by_key):
-                    out.setdefault(key, f"release cache {pdir}" + (f" ({k})" if k != key[1] else ""))
+                    (out if strict else unv).setdefault(key, f"release cache {pdir}" + (f" ({k})" if k != key[1] else ""))
     for r in cache.get("signed_records") or []:
         text = f"{r.get('path', '')} {r.get('name', '')}"
+        ok = strict and (legacy_cache or r.get("legacy") or (r.get("versioned") and r.get("src_commit") and r.get("flow_tag")))
         for k in rec_keys(r):
             for key in pick(names.get(k, []), text, by_key):
-                out.setdefault(key, f"SIGNED {r.get('scan_host')}:{r.get('path')}")
+                if ok:
+                    out.setdefault(key, f"SIGNED {r.get('scan_host')}:{r.get('path')} src {str(r['src_commit'])[:12]} "
+                                        f"flow {r['flow_tag']}" if r.get("versioned") else
+                                   f"SIGNED-LEGACY {r.get('scan_host')}:{r.get('path')}")
+                else:
+                    unv.setdefault(key, f"UNVERSIONED {r.get('scan_host')}:{r.get('path')}")
+    for key in out:
+        unv.pop(key, None)
     return out
 
 
@@ -461,7 +480,8 @@ def build(inp, now=None):
             ks = {k for k in ks if k[0] in near} or ks
         return ks
 
-    signed = signed_items(items, inp.get("cache"))
+    unversioned = {}
+    signed = signed_items(items, inp.get("cache"), unversioned)
     for j in inp.get("jobs") or []:
         st = str(j.get("status", ""))
         ks = keys_for(j.get("type", ""), j.get("die"))
@@ -470,8 +490,12 @@ def build(inp, now=None):
             e = E[k]
             if sel and k not in sel:                     # a run of one pin table of a multi-table module
                 continue
-            if st in ("SIGNED", "DONE-SIGNED") and k in sel:
-                signed.setdefault(k, f"autopilot {j.get('id')} SIGNED")
+            if st in ("SIGNED", "DONE-SIGNED", "ARCHIVED", "SIGNED-UNVERSIONED") and k in sel:
+                if st != "SIGNED-UNVERSIONED" and j.get("src_commit") and j.get("flow_tag"):
+                    signed.setdefault(k, f"autopilot {j.get('id')} SIGNED src {j['src_commit'][:12]} flow {j['flow_tag']}")
+                    unversioned.pop(k, None)
+                elif k not in signed:
+                    unversioned.setdefault(k, f"autopilot {j.get('id')} {st} without src commit + flow tag")
             if st == "RUNNING":
                 e["live"].append((f"{j.get('unit') or 'adopted'} {j.get('id')}", j.get("lane") or "", "route"))
             if st == "WAIT-PARENT":
@@ -544,6 +568,8 @@ def build(inp, now=None):
                          if x in struct), None)
             if k in signed:
                 state, why = "SIGNED", signed[k]
+            elif k in unversioned and not live_route:
+                state, why = "SIGNED-UNVERSIONED", unversioned[k]
             elif live_route:
                 state, why = "ROUTING", live_route[0][0]
             else:
