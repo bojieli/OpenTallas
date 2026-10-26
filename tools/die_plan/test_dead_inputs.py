@@ -16,13 +16,13 @@ def test_exact_type_parameter_source_and_bit(tmp_path):
  src=tmp_path/'leaf.sv';src.write_text('module leaf #(parameter M=0)(input [1:0]a,output y);assign y=a[0];\nendmodule\n')
  row=dict(partition_type='tile',module='leaf',parameters={'M':'0'},source='leaf.sv',module_sha256=module_hash(src,'leaf'),method='yosys.proc.opt.no_fanout',remaining_loads=0,ports={'a':[[1,1]]})
  proof=tmp_path/'proof.json';proof.write_text(json.dumps(dict(schema='opentallas.dead_inputs.v1',verdict='PASS',declarations=[row])))
- d=ProvenDead({'dead_input_proofs':['proof.json']},tmp_path);cell=SimpleNamespace(module='leaf',params={'M':'0'})
+ d=ProvenDead({'dead_input_proofs':['proof.json'],'files':['leaf.sv']},tmp_path);cell=SimpleNamespace(module='leaf',params={'M':'0'})
  assert d.allows('tile',cell,'a',1)
  assert not d.allows('tile',cell,'a',0)
  assert not d.allows('other',cell,'a',1)
  cell.params={'M':'1'};assert not d.allows('tile',cell,'a',1)
  src.write_text(src.read_text().replace('a[0]','a[1]'))
- with pytest.raises(ValueError,match='stale'):ProvenDead({'dead_input_proofs':['proof.json']},tmp_path)
+ with pytest.raises(ValueError,match='stale'):ProvenDead({'dead_input_proofs':['proof.json'],'files':['leaf.sv']},tmp_path)
 
 
 def test_no_unknown_direction_assumption():

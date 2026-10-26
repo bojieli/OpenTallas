@@ -45,6 +45,17 @@ class ProvenDead:
                 source = (repo / row['source']).resolve()
                 if not source.is_relative_to(repo) or Path(row['source']).is_absolute():
                     raise ValueError('dead-input source must be repository-relative')
+                # A still-present historical file cannot qualify a different selected
+                # implementation with the same module name. Resolve the preferred
+                # definition exactly as a source declaration, and reject ambiguity.
+                import re
+                selected = []
+                for rel_source in manifest.get('prefer', manifest.get('files', [])):
+                    candidate = repo / rel_source
+                    if candidate.is_file() and re.search(r'^module\s+' + re.escape(row['module']) + r'\b', candidate.read_text(), re.M):
+                        selected.append(candidate.resolve())
+                if set(selected) != {source}:
+                    raise ValueError('dead-input proof source is not the unique selected definition: ' + row['module'])
                 if module_hash(source, row['module']) != row['module_sha256']:
                     raise ValueError('stale dead-input source ' + row['source'])
                 if row.get('method') != 'yosys.proc.opt.no_fanout' or row.get('remaining_loads') != 0:
