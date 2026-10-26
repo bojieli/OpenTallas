@@ -1,0 +1,7 @@
+{
+  "failed": "k26b: fill2.78%, empty92.56%,182 r2r arcs>405um, max476.98um (u_sid s0->s1); NO ROUTE",
+  "cause": "oversized hard-core outline spreads dedicated opposite-face register stages. Compact hard-core candidate uses108x82.08 vs345.6x172.8, keeps RTL/face ordering/3499pin names and uses M3+M5 on N/S (old M5-only); M4 E/W.",
+  "candidate": "PASS-COND PLACE ONLY; image viewed. No macros/walls/slivers. Continuous M1/M2/M5 PDN. Clock/reset W near mid-height. All core points within190.08um Manhattan reach. E735pins use765 available every-other-track sites; S702M3/701M5 use1380/1035sites. Close E pin capacity requires real placement/route. Measured old cell area predicts~21% free-area fill. New hard box lies inside old parent box, no added overlap.",
+  "cycles_added": 0,
+  "status": "NOT ADOPTED. Fold only in D-S81-B2, G0/G0C + parent image review + actual placed r2r census required. No sign-off claim."
+}
