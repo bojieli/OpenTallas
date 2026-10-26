@@ -61,7 +61,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] HBM.STA Die STA on real views · DIE-PROTO · WAITS · → HBM.GRT
 
 ## TOKEN · Token-pass gate per design
-- [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS-6 · RUNNING · L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger → S81.BIND, → HEAD.BIND
+- [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS-6 · RUNNING · L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger ACCEPTED (owner 10-26) → S81.BIND, → HEAD.BIND
 - [ ] TOK.QW Qwen ROM token pass (compute + KV) · TOK · RUNNING · QK vehicle on KV rebased bind; prices landed seams + FE stations → KV.BIND, → QC.INFRA
 - [ ] TOK.HDS / TOK.HQ HBM token passes (next release) · TOK · RUNNING · SU programme-path fault (pgslice lw, side_pipe rsq) being root-caused
 - [ ] TOK.FREEZE Final evidence run at freeze · COORD · WAITS · → TOK.DS, → TOK.QW
