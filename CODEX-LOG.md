@@ -3763,3 +3763,9 @@ DIAGNOSED INPUT/TOOL FAILURES:
 Local scratch2 permission denied for source WT ->hub scratch2/local source mirror scratch1. E5 extraction2 wrong /opt/ORFS binary path exit127 preserved; corrected /OpenROAD-flow-scripts extraction3 PASS. Exact own waiter cancellation only, no other jobs killed. Docker -v colon-path stage parser blocked spill; INFRA fixed0d7f/rootdeployed3eaf, no live jobs restarted. Push to checked-out hub branch correctly refused ->publish -pub, preserve own earlier helper patch and ff own hub WT. Merge test append conflict kept both150 and new tests; failed test collection with conflict markers was not a design regression.
 
 OWNER? No new owner questions from this lane.
+
+## Takeover 2026-10-25 21:46 PDT
+All lanes assigned to execution groups; root owns integration. Real source hub epyc1 main0f076c3f75; local checkout stale and left intact. Four active hosts; epyc3 retired by owner. Approved batch12 integration started.
+
+OWNER?
+No new owner decision needed at takeover; existing rulings being executed.
