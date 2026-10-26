@@ -38,6 +38,7 @@ MU_ARGS=()
 # KV-PROG17 10-20: the KV attention r16 tile (OT_KV_ATTN_R16=1: qkd_attn_cal_gen_r16 TX_SHIFT 1, RETIRE_STATIC STATUS_DELAY 213)
 # moves the K RESULT burst +D2D_ATTN_TX_SHIFT and the K STATUS +D2D_STATUS_DELAY in every layer (priced in every layer /
 # token window); both link ends bind the resulting _r16 image (kv_static_programme LINK_IMAGE, compute sequencer).
+[ -n "${D2D_ATTN_SERVICE_PAD:-}" ] && MU_ARGS+=(--attn-service-pad "$D2D_ATTN_SERVICE_PAD")
 [ -n "${D2D_ATTN_TX_SHIFT:-}" ] && MU_ARGS+=(--attn-tx-shift "$D2D_ATTN_TX_SHIFT")
 [ -n "${D2D_STATUS_DELAY:-}" ] && MU_ARGS+=(--status-delay "$D2D_STATUS_DELAY")
 mkdir -p "$OUT"
