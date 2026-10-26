@@ -44,7 +44,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE s81 · S81 (DeepSeek ROM layer die) · rev main · B2 batch
 - [ ] S81.B2 One plan event D-S81-B2: A25 + stations v4 + PHY pins + leaf pins + eng SRAM r0c0 + FT alignment/corridors + D-S81-PHY + infra-first · PATH-S81 · RUNNING · gate: lateral jog <5M bit-um → GRT0 → skew
-- [ ] S81.GRT Die GRT0 · PATH-S81 · PASS SIGNAL DIAGNOSTIC · B5(A25+C+D+E,M5tplcaps) configured50iterations overflow0, converged10; freeze still waits real PHY geometry + infra → S81.B2
+- [ ] S81.GRT Die GRT0 · PATH-S81 · RUNNING SIGNAL PROBE · B2 g0fix plan c6b5e29a 50-it probe at extra it 22/50 (06:54, ~10 min/it, ETA ~11:30; unit oth-ubuntu-3630088-1793016620; signal-only, 0 clock nets = no freeze credit); B5 overflow0 diagnostic; freeze = die STA real clock (12.4a v4.3) → S81.B2
 - [ ] S81.PHY 14 SerDes windows · PATH-S81 · RUNNING · zero-area fit 14/14; gunit R180 re-plan PASS-COND (GEOM-17); bk_sel option B re-cut 864x483.84 APPROVED (rebuild quarter tile) → S81.B2
 - [ ] S81.CLK Clock under 12.8 · PATH-S81 · NOT RUN · replace early taps (gunit u_l5 520, bk_sel u_c 430) with centre entries; cores → S81-CORE-LAT → IF.CLK128
 - [ ] S81.BIND Strict bind on main · TOK-DS · PASS on 877cfdeb2 (0 tied, 10,352 straps) → re-run after S81.B2
