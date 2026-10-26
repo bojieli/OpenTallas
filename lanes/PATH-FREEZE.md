@@ -54,3 +54,6 @@ CLOCK | E5 die clock route | FAIL (narrowed again) | CTS04b (claude/clock-reset-
 
 QC | PATH-STA old441d/v1budgetdiagnostic | FAIL TTsetup+555.274 / FFhold-73.026(39621 EP), pair119.0TT/110.22FF; noactualsignedviewreleasegate | epyc1 die-ft-1830/qc_sta, oldspine+budgetCLAT; successorphysicalclockworkactive,nooldrerun | 2026-10-25 22:16 PDT
 QC | CLKSEAM batch1b actualNDRGRT | GEOMETRYGRT0TT/FF; MIXED-NDR TIMING NOTRUN (standard-widthRCdiagnosticFAIL462.94/407.09, cannotexportestimatedSPEFthroughOpenRCX) | codex/dieproto-2145@c623f99d8; routedsegmentRCconverter+actualgeometricclockfallbackactive; noFROZENreplacement | 2026-10-25 22:16 PDT
+
+QC | native mixed-NDR clock | FAIL pair573.966TT/505.913FF despite GRT0; native R once/profile C/restored terminal caps; physical contour normalization active | codex/dieproto-complete-2313@77b2eec49 | 2026-10-25 23:16 PDT
+S81 | bounded actual-station coupons | t53/t29 PASS0, t24/t44 FAIL26571/47247 under conservative core union; older unbounded positives diagnostic only | same ready ref; S81 lead owns next geometry | 2026-10-25 23:16 PDT
