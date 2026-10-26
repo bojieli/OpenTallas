@@ -1056,7 +1056,11 @@ def main():
               head_lane_taps=bool(a.head_lane_taps), head_strap_master=bool(a.head_strap_master),
               head_lane_s3copy=bool(a.head_lane_s3copy),
               kit_hash=kit_hash(kd))
+    import lec as LEC
+    source_provenance = LEC._repo_provenance(REPO)
+    fz["source_commit"] = source_provenance.get("commit")
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
+    LEC.write_kit_provenance(kd, REPO, provenance=source_provenance)
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),
                           macros=macros, kit_hash=fz["kit_hash"])))
 
