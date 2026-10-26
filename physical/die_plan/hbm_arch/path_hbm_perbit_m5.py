@@ -16,6 +16,13 @@ from tools.die_trial.legal_sites import RowAllocator
 REACH=323.0  # reserve 2*40um cell displacement plus data-pin offsets below405
 RADIUS=40.0
 CELL=np.array([1.404,.27])
+_NEIGHBORS={}
+
+def neighbors(targets,node):
+    if node not in _NEIGHBORS:
+        _NEIGHBORS[node]=np.flatnonzero(np.abs(targets-targets[node]).sum(axis=1)<=REACH).astype(np.int32)
+    return _NEIGHBORS[node]
+
 
 
 def path_for(a,b,targets):
@@ -30,8 +37,8 @@ def path_for(a,b,targets):
     desired=a+(b-a)*min(.75*REACH/float(np.abs(b-a).sum()),1.0)
     node=int(starts[np.argmin(np.abs(targets[starts]-desired).sum(axis=1))]);path=[node];seen={node}
     while True:
-        dist=np.abs(targets-targets[node]).sum(axis=1)
-        ids=np.flatnonzero((dist<=REACH)&(last<last[node]-1e-6))
+        ids=neighbors(targets,node)
+        ids=ids[last[ids]<last[node]-1e-6]
         if not len(ids):break
         desired=targets[node]+(b-targets[node])*min(.75*REACH/float(last[node]),1.0)
         node=int(ids[np.argmin(np.abs(targets[ids]-desired).sum(axis=1))]);path.append(node)
@@ -43,7 +50,8 @@ def path_for(a,b,targets):
     while queue:
         node=queue.popleft()
         if last[node]<=REACH:end=node;break
-        ids=np.flatnonzero((np.abs(targets-targets[node]).sum(axis=1)<=REACH)&(parent==-2))
+        ids=neighbors(targets,node)
+        ids=ids[parent[ids]==-2]
         ids=ids[np.argsort(last[ids])];parent[ids]=node;queue.extend(map(int,ids))
     if end is None:raise ValueError('no reach-bounded per-bit cell corridor')
     out=[]
@@ -52,6 +60,7 @@ def path_for(a,b,targets):
 
 
 def repair_type(raw,tn):
+    _NEIGHBORS.clear()
     t=raw['partition_types'][tn];w,h=t['outline_um']
     for c in t.get('hard_cores',[]):
         if int(c.get('obs_max','M7')[1:])>5:raise ValueError(tn+': wire-over-core requires M5 ceiling')
@@ -143,19 +152,19 @@ def main():
             c['origin_um'][1]=round(c['origin_um'][1]+17.28,6)
         if 'q_b110' in a.types.split(','):
             cores=sorted(raw['partition_types']['q_b110']['hard_cores'],key=lambda c:c['origin_um'][1])
-            for c,y in zip(cores,[86.4,457.92,829.44,1200.96]):c['origin_um'][1]=y
+            for c,y in zip(cores,[77.76,449.28,820.8,1192.32]):c['origin_um'][1]=y
     if a.su_corridors:
         for tn in a.types.split(','):
             if tn in ('q_su21','q_su31'):
                 for c in raw['partition_types'][tn]['hard_cores']:
                     x,y=c['origin_um']
-                    if tn=='q_su21':c['origin_um'][0]=25.92 if x<400 else 812.16
-                    else:c['origin_um'][0]=x+(17.28 if x>400 else 0)
+                    if tn=='q_su21':c['origin_um'][0]=25.92 if x<400 else 864.0
+                    else:c['origin_um'][0]=x+(86.4 if x>400 else 0)
                     c['origin_um'][1]=34.56 if y<400 else 803.52
             elif tn=='q_su30':
                 for c in raw['partition_types'][tn]['hard_cores']:
                     if c['outline_um'][0]<700:continue
-                    x,y=c['origin_um'];c['origin_um'][0]=x+(8.64 if x in(803.52,1270.08) else 0)
+                    x,y=c['origin_um'];c['origin_um'][0]=x+(51.84 if x in(803.52,1270.08) else 0)
                     c['origin_um'][1]=34.56 if y<400 else 803.52
     shutil.copytree(a.src,a.out)
     try:
