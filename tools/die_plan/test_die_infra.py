@@ -31,6 +31,38 @@ class T(unittest.TestCase):
         r = DI.pg_clock_conflicts(P, pg, [("ck_mesh", "M9", 4.60, 0, 4.76, 108, .16)])
         self.assertEqual((r["conflicts"], r["metal_shorts"]), (1, 0))
 
+    def test_snap_moves_special_wires_off_pg_onto_free_tracks(self):
+        # KV-INFRA-R2: a clock strap built against an older PG grid and a reset L-route both sit on a PG stripe;
+        # the snap moves each across its axis to the nearest PG-free track centre, length/width unchanged.
+        P = plan()
+        pg = [("VDD", "M9", 4.08, 0, 4.56, 108), ("VSS", "M9", 8.4, 0, 8.88, 108), ("VDD", "M8", 0, 20.0, 108, 20.48)]
+        wires = [("ck_mesh_r0", "M9", 4.24, 0, 4.4, 108, .16), ("rst", "M8", 10, 20.2, 60, 20.24, .04),
+                 ("ok", "M9", 6.0, 0, 6.16, 108, .16), ("m7", "M7", 4.24, 0, 4.4, 108, .16)]
+        self.assertEqual(DI.pg_clock_conflicts(P, pg, wires[:2], clearance_um=0.08)["metal_shorts"], 2)
+        out, led = DI.snap_off_pg(P, pg, wires, 0.08, max_shift_um=2.0)
+        self.assertEqual((led["moved"], led["unsnappable"]), (2, 0))
+        self.assertEqual(out[2:], wires[2:])                       # clear wire and non-PG layer untouched
+        self.assertEqual(DI.pg_clock_conflicts(P, pg, out[:2], clearance_um=0.08)["conflicts"], 0)
+        for a, b in zip(wires[:2], out[:2]):
+            self.assertAlmostEqual(a[4] - a[2], b[4] - b[2])          # same width / length
+            self.assertAlmostEqual(a[5] - a[3], b[5] - b[3])
+        c = (out[0][2] + out[0][4]) / 2                            # on a track centre (pitch 0.08, offset 0)
+        self.assertAlmostEqual(c / 0.08, round(c / 0.08), places=6)
+        self.assertLessEqual(led["max_shift_um"], 0.6)
+        # a limit smaller than the needed move leaves the wire in place and reports it
+        _, led = DI.snap_off_pg(P, pg, wires[:1], 0.08, max_shift_um=0.05)
+        self.assertEqual((led["moved"], led["unsnappable"]), (0, 1))
+
+    def test_infra_pg_phy_window_power_from_load_model_rows(self):
+        # KV-INFRA-R2: load_model hands phy_power its window rows as {name, rect, part, iface}; a generic PHY
+        # window (not SerDes / UCIe) is charged PHY_W_MM2 x its area instead of failing on a missing rect_um.
+        import infra_pg as IP
+        P = SimpleNamespace(parts={}, types={})
+        w, basis = IP.phy_power(P, dict(name="io_phy_EN_0", rect=[0, 0, 1000.0, 1000.0], part=None, iface="phy"), 4.37)
+        self.assertAlmostEqual(w, IP.PHY_W_MM2 * 1.0)
+        w2, _ = IP.phy_power(P, dict(name="x", rect_um=[0, 0, 500.0, 1000.0], iface="phy"), 4.37)
+        self.assertAlmostEqual(w2, IP.PHY_W_MM2 * 0.5)
+
     def test_regional_preroute_preserves_physical_clock_cuts(self):
         with tempfile.TemporaryDirectory() as td:
             d = Path(td)

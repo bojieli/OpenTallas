@@ -128,7 +128,8 @@ def phy_power(P, w, phy_w_per_macro):
     if "ucie" in iface or "ucie" in mod:
         return UCIE_X64_W, ("UCIe x64: 128 lanes x 32 GT/s x 0.6 pJ/b = %.2f W (PHY_ASSUMPTIONS UCIE.ENERGY, UCIe-A "
                             "upper; UCIE.RATE 32 GT/s)" % UCIE_X64_W)
-    a = (w["rect_um"][2] - w["rect_um"][0]) * (w["rect_um"][3] - w["rect_um"][1]) * 1e-6
+    r = w.get("rect_um") or w["rect"]          # load_model passes its window rows as {name, rect, part, iface}
+    a = (r[2] - r[0]) * (r[3] - r[1]) * 1e-6
     return PHY_W_MM2 * a, f"{iface or 'PHY'}: {PHY_W_MM2} W/mm2 x {a:.3f} mm2 (PHY_ASSUMPTIONS PHY power density)"
 
 
