@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Actual host_qm placed diagnostic: io clock scalar alias only; canonical929a037e3 regen before CTS",
+  "source": "codex/kvhr-faces-1026@e6cbdc9e7",
+  "picture": "/srv/opentallas-scratch/claude/wt/codex-vqvs-1026/results/geom_review/codex_vqvs_1026/host_qm_placed.png",
+  "actual": "epyc2:/srv/opentallas-scratch2/claude/codex-vqvs-1026/host_qm/kit_ckscalar/run/results/asap7/hc_qkd_hr_host_qm__77_76x77_76/base/3_place.odb",
+  "results": {
+    "place_exit": 0,
+    "flops": 17,
+    "stdcell_area_um2": 45,
+    "utilization_pct": 1,
+    "full_reach_arcs": 179,
+    "max_reach_um": 128.703,
+    "arcs_over405": 0
+  },
+  "findings": [
+    "Data landing FFs follow corresponding north/west/south pins; private credit output FF retained",
+    "Logic concentrated near southern credit-count inputs, output valid/fault relays near output faces",
+    "No macro blockage, channel bottleneck, dense pin bar or long unregistered path; all arcs under129um",
+    "M5 PG crosses empty channels continuously; exact clock skew and FFhold not yet measured"
+  ],
+  "failed_predecessor": {
+    "verdict": "FAIL",
+    "stage": "2_1_floorplan",
+    "error": "PPL-0061 ck[0] pin not found; raw netlist scalar ck",
+    "resolution": "Diagnostic io.tcl spelling corrected in isolated copy only; durable source929a037e3 single_bit_vector preserves canonical ck[0]"
+  }
+}

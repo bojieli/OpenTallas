@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Host credit pacer pre-placement trial only; actual placed review before CTS/route",
+  "source": "codex/kvhr-faces-1026@e6cbdc9e7",
+  "kit_hash": "42c650e7f796c2f8",
+  "picture": "/srv/opentallas-scratch/claude/wt/codex-vqvs-1026/results/geom_review/codex_vqvs_1026/host_qm_preplan.png",
+  "findings": [
+    "Macro-free77.76um square and10pins leave all faces/corridors open",
+    "Input credit count spaced along south, credit return and valid on north, fault on west; low pin density, no crossings imposed",
+    "Clock enters north center; all Manhattan spans <=155.52um before local sink placement",
+    "M5 PG pitch4.32um crosses entire core with continuous M1/M2 followpins; no macro PG interruptions",
+    "Core has low fill and must preserve private output Q+input pin flop anchors in actual placement"
+  ],
+  "added_cycles": 0
+}
