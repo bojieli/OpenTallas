@@ -5,7 +5,9 @@ tools/die_plan/bind.py; same mechanism as the QC collective coll_regen.py).
 Rules (tools/qwen_kv_die/kv_static_die.py KVR-DERIVE / ahub_ages; D = register stages on the die path):
   ECTL  qkd_ectl3_kiss_st (one per hg frame)   RESPONSE_LAT = 8 + D(krq) + D(krs)   (absolute: 8 = landing seg)
         krq = ectl.req_* -> slg.kreq landed depth, krs = slg.krsp -> ectl.rsp_* landed depth; one value per frame
-        QK_ISSUE_AGE = RESPONSE_LAT + 11   (kv_static_ages.QK_WRITE_BEFORE_READ)
+        QK_ISSUE_AGE = max(34, RESPONSE_LAT + 11)   (kv_static_ages: max(QK_ISSUE_AGE_KIT, RL + QK_WRITE_BEFORE_READ);
+        34 = attn calendar QK_CONSUME floor; TOK-QK-KVCHK 10-26: the floor was missing here, so the composed hook would
+        bind 23 at RL 12 while the 833 boot image of record and regen_constants use 34)
         all frames must agree (the hardened children carry one value): unequal -> error, never a per-frame guess.
   AHUB  qkd_ahub_static_dw                      AP_OFS_s = 2 + L_s + D(ap_s) - D(ks_ahs)
         FR_OFS = D(ks_pvfst) - PV_LEAD - D(ks_ahfr) - D(ks_ahs) - 1
@@ -13,6 +15,9 @@ Rules (tools/qwen_kv_die/kv_static_die.py KVR-DERIVE / ahub_ages; D = register s
         change of each D term (landed - as-built stages of that leg; an intra-partition leg keeps its as-built
         stages, change 0).  ap_s = ahub.ap<k> (k = 0..3 = stacks WS WN ES EN, AP_OFS[16k +: 16]); ks_ahs = kvs_attn.ahs
         -> ahub.hs_*; ks_pvfst = kvs_attn.pvfst -> pvfin; ks_ahfr = ahub.fr_* -> pvfin; PV_LEAD = kvs_attn.pvst -> pvw_*.
+  SEQ   qkd_seq_core_static_s                  KVN_A0 = KVN_A0_asb + dD(d2d_kv.kvn_word_valid -> seq core)
+        - dD(d2d_kv.att_rx_v -> kvs_attn)   (KV-P6 18:09: age a starts at the attention programme request, triggered by
+        att_rx; kv_regen36 applied it from a table, the composed 2350 hook had dropped it: TOK-QK-KVCHK 10-26)
 NOT regenerated here (no lane rule given, or not an RTL parameter) -> recorded in record.open for KV-P5 / TOK:
   PV ctl ot_qwen_tp8_pv_wide_ctl_tbf FIRST_INPUT_AGE / TRUNK_D / FLAG_D (4 + W + DQ + RT_die + 1 needs the boot-image
   vport RT/DQ, which differ per port on the bound top); vport RT/DQ (boot-programmable); ahub am lag / d2d / kvs_ctl
@@ -22,6 +27,7 @@ from collections import defaultdict
 
 STACKS = ["WS", "WN", "ES", "EN"]
 QK_WRITE_BEFORE_READ = 11
+QK_ISSUE_AGE_KIT = 34
 LANDING_SEG = 8
 
 
@@ -96,10 +102,11 @@ def regen(ctx):
             raise ValueError(f"ECTL: K round trips differ per frame {sorted(vals)} (the hardened children take one "
                              f"RESPONSE_LAT): equalise krq/krs in the plan or the r8 table")
         rt = vals.pop()
+        qk = max(QK_ISSUE_AGE_KIT, rt + QK_WRITE_BEFORE_READ)
         for p in rts:
-            params[p] = dict(RESPONSE_LAT=rt, QK_ISSUE_AGE=rt + QK_WRITE_BEFORE_READ)
-        rec["ectl"] = dict(rule="RESPONSE_LAT = 8 + krq + krs; QK_ISSUE_AGE = RESPONSE_LAT + 11", frames=len(rts),
-                           RESPONSE_LAT=rt, QK_ISSUE_AGE=rt + QK_WRITE_BEFORE_READ,
+            params[p] = dict(RESPONSE_LAT=rt, QK_ISSUE_AGE=qk)
+        rec["ectl"] = dict(rule="RESPONSE_LAT = 8 + krq + krs; QK_ISSUE_AGE = max(34, RESPONSE_LAT + 11)", frames=len(rts),
+                           RESPONSE_LAT=rt, QK_ISSUE_AGE=qk,
                            krq=sorted({v["krq"] for v in rts.values()}), krs=sorted({v["krs"] for v in rts.values()}))
     # ---- AHUB offsets (delta form)
     for ci, c in enumerate(F.cells):
@@ -126,6 +133,27 @@ def regen(ctx):
                                 "dD(ks_ahs)", stacks=STACKS, AP_OFS_asbuilt=ap0, AP_OFS=ap, FR_OFS_asbuilt=fr0, FR_OFS=fr,
                            dD=dict(ap=d_ap, ks_ahs=d_hs, ks_pvfst=d_pvfst, ks_ahfr=d_ahfr, PV_LEAD=d_lead))
         del cidx
+    # ---- SEQ KVN_A0 (delta form, KV-P6 18:09)
+    seq = [ci for ci, c in enumerate(F.cells) if re.search(r"qkd_seq_core_static_s", c.module)]
+    if len(seq) != 1:
+        raise ValueError(f"SEQ: {len(seq)} qkd_seq_core_static_s leaves (one seq core per die)")
+    ci = seq[0]
+    c = F.cells[ci]
+    a0 = c.params.get("KVN_A0", (getattr(ctx, "param_defaults", {}) or {}).get((getattr(c, "ytype", None), c.module), {}).get("KVN_A0"))
+    if a0 is None:
+        raise ValueError(f"SEQ {c.path}: as-built KVN_A0 unknown")
+    a0 = int(str(a0).strip('"'))
+    attn = [i for i, x in enumerate(F.cells) if re.fullmatch(r"(.*\.)?kvs_attn", x.path)]
+    if len(attn) != 1:
+        raise ValueError(f"SEQ KVN_A0: {len(attn)} kvs_attn leaves")
+    d_kvn = _one(_delta(legs, ci, [r"\w+"], r"(.*\.)?d2d_kv\.kvn_word_valid"), "SEQ kvn_word_valid -> seq core")
+    d_rx = _one(_delta(legs, attn[0], [r"\w+"], r"(.*\.)?d2d_kv\.att_rx_v"), "SEQ att_rx_v -> kvs_attn")
+    kvn = a0 + d_kvn - d_rx
+    if not (0 <= kvn and kvn + 4 < 256):
+        raise ValueError(f"SEQ KVN_A0 {kvn} outside the 8-b age window (asb {a0} + {d_kvn} - {d_rx})")
+    params[c.path] = dict(KVN_A0=kvn)
+    rec["seq"] = dict(rule="KVN_A0 += dD(kvn_word_valid -> seq core) - dD(att_rx_v -> kvs_attn)", KVN_A0_asbuilt=a0,
+                      KVN_A0=kvn, dD=dict(kvn=d_kvn, att_rx=d_rx))
     open_ += [
         "PV ctl ot_qwen_tp8_pv_wide_ctl_tbf FIRST_INPUT_AGE/TRUNK_D/FLAG_D: 4 + W + DQ + RT_die + 1 needs the boot vport "
         "RT/DQ (per-port bound round trips differ) -> KV-P5 rule + boot image",
