@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "GRT-only A/B from unchanged reviewed HCPL v1b 4_cts; no production route or adoption",
+  "source": "claude/path-s81-hcpl-1025@3ff7d0927d",
+  "checkpoint": "epyc1:/srv/opentallas-scratch2/claude/path-s81-hcpl/kits/ot_dsrom_su_hcpost_lane_pr_v1b/run/results/asap7/kl_ot_dsrom_su_hcpost_lane_pr_v1b/base/4_cts.odb",
+  "images": [
+    "floorplan.png",
+    "density.png",
+    "paths_zoom.png"
+  ],
+  "findings": [
+    "114.48um square without macros; no macro walls/halos required; pins distributed on all four faces, strongest bus at north face.",
+    "Continuous parallel PG stripes; density predominantly green with isolated warm bins rather than a corridor hotspot.",
+    "Worst prior FF path is short internal register chain with clock skew, not a long relay-less wire. Slot span well below405um.",
+    "No geometry, pins, clock or RTL changes in experiment; same exact CTS checkpoint in both arms.",
+    "Compare native TT setup and FF hold in their own vclk frames; mixed FF-frame TT optimizer reports do not qualify."
+  ]
+}

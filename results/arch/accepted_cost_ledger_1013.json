@@ -1627,6 +1627,39 @@
   },
   {
    "design": "s81",
+   "unit": "S81.HEADB4_GO (ot_s81hd_elemB_l4_native v4 go_q pin register, main c9d0aaff41: GO accepted one edge later, x contract word a at G+6+a, first root +1)",
+   "group": "S81.HEADB4_GO (ot_s81hd_elemB_l4_native v4 go_q pin register, main c9d0aaff41: GO accepted one edge later, x contract word a at G+6+a, first root +1)",
+   "measured": 1.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.0,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 828867.4,
+     "added_cycles": 1.0,
+     "runs_per_token": 1,
+     "critical_runs": 1,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "rtl/dsrom_sys/s81_head/ot_s81hd_elemB_l4_native.sv rtl/dsrom_sys/s81_head/test/tb_s81hd_native_l4.sv",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-25",
+   "status": "proposed",
+   "note": "TOK-SCHED 10-25 static-schedule re-check (COORD 19:55): +1 cycle on every head.lm_head/draft.head node of the token-path DAG; AR longest path 828866.4 -> 828867.4 (+1, critical, 1 run/token), e2e 0.0001 %. Native B v4 is off-default: the schedule of record is unchanged until it is adopted; at adoption the head x feeder must launch word a at G+6+a (one edge later than v3) -- no other edge moves. Proposed, not accepted: the v4 bench reads an out-of-repo kit (rule 3, COORD 19:55), re-run in-repo to make it committed_bench."
+  },
+  {
+   "design": "s81",
    "unit": "S81.VSW_LR1 (ot_s81sl_vsw LR=1 default, main 8d6af30b15: +1 output edge a SW/SWR command in every S81 slice; lower_vs SW16 191->192, SWR 195->196; L14 span 28081.9->28082.9)",
    "group": "S81.VSW_LR1 (ot_s81sl_vsw LR=1 default, main 8d6af30b15: +1 output edge a SW/SWR command in every S81 slice; lower_vs SW16 191->192, SWR 195->196; L14 span 28081.9->28082.9)",
    "measured": 40.0,
@@ -3419,7 +3452,7 @@
    "accepted_plus_proposed_pct": 9.851,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 9,
+   "proposed_rows": 10,
    "headroom_pct": 11.498,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,

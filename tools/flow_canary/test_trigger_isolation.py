@@ -46,6 +46,19 @@ class Isolation(unittest.TestCase):
                 {'last_sha':'old','die_sha':{'hbm':'new'}},set())
             self.assertEqual(ready,['s81'])
         finally:T.git=old
+    def test_foreign_die_changes_trigger_only_own_reference(self):
+        old=T.git
+        try:
+            T.git=lambda *a:SimpleNamespace(returncode=0,stdout='physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py\n')
+            spec={'watch':['physical/die_plan/*'],
+                  'die_plans':{'s81_head':['s81_head'], 'qwen_compute':['qwen_compute'],
+                               'qwen_kvsys_core':['qwen_kvsys']}}
+            ready,revisions,_=T.ready_dies('/src','new',list(spec['die_plans']),spec['watch'],
+                {'last_sha':'old'},set(),spec=spec)
+            self.assertEqual(ready,['qwen_kvsys_core'])
+            self.assertEqual(revisions,{'s81_head':'new','qwen_compute':'new'})
+        finally:T.git=old
+
     def test_snapshot_preserves_original_checkout_and_reuses_same_revision(self):
         with tempfile.TemporaryDirectory() as d:
             src=Path(d)/'src';src.mkdir()

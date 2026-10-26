@@ -1223,12 +1223,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_2 + head0__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_2 + head0__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head0_e2",
@@ -1263,7 +1270,7 @@
     },
     {
      "inst": "head0_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -1273,12 +1280,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_6 + head0__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_6 + head0__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head0_e4",
@@ -1323,12 +1337,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_10 + head0__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_10 + head0__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head0_e6",
@@ -1363,7 +1384,7 @@
     },
     {
      "inst": "head0_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -1373,12 +1394,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_14 + head0__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_14 + head0__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head1_e0",
@@ -1423,12 +1451,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_2 + head1__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_2 + head1__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head1_e2",
@@ -1463,7 +1498,7 @@
     },
     {
      "inst": "head1_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -1473,12 +1508,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_6 + head1__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_6 + head1__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head1_e4",
@@ -1523,12 +1565,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_10 + head1__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_10 + head1__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head1_e6",
@@ -1563,7 +1612,7 @@
     },
     {
      "inst": "head1_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -1573,12 +1622,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_14 + head1__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_14 + head1__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "ectl_q0",
@@ -2853,12 +2909,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_2 + head0__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_2 + head0__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head0_e2",
@@ -2893,7 +2956,7 @@
     },
     {
      "inst": "head0_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -2903,12 +2966,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_6 + head0__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_6 + head0__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head0_e4",
@@ -2953,12 +3023,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_10 + head0__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_10 + head0__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head0_e6",
@@ -2993,7 +3070,7 @@
     },
     {
      "inst": "head0_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -3003,12 +3080,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_14 + head0__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_14 + head0__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head1_e0",
@@ -3053,12 +3137,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_2 + head1__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_2 + head1__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head1_e2",
@@ -3093,7 +3184,7 @@
     },
     {
      "inst": "head1_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -3103,12 +3194,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_6 + head1__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_6 + head1__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head1_e4",
@@ -3153,12 +3251,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_10 + head1__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_10 + head1__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head1_e6",
@@ -3193,7 +3298,7 @@
     },
     {
      "inst": "head1_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -3203,12 +3308,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_14 + head1__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_14 + head1__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "ectl_q0",
@@ -63511,12 +63623,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head2_e2",
@@ -63551,7 +63670,7 @@
     },
     {
      "inst": "head2_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -63561,12 +63680,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head2_e4",
@@ -63611,12 +63737,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head2_e6",
@@ -63651,7 +63784,7 @@
     },
     {
      "inst": "head2_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -63661,12 +63794,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head3_e0",
@@ -63711,12 +63851,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head3_e2",
@@ -63751,7 +63898,7 @@
     },
     {
      "inst": "head3_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -63761,12 +63908,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head3_e4",
@@ -63811,12 +63965,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head3_e6",
@@ -63851,7 +64012,7 @@
     },
     {
      "inst": "head3_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -63861,12 +64022,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     }
    ],
    "face_pins_per_um": 13.2,
@@ -64819,12 +64987,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head2_e2",
@@ -64859,7 +65034,7 @@
     },
     {
      "inst": "head2_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -64869,12 +65044,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head2_e4",
@@ -64919,12 +65101,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head2_e6",
@@ -64959,7 +65148,7 @@
     },
     {
      "inst": "head2_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -64969,12 +65158,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head3_e0",
@@ -65019,12 +65215,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head3_e2",
@@ -65059,7 +65262,7 @@
     },
     {
      "inst": "head3_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -65069,12 +65272,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head3_e4",
@@ -65119,12 +65329,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head3_e6",
@@ -65159,7 +65376,7 @@
     },
     {
      "inst": "head3_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -65169,12 +65386,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     }
    ],
    "face_pins_per_um": 13.2,
@@ -66134,12 +66358,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head2_e2",
@@ -66174,7 +66405,7 @@
     },
     {
      "inst": "head2_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -66184,12 +66415,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head2_e4",
@@ -66234,12 +66472,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head2_e6",
@@ -66274,7 +66519,7 @@
     },
     {
      "inst": "head2_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -66284,12 +66529,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head3_e0",
@@ -66334,12 +66586,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head3_e2",
@@ -66374,7 +66633,7 @@
     },
     {
      "inst": "head3_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -66384,12 +66643,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head3_e4",
@@ -66434,12 +66700,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head3_e6",
@@ -66474,7 +66747,7 @@
     },
     {
      "inst": "head3_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -66484,12 +66757,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     }
    ],
    "face_pins_per_um": 13.2,
@@ -168456,12 +168736,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head2_e2",
@@ -168496,7 +168783,7 @@
     },
     {
      "inst": "head2_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -168506,12 +168793,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head2_e4",
@@ -168556,12 +168850,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head2_e6",
@@ -168596,7 +168897,7 @@
     },
     {
      "inst": "head2_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -168606,12 +168907,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head3_e0",
@@ -168656,12 +168964,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head3_e2",
@@ -168696,7 +169011,7 @@
     },
     {
      "inst": "head3_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -168706,12 +169021,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head3_e4",
@@ -168756,12 +169078,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head3_e6",
@@ -168796,7 +169125,7 @@
     },
     {
      "inst": "head3_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -168806,12 +169135,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     }
    ],
    "face_pins_per_um": 13.2,
@@ -169918,12 +170254,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head2_e2",
@@ -169958,7 +170301,7 @@
     },
     {
      "inst": "head2_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -169968,12 +170311,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head2_e4",
@@ -170018,12 +170368,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head2_e6",
@@ -170058,7 +170415,7 @@
     },
     {
      "inst": "head2_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -170068,12 +170425,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head3_e0",
@@ -170118,12 +170482,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head3_e2",
@@ -170158,7 +170529,7 @@
     },
     {
      "inst": "head3_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -170168,12 +170539,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head3_e4",
@@ -170218,12 +170596,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head3_e6",
@@ -170258,7 +170643,7 @@
     },
     {
      "inst": "head3_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -170268,12 +170653,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     }
    ],
    "face_pins_per_um": 13.2,
@@ -239391,12 +239783,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head2_e2",
@@ -239431,7 +239830,7 @@
     },
     {
      "inst": "head2_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -239441,12 +239840,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head2_e4",
@@ -239491,12 +239897,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head2_e6",
@@ -239531,7 +239944,7 @@
     },
     {
      "inst": "head2_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -239541,12 +239954,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head3_e0",
@@ -239591,12 +240011,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head3_e2",
@@ -239631,7 +240058,7 @@
     },
     {
      "inst": "head3_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -239641,12 +240068,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head3_e4",
@@ -239691,12 +240125,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head3_e6",
@@ -239731,7 +240172,7 @@
     },
     {
      "inst": "head3_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -239741,12 +240182,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     }
    ],
    "face_pins_per_um": 13.2,
@@ -353279,12 +353727,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head2_e2",
@@ -353319,7 +353774,7 @@
     },
     {
      "inst": "head2_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -353329,12 +353784,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head2_e4",
@@ -353379,12 +353841,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head2_e6",
@@ -353419,7 +353888,7 @@
     },
     {
      "inst": "head2_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -353429,12 +353898,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head3_e0",
@@ -353479,12 +353955,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head3_e2",
@@ -353519,7 +354002,7 @@
     },
     {
      "inst": "head3_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -353529,12 +354012,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head3_e4",
@@ -353579,12 +354069,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head3_e6",
@@ -353619,7 +354116,7 @@
     },
     {
      "inst": "head3_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -353629,12 +354126,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     }
    ],
    "face_pins_per_um": 13.2,
@@ -354741,12 +355245,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head2_e2",
@@ -354781,7 +355292,7 @@
     },
     {
      "inst": "head2_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -354791,12 +355302,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head2_e4",
@@ -354841,12 +355359,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head2_e6",
@@ -354881,7 +355406,7 @@
     },
     {
      "inst": "head2_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -354891,12 +355416,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head3_e0",
@@ -354941,12 +355473,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head3_e2",
@@ -354981,7 +355520,7 @@
     },
     {
      "inst": "head3_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -354991,12 +355530,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head3_e4",
@@ -355041,12 +355587,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head3_e6",
@@ -355081,7 +355634,7 @@
     },
     {
      "inst": "head3_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -355091,12 +355644,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     }
    ],
    "face_pins_per_um": 13.2,
@@ -445521,12 +446081,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_2 + head2__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head2_e2",
@@ -445561,7 +446128,7 @@
     },
     {
      "inst": "head2_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -445571,12 +446138,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_6 + head2__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head2_e4",
@@ -445621,12 +446195,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_10 + head2__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head2_e6",
@@ -445661,7 +446242,7 @@
     },
     {
      "inst": "head2_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -445671,12 +446252,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head2__g_t_14 + head2__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head3_e0",
@@ -445721,12 +446309,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_2 + head3__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head3_e2",
@@ -445761,7 +446356,7 @@
     },
     {
      "inst": "head3_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -445771,12 +446366,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_6 + head3__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head3_e4",
@@ -445821,12 +446423,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_10 + head3__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head3_e6",
@@ -445861,7 +446470,7 @@
     },
     {
      "inst": "head3_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -445871,12 +446480,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head3__g_t_14 + head3__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     }
    ]
   },
@@ -819148,12 +819764,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_2 + head0__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_2 + head0__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head0_e2",
@@ -819188,7 +819811,7 @@
     },
     {
      "inst": "head0_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       336.96,
       336.96
@@ -819198,12 +819821,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_6 + head0__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_6 + head0__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head0_e4",
@@ -819248,12 +819878,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_10 + head0__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_10 + head0__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head0_e6",
@@ -819288,7 +819925,7 @@
     },
     {
      "inst": "head0_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       336.96,
       976.32
@@ -819298,12 +819935,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_14 + head0__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head0__g_t_14 + head0__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "head1_e0",
@@ -819348,12 +819992,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_2 + head1__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_2 + head1__g_t_3; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=00 (was .bsel constant of e1); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b00"
+      }
+     ]
     },
     {
      "inst": "head1_e2",
@@ -819388,7 +820039,7 @@
     },
     {
      "inst": "head1_e3",
-     "module": "kv3_head_eighth_e3",
+     "module": "kv3_head_eighth_e1",
      "origin_um": [
       976.32,
       336.96
@@ -819398,12 +820049,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_6 + head1__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_6 + head1__g_t_7; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e1; BSEL=01 (was .bsel constant of e3); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e3_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b01"
+      }
+     ]
     },
     {
      "inst": "head1_e4",
@@ -819448,12 +820106,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_10 + head1__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_10 + head1__g_t_11; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=10 (was .bsel constant of e5); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b10"
+      }
+     ]
     },
     {
      "inst": "head1_e6",
@@ -819488,7 +820153,7 @@
     },
     {
      "inst": "head1_e7",
-     "module": "kv3_head_eighth_e7",
+     "module": "kv3_head_eighth_e5",
      "origin_um": [
       976.32,
       976.32
@@ -819498,12 +820163,19 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_14 + head1__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap)",
+     "note": "head_eighth: head1__g_t_14 + head1__g_t_15; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | odd ID strap master e5; BSEL=11 (was .bsel constant of e7); 0 schedule cycles",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "cores/kv3_head_eighth_e7_pins.json"
+     "pins_file": "cores/kv3_head_eighth_e5_pins.json",
+     "straps": [
+      {
+       "port": "strap_bsel",
+       "width": 2,
+       "value": "2'b11"
+      }
+     ]
     },
     {
      "inst": "ectl_q0",

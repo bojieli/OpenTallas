@@ -251,9 +251,20 @@ def prep(a):
     print(json.dumps(res, indent=1))
 
 
+def native_die_config(path):
+    """Current native ABI: 32 ECTL + 43 reset + capability + 19 ages + seal, all from the real die producer."""
+    from tools.qwen_kv_die.kv_static_kvjf_join import DIE_CFG_SEAL
+    words=[int(w,16) for w in Path(path).read_text().split()]
+    if len(words)!=96 or any(not 0<=w<(1<<64) for w in words):
+        raise ValueError('native DIECFG image must contain 96 uint64 words (NRST43, CAP1, AGES1)')
+    if any(w >= (1<<15) for w in words[:32]) or any(w>=256 for w in words[32:75]) or words[75] not in (0,1) or any(w>=(1<<32) for w in words[76:95]) or words[95]!=DIE_CFG_SEAL:
+        raise ValueError('native DIECFG ECTL/reset/capability/seal fields do not match the source ABI')
+    return words
+
+
 def compile_(a):
     from tools.qwen_kv_die import kv_static_programme as P
-    P.MU = False          # --no-mu: kv_frame_search fails on main for every setting (KV-PROG17 blocker 3), as KDIE5-RTL2
+    P.MU = bool(P.LINK_MU if a.mu is None else a.mu)     # Native MU1 RTL requires the compiler's real 471-word MU layer image.
     P.AGES = str(Path(a.ages).resolve())   # priced_template (write) reads the SAME ages file the compile used
     ages = json.loads(Path(a.ages).read_text())
     if a.qk is not None:
@@ -261,7 +272,22 @@ def compile_(a):
     os.environ['OT_KV_EMB_FILL_RELAYS'] = str(a.rs)
     os.environ['OT_KV_WRITER_DIE'] = '1'
     pr = P.profile('die', ages)
-    r = P.compile_all(pr, 0x0b0b)
+    die_cfg = native_die_config(a.die_config) if a.die_config else None
+    if a.native_contract:
+        if a.die_config or a.capability is None:
+            raise ValueError('native contract requires explicit --capability and no separate --die-config')
+        contract=json.loads(Path(a.native_contract).read_text())
+        if contract.get('abi') != dict(NRST=43,CAP=1,AGES=1) or contract.get('required_target10_words')!=96:
+            raise ValueError('native source contract does not match NRST43/CAP1/AGES1')
+        from tools.qwen_kv_die.kv_static_kvjf_join import die_cfg_image
+        ages_image=boot_words(ages['schedule'],ages['qk']['QK_ISSUE_AGE'])
+        if ages_image['error']:raise ValueError(f'current compiler boot ages do not fit: {ages_image["error"]}')
+        die_cfg=die_cfg_image(contract['ectl_a'],contract['ectl_b'],contract['ectl_c'],contract['reset_words'],a.capability,ages=ages_image['words'])
+        if len(die_cfg)!=96:raise ValueError('native producer returned a different target10 ABI')
+    r = P.compile_all(pr, 0x0b0b, die_cfg_words=die_cfg, die_cfg_ages=die_cfg is not None)
+    image_words={im['target']:len(im['program'])+len(im['descriptors']) for im in r['images']}
+    if image_words.get(1)!=(471 if P.MU else 327):raise ValueError('compiled layer image does not match requested MU ABI')
+    if die_cfg is not None and image_words.get(10)!=96:raise ValueError('compiled native bundle dropped DIECFG target 10')
     rep = P.write(r, Path(a.out))
     keep = dict(status=rep['status'], profile={k: pr[k] for k in ('start_relays', 'att', 'rx', 'writer', 'kvn', 'groups', 'qk_age',
                                                                   'qk_row_latency', 'v_rl', 'd_rl', 'd_qk', 'f_dly')},
@@ -277,7 +303,8 @@ def compile_(a):
                 es_cfg=dict(relay=r['es_cfg']['relay'], return_relay=r['es_cfg']['return_relay']),
                 link_cfg_check=r['link_cfg']['check'], images={str(im['target']): len(im['program']) + len(im['descriptors'])
                                                                  for im in r['images']},
-                link_image=P.LINK_IMAGE, mu_images='skipped (--no-mu)')
+                link_image=P.LINK_IMAGE, mu_images='compiled MU target1/3' if P.MU else 'skipped (--no-mu)',
+                native_die_config_words=0 if die_cfg is None else len(die_cfg))
     (Path(a.out) / 'kv_p6_summary.json').write_text(json.dumps(keep, indent=1, default=str) + '\n')
     print(json.dumps(dict(status=keep['status'], profile=keep['profile'], writer_die=dict(kvn=r['writer_die']['kvn_relays']),
                           emb_fill={k: r['emb_fill'][k] for k in ('status', 'margin')}, token=keep['token_core_cycles']), default=str))
@@ -296,5 +323,9 @@ if __name__ == '__main__':
     c.add_argument('--rs', required=True)
     c.add_argument('--out', required=True)
     c.add_argument('--qk', type=int)
+    c.add_argument('--mu', action=argparse.BooleanOptionalAction, default=None, help='compile the real MU1 target1/3 image; required by native nc32')
+    c.add_argument('--die-config', type=Path, help='producer target10 hex: 32 ECTL + 43 reset + capability + 19 ages + seal')
+    c.add_argument('--native-contract', type=Path, help='actual source-derived native_die_cfg_contract JSON')
+    c.add_argument('--capability',type=int,choices=[0,1],help='explicit selected native fused-programme capability')
     a = ap.parse_args()
     prep(a) if a.cmd == 'prep' else compile_(a)

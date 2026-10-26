@@ -68,11 +68,27 @@ def _runs(root, die, item=None):
     return sorted(runs, key=lambda r: (r['mtime'], r['run']))
 
 
-def _flow_diff(run_git, repo, a, b, watch):
+def _flow_diff(run_git, repo, a, b, watch, spec=None, die=None):
     rc, paths, _ = run_git(['git', '-C', str(repo), 'diff', '--name-only', a, b], timeout=60)
     if rc:
         return None
-    return [p for p in paths.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)]
+    module_path = Path(__file__).resolve().parent.parent / "flow_canary/flow_watch.py"
+    module_spec = importlib.util.spec_from_file_location("flow_canary_watch", module_path)
+    module = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(module)
+    changed = module.flow_paths(paths.splitlines(), spec or {"watch": watch}, die)
+    if "tools/flow_canary/canaries.json" in changed and die:
+        snapshots = []
+        for revision in (a, b):
+            status, content, _ = run_git(['git', '-C', str(repo), 'show',
+                                          revision + ':tools/flow_canary/canaries.json'], timeout=60)
+            try:
+                snapshots.append(json.loads(content) if status == 0 else None)
+            except ValueError:
+                snapshots.append(None)
+        if all(isinstance(s, dict) for s in snapshots) and not module.spec_flow_changed(*snapshots, die):
+            changed.remove("tools/flow_canary/canaries.json")
+    return changed
 
 
 def _corrective(correction, runs, root, die, repo, seed):
@@ -160,9 +176,9 @@ def assess(row, root, repo, run_git, seed=True):
     # otherwise main must still carry the released canary's flow.
     covered = False
     if newest is not bind and newest['src']:
-        covered = _flow_diff(run_git, repo, newest['src'], 'main', watch) == []
+        covered = _flow_diff(run_git, repo, newest['src'], 'main', watch, spec, ref_die) == []
     if not covered:
-        changed = _flow_diff(run_git, repo, bind['src'], 'main', watch)
+        changed = _flow_diff(run_git, repo, bind['src'], 'main', watch, spec, ref_die)
         if changed is None:
             return False, 'cannot compare canary flow source to current main'
         if changed:
@@ -171,7 +187,7 @@ def assess(row, root, repo, run_git, seed=True):
     kit_source = row.get('src', '').rsplit('@', 1)[-1]
     if not kit_source:
         return False, 'queued kit source is missing'
-    changed = _flow_diff(run_git, repo, bind['src'], kit_source, watch)
+    changed = _flow_diff(run_git, repo, bind['src'], kit_source, watch, spec, ref_die)
     if changed is None:
         return False, 'cannot compare queued kit flow source to released canary source'
     if changed:

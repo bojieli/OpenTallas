@@ -4,7 +4,7 @@
     python3 enqueue.py --die s81 --type slice_station__t5 --kit epyc2:/srv/opentallas-scratch2/claude/<lane>/.../<kit> \
         --src claude/<branch>@<sha> --geom PASS --geom-ref "GEOM-REVIEW 2026-10-25 03:33 <record>" \
         --mem 24 --cells 120000 --lane S81 [--goal route|finish|cts (explicit CTS-only runner)] [--runner /abs/run_kit.sh] [--threads 8]
-        [--mode submit|adopt] [--no-commit]
+        [--mode submit|adopt|trial] [--flow flow-YYYYMMDD-a] [--no-commit]
 
 mode submit (default): the autopilot launches the kit through ot-run once it carries a GEOM PASS.  The kit is fresh or
   placed (the GEOM review is done on 3_place): run_kit.sh continues in its run dir.  A kit that already routed, signed
@@ -13,8 +13,18 @@ mode submit (default): the autopilot launches the kit through ot-run once it car
   --geom REQ --geom-ref "<GEOM REQ tag>"       : waits; the tick reads lanes/GEOM-REVIEW.md and submits within one tick
                                                  of a REPLY/VERDICT [<tag>] that names the kit (type, __suffix or sha)
                                                  with PASS/PASS-COND (mixed/unclear verdicts never submit).
+  --geom AUTO --geom-ref "TEMPLATE <tid>"      : AUTO-GEOM (owner 2026-10-25, hub AP_AUTO_GEOM=1 only): a replica of a
+                                                 registered visually passed template (autopilot/geom_templates.tsv) is
+                                                 judged by tools/autopilot/geom_rules.py on its 3_place / 4_cts; PASS
+                                                 routes, FAIL + a 1-in-10 sample go to the visual reviewers.
 mode adopt: the lane already launched the run by hand; the autopilot only watches it (hub ot-run client + containers +
   logs), then classifies, archives SIGNED / renders + records failures, and deletes failed data.
+mode trial (closure order rule 1, owner 2026-10-25): a part of a path whose die gate in lanes/PATH-FREEZE.md is not
+  PASS gets trial builds only.  The autopilot holds a 'submit' row of a path part (lane / GEOM tag PATH-*, or a type on
+  a 'PATH-PARTS <PATH> ...' line) as WAIT-PATH-GATE; a 'trial' row runs and its result goes to trial.tsv, never to
+  signed.tsv.  Rows touching a 'PENDING-DELTA <id> <die> <types>' line of lanes/PLAN-DELTA.md wait (WAIT-PLAN-DELTA).
+--flow: the flow release tag the kit was built with (rule 3).  Empty = derived: the newest flow-* tag whose watched flow
+  files equal the src commit's.  A sign-off with no src commit + flow tag is SIGNED-UNVERSIONED (not counted).
 --mem is the honest ot-run admission (peak of a comparable run + margin); --cells the expected std cells (<= 400000).
 Publication uses a temporary git index and a queue-only remote commit; the shared coord checkout/index is untouched.
 """
@@ -37,19 +47,23 @@ def main(argv=None):
     ap.add_argument("--goal", default="")
     ap.add_argument("--runner", default="")
     ap.add_argument("--threads", default="")
-    ap.add_argument("--mode", default="", choices=["", "submit", "adopt", "withdraw"],
+    ap.add_argument("--mode", default="", choices=["", "submit", "adopt", "withdraw", "trial"],
                     help="withdraw an unstarted row append-only (same kit/src/goal); never cancels existing work")
     ap.add_argument("--canary-fix", default="", help="explicit corrective kit: newest canary SRC_COMMIT@/abs/run/canary.json")
+    ap.add_argument("--flow", default="", help="flow release tag flow-YYYYMMDD-a|b the kit used (default: derived)")
     ap.add_argument("--no-commit", action="store_true")
     a = ap.parse_args(argv)
-    row = [a.die, a.type, a.kit, a.src, a.geom, a.geom_ref, a.mem, a.cells, a.lane, a.goal, a.runner, a.threads, a.mode, a.canary_fix]
+    row = [a.die, a.type, a.kit, a.src, a.geom, a.geom_ref, a.mem, a.cells, a.lane, a.goal, a.runner, a.threads, a.mode, a.canary_fix, a.flow]
     if any("\t" in x or "\n" in x for x in row):
         sys.exit("enqueue: no tabs/newlines in fields")
     line = "\t".join(row).rstrip("\t")
     (r,) = AP.parse_queue(line).values()
     if r["error"]:
         sys.exit(f"enqueue: REFUSED: {r['error']}")
-    if r["geom"].upper() not in AP.GEOM_OK and r["mode"] not in ("adopt", "withdraw"):
+    if r["geom"].upper() == "AUTO":
+        print("enqueue: NOTE geom AUTO: AUTO-GEOM rule check if the kit is a registered template replica, else the row "
+              "waits for a visual GEOM REQ verdict")
+    elif r["geom"].upper() not in AP.GEOM_OK and r["mode"] not in ("adopt", "withdraw"):
         print(f"enqueue: NOTE geom '{r['geom']}' is not PASS: the row waits for a GEOM-REVIEW verdict of tag "
               f"'{AP.geom_tag(r['geom_ref'])}' naming {r['type']} (or a PASS row appended later)")
     if not a.no_commit:

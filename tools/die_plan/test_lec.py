@@ -854,3 +854,36 @@ def test_exact_twin_uses_an_already_paired_gold_root(tmp_path):
         assert L.hyp['gold','ff:u_dut.copy']==('eq','gold','ff:u_dut.root',0)
         m,_=L.build(with_compare=True,with_hyp=True)
         assert ('differs' in _exact_prove(m).values())==bad
+
+
+def test_cyclic_hypotheses_drop_one_and_reprove(tmp_path, monkeypatch):
+    """PATH-KV-LEC 10-25 (KV PC833 kits qkd_kvs_pc / qkd_kvs_pc_h_head_p): a hint overrode one register of a
+    discovered twin pair in the reverse direction, so (gold,c2) -> (gold,c3) -> (gold,c2) and build() raised
+    'cyclic flop hypotheses (rebuild)' that no caller caught (verdict ERROR after ~6200 s).  build() now drops ONE
+    hypothesis on the cycle (that flop a free input) and the rest is proved by the same induction: the true twins
+    still prove o; an inverted twin (c3 = !x) is refuted and o differs -- a cycle is never a waiver."""
+    monkeypatch.setattr(lec, "prove", _exact_prove)
+    for bad in (False, True):
+        g, gm = _seq(tmp_path, f"cyc_gold{bad}", ["x", "a"], ["c1", "c2", "c3", "o"],
+                     lambda m, l: {"c1": l["a"], "c2": l["x"], "c3": l["x"] ^ int(bad),
+                                   "o": m.XOR(m.XOR(l["c1"], l["c2"]), l["c3"])})
+        t, tm = _seq(tmp_path, f"cyc_gate{bad}", ["x", "a"], ["c1", "o"], lambda m, l: {"c1": l["a"], "o": l["c1"]})
+        L = lec.Lec(g, gm, t, tm)
+        assert L.gonly == ["ff:u_dut.c2", "ff:u_dut.c3"]
+        hints = [["gold", "ff:u_dut.c2", ["eq", "gold", "ff:u_dut.c3", 0]],
+                 ["gold", "ff:u_dut.c3", ["eq", "gold", "ff:u_dut.c2", 0]]]
+        r = lec.apply_hints(L, hints, tmp_path, 100, [])
+        assert [d for d, _ in L.cycle_dropped] == [("gold", "ff:u_dut.c3")]
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        st = _exact_prove(m)
+        assert st["ff:u_dut.o"] == ("differs" if bad else "proved")
+        assert (("gold", "ff:u_dut.c2") in L.hyp) == (not bad) and r["kept"] == (0 if bad else 1)
+    # matched-register merges (both-side representative chains) form a cycle: one is dropped, no exception
+    g, gm = _seq(tmp_path, "cycb_gold", ["x"], ["p", "q", "o"], lambda m, l: {"p": l["x"], "q": l["x"], "o": l["p"]})
+    t, tm = _seq(tmp_path, "cycb_gate", ["x"], ["p", "q", "o"], lambda m, l: {"p": l["x"], "q": l["x"], "o": l["q"]})
+    L = lec.Lec(g, gm, t, tm)
+    L.hyp[("both", "ff:u_dut.p")] = ("eq", "gold", "ff:u_dut.q", 0)
+    L.hyp[("both", "ff:u_dut.q")] = ("eq", "gold", "ff:u_dut.p", 0)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert [d for d, _ in L.cycle_dropped] == [("both", "ff:u_dut.q")] and ("both", "ff:u_dut.p") in L.hyp
+    assert set(_exact_prove(m).values()) == {"proved"}

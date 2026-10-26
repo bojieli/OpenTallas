@@ -241,4 +241,7 @@ def test_ff_grt_step_runs_cts_in_kit_corners_first():
     s = core_flow.FF_GRT_STEP
     assert s.index("\\$M cts;") < s.index("\\$M grt CORNER=BC CORNERS=bc")
     kv = (Path(__file__).resolve().parents[2] / "physical/die_plan/qwen_kvsys/cores/harden/run_kit_kv.sh").read_text()
-    assert kv.index("\\$M cts;") < kv.index("\\$M grt CORNER=BC CORNERS=bc")
+    assert kv.index("\\$M cts;") < kv.index("\\$M grt \\$GC")
+    # FLOW-CANARY 10-25: MCMM KV kits run the GRT step in the kit corners (TT setup repaired after GRT), else FF-only
+    assert "GC='CORNER=BC CORNERS=bc'; if grep -q '^export CORNERS = tc bc' /work/config.mk; then GC=''; fi" in kv
+    assert "OT_VCLK_CORNER=ff \\$M grt \\$GC HOLD_SLACK_MARGIN" in kv

@@ -40,6 +40,7 @@ def main():
     ap.add_argument("new")
     ap.add_argument("out")
     ap.add_argument("--new-mod-file")
+    ap.add_argument("--identity-ports", action="store_true", help="compare unchanged port sets, without am-g-drop")
     ap.add_argument("--cycles", type=int, default=20000)
     a = ap.parse_args()
     old, new, out = Path(a.old), Path(a.new), Path(a.out)
@@ -49,7 +50,7 @@ def main():
     cjo = json.load(open(old / "core.json"))
     cjn = json.load(open(new / "core.json"))
     mod = cjo["module"]
-    drops = am_g_drop.drops_for(mod)
+    drops = {} if a.identity_ports else am_g_drop.drops_for(mod)
     fo, fn = vfiles(old), vfiles(new)
     names = set()
     for f in fo:
@@ -81,7 +82,11 @@ def main():
     outs = {p: d for p, d in cjo["port_decl"].items() if d[0] == "output"}
     clk = [p for p in ins if p in ("ck", "clk")]
     rst = [p for p in ins if re.search(r"rst", p)]
-    assert len(clk) == 1 and len(rst) == 1, (clk, rst)
+    if a.identity_ports:
+        clk = [p for p in ins if cjo.get("pin_class", {}).get(p, cjo.get("pin_class", {}).get(p + "[0]")) in ("clk", "clk_unused")] or clk
+        assert clk and rst, (clk, rst)
+    else:
+        assert len(clk) == 1 and len(rst) == 1, (clk, rst)
     L = ["`timescale 1ns/1ps", "module tb;", "  reg ck = 0; always #0.5 ck = ~ck; reg rn = 0;"]
     conn_o, conn_n, cmp_o, cmp_n, drop_bits = [], [], [], [], []
     for p, (dr, hi, lo) in cjo["port_decl"].items():
@@ -127,6 +132,8 @@ def main():
             tog.append(f"o_{p}")
         else:
             tog.append(f"i_{p}")
+    if a.identity_ports:
+        tog = [f"i_{p}" for p in ins if p not in clk and p not in rst]
     L.append(f"  wire [99999:0] tg = {{{', '.join(tog)}}}; reg [99999:0] tg_q = 0;")
     L.append("  integer n, mis = 0, dzc = 0, edges = 0, tgc = 0;")
     L.append("  always @(negedge ck) if (rn) begin edges = edges + 1;")

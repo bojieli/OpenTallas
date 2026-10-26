@@ -1,0 +1,5 @@
+ADDR_DIFF cycle=0 golden=000 r0=000 r1=001
+ADDR_DIFF cycle=1 golden=000 r0=000 r1=001
+[400040000] %Fatal: tb_s81hd_rom_addr_copy.sv:31: Assertion failed in tb: ADDR_COPY_FAIL errors=40000
+%Error: tb_s81hd_rom_addr_copy.sv:31: Verilog $stop
+Aborting...
