@@ -1,0 +1,243 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "die": "s81_head",
+ "kind": "partition",
+ "type": "hd_turn_a",
+ "module": "ot_s81hd_turn_a",
+ "instances": [
+  "turnE0a",
+  "turnE1a",
+  "turnE2a",
+  "turnE3a",
+  "turnE4a",
+  "turnE5a",
+  "turnW0a",
+  "turnW1a",
+  "turnW2a",
+  "turnW3a",
+  "turnW4a",
+  "turnW5a"
+ ],
+ "plan": "physical/die_plan/s81_head/die_plan.json",
+ "plan_sha256": "d7b8d1eb935cf641061b2ec18389d57919ee804e9344f519aa00431dc002473e",
+ "master_plan_sha256": "7d4907f9cf5e8784a202d2190132118dfce29f9353f3ff46798e2fec82bd3d98",
+ "frozen": false,
+ "outline_um": [
+  172.8,
+  1036.8
+ ],
+ "keepouts": [
+  {
+   "name": "island",
+   "rect_um": [
+    73.44,
+    505.44,
+    99.36,
+    531.36
+   ],
+   "kind": "island",
+   "use": [
+    "placement"
+   ]
+  }
+ ],
+ "islands": [
+  {
+   "name": "island",
+   "rect_um": [
+    73.44,
+    505.44,
+    99.36,
+    531.36
+   ],
+   "centre_um": [
+    86.4,
+    518.4
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M1"
+   ],
+   "clock_pin": null,
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  }
+ ],
+ "bays": [
+  {
+   "name": "bay0",
+   "rect_um": [
+    4.32,
+    295.051,
+    168.992,
+    295.861
+   ],
+   "owner": "hd_turn_a",
+   "kind": "repeater",
+   "bits": 565,
+   "cell_area_um2": 57.664,
+   "fill": 0.432,
+   "layer": "M7",
+   "paths": [
+    "chE0_t",
+    "chW0_t",
+    "chE1_t",
+    "chW1_t",
+    "chE2_t",
+    "chW2_t",
+    "chE3_t",
+    "chW3_t"
+   ],
+   "regions_um": [
+    [
+     4.32,
+     295.051,
+     168.992,
+     295.861
+    ]
+   ]
+  }
+ ],
+ "entry_pins": [],
+ "hard_cores": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250.0,
+   "FF": 202.5
+  },
+  "tol_ps": 20,
+  "early_taps": false
+ },
+ "corridors": [
+  {
+   "path": "chW0_t",
+   "layer": "M4",
+   "bits": 565,
+   "polyline_um": [
+    [
+     0.0,
+     504.256
+    ],
+    [
+     86.656,
+     504.256
+    ]
+   ],
+   "band_um": 164.672
+  },
+  {
+   "path": "chW0_t",
+   "layer": "M5",
+   "bits": 565,
+   "polyline_um": [
+    [
+     86.656,
+     504.256
+    ],
+    [
+     86.656,
+     0.0
+    ]
+   ],
+   "band_um": 164.672
+  }
+ ],
+ "gates": {
+  "reach_gap": "PASS",
+  "bay_fill": "PASS",
+  "corridor_tracks": "PASS",
+  "entry_pins": "PASS",
+  "clock_shield": "NOT RUN",
+  "static_ir": "NOT RUN",
+  "lot_fit": "PASS",
+  "clock_entry": "FAIL",
+  "core_reach": "FAIL",
+  "early_taps": "FAIL",
+  "tree_balance": "NOT RUN",
+  "core_insertion_model": "FAIL",
+  "die_pair_skew_model": "NOT RUN",
+  "tree_commensurate": "PASS",
+  "clock_sites": "FAIL",
+  "island_lattice": "NOT RUN",
+  "infra_sites": "FAIL",
+  "clock_rep_sites": "NOT RUN",
+  "tap_region_containment": "NOT RUN",
+  "footless_stubs": "NOT RUN",
+  "island_ft_inputs": "NOT RUN"
+ },
+ "pushdown": {
+  "rule": "12.2a1 / COORD 06:53: die clock drivers + leg repeaters are partition-netlist cells at these fixed coordinates, identical for every instance (union of instance sites; unused ones fed from the local strap, COORD 06:41); the die connects only through the mp_* ft ports",
+  "islands": [
+   {
+    "name": "isl0",
+    "role": "die_node",
+    "rect_um": [
+     73.44,
+     505.44,
+     99.36,
+     531.36
+    ],
+    "centre_um": [
+     86.4,
+     518.4
+    ],
+    "via_stack": [
+     "M9",
+     "M5"
+    ],
+    "ft_ports": [
+     {
+      "name": "mp_isl0_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       84.24,
+       520.56
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)"
+     },
+     {
+      "name": "mp_isl0_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       88.56,
+       520.56
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin"
+     },
+     {
+      "name": "mp_isl0_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       84.24,
+       516.24
+      ],
+      "connect": "die regional reset stack (M9->M5)"
+     },
+     {
+      "name": "mp_isl0_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       88.56,
+       516.24
+      ],
+      "connect": "die reset feed-through net; independent core reset pin"
+     }
+    ],
+    "driver": {
+     "cell": "BUFx24_ASAP7_75t_R",
+     "parallel": 1,
+     "load_ff": 81.0,
+     "rc_ps": 32.4,
+     "placement": "fixed dont_touch at centre_um",
+     "basis": "12.8 d1: plan geometry only (driven length 405.0 um, 0 sinks)"
+    },
+    "lec": "die-owned feed-through: no core logic on mp_isl* ports (12.2a1)"
+   }
+  ],
+  "clock_repeaters": []
+ }
+}

@@ -1,0 +1,791 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "die": "s81_head",
+ "kind": "partition",
+ "type": "hd_tile",
+ "module": "ot_s81hd_tile_p",
+ "instances": [
+  "tE0b0",
+  "tE0b1",
+  "tE0b10",
+  "tE0b2",
+  "tE0b3",
+  "tE0b4",
+  "tE0b5",
+  "tE0b6",
+  "tE0b7",
+  "tE0b8",
+  "tE0b9",
+  "tE0o0",
+  "tE0o1",
+  "tE0o10",
+  "tE0o2",
+  "tE0o3",
+  "tE0o4",
+  "tE0o5",
+  "tE0o6",
+  "tE0o7",
+  "tE0o8",
+  "tE0o9",
+  "tE1b0",
+  "tE1b1",
+  "tE1b10",
+  "tE1b2",
+  "tE1b3",
+  "tE1b4",
+  "tE1b5",
+  "tE1b6",
+  "tE1b7",
+  "tE1b8",
+  "tE1b9",
+  "tE1o0",
+  "tE1o1",
+  "tE1o10",
+  "tE1o2",
+  "tE1o3",
+  "tE1o4",
+  "tE1o5",
+  "tE1o6",
+  "tE1o7",
+  "tE1o8",
+  "tE1o9",
+  "tE2b0",
+  "tE2b1",
+  "tE2b10",
+  "tE2b2",
+  "tE2b3",
+  "tE2b4",
+  "tE2b5",
+  "tE2b6",
+  "tE2b7",
+  "tE2b8",
+  "tE2b9",
+  "tE2o0",
+  "tE2o1",
+  "tE2o10",
+  "tE2o2",
+  "tE2o3",
+  "tE2o4",
+  "tE2o5",
+  "tE2o6",
+  "tE2o7",
+  "tE2o8",
+  "tE2o9",
+  "tE3b0",
+  "tE3b1",
+  "tE3b10",
+  "tE3b2",
+  "tE3b3",
+  "tE3b4",
+  "tE3b5",
+  "tE3b6",
+  "tE3b7",
+  "tE3b8",
+  "tE3b9",
+  "tE3o0",
+  "tE3o1",
+  "tE3o10",
+  "tE3o2",
+  "tE3o3",
+  "tE3o4",
+  "tE3o5",
+  "tE3o6",
+  "tE3o7",
+  "tE3o8",
+  "tE3o9",
+  "tE4b0",
+  "tE4b1",
+  "tE4b10",
+  "tE4b2",
+  "tE4b3",
+  "tE4b4",
+  "tE4b5",
+  "tE4b6",
+  "tE4b7",
+  "tE4b8",
+  "tE4b9",
+  "tE4o0",
+  "tE4o1",
+  "tE4o10",
+  "tE4o2",
+  "tE4o3",
+  "tE4o4",
+  "tE4o5",
+  "tE4o6",
+  "tE4o7",
+  "tE4o8",
+  "tE4o9",
+  "tE5b0",
+  "tE5b1",
+  "tE5b10",
+  "tE5b2",
+  "tE5b3",
+  "tE5b4",
+  "tE5b5",
+  "tE5b6",
+  "tE5b7",
+  "tE5b8",
+  "tE5b9",
+  "tE5o0",
+  "tE5o1",
+  "tE5o10",
+  "tE5o2",
+  "tE5o3",
+  "tE5o4",
+  "tE5o5",
+  "tE5o6",
+  "tE5o7",
+  "tE5o8",
+  "tE5o9",
+  "tW0b0",
+  "tW0b1",
+  "tW0b10",
+  "tW0b2",
+  "tW0b3",
+  "tW0b4",
+  "tW0b5",
+  "tW0b6",
+  "tW0b7",
+  "tW0b8",
+  "tW0b9",
+  "tW0o0",
+  "tW0o1",
+  "tW0o10",
+  "tW0o2",
+  "tW0o3",
+  "tW0o4",
+  "tW0o5",
+  "tW0o6",
+  "tW0o7",
+  "tW0o8",
+  "tW0o9",
+  "tW1b0",
+  "tW1b1",
+  "tW1b10",
+  "tW1b2",
+  "tW1b3",
+  "tW1b4",
+  "tW1b5",
+  "tW1b6",
+  "tW1b7",
+  "tW1b8",
+  "tW1b9",
+  "tW1o0",
+  "tW1o1",
+  "tW1o10",
+  "tW1o2",
+  "tW1o3",
+  "tW1o4",
+  "tW1o5",
+  "tW1o6",
+  "tW1o7",
+  "tW1o8",
+  "tW1o9",
+  "tW2b0",
+  "tW2b1",
+  "tW2b10",
+  "tW2b2",
+  "tW2b3",
+  "tW2b4",
+  "tW2b5",
+  "tW2b6",
+  "tW2b7",
+  "tW2b8",
+  "tW2b9",
+  "tW2o0",
+  "tW2o1",
+  "tW2o10",
+  "tW2o2",
+  "tW2o3",
+  "tW2o4",
+  "tW2o5",
+  "tW2o6",
+  "tW2o7",
+  "tW2o8",
+  "tW2o9",
+  "tW3b0",
+  "tW3b1",
+  "tW3b10",
+  "tW3b2",
+  "tW3b3",
+  "tW3b4",
+  "tW3b5",
+  "tW3b6",
+  "tW3b7",
+  "tW3b8",
+  "tW3b9",
+  "tW3o0",
+  "tW3o1",
+  "tW3o10",
+  "tW3o2",
+  "tW3o3",
+  "tW3o4",
+  "tW3o5",
+  "tW3o6",
+  "tW3o7",
+  "tW3o8",
+  "tW3o9",
+  "tW4b0",
+  "tW4b1",
+  "tW4b10",
+  "tW4b2",
+  "tW4b3",
+  "tW4b4",
+  "tW4b5",
+  "tW4b6",
+  "tW4b7",
+  "tW4b8",
+  "tW4b9",
+  "tW4o0",
+  "tW4o1",
+  "tW4o10",
+  "tW4o2",
+  "tW4o3",
+  "tW4o4",
+  "tW4o5",
+  "tW4o6",
+  "tW4o7",
+  "tW4o8",
+  "tW4o9",
+  "tW5b0",
+  "tW5b1",
+  "tW5b10",
+  "tW5b2",
+  "tW5b3",
+  "tW5b4",
+  "tW5b5",
+  "tW5b6",
+  "tW5b7",
+  "tW5b8",
+  "tW5b9",
+  "tW5o0",
+  "tW5o1",
+  "tW5o10",
+  "tW5o2",
+  "tW5o3",
+  "tW5o4",
+  "tW5o5",
+  "tW5o6",
+  "tW5o7",
+  "tW5o8",
+  "tW5o9"
+ ],
+ "plan": "physical/die_plan/s81_head/die_plan.json",
+ "plan_sha256": "d7b8d1eb935cf641061b2ec18389d57919ee804e9344f519aa00431dc002473e",
+ "master_plan_sha256": "7d4907f9cf5e8784a202d2190132118dfce29f9353f3ff46798e2fec82bd3d98",
+ "frozen": false,
+ "outline_um": [
+  708.48,
+  1036.8
+ ],
+ "keepouts": [
+  {
+   "name": "island",
+   "rect_um": [
+    341.28,
+    505.44,
+    367.2,
+    531.36
+   ],
+   "kind": "island",
+   "use": [
+    "placement"
+   ]
+  },
+  {
+   "name": "core:u_core.u_b.g_cv.u_eA0",
+   "rect_um": [
+    17.28,
+    8.64,
+    334.952,
+    326.312
+   ],
+   "kind": "hard_core",
+   "use": [
+    "placement"
+   ]
+  },
+  {
+   "name": "core:u_core.u_b.g_cv.u_eA1",
+   "rect_um": [
+    371.52,
+    8.64,
+    689.192,
+    326.312
+   ],
+   "kind": "hard_core",
+   "use": [
+    "placement"
+   ]
+  },
+  {
+   "name": "core:u_core.u_b.g_cv.u_eA2",
+   "rect_um": [
+    17.28,
+    380.16,
+    334.952,
+    697.832
+   ],
+   "kind": "hard_core",
+   "use": [
+    "placement"
+   ]
+  },
+  {
+   "name": "core:u_core.u_b.g_cv.u_eA3",
+   "rect_um": [
+    371.52,
+    380.16,
+    689.192,
+    697.832
+   ],
+   "kind": "hard_core",
+   "use": [
+    "placement"
+   ]
+  },
+  {
+   "name": "core:u_core.u_b.g_cvb.u_eB",
+   "rect_um": [
+    216.0,
+    734.4,
+    493.652,
+    1012.052
+   ],
+   "kind": "hard_core",
+   "use": [
+    "placement"
+   ]
+  }
+ ],
+ "islands": [
+  {
+   "name": "island",
+   "rect_um": [
+    341.28,
+    505.44,
+    367.2,
+    531.36
+   ],
+   "centre_um": [
+    354.24,
+    518.4
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M1"
+   ],
+   "clock_pin": null,
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  }
+ ],
+ "bays": [],
+ "entry_pins": [],
+ "hard_cores": [
+  {
+   "inst": "u_core.u_b.g_cv.u_eA0",
+   "module": "ot_s81hd_elemA_cv",
+   "origin_um": [
+    17.28,
+    8.64
+   ],
+   "outline_um": [
+    317.672,
+    317.672
+   ],
+   "orient": "MX",
+   "islands": [
+    [
+     155.52,
+     155.52,
+     164.16,
+     164.16
+    ],
+    [
+     73.44,
+     73.44,
+     82.08,
+     82.08
+    ],
+    [
+     73.44,
+     233.28,
+     82.08,
+     241.92
+    ],
+    [
+     233.28,
+     73.44,
+     241.92,
+     82.08
+    ],
+    [
+     233.28,
+     233.28,
+     241.92,
+     241.92
+    ]
+   ],
+   "bays": [],
+   "clock_entry_um": [
+    159.84,
+    159.84
+   ]
+  },
+  {
+   "inst": "u_core.u_b.g_cv.u_eA1",
+   "module": "ot_s81hd_elemA_cv",
+   "origin_um": [
+    371.52,
+    8.64
+   ],
+   "outline_um": [
+    317.672,
+    317.672
+   ],
+   "orient": "R180",
+   "islands": [
+    [
+     155.52,
+     155.52,
+     164.16,
+     164.16
+    ],
+    [
+     73.44,
+     73.44,
+     82.08,
+     82.08
+    ],
+    [
+     73.44,
+     233.28,
+     82.08,
+     241.92
+    ],
+    [
+     233.28,
+     73.44,
+     241.92,
+     82.08
+    ],
+    [
+     233.28,
+     233.28,
+     241.92,
+     241.92
+    ]
+   ],
+   "bays": [],
+   "clock_entry_um": [
+    159.84,
+    159.84
+   ]
+  },
+  {
+   "inst": "u_core.u_b.g_cv.u_eA2",
+   "module": "ot_s81hd_elemA_cv",
+   "origin_um": [
+    17.28,
+    380.16
+   ],
+   "outline_um": [
+    317.672,
+    317.672
+   ],
+   "orient": "R0",
+   "islands": [
+    [
+     155.52,
+     155.52,
+     164.16,
+     164.16
+    ],
+    [
+     73.44,
+     73.44,
+     82.08,
+     82.08
+    ],
+    [
+     73.44,
+     233.28,
+     82.08,
+     241.92
+    ],
+    [
+     233.28,
+     73.44,
+     241.92,
+     82.08
+    ],
+    [
+     233.28,
+     233.28,
+     241.92,
+     241.92
+    ]
+   ],
+   "bays": [],
+   "clock_entry_um": [
+    159.84,
+    159.84
+   ]
+  },
+  {
+   "inst": "u_core.u_b.g_cv.u_eA3",
+   "module": "ot_s81hd_elemA_cv",
+   "origin_um": [
+    371.52,
+    380.16
+   ],
+   "outline_um": [
+    317.672,
+    317.672
+   ],
+   "orient": "MY",
+   "islands": [
+    [
+     155.52,
+     155.52,
+     164.16,
+     164.16
+    ],
+    [
+     73.44,
+     73.44,
+     82.08,
+     82.08
+    ],
+    [
+     73.44,
+     233.28,
+     82.08,
+     241.92
+    ],
+    [
+     233.28,
+     73.44,
+     241.92,
+     82.08
+    ],
+    [
+     233.28,
+     233.28,
+     241.92,
+     241.92
+    ]
+   ],
+   "bays": [],
+   "clock_entry_um": [
+    159.84,
+    159.84
+   ]
+  },
+  {
+   "inst": "u_core.u_b.g_cvb.u_eB",
+   "module": "ot_s81hd_elemB_cv",
+   "origin_um": [
+    216.0,
+    734.4
+   ],
+   "outline_um": [
+    277.652,
+    277.652
+   ],
+   "orient": "R0",
+   "islands": [
+    [
+     133.92,
+     133.92,
+     142.56,
+     142.56
+    ],
+    [
+     64.8,
+     64.8,
+     73.44,
+     73.44
+    ],
+    [
+     64.8,
+     203.04,
+     73.44,
+     211.68
+    ],
+    [
+     203.04,
+     64.8,
+     211.68,
+     73.44
+    ],
+    [
+     203.04,
+     203.04,
+     211.68,
+     211.68
+    ]
+   ],
+   "bays": [],
+   "clock_entry_um": [
+    138.24,
+    138.24
+   ]
+  }
+ ],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250.0,
+   "FF": 202.5
+  },
+  "tol_ps": 20,
+  "early_taps": false
+ },
+ "corridors": [],
+ "gates": {
+  "reach_gap": "PASS",
+  "bay_fill": "PASS",
+  "corridor_tracks": "PASS",
+  "entry_pins": "PASS",
+  "clock_shield": "NOT RUN",
+  "static_ir": "NOT RUN",
+  "lot_fit": "PASS",
+  "clock_entry": "FAIL",
+  "core_reach": "FAIL",
+  "early_taps": "FAIL",
+  "tree_balance": "NOT RUN",
+  "core_insertion_model": "FAIL",
+  "die_pair_skew_model": "NOT RUN",
+  "tree_commensurate": "PASS",
+  "clock_sites": "FAIL",
+  "island_lattice": "NOT RUN",
+  "infra_sites": "FAIL",
+  "clock_rep_sites": "NOT RUN",
+  "tap_region_containment": "NOT RUN",
+  "footless_stubs": "NOT RUN",
+  "island_ft_inputs": "NOT RUN"
+ },
+ "pushdown": {
+  "rule": "12.2a1 / COORD 06:53: die clock drivers + leg repeaters are partition-netlist cells at these fixed coordinates, identical for every instance (union of instance sites; unused ones fed from the local strap, COORD 06:41); the die connects only through the mp_* ft ports",
+  "islands": [
+   {
+    "name": "isl0",
+    "role": "die_node",
+    "rect_um": [
+     341.28,
+     505.44,
+     367.2,
+     531.36
+    ],
+    "centre_um": [
+     354.24,
+     518.4
+    ],
+    "via_stack": [
+     "M9",
+     "M5"
+    ],
+    "ft_ports": [
+     {
+      "name": "mp_isl0_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       352.08,
+       520.56
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)"
+     },
+     {
+      "name": "mp_isl0_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       356.4,
+       520.56
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin"
+     },
+     {
+      "name": "mp_isl0_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       352.08,
+       516.24
+      ],
+      "connect": "die regional reset stack (M9->M5)"
+     },
+     {
+      "name": "mp_isl0_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       356.4,
+       516.24
+      ],
+      "connect": "die reset feed-through net; independent core reset pin"
+     }
+    ],
+    "driver": {
+     "cell": "BUFx24_ASAP7_75t_R",
+     "parallel": 1,
+     "load_ff": 81.0,
+     "rc_ps": 32.4,
+     "placement": "fixed dont_touch at centre_um",
+     "basis": "12.8 d1: plan geometry only (driven length 405.0 um, 0 sinks)"
+    },
+    "lec": "die-owned feed-through: no core logic on mp_isl* ports (12.2a1)"
+   }
+  ],
+  "clock_repeaters": []
+ },
+ "die_tree": {
+  "rule": "die H-tree leaf / mesh-driver pitch = the core-array repeat (leaf_pitch_um, an 8.64 multiple), tree node spans = integer multiples of it, so every node and mesh driver lands on a core-centre island (COORD 06:23); breaks = array gaps (e.g. a spine) the tree must bridge at a common node",
+  "core_lattice": {
+   "x": {
+    "pitch_um": 176.116,
+    "on_lattice": false,
+    "lines": 66,
+    "span_um": [
+     454.604,
+     17067.316
+    ],
+    "irregular": [
+     356.248,
+     1738.648
+    ],
+    "n_irregular": 2,
+    "leaf_pitch_um": 708.48,
+    "leaf_cover": 0.955,
+    "half_leaf_node_on_centre": 0.667,
+    "breaks": [
+     [
+      7891.636,
+      9630.284
+     ]
+    ]
+   },
+   "y": {
+    "pitch_um": 330.632,
+    "on_lattice": false,
+    "lines": 36,
+    "span_um": [
+     2723.912,
+     14834.88
+    ],
+    "irregular": [
+     332.64,
+     373.528
+    ],
+    "n_irregular": 2,
+    "leaf_pitch_um": 1036.8,
+    "leaf_cover": 1.0,
+    "half_leaf_node_on_centre": 0.056,
+    "breaks": []
+   }
+  },
+  "verdict": "PASS"
+ }
+}

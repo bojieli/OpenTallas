@@ -1,0 +1,555 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "die": "s81_head",
+ "kind": "partition",
+ "type": "hd_host",
+ "module": "ot_s81hd_host_ep",
+ "instances": [
+  "host"
+ ],
+ "plan": "physical/die_plan/s81_head/die_plan.json",
+ "plan_sha256": "d7b8d1eb935cf641061b2ec18389d57919ee804e9344f519aa00431dc002473e",
+ "master_plan_sha256": "7d4907f9cf5e8784a202d2190132118dfce29f9353f3ff46798e2fec82bd3d98",
+ "frozen": false,
+ "outline_um": [
+  1442.88,
+  1226.88
+ ],
+ "keepouts": [
+  {
+   "name": "island",
+   "rect_um": [
+    712.8,
+    600.48,
+    738.72,
+    626.4
+   ],
+   "kind": "island",
+   "use": [
+    "placement"
+   ]
+  }
+ ],
+ "islands": [
+  {
+   "name": "island",
+   "rect_um": [
+    712.8,
+    600.48,
+    738.72,
+    626.4
+   ],
+   "centre_um": [
+    725.76,
+    613.44
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M1"
+   ],
+   "clock_pin": null,
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  }
+ ],
+ "bays": [
+  {
+   "name": "bay0",
+   "rect_um": [
+    208.721,
+    1200.88,
+    209.261,
+    1226.88
+   ],
+   "owner": "hd_host",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.465,
+   "layer": "M7",
+   "paths": [
+    "m0S_tx"
+   ],
+   "regions_um": [
+    [
+     208.721,
+     1200.88,
+     209.261,
+     1226.88
+    ]
+   ]
+  },
+  {
+   "name": "bay1",
+   "rect_um": [
+    0.0,
+    1134.606,
+    26.0,
+    1135.146
+   ],
+   "owner": "hd_host",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.465,
+   "layer": "M7",
+   "paths": [
+    "m0S_tx"
+   ],
+   "regions_um": [
+    [
+     0.0,
+     1134.606,
+     26.0,
+     1135.146
+    ]
+   ]
+  },
+  {
+   "name": "bay2",
+   "rect_um": [
+    306.499,
+    783.731,
+    307.309,
+    800.029
+   ],
+   "owner": "hd_host",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.495,
+   "layer": "M7",
+   "paths": [
+    "m0S_rx"
+   ],
+   "regions_um": [
+    [
+     306.499,
+     783.731,
+     307.309,
+     800.029
+    ]
+   ]
+  },
+  {
+   "name": "bay3",
+   "rect_um": [
+    477.564,
+    919.571,
+    493.862,
+    920.381
+   ],
+   "owner": "hd_host",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.495,
+   "layer": "M7",
+   "paths": [
+    "m0S_rx"
+   ],
+   "regions_um": [
+    [
+     477.564,
+     919.571,
+     493.862,
+     920.381
+    ]
+   ]
+  },
+  {
+   "name": "bay4",
+   "rect_um": [
+    877.571,
+    1200.88,
+    878.111,
+    1226.88
+   ],
+   "owner": "hd_host",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.465,
+   "layer": "M7",
+   "paths": [
+    "m7S_tx"
+   ],
+   "regions_um": [
+    [
+     877.571,
+     1200.88,
+     878.111,
+     1226.88
+    ]
+   ]
+  },
+  {
+   "name": "bay5",
+   "rect_um": [
+    1196.917,
+    1200.88,
+    1197.457,
+    1226.88
+   ],
+   "owner": "hd_host",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.465,
+   "layer": "M7",
+   "paths": [
+    "m7S_tx"
+   ],
+   "regions_um": [
+    [
+     1196.917,
+     1200.88,
+     1197.457,
+     1226.88
+    ]
+   ]
+  },
+  {
+   "name": "bay6",
+   "rect_um": [
+    1416.88,
+    1152.956,
+    1442.88,
+    1153.496
+   ],
+   "owner": "hd_host",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.465,
+   "layer": "M7",
+   "paths": [
+    "m7S_tx"
+   ],
+   "regions_um": [
+    [
+     1416.88,
+     1152.956,
+     1442.88,
+     1153.496
+    ]
+   ]
+  },
+  {
+   "name": "bay7",
+   "rect_um": [
+    1102.064,
+    765.755,
+    1102.874,
+    782.005
+   ],
+   "owner": "hd_host",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_rx"
+   ],
+   "regions_um": [
+    [
+     1102.064,
+     765.755,
+     1102.874,
+     782.005
+    ]
+   ]
+  },
+  {
+   "name": "bay8",
+   "rect_um": [
+    761.653,
+    765.755,
+    762.464,
+    782.005
+   ],
+   "owner": "hd_host",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_rx"
+   ],
+   "regions_um": [
+    [
+     761.653,
+     765.755,
+     762.464,
+     782.005
+    ]
+   ]
+  },
+  {
+   "name": "bay9",
+   "rect_um": [
+    526.112,
+    886.064,
+    542.362,
+    886.874
+   ],
+   "owner": "hd_host",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_rx"
+   ],
+   "regions_um": [
+    [
+     526.112,
+     886.064,
+     542.362,
+     886.874
+    ]
+   ]
+  }
+ ],
+ "entry_pins": [],
+ "hard_cores": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250.0,
+   "FF": 202.5
+  },
+  "tol_ps": 20,
+  "early_taps": false
+ },
+ "corridors": [
+  {
+   "path": "m0S_tx",
+   "layer": "M4",
+   "bits": 64,
+   "polyline_um": [
+    [
+     509.987,
+     1226.88
+    ],
+    [
+     0.0,
+     1226.88
+    ]
+   ],
+   "band_um": 26.0
+  },
+  {
+   "path": "m0S_tx",
+   "layer": "M5",
+   "bits": 64,
+   "polyline_um": [
+    [
+     0.0,
+     1226.88
+    ],
+    [
+     0.0,
+     833.88
+    ]
+   ],
+   "band_um": 26.0
+  },
+  {
+   "path": "m0S_rx",
+   "layer": "M4",
+   "bits": 64,
+   "polyline_um": [
+    [
+     0.0,
+     791.88
+    ],
+    [
+     485.713,
+     791.88
+    ]
+   ],
+   "band_um": 16.298
+  },
+  {
+   "path": "m0S_rx",
+   "layer": "M5",
+   "bits": 64,
+   "polyline_um": [
+    [
+     485.713,
+     791.88
+    ],
+    [
+     485.713,
+     1226.88
+    ]
+   ],
+   "band_um": 16.298
+  },
+  {
+   "path": "m7S_tx",
+   "layer": "M4",
+   "bits": 64,
+   "polyline_um": [
+    [
+     558.495,
+     1226.88
+    ],
+    [
+     1442.88,
+     1226.88
+    ]
+   ],
+   "band_um": 26.0
+  },
+  {
+   "path": "m7S_tx",
+   "layer": "M5",
+   "bits": 64,
+   "polyline_um": [
+    [
+     1442.88,
+     1226.88
+    ],
+    [
+     1442.88,
+     833.88
+    ]
+   ],
+   "band_um": 26.0
+  },
+  {
+   "path": "m7S_rx",
+   "layer": "M4",
+   "bits": 64,
+   "polyline_um": [
+    [
+     1442.88,
+     773.88
+    ],
+    [
+     534.237,
+     773.88
+    ]
+   ],
+   "band_um": 16.25
+  },
+  {
+   "path": "m7S_rx",
+   "layer": "M5",
+   "bits": 64,
+   "polyline_um": [
+    [
+     534.237,
+     773.88
+    ],
+    [
+     534.237,
+     1226.88
+    ]
+   ],
+   "band_um": 16.25
+  }
+ ],
+ "gates": {
+  "reach_gap": "PASS",
+  "bay_fill": "PASS",
+  "corridor_tracks": "PASS",
+  "entry_pins": "PASS",
+  "clock_shield": "NOT RUN",
+  "static_ir": "NOT RUN",
+  "lot_fit": "PASS",
+  "clock_entry": "FAIL",
+  "core_reach": "FAIL",
+  "early_taps": "FAIL",
+  "tree_balance": "NOT RUN",
+  "core_insertion_model": "FAIL",
+  "die_pair_skew_model": "NOT RUN",
+  "tree_commensurate": "PASS",
+  "clock_sites": "FAIL",
+  "island_lattice": "NOT RUN",
+  "infra_sites": "FAIL",
+  "clock_rep_sites": "NOT RUN",
+  "tap_region_containment": "NOT RUN",
+  "footless_stubs": "NOT RUN",
+  "island_ft_inputs": "NOT RUN"
+ },
+ "pushdown": {
+  "rule": "12.2a1 / COORD 06:53: die clock drivers + leg repeaters are partition-netlist cells at these fixed coordinates, identical for every instance (union of instance sites; unused ones fed from the local strap, COORD 06:41); the die connects only through the mp_* ft ports",
+  "islands": [
+   {
+    "name": "isl0",
+    "role": "die_node",
+    "rect_um": [
+     712.8,
+     600.48,
+     738.72,
+     626.4
+    ],
+    "centre_um": [
+     725.76,
+     613.44
+    ],
+    "via_stack": [
+     "M9",
+     "M5"
+    ],
+    "ft_ports": [
+     {
+      "name": "mp_isl0_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       723.6,
+       615.6
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)"
+     },
+     {
+      "name": "mp_isl0_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       727.92,
+       615.6
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin"
+     },
+     {
+      "name": "mp_isl0_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       723.6,
+       611.28
+      ],
+      "connect": "die regional reset stack (M9->M5)"
+     },
+     {
+      "name": "mp_isl0_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       727.92,
+       611.28
+      ],
+      "connect": "die reset feed-through net; independent core reset pin"
+     }
+    ],
+    "driver": {
+     "cell": "BUFx24_ASAP7_75t_R",
+     "parallel": 1,
+     "load_ff": 81.0,
+     "rc_ps": 32.4,
+     "placement": "fixed dont_touch at centre_um",
+     "basis": "12.8 d1: plan geometry only (driven length 405.0 um, 0 sinks)"
+    },
+    "lec": "die-owned feed-through: no core logic on mp_isl* ports (12.2a1)"
+   }
+  ],
+  "clock_repeaters": []
+ }
+}

@@ -1,0 +1,536 @@
+{
+ "die": "s81_head",
+ "verdict": "FAIL",
+ "plan_sha256": "d7b8d1eb935cf641061b2ec18389d57919ee804e9344f519aa00431dc002473e",
+ "master_plan_sha256": "7d4907f9cf5e8784a202d2190132118dfce29f9353f3ff46798e2fec82bd3d98",
+ "gates": {
+  "reach_gap": {
+   "verdict": "PASS",
+   "max_gap_um": 401.742,
+   "worst_path": "coll_WN3_d",
+   "fails": 0,
+   "in_core_bays_proposed": 0,
+   "examples": []
+  },
+  "bay_fill": {
+   "verdict": "PASS",
+   "bays": 468,
+   "max_fill": 0.496,
+   "bay_fails": 0,
+   "bay_fail_kinds": {},
+   "partition_fill_fails": 0,
+   "examples": []
+  },
+  "corridor_tracks": {
+   "verdict": "PASS",
+   "limit": 0.6,
+   "layers": {
+    "M4": {
+     "max_use": 0.379,
+     "gcells_used": 110597,
+     "gcells_over": 0,
+     "mean_use_where_used": 0.146
+    },
+    "M5": {
+     "max_use": 0.498,
+     "gcells_used": 105384,
+     "gcells_over": 0,
+     "mean_use_where_used": 0.251
+    },
+    "M6": {
+     "max_use": 0.0,
+     "gcells_used": 0,
+     "gcells_over": 0,
+     "mean_use_where_used": 0.0
+    },
+    "M7": {
+     "max_use": 0.0,
+     "gcells_used": 0,
+     "gcells_over": 0,
+     "mean_use_where_used": 0.0
+    },
+    "M8": {
+     "max_use": 0.0,
+     "gcells_used": 0,
+     "gcells_over": 0,
+     "mean_use_where_used": 0.0
+    },
+    "M9": {
+     "max_use": 0.0,
+     "gcells_used": 0,
+     "gcells_over": 0,
+     "mean_use_where_used": 0.0
+    }
+   },
+   "worst_gcells": [],
+   "blocked_sections": 0,
+   "blocked": [],
+   "m89_roads": 0
+  },
+  "entry_pins": {
+   "verdict": "PASS",
+   "pins": 0,
+   "max_per_gcell": 0,
+   "unplaced": 0,
+   "failed_drops": 0,
+   "missing_examples": [],
+   "max_drop_reach_um": 405.0,
+   "limit_per_gcell": 35,
+   "free_tracks_per_gcell": {
+    "M7": 126.562,
+    "M8": 117.5,
+    "M9": 117.5
+   },
+   "derivation": {
+    "margin": 0.6,
+    "stagger": 0.5,
+    "binding": "M8"
+   }
+  },
+  "clock_shield": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  },
+  "static_ir": {
+   "verdict": "NOT RUN",
+   "note": "no PDNSim region result (--ir); PG lane = INFRA-FIRST-R2"
+  },
+  "lot_fit": {
+   "verdict": "PASS",
+   "fails": [],
+   "n": 0
+  },
+  "clock_entry": {
+   "verdict": "FAIL",
+   "cores": 5,
+   "fails": 5,
+   "examples": [
+    {
+     "type": "hd_tile",
+     "inst": "u_core.u_b.g_cv.u_eA0",
+     "module": "ot_s81hd_elemA_cv",
+     "issue": "no plan clock tap",
+     "entry_um": [
+      159.84,
+      159.84
+     ]
+    },
+    {
+     "type": "hd_tile",
+     "inst": "u_core.u_b.g_cv.u_eA1",
+     "module": "ot_s81hd_elemA_cv",
+     "issue": "no plan clock tap",
+     "entry_um": [
+      159.84,
+      159.84
+     ]
+    },
+    {
+     "type": "hd_tile",
+     "inst": "u_core.u_b.g_cv.u_eA2",
+     "module": "ot_s81hd_elemA_cv",
+     "issue": "no plan clock tap",
+     "entry_um": [
+      159.84,
+      159.84
+     ]
+    },
+    {
+     "type": "hd_tile",
+     "inst": "u_core.u_b.g_cv.u_eA3",
+     "module": "ot_s81hd_elemA_cv",
+     "issue": "no plan clock tap",
+     "entry_um": [
+      159.84,
+      159.84
+     ]
+    },
+    {
+     "type": "hd_tile",
+     "inst": "u_core.u_b.g_cvb.u_eB",
+     "module": "ot_s81hd_elemB_cv",
+     "issue": "no plan clock tap",
+     "entry_um": [
+      138.24,
+      138.24
+     ]
+    }
+   ]
+  },
+  "core_reach": {
+   "verdict": "FAIL",
+   "limit_um": 200.0,
+   "restructure": [
+    {
+     "module": "ot_s81hd_elemA_cv",
+     "outline_um": [
+      317.672,
+      317.672
+     ],
+     "entry_um": [
+      159.84,
+      159.84
+     ],
+     "farthest_corner_um": 319.68,
+     "uses": 4,
+     "lane": "HEAD-CORE-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 158.836,
+      "islands": [
+       {
+        "centre_um": [
+         77.76,
+         77.76
+        ],
+        "rect_um": [
+         73.44,
+         73.44,
+         82.08,
+         82.08
+        ]
+       },
+       {
+        "centre_um": [
+         77.76,
+         237.6
+        ],
+        "rect_um": [
+         73.44,
+         233.28,
+         82.08,
+         241.92
+        ]
+       },
+       {
+        "centre_um": [
+         237.6,
+         77.76
+        ],
+        "rect_um": [
+         233.28,
+         73.44,
+         241.92,
+         82.08
+        ]
+       },
+       {
+        "centre_um": [
+         237.6,
+         237.6
+        ],
+        "rect_um": [
+         233.28,
+         233.28,
+         241.92,
+         241.92
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "ot_s81hd_elemB_cv",
+     "outline_um": [
+      277.652,
+      277.652
+     ],
+     "entry_um": [
+      138.24,
+      138.24
+     ],
+     "farthest_corner_um": 278.824,
+     "uses": 1,
+     "lane": "HEAD-CORE-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 138.826,
+      "islands": [
+       {
+        "centre_um": [
+         69.12,
+         69.12
+        ],
+        "rect_um": [
+         64.8,
+         64.8,
+         73.44,
+         73.44
+        ]
+       },
+       {
+        "centre_um": [
+         69.12,
+         207.36
+        ],
+        "rect_um": [
+         64.8,
+         203.04,
+         73.44,
+         211.68
+        ]
+       },
+       {
+        "centre_um": [
+         207.36,
+         69.12
+        ],
+        "rect_um": [
+         203.04,
+         64.8,
+         211.68,
+         73.44
+        ]
+       },
+       {
+        "centre_um": [
+         207.36,
+         207.36
+        ],
+        "rect_um": [
+         203.04,
+         203.04,
+         211.68,
+         211.68
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "early_taps": {
+   "verdict": "FAIL",
+   "plan_taps_offset": {
+    "core": 5
+   },
+   "mesh_taps_early": 0,
+   "examples": [
+    {
+     "type": "hd_tile",
+     "tap": "u_core.u_b.g_cv.u_eA0.clk",
+     "kind": "core",
+     "insertion_ps": 415.62717,
+     "offset_ps": 165.627
+    },
+    {
+     "type": "hd_tile",
+     "tap": "u_core.u_b.g_cv.u_eA1.clk",
+     "kind": "core",
+     "insertion_ps": 415.62717,
+     "offset_ps": 165.627
+    },
+    {
+     "type": "hd_tile",
+     "tap": "u_core.u_b.g_cv.u_eA2.clk",
+     "kind": "core",
+     "insertion_ps": 415.62717,
+     "offset_ps": 165.627
+    },
+    {
+     "type": "hd_tile",
+     "tap": "u_core.u_b.g_cv.u_eA3.clk",
+     "kind": "core",
+     "insertion_ps": 415.62717,
+     "offset_ps": 165.627
+    },
+    {
+     "type": "hd_tile",
+     "tap": "u_core.u_b.g_cvb.u_eB.clk",
+     "kind": "core",
+     "insertion_ps": 378.75565,
+     "offset_ps": 128.756
+    }
+   ]
+  },
+  "tree_balance": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  },
+  "core_insertion_model": {
+   "verdict": "FAIL",
+   "fails": 1,
+   "cores": 2,
+   "model": {
+    "form": "TT = RCX x K x L_max(entry -> farthest corner); FF = FF_RATIO x TT",
+    "K_ps_per_um": 0.8963,
+    "RCX": 0.9429,
+    "FF_RATIO": 0.7998,
+    "calibration": [
+     [
+      "qfd_dv_s8x_vmr",
+      406.08,
+      341.8,
+      271.8
+     ],
+     [
+      "qfd_dv_s8x_prog",
+      436.32,
+      419.4,
+      337.1
+     ],
+     [
+      "qfd_dv_s8x_btab",
+      436.32,
+      384.9,
+      308.1
+     ]
+    ],
+    "calibration_err_ps": [
+     22.2,
+     -28.3,
+     6.2
+    ],
+    "calibration_rms_ps": 21.1,
+    "note": "shallow cores (pred < target) pad up with a designed fixed trunk (12.8c): not a FAIL"
+   },
+   "examples": [
+    {
+     "module": "ot_s81hd_elemA_cv",
+     "entry_um": [
+      159.84,
+      159.84
+     ],
+     "farthest_um": 319.68,
+     "pred_TT_ps": 270.2,
+     "pred_FF_ps": 216.1,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    }
+   ],
+   "all": [
+    {
+     "module": "ot_s81hd_elemA_cv",
+     "entry_um": [
+      159.84,
+      159.84
+     ],
+     "farthest_um": 319.68,
+     "pred_TT_ps": 270.2,
+     "pred_FF_ps": 216.1,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "ot_s81hd_elemB_cv",
+     "entry_um": [
+      138.24,
+      138.24
+     ],
+     "farthest_um": 278.824,
+     "pred_TT_ps": 235.6,
+     "pred_FF_ps": 188.5,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    }
+   ]
+  },
+  "die_pair_skew_model": {
+   "verdict": "NOT RUN",
+   "diagnostic_only": true,
+   "note": "no --mesh (clock plan geometry)"
+  },
+  "tree_commensurate": {
+   "verdict": "PASS",
+   "core_lattice": {
+    "x": {
+     "pitch_um": 176.116,
+     "on_lattice": false,
+     "lines": 66,
+     "span_um": [
+      454.604,
+      17067.316
+     ],
+     "irregular": [
+      356.248,
+      1738.648
+     ],
+     "n_irregular": 2,
+     "leaf_pitch_um": 708.48,
+     "leaf_cover": 0.955,
+     "half_leaf_node_on_centre": 0.667,
+     "breaks": [
+      [
+       7891.636,
+       9630.284
+      ]
+     ]
+    },
+    "y": {
+     "pitch_um": 330.632,
+     "on_lattice": false,
+     "lines": 36,
+     "span_um": [
+      2723.912,
+      14834.88
+     ],
+     "irregular": [
+      332.64,
+      373.528
+     ],
+     "n_irregular": 2,
+     "leaf_pitch_um": 1036.8,
+     "leaf_cover": 1.0,
+     "half_leaf_node_on_centre": 0.056,
+     "breaks": []
+    }
+   },
+   "mesh_vs_core": null,
+   "phy_entries": 1,
+   "rule": "die H-tree leaf / mesh-driver pitch = the core-array repeat (leaf_pitch_um, an 8.64 multiple), tree node spans = integer multiples of it, so every node and mesh driver lands on a core-centre island (COORD 06:23); breaks = array gaps (e.g. a spine) the tree must bridge at a common node",
+   "no_leaf_axes": [],
+   "off_lattice_axes": []
+  },
+  "clock_sites": {
+   "verdict": "FAIL",
+   "note": "no --mesh",
+   "plan_taps_inside_phy": [
+    "hd_serdes"
+   ]
+  },
+  "island_lattice": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  },
+  "infra_sites": {
+   "verdict": "FAIL",
+   "source": "infra_sites.run (INFRA-FIRST-R2)",
+   "error": null,
+   "checks": {
+    "htree_snap": "NOT RUN",
+    "reset_demand": "INFO",
+    "a_corridor_gap": "PASS",
+    "b_cut_use": "PASS",
+    "d_bay_fill": "PASS",
+    "d_island": "NOT RUN (no --mesh: island clock demand unknown)",
+    "c_porosity": "NOT RUN (no --mesh)",
+    "reset_hop_reach": "PASS"
+   },
+   "islands": 16
+  },
+  "clock_rep_sites": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh (die H-tree)"
+  },
+  "tap_region_containment": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  },
+  "footless_stubs": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  },
+  "island_ft_inputs": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  }
+ }
+}

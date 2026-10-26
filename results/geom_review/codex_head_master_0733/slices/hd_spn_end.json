@@ -1,0 +1,1771 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "die": "s81_head",
+ "kind": "partition",
+ "type": "hd_spn_end",
+ "module": "ot_s81hd_spn_end",
+ "instances": [
+  "sp5"
+ ],
+ "plan": "physical/die_plan/s81_head/die_plan.json",
+ "plan_sha256": "d7b8d1eb935cf641061b2ec18389d57919ee804e9344f519aa00431dc002473e",
+ "master_plan_sha256": "7d4907f9cf5e8784a202d2190132118dfce29f9353f3ff46798e2fec82bd3d98",
+ "frozen": false,
+ "outline_um": [
+  1382.4,
+  2073.6
+ ],
+ "keepouts": [
+  {
+   "name": "island",
+   "rect_um": [
+    678.24,
+    1023.84,
+    704.16,
+    1049.76
+   ],
+   "kind": "island",
+   "use": [
+    "placement"
+   ]
+  }
+ ],
+ "islands": [
+  {
+   "name": "island",
+   "rect_um": [
+    678.24,
+    1023.84,
+    704.16,
+    1049.76
+   ],
+   "centre_um": [
+    691.2,
+    1036.8
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M1"
+   ],
+   "clock_pin": null,
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  }
+ ],
+ "bays": [
+  {
+   "name": "bay0",
+   "rect_um": [
+    1091.498,
+    1727.46,
+    1160.764,
+    1728.54
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 276,
+   "cell_area_um2": 28.169,
+   "fill": 0.377,
+   "layer": "M7",
+   "paths": [
+    "host_tx"
+   ],
+   "regions_um": [
+    [
+     1091.498,
+     1727.46,
+     1160.764,
+     1728.54
+    ]
+   ]
+  },
+  {
+   "name": "bay1",
+   "rect_um": [
+    1091.498,
+    1381.86,
+    1160.764,
+    1382.94
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 276,
+   "cell_area_um2": 28.169,
+   "fill": 0.377,
+   "layer": "M7",
+   "paths": [
+    "host_tx"
+   ],
+   "regions_um": [
+    [
+     1091.498,
+     1381.86,
+     1160.764,
+     1382.94
+    ]
+   ]
+  },
+  {
+   "name": "bay2",
+   "rect_um": [
+    1091.498,
+    1036.26,
+    1160.764,
+    1037.34
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 276,
+   "cell_area_um2": 28.169,
+   "fill": 0.377,
+   "layer": "M7",
+   "paths": [
+    "host_tx"
+   ],
+   "regions_um": [
+    [
+     1091.498,
+     1036.26,
+     1160.764,
+     1037.34
+    ]
+   ]
+  },
+  {
+   "name": "bay3",
+   "rect_um": [
+    1091.498,
+    690.66,
+    1160.764,
+    691.74
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 276,
+   "cell_area_um2": 28.169,
+   "fill": 0.377,
+   "layer": "M7",
+   "paths": [
+    "host_tx"
+   ],
+   "regions_um": [
+    [
+     1091.498,
+     690.66,
+     1160.764,
+     691.74
+    ]
+   ]
+  },
+  {
+   "name": "bay4",
+   "rect_um": [
+    1091.498,
+    345.06,
+    1160.764,
+    346.14
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 276,
+   "cell_area_um2": 28.169,
+   "fill": 0.377,
+   "layer": "M7",
+   "paths": [
+    "host_tx"
+   ],
+   "regions_um": [
+    [
+     1091.498,
+     345.06,
+     1160.764,
+     346.14
+    ]
+   ]
+  },
+  {
+   "name": "bay5",
+   "rect_um": [
+    1014.248,
+    345.06,
+    1083.498,
+    346.14
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 276,
+   "cell_area_um2": 28.169,
+   "fill": 0.377,
+   "layer": "M7",
+   "paths": [
+    "host_rx"
+   ],
+   "regions_um": [
+    [
+     1014.248,
+     345.06,
+     1083.498,
+     346.14
+    ]
+   ]
+  },
+  {
+   "name": "bay6",
+   "rect_um": [
+    1014.248,
+    690.66,
+    1083.498,
+    691.74
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 276,
+   "cell_area_um2": 28.169,
+   "fill": 0.377,
+   "layer": "M7",
+   "paths": [
+    "host_rx"
+   ],
+   "regions_um": [
+    [
+     1014.248,
+     690.66,
+     1083.498,
+     691.74
+    ]
+   ]
+  },
+  {
+   "name": "bay7",
+   "rect_um": [
+    1014.248,
+    1036.26,
+    1083.498,
+    1037.34
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 276,
+   "cell_area_um2": 28.169,
+   "fill": 0.377,
+   "layer": "M7",
+   "paths": [
+    "host_rx"
+   ],
+   "regions_um": [
+    [
+     1014.248,
+     1036.26,
+     1083.498,
+     1037.34
+    ]
+   ]
+  },
+  {
+   "name": "bay8",
+   "rect_um": [
+    1014.248,
+    1381.86,
+    1083.498,
+    1382.94
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 276,
+   "cell_area_um2": 28.169,
+   "fill": 0.377,
+   "layer": "M7",
+   "paths": [
+    "host_rx"
+   ],
+   "regions_um": [
+    [
+     1014.248,
+     1381.86,
+     1083.498,
+     1382.94
+    ]
+   ]
+  },
+  {
+   "name": "bay9",
+   "rect_um": [
+    1014.248,
+    1727.46,
+    1083.498,
+    1728.54
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 276,
+   "cell_area_um2": 28.169,
+   "fill": 0.377,
+   "layer": "M7",
+   "paths": [
+    "host_rx"
+   ],
+   "regions_um": [
+    [
+     1014.248,
+     1727.46,
+     1083.498,
+     1728.54
+    ]
+   ]
+  },
+  {
+   "name": "bay10",
+   "rect_um": [
+    1193.062,
+    1727.595,
+    1209.312,
+    1728.405
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m0S_tx"
+   ],
+   "regions_um": [
+    [
+     1193.062,
+     1727.595,
+     1209.312,
+     1728.405
+    ]
+   ]
+  },
+  {
+   "name": "bay11",
+   "rect_um": [
+    1193.062,
+    1381.995,
+    1209.312,
+    1382.805
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m0S_tx"
+   ],
+   "regions_um": [
+    [
+     1193.062,
+     1381.995,
+     1209.312,
+     1382.805
+    ]
+   ]
+  },
+  {
+   "name": "bay12",
+   "rect_um": [
+    1193.062,
+    1036.395,
+    1209.312,
+    1037.205
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m0S_tx"
+   ],
+   "regions_um": [
+    [
+     1193.062,
+     1036.395,
+     1209.312,
+     1037.205
+    ]
+   ]
+  },
+  {
+   "name": "bay13",
+   "rect_um": [
+    1193.062,
+    690.795,
+    1209.312,
+    691.605
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m0S_tx"
+   ],
+   "regions_um": [
+    [
+     1193.062,
+     690.795,
+     1209.312,
+     691.605
+    ]
+   ]
+  },
+  {
+   "name": "bay14",
+   "rect_um": [
+    1193.062,
+    345.195,
+    1209.312,
+    346.005
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m0S_tx"
+   ],
+   "regions_um": [
+    [
+     1193.062,
+     345.195,
+     1209.312,
+     346.005
+    ]
+   ]
+  },
+  {
+   "name": "bay15",
+   "rect_um": [
+    1168.764,
+    345.195,
+    1185.062,
+    346.005
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.495,
+   "layer": "M7",
+   "paths": [
+    "m0S_rx"
+   ],
+   "regions_um": [
+    [
+     1168.764,
+     345.195,
+     1185.062,
+     346.005
+    ]
+   ]
+  },
+  {
+   "name": "bay16",
+   "rect_um": [
+    1168.764,
+    690.795,
+    1185.062,
+    691.605
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.495,
+   "layer": "M7",
+   "paths": [
+    "m0S_rx"
+   ],
+   "regions_um": [
+    [
+     1168.764,
+     690.795,
+     1185.062,
+     691.605
+    ]
+   ]
+  },
+  {
+   "name": "bay17",
+   "rect_um": [
+    1168.764,
+    1036.395,
+    1185.062,
+    1037.205
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.495,
+   "layer": "M7",
+   "paths": [
+    "m0S_rx"
+   ],
+   "regions_um": [
+    [
+     1168.764,
+     1036.395,
+     1185.062,
+     1037.205
+    ]
+   ]
+  },
+  {
+   "name": "bay18",
+   "rect_um": [
+    1168.764,
+    1381.995,
+    1185.062,
+    1382.805
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.495,
+   "layer": "M7",
+   "paths": [
+    "m0S_rx"
+   ],
+   "regions_um": [
+    [
+     1168.764,
+     1381.995,
+     1185.062,
+     1382.805
+    ]
+   ]
+  },
+  {
+   "name": "bay19",
+   "rect_um": [
+    1168.764,
+    1727.595,
+    1185.062,
+    1728.405
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.495,
+   "layer": "M7",
+   "paths": [
+    "m0S_rx"
+   ],
+   "regions_um": [
+    [
+     1168.764,
+     1727.595,
+     1185.062,
+     1728.405
+    ]
+   ]
+  },
+  {
+   "name": "bay20",
+   "rect_um": [
+    1241.562,
+    1727.595,
+    1257.828,
+    1728.405
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_tx"
+   ],
+   "regions_um": [
+    [
+     1241.562,
+     1727.595,
+     1257.828,
+     1728.405
+    ]
+   ]
+  },
+  {
+   "name": "bay21",
+   "rect_um": [
+    1241.562,
+    1381.995,
+    1257.828,
+    1382.805
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_tx"
+   ],
+   "regions_um": [
+    [
+     1241.562,
+     1381.995,
+     1257.828,
+     1382.805
+    ]
+   ]
+  },
+  {
+   "name": "bay22",
+   "rect_um": [
+    1241.562,
+    1036.395,
+    1257.828,
+    1037.205
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_tx"
+   ],
+   "regions_um": [
+    [
+     1241.562,
+     1036.395,
+     1257.828,
+     1037.205
+    ]
+   ]
+  },
+  {
+   "name": "bay23",
+   "rect_um": [
+    1241.562,
+    690.795,
+    1257.828,
+    691.605
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_tx"
+   ],
+   "regions_um": [
+    [
+     1241.562,
+     690.795,
+     1257.828,
+     691.605
+    ]
+   ]
+  },
+  {
+   "name": "bay24",
+   "rect_um": [
+    1241.562,
+    345.195,
+    1257.828,
+    346.005
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_tx"
+   ],
+   "regions_um": [
+    [
+     1241.562,
+     345.195,
+     1257.828,
+     346.005
+    ]
+   ]
+  },
+  {
+   "name": "bay25",
+   "rect_um": [
+    1217.312,
+    345.195,
+    1233.562,
+    346.005
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_rx"
+   ],
+   "regions_um": [
+    [
+     1217.312,
+     345.195,
+     1233.562,
+     346.005
+    ]
+   ]
+  },
+  {
+   "name": "bay26",
+   "rect_um": [
+    1217.312,
+    690.795,
+    1233.562,
+    691.605
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_rx"
+   ],
+   "regions_um": [
+    [
+     1217.312,
+     690.795,
+     1233.562,
+     691.605
+    ]
+   ]
+  },
+  {
+   "name": "bay27",
+   "rect_um": [
+    1217.312,
+    1036.395,
+    1233.562,
+    1037.205
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_rx"
+   ],
+   "regions_um": [
+    [
+     1217.312,
+     1036.395,
+     1233.562,
+     1037.205
+    ]
+   ]
+  },
+  {
+   "name": "bay28",
+   "rect_um": [
+    1217.312,
+    1381.995,
+    1233.562,
+    1382.805
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_rx"
+   ],
+   "regions_um": [
+    [
+     1217.312,
+     1381.995,
+     1233.562,
+     1382.805
+    ]
+   ]
+  },
+  {
+   "name": "bay29",
+   "rect_um": [
+    1217.312,
+    1727.595,
+    1233.562,
+    1728.405
+   ],
+   "owner": "hd_spn_end",
+   "kind": "repeater",
+   "bits": 64,
+   "cell_area_um2": 6.532,
+   "fill": 0.496,
+   "layer": "M7",
+   "paths": [
+    "m7S_rx"
+   ],
+   "regions_um": [
+    [
+     1217.312,
+     1727.595,
+     1233.562,
+     1728.405
+    ]
+   ]
+  },
+  {
+   "name": "bay30",
+   "rect_um": [
+    312.294,
+    354.24,
+    313.914,
+    654.272
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn2"
+   ],
+   "regions_um": [
+    [
+     312.294,
+     354.24,
+     313.914,
+     654.272
+    ]
+   ]
+  },
+  {
+   "name": "bay31",
+   "rect_um": [
+    625.398,
+    354.24,
+    627.018,
+    654.272
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn2"
+   ],
+   "regions_um": [
+    [
+     625.398,
+     354.24,
+     627.018,
+     654.272
+    ]
+   ]
+  },
+  {
+   "name": "bay32",
+   "rect_um": [
+    785.474,
+    507.269,
+    1085.506,
+    508.889
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn2"
+   ],
+   "regions_um": [
+    [
+     785.474,
+     507.269,
+     1085.506,
+     508.889
+    ]
+   ]
+  },
+  {
+   "name": "bay33",
+   "rect_um": [
+    785.474,
+    820.373,
+    1085.506,
+    821.993
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn2"
+   ],
+   "regions_um": [
+    [
+     785.474,
+     820.373,
+     1085.506,
+     821.993
+    ]
+   ]
+  },
+  {
+   "name": "bay34",
+   "rect_um": [
+    785.474,
+    1133.477,
+    1085.506,
+    1135.097
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn2"
+   ],
+   "regions_um": [
+    [
+     785.474,
+     1133.477,
+     1085.506,
+     1135.097
+    ]
+   ]
+  },
+  {
+   "name": "bay35",
+   "rect_um": [
+    785.474,
+    1446.581,
+    1085.506,
+    1448.201
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn2"
+   ],
+   "regions_um": [
+    [
+     785.474,
+     1446.581,
+     1085.506,
+     1448.201
+    ]
+   ]
+  },
+  {
+   "name": "bay36",
+   "rect_um": [
+    785.474,
+    1759.686,
+    1085.506,
+    1761.306
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn2"
+   ],
+   "regions_um": [
+    [
+     785.474,
+     1759.686,
+     1085.506,
+     1761.306
+    ]
+   ]
+  },
+  {
+   "name": "bay37",
+   "rect_um": [
+    896.342,
+    503.446,
+    1196.374,
+    505.066
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn3"
+   ],
+   "regions_um": [
+    [
+     896.342,
+     503.446,
+     1196.374,
+     505.066
+    ]
+   ]
+  },
+  {
+   "name": "bay38",
+   "rect_um": [
+    785.474,
+    728.621,
+    1085.506,
+    730.241
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn3"
+   ],
+   "regions_um": [
+    [
+     785.474,
+     728.621,
+     1085.506,
+     730.241
+    ]
+   ]
+  },
+  {
+   "name": "bay39",
+   "rect_um": [
+    785.474,
+    1064.663,
+    1085.506,
+    1066.283
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn3"
+   ],
+   "regions_um": [
+    [
+     785.474,
+     1064.663,
+     1085.506,
+     1066.283
+    ]
+   ]
+  },
+  {
+   "name": "bay40",
+   "rect_um": [
+    785.474,
+    1400.705,
+    1085.506,
+    1402.325
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn3"
+   ],
+   "regions_um": [
+    [
+     785.474,
+     1400.705,
+     1085.506,
+     1402.325
+    ]
+   ]
+  },
+  {
+   "name": "bay41",
+   "rect_um": [
+    785.474,
+    1736.748,
+    1085.506,
+    1738.368
+   ],
+   "owner": "hd_spn_end",
+   "kind": "station",
+   "bits": 566,
+   "cell_area_um2": 214.559,
+   "fill": 0.441,
+   "layer": "M7",
+   "paths": [
+    "sp5:istn3"
+   ],
+   "regions_um": [
+    [
+     785.474,
+     1736.748,
+     1085.506,
+     1738.368
+    ]
+   ]
+  }
+ ],
+ "entry_pins": [],
+ "hard_cores": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250.0,
+   "FF": 202.5
+  },
+  "tol_ps": 20,
+  "early_taps": false
+ },
+ "corridors": [
+  {
+   "path": "sp5:istn0",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     785.966,
+     2073.6
+    ],
+    [
+     456.339,
+     2073.6
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn0",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     456.339,
+     2073.6
+    ],
+    [
+     126.711,
+     2073.6
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn0",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     126.711,
+     2073.6
+    ],
+    [
+     0.0,
+     2073.6
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn0",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     0.0,
+     2073.6
+    ],
+    [
+     0.0,
+     1870.684
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn0",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     0.0,
+     1870.684
+    ],
+    [
+     0.0,
+     1541.056
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn1",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     785.966,
+     2073.6
+    ],
+    [
+     1068.211,
+     2073.6
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn1",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     1068.211,
+     2073.6
+    ],
+    [
+     1350.455,
+     2073.6
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn1",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     1350.455,
+     2073.6
+    ],
+    [
+     1382.4,
+     2073.6
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn1",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     1382.4,
+     2073.6
+    ],
+    [
+     1382.4,
+     1823.3
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn1",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     1382.4,
+     1823.3
+    ],
+    [
+     1382.4,
+     1541.056
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn2",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     0.0,
+     504.256
+    ],
+    [
+     313.104,
+     504.256
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn2",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     313.104,
+     504.256
+    ],
+    [
+     626.208,
+     504.256
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn2",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     626.208,
+     504.256
+    ],
+    [
+     935.49,
+     504.256
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn2",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     504.256
+    ],
+    [
+     935.49,
+     508.079
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn2",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     508.079
+    ],
+    [
+     935.49,
+     821.183
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn2",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     821.183
+    ],
+    [
+     935.49,
+     1134.287
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn2",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     1134.287
+    ],
+    [
+     935.49,
+     1447.391
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn2",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     1447.391
+    ],
+    [
+     935.49,
+     1760.496
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn2",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     1760.496
+    ],
+    [
+     935.49,
+     2073.6
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn3",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     1382.4,
+     504.256
+    ],
+    [
+     1046.358,
+     504.256
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn3",
+   "layer": "M4",
+   "bits": 566,
+   "polyline_um": [
+    [
+     1046.358,
+     504.256
+    ],
+    [
+     935.49,
+     504.256
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn3",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     504.256
+    ],
+    [
+     935.49,
+     729.431
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn3",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     729.431
+    ],
+    [
+     935.49,
+     1065.473
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn3",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     1065.473
+    ],
+    [
+     935.49,
+     1401.515
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn3",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     1401.515
+    ],
+    [
+     935.49,
+     1737.558
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "sp5:istn3",
+   "layer": "M5",
+   "bits": 566,
+   "polyline_um": [
+    [
+     935.49,
+     1737.558
+    ],
+    [
+     935.49,
+     2073.6
+    ]
+   ],
+   "band_um": 300.032
+  },
+  {
+   "path": "host_tx",
+   "layer": "M5",
+   "bits": 276,
+   "polyline_um": [
+    [
+     1126.131,
+     2073.6
+    ],
+    [
+     1126.131,
+     0.0
+    ]
+   ],
+   "band_um": 69.266
+  },
+  {
+   "path": "host_rx",
+   "layer": "M5",
+   "bits": 276,
+   "polyline_um": [
+    [
+     1048.873,
+     0.0
+    ],
+    [
+     1048.873,
+     2073.6
+    ]
+   ],
+   "band_um": 69.25
+  },
+  {
+   "path": "m0S_tx",
+   "layer": "M5",
+   "bits": 64,
+   "polyline_um": [
+    [
+     1201.187,
+     2073.6
+    ],
+    [
+     1201.187,
+     0.0
+    ]
+   ],
+   "band_um": 16.25
+  },
+  {
+   "path": "m0S_rx",
+   "layer": "M5",
+   "bits": 64,
+   "polyline_um": [
+    [
+     1176.913,
+     0.0
+    ],
+    [
+     1176.913,
+     2073.6
+    ]
+   ],
+   "band_um": 16.298
+  },
+  {
+   "path": "m7S_tx",
+   "layer": "M5",
+   "bits": 64,
+   "polyline_um": [
+    [
+     1249.695,
+     2073.6
+    ],
+    [
+     1249.695,
+     0.0
+    ]
+   ],
+   "band_um": 16.266
+  },
+  {
+   "path": "m7S_rx",
+   "layer": "M5",
+   "bits": 64,
+   "polyline_um": [
+    [
+     1225.437,
+     0.0
+    ],
+    [
+     1225.437,
+     2073.6
+    ]
+   ],
+   "band_um": 16.25
+  }
+ ],
+ "gates": {
+  "reach_gap": "PASS",
+  "bay_fill": "PASS",
+  "corridor_tracks": "PASS",
+  "entry_pins": "PASS",
+  "clock_shield": "NOT RUN",
+  "static_ir": "NOT RUN",
+  "lot_fit": "PASS",
+  "clock_entry": "FAIL",
+  "core_reach": "FAIL",
+  "early_taps": "FAIL",
+  "tree_balance": "NOT RUN",
+  "core_insertion_model": "FAIL",
+  "die_pair_skew_model": "NOT RUN",
+  "tree_commensurate": "PASS",
+  "clock_sites": "FAIL",
+  "island_lattice": "NOT RUN",
+  "infra_sites": "FAIL",
+  "clock_rep_sites": "NOT RUN",
+  "tap_region_containment": "NOT RUN",
+  "footless_stubs": "NOT RUN",
+  "island_ft_inputs": "NOT RUN"
+ },
+ "pushdown": {
+  "rule": "12.2a1 / COORD 06:53: die clock drivers + leg repeaters are partition-netlist cells at these fixed coordinates, identical for every instance (union of instance sites; unused ones fed from the local strap, COORD 06:41); the die connects only through the mp_* ft ports",
+  "islands": [
+   {
+    "name": "isl0",
+    "role": "die_node",
+    "rect_um": [
+     678.24,
+     1023.84,
+     704.16,
+     1049.76
+    ],
+    "centre_um": [
+     691.2,
+     1036.8
+    ],
+    "via_stack": [
+     "M9",
+     "M5"
+    ],
+    "ft_ports": [
+     {
+      "name": "mp_isl0_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       689.04,
+       1038.96
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)"
+     },
+     {
+      "name": "mp_isl0_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       693.36,
+       1038.96
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin"
+     },
+     {
+      "name": "mp_isl0_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       689.04,
+       1034.64
+      ],
+      "connect": "die regional reset stack (M9->M5)"
+     },
+     {
+      "name": "mp_isl0_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       693.36,
+       1034.64
+      ],
+      "connect": "die reset feed-through net; independent core reset pin"
+     }
+    ],
+    "driver": {
+     "cell": "BUFx24_ASAP7_75t_R",
+     "parallel": 1,
+     "load_ff": 81.0,
+     "rc_ps": 32.4,
+     "placement": "fixed dont_touch at centre_um",
+     "basis": "12.8 d1: plan geometry only (driven length 405.0 um, 0 sinks)"
+    },
+    "lec": "die-owned feed-through: no core logic on mp_isl* ports (12.2a1)"
+   }
+  ],
+  "clock_repeaters": []
+ }
+}
