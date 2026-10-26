@@ -17,6 +17,7 @@ REACH=323.0  # reserve 2*40um cell displacement plus data-pin offsets below405
 RADIUS=80.0
 CELL=np.array([1.404,.27])
 _NEIGHBORS={}
+AGGRESSIVE=False
 
 def neighbors(targets,node):
     if node not in _NEIGHBORS:
@@ -35,13 +36,13 @@ def path_for(a,b,targets):
     if len(common):return [int(common[np.argmin(first[common]+last[common]+.001*np.abs(targets[common]-(a+b)/2).sum(axis=1))])]
     # Greedy toward capture is normally enough when wires may cross M5 cores.
     desired=a+(b-a)*min(.75*REACH/float(np.abs(b-a).sum()),1.0)
-    node=int(starts[np.argmin(np.abs(targets[starts]-desired).sum(axis=1))]);path=[node];seen={node}
+    node=int(starts[np.argmin(last[starts] if AGGRESSIVE else np.abs(targets[starts]-desired).sum(axis=1))]);path=[node];seen={node}
     while True:
         ids=neighbors(targets,node)
         ids=ids[last[ids]<last[node]-1e-6]
         if not len(ids):break
         desired=targets[node]+(b-targets[node])*min(.75*REACH/float(last[node]),1.0)
-        node=int(ids[np.argmin(np.abs(targets[ids]-desired).sum(axis=1))]);path.append(node)
+        node=int(ids[np.argmin(last[ids] if AGGRESSIVE else np.abs(targets[ids]-desired).sum(axis=1))]);path.append(node)
         if last[node]<=REACH:return path
         if node in seen:break
         seen.add(node)
@@ -157,10 +158,11 @@ def repair_type(raw,tn):
 
 
 def main():
-    global REACH
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--types',required=True);ap.add_argument('--bank-corridors',action='store_true');ap.add_argument('--su-corridors',action='store_true');ap.add_argument('--reach-budget',type=float,default=323.0);a=ap.parse_args()
+    global REACH,AGGRESSIVE
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--types',required=True);ap.add_argument('--bank-corridors',action='store_true');ap.add_argument('--short-targets',action='store_true');ap.add_argument('--su-corridors',action='store_true');ap.add_argument('--reach-budget',type=float,default=323.0);a=ap.parse_args()
     if not 0<a.reach_budget<=403:raise SystemExit('reach budget must be in(0,403]')
     REACH=a.reach_budget
+    AGGRESSIVE=a.short_targets
     if a.out.exists():raise SystemExit('output must be new')
     raw=json.loads((a.src/'die_plan.json').read_text());before=S.Plan(copy.deepcopy(raw));rep={}
     if a.bank_corridors:
