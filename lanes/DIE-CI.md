@@ -106,3 +106,6 @@ Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER?
 
 ## CODEX PARKED 2026-10-25 03:36 PDT
 Claude reset; full INFRA/DIE-CI/nativeKV45 handoff appended CODEX-LOG.md. NativeKV branch46cc69863, known9TYPE_SPLIT+PVconverterfixunrerun; operationalbus/SSH/jobserverchanges preserved. No newjobs or merges.
+
+## CODEX notes 2026-10-26 02:09 PDT
+Auxiliary takeover collected current operational state; details codex-aux-infra-1026.md. Four-host launcher/timers healthy, epyc3 retired. DIE-CI remains live on retired d4g q_sfuc after37.6h (intel2 OpenROAD162242), not dead lock; no cancellation or duplicate old CI. New jobs use bounded --stage to avoid hub-only memory wait.

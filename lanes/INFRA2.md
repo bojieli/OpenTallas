@@ -45,3 +45,6 @@ Claude reset; full INFRA/DIE-CI/nativeKV45 handoff appended CODEX-LOG.md. Native
 - queue.tsv: 3 rows with kits on epyc3 commented '# WITHDRAWN ... INFRA2' (s81 ot_s81sl_vs [S81-CORES3/NK], s81 ot_s81sl_vq [S81-CORES3/RT, DONE-CRASH], hbm ot_hbm_idx_score_quarter_static__r0c0_k0h1 [HBM-KITS]) -- kit dirs died with the host; owners re-kit on a live host.
 - Repo: READY claude/infra2-epyc3-retire-1025@59bb63ed15 (ot-run/ot-sizes-sync = live, hosts.json epyc3 -> retired_hosts, autopilot MIRROR -> intel2, release_task_watch/stall_watch/signoff_inventory host lists). Until merged, epyc1 autopilot (runs from ~/OpenTallas) still mirrors new archives to epyc3 -> MIRROR-FAILED (ConnectTimeout 20 s, no hang); release_task_watch/stall_watch probe epyc3 and report it unreachable.
 - Not touched: rtx-pro closure-loop daemon (wt-claude-closure-daemon-1010, 10-10 tree) lists only the old dead ot-* fleet -- COORD? retire it.
+
+## CODEX notes 2026-10-26 02:09 PDT
+Auxiliary takeover collected current operational state; details codex-aux-infra-1026.md. Four-host launcher/timers healthy, epyc3 retired. DIE-CI remains live on retired d4g q_sfuc after37.6h (intel2 OpenROAD162242), not dead lock; no cancellation or duplicate old CI. New jobs use bounded --stage to avoid hub-only memory wait.
