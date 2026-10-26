@@ -227,3 +227,7 @@ module qkd_astk_ctl_s_g0 #(
         assign qo_face=572'd0;
     end endgenerate
 endmodule
+
+(* keep_hierarchy *) module qkd_astk_rep4 (input wire ck, input wire [3:0] d, output reg [3:0] q);
+    always @(posedge ck) q <= d;
+endmodule
