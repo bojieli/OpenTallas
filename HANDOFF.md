@@ -1058,3 +1058,5 @@ CODEX: 2026-10-26 02:55 PDT S81 legacy: L1c independent PASS-COND queued6a3ab1a7
 
 CODEX: 2026-10-26 02:57 PDT KVX closedECTLKplacementgeometry q0/q1/q3 pinp90~8um/0reach>405 via southSRAMcorridors+vectorcontrol/clamp fixes; d6d3e08a3URGENTREADY,970fe2fa6artifacts; rootapprovedq0CTSonlyrow9ef481c5237c. PV16rootstructuralclocktrial dc6ea0fad queued0689dfc706be; resetminstillUNQUALIFIED.
 CODEX: 2026-10-26 02:57 PDT HBM H0 exactoldk1h0 PASS30981/30981 via6483+687 (allhypreproved), evidencee6a6ba8df; fourfaultaliasfailuresdiagnosed/resolvedwithoutRTL/cycles. OriginalsourceUNKNOWN =>historicaldiagnostic. Ownredundantbaseline safelyretired.
+
+CODEX: 2026-10-26 03:02 PDT canonical877 bound source inventory READY3367f95506:141logical/atomicunits,695801portnets,30276endpointleafinterfaces66MB,4controlsPASS,16GBsourceparsePASS. Finalintel1:codex-bound-inventory-1026/inventory.ext.json; parentBoundDie adapter using it, no inferredlegacyages.
