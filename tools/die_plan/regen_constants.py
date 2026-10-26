@@ -605,8 +605,8 @@ def kv_vport(o):
         return
     rl = max(v["RT"] + v["W"] for v in out.values())
     dq = {k: rl - (v["RT"] + v["W"]) for k, v in out.items()}
-    o.add("VPORT_RT", {k: v["RT"] for k, v in out.items()}, "boot", "9 + max_g(D(vq_g) + D(rs_g)) (<= 31)", group="vport",
-          status="OK" if all(v["RT"] <= 31 for v in out.values()) else "ERROR")
+    o.add("VPORT_RT", {k: v["RT"] for k, v in out.items()}, "boot", "9 + max_g(D(vq_g) + D(rs_g)) (<= 63, PATH-KV 10-25 21:21 RT 31 -> 63)", group="vport",
+          status="OK" if all(v["RT"] <= 63 for v in out.values()) else "ERROR")
     o.add("VPORT_DQ", dq, "boot", "max_q(W_q + RT_q) - (W_p + RT_p) (<= 15, else W-lane pads)", group="vport",
           status="OK" if max(dq.values()) <= 15 else "WARN",
           note=None if max(dq.values()) <= 15 else f"DQ > 15 on {[k for k, v in dq.items() if v > 15]}: W request pads")
