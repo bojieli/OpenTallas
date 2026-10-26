@@ -5,7 +5,7 @@
 // Every lep <-> lane net crosses through the existing ot_s81_mu72_land (chunk-8 D4/K2 transport, exactly +3
 // destination edges, reset on epochs/valid only):
 //   K -> N  {li_r credit, rxv, lo_v, lo_d[552:0]}            556 b  +3 edges
-//   N -> K  {st[1:0], flt[2:0], lo_r credit, li_v, li_d}      559 b  +3 edges
+//   N -> K  {st[1:0], flt[2:0], lo_r credit, li_v, li_d}      560 b  +3 edges
 // Both data directions are credit links (lane ot_link_credit_rx_b64 DEPTH = CORE_CRED / ot_link_credit_tx_rc
 // CRED = CORE_CRED; lep CRED / DR): the landing preserves every valid and every credit pulse (fixed latency, no
 // drop), it adds +6 edges to each credit round trip.  Round trips TX ~8 -> ~14, RX ~6 -> ~12 edges: the MU72 tops
@@ -27,11 +27,11 @@ module ot_s81_mu72_lnland #(parameter integer MUT = 0) (
     output wire         n_rxv,   input  wire [2:0]   n_flt,  input  wire [1:0] n_st
 );
     wire [555:0] kn_i = {k_li_r, k_rxv, k_lo_v, k_lo_d}, kn_o;
-    wire [558:0] nk_i = {n_st, n_flt, n_lo_r, n_li_v, n_li_d}, nk_o;
+    wire [559:0] nk_i = {n_st, n_flt, n_lo_r, n_li_v, n_li_d}, nk_o;
     ot_s81_mu72_land #(.W(556)) u_kn (.ck_w(ck_k), .ck_r(ck_n), .rs_w(rs_k), .rs_r(rs_n), .i(kn_i), .o(kn_o));
-    ot_s81_mu72_land #(.W(559)) u_nk (.ck_w(ck_n), .ck_r(ck_k), .rs_w(rs_n), .rs_r(rs_k), .i(nk_i), .o(nk_o));
+    ot_s81_mu72_land #(.W(560)) u_nk (.ck_w(ck_n), .ck_r(ck_k), .rs_w(rs_n), .rs_r(rs_k), .i(nk_i), .o(nk_o));
     wire [555:0] kn = (MUT == 1) ? kn_i : (MUT == 3) ? {kn_i[555], kn_o[554:0]} : kn_o;
-    wire [558:0] nk = (MUT == 2) ? nk_i : nk_o;
+    wire [559:0] nk = (MUT == 2) ? nk_i : nk_o;
     assign {n_li_r, n_rxv, n_lo_v, n_lo_d} = kn;
     assign {k_st, k_flt, k_lo_r, k_li_v, k_li_d} = nk;
 endmodule
