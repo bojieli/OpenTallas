@@ -1,0 +1,35 @@
+
+-- Executing script file `good.ys' --
+
+1. Executing Liberty frontend: /work/ot_rom_64x32_m2_tt.lib
+Imported 1 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /work/ot_rom_64x32_m2_bb.v
+Parsing SystemVerilog input from `/work/ot_rom_64x32_m2_bb.v' to AST representation.
+Replacing existing blackbox module `\ot_rom_64x32_m2' at /work/ot_rom_64x32_m2_bb.v:5.1-11.10.
+Generating RTLIL representation for module `\ot_rom_64x32_m2'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /work/good.v
+Parsing SystemVerilog input from `/work/good.v' to AST representation.
+Storing AST representation for module `$abstract\top'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\top'.
+Generating RTLIL representation for module `\top'.
+
+5.1. Analyzing design hierarchy..
+Top module:  \top
+
+5.2. Analyzing design hierarchy..
+Top module:  \top
+Removing unused module `$abstract\top'.
+Removed 1 unused modules.
+
+6. Executing JSON backend.
+
+End of script. Logfile hash: 9640c03c82, time: 0.00s, user: 0.00s, system: 0.01s, MEM: 22.16 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 46% 4x read_verilog (0 sec), 26% 2x read_liberty (0 sec), ...

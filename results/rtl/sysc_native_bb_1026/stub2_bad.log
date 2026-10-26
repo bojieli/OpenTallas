@@ -1,0 +1,13 @@
+
+-- Executing script file `stub2_bad.ys' --
+
+1. Executing SLANG frontend.
+Top level design units:
+    top
+
+bad.v:1:79: error: parameter 'INSTNCE' does not exist in 'ot_rom_64x32_m2' [-Wundefined-param-override]
+module top(input clk, ce, input [5:0] a, output [31:0] q); ot_rom_64x32_m2 #(.INSTNCE("native_sysc"), .VIAMAP("profile.hex")) u_rom(.clk(clk),.ce_in(ce),.addr_in(a),.rd_out(q)); endmodule
+                                                                              ^
+
+Build failed: 1 error, 0 warnings
+ERROR: Design elaboration failed; see full log for details

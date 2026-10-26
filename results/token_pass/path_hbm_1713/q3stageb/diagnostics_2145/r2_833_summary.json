@@ -1,0 +1,35 @@
+{
+  "verdict": "FAIL",
+  "source_commit": "25b30e71d",
+  "clock_period_fs": 833000,
+  "clock_contract": "per-edge runtime assertion, no violation before expected native-protocol failure",
+  "component_launches": [
+    2048,
+    4096
+  ],
+  "reset_between_operations": false,
+  "programme_reloaded_between_operations": false,
+  "both_operations": {
+    "raw_start": 95,
+    "flit": 105,
+    "first_root_write": 613,
+    "last_root_write": 613,
+    "root_done": 620,
+    "root_stat_cycles": 510,
+    "native_done": 631,
+    "gold_word": 20,
+    "numerical_errors": 0
+  },
+  "failure": {
+    "first_fault": 617,
+    "cold_cause": "0x0400 native VM writer reservation missing",
+    "warm_cause": "0x0404 writer fault sticky plus wrong done-slot instruction608"
+  },
+  "repair_already_measured_on_r1_diagnostic": {
+    "done_instruction": 609,
+    "writer_ingress_instruction": 602,
+    "writer_low_reservation": 603,
+    "writer_high_reservation": 604
+  },
+  "scope": "Component only; native VM payload observation is added in the final f0393f111 observer, still building. Hub-internal52 stations and final die START not included."
+}
