@@ -1,0 +1,12 @@
+# KV takeover 2026-10-25 17:13 PDT
+
+Parent owns the one folded plan and all13 TYPE_SPLIT structural repairs, exact selected-path integration and die trial/STA coordination. New source tree epyc1:/srv/opentallas-scratch2/claude/wt/codex-kv-plan-1713 branch codex/kv-plan-1713 from current kvtok-bind lane, merging main c51d6d9303. No heavy parent job launched yet.
+
+- Native/token: current b2 epyc3:/srv/opentallas-scratch2/claude/tok-sched/kvbind/b2 has160parts/72functionalvariants,13TYPE_SPLIT ONLY; allPOR/ID/ties PASS and2,558,104 exact terminals matched. Four lint errors undefined KVD_STMUT in actual ASTK ctl source. TOKEN owns lint, current exact-image HOST setup and actual Qwen history; no live old token/bind jobs, no oldCTX256 reuse.
+- PC/ASTK/HEAD/PV: CORES collecting4 PC5 formal jobs live intel1 (994437/994741/994707/994744) and ASTK5 epyc2 unit2107508, all progressing; no new duplicate. ASTK5 replica andraw/ODBFACE pass, awaitingLEC beforeplace. Heads currentm6 e2/e6 epyc1containers4101954/4129919 live. PC5/source merged main; previous cached proof not current release by itself. GEOM notified currentASTK5 review waits actualplace. Oldz3 reviewdoesnottransfer.
+- SYS_C/HOST physical: KITS collected pg13 COREcheck terminal PSM0069, fourSRAM+logic VDD disconnected; actualPG14 M7sourceexports differ, diagnosisinprogress. No fullCORE/IRclaim. POR source nowmerged; preserve realdigitalwavefront +oneasyncroot. Existingphysicalprojectionfourservice roles, no1168physicalbumps.
+- Canary: ffgrt976d A/B terminal TT−57.66/254,FF−1.01/1; resetrecovery+257.81MET, DRC/DRV/pairpass. Remaininge1internal linevalidfanout/decode810.47ps/QN229psslew assignedCORES; currentc51e1canarylive17:02/FLOWownscollection. No blanketcanaryrelease.
+- Plan: current b2 split diagnostic/receiver equalization data committed physical/die_plan/qwen_kvsys/bind/kvtok1025. Structural families receiverpads +intraPC/PVlatency +HGdaisychain +PVmirrorroles. Parent advancingoneper-diedelta; uniform physicaltypes remainrequired.
+- Die/ELEM/TRIAL: currentphysicalviews/signoff still4/34historicaloddheads; currentoddcanaryfailureexplicit. Rootclock/resetSTART andactualsignedviewdieGRT/STA/seam/token remainrequired, sourcefixturesnotcompletepath. FLOW/GEOM/CLOCK supportassigned; olderdiagnosticstand-intrials retainedonly.
+
+Questions are plain OWNER? in CODEX-LOG; no dialogs or waiting for owner. Every heavy job ot-run, immutable sources, render/view and independent GEOM before PNR/STA. Root integrates gated READY source only. Work continues until explicit RESET.
