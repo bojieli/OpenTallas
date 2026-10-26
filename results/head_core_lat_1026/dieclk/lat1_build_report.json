@@ -1,0 +1,161 @@
+{
+ "cells": 5719,
+ "drivers": 212,
+ "nodes": 239,
+ "reps": 1115,
+ "stubs": 3941,
+ "unplaced": 1655,
+ "split_reps": 575,
+ "clock_cell_overlap_pairs": 8,
+ "clock_hard_keepout_violations": 4,
+ "stub_max_um": 1909.47,
+ "htree_wire_mm": 347.57,
+ "mesh_wire_mm": 701.96,
+ "rule_12_8": {
+  "methodology": "v4.1 12.8 + 12.4b",
+  "shield_net": "VSS",
+  "sizing": "plan model (d1)",
+  "early_offset_taps": 0,
+  "tap_slew_max_ps": 80.0
+ },
+ "lattice": {
+  "rule": "COORD 2026-10-26 06:23: H-tree node pitch = integer multiple of the core pitch; nodes/drivers on core-centre islands",
+  "xs": [
+   -963.36,
+   -254.88,
+   453.6,
+   1162.08,
+   1870.56,
+   2579.04,
+   3287.52,
+   3996.0,
+   4704.48,
+   5412.96,
+   6121.44,
+   6829.92,
+   7538.4,
+   8246.88,
+   8955.36,
+   9663.84,
+   7858.08,
+   8566.56,
+   9275.04,
+   9983.52,
+   10692.0,
+   11400.48,
+   12108.96,
+   12817.44,
+   13525.92,
+   14234.4,
+   14942.88,
+   15651.36,
+   16359.84,
+   17068.32,
+   17776.8,
+   18485.28
+  ],
+  "ys": [
+   1689.12,
+   3762.72,
+   5836.32,
+   7909.92,
+   9983.52,
+   12057.12,
+   14130.72,
+   16204.32
+  ],
+  "virtual_pruned": 44,
+  "pruned_branches": 28,
+  "islands_used": 1051,
+  "island_row_um_max": 6.48,
+  "island_row_um_budget": 12.528,
+  "cells_in_tile_glue": 1344,
+  "cells_in_tile_glue_list": [
+   "ckm_r1_h0_7",
+   "ckm_r1_h0_8",
+   "ckm_r1_h1_7",
+   "ckm_r1_h1_8",
+   "ckm_s_965",
+   "ckm_s_967",
+   "ckm_s_969",
+   "ckm_s_976",
+   "ckm_s_977",
+   "ckm_s_978",
+   "ckm_s_979",
+   "ckm_s_980",
+   "ckm_s_981",
+   "ckm_s_987",
+   "ckm_s_988",
+   "ckm_s_989",
+   "ckm_s_990",
+   "ckm_s_991",
+   "ckm_s_992",
+   "ckm_s_998",
+   "ckm_s_999",
+   "ckm_s_1000",
+   "ckm_s_1001",
+   "ckm_s_1002",
+   "ckm_s_1003",
+   "ckm_s_1009",
+   "ckm_s_1010",
+   "ckm_s_1011",
+   "ckm_s_1012",
+   "ckm_s_1013",
+   "ckm_s_1014",
+   "ckm_s_1020",
+   "ckm_s_1021",
+   "ckm_s_1022",
+   "ckm_s_1023",
+   "ckm_s_1024",
+   "ckm_s_1025",
+   "ckm_s_1031",
+   "ckm_s_1033",
+   "ckm_s_1034"
+  ],
+  "node_rep_driver_move_max_um": 1347.84,
+  "island_cell_pin_offset_max_um": 2.997,
+  "serdes_taps_to_strip_edge": 384
+ },
+ "model_assumption": "core infra-island holes = legal top-level sites (LEF hole cut: sibling claude/head-core-lat-r2-lef-1026); hd_tile glue is NOT a site (ISLAND_STRICT)",
+ "plan_sha256": "d7b8d1eb935cf641061b2ec18389d57919ee804e9344f519aa00431dc002473e",
+ "unplaced_by_class": {
+  "top W/E seam leg rep": 4,
+  "stub(no island/soft foot on strap)": 1603,
+  "leg rep / node near station rows": 48
+ },
+ "rep_slide_top": [
+  [
+   1347.84,
+   "h1"
+  ],
+  [
+   1347.84,
+   "h0"
+  ],
+  [
+   1010.88,
+   "h1"
+  ],
+  [
+   1010.88,
+   "h0"
+  ],
+  [
+   509.76,
+   "h1111001"
+  ],
+  [
+   509.76,
+   "h1111000"
+  ],
+  [
+   509.76,
+   "h1101101"
+  ],
+  [
+   509.76,
+   "h1101100"
+  ]
+ ],
+ "note": "lat1 = static build only (no combo/GRT): refused for GRT by 1655 unplaced; HEAD-CORE-LAT-R2/DIECLK 2026-10-26"
+}
