@@ -19,6 +19,21 @@ set la_maxg [la_env OT_LEAF_AFF_MAX_GROUP 24]
 set la_slack [la_env OT_LEAF_AFF_SLACK 4]
 set la_depth [la_env OT_LEAF_AFF_DEPTH 4]
 set la_ronly [la_env OT_LEAF_AFF_REPORT_ONLY 0]
+# PATH-KV-ASTK8 10-26: OT_LEAF_AFF_ANCHORS = file of register instance names (one per line; relative -> RESULTS_DIR)
+# that sit on a dedicated sub-tree (ASTK face sub-root, astk_face_taps.tcl ot_face_tree_sinks.txt).  A group with an
+# anchor member is re-hung only onto the leaf that drives the most ANCHOR members (never onto a non-anchor leaf), so
+# the interface registers keep their own clock tree.  Unset = unchanged behaviour.
+global la_anchor
+set la_anchor [dict create]
+set la_anchor_file [la_env OT_LEAF_AFF_ANCHORS ""]
+if {$la_anchor_file ne ""} {
+  if {[file pathtype $la_anchor_file] ne "absolute"} { set la_anchor_file [file join $::env(RESULTS_DIR) $la_anchor_file] }
+  if {![file exists $la_anchor_file]} { error "OT_LEAF_AFF: anchor file $la_anchor_file missing" }
+  set fh [open $la_anchor_file r]
+  foreach ln [split [read $fh] "\n"] { set ln [string trim $ln]; if {$ln ne ""} { dict set la_anchor $ln 1 } }
+  close $fh
+  puts "OT_LEAF_AFF anchors [dict size $la_anchor] from $la_anchor_file"
+}
 set la_blk [ord::get_db_block]
 set la_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 
@@ -128,14 +143,17 @@ dict for {name it} $la_ck {
 set la_cap [expr {$la_fomax + $la_slack}]
 set la_groups [dict create]
 foreach x [array names la_par] { dict lappend la_groups [la_find $x] $x }
+set la_anch 0
 set la_moved 0; set la_gmoved 0; set la_skip_big 0; set la_skip_far 0; set la_skip_cap 0; set la_skip_drv 0; set la_skip_clock 0; set la_ok 0
 dict for {r mem} $la_groups {
   if {![la_same_clock $mem]} { incr la_skip_clock; continue }
   if {[llength $mem] > $la_maxg} { incr la_skip_big; continue }
   # candidate leaves: by member count, ties -> nearest centroid
-  set cnt [dict create]
-  foreach m $mem { set n [la_leaf $m]; if {$n ne "NULL"} { dict incr cnt [$n getName] } }
+  set cnt [dict create]; set acnt [dict create]
+  foreach m $mem { set n [la_leaf $m]; if {$n ne "NULL"} { dict incr cnt [$n getName]; if {[dict exists $la_anchor $m]} { dict incr acnt [$n getName] } } }
   if {[dict size $cnt] <= 1} { incr la_ok; continue }
+  # anchored group: only leaves that drive anchor members are candidates
+  if {[dict size $acnt]} { set cnt $acnt; incr la_anch }
   set best ""; set bestc -1
   dict for {nn c} $cnt { if {$c > $bestc} { set best $nn; set bestc $c } }
   set net [$la_blk findNet $best]
@@ -167,5 +185,5 @@ dict for {r mem} $la_groups {
 }
 set la_cross1 0
 foreach pr $la_pairlist { lassign $pr a b; if {[la_leaf $a] ne [la_leaf $b]} { incr la_cross1 } }
-puts "OT_LEAF_AFF pairs $la_pairs groups [dict size $la_groups] cross_leaf_before $la_cross0 cross_leaf_after $la_cross1 groups_moved $la_gmoved sinks_moved $la_moved same_leaf_already $la_ok skip_big $la_skip_big skip_far $la_skip_far skip_cap $la_skip_cap skip_driver $la_skip_drv skip_clock $la_skip_clock leaf_cap $la_cap radius_um $la_um report_only $la_ronly"
+puts "OT_LEAF_AFF pairs $la_pairs groups [dict size $la_groups] cross_leaf_before $la_cross0 cross_leaf_after $la_cross1 groups_moved $la_gmoved sinks_moved $la_moved same_leaf_already $la_ok skip_big $la_skip_big skip_far $la_skip_far skip_cap $la_skip_cap skip_driver $la_skip_drv skip_clock $la_skip_clock leaf_cap $la_cap radius_um $la_um report_only $la_ronly anchored_groups $la_anch"
 if {$la_moved > 0} { estimate_parasitics -placement }
