@@ -1,0 +1,80 @@
+[
+  {
+    "type": "q_b000",
+    "core_count": 8,
+    "port_groups": 112,
+    "unconnected": []
+  },
+  {
+    "type": "q_b001",
+    "core_count": 8,
+    "port_groups": 120,
+    "unconnected": []
+  },
+  {
+    "type": "q_b002",
+    "core_count": 8,
+    "port_groups": 120,
+    "unconnected": []
+  },
+  {
+    "type": "q_b003",
+    "core_count": 8,
+    "port_groups": 120,
+    "unconnected": []
+  },
+  {
+    "type": "q_b010",
+    "core_count": 8,
+    "port_groups": 120,
+    "unconnected": []
+  },
+  {
+    "type": "q_b011",
+    "core_count": 8,
+    "port_groups": 120,
+    "unconnected": []
+  },
+  {
+    "type": "q_b012",
+    "core_count": 8,
+    "port_groups": 120,
+    "unconnected": []
+  },
+  {
+    "type": "q_b013",
+    "core_count": 8,
+    "port_groups": 120,
+    "unconnected": []
+  },
+  {
+    "type": "q_hub_nw",
+    "core_count": 4,
+    "port_groups": 18,
+    "unconnected": [
+      [
+        "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1",
+        "valid_out"
+      ],
+      [
+        "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3",
+        "valid_out"
+      ]
+    ]
+  },
+  {
+    "type": "q_hub_ne",
+    "core_count": 4,
+    "port_groups": 18,
+    "unconnected": [
+      [
+        "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1",
+        "valid_out"
+      ],
+      [
+        "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3",
+        "valid_out"
+      ]
+    ]
+  }
+]

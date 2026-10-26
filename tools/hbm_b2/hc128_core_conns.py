@@ -2,7 +2,8 @@
 """Derive native HC core connectivity from actual composed adapters and B2 bindings.
 
 Non-core logic is traversed in signal direction, including original registers;
-clock/reset never create data dependencies. Existing non-HC sidecars are retained.
+clock/reset never create data dependencies. Existing non-HC sidecars are retained. Multi-lane external bundles retain
+all reported endpoint targets; this sidecar is not a per-bit lane assignment.
 """
 import argparse,collections,json,re,subprocess
 from pathlib import Path
@@ -12,9 +13,9 @@ for mat in re.finditer(r'\b(hcb_N[WE][0-7]|hc_N[WE])\s*\(\s*(.*?)\n  \);',text,r
 # Both directions of each lane are determined by its actual endpoint objects.
 produced=collections.defaultdict(list)
 for row in report['lane_capacity']:
- if len(row.get('lanes',[]))!=1:continue
- lane=lanes[row['lanes'][0]];src=ports[lane['ports'][0]]['src'];dst=ports[lane['ports'][-1]]['dst']
- for p in row.get('source_ports',[]):produced[p].append((src,dst))
+ for lid in row.get('lanes',[]):
+  lane=lanes[lid];src=ports[lane['ports'][0]]['src'];dst=ports[lane['ports'][-1]]['dst']
+  for p in row.get('source_ports',[]):produced[p].append((src,dst))
 
 def bus_ports(inst,part):
  out=collections.defaultdict(set)
@@ -82,5 +83,5 @@ for tn,t in plan['partition_types'].items():
  if tn.startswith('q_b'):
   idx=int(re.search(r'Q(\d+)',cores[0]['parent_instance'])[1]);asb='hcb_NW'+str(idx);top=next(c['module'] for c in t['contents'] if c['inst']==cores[0]['parent_instance'])
  else:asb='hc_NW' if tn.endswith('nw') else 'hc_NE';top='ot_hbm_hc_qhub_static';part=next(p['name'] for p in plan['partitions'] if p['type']==tn and p['name'].startswith('NE' if tn.endswith('ne') else 'NW'))
- jp=a.adapters/(top+'.json');j=json.loads(jp.read_text());work=a.out/(tn+'_flat.json');ys=a.out/(tn+'.ys');ys.write_text(f'read_json {jp.resolve()}\nsetattr -unset keep_hierarchy\nsetattr -mod -unset keep_hierarchy\nhierarchy -top {top}\nflatten\nwrite_json {work.resolve()}\n');subprocess.run([str(Path.home()/'.local/opentallas-tools/bin/yosys'),'-ql',str(a.out/(tn+'.log')),'-s',str(ys)],check=True);j=json.loads(work.read_text());cn={c['cut_instance']:c['inst'] for c in cores};new,miss=derive(j,top,cn,bus_ports(asb,part),cores[0]['parent_instance']);conn[tn]={k:v for k,v in conn.get(tn,{}).items() if not k.startswith(cores[0]['parent_instance'])};conn[tn].update(new);summary.append(dict(type=tn,core_count=len(new),port_groups=sum(len(p) for p in new.values()),unconnected=miss))
+ jp=a.adapters/(top+'.json');j=json.loads(jp.read_text());work=a.out/(tn+'_flat.json');ys=a.out/(tn+'.ys');ys.write_text(f'read_json {jp.resolve()}\nsetattr -unset keep_hierarchy\nsetattr -mod -unset keep_hierarchy\nhierarchy -top {top}\nflatten\nwrite_json {work.resolve()}\n');subprocess.run([str(Path.home()/'.local/opentallas-tools/bin/yosys'),'-ql',str(a.out/(tn+'.log')),'-s',str(ys)],check=True);j=json.loads(work.read_text());cn={c['cut_instance']:c['inst'] for c in cores};new,miss=derive(j,top,cn,bus_ports(asb,part),cores[0]['parent_instance']);conn[tn]={k:v for k,v in conn.get(tn,{}).items() if not k.startswith(cores[0]['parent_instance'])};conn[tn].update(new);assert all(pn=='valid_out' and inst.endswith(('subtree32_1','subtree32_3')) for inst,pn in miss),(tn,miss);summary.append(dict(type=tn,core_count=len(new),port_groups=sum(len(p) for p in new.values()),unconnected=miss))
 (a.out/'core_conns.json').write_text(json.dumps(conn,indent=1)+'\n');(a.out/'connectivity_receipt.json').write_text(json.dumps(summary,indent=2)+'\n');print(json.dumps(summary))

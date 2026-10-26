@@ -1,0 +1,962 @@
+{
+ "schema": "opentallas.hbm.hc128_templates.v1",
+ "qualification": "PARENT_BIND_PENDING",
+ "source_cut": "5e2d78d280",
+ "added_cut_cycles": 0,
+ "routing_ceiling": "M5",
+ "masters": {
+  "ot_hbm_hc_bank128_pair_core": {
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "pins": 1590,
+   "pins_file": "ot_hbm_hc_bank128_pair_core_pins.json",
+   "pins_sha256": "dc5591d2956a1c7a4ef4d6967b6ad858e999c579c70b389716515c6977be189d",
+   "obs_max": "M5",
+   "interface_basis": "actual_compact_pair"
+  },
+  "ot_hbm_hc_bank128_pair_first_core": {
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "pins": 1078,
+   "pins_file": "ot_hbm_hc_bank128_pair_first_core_pins.json",
+   "pins_sha256": "422308618674116bae6856cfe82de45bbc749e85f6cb00c82b00942e6bd72051",
+   "obs_max": "M5",
+   "interface_basis": "actual_compact_pair"
+  },
+  "ot_hbm_hc_subtree32_core": {
+   "outline_um": [
+    220.32,
+    220.32
+   ],
+   "pins": 1091,
+   "pins_file": "ot_hbm_hc_subtree32_core_pins.json",
+   "pins_sha256": "d7c3ec297ab44d5e76d93a5bc6d2fe7fd3d47b1c3ff17d62f4c44a42d48f94b7",
+   "obs_max": "M5",
+   "interface_basis": "recovered_template"
+  }
+ },
+ "bank_placements": {
+  "q_b000": [
+   {
+    "pair": 0,
+    "module": "ot_hbm_hc_bank128_pair_first_core",
+    "origin_um": [
+     25.92,
+     17.28
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 1,
+    "module": "ot_hbm_hc_bank128_pair_first_core",
+    "origin_um": [
+     25.92,
+     388.8
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 2,
+    "module": "ot_hbm_hc_bank128_pair_first_core",
+    "origin_um": [
+     25.92,
+     760.32
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 3,
+    "module": "ot_hbm_hc_bank128_pair_first_core",
+    "origin_um": [
+     25.92,
+     1131.84
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 4,
+    "module": "ot_hbm_hc_bank128_pair_first_core",
+    "origin_um": [
+     25.92,
+     1503.36
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 5,
+    "module": "ot_hbm_hc_bank128_pair_first_core",
+    "origin_um": [
+     25.92,
+     1874.88
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 6,
+    "module": "ot_hbm_hc_bank128_pair_first_core",
+    "origin_um": [
+     25.92,
+     2246.4
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 7,
+    "module": "ot_hbm_hc_bank128_pair_first_core",
+    "origin_um": [
+     25.92,
+     2617.92
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   }
+  ],
+  "q_b001": [
+   {
+    "pair": 0,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     17.28
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 1,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     388.8
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 2,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     760.32
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 3,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1131.84
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 4,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1503.36
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 5,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1874.88
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 6,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2246.4
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 7,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2617.92
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   }
+  ],
+  "q_b002": [
+   {
+    "pair": 0,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     17.28
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 1,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     388.8
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 2,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     760.32
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 3,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1131.84
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 4,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1503.36
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 5,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1874.88
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 6,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2246.4
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 7,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2617.92
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   }
+  ],
+  "q_b003": [
+   {
+    "pair": 0,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     17.28
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 1,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     388.8
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 2,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     760.32
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 3,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1131.84
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 4,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1503.36
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 5,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1874.88
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 6,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2246.4
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 7,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2617.92
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   }
+  ],
+  "q_b010": [
+   {
+    "pair": 0,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     17.28
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 1,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     388.8
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 2,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     760.32
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 3,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1131.84
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 4,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1503.36
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 5,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1874.88
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 6,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2246.4
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 7,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2617.92
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   }
+  ],
+  "q_b011": [
+   {
+    "pair": 0,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     17.28
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 1,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     388.8
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 2,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     760.32
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 3,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1131.84
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 4,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1503.36
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 5,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1874.88
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 6,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2246.4
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 7,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2617.92
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   }
+  ],
+  "q_b012": [
+   {
+    "pair": 0,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     17.28
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 1,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     388.8
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 2,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     760.32
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 3,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1131.84
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 4,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1503.36
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 5,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1874.88
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 6,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2246.4
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 7,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2617.92
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   }
+  ],
+  "q_b013": [
+   {
+    "pair": 0,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     17.28
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 1,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     388.8
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 2,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     760.32
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 3,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1131.84
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 4,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1503.36
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 5,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     1874.88
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 6,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2246.4
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   },
+   {
+    "pair": 7,
+    "module": "ot_hbm_hc_bank128_pair_core",
+    "origin_um": [
+     25.92,
+     2617.92
+    ],
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "obs_max": "M5",
+    "halo_um": 8.64
+   }
+  ]
+ },
+ "pending": [
+  "exact_native_parent_cut_maps",
+  "perbit_routing_and_geometry_review",
+  "rebuild_core_views_at_M5",
+  "die_GRT_STA_clock_and_token"
+ ]
+}
