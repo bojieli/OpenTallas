@@ -34,6 +34,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import schema as S  # noqa: E402
+import ft_hold  # noqa: E402
 
 CELLS = """`timescale 1ns/1ps
 `default_nettype none
@@ -325,12 +326,19 @@ def wrapper(P, tn, epochs, rtl_root=None):
             body.append(f"    {st(ea)} #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
                         f".q({n}[{W - 1}:0]), .eq({eq}));")
             sig[f"bus:{b['name']}"] = f"{n}_d"
+    hold_cells = ft_hold.chain(P)[0] if slots else ()
     for s in slots:
         n, W, k = sv_id(s["name"]), s["width"], int(s.get("stations", 1))
         ep_i = epochs.get((tn, s["name"] + "_i"), True)
         ep_o = epochs.get((tn, s["name"] + "_o"), True)
         r = rsel(s["name"] + "_i")
         d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep_i else r)
+        if hold_cells:
+            # plan ft input hold cells (clock.ft_in_hold, ft_hold.py): every in bit (data + epoch) before station 0
+            wi = W + (1 if ep_i else 0)
+            decl.append(f"    wire [{wi - 1}:0] {n}_ih;  // ft input after the plan hold cells")
+            body.append(f"    {ft_hold.module_name(hold_cells)} #(.W({wi})) u_ftd_{n} (.d({n}_i), .q({n}_ih));")
+            d, ea = f"{n}_ih[{W - 1}:0]", (f"{n}_ih[{W}]" if ep_i else r)
         for j in range(k):
             last = j == k - 1
             if last:
@@ -457,7 +465,7 @@ def write_rtl(raw, out, rtl_root=None, types=None):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     ep = bus_epochs(P)
-    (out / "ot_dp_cells.sv").write_text(CELLS)
+    (out / "ot_dp_cells.sv").write_text(CELLS + ft_hold.module_text(P))
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types is not None and tn not in types):

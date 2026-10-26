@@ -12,3 +12,12 @@ foreach i [get_cells -hierarchical *] {
 }
 if {[llength $fk_c]} { set_dont_touch $fk_c }
 puts "OT_FACE_KEEP dont_touch [llength $fk_c] boundary cells before eliminate_dead_logic"
+# S81/FTHOLD 10-25: the plan's ft input hold cells (u_ftd_<slot>, tools/die_plan/ft_hold.py) are dont_touch for the
+# WHOLE flow (face_keep_release.tcl does not match them): remove_buffers / repair_design / repair_timing must neither
+# delete nor resize the deterministic delay (it is budgeted in the kit SDC ft share).
+set fk_h {}
+foreach i [get_cells -hierarchical *] {
+  if {[regexp {(^|[/.])u_ftd_[^/.]*[/.]} [get_full_name $i]]} { lappend fk_h $i }
+}
+if {[llength $fk_h]} { set_dont_touch $fk_h }
+puts "OT_FACE_KEEP dont_touch [llength $fk_h] ft input hold cells (kept for the whole flow)"
