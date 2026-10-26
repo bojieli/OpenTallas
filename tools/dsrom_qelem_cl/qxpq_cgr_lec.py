@@ -146,11 +146,17 @@ def merge_enable_copies(m):
             if c["type"] in ("$adff", "$dff") and c["connections"].get("Q") == bits:
                 return cn, c
         sys.exit(f"merge-enables: no flop drives {net}")
-    zn, z = q_of("u_e.g_qz_cg.u_z.q")
+    alias = "u_e.g_qz_cg.u_z.q"
+    if alias in m["netnames"]:
+        zn, z = q_of(alias); rep = "u_e.g_qz_cg.u_z"; ks = range(8)
+    else:                               # CGR: u_z has no load (only simulation checks read it) and is gone after
+        zn, z = q_of("u_e.g_cgr.u_ze_r0.q")   # opt_clean; u_ze_r0 represents it, under u_z's name (matched to gold u_z)
+        m["netnames"][alias] = {"hide_name": 0, "bits": list(z["connections"]["Q"]), "attributes": {}}
+        rep = "u_e.g_cgr.u_ze_r0 (named u_e.g_qz_cg.u_z.q)"; ks = range(1, 8)
     key = lambda c: (c["type"], c["connections"]["CLK"], c["connections"].get("ARST"), c["connections"]["D"],
                      tuple(sorted(c["parameters"].items())))
     sub, done = {}, []
-    for k in range(8):
+    for k in ks:
         cn, c = q_of(f"u_e.g_cgr.u_ze_r{k}.q")
         if key(c) != key(z):
             sys.exit(f"merge-enables REFUSED: u_ze_r{k} differs from u_z: {key(c)} vs {key(z)}")
@@ -163,7 +169,7 @@ def merge_enable_copies(m):
     for pn, pp in m["ports"].items():
         if pp["direction"] == "output":
             pp["bits"] = [sub.get(b, b) for b in pp["bits"]]
-    return {"into": "u_e.g_qz_cg.u_z", "copies": done, "check": "type/CLK/ARST/D/params identical"}
+    return {"into": rep, "copies": done, "check": "type/CLK/ARST/D/params identical"}
 
 
 def newnot(m, cn, a, newbit):
