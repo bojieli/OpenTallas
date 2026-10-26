@@ -21,7 +21,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 ## DIE qwen_compute · Qwen compute · rev UNFROZEN 54a1aeb5 · PROTOTYPE of infra-first
 - [ ] QC.PATH CRITICAL PATH end to end (12.9b): 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> GRT0 -> skew gate -> die STA · INFRA-FIRST · RUNNING · dated ETA checklist in lanes/INFRA-FIRST.md
 - [ ] QC.INFRA One QC plan event: infra-first PG/clock/reset + batch 2 (STM ROMs, SRAM, DEAD-FAULT) + D-QC-FE-REACH stations (all FE variants) + COLLFTM-CTL + CB ID straps + SCROOT + vmr_s6kc · INFRA-FIRST + PATH-QC · RUNNING · PENDING-DELTA D-INFRA-FIRST-QC holds all 68 type routes
-- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · INFRA-FIRST · FAIL · partition-union regions 60/48 ideal islands, 232/208 real keepouts (CHECKED) -> needs in-core pushdown islands; die STA blocker = kit hold windows -> RULED 80 ps declared window (intra+seam) in QC plan event; ngspice mesh check OK (2-3 ps offset, UNCHECKED); SU cores FAIL (QC-SU-LAT-R4)
+- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · CLOCK-128-R4 + QC-SU-KITS · RUNNING · c4x4 die tree lattice ADOPTED (31 nodes/232 reps in channels, UNCHECKED); 80 ps kit window in gen (i6p bound PASS CHECKED, r6p FAIL -> in-core islands); SU cores: btab R6 cal TT 262.9 (CHECKED) routing to sign-off, window decided on RCX; vmr/rp1/prog re-predict on MODEL-REFIT + trunks; FT ports die-timed (flow-ft-sdc)
 - [ ] QC.SU 4 SU core types (72 inst) rebuilt with centre clock island + structured tree to 250+-20 · QC-SU-LAT-R2 · RUNNING · points vmr/rp1 (129.6,169.0), prog/btab (177.12,135.0) → IF.MASTER
 - [ ] QC.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · → QC.INFRA
 - [ ] QC.BIND Strict bind on the QC plan event (wavefront reset/START, CB16 phase classes) · PATH-QC · WAITS · → QC.INFRA
@@ -41,7 +41,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] KV.CLK Clock under 12.8 (skew 80 = target; gate = related-pair STA) · PATH-KV · RE-MEASURE · c3t 63.95/54.71 used stub trim (banned) → rebuild by construction, strict CPPR; NUMBER-CHECK → IF.CLK128
 - [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · RUNNING · die_infra reset 287 nets max hop 377um PASS; signal GRT50 M4-M9 w/ clock reservation ovf0; PG needs KV power figure (0.15 W/mm2 fallback) → IF.TOOL
 - [ ] KV.GRT GRT0 incl. clock on the batch · PATH-KV · PASS · batch 650841e1ef one global_route signals M4-M7 + mesh M8-M9: ovf 0 TT+FF; freeze waits KV.BIND + D-INFRA-FIRST PG/pre-route
-- [ ] KV.STA Die STA on real views · DIE-PROTO · WAITS · → KV.CLK, → KV.TILES
+- [ ] KV.STA Die STA on real views · PATH-KV · FAIL · TT setup +216.6 hold -334.1 (CHECKED; worst = reset seam hub_C->hgi_EN_7), FF rerun (report corrupted); classification of hold pairs running; shielded clock must be rebuilt on corrected PG model (PDN-ONE)
   - [ ] KV.TILES Tile sign-offs · PATH-KV / CORES-KITS · WAITS · ASTK strict LEC EQ + S2 GRT done (remeasure); PC833 fix in main; 3 head-eighth routes held on flow canary
 
 ## DIE s81 · S81 (DeepSeek ROM layer die) · rev main · B2 batch
