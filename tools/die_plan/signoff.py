@@ -33,6 +33,10 @@ CHECKS (each PASS / FAIL / NOT RUN; SIGNED only if every blocking check PASSes):
   drv           max transition and max capacitance violations = 0 at TT and FF (liberty limits; SS info)  blocking
   fanout        nets with fanout > FANOUT_MAX (64; ASAP7 liberty has no max_fanout)                        WARN only
   unconstrained check_setup -unconstrained_endpoints = 0, no unclocked registers, no loops                blocking
+                (12.2a1 kits: the declared die-timed ft outputs are listed as ft_die_timed, never counted as core IO)
+  ft_interface  (only kits with ft_ports.json, COORD 10-26 12:55) every declared ft arc characterised TT + FF into the
+                kit interface model ft_interface.json (port-to-port delay, clock = die clock pass-through, reset =
+                interface arc for die STA); no core IO overlay on the ft ports                                 blocking
   clock         per corner: active-edge clock arrival at every register clock pin (insertion min/mean/max) and
                 at the PIN FLOPS (registers whose D is in the fan-out of a data input or whose Q reaches a data
                 output); related flop-pair skew with CPPR <= 80 ps at TT and FF (owner decision 5); spread INFO; with
@@ -138,6 +142,8 @@ def discover(base, kit=None, sdc=None, record=None):
     d = dict(base=str(base), orfs=str(root) if root else None, design=design, kit=str(kit) if kit else None,
              odb=str(base / (routed_db(base) or "6_final.odb")), spef=None, sdc=None, sdc_source=None, synth=None, final_v=None,
              metrics={}, drc_rpt=None, pins=None, sdc_lint_ctx=None, record=str(record) if record else None)
+    if kit and (kit / "ft_ports.json").is_file():             # 12.2a1 die-timed ft declaration (key only when present)
+        d["ft_ports"] = str(kit / "ft_ports.json")
     if (base / "6_final.spef").is_file() and Path(d["odb"]).name == "6_final.odb":
         d["spef"] = str(base / "6_final.spef")
     if sdc:
@@ -705,8 +711,47 @@ exit
 """
 
 
+def ft_char_tcl(decl, env=None):
+    """12.2a1 declared ft arcs (COORD 10-26 12:55): characterise each port-to-port arc for the kit interface model
+    under the kit IO environment, AFTER every constrained check of the session (it changes none of them)."""
+    env = env or dict(driving_cell="BUFx4_ASAP7_75t_R", load_ff=2.0)
+    L = ["# ---- 12.2a1 declared ft arcs: interface-model characterisation (after all checks) ----"]
+    for a in decl["arcs"]:
+        L += [f"set_driving_cell -lib_cell {env['driving_cell']} -pin Y [get_ports {{{a['source']}}}]",
+              f"set_load {float(env['load_ff']):g} [get_ports {{{a['sink']}}}]"]
+    for a in decl["arcs"]:
+        s_, d_ = a["source"], a["sink"]
+        L.append(f"foreach so_ft_w {{min max}} {{ set so_ft_p [find_timing_paths -unconstrained -path_delay $so_ft_w "
+                 f"-from [get_ports {{{s_}}}] -to [get_ports {{{d_}}}]]; set so_ft_v($so_ft_w) [expr {{[llength $so_ft_p] "
+                 f"? [so_ps [get_property [lindex $so_ft_p 0] arrival]] : \"NA\"}}] }}")
+        L.append(f"puts \"SO_FT_ARC {s_} {d_} $so_ft_v(min) $so_ft_v(max)\"")
+    return "\n".join(L) + "\n"
+
+
+def ft_parse(text):
+    """SO_FT_ARC src sink min max -> {"src->sink": {min, max} | None}"""
+    r = {}
+    for m in re.finditer(r"^SO_FT_ARC (\S+) (\S+) (\S+) (\S+)\s*$", text, re.M):
+        try:
+            r[f"{m.group(1)}->{m.group(2)}"] = dict(min=float(m.group(3)), max=float(m.group(4)))
+        except ValueError:
+            r[f"{m.group(1)}->{m.group(2)}"] = None
+    return r
+
+
+def ft_fill_model(decl, model, corners):
+    """corner results -> the kit interface model's tt_ps / ff_ps {min, max} per declared arc."""
+    for a in model["arcs"]:
+        for c in ("tt", "ff"):
+            a[f"{c}_ps"] = ((corners.get(c) or {}).get("ft_arcs") or {}).get(f"{a['source']}->{a['sink']}")
+    ok = all(isinstance(a.get(k), dict) for a in model["arcs"] for k in ("tt_ps", "ff_ps"))
+    model["status"] = "characterised" if ok else "partial"
+    return model
+
+
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
-                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False):
+                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False,
+                ft_decl=None):
     """hold_in_min / hold_out_min: the kit's seam hold contract (sdc_lint.json hold_in_min_ps / hold_out_min_ps,
     CLOCK-RESET IO-HOLD 10-25); None = legacy overlay (min input -ins_tol, min output 0).  hold_in_min_ports
     {input port: ps}: IO-HOLD option A per-port min input delays (sdc_lint.json hold_in_min_ports_ps) applied after
@@ -731,6 +776,21 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
         t = SESSION_TCL.replace("@FF_VCLK@", FF_BOUND_TCL.replace("@FF_BOUND@", f"{float(ff_bound_ps):.6f}"))
     else:
         t = SESSION_TCL.replace("@FF_VCLK@", FF_VCLK_TCL if on else "")
+    if ft_decl:
+        # 12.2a1: the declared ft ports are die-timed -- the boundary-hold overlay never reaches them; the arcs are
+        # characterised for the interface model after all checks (no ft declaration: session text unchanged)
+        fi = " ".join(p["name"] for p in ft_decl["ports"] if p["direction"] == "INPUT")
+        fo = " ".join(p["name"] for p in ft_decl["ports"] if p["direction"] == "OUTPUT")
+        a_ = "foreach p [all_inputs] { if {[get_full_name $p] ni $so_ck_ports} { lappend so_din $p } }\n"
+        b_ = "  if {[llength [all_outputs]]} { set_output_delay -min @OUT_MIN@ -clock [lindex $so_vclk 0] [all_outputs] }\n"
+        if t.count(a_) != 1 or t.count(b_) != 1 or t.count("so DONE 1\n") != 1:
+            raise ValueError("signoff: session template anchors for the ft exclusion changed")
+        t = t.replace(a_, a_ + f"set so_ft_in {{{fi}}}; set so_ft_out {{{fo}}}\n"
+                          "set so_din [lmap p $so_din {if {[get_full_name $p] in $so_ft_in} continue; set p}]\n"
+                          "set so_dout [lmap p [all_outputs] {if {[get_full_name $p] in $so_ft_out} continue; set p}]\n"
+                          "so FT_DIE_TIMED in $so_ft_in out $so_ft_out\n")
+        t = t.replace(b_, "  if {[llength $so_dout]} { set_output_delay -min @OUT_MIN@ -clock [lindex $so_vclk 0] $so_dout }\n")
+        t = t.replace("so DONE 1\n", ft_char_tcl(ft_decl) + "so DONE 1\n")
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@TIMING_LIBRARIES@", EXACT_TIMING_LIBRARIES_TCL),
                  ("@CORE_TAPS_FF@", "read_sdc /sdc/core_taps_ff.sdc" if corner == "ff" and core_taps_ff else ""),
@@ -806,13 +866,24 @@ def stats(v):
                 spread=round(max(v) - min(v), 2))
 
 
-def check_setup_counts(text):
-    """counts from check_setup output."""
+def check_setup_counts(text, ft_out=()):
+    """counts from check_setup output.  ft_out: declared 12.2a1 die-timed ft outputs -- listed (verbose) unconstrained
+    endpoints among them are counted as ft_die_timed, not as unconstrained core IO."""
     c = dict(unconstrained=0, unclocked=0, loops=0, multiple_clock=0, generated=0)
-    for ln in text.splitlines():
+    lines = text.splitlines()
+    for i, ln in enumerate(lines):
         m = re.search(r"There (?:are|is) (\d+) unconstrained endpoints?", ln)
         if m:
             c["unconstrained"] = int(m.group(1))
+            if ft_out:
+                listed = []
+                for x in lines[i + 1:]:
+                    if not x.startswith((" ", "\t")) or not x.strip():
+                        break
+                    listed.append(x.strip())
+                ft = sorted(set(listed) & set(ft_out))
+                c["unconstrained"] -= len(ft)
+                c["ft_die_timed"] = len(ft)
         m = re.search(r"There (?:are|is) (\d+) register/latch pins? with no clock", ln)
         if m:
             c["unclocked"] = int(m.group(1))
@@ -847,7 +918,11 @@ def corner_result(parsed):
     out["fanout_max"] = _f(fo[0]) if fo else None
     out["fanout_worst_net"] = fo[1] if len(fo) > 1 else None
     out["fanout_viol"] = _f(kv.get("FANOUT_VIOL"))
-    out["check_setup"] = check_setup_counts(parsed["blocks"].get("CHECK_SETUP", ""))
+    ftd = (kv.get("FT_DIE_TIMED") or "").split()
+    ft_out = ftd[ftd.index("out") + 1:] if "out" in ftd else []
+    out["check_setup"] = check_setup_counts(parsed["blocks"].get("CHECK_SETUP", ""), ft_out)
+    if ftd:
+        out["ft_die_timed"] = " ".join(ftd)
     out["ck_errors"] = _f(kv.get("CK_ERRORS"))
     out["insertion_all"] = stats(allck)
     out["insertion_pinflops"] = stats(bnd)
@@ -901,7 +976,9 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     core_overlay = copy_core_tap_overlay(Path(disc["sdc"]), od / "sdcdir")
     ml_ctr = []
     lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text()) if disc.get("sdc_lint_ctx") else {}
+    ftd = json.loads(Path(disc["ft_ports"]).read_text()) if disc.get("ft_ports") else None
     (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name, ff_vclk=ff_vclk,
+                                                ft_decl=ftd,
                                                 ff_bound_ps=disc.get("ff_bound_ps"),
                                                 hold_in_min=lctx.get("hold_in_min_ps"),
                                                 hold_out_min=lctx.get("hold_out_min_ps"),
@@ -918,6 +995,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     res = corner_result(parse_session(text))
     res.update(corner=corner, rc=rc, macro_libs=mlibs, macro_missing=mmiss,
                errors=re.findall(r"\[ERROR[^\n]*", text)[:5])
+    if ftd:
+        res["ft_arcs"] = ft_parse(text)
     res["clock_endpoint_coverage"] = consumed_clock_model_coverage(od / "libraries.json", disc,
         res.get("clock_endpoint_masters"), res.get("clock_endpoint_mapping_errors"))
     (od / "corner.json").write_text(json.dumps(res, indent=1) + "\n")
@@ -965,6 +1044,10 @@ def run_sdc_lint(disc, ports):
                    clock_ports=ports["clock_ports"], inputs=ports["inputs"], outputs=ports["outputs"],
                    unc_setup_ps=UNC_SETUP_PS, unc_hold_ps=UNC_HOLD_PS, time_unit_ps=1.0)
         mode = "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)"
+    if disc.get("ft_ports"):                  # 12.2a1: the characterised kit interface model must carry every arc
+        ctx["ft_ports"] = json.loads(Path(disc["ft_ports"]).read_text())
+        ctx["ft_interface"] = disc.get("ft_interface_model")
+        ctx["ft_require_characterised"] = True
     try:
         err = sdc_lint.lint(text, **ctx)
     except Exception as e:                    # parser limits are a FAIL with the reason, never a pass
@@ -1228,7 +1311,13 @@ def evaluate(rec, insertion_target=None):
     put("antenna", "NOT RUN" if rc.get("antenna_nets") is None else ("PASS" if rc["antenna_nets"] == 0 else "FAIL"),
         count=rc.get("antenna_nets"), source=rc.get("antenna_source"))
     reasons = []
-    for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()):
+    fm = rec.get("ft_interface")
+    if fm is not None:                        # 12.2a1 declared ft arcs (only kits with ft_ports.json)
+        import sdc_lint
+        e = sdc_lint.ft_model_errors(fm.get("declaration") or {}, fm.get("model"), require_characterised=True)
+        put("ft_interface", "FAIL" if e else "PASS", errors=e[:10], model=fm.get("path"),
+            arcs=(fm.get("model") or {}).get("arcs"))
+    for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()):
         v = ch[k]["verdict"]
         if v != "PASS":
             reasons.append(f"{k}: {v}" + _detail(k, ch[k]))
@@ -1354,6 +1443,18 @@ def cmd_run(a):
         return 0
     ports = next((dict(clock_ports=x["clock_ports"], inputs=x["inputs"], outputs=x["outputs"])
                   for x in rec["corners"].values() if x.get("done")), None)
+    if disc.get("ft_ports"):
+        # 12.2a1 (COORD 10-26 12:55): characterised ft arcs -> the kit interface model (+ a copy with the record)
+        import sdc_lint
+        decl = json.loads(Path(disc["ft_ports"]).read_text())
+        mp = Path(disc["kit"]) / "ft_interface.json"
+        model = json.loads(mp.read_text()) if mp.is_file() else None
+        if model is not None and not sdc_lint.ft_model_errors(decl, model):
+            model = ft_fill_model(decl, model, rec["corners"])
+            mp.write_text(json.dumps(model, indent=1) + "\n")
+            (out / "ft_interface.json").write_text(json.dumps(model, indent=1) + "\n")
+        disc["ft_interface_model"] = model
+        rec["ft_interface"] = dict(declaration=decl, model=model, path=str(mp))
     rec["sdc_lint"] = run_sdc_lint(disc, ports) if ports else dict(verdict="NOT RUN", reason="no STA session finished")
     rec["face_guard"] = run_face_guard(disc, (ports or {}).get("clock_ports", ()))
     rec["route"] = route_counts(disc)
