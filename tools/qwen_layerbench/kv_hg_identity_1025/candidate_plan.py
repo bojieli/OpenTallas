@@ -55,9 +55,26 @@ def make(plan,cells):
  c['types']['kv3_hg_v1']['replicas']=[x['name']for x in p['partitions']if x['type']=='kv3_hg_v1']
  return p,c,dict(candidate_only=True,removed_types=removed,types_after=len(T),ports=len(changed),old_port_bits=sum(w for _,w in changed),new_port_bits=2*len(changed),added_registers=0,added_cycles=0,obligations=['strict bind/R8','startup identity arrival vs config readiness','bootcfg/fault contract','render and G0C before route'])
 
+# PLANDIR sidecars the die tools resolve next to the plan file (reset_tree.die_io_entries, die_ci): a relocated
+# candidate must carry them byte-identical, else the declared reset pad falls back to its bare name (b21 ERROR
+# 'pll.por_n driven by pad_por_n, expected io_pad_por_n', PATH-KV 2026-10-25 23:32).
+SIDECARS=('die_io.json',)
+
+def copy_sidecars(pin,out,p):
+ src=Path(pin).resolve().parent;copied=[]
+ for n in SIDECARS:
+  if (src/n).is_file():(out/n).write_bytes((src/n).read_bytes());copied.append(n)
+ pad=(p.get('reset',{}).get('source') or {}).get('pad')
+ if pad and not p.get('die',{}).get('io'):
+  io=json.loads((out/'die_io.json').read_text()) if (out/'die_io.json').is_file() else []
+  if not any(w.get('name')==pad for w in io):
+   raise SystemExit(f'declared reset pad {pad}: no die.io entry in the plan and no die_io.json sidecar next to {pin}')
+ return copied
+
 if __name__=='__main__':
  pin,cin,out=sys.argv[1:];out=Path(out)
  if out.exists():raise SystemExit('Refuse existing output directory')
  p,c,r=make(json.loads(Path(pin).read_text()),json.loads(Path(cin).read_text()));out.mkdir(parents=True)
+ r['sidecars']=copy_sidecars(pin,out,p)
  for n,d in [('plan.json',p),('plan_cells.json',c),('impact.json',r)]: (out/n).write_text(json.dumps(d,indent=1)+'\n')
  print(json.dumps(r))
