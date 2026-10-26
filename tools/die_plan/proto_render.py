@@ -78,11 +78,28 @@ def render(d, out=None):
             ax.scatter(xs, ys, s=s, c=col, marker=".", linewidths=0, label=f"{k} {len(pts[k])}")
     for n, x, y in taps:
         ax.scatter([x], [y], s=40, c="red", marker="*", zorder=5)
+    # repeater islands (gap_repeaters.tsv: final site) and INTERNAL max-slew/cap violators (drv_class.tsv)
+    if (d / "gap_repeaters.tsv").exists():
+        isl = [ln.split("\t") for ln in (d / "gap_repeaters.tsv").read_text().splitlines()[1:]]
+        if isl:
+            ax.scatter([float(r[8]) for r in isl], [float(r[9]) for r in isl], s=1.5, c="#7b3294", marker=".",
+                       linewidths=0, label=f"island rep {len(isl)}", zorder=4)
+    n_int = None
+    if (d / "drv_class.tsv").exists() and (d / "insts.tsv").exists():
+        bad = {ln.split("\t")[1].split("/")[0] for ln in (d / "drv_class.tsv").read_text().splitlines()[1:]
+               if ln.endswith("\tinternal")}
+        n_int = len(bad)
+        loc = {p[0]: (float(p[2]), float(p[3])) for p in
+               (ln.split("\t") for ln in (d / "insts.tsv").read_text().splitlines()) if p[0] in bad}
+        if loc:
+            xs, ys = zip(*loc.values())
+            ax.scatter(xs, ys, s=18, c="magenta", marker="x", linewidths=0.8, label=f"internal DRV {len(loc)}", zorder=6)
     s = meta.get("sta", {})
     cl = meta.get("classify", {})
     ax.set_title(f"{'PLANNED SITES | ' if planned else ''}{meta['die']} {meta['type']} {w:.0f}x{h:.0f} um | GRT ov {meta.get('total_overflow')} "
                  f"({meta.get('hot_gcells', 0)} gc) | TT setup {s.get('tt_setup_wns')} / FF hold "
-                 f"{s.get('ff_hold_wns')} ps | {cl.get('cls', '')}", fontsize=8)
+                 f"{s.get('ff_hold_wns')} ps | {cl.get('cls', '')}"
+                 + (f" | internal DRV {n_int}" if n_int is not None else ""), fontsize=8)
     ax.set_xlim(-0.02 * w, 1.02 * w)
     ax.set_ylim(-0.02 * h, 1.02 * h)
     ax.set_aspect("equal")

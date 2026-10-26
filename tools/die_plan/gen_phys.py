@@ -155,12 +155,16 @@ def core_tap_pins(P, tn):
     return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
 
 
-def core_tap_rows(P, tn):
+def core_tap_rows(P, tn, corner="TT"):
     """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
     `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin."""
     insts = [c["inst"] for c in P.types[tn].get("hard_cores", []) or []]
     out = []
     for n, _, _, tp in S.core_taps(P, tn):
+        if "core_group" in tp:
+            out.extend((n, m["inst"], m["pin"], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner))
+                       for m in tp["core_group"]["members"])
+            continue
         nm = tp["name"]
         hit = None
         for i in sorted(insts, key=len, reverse=True):
@@ -172,8 +176,22 @@ def core_tap_rows(P, tn):
                 break
         if not hit:
             raise ValueError(f"type {tn}: core tap {nm} names no hard_cores[] inst")
-        out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp), float(tp.get("insertion_ps", 0.0))))
+        out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
     return out
+
+
+
+def core_tap_ff_sdc(P, tn):
+    """Corner overlay for dedicated core taps; the golden SDC retains its TT basis."""
+    seen = set()
+    lines = []
+    for n, inst, pin, early, ins in core_tap_rows(P, tn, "FF"):
+        if n in seen:
+            continue
+        seen.add(n)
+        lines.append(f"# CP2 FF core tap {n} ({inst}/{pin}: internal {ins:g} ps)\n"
+                     f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
+    return "".join(lines)
 
 
 def edge_clock_pins(P, tn):
@@ -360,8 +378,10 @@ def input_hold_min(P, tn):
         if pr["dst"]["part"] in insts:
             drv.setdefault((pr["dst"]["part"], pr["dst"]["bus"]), []).append((pid, pr))
     t = P.types[tn]
-    in_buses = [b["name"] for b in t.get("buses", []) if b["dir"] == "in"]
-    in_buses += [s["name"] + "_i" for s in t.get("ft_slots", [])]
+    # vector inputs only (COORD 15:23 / GEOM-REVIEW-2 15:54 (b)): 1-bit scalars (slot / valid / strobe controls) keep the
+    # fallback contract, as rst and the strap_* ID pins (not plan buses) do
+    in_buses = [b["name"] for b in t.get("buses", []) if b["dir"] == "in" and int(b.get("width", 2)) > 1]
+    in_buses += [s["name"] + "_i" for s in t.get("ft_slots", []) if int(s.get("width", 2)) > 1]
     out = {}
     for bus in in_buses:
         vals, why = [], None
@@ -548,7 +568,13 @@ def sdc(P, tn, pins):
            "set non_clk_in [all_inputs -no_clocks]\n"
            f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
+    source_ports = set()
+    if core_tap_rows(P, tn):
+        out += "# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc\n"
     for n, inst, pin, early, ins in core_tap_rows(P, tn):
+        if n in source_ports:
+            continue
+        source_ports.add(n)
         out += (f"# CP2 early core tap {n} ({inst}/{pin}: internal {ins:g} ps): the spine delivers it {early:g} ps early\n"
                 f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
     if slots:
@@ -682,6 +708,8 @@ def _corner_libs(mlib, kd, corner):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True):
     t = P.types[tn]
+    import core_clock_groups as CG
+    grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
     ib = insertion_binding(P, tn)
     w, h = t["outline_um"]
     macros = type_macros(P, tn)
@@ -757,6 +785,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
+    if core_tap_rows(P, tn):
+        (kd / "core_taps_ff.sdc").write_text(core_tap_ff_sdc(P, tn))
     ioh = io_hold_tcl(P, tn)            # IO-HOLD option A: per-port min input delays for the hold_gate / sign-off overlays
     if ioh:
         (kd / "io_hold.tcl").write_text(ioh)
@@ -766,7 +796,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if RT.pipelined(P) or RT.wavefront(P):
         leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n"
                       "source /work/reset_taps.tcl\nunset rt_postplace\n")
-    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check)
+    group_hook = ""
+    if grouped["groups"]:
+        (kd / "core_clock_groups.json").write_text(json.dumps(grouped, indent=1) + "\n")
+        (kd / "core_clock_groups_apply.tcl").write_text(CG.tcl_text(grouped))
+        shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/core_clock_groups.tcl",
+                        kd / "core_clock_groups.tcl")
+        group_hook = "\nsource /work/core_clock_groups_apply.tcl\n"
+    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
@@ -945,6 +982,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
     from ft_bit_sites import table as ft_bit_sites_table
     (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(t.get("ft_slots", [])))
+    ff_core_taps = {r[0]: r for r in core_tap_rows(P, tn, "FF")}
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
                signal_max=top,
@@ -961,7 +999,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                 for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
                           taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
-                          core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins)
+                          core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins,
+                                          early_ff_ps=ff_core_taps[n][3], insertion_ff_ps=ff_core_taps[n][4])
                                      for n, i, p_, e, ins in clat["taps"]],
                           uncertainty_split=UNC_SPLIT),
                core_latency=clat["rows"],
@@ -985,11 +1024,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
-    shutil.copyfile(Path(__file__).with_name("signoff.py"), kd / "signoff.py")
-    if ioh:  # option-A only: legacy generated kit inventory is unchanged
-        shutil.copyfile(Path(__file__).with_name("io_hold_qualification.py"), kd / "io_hold_qualification.py")
-    shutil.copyfile(Path(__file__).with_name("pair_skew.tcl"), kd / "pair_skew.tcl")
-    shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
+    from signoff import copy_signoff_bundle
+    copy_signoff_bundle(kd)
+    # CRASH-TRIAGE 10-25: 6_report PDNSim IR is deferred out of the route container (partition_ir.py patch +
+    # OT_DEFER_PARTITION_IR=1 in run_kit.sh).  10 autopilot CRASH rows (kv3_io_ft/_v1 x8, coll_ftm x2) were killed
+    # at the memory cap (25/33/50 GB at --mem 24/32/48) inside analyze_power_grid AFTER 6_final.odb/.spef existed.
+    # IR stays NOT_RUN for the kit; partition_ir.py sidecar KIT --mem-gb 64 runs it as its own admitted job.
+    shutil.copyfile(Path(__file__).with_name("partition_ir.py"), kd / "partition_ir.py")
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
     # pins.json is the data-face contract; include timed control/clock interior
@@ -1004,6 +1045,8 @@ RUN_KIT = r"""#!/bin/bash
 # GENERATED by gen.py phys. Pre-floorplan gates fail closed. CTS is measured at
 # FF before hold repair; structural failures return before global/detail route.
 # Heavy: run_kit.sh KITDIR [GOAL=route] [MEM_GB=16] [CPUS=8] through ot-run.
+# Kit IR (CRASH-TRIAGE 10-25): 6_report PDNSim is deferred (partition_ir.py; IR NOT_RUN in the kit, run it with
+# partition_ir.py sidecar KIT --mem-gb 64 --threads 8).  OT_KIT_IR=inline restores the in-route analysis.
 # LEC (10-24): lec.py proves the Yosys netlist equivalent to the kit RTL read with the OTHER HDL frontend, right after
 # face_guard: NOT EQUIVALENT stops the kit before floorplan; UNPROVEN / tool error is a warning in lec/lec.json.
 # Gate exit codes (classify by the FAIL_PREFLOOR / FAIL_POSTCTS marker text): 3 selrange, 4 FF structural hold gate,
@@ -1019,8 +1062,9 @@ for f in rtl_lint.json sdc_lint.json selrange.json port_bind.json face_guard.jso
   if [ -f "$K/$f" ]; then mkdir -p "$HISTORY"; cp -p "$K/$f" "$HISTORY/$f"; fi
 done
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
-  -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+  -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
+  if [ -f /work/partition_ir.py ] && [ \"\$OT_KIT_IR\" = defer ]; then python3 -I /work/partition_ir.py patch /OpenROAD-flow-scripts/flow/scripts && export OT_DEFER_PARTITION_IR=1 || echo 'PARTITION_IR WARNING: patch refused, kit IR runs inline in 6_report'; fi; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/rtl_lint.py /work; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \\\

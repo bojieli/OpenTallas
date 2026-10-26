@@ -326,6 +326,29 @@ def decode_cmd(c):
 
 
 # ------------------------------------------------------------------------------------------------ the lowering
+def memory_profile():
+    """The exact memory switches passed to the calibration RTL build."""
+    defines = set()
+    for flag in os.environ.get('DV_LOWER_VFLAGS', '').split():
+        if flag.startswith('+define+'):
+            defines.update(part.split('=', 1)[0] for part in flag[len('+define+'):].split('+'))
+        elif flag.startswith('-D'):
+            defines.add(flag[2:].split('=', 1)[0])
+    return dict(sram_if_mif=int('OT_QC_SRAM_MIF' in defines),
+                relative_memory_alignment=3 if 'OT_S8_CROM_ALIGN' in defines else 0)
+
+
+def check_memory_profile(ages, path, expected=None):
+    expected = memory_profile() if expected is None else expected
+    measured = ages.get('memory_profile')
+    # Historic untagged ages remain usable only for their unchanged legacy RTL.
+    if measured is None and expected == dict(sram_if_mif=0, relative_memory_alignment=0):
+        return
+    if measured != expected:
+        raise LowerError(f'{path}: measured memory_profile {measured} does not match RTL {expected}; '
+                         'calibrate this exact memory profile before compiling')
+
+
 def load_ages(path=AGES):
     p = ROOT / path
     if not p.exists():
@@ -334,6 +357,7 @@ def load_ages(path=AGES):
     for k in ('ssq_psum_out', 'root_cfg_lead'):
         if k not in a:
             raise LowerError(f'{path}: no {k}')
+    check_memory_profile(a, path)
     return a
 
 

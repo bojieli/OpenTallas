@@ -8,7 +8,7 @@
 // fault). Fix: the SU start is relayed 3 edges (wf_st) behind the PROG read request so the closed su8 accepts the word on
 // the edge it lands; su8_rst3 and vm8q_rp1 are untouched. Price: SU command latency +3 edges (su_cmd -> SU start -> every
 // SU output), carried by the compiler's calibrated SU ages (ssq_psum_out etc.); no other timing changes.
-module qfd_dv_s8_suvm_rp1 #(parameter integer HARD = 1, parameter integer MUT = 0) (
+module qfd_dv_s8_suvm_rp1 #(parameter integer HARD = 1, parameter integer MUT = 0, parameter integer MIF = 0) (
     input  wire           ck,
     input  wire           rst_n,
     input  wire [9:0]     su_cmd,         // {c_su, p_idx 9}
@@ -56,7 +56,7 @@ module qfd_dv_s8_suvm_rp1 #(parameter integer HARD = 1, parameter integer MUT = 
     assign gb={su_gb,bs_group};
     wire f_va,f_vb,f_vc,f_crl,f_crh,f_bt;
     assign vm_fault=f_va|f_vb|f_vc|f_crl|f_crh|f_bt;
-    qfd_dv_s8_vm8q_rp1 u_vm8q(.ck(ck),.rst_n(rst_n),
+    qfd_dv_s8_vm8q_rp1 #(.MIF(MIF)) u_vm8q(.ck(ck),.rst_n(rst_n),
         .a_re(va_re),.b_re(vb_re),.c_re(vc_re),.a_addr(va_addr),.b_addr(vb_addr),.c_addr(vc_addr),
         .a_q(va_q),.b_q(vb_q),.c_q(vc_q),.cr_re(cr_re),.cr_addr(cr_addr),.cr_q(cr_q),
         .bs_re(l_wrom_re[0]),.bs_addr(l_wrom_addr[23:0]),.bs_q(bs_q),
@@ -69,8 +69,8 @@ module qfd_dv_s8_suvm_rp1 #(parameter integer HARD = 1, parameter integer MUT = 
     // CLOSED 422d006e2 child, exact MUT0 interface. Start and program request come from the SAME landed su_cmd
     // edge; the start is relayed 3 edges (word-fetch start wf_st, reset like the su_cmd source) so it meets the PROG word
     // (S8-SU-PROG-ALIGN): su8 accept edge == p_q landing edge.
-    reg [2:0] wf_st; always @(posedge ck or negedge rst_n) if (!rst_n) wf_st <= 0; else wf_st <= {wf_st, su_cmd[9]};
-    qfd_dv_s5_su8_rst3 u_su8(.ck(ck),.rst_n(rst_n),.start(wf_st[2]),.si(si),
+    reg [2+MIF:0] wf_st; always @(posedge ck or negedge rst_n) if (!rst_n) wf_st <= 0; else wf_st <= {wf_st, su_cmd[9]};
+    qfd_dv_s5_su8_rst3 u_su8(.ck(ck),.rst_n(rst_n),.start(wf_st[2+MIF]),.si(si),
         .l_retire(l_retire[0]),.l_last(l_last[0]),.l_fault(l_fault),.kv_we(kv_we),
         .rd_v(rd_v),.red_busy(red_busy),.red_fault(red_fault),.lvm_we(lvm_we),
         .gb(su_gb),.gv(gv),.lv1(lv1),.pd1(pd1),.su_nr(su_nr),.su_idle(su_idle),

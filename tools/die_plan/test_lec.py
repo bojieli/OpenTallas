@@ -764,3 +764,93 @@ def test_gate_side_cohort_representative_not_constant_differs(tmp_path, monkeypa
     lec.correspond(L, tmp_path, 100, [])
     m, _ = L.build(with_compare=True, with_hyp=True)
     assert _sim_prove(m)["ff:u_dut.oA"] == "differs"
+def test_structural_cross_side_alias_and_wrong_enable(tmp_path):
+    for mutant in (False, True):
+        g, gm = _seq(tmp_path, 'alias_gold', ['d','wrong'], ['wce_n','out'],
+                     lambda m,x: {'wce_n':x['d'],'out':x['wce_n']})
+        t, tm = _seq(tmp_path, 'alias_gate', ['d','wrong'], ['wce3','out'],
+                     lambda m,x: {'wce3':x['wrong'] if mutant else x['d'],'out':x['wce3']})
+        L = lec.Lec(g,gm,t,tm)
+        n = lec.structural_twin_closure(L,[])
+        assert n == (0 if mutant else 1)
+        m,_ = L.build(with_compare=True,with_hyp=True)
+        assert ('differs' in _sim_prove(m).values()) == mutant
+
+
+def test_kept_wire_alias_copies_preserve_distinct_flops(tmp_path):
+    keep=tmp_path/'gold.keep'
+    keep.write_text("lec_top/u_dut.copy0"+chr(10)+"lec_top/u_dut.copy1"+chr(10))
+    alias=keep.with_suffix('.aliases.json')
+    for count in (1,2):
+        g,gm=_seq(tmp_path,'wiregold',['d'],['copy0','copy1'],
+                  lambda m,x:{'copy0':x['d'],'copy1':x['d']})
+        t,tm=_seq(tmp_path,'wiregate',['d'],['port'+str(i) for i in range(count)],
+                  lambda m,x:{'port'+str(i):x['d'] for i in range(count)})
+        L=lec.Lec(g,gm,t,tm)
+        # Each kept copy's Q also drives an output alias. Neither spelling is
+        # used as the gold AIG key; the mapped gate uses the output spelling.
+        alias.write_text(json.dumps({'modules':{lec.WRAP:{'netnames':{
+            'u_dut.copy0':{'bits':[10]},'u_dut.port0':{'bits':[10]},
+            'u_dut.copy1':{'bits':[11]},'u_dut.port1':{'bits':[11]}}}}}))
+        assert bool(lec.kept_registers(L,keep)[1]) == (count<2)
+        if count==2:
+            # Corrupt alias wiring must not re-use port0 for both copies.
+            d=json.loads(alias.read_text());d['modules'][lec.WRAP]['netnames']['u_dut.copy1']['bits']=[10]
+            alias.write_text(json.dumps(d))
+            assert lec.kept_registers(L,keep)[1]
+    alias.unlink()
+    assert lec.kept_registers(L,keep)[1]
+
+
+def test_gold_records_kept_wire_aliases():
+    s=lec.gold_script({'VERILOG_FILES':'a.v','DESIGN_NAME':'t'},'/k','verilog',[],'s.v','w.v','f.v','/o/gold')
+    assert 'write_json /o/gold.aliases.json' in s
+    assert s.index('write_json') < s.index('memory -nomap')
+
+
+def test_matched_rep_can_be_a_proved_constant(tmp_path,monkeypatch):
+    monkeypatch.setattr(lec,'prove',_exact_prove)
+    for bad in (False,True):
+        def zero(m,x):
+            return m.AND(m.AND(x['a'],x['b']),x['a']^1)
+        g,gm=_seq(tmp_path,'rep_gold',['a','b'],['rep','copy','u','out'],
+                  lambda m,x:{'rep':zero(m,x),'copy':zero(m,x),'u':zero(m,x),'out':x['u']})
+        t,tm=_seq(tmp_path,'rep_gate',['a','b'],['rep','copy','out'],
+                  lambda m,x:{'rep':zero(m,x),'copy':zero(m,x),'out':x['a'] if bad else 0})
+        L=lec.Lec(g,gm,t,tm)
+        L.hyp['both','ff:u_dut.copy']=('eq','gold','ff:u_dut.rep',0)
+        L.hyp['gold','ff:u_dut.u']=('eq','gold','ff:u_dut.rep',0)
+        o=tmp_path/('bad' if bad else 'good');o.mkdir()
+        lec.correspond(L,o,1000,[],rounds=2,sim_iters=1,words=1)
+        m,_=L.build(with_compare=True,with_hyp=True)
+        st=_exact_prove(m)
+        assert ('differs' in st.values()) == bad
+        assert L.hyp.get(('both','ff:u_dut.rep'))==('const',0)
+
+
+def test_constant_alias_chain_does_not_waive_a_live_or_cyclic_copy(tmp_path):
+    g,gm=_seq(tmp_path,'aliasconst_gold',['d'],['a','b','live'],
+              lambda m,x:{'a':1,'b':x['a'],'live':x['d']})
+    t,tm=_seq(tmp_path,'aliasconst_gate',['d'],['live'],lambda m,x:{'live':x['d']})
+    L=lec.Lec(g,gm,t,tm)
+    L.hyp['gold','ff:u_dut.a']=('const',1)
+    L.hyp['gold','ff:u_dut.b']=('eq','gold','ff:u_dut.a',0)
+    assert lec.proved_state_constant(L,'gold','ff:u_dut.b')==1
+    L.hyp['gold','ff:u_dut.a']=('eq','gold','ff:u_dut.live',0)
+    assert lec.proved_state_constant(L,'gold','ff:u_dut.b') is None
+    L.hyp['gold','ff:u_dut.a']=('eq','gold','ff:u_dut.b',0)
+    assert lec.proved_state_constant(L,'gold','ff:u_dut.b') is None
+
+def test_exact_twin_uses_an_already_paired_gold_root(tmp_path):
+    for bad in (False,True):
+        g,gm=_seq(tmp_path,'pairedgold',['d','wrong'],['root','copy','out'],
+                  lambda m,x:{'root':x['d'],'copy':x['d'],'out':x['copy']})
+        t,tm=_seq(tmp_path,'pairedgate',['d','wrong'],['alias','out'],
+                  lambda m,x:{'alias':x['d'],'out':x['wrong'] if bad else x['alias']})
+        L=lec.Lec(g,gm,t,tm)
+        L.hyp['gate','ff:u_dut.alias']=('eq','gold','ff:u_dut.root',0)
+        assert lec.structural_twin_closure(L,[])==1
+        assert ('gold','ff:u_dut.root') not in L.hyp
+        assert L.hyp['gold','ff:u_dut.copy']==('eq','gold','ff:u_dut.root',0)
+        m,_=L.build(with_compare=True,with_hyp=True)
+        assert ('differs' in _exact_prove(m).values())==bad

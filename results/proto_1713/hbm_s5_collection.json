@@ -1,0 +1,116 @@
+{
+  "status": "GRT_FINISHED_CONGESTED",
+  "overflow": 1424285,
+  "layers": {
+    "M4": 52931,
+    "M5": 0,
+    "M6": 546394,
+    "M7": 824960
+  },
+  "warnings_underflow": 0,
+  "hot_cells": 10015,
+  "zero_capacity_hot_cells": 8451,
+  "top_net_families_by_hotcell_mentions": [
+    [
+      "ft_root__L4x1",
+      8514
+    ],
+    [
+      "ft_root__L4mx1",
+      7284
+    ],
+    [
+      "ft_root__L96mx1",
+      206
+    ],
+    [
+      "ft_root__L96x1",
+      66
+    ],
+    [
+      "ft_root__L150x2",
+      34
+    ],
+    [
+      "ft_NW_b112__L150x3",
+      29
+    ],
+    [
+      "ft_NW_b112__L150x1",
+      24
+    ],
+    [
+      "ft_root__L9x1",
+      19
+    ],
+    [
+      "ft_root__L150mx2",
+      13
+    ],
+    [
+      "ft_root__L63x1",
+      8
+    ],
+    [
+      "ft_NE_su01__L55x1",
+      6
+    ],
+    [
+      "ft_NE_b000__L36x1",
+      6
+    ]
+  ],
+  "top_partitions_by_congestion_mentions": [
+    [
+      "ft_root",
+      65357
+    ],
+    [
+      "ft_NW_b112",
+      93
+    ],
+    [
+      "ft_NE_b000",
+      8
+    ],
+    [
+      "ft_NE_su01",
+      8
+    ],
+    [
+      "ft_NE_b002",
+      8
+    ],
+    [
+      "ft_NW_b011",
+      7
+    ],
+    [
+      "ft_NW_su10",
+      3
+    ],
+    [
+      "rst_n",
+      3
+    ],
+    [
+      "ft_NE_su10",
+      2
+    ],
+    [
+      "ft_NW_b002",
+      2
+    ],
+    [
+      "ft_NW_b001",
+      1
+    ]
+  ],
+  "runtime_s": 605.52,
+  "peak_rss_kb": 9260680,
+  "routed_nets": 308707,
+  "wirelength_um": 409298896,
+  "plan_sha256": "5b2ac99e1ee3a63fc80e654eb853f0e04da8a98fa6248eea9257e247b3fc3f0b",
+  "report_api_failure": "OT_NO_LAYER_WL report_layer_wire_lengths requires global_route detailed_route args",
+  "reach": "No actual-site per-bit reach result in this inherited kit; prior plan even-spread proxy is not G2 physical proof"
+}

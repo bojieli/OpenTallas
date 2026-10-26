@@ -8,7 +8,7 @@ ONE flow, run twice: on the AS-BUILT depths (rtl6 GEN die e33504a6f: relay_stage
 BOUND depths (BINDER2 kv35 bus_groups landing members: sink leaf.port <- source leaf.port, asbuilt_stages, landed_stages).
 Every bound value = as-built value + lane-depth delta of the mapped crossing (D_bound - D_asbuilt of the SAME bus_groups
 members); where the as-built table value equals the bus_groups as-built full-path count the bound value is the landed depth
-itself.  A path with no crossing member is intra-partition -> unchanged.  Every mapping is listed in depth_map.json.
+itself.  A path with no crossing or explicit changed INNER member is unchanged.  Every mapping is listed in depth_map.json.
 
 Generators (unchanged, imported): kv_static_params.schedule (vport RT/DQ/W, pv RL/FIRST_INPUT_AGE, attn PV_LEAD/F_DLY,
 ECTL RESPONSE_LAT), kv_bootage.image_ages (19 boot age words), kv_static_ages.derive (k_issuer / ectla / qk ages: K_RT
@@ -33,7 +33,7 @@ KVS13L4 = ROOT / 'results/arch/qwen_kv_static_programme_1017/kvs13l4_plan_ages_s
 
 # ---------------------------------------------------------------------------------------------------------------- depths
 class Groups:
-    """bus_groups landing members indexed by sink leaf"""
+    """Crossing and explicit changed INNER timing members indexed by sink leaf"""
     def __init__(self, path):
         g = json.load(gzip.open(path)) if str(path).endswith('.gz') else json.load(open(path))
         self.by_sink = {}
@@ -43,13 +43,32 @@ class Groups:
                 self.by_sink.setdefault(x['sink'], []).append(dict(sink=x['sink'], sink_port=m['sink_port'], src=sl, src_port=sp,
                                                                    asb=m['asbuilt_stages'], bnd=m['landed_stages'], lane=m['lane']))
 
+        self.inner = {}
+        self.inner_consumed = set()
+        for m in g.get('internal', []):
+            if m.get('kind') != 'intra':
+                raise ValueError('internal timing member must be an intra edge')
+            sl, sp = m['source'].rsplit('.', 1)
+            row = dict(sink=m['sink'], sink_port=m['sink_port'], src=sl, src_port=sp,
+                       asb=m['asbuilt_stages'], bnd=m['landed_stages'], lane=m['lane'], inner_id=m['id'])
+            if row['inner_id'] in self.inner:
+                raise ValueError('duplicate internal timing edge')
+            self.inner[row['inner_id']] = row
+            self.by_sink.setdefault(row['sink'], []).append(row)
+
     def find(self, sink_re, port_re, src_re, src_port_re='.*'):
         out = []
         for s, ms in self.by_sink.items():
             if re.fullmatch(sink_re, s):
                 out += [m for m in ms if re.fullmatch(port_re, m['sink_port']) and re.fullmatch(src_re, m['src'])
                         and re.fullmatch(src_port_re, m['src_port'])]
+        self.inner_consumed.update(m['inner_id'] for m in out if 'inner_id' in m)
         return out
+
+    def require_inner_priced(self):
+        missing = sorted(k for k, m in self.inner.items() if m['asb'] != m['bnd'] and k not in self.inner_consumed)
+        if missing:
+            raise ValueError(f'Unpriced changed INNER edges: {missing[:12]}')
 
 
 def bound_value(asb_value, members, key):
@@ -187,6 +206,7 @@ def prep(a):
         P_bnd[k], r = bound_value(v, path_members(G, k), k)
         prow.append(r)
     rs_bnd, rrow = overlay_relay_stages(rs, G)
+    G.require_inner_priced()
     (out / 'relay_stages_asbuilt.json').write_text(json.dumps(rs) + '\n')
     (out / 'relay_stages_bound.json').write_text(json.dumps(rs_bnd) + '\n')
     rec = dict(schema='opentallas.kv_p6_boot.depth_map.v1', inputs=dict(relay_stages=str(a.rs), static_model=str(a.model),
@@ -195,6 +215,7 @@ def prep(a):
                             paths_delta=[r['key'] for r in prow if r['cls'].startswith('DELTA')],
                             relay_buses_total=len(rs['buses']), relay_buses_mapped=len(rrow),
                             relay_buses_delta=[r['key'] for r in rrow if r['cls'].startswith('DELTA')]))
+    if G.inner:rec['internal_timing']=dict(changed_edges=len(G.inner), priced=sorted(G.inner_consumed))
     (out / 'depth_map.json').write_text(json.dumps(rec, indent=1) + '\n')
     # V port DQ bound 15 (qkd_pv16_vport_b): a port whose DQ = RL - (4 + W + RT) exceeds it gets (DQ - 15) pad stages on its
     # W request lane (pvw ctl req_t/req_valid -> vport pr_t/pr_valid, 15 b); RL (= the longest port) is unchanged
@@ -230,9 +251,20 @@ def prep(a):
     print(json.dumps(res, indent=1))
 
 
+def native_die_config(path):
+    """Current native ABI: 32 ECTL + 43 reset + capability + 19 ages + seal, all from the real die producer."""
+    from tools.qwen_kv_die.kv_static_kvjf_join import DIE_CFG_SEAL
+    words=[int(w,16) for w in Path(path).read_text().split()]
+    if len(words)!=96 or any(not 0<=w<(1<<64) for w in words):
+        raise ValueError('native DIECFG image must contain 96 uint64 words (NRST43, CAP1, AGES1)')
+    if any(w >= (1<<15) for w in words[:32]) or any(w>=256 for w in words[32:75]) or words[75] not in (0,1) or any(w>=(1<<32) for w in words[76:95]) or words[95]!=DIE_CFG_SEAL:
+        raise ValueError('native DIECFG ECTL/reset/capability/seal fields do not match the source ABI')
+    return words
+
+
 def compile_(a):
     from tools.qwen_kv_die import kv_static_programme as P
-    P.MU = False          # --no-mu: kv_frame_search fails on main for every setting (KV-PROG17 blocker 3), as KDIE5-RTL2
+    P.MU = bool(P.LINK_MU if a.mu is None else a.mu)     # Native MU1 RTL requires the compiler's real 471-word MU layer image.
     P.AGES = str(Path(a.ages).resolve())   # priced_template (write) reads the SAME ages file the compile used
     ages = json.loads(Path(a.ages).read_text())
     if a.qk is not None:
@@ -240,7 +272,22 @@ def compile_(a):
     os.environ['OT_KV_EMB_FILL_RELAYS'] = str(a.rs)
     os.environ['OT_KV_WRITER_DIE'] = '1'
     pr = P.profile('die', ages)
-    r = P.compile_all(pr, 0x0b0b)
+    die_cfg = native_die_config(a.die_config) if a.die_config else None
+    if a.native_contract:
+        if a.die_config or a.capability is None:
+            raise ValueError('native contract requires explicit --capability and no separate --die-config')
+        contract=json.loads(Path(a.native_contract).read_text())
+        if contract.get('abi') != dict(NRST=43,CAP=1,AGES=1) or contract.get('required_target10_words')!=96:
+            raise ValueError('native source contract does not match NRST43/CAP1/AGES1')
+        from tools.qwen_kv_die.kv_static_kvjf_join import die_cfg_image
+        ages_image=boot_words(ages['schedule'],ages['qk']['QK_ISSUE_AGE'])
+        if ages_image['error']:raise ValueError(f'current compiler boot ages do not fit: {ages_image["error"]}')
+        die_cfg=die_cfg_image(contract['ectl_a'],contract['ectl_b'],contract['ectl_c'],contract['reset_words'],a.capability,ages=ages_image['words'])
+        if len(die_cfg)!=96:raise ValueError('native producer returned a different target10 ABI')
+    r = P.compile_all(pr, 0x0b0b, die_cfg_words=die_cfg, die_cfg_ages=die_cfg is not None)
+    image_words={im['target']:len(im['program'])+len(im['descriptors']) for im in r['images']}
+    if image_words.get(1)!=(471 if P.MU else 327):raise ValueError('compiled layer image does not match requested MU ABI')
+    if die_cfg is not None and image_words.get(10)!=96:raise ValueError('compiled native bundle dropped DIECFG target 10')
     rep = P.write(r, Path(a.out))
     keep = dict(status=rep['status'], profile={k: pr[k] for k in ('start_relays', 'att', 'rx', 'writer', 'kvn', 'groups', 'qk_age',
                                                                   'qk_row_latency', 'v_rl', 'd_rl', 'd_qk', 'f_dly')},
@@ -256,7 +303,8 @@ def compile_(a):
                 es_cfg=dict(relay=r['es_cfg']['relay'], return_relay=r['es_cfg']['return_relay']),
                 link_cfg_check=r['link_cfg']['check'], images={str(im['target']): len(im['program']) + len(im['descriptors'])
                                                                  for im in r['images']},
-                link_image=P.LINK_IMAGE, mu_images='skipped (--no-mu)')
+                link_image=P.LINK_IMAGE, mu_images='compiled MU target1/3' if P.MU else 'skipped (--no-mu)',
+                native_die_config_words=0 if die_cfg is None else len(die_cfg))
     (Path(a.out) / 'kv_p6_summary.json').write_text(json.dumps(keep, indent=1, default=str) + '\n')
     print(json.dumps(dict(status=keep['status'], profile=keep['profile'], writer_die=dict(kvn=r['writer_die']['kvn_relays']),
                           emb_fill={k: r['emb_fill'][k] for k in ('status', 'margin')}, token=keep['token_core_cycles']), default=str))
@@ -275,5 +323,9 @@ if __name__ == '__main__':
     c.add_argument('--rs', required=True)
     c.add_argument('--out', required=True)
     c.add_argument('--qk', type=int)
+    c.add_argument('--mu', action=argparse.BooleanOptionalAction, default=None, help='compile the real MU1 target1/3 image; required by native nc32')
+    c.add_argument('--die-config', type=Path, help='producer target10 hex: 32 ECTL + 43 reset + capability + 19 ages + seal')
+    c.add_argument('--native-contract', type=Path, help='actual source-derived native_die_cfg_contract JSON')
+    c.add_argument('--capability',type=int,choices=[0,1],help='explicit selected native fused-programme capability')
     a = ap.parse_args()
     prep(a) if a.cmd == 'prep' else compile_(a)

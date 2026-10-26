@@ -1524,6 +1524,7 @@ class Binder:
         for k, d in list(self.sinks.items()):
             nd = fix(k[0], k[1], d)
             if nd != d:
+                self.__dict__.setdefault('_inner_original', {}).setdefault(k, d)
                 self.sinks[k] = nd
         miss = [w[1]["id"] for k, w in want.items() if k not in hit]
         for i in miss[:30]:
@@ -1813,6 +1814,11 @@ class Binder:
             out[i] = (self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)) if d[0] == "x" else 0
         return out
 
+    def timing_depths(self, path, port):
+        """Structured original/landed depths including explicit INNER changes; depth() keeps its old API."""
+        import bind_timing
+        return bind_timing.timing_depths(self, path, port)
+
     def cell_index(self):
         if not hasattr(self, "_cidx"):
             self._cidx = {c.path: i for i, c in enumerate(self.F.cells)}
@@ -1910,13 +1916,19 @@ class Binder:
             replicas.append(dict(source=f"{path}.{spn}", source_bits=ranges(b for b, _ in bl), asbuilt_stages=st,
                                  sink_parts=list(ps), bound_depths=depth,
                                  equal=len({x for v in depth.values() for x in v}) == 1))
-        return dict(schema="opentallas.die_plan.bus_groups.v1", die=self.plan["die"]["name"],
+        out = dict(schema="opentallas.die_plan.bus_groups.v1", die=self.plan["die"]["name"],
                     note=self.bus_groups.__doc__.split("\n\n")[0],
                     summary=dict(landing_groups=len(groups),
                                  landing_misaligned_by_lanes=sum(1 for g in groups if not g["aligned_by_lanes"]),
                                  landing_misaligned_after_pads=sum(1 for g in groups if not g["aligned_landed"]),
                                  replica_sets=len(replicas), replica_unequal=sum(1 for r in replicas if not r["equal"])),
                     landing=groups, replica=replicas)
+        import bind_timing
+        internal = bind_timing.changed_inner_groups(self)
+        if internal:
+            out['internal'] = internal
+            out['summary']['internal_changed_edges'] = len(internal)
+        return out
 
     def _rel_desc(self, p, d, inst_vals, where, nm=None):
         k = d[0]
@@ -2375,6 +2387,13 @@ class Binder:
             (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
         (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
+        self._native_glue = None
+        if self.ab.get("native_glue_types"):
+            import bind_native_glue
+            try:
+                self._native_glue = bind_native_glue.NativeGlue(out / "native_glue", self.ab["native_glue_types"])
+            except bind_native_glue.NativeGlueError as exc:
+                raise BindError(str(exc)) from exc
         self.pnames = {}
         self.io_used = {}
         self.parent_id_ports = {}
@@ -2388,6 +2407,8 @@ class Binder:
             import native_istations
             native_istations.materialize(self, tn, f)
             files.append(f)
+        if self._native_glue is not None:
+            files.extend(self._native_glue.files)
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
         f.write_text(self.emit_top())
         files.append(f)
@@ -2540,6 +2561,16 @@ class Binder:
                 if not candidates:
                     modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
                     candidates = core_reset_hierarchy_candidates(F.cells, self.members[p], target, modules)
+                if not candidates and "." in target["inst"]:
+                    # TOK-SCHED 10-25: the plan core names the partition's mapped source instance by its canonical
+                    # name (u_lf, as in u_slice.lf[k].u_lf) while this replica's mapped instance is u_s_0S.u_sl.u_lf2
+                    # (and the partition root may be its parent u_s_0N.u_sl). Replace ONLY that leading token by the
+                    # partition's own map key(s) and require the exact full source path (replica tokens kept).
+                    rest = target["inst"].split(".", 1)[1]
+                    modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
+                    want = {k + "." + rest for k, v in self.R.parts.items() if v == p}
+                    candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
+                                  F.cells[ci].module in modules and F.cells[ci].path in want]
                 if not candidates:
                     # Plan-local matrix names commonly compact coordinate
                     # separators (u_t00 versus RTL u_t_0_0). Accept only a unique
@@ -2551,7 +2582,9 @@ class Binder:
                     modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and F.cells[ci].module in modules]
                 if len(candidates) != 1:
-                    raise BindError(f"wavefront core reset {tn}/{target['inst']}.{pin}: expected one bound leaf, found {len(candidates)}")
+                    raise BindError(f"wavefront core reset {tn}/{target['inst']}.{pin}: expected one bound leaf, found {len(candidates)} "
+                                    f"(partition {p} root {getattr(self, 'root', {}).get(p)}; e.g. " + ", ".join(
+                                        f"{F.cells[ci].path} rel {self.rel_of(ci)}" for ci in candidates[:3]) + ")")
                 core_reset[(candidates[0], pin)] = f"rst_n_t{target['tap']}"
         need_rst = False
         obus = sorted(self.out_bus[p], key=lambda L: L["oname"])
@@ -2779,7 +2812,15 @@ class Binder:
                     conns.append((pn, _concat(e)))
             conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":
-                insts.append(_glue(c, dict(conns), r))
+                native = getattr(self, "_native_glue", None)
+                if native is not None and c.ytype in native.enabled:
+                    import bind_native_glue
+                    try:
+                        insts.append(native.emit(c, dict(conns), short_id("g_" + r, 90)))
+                    except bind_native_glue.NativeGlueError as exc:
+                        raise BindError(str(exc)) from exc
+                else:
+                    insts.append(_glue(c, dict(conns), r))
                 continue
             ps = []
             for k, v in sorted(c.params.items()):
@@ -2947,7 +2988,7 @@ class Binder:
             bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0))
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
-                            leaves=_seg_summary(L, F), forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
+                            leaves=_seg_summary(L, F), source_bits=_source_bits(L, F), source_bit_order="lsb_first", forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
                             asbuilt_stages=[min(st), max(st)], bound_stages=bound,
                             plan_cycles=L.get("cycles", 2), delta=bound - max(st)))
             if L["src"] in rh or L["dst"] in rh:
@@ -3001,6 +3042,12 @@ def _strip_comment_comma(ports):
         else:
             out.append(ln + ("" if last else ","))
     return out
+
+
+def _source_bits(L, F):
+    """Exact payload order used by emit_type's LSB-first concatenation, not run counts."""
+    return [["leaf", F.cells[it[1]].path, it[2], it[3]] if it[0] == "leaf"
+            else ["forward", it[1].get("lane"), it[2]] for it in L["items"]]
 
 
 def _seg_summary(L, F):
@@ -3073,7 +3120,7 @@ def _glue(c, conns, r):
         return f"    assign {conns['Y']} = {_GLUE_UN[t]}{op(conns['A'], sg('A_SIGNED'))};{src}"
     if t == "$mux":
         return f"    assign {conns['Y']} = {conns['S']} ? {conns['B']} : {conns['A']};{src}"
-    if t in ("$dff", "$adff", "$sdff", "$dffe", "$adffe", "$sdffe", "$sdffce"):
+    if t in ("$dff", "$adff", "$sdff", "$dffe", "$adffe", "$sdffe", "$sdffce", "$aldff", "$aldffe"):
         clkpol = "posedge" if P.get("CLK_POLARITY", "1").endswith("1") else "negedge"
         lines = []
         q = conns["Q"]
@@ -3082,7 +3129,14 @@ def _glue(c, conns, r):
         en = ""
         if "EN" in conns:
             en = f"if ({'' if P.get('EN_POLARITY', '1').endswith('1') else '!'}{conns['EN']}) "
-        if t.startswith("$adff"):
+        if t.startswith("$aldff"):
+            # Slang uses asynchronous-load FFs even for some constant-reset RTL.
+            # Preserve the actual load data and event polarity; never turn this
+            # into a synchronous reset or treat dynamic AD as a reset constant.
+            apol = P.get("ALOAD_POLARITY", "1").endswith("1")
+            lines.append(f"    always @({clkpol} {conns['CLK']} or {'posedge' if apol else 'negedge'} {conns['ALOAD']})\n"
+                         f"        if ({'' if apol else '!'}{conns['ALOAD']}) {nm}_q <= {conns['AD']}; else {en}{nm}_q <= {conns['D']};{src}")
+        elif t.startswith("$adff"):
             apol = P.get("ARST_POLARITY", "1").endswith("1")
             av = P.get("ARST_VALUE", "0")
             lines.append(f"    always @({clkpol} {conns['CLK']} or {'posedge' if apol else 'negedge'} {conns['ARST']})\n"
@@ -3112,7 +3166,27 @@ def load_plan(path):
         raw["asbuilt"] = ab
     if "asbuilt" not in raw:
         raise BindError(f"{path}: no `asbuilt` section (README: As-built binding)")
+    _gate_manifest_paths(raw["asbuilt"], Path(_AB_OVERRIDE.get("path") or path), bool(_AB_OVERRIDE.get("path")))
     return raw
+
+
+def _gate_manifest_paths(ab, mpath, override):
+    """TOK-SCHED 10-25: a manifest that lives in this repository must bind this checkout's sources only: every path
+    repository-relative and inside the repository (tools/die_plan/manifest_paths.py).  The S81 main manifest once read
+    a frozen worktree via absolute paths (12,800 false multi-driven nets).  Manifests outside the repository
+    (scratch diagnostics) are not gated; --allow-external-paths records an explicit diagnostic exception."""
+    import manifest_paths
+    if not manifest_paths._inside(mpath, E.REPO):
+        return
+    errs = manifest_paths.check(ab, mpath.parent, E.REPO, override=override)
+    if not errs:
+        return
+    if _AB_OVERRIDE.get("allow_external_paths"):
+        print(f"bind: WARNING {mpath}: {len(errs)} external manifest path(s) allowed by --allow-external-paths "
+              f"(diagnostic only, not a result of record): {errs[0]}", file=sys.stderr)
+        return
+    raise BindError(f"{mpath}: {len(errs)} absolute or out-of-repository manifest path(s), first: {errs[0]} "
+                    f"(tools/die_plan/manifest_paths.py lists all; make them repository-relative)")
 
 
 def plan_base(path, raw):
@@ -3125,8 +3199,29 @@ def plan_base(path, raw):
     return str(E.REPO)
 
 
+def _write_provenance(a, step):
+    """closure order rule 3 (OWNER 10-25): every bind result names the commit and the repository-relative plan and
+    manifest it was made from (out/provenance_<step>.json; tools/die_plan/manifest_paths.py --result checks it)."""
+    import manifest_paths
+    rec = manifest_paths.provenance(E.REPO)
+
+    def rel(p):
+        if not p:
+            return None
+        try:
+            return str(Path(p).resolve().relative_to(E.REPO.resolve()))
+        except ValueError:
+            return str(Path(p).resolve())
+    rec.update(step=step, plan=rel(a.plan), manifest=rel(getattr(a, "asbuilt", None)),
+               external_paths_allowed=bool(_AB_OVERRIDE.get("allow_external_paths")))
+    rec["inputs"] = [x for x in (rec["plan"], rec["manifest"]) if x]
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    (Path(a.out) / f"provenance_{step}.json").write_text(json.dumps(dict(provenance=rec), indent=1) + "\n")
+
+
 def cmd_elab(a):
     raw = load_plan(a.plan)
+    _write_provenance(a, "elab")
     rec = E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem)
     print(json.dumps({k: (v if k not in ("ambiguous", "undefined") else len(v)) for k, v in rec.items()}))
     return 0
@@ -3134,6 +3229,7 @@ def cmd_elab(a):
 
 def cmd_bind(a):
     raw = load_plan(a.plan)
+    _write_provenance(a, "bind")
     out = Path(a.out)
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
@@ -3756,8 +3852,11 @@ def main(argv=None):
         s.add_argument("--mem", type=int, default=32)
         s.add_argument("--strict", action="store_true")
         s.add_argument("--asbuilt", help="as-built binding section in its own file (overrides the plan's `asbuilt`)")
+        s.add_argument("--allow-external-paths", action="store_true",
+                       help="diagnostic only: do not fail on absolute / out-of-repository paths in an in-repo manifest")
     a = ap.parse_args(argv)
     _AB_OVERRIDE["path"] = a.asbuilt
+    _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
     try:
         if a.cmd == "kit-rtl":
             return cmd_kit_rtl(a)

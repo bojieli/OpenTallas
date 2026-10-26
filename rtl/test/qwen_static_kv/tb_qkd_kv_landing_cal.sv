@@ -6,13 +6,14 @@
 // first HBM edge >= kgo/vgo edge + XU) and of every landing put (LD later), and checks each r_put / l_put edge and
 // sector exactly, no extra puts, arm one edge after the K start, epoch/layer/ctx, fault 0.  MUT must FAIL.
 module tb_qkd_kv_landing_cal;
- parameter integer MUT=0, PH0=0;
- reg ck=0; always #0.416667 ck=~ck;
+ parameter integer MUT=0, PH0=0, SAME_CLOCK=0;
+ localparam integer HBM_U = SAME_CLOCK ? 625 : 768;
+ reg ck=0; always #(SAME_CLOCK ? 0.4165 : 0.416667) ck=~ck;
  reg rst_n=0, cfg_we=0, kgo=0, vgo=0; reg [7:0] cfg_addr=0; reg [63:0] cfg_data=0;
  reg [13:0] ctx_t=0; reg [15:0] epoch=16'd7; reg [5:0] layer=6'd3;
  wire arm,fault; wire [15:0] l_epoch,r_epoch; wire [5:0] l_layer,r_layer; 
  wire [3:0] l_put,r_put; wire [39:0] l_sector,r_sector;
- qkd_kv_landing_cal #(.MUT(MUT),.PH0(PH0)) dut(.ck(ck),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+ qkd_kv_landing_cal #(.MUT(MUT),.PH0(PH0),.SAME_CLOCK(SAME_CLOCK)) dut(.ck(ck),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
   .kgo(kgo),.vgo(vgo),.ctx_t(ctx_t),.epoch(epoch),.layer(layer),.arm(arm),.l_epoch(l_epoch),.l_layer(l_layer),
   .l_put(l_put),.l_sector(l_sector),.r_put(r_put),.r_sector(r_sector),.r_epoch(r_epoch),.r_layer(r_layer),.fault(fault));
  integer cs,ce,cT,ph0,xu,h0,rc,ld,kgo_r,vgo_r,nk,nv,kp0,kg,vp0,vg,fd,i,x,cyc=0,E0=-1,tmp,errors=0,rp=0,lp=0,tot,armed_at=-1;
@@ -20,14 +21,14 @@ module tb_qkd_kv_landing_cal;
  string f;
  longint A,P,base;
  function automatic integer first_hbm_at_or_after(input longint t);   // HBM edges at 625 E0 + PH0 + 768 m
-  longint m; begin m=(t-(625*E0+ph0)+767)/768; if(t-(625*E0+ph0)<=0) m=0; first_hbm_at_or_after=0; A=625*E0+ph0+768*m; end
+  longint m; begin m=(t-(625*E0+ph0)+HBM_U-1)/HBM_U; if(t-(625*E0+ph0)<=0) m=0; first_hbm_at_or_after=0; A=625*E0+ph0+HBM_U*m; end
  endfunction
  task automatic sched(input integer k0, input integer first, input integer cnt);
   integer j,dummy; longint num;
   begin
    dummy=first_hbm_at_or_after(625*longint'(k0)+xu);
    for(j=0;j<cnt;j=j+1)begin
-    P=A+768*(h0+off[first+j]);
+    P=A+HBM_U*(h0+off[first+j]);
     num=P+625-1; redge[first+j]=int'(num/625)+rc;
    end
   end
@@ -63,6 +64,7 @@ module tb_qkd_kv_landing_cal;
   if(l_epoch!==16'd7||l_layer!==6'd3||r_epoch!==16'd7||r_layer!==6'd3)begin $display("META");errors=errors+1;end
   $display("%s landing_cal s%0d e%0d T%0d nk%0d nv%0d ph0 %0d xu %0d h0 %0d rc %0d ld %0d errors %0d",
    errors==0?"PASS":"FAIL",cs,ce,cT,nk,nv,ph0,xu,h0,rc,ld,errors);
+  if(errors!=0)$fatal(1,"landing calendar mismatch");
   $finish;
  end
  // checks at every negedge (after the posedge that updated the outputs; cyc = that edge's index)
