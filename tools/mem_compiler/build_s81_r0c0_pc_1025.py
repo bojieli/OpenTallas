@@ -9,6 +9,11 @@ r2c2.  A tile already placed around r2c2 (e.g. dsdv_eng_rr_e via ot_s81eng_win_n
 place: same SIZE, same functional pin rects, repair pin slots simply empty.  Array/periphery/timing are the
 r0c0 compile; only the outline is held at the r2c2 size (area and Liberty area reported at that outline, no
 credit taken).  Existing r2c2 / r2c2_nr / r0c0 views are untouched.
+
+PATH-S81/ENG-R0C0 2026-10-26: generalised to every SRAM shape dsdv_eng_rr_e holds with tied repair pins (COORD
+2026-10-26 00:50 approval of D-S81-B2 item F): 512x128 m4 (u_win.u_h), 64x512 m1 (u_xq.u_wl/u_b0/u_b1) and
+128x256 m1 (u_lkp.u_e.u_row_e/o/a).  usage: build_s81_r0c0_pc_1025.py [512x128_m4|64x512_m1|128x256_m1 ...]
+(default: all three).  The 512x128 output is byte-identical to the 2325 single-shape build.
 """
 import re
 import sys
@@ -19,23 +24,25 @@ import sram_gen  # noqa: E402
 import views  # noqa: E402
 import build_aligned_v2 as aligned  # noqa: E402
 
-REF = "ot_sram_1r1w_512x128_m4_r2c2"
-NAME = "ot_sram_1r1w_512x128_m4_r0c0_pc"
+SHAPES = {"512x128_m4": (512, 128, 4), "64x512_m1": (64, 512, 1), "128x256_m1": (128, 256, 1)}
 
 
-def ref_geometry(out: Path):
+def ref_geometry(out: Path, REF, words, bits, mux):
     text = (out / REF / f"{REF}.lef").read_text()
     w, h = map(float, re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", text).groups())
-    ref_spec = sram_gen.SramSpec(REF, 512, 128, 4, 1, "1r1w", 2, 2)
+    ref_spec = sram_gen.SramSpec(REF, words, bits, mux, 1, "1r1w", 2, 2)
     n_ref = sum(p.width for p in sram_gen.pins_for(ref_spec))
     return w, h, -(-n_ref // 2)          # r2c2 default split: first ceil(n/2) bits on the left edge
 
 
-def build(root):
+def build(root, shape="512x128_m4"):
+    words, bits, mux = SHAPES[shape]
+    REF = f"ot_sram_1r1w_{shape}_r2c2"
+    NAME = f"ot_sram_1r1w_{shape}_r0c0_pc"
     root = Path(root)
     out = root / "physical/asap7_memory_macros_v2"
-    W, H, left_n = ref_geometry(out)
-    spec = sram_gen.SramSpec(NAME, 512, 128, 4, 1, "1r1w", 0, 0)
+    W, H, left_n = ref_geometry(out, REF, words, bits, mux)
+    spec = sram_gen.SramSpec(NAME, words, bits, mux, 1, "1r1w", 0, 0)
     info = {}
 
     def outline(core_w, core_h, pins):
@@ -67,4 +74,5 @@ def build(root):
 
 
 if __name__ == "__main__":
-    print(build(Path(__file__).resolve().parents[2]))
+    for shape in (sys.argv[1:] or list(SHAPES)):
+        print(build(Path(__file__).resolve().parents[2], shape))

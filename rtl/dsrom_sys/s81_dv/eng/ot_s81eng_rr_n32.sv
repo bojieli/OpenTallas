@@ -72,9 +72,8 @@ module ot_s81eng_xq_n32 #(
 `else
     wire[511:0]wd_wl=bfxq;wire[5:0]wa_wl=wa_q,ra_wl=ra_q;
 `endif
-    ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra_wl), .rd_out(wl_rd),
-        .w_ce_in(1'b1), .w_addr_in(wa_wl), .wd_in(wd_wl), .w_mask_in({512{1'b1}}),
-        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    ot_sram_1r1w_64x512_m1_r0c0_pc u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra_wl), .rd_out(wl_rd),
+        .w_ce_in(1'b1), .w_addr_in(wa_wl), .wd_in(wd_wl), .w_mask_in({512{1'b1}}));
 `ifndef OT_S81ENG_MACRO_F6
     always @(posedge ck) bf_dq <= wl_rd;
 `endif
@@ -118,9 +117,8 @@ module ot_s81eng_xq_n32 #(
     // Wait line: read wp-10 one edge earlier; owned raw landing below restores the original total12-edge age.
     reg [5:0] wp;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
-    ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(wp - 6'd9), .rd_out(wl_rd),
-        .w_ce_in(1'b1), .w_addr_in(wp), .wd_in({248'd0, id_scale_c[7:0], id_code_w}), .w_mask_in({512{1'b1}}),
-        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    ot_sram_1r1w_64x512_m1_r0c0_pc u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(wp - 6'd9), .rd_out(wl_rd),
+        .w_ce_in(1'b1), .w_addr_in(wp), .wd_in({248'd0, id_scale_c[7:0], id_code_w}), .w_mask_in({512{1'b1}}));
     reg[255:0] wl_code;
     always @(posedge ck)wl_code<=wl_rd[255:0];
     assign wl={wl_scale_c[7:0],wl_code};
@@ -194,12 +192,10 @@ module ot_s81eng_xq_n32 #(
     wire[5:0]ra_b0=tx?rda:6'd0,ra_b1=tx?rda:6'd0,wa_b0=rv_row,wa_b1=rv_row;
     wire we_b0=bw,we_b1=bw;wire[511:0]wd_b0=bwd[511:0];wire[26:0]wd_b1=bwd[538:512];
 `endif
-    ot_sram_1r1w_64x512_m1_r2c2 u_b0 (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra_b0), .rd_out(br_rd[511:0]),
-        .w_ce_in(we_b0), .w_addr_in(wa_b0), .wd_in(wd_b0), .w_mask_in({512{1'b1}}),
-        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
-    ot_sram_1r1w_64x512_m1_r2c2 u_b1 (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra_b1), .rd_out(br_rd[1023:512]),
-        .w_ce_in(we_b1), .w_addr_in(wa_b1), .wd_in({485'd0, wd_b1}), .w_mask_in({512{1'b1}}),
-        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    ot_sram_1r1w_64x512_m1_r0c0_pc u_b0 (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra_b0), .rd_out(br_rd[511:0]),
+        .w_ce_in(we_b0), .w_addr_in(wa_b0), .wd_in(wd_b0), .w_mask_in({512{1'b1}}));
+    ot_sram_1r1w_64x512_m1_r0c0_pc u_b1 (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra_b1), .rd_out(br_rd[1023:512]),
+        .w_ce_in(we_b1), .w_addr_in(wa_b1), .wd_in({485'd0, wd_b1}), .w_mask_in({512{1'b1}}));
     // the beat being sent: full = {pad, payload 532, idx 8, src 4, hops 5, kind 3, v}
     reg  [538:0] cur;
     wire [1103:0] full = {551'd0, cur[531:0], {1'b0, cur[538:532]}, 4'd0, 5'd1, 3'd1, 1'b1};
@@ -560,9 +556,8 @@ module ot_s81eng_win_n32 #(
     wire h_ce_macro=h_ce,h_we_macro=h_we;wire[8:0]h_ra_macro=h_ra,h_wa_macro=h_wa;wire[127:0]h_wd_macro=h_wd;
     assign rd=h_raw;
 `endif
-    ot_sram_1r1w_512x128_m4_r2c2 u_h (.clk(ck), .r_ce_in(h_ce_macro), .r_addr_in(h_ra_macro), .rd_out(h_raw),
-        .w_ce_in(h_we_macro), .w_addr_in(h_wa_macro), .wd_in(h_wd_macro), .w_mask_in({128{1'b1}}),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
+    ot_sram_1r1w_512x128_m4_r0c0_pc u_h (.clk(ck), .r_ce_in(h_ce_macro), .r_addr_in(h_ra_macro), .rd_out(h_raw),
+        .w_ce_in(h_we_macro), .w_addr_in(h_wa_macro), .wd_in(h_wd_macro), .w_mask_in({128{1'b1}}));
     wire[67:0] ids_next={b3 ? PAD : h2[50:34], b2 ? PAD : h2[33:17], b1 ? PAD : h2[16:0], m_cid};
     for(genvar wg=0;wg<7;wg=wg+1)begin:g_wi
         localparam integer W=(wg==6)?2:11;
