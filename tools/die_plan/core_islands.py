@@ -136,7 +136,9 @@ def balanced(cost, iters=400):
     return a
 
 
-def site(geo, k=4, max_entry_um=110.0, pct=95, rounds=6, sample=1500, seed=1, sep_um=17.28):
+def site(geo, k=4, max_entry_um=110.0, pct=95, rounds=6, sample=1500, seed=1, sep_um=17.28, sym=False):
+    """sym (GEOM-REVIEW-3 10-26, prog 3-of-4 islands in one E column): islands 0..k/2-1 stay W of the entry, the rest E
+    (W/E root split of the core tree, 2 islands per side, COORD 11:34 ruling (2))."""
     core, entry = geo["core_um"], tuple(geo["entry_um"])
     G = Grid(core, geo["macros"])
     De = G.dist(entry)
@@ -157,6 +159,12 @@ def site(geo, k=4, max_entry_um=110.0, pct=95, rounds=6, sample=1500, seed=1, se
     if len(cand) < k:
         raise ValueError(f"only {len(cand)} legal island sites within {max_entry_um} um maze of the entry")
     cand_a = np.array(cand)
+    side_ok = [np.ones(len(cand), bool)] * k
+    if sym and k % 2 == 0:
+        w_ok = cand_a[:, 0] <= entry[0] - ISL_HALF
+        e_ok = cand_a[:, 0] >= entry[0] + ISL_HALF
+        if w_ok.sum() >= k // 2 and e_ok.sum() >= k // 2:
+            side_ok = [w_ok] * (k // 2) + [e_ok] * (k // 2)
     # seeds: k-way median split of the sinks (W/E then N/S for k=4), nearest feasible candidates
     order = np.argsort(pts[:, 0])
     halves = [order[: len(order) // 2], order[len(order) // 2:]]
@@ -165,8 +173,9 @@ def site(geo, k=4, max_entry_um=110.0, pct=95, rounds=6, sample=1500, seed=1, se
         o = h[np.argsort(pts[h, 1])]
         for part in np.array_split(o, k // 2):
             m = np.median(pts[part], 0)
+            sk = side_ok[len(seeds)]
             ok = [i for i in np.argsort(np.abs(cand_a - m).sum(1))
-                  if all(abs(cand_a[i][0] - q[0]) + abs(cand_a[i][1] - q[1]) >= sep_um for q in seeds)]
+                  if sk[i] and all(abs(cand_a[i][0] - q[0]) + abs(cand_a[i][1] - q[1]) >= sep_um for q in seeds)]
             seeds.append(tuple(map(float, cand_a[ok[0]])))
     cur = seeds
     for _ in range(rounds):
@@ -178,7 +187,8 @@ def site(geo, k=4, max_entry_um=110.0, pct=95, rounds=6, sample=1500, seed=1, se
             m = np.median(pts[a == c], 0)
             others = new + cur[c + 1:]
             ok = [i for i in np.argsort(np.abs(cand_a - m).sum(1))
-                  if all(abs(cand_a[i][0] - q[0]) + abs(cand_a[i][1] - q[1]) >= sep_um for q in others)][:40]
+                  if side_ok[c][i] and all(abs(cand_a[i][0] - q[0]) + abs(cand_a[i][1] - q[1]) >= sep_um
+                                           for q in others)][:40]
             best = None
             for s in [tuple(map(float, cand_a[i])) for i in ok]:
                 v = De[G.cell(s)] + np.percentile(G.dist(s)[g[:, 0], g[:, 1]], pct)
@@ -200,8 +210,9 @@ def site(geo, k=4, max_entry_um=110.0, pct=95, rounds=6, sample=1500, seed=1, se
                         reach_um=dict(mean=round(float(d.mean()), 1), p95=round(float(np.percentile(d, 95)), 1),
                                       max=round(float(d.max()), 1))))
     em = [q["entry_maze_um"] for q in isl]
-    return dict(method="core_islands.site (SRAM-aware maze, equal-load, entry <= max_entry_um)",
-                k=k, max_entry_um=max_entry_um, entry_um=list(entry), sinks=len(geo["sinks"]),
+    return dict(method="core_islands.site (SRAM-aware maze, equal-load, entry <= max_entry_um, W/E symmetric)" if sym
+                else "core_islands.site (SRAM-aware maze, equal-load, entry <= max_entry_um)",
+                k=k, sides=["W" if q["centre_um"][0] < entry[0] else "E" for q in isl], max_entry_um=max_entry_um, entry_um=list(entry), sinks=len(geo["sinks"]),
                 sampled=int(len(pts)), islands=isl,
                 entry_maze_um=dict(min=min(em), max=max(em)),
                 leaf_reach_um=max(q["reach_um"]["p95"] for q in isl),
@@ -217,12 +228,13 @@ def main(argv=None):
     p.add_argument("geo", nargs="+", help="MODULE=geo_file")
     p.add_argument("--k", type=int, default=4)
     p.add_argument("--max-entry-um", type=float, default=110.0)
+    p.add_argument("--sym", action="store_true", help="2 islands W and 2 E of the entry (W/E root split)")
     p.add_argument("--out", required=True, help="output JSON {module: site result}")
     a = p.parse_args(argv)
     res = {}
     for spec in a.geo:
         mod, f = spec.split("=", 1)
-        res[mod] = site(read_geo(f), a.k, a.max_entry_um)
+        res[mod] = site(read_geo(f), a.k, a.max_entry_um, sym=a.sym)
         r = res[mod]
         print(mod, r["verdict"], "entry_maze", r["entry_maze_um"], "p95 reach", r["leaf_reach_um"],
               "equal_path", r["equal_path_um"], "floor", r["floor_entry_to_sink_maze_um"],
