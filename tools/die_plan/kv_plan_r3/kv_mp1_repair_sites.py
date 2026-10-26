@@ -88,6 +88,7 @@ def repair(raw):
         free=g[ok]
         for s,hits in badslots:
             name=s['name'];old=copy.deepcopy(s);original=originals[name];cw,ch=s['bit_site_cell_um'];k=s['stations'];pts={}
+            used_before=set(al.used)
             try:
                 for bit in range(s['width']+1):
                     A,B=pins[name+'_i'][bit],pins[name+'_o'][bit]
@@ -127,6 +128,8 @@ def repair(raw):
                 s['bit_sites_um']=new
                 row=dict(type=tn,slot=name,status='PASS',repaired_hits=hits,moved=moved,stations=k,max_hop_um=worst,added_cycles=0)
             except (ValueError,SystemExit) as e:
+                # A rejected candidate must not leave phantom occupied sites.
+                al.used=used_before
                 s.clear();s.update(original);row=dict(type=tn,slot=name,status='FAIL',original_macro_hits=hits,reason=str(e),added_cycles=0)
             report.append(row);print(json.dumps(row),flush=True)
     return report
