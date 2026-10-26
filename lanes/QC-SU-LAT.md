@@ -26,3 +26,20 @@ Variant A (all MSCTS cores): OT_MSCTS_SEG_UM 110, LEG_SEG_UM 120, TRUNK_CELL BUF
 - prog_A intel1 qc-su-lat/prog_A ot-run oth-ubuntu-2896883-1793018660
 - btab_A intel2 qc-su-lat/btab_A ot-run oth-ubuntu-1825007-1793018660
 Variant B (next, per core, after A numbers): topology fix -- prog/btab bands fed from the near channel (E sinks from an E trunk, not the W detour), taps split to <=~500 sinks (2-level local tree), rp1 ported to MSCTS (it has no structured trunk).
+
+## 2026-10-26 06:03 PDT QC-SU-LAT: (3) TRIAL RESULTS (CTS+GRT, GRT-RC probe, all sinks, TT/FF mean ps; receipt claude/qc-su-lat-1026@ad22ae2b28 results/qc_su_lat/trials_1026.json)
+| core | today | best trial | change | kept data |
+| vmr  | 409.9/317.9 | B 341.8/271.8 (window 15.2/15.5 PASS) | SEG 110 BUFx16f 3-stage trunk + SW/W1 split | intel1 qc-su-lat/vmr_B |
+| prog | 568.1/446.4 | B 419.4/337.1 (17.4/13.2 PASS) | + split W/E band trunks (no W detour) | intel1 qc-su-lat/prog_B |
+| btab | 489.1/382.5 | B 384.9/308.1 (15.1/16.6 PASS) | same as prog | intel2 qc-su-lat/btab_B |
+| rp1  | 383.3/316.4 | M 408.3/322.9 WORSE | TritonCTS->MSCTS from SW-corner pin, 4 stages | deleted; keep f62 |
+Deleted (superseded/no gain): vmr_A, prog_A/btab_A (stopped, B dominated), prog_C/btab_C (flat taps = B), rp1_M.
+FINDING: with S-face/corner ck pins the floor is ~340-420 TT. 250 needs the clock to enter near the core centre (island + M9->M5 stack + M5 interior ck pin), plus taps <=300 sinks. That is a 12.7 slice item, not a kit tweak -> slice inputs posted in lanes/MASTER-PLAN.md. The plan's die_plan tap xy for these cores is already at the core centre; the kits put ck on the S face.
+Interim (if the die needs it before rebuilt cores): B kits cut the early offsets to ~+92 (vmr), ~+169 (prog), ~+135 (btab) TT on the GRT basis. That is a fallback evidence point only; no route or sign-off (no slice).
+
+## PARKED 2026-10-26 06:03 PDT (QC-SU-LAT)
+- Branch claude/qc-su-lat-1026@ad22ae2b28 (pushed): probe + trial harness, kept specs, trials_1026.json. NOT for main (diagnostic tooling under results/). Worktree epyc1 wt/qc-su-lat-1026 removed.
+- Live jobs: NONE. Kept data: intel1 /srv/opentallas-scratch2/claude/qc-su-lat/{vmr_B,prog_B,vmr,prog} and intel2 .../{btab_B,btab}, epyc1 .../rp1 (probe tsv). Delete them once centre-entry rebuilds land.
+- GEOM-REVIEW: no REQ posted. Clock-only CTS+GRT trials on already-reviewed placements, no route. The rebuild kits get the GEOM REQ with their slice.
+- NEXT: (1) MASTER-PLAN answers (3): the centre entry/island coordinates -> regen the 4 kits with the interior M5 ck pin (gen_core_kit --clock-pin-center as S81-CORE-LAT), MSCTS root at the entry, SEG 110-120 BUFx16f, taps <=300 sinks, pad to 250 TT; render + GEOM REQ; CTS+GRT; insertion gate TT/FF on routed RC. (2) rp1: same centre entry, MSCTS with 2-stage trunk (rp1 f62 stays the signed view until then). (3) Tell INFRA-FIRST to drop core_taps early when all 72 measure 250+/-20.
+- OWNER?: none. COORD?: none (interim B-kit offsets are a fallback only).
