@@ -351,12 +351,15 @@ class Landings:
         self.emitted_types.add(tn)
         return head + marker + "\n".join(logic) + "\n" + body
 
-    def top_rtl(self, text):
+    def top_rtl(self, text, emitted_modules=None):
         """Connect the new forwarded-clock pins and observed status at die top.
 
         Region clocks are explicit inputs. No die-top data register or clock
         synthesizer is invented; physical die-clock emission supplies them.
         """
+        modules=emitted_modules or {tn:t["module"] for tn,t in self.types.items()}
+        if set(modules)!=set(self.types):raise LandingError("clock landing: emitted module/type inventory changed after cohort composition")
+        self.emitted_modules=dict(modules)
         clocks = sorted(set(self.region.values()))
         n = len(self.rows)
         if not n:
@@ -389,7 +392,7 @@ class Landings:
         for pn, p in self.parts.items():
             # Anchor on the instance, then the binder's own closing line; leaf
             # parameter parentheses can never terminate this module instance.
-            pat = re.compile(r"(?m)^(    " + re.escape(self.types[p["type"]]["module"]) +
+            pat = re.compile(r"(?m)^(    " + re.escape(modules[p["type"]]) +
                              r"(?: #\([^\n]*\))? " + re.escape(ident(pn)) + r" \(\n)(.*?)(\n    \);)", re.S)
             matches = list(pat.finditer(text))
             if len(matches) != 1:
@@ -434,6 +437,7 @@ class Landings:
                     types=self.by_type, reset_placements=self.reset_placements,
                     collector=self.collector,
                     observer_source=getattr(self,"observer_source",None),
+                    emitted_modules=getattr(self,"emitted_modules",None),
                     remaining_gates=["placed clock/status pins", "landing ring window STA",
                                      "trained region calendar offsets", "token pass"])
 
