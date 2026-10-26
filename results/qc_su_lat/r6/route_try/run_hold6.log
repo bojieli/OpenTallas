@@ -1,0 +1,557 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+OT_VCLK_BIND corner ff clock vclk source_latency 217.73
+OT_RC_CAL layer RC scaled: R h0.8 v0.8, C h0.9 v0.9 (estimates only; RCX unaffected)
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       15
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   qfd_dv_s8x_btab
+Die area:                 ( 0 0 ) ( 354240 259200 )
+Number of track patterns: 26
+Number of DEF vias:       0
+Number of components:     25487
+Number of terminals:      1324
+Number of snets:          2
+Number of nets:           19985
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 100.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 408251.
+[INFO DRT-0033] V1 shape region query size = 6853956.
+[INFO DRT-0033] M2 shape region query size = 76932.
+[INFO DRT-0033] V2 shape region query size = 169968.
+[INFO DRT-0033] M3 shape region query size = 169972.
+[INFO DRT-0033] V3 shape region query size = 113312.
+[INFO DRT-0033] M4 shape region query size = 126625.
+[INFO DRT-0033] V4 shape region query size = 131968.
+[INFO DRT-0033] M5 shape region query size = 67353.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1301 pins.
+[INFO DRT-0081]   Complete 99 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0084]   Complete 13551 groups.
+#scanned instances     = 25487
+#unique  instances     = 100
+#stdCellGenAp          = 2594
+#stdCellValidPlanarAp  = 9
+#stdCellValidViaAp     = 2379
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 40943
+#instTermValidViaApCnt = 0
+#macroGenAp            = 819
+#macroValidPlanarAp    = 819
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:07:17, elapsed time = 00:00:55, memory = 589.59 (MB), peak = 831.49 (MB)
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_MSCTS_TAP hold_ff TT T000 n 42 mean 213.3 min 212.7 max 213.7
+OT_MSCTS_TAP hold_ff TT T001 n 41 mean 207.4 min 206.2 max 207.9
+OT_MSCTS_TAP hold_ff TT T002 n 41 mean 207.7 min 206.1 max 208.4
+OT_MSCTS_TAP hold_ff TT T003 n 42 mean 208.5 min 207.2 max 209.3
+OT_MSCTS_TAP hold_ff TT T004 n 42 mean 207.0 min 205.9 max 207.7
+OT_MSCTS_TAP hold_ff TT T005 n 41 mean 212.6 min 211.5 max 213.2
+OT_MSCTS_TAP hold_ff TT T010 n 43 mean 212.8 min 211.4 max 213.9
+OT_MSCTS_TAP hold_ff TT T011 n 42 mean 208.5 min 207.3 max 208.9
+OT_MSCTS_TAP hold_ff TT T012 n 42 mean 208.3 min 207.5 max 208.9
+OT_MSCTS_TAP hold_ff TT T013 n 43 mean 212.3 min 211.6 max 213.4
+OT_MSCTS_TAP hold_ff TT T014 n 43 mean 207.9 min 206.6 max 208.9
+OT_MSCTS_TAP hold_ff TT T015 n 41 mean 207.7 min 206.7 max 208.0
+OT_MSCTS_TAP hold_ff TT T020 n 40 mean 207.0 min 206.7 max 207.4
+OT_MSCTS_TAP hold_ff TT T021 n 41 mean 208.5 min 207.6 max 209.7
+OT_MSCTS_TAP hold_ff TT T022 n 41 mean 209.4 min 206.4 max 210.4
+OT_MSCTS_TAP hold_ff TT T023 n 40 mean 208.4 min 207.3 max 209.2
+OT_MSCTS_TAP hold_ff TT T024 n 40 mean 208.3 min 207.1 max 209.0
+OT_MSCTS_TAP hold_ff TT T025 n 41 mean 208.5 min 207.9 max 209.1
+OT_MSCTS_TAP hold_ff TT T030 n 39 mean 210.7 min 208.2 max 211.5
+OT_MSCTS_TAP hold_ff TT T031 n 40 mean 229.9 min 229.3 max 230.3
+OT_MSCTS_TAP hold_ff TT T032 n 40 mean 209.6 min 207.8 max 210.3
+OT_MSCTS_TAP hold_ff TT T033 n 39 mean 213.5 min 211.3 max 214.4
+OT_MSCTS_TAP hold_ff TT T034 n 41 mean 209.6 min 208.9 max 210.2
+OT_MSCTS_TAP hold_ff TT T035 n 40 mean 211.0 min 209.2 max 211.6
+OT_MSCTS_TAP hold_ff TT T100 n 49 mean 212.5 min 210.5 max 214.2
+OT_MSCTS_TAP hold_ff TT T101 n 48 mean 213.2 min 211.1 max 214.7
+OT_MSCTS_TAP hold_ff TT T102 n 50 mean 212.9 min 211.1 max 214.1
+OT_MSCTS_TAP hold_ff TT T103 n 49 mean 212.4 min 211.4 max 213.3
+OT_MSCTS_TAP hold_ff TT T104 n 49 mean 212.2 min 210.8 max 213.5
+OT_MSCTS_TAP hold_ff TT T105 n 48 mean 213.0 min 210.0 max 214.9
+OT_MSCTS_TAP hold_ff TT T110 n 60 mean 217.9 min 216.7 max 218.9
+OT_MSCTS_TAP hold_ff TT T111 n 60 mean 213.7 min 211.6 max 215.3
+OT_MSCTS_TAP hold_ff TT T112 n 61 mean 212.1 min 211.3 max 212.6
+OT_MSCTS_TAP hold_ff TT T113 n 59 mean 213.0 min 211.3 max 214.0
+OT_MSCTS_TAP hold_ff TT T114 n 64 mean 213.2 min 210.9 max 214.1
+OT_MSCTS_TAP hold_ff TT T115 n 62 mean 212.2 min 210.7 max 213.2
+OT_MSCTS_TAP hold_ff TT T120 n 58 mean 213.6 min 212.2 max 214.2
+OT_MSCTS_TAP hold_ff TT T121 n 62 mean 214.6 min 211.5 max 216.2
+OT_MSCTS_TAP hold_ff TT T122 n 59 mean 213.8 min 211.6 max 214.6
+OT_MSCTS_TAP hold_ff TT T123 n 58 mean 214.6 min 210.1 max 215.8
+OT_MSCTS_TAP hold_ff TT T124 n 49 mean 214.6 min 212.5 max 216.8
+OT_MSCTS_TAP hold_ff TT T125 n 60 mean 212.7 min 211.3 max 213.5
+OT_MSCTS_TAP hold_ff TT T130 n 49 mean 213.5 min 211.4 max 214.9
+OT_MSCTS_TAP hold_ff TT T131 n 51 mean 213.0 min 210.7 max 214.0
+OT_MSCTS_TAP hold_ff TT T132 n 49 mean 212.3 min 211.0 max 213.0
+OT_MSCTS_TAP hold_ff TT T133 n 48 mean 215.5 min 212.4 max 218.0
+OT_MSCTS_TAP hold_ff TT T134 n 49 mean 212.8 min 211.5 max 213.4
+OT_MSCTS_TAP hold_ff TT T135 n 49 mean 213.6 min 211.3 max 215.9
+OT_MSCTS_TAP hold_ff TT T200 n 47 mean 219.2 min 216.8 max 226.4
+OT_MSCTS_TAP hold_ff TT T201 n 47 mean 219.8 min 217.1 max 227.5
+OT_MSCTS_TAP hold_ff TT T202 n 44 mean 213.4 min 212.0 max 214.3
+OT_MSCTS_TAP hold_ff TT T203 n 44 mean 213.4 min 212.3 max 213.9
+OT_MSCTS_TAP hold_ff TT T204 n 44 mean 213.1 min 211.7 max 213.5
+OT_MSCTS_TAP hold_ff TT T205 n 44 mean 213.3 min 212.1 max 213.8
+OT_MSCTS_TAP hold_ff TT T210 n 44 mean 217.0 min 214.4 max 217.8
+OT_MSCTS_TAP hold_ff TT T211 n 46 mean 217.1 min 213.3 max 218.4
+OT_MSCTS_TAP hold_ff TT T212 n 44 mean 214.9 min 213.3 max 215.5
+OT_MSCTS_TAP hold_ff TT T213 n 47 mean 215.6 min 214.5 max 216.2
+OT_MSCTS_TAP hold_ff TT T214 n 42 mean 217.9 min 216.7 max 219.1
+OT_MSCTS_TAP hold_ff TT T215 n 45 mean 217.8 min 214.5 max 219.5
+OT_MSCTS_TAP hold_ff TT T220 n 44 mean 217.4 min 214.5 max 218.5
+OT_MSCTS_TAP hold_ff TT T221 n 45 mean 216.5 min 214.5 max 217.4
+OT_MSCTS_TAP hold_ff TT T222 n 45 mean 215.6 min 214.5 max 216.3
+OT_MSCTS_TAP hold_ff TT T223 n 47 mean 217.5 min 215.0 max 218.4
+OT_MSCTS_TAP hold_ff TT T224 n 46 mean 216.5 min 214.0 max 217.1
+OT_MSCTS_TAP hold_ff TT T225 n 45 mean 215.6 min 212.6 max 216.2
+OT_MSCTS_TAP hold_ff TT T230 n 47 mean 215.7 min 213.9 max 216.8
+OT_MSCTS_TAP hold_ff TT T231 n 48 mean 215.8 min 214.1 max 216.5
+OT_MSCTS_TAP hold_ff TT T232 n 48 mean 215.3 min 214.5 max 215.8
+OT_MSCTS_TAP hold_ff TT T233 n 46 mean 216.8 min 214.9 max 217.6
+OT_MSCTS_TAP hold_ff TT T234 n 46 mean 215.0 min 213.6 max 215.7
+OT_MSCTS_TAP hold_ff TT T235 n 49 mean 216.4 min 214.5 max 217.1
+OT_MSCTS_TAP hold_ff TT T240 n 47 mean 216.0 min 213.0 max 217.5
+OT_MSCTS_TAP hold_ff TT T241 n 45 mean 218.1 min 217.0 max 218.9
+OT_MSCTS_TAP hold_ff TT T242 n 46 mean 216.6 min 214.4 max 217.7
+OT_MSCTS_TAP hold_ff TT T243 n 46 mean 215.3 min 214.4 max 216.0
+OT_MSCTS_TAP hold_ff TT T244 n 46 mean 215.9 min 215.0 max 216.8
+OT_MSCTS_TAP hold_ff TT T245 n 46 mean 214.9 min 213.7 max 215.7
+OT_MSCTS_TAP hold_ff TT T250 n 47 mean 216.6 min 213.3 max 217.6
+OT_MSCTS_TAP hold_ff TT T251 n 48 mean 214.6 min 213.4 max 215.1
+OT_MSCTS_TAP hold_ff TT T252 n 46 mean 216.0 min 215.2 max 216.5
+OT_MSCTS_TAP hold_ff TT T253 n 47 mean 214.9 min 214.4 max 215.5
+OT_MSCTS_TAP hold_ff TT T254 n 48 mean 216.2 min 214.9 max 217.2
+OT_MSCTS_TAP hold_ff TT T255 n 45 mean 215.0 min 213.9 max 215.8
+OT_MSCTS_TAP hold_ff TT T300 n 47 mean 223.2 min 220.8 max 224.4
+OT_MSCTS_TAP hold_ff TT T301 n 52 mean 219.6 min 217.6 max 220.2
+OT_MSCTS_TAP hold_ff TT T302 n 49 mean 220.7 min 216.9 max 221.7
+OT_MSCTS_TAP hold_ff TT T303 n 46 mean 219.7 min 218.0 max 220.8
+OT_MSCTS_TAP hold_ff TT T304 n 52 mean 220.9 min 216.5 max 222.2
+OT_MSCTS_TAP hold_ff TT T305 n 52 mean 218.9 min 216.0 max 220.4
+OT_MSCTS_TAP hold_ff TT T310 n 43 mean 219.6 min 217.8 max 221.0
+OT_MSCTS_TAP hold_ff TT T311 n 41 mean 221.4 min 220.4 max 223.0
+OT_MSCTS_TAP hold_ff TT T312 n 51 mean 219.8 min 218.3 max 221.2
+OT_MSCTS_TAP hold_ff TT T313 n 48 mean 220.3 min 217.6 max 221.3
+OT_MSCTS_TAP hold_ff TT T314 n 42 mean 219.6 min 216.5 max 221.6
+OT_MSCTS_TAP hold_ff TT T315 n 39 mean 219.0 min 216.3 max 220.4
+OT_MSCTS_TAP hold_ff TT T320 n 49 mean 221.2 min 218.4 max 222.0
+OT_MSCTS_TAP hold_ff TT T321 n 51 mean 220.2 min 219.0 max 221.2
+OT_MSCTS_TAP hold_ff TT T322 n 52 mean 222.3 min 219.4 max 223.1
+OT_MSCTS_TAP hold_ff TT T323 n 50 mean 221.7 min 219.2 max 222.6
+OT_MSCTS_TAP hold_ff TT T324 n 51 mean 221.4 min 217.8 max 223.1
+OT_MSCTS_TAP hold_ff TT T325 n 52 mean 221.2 min 219.7 max 222.2
+OT_MSCTS_TAP hold_ff TT T330 n 51 mean 220.0 min 218.1 max 220.6
+OT_MSCTS_TAP hold_ff TT T331 n 52 mean 223.1 min 220.5 max 224.1
+OT_MSCTS_TAP hold_ff TT T332 n 51 mean 221.3 min 219.1 max 222.7
+OT_MSCTS_TAP hold_ff TT T333 n 51 mean 220.1 min 218.3 max 221.8
+OT_MSCTS_TAP hold_ff TT T334 n 51 mean 218.4 min 217.8 max 218.8
+OT_MSCTS_TAP hold_ff TT T335 n 51 mean 219.2 min 218.7 max 219.6
+OT_MSCTS_TAP hold_ff TT T340 n 50 mean 221.2 min 217.5 max 222.4
+OT_MSCTS_TAP hold_ff TT T341 n 46 mean 219.7 min 218.0 max 221.4
+OT_MSCTS_TAP hold_ff TT T342 n 49 mean 218.8 min 217.4 max 219.9
+OT_MSCTS_TAP hold_ff TT T343 n 52 mean 217.5 min 217.0 max 217.8
+OT_MSCTS_TAP hold_ff TT T344 n 47 mean 218.1 min 216.9 max 218.8
+OT_MSCTS_TAP hold_ff TT T345 n 48 mean 217.6 min 216.4 max 218.3
+OT_MSCTS_TAP hold_ff TT T350 n 40 mean 219.2 min 216.9 max 220.0
+OT_MSCTS_TAP hold_ff TT T351 n 41 mean 218.7 min 217.6 max 219.4
+OT_MSCTS_TAP hold_ff TT T352 n 41 mean 219.2 min 217.8 max 220.2
+OT_MSCTS_TAP hold_ff TT T353 n 41 mean 218.2 min 217.1 max 219.2
+OT_MSCTS_TAP hold_ff TT T354 n 41 mean 218.5 min 217.1 max 219.2
+OT_MSCTS_TAP hold_ff TT T355 n 38 mean 220.2 min 217.7 max 222.6
+OT_MSCTS_WINDOW hold_ff TT tap-mean window 22.9 ps (limit 20) FAIL
+OT_MSCTS_MACRO hold_ff TT g_btb\[3\].u_m clk 210.2 interface regs n 528 mean 213.6 (207.1..230.3) diff -3.4
+OT_MSCTS_MACRO hold_ff TT g_btb\[2\].u_m clk 214.8 interface regs n 528 mean 215.0 (206.2..219.5) diff -0.2
+OT_MSCTS_MACRO hold_ff TT g_btb\[1\].u_m clk 218.3 interface regs n 528 mean 218.4 (210.9..223.7) diff -0.1
+OT_MSCTS_MACRO hold_ff TT g_btb\[0\].u_m clk 219.4 interface regs n 528 mean 219.5 (211.3..224.4) diff -0.1
+OT_MSCTS_TAP hold_ff FF T000 n 42 mean 200.6 min 200.1 max 201.0
+OT_MSCTS_TAP hold_ff FF T001 n 41 mean 195.1 min 194.1 max 195.5
+OT_MSCTS_TAP hold_ff FF T002 n 41 mean 195.4 min 194.1 max 196.0
+OT_MSCTS_TAP hold_ff FF T003 n 42 mean 196.2 min 195.1 max 196.8
+OT_MSCTS_TAP hold_ff FF T004 n 42 mean 195.0 min 194.0 max 195.5
+OT_MSCTS_TAP hold_ff FF T005 n 41 mean 199.9 min 199.0 max 200.4
+OT_MSCTS_TAP hold_ff FF T010 n 43 mean 200.1 min 198.9 max 201.1
+OT_MSCTS_TAP hold_ff FF T011 n 42 mean 196.1 min 195.1 max 196.4
+OT_MSCTS_TAP hold_ff FF T012 n 42 mean 195.9 min 195.2 max 196.4
+OT_MSCTS_TAP hold_ff FF T013 n 43 mean 199.7 min 199.0 max 200.9
+OT_MSCTS_TAP hold_ff FF T014 n 43 mean 195.6 min 194.5 max 196.4
+OT_MSCTS_TAP hold_ff FF T015 n 41 mean 195.4 min 194.6 max 195.7
+OT_MSCTS_TAP hold_ff FF T020 n 40 mean 194.9 min 194.6 max 195.2
+OT_MSCTS_TAP hold_ff FF T021 n 41 mean 196.1 min 195.4 max 197.1
+OT_MSCTS_TAP hold_ff FF T022 n 41 mean 197.1 min 194.5 max 198.0
+OT_MSCTS_TAP hold_ff FF T023 n 40 mean 196.1 min 195.2 max 196.8
+OT_MSCTS_TAP hold_ff FF T024 n 40 mean 195.9 min 195.0 max 196.6
+OT_MSCTS_TAP hold_ff FF T025 n 41 mean 196.1 min 195.6 max 196.5
+OT_MSCTS_TAP hold_ff FF T030 n 39 mean 198.3 min 196.2 max 199.0
+OT_MSCTS_TAP hold_ff FF T031 n 40 mean 215.2 min 214.4 max 216.1
+OT_MSCTS_TAP hold_ff FF T032 n 40 mean 197.2 min 195.7 max 197.7
+OT_MSCTS_TAP hold_ff FF T033 n 39 mean 200.5 min 198.6 max 201.2
+OT_MSCTS_TAP hold_ff FF T034 n 41 mean 197.2 min 196.6 max 197.7
+OT_MSCTS_TAP hold_ff FF T035 n 40 mean 198.4 min 196.9 max 198.9
+OT_MSCTS_TAP hold_ff FF T100 n 49 mean 200.0 min 198.2 max 201.4
+OT_MSCTS_TAP hold_ff FF T101 n 48 mean 200.6 min 198.8 max 201.9
+OT_MSCTS_TAP hold_ff FF T102 n 50 mean 200.3 min 198.8 max 201.4
+OT_MSCTS_TAP hold_ff FF T103 n 49 mean 199.9 min 199.0 max 200.7
+OT_MSCTS_TAP hold_ff FF T104 n 49 mean 199.7 min 198.5 max 200.8
+OT_MSCTS_TAP hold_ff FF T105 n 48 mean 200.5 min 197.9 max 202.1
+OT_MSCTS_TAP hold_ff FF T110 n 60 mean 204.7 min 203.7 max 205.5
+OT_MSCTS_TAP hold_ff FF T111 n 60 mean 200.7 min 199.0 max 202.1
+OT_MSCTS_TAP hold_ff FF T112 n 61 mean 199.4 min 198.7 max 199.8
+OT_MSCTS_TAP hold_ff FF T113 n 59 mean 200.2 min 198.8 max 201.0
+OT_MSCTS_TAP hold_ff FF T114 n 64 mean 200.4 min 198.5 max 201.1
+OT_MSCTS_TAP hold_ff FF T115 n 62 mean 199.5 min 198.3 max 200.3
+OT_MSCTS_TAP hold_ff FF T120 n 58 mean 200.6 min 199.4 max 201.1
+OT_MSCTS_TAP hold_ff FF T121 n 62 mean 201.4 min 198.9 max 202.8
+OT_MSCTS_TAP hold_ff FF T122 n 59 mean 200.8 min 199.0 max 201.5
+OT_MSCTS_TAP hold_ff FF T123 n 58 mean 201.7 min 197.9 max 202.7
+OT_MSCTS_TAP hold_ff FF T124 n 49 mean 201.8 min 200.0 max 203.8
+OT_MSCTS_TAP hold_ff FF T125 n 60 mean 199.9 min 198.8 max 200.6
+OT_MSCTS_TAP hold_ff FF T130 n 49 mean 201.0 min 199.1 max 202.1
+OT_MSCTS_TAP hold_ff FF T131 n 51 mean 200.5 min 198.5 max 201.3
+OT_MSCTS_TAP hold_ff FF T132 n 49 mean 199.8 min 198.7 max 200.4
+OT_MSCTS_TAP hold_ff FF T133 n 48 mean 202.8 min 200.1 max 204.9
+OT_MSCTS_TAP hold_ff FF T134 n 49 mean 200.4 min 199.3 max 200.9
+OT_MSCTS_TAP hold_ff FF T135 n 49 mean 201.1 min 199.1 max 203.1
+OT_MSCTS_TAP hold_ff FF T200 n 47 mean 205.7 min 203.6 max 212.9
+OT_MSCTS_TAP hold_ff FF T201 n 47 mean 206.2 min 203.8 max 213.8
+OT_MSCTS_TAP hold_ff FF T202 n 44 mean 200.3 min 199.1 max 201.0
+OT_MSCTS_TAP hold_ff FF T203 n 44 mean 200.3 min 199.4 max 200.7
+OT_MSCTS_TAP hold_ff FF T204 n 44 mean 199.9 min 198.8 max 200.3
+OT_MSCTS_TAP hold_ff FF T205 n 44 mean 200.2 min 199.2 max 200.6
+OT_MSCTS_TAP hold_ff FF T210 n 44 mean 203.4 min 201.3 max 204.1
+OT_MSCTS_TAP hold_ff FF T211 n 46 mean 203.6 min 200.4 max 204.6
+OT_MSCTS_TAP hold_ff FF T212 n 44 mean 201.5 min 200.2 max 202.0
+OT_MSCTS_TAP hold_ff FF T213 n 47 mean 202.2 min 201.3 max 202.8
+OT_MSCTS_TAP hold_ff FF T214 n 42 mean 204.1 min 203.1 max 205.3
+OT_MSCTS_TAP hold_ff FF T215 n 45 mean 204.3 min 201.5 max 205.7
+OT_MSCTS_TAP hold_ff FF T220 n 44 mean 203.9 min 201.4 max 204.8
+OT_MSCTS_TAP hold_ff FF T221 n 45 mean 203.1 min 201.4 max 203.8
+OT_MSCTS_TAP hold_ff FF T222 n 45 mean 202.3 min 201.4 max 202.9
+OT_MSCTS_TAP hold_ff FF T223 n 47 mean 204.0 min 201.9 max 204.8
+OT_MSCTS_TAP hold_ff FF T224 n 46 mean 203.1 min 201.0 max 203.6
+OT_MSCTS_TAP hold_ff FF T225 n 45 mean 202.3 min 199.8 max 202.9
+OT_MSCTS_TAP hold_ff FF T230 n 47 mean 202.2 min 200.7 max 203.1
+OT_MSCTS_TAP hold_ff FF T231 n 48 mean 202.2 min 200.9 max 202.9
+OT_MSCTS_TAP hold_ff FF T232 n 48 mean 201.9 min 201.2 max 202.3
+OT_MSCTS_TAP hold_ff FF T233 n 46 mean 203.2 min 201.6 max 203.9
+OT_MSCTS_TAP hold_ff FF T234 n 46 mean 201.6 min 200.5 max 202.2
+OT_MSCTS_TAP hold_ff FF T235 n 49 mean 202.8 min 201.2 max 203.4
+OT_MSCTS_TAP hold_ff FF T240 n 47 mean 202.7 min 200.1 max 203.9
+OT_MSCTS_TAP hold_ff FF T241 n 45 mean 204.7 min 203.8 max 205.3
+OT_MSCTS_TAP hold_ff FF T242 n 46 mean 203.2 min 201.3 max 204.0
+OT_MSCTS_TAP hold_ff FF T243 n 46 mean 202.0 min 201.3 max 202.6
+OT_MSCTS_TAP hold_ff FF T244 n 46 mean 202.6 min 201.8 max 203.3
+OT_MSCTS_TAP hold_ff FF T245 n 46 mean 201.6 min 200.6 max 202.2
+OT_MSCTS_TAP hold_ff FF T250 n 47 mean 203.1 min 200.3 max 203.9
+OT_MSCTS_TAP hold_ff FF T251 n 48 mean 201.2 min 200.3 max 201.6
+OT_MSCTS_TAP hold_ff FF T252 n 46 mean 202.5 min 201.8 max 202.9
+OT_MSCTS_TAP hold_ff FF T253 n 47 mean 201.4 min 201.0 max 201.9
+OT_MSCTS_TAP hold_ff FF T254 n 48 mean 202.6 min 201.5 max 203.5
+OT_MSCTS_TAP hold_ff FF T255 n 45 mean 201.5 min 200.6 max 202.2
+OT_MSCTS_TAP hold_ff FF T300 n 47 mean 209.2 min 207.1 max 210.2
+OT_MSCTS_TAP hold_ff FF T301 n 52 mean 206.0 min 204.4 max 206.6
+OT_MSCTS_TAP hold_ff FF T302 n 49 mean 207.1 min 203.9 max 208.0
+OT_MSCTS_TAP hold_ff FF T303 n 46 mean 206.2 min 204.8 max 207.1
+OT_MSCTS_TAP hold_ff FF T304 n 52 mean 207.3 min 203.6 max 208.4
+OT_MSCTS_TAP hold_ff FF T305 n 52 mean 205.5 min 203.1 max 206.8
+OT_MSCTS_TAP hold_ff FF T310 n 43 mean 206.2 min 204.6 max 207.3
+OT_MSCTS_TAP hold_ff FF T311 n 41 mean 207.5 min 206.6 max 208.9
+OT_MSCTS_TAP hold_ff FF T312 n 51 mean 206.1 min 204.9 max 207.3
+OT_MSCTS_TAP hold_ff FF T313 n 48 mean 206.7 min 204.5 max 207.5
+OT_MSCTS_TAP hold_ff FF T314 n 42 mean 206.2 min 203.5 max 208.0
+OT_MSCTS_TAP hold_ff FF T315 n 39 mean 205.7 min 203.4 max 206.9
+OT_MSCTS_TAP hold_ff FF T320 n 49 mean 207.4 min 205.1 max 208.0
+OT_MSCTS_TAP hold_ff FF T321 n 51 mean 206.5 min 205.5 max 207.3
+OT_MSCTS_TAP hold_ff FF T322 n 52 mean 208.4 min 206.0 max 209.1
+OT_MSCTS_TAP hold_ff FF T323 n 50 mean 207.9 min 205.8 max 208.6
+OT_MSCTS_TAP hold_ff FF T324 n 51 mean 207.6 min 204.5 max 208.9
+OT_MSCTS_TAP hold_ff FF T325 n 52 mean 207.3 min 206.1 max 208.2
+OT_MSCTS_TAP hold_ff FF T330 n 51 mean 206.2 min 204.6 max 206.7
+OT_MSCTS_TAP hold_ff FF T331 n 52 mean 209.2 min 207.0 max 210.0
+OT_MSCTS_TAP hold_ff FF T332 n 51 mean 207.5 min 205.7 max 208.7
+OT_MSCTS_TAP hold_ff FF T333 n 51 mean 206.3 min 204.8 max 207.8
+OT_MSCTS_TAP hold_ff FF T334 n 51 mean 204.8 min 204.4 max 205.2
+OT_MSCTS_TAP hold_ff FF T335 n 51 mean 205.5 min 205.1 max 205.9
+OT_MSCTS_TAP hold_ff FF T340 n 50 mean 207.3 min 204.3 max 208.4
+OT_MSCTS_TAP hold_ff FF T341 n 46 mean 206.2 min 204.7 max 207.8
+OT_MSCTS_TAP hold_ff FF T342 n 49 mean 205.3 min 204.1 max 206.2
+OT_MSCTS_TAP hold_ff FF T343 n 52 mean 204.0 min 203.6 max 204.2
+OT_MSCTS_TAP hold_ff FF T344 n 47 mean 204.7 min 203.7 max 205.3
+OT_MSCTS_TAP hold_ff FF T345 n 48 mean 204.2 min 203.2 max 204.8
+OT_MSCTS_TAP hold_ff FF T350 n 40 mean 205.9 min 203.9 max 206.6
+OT_MSCTS_TAP hold_ff FF T351 n 41 mean 205.4 min 204.4 max 206.0
+OT_MSCTS_TAP hold_ff FF T352 n 41 mean 205.9 min 204.7 max 206.7
+OT_MSCTS_TAP hold_ff FF T353 n 41 mean 205.0 min 204.1 max 205.9
+OT_MSCTS_TAP hold_ff FF T354 n 41 mean 205.3 min 204.1 max 205.9
+OT_MSCTS_TAP hold_ff FF T355 n 38 mean 207.0 min 204.8 max 209.2
+OT_MSCTS_WINDOW hold_ff FF tap-mean window 20.4 ps (limit 20) FAIL
+OT_MSCTS_MACRO hold_ff FF g_btb\[3\].u_m clk 198.2 interface regs n 528 mean 200.6 (195.0..216.1) diff -2.4
+OT_MSCTS_MACRO hold_ff FF g_btb\[2\].u_m clk 202.1 interface regs n 528 mean 201.8 (194.1..205.7) diff +0.3
+OT_MSCTS_MACRO hold_ff FF g_btb\[1\].u_m clk 205.5 interface regs n 528 mean 204.9 (198.5..209.6) diff +0.6
+OT_MSCTS_MACRO hold_ff FF g_btb\[0\].u_m clk 206.5 interface regs n 528 mean 205.9 (198.8..210.2) diff +0.6
+S6_HOLD_FF_BEFORE -56.06 ep 23 (vclk FF 217.73, margin 15)
+S6_HOLD_CLASS before in {13 -56.06} out {2 -50.55} int {10 -2.11}
+[INFO RSZ-0046] Found 197 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -56.056 | -667.685 | rl0$_DFF_P_/D
+       10 |       0 |      16 |            0 |    +0.0% | -50.551 | -445.937 | ft_rst_o
+       20 |       0 |      36 |            0 |    +0.0% | -50.551 | -337.412 | ft_rst_o
+       30 |       0 |      56 |            0 |    +0.0% | -50.551 | -334.628 | ft_rst_o
+       40 |       0 |      76 |            0 |    +0.0% | -50.551 | -334.628 | ft_rst_o
+       50 |       0 |      96 |            0 |    +0.0% | -50.551 | -334.628 | ft_rst_o
+       60 |       0 |     114 |            0 |    +0.0% | -50.551 | -334.628 | ft_rst_o
+       70 |       0 |     133 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+       80 |       0 |     153 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+       90 |       0 |     172 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      100 |       0 |     185 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      110 |       0 |     197 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      120 |       0 |     207 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      130 |       0 |     217 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      140 |       0 |     227 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      150 |       0 |     237 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      160 |       0 |     247 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      170 |       0 |     256 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      180 |       0 |     266 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      190 |       0 |     276 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      200 |       0 |     284 |            0 |    +0.1% | -50.551 | -334.628 | ft_rst_o
+      210 |       0 |     320 |            0 |    +0.1% | -50.551 | -99.244 | ft_rst_o
+    final |       0 |     320 |            0 |    +0.1% | -50.551 | -99.244 | ft_rst_o
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 320 hold buffers.
+[INFO RSZ-0506] Runtime: 24.57s
+[INFO DPL-0006] Core area: 86593.54 um^2
+[INFO DPL-0007] Movable instances area: 2897.09 um^2
+[INFO DPL-0008] Fixed instances area within core: 15797.46 um^2
+[INFO DPL-0009] Utilization: 21.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 25803 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         30 |         6 |        24
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.41s
+Placement Analysis
+---------------------------------
+total displacement         68.6 u
+average displacement        0.0 u
+max displacement            1.4 u
+original HPWL          595911.5 u
+legalized HPWL         595927.8 u
+delta HPWL                    0 %
+
+BOUNDED_GRT pass 0 hold -50.550980270556146 endpoints 2
+[INFO RSZ-0046] Found 5 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -50.551 | -99.244 | ft_rst_o
+    final |       0 |       3 |            0 |    +0.0% | -50.551 | -99.244 | ft_rst_o
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 3 hold buffers.
+[INFO RSZ-0506] Runtime: 0.65s
+[INFO DPL-0006] Core area: 86593.54 um^2
+[INFO DPL-0007] Movable instances area: 2897.31 um^2
+[INFO DPL-0008] Fixed instances area within core: 15797.46 um^2
+[INFO DPL-0009] Utilization: 21.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 25806 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.25s
+Placement Analysis
+---------------------------------
+total displacement          1.1 u
+average displacement        0.0 u
+max displacement            0.5 u
+original HPWL          595928.6 u
+legalized HPWL         595929.1 u
+delta HPWL                    0 %
+
+BOUNDED_GRT pass 1 hold -50.550980270556146 endpoints 2
+[INFO RSZ-0046] Found 2 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -50.551 | -99.244 | ft_rst_o
+    final |       0 |       0 |            0 |    +0.0% | -50.551 | -99.244 | ft_rst_o
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0506] Runtime: 0.38s
+[INFO DPL-0006] Core area: 86593.54 um^2
+[INFO DPL-0007] Movable instances area: 2897.31 um^2
+[INFO DPL-0008] Fixed instances area within core: 15797.46 um^2
+[INFO DPL-0009] Utilization: 21.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 25806 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+[INFO DPL-0500] Runtime: 0.23s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL          595929.1 u
+legalized HPWL         595929.1 u
+delta HPWL                    0 %
+
+BOUNDED_GRT pass 2 hold -50.550980270556146 endpoints 2
+[INFO RSZ-0046] Found 2 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -50.551 | -99.244 | ft_rst_o
+    final |       0 |       0 |            0 |    +0.0% | -50.551 | -99.244 | ft_rst_o
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0506] Runtime: 0.39s
+[INFO DPL-0006] Core area: 86593.54 um^2
+[INFO DPL-0007] Movable instances area: 2897.31 um^2
+[INFO DPL-0008] Fixed instances area within core: 15797.46 um^2
+[INFO DPL-0009] Utilization: 21.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 25806 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+[INFO DPL-0500] Runtime: 0.24s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL          595929.1 u
+legalized HPWL         595929.1 u
+delta HPWL                    0 %
+
+BOUNDED_GRT pass 3 hold -50.550980270556146 endpoints 2
+Error: hold_grt_s6.tcl, 84 BOUNDED_GRT no progress over3 independently rerouted native-GRT passes
