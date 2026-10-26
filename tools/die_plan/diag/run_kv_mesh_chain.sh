@@ -11,7 +11,7 @@ measure() { python3 $T/die_clock_mesh.py combo $1 --kit $K --plan $PL; MEM=24 ba
             bash $T/die_clock_mesh_post.sh $1 $PL; }
 python3 $T/die_clock_mesh.py build $PL --out $O/b0 --nx 32 --ny 64 --m 2 --rep-um 450 --ndr 4w --sites any \
   --region-spec $SPEC --reserve-cell-sites --pg-json $PG --track-file $K/grt/tracks.tcl \
-  --trunk-repeaters --driver-pair-span 700 --split-yfirst --delta-id D-KV-CLKMESH-PROTO
+  --trunk-repeaters --driver-pair-span 700 --split-yfirst --max-move ${MAXMOVE:-250} --delta-id D-KV-CLKMESH-PROTO
 measure $O/b0
 python3 $T/die_clock_mesh.py balance $O/b0 --out $O/b1 --plan $PL --tag a; measure $O/b1
 python3 $T/die_clock_mesh.py balance $O/b1 --out $O/b2 --plan $PL --tag b; measure $O/b2
