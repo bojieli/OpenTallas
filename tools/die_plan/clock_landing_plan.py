@@ -331,7 +331,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None):
             split=True;old=raw["partition_types"].pop(tn)
             for sig,names in cohorts.items():
                 base=base_type[names[0]];name=base+"__cl"+hashlib.sha256((tn+sig).encode()).hexdigest()[:8]
-                clone=copy.deepcopy(old);clone["module"]=name
+                clone=copy.deepcopy(old);clone["module"]=name;clone["landing_base_type"]=base
                 clone["note"]=clone.get("note","")+f";clock landing cohort from{base} (exact local monitor children)"
                 raw["partition_types"][name]=clone
                 if "in_um" in W["types"].get(tn,{}):raw["reset"]["in_sites"][name]=W["types"][tn]["in_um"]
