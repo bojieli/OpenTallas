@@ -62,6 +62,12 @@ def repair(raw):
                     a,b=inset(A),inset(B);r=U.C.zroute(a,b,A[2],B[2]);ps=[(st[bit][0]+cw/2,st[bit][1]+ch/2) for st in s['bit_sites_um']]
                     pts[bit]=(a,b,r,U.C.plen(r),ps)
                 moved=U._move(pts,list(pts),k,grow,free,395.,tn,name)
+                # A moved endpoint can invalidate otherwise macro-free old
+                # stations. Re-solve that bit at the same depth as well.
+                for bit,(a,b,r,L,ps) in list(pts.items()):
+                    chain=[a,*ps,b]
+                    if max(U.man(u,v) for u,v in zip(chain,chain[1:]))>395.:
+                        pts[bit]=(a,b,r,L,U.layered(a,b,ps,k,grow,395.,tn,name,bit))
                 new=copy.deepcopy(s['bit_sites_um'])
                 for bit,(a,b,r,L,ps) in pts.items():
                     for stage,p in enumerate(ps):
