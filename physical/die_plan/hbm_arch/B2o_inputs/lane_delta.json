@@ -1,5 +1,38 @@
 {
- "source": "HBM-BIND native-bind need (B2n b2n_report.json lane_delta_short: NW_hub->root ctl 1491 < 3749, NE 1491 < 2709) + COORD 00:21 ruling (1): RTL sends hub->root over static beats; size L74 >= ceil(need/3) per beat, ideally wider",
- "why": "B2o puts L74 on the hub / root ABUTTING face (one neighbour hop, no transit): 2 static beats (ceil(3749/2) = 1875 NW; NE 2709 -> 1355 fits) instead of 3; full width would take another 1874 pins of the 2073.6-um hub / root face that root -> hub L12/L13 (6286 b) already uses",
- "widen": [{"lanes": ["L74"], "width": [1875]}]
+ "source": "COORD RULING 2026-10-25 03:12 PDT (HBM L74, option b) + HBM-BIND native need: NW hub->root L74 >= 2341 b at 2 static beats; HC bank-chain lanes sized for the W128 halves (>= 4127 b); one B2o batch, both within the cut check",
+ "why": "L74 on the direct hub / root face (one neighbour hop); hub is one type for NW and NE, so its L74_o pin table (and NE L74m) take the NW width 2341 (NE needs 1875 at 2 beats: spare). Bank chain = the hc ring data lanes b000->b001->b002->b003->b013->b012->b011->b010->b000 (L14 L15 L10 L16 L18 L17 L11 L20) + the chain delivery b000->hub (L19), all W128 halves",
+ "widen": [
+  {
+   "lanes": [
+    "L74"
+   ],
+   "width": [
+    2341
+   ]
+  },
+  {
+   "lanes": [
+    "L10",
+    "L11",
+    "L14",
+    "L15",
+    "L16",
+    "L17",
+    "L18",
+    "L19",
+    "L20"
+   ],
+   "width": [
+    4127,
+    4127,
+    4127,
+    4127,
+    4127,
+    4127,
+    4127,
+    4127,
+    4127
+   ]
+  }
+ ]
 }

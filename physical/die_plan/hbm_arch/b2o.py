@@ -21,8 +21,8 @@ Steps:
                 + one 360-um hop per partition crossing + face / transit congestion with history), NW primaries and
                 their 'm' mirrors routed as MY images, die-level lanes only through die-level partitions; lane ids,
                 widths, kinds and END buses (type pin names) kept; ports / ft slots re-emitted (B2n naming).
-  3. lane_delta B2o_inputs/lane_delta.json: L74 (hub -> root) widened toward the RTL need (ruling 1: >= ceil(need/3)
-                per static beat), now on the hub / root abutting face.
+  3. lane_delta B2o_inputs/lane_delta.json (applied before step 2): L74 (hub -> root) 2341 b = 2 static beats of the
+                NW need (COORD 03:12 ruling b) on the hub / root abutting face; HC bank-chain lanes 4127 b (W128 halves).
   4. windows    b2n.rewindow / enforce_mirror / fix_mirror_pins (2 pin layers, <= 5.6 pins / um, mirror tables).
   5. contents   every changed soft type: hard cores (outline + pins FROZEN, b2n_core_outlines.json) and soft leaves
                 re-placed by cores_b2.place_flow (data flow: core_conns.json partners, bus windows), core taps carried,
@@ -1380,8 +1380,8 @@ def main(argv=None):
     else:
         rect, newH, dy, widths = layout(plan, FP, log)
         changed = apply_rects(plan, rect, newH, dy, log)
+        lane_delta(plan, log)                   # widths first: the re-route sizes faces / transit for them
         routes, we, wt = reroute(plan, log)
-        lane_delta(plan, log)
         B.rewindow(plan, log)
         touched, pairs = B.enforce_mirror(plan, log)
         worst = B.rewindow(plan, log, fixed_ids=touched)
