@@ -1,0 +1,18 @@
+{
+  "source": "498db87763bdc1b4c188054bcc9281c7942c0dbb",
+  "runtime": "/srv/opentallas-scratch2/claude/codex-kv-image-2204/b19_r2",
+  "scope": "Actual b19 bound schedule compiler image; component ABI/static image checks only, full verify initially fails wrapper localparam overrides; b20 correction pending. No whole token or physical closure claim.",
+  "inputs": {
+    "bus_groups.json": "77d98d60e2998e17a14436f076940f3f338f850ad434868d85e1116c826fd30e",
+    "bind_report.json": "cb8d4771a61786c38b1969b80e3650776d058ad415f16eea3b1fdadc00f59254"
+  },
+  "dq_virtual_pad_flops": 0,
+  "real_request_pad_flops": 6316,
+  "uniform_bank_flops": 1456,
+  "profile": "F2 H586878 T293439; KST56,56,54,54,54,55,55; target10 native96",
+  "steady_cycle_delta_vs_b15": 0,
+  "static_gate": "PASS1800events/1494eventcycles/180servicewindows0collisions",
+  "abi_gate": "PASS MU471 + actual nativeAGES96/defaultAGES0 lockstep; MU327 fault80 and old77 fault08 caught",
+  "gate_unit": "oth-ubuntu-791411-1792994848 exit0",
+  "actual_parent_selection_gate": "Separate READYbad78d276f checks all11parentparams and4receiverparams; this older helper validates dispatcher/image only"
+}

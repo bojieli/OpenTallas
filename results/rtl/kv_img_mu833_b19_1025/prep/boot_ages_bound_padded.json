@@ -1,0 +1,116 @@
+{
+ "schema": "opentallas.qwen_kv.boot_ages.v1",
+ "ages": {
+  "attn": {
+   "PV_LEAD": 38,
+   "F_DLY": 55,
+   "D_QK": 0,
+   "D_RL": 111
+  },
+  "pv": {
+   "0": 131,
+   "1": 131
+  },
+  "vport": {
+   "vport_EN_0": {
+    "RT": 47,
+    "DQ": 15
+   },
+   "vport_EN_1": {
+    "RT": 48,
+    "DQ": 15
+   },
+   "vport_EN_2": {
+    "RT": 49,
+    "DQ": 0
+   },
+   "vport_EN_3": {
+    "RT": 50,
+    "DQ": 15
+   },
+   "vport_ES_0": {
+    "RT": 47,
+    "DQ": 15
+   },
+   "vport_ES_1": {
+    "RT": 48,
+    "DQ": 15
+   },
+   "vport_ES_2": {
+    "RT": 49,
+    "DQ": 1
+   },
+   "vport_ES_3": {
+    "RT": 50,
+    "DQ": 15
+   },
+   "vport_WN_0": {
+    "RT": 48,
+    "DQ": 15
+   },
+   "vport_WN_1": {
+    "RT": 47,
+    "DQ": 15
+   },
+   "vport_WN_2": {
+    "RT": 44,
+    "DQ": 14
+   },
+   "vport_WN_3": {
+    "RT": 46,
+    "DQ": 15
+   },
+   "vport_WS_0": {
+    "RT": 48,
+    "DQ": 15
+   },
+   "vport_WS_1": {
+    "RT": 47,
+    "DQ": 15
+   },
+   "vport_WS_2": {
+    "RT": 43,
+    "DQ": 15
+   },
+   "vport_WS_3": {
+    "RT": 46,
+    "DQ": 15
+   }
+  },
+  "pv_lead_by_pair": [
+   38,
+   38
+  ]
+ },
+ "words": [
+  1862285094,
+  131,
+  131,
+  3888,
+  3887,
+  3883,
+  3886,
+  3888,
+  3887,
+  3628,
+  3886,
+  3887,
+  3888,
+  305,
+  3890,
+  3887,
+  3888,
+  49,
+  3890
+ ],
+ "bounds": {
+  "PV_LEAD": 63,
+  "F_DLY": 127,
+  "D_QK": 255,
+  "D_RL": 255,
+  "VPORT_RT": 63,
+  "VPORT_DQ": 15,
+  "PV_FIRST_INPUT_AGE": 255
+ },
+ "error": null
+}

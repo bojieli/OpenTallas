@@ -1,0 +1,49 @@
+{
+  "scope": "historical StageA bootstrap source diagnosis; not current b19 G5",
+  "word_counts": {
+    "dispatcher": 77,
+    "receiver": 96,
+    "missing_native_age_words": 19
+  },
+  "readiness_gate": "setup_int explicitly requires diecfg_sealed; sender77 cannot seal receiver96",
+  "sources": {
+    "qkd_kvs_ctl_nc32.sv": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-token-0719/vehicle/src/scratch__binder4-1023__kv__kvsrc40__rtl__qwen_sys__static_kv_die_20261017/qkd_kvs_ctl_nc32.sv",
+      "sha256": "2edc45dffcad72bb9ed5f38185f9a92b08780a3643de8d35f87bf0d7cc255556",
+      "evidence": [
+        "    qkd_static_kv_boot_dispatch_mu_nc32 #(.MUT(0), .DIECFG(1), .NRST(43), .LINKCFG(1), .ESCFG(1), .DIECAP(1), .MU(1), .WMUT(0), .SRQ(2), .DSTG(1)) u_boot (.ck(ck), .rst_n(rst_n), .boot_pr(boot__boot_pr), .boot_image_target(boot__boot_image_target), .boot_image_ready(boot__boot_image_ready), .boot_image_fault(boot__boot_image_fault), .boot_image_epoch(boot__boot_image_epoch), .boot_image_digest(boot__boot_image_digest), .execution_active(d2d__svc[23:23]), .sink_applied(w_bobs__applied_core[159:0]), .local_configured({w_own__configured[0:0], w_wp",
+        "    qkd_kv_die_cfg_a_c32 #(.NRST(43), .CAP(1), .AGES(1), .MUT(0)) u_dcfg (.ck(ck), .por_n(por_n), .cfg_we(w_boot__diecfg_we[0:0]), .cfg_addr(w_boot__diecfg_addr[7:0]), .cfg_data(w_boot__diecfg_data[63:0]), .ectl_a_cfg(w_dcfg__ectl_a_cfg), .ectl_b_cfg(w_dcfg__ectl_b_cfg), .ectl_c_cfg(w_dcfg__ectl_c_cfg), .rst_dly(w_dcfg__rst_dly), .fused_program_capability(w_dcfg__fused_program_capability), .age_attn(w_dcfg__age_attn), .age_pv(w_dcfg__age_pv), .age_vport(w_dcfg__age_vport), .sealed(w_dcfg__sealed), .fault(w_dcfg__fault));"
+      ]
+    },
+    "qkd_kv_ctl_nc32_face.sv": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-token-0719/vehicle/src/extra__scratch__binder4-1023__kv__kvsrc40__rtl__qwen_sys__static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv",
+      "sha256": "57d7e5e73ae556fc6d9c5d388e7e3a5f562a5c5e0ecb57aad7cfecfd764a88bd",
+      "evidence": [
+        " 6,7,8,9:word_count=1024;10:word_count=(DIECFG!=0)?11'(32+NRST+1+((DIECAP!=0)?1:0)):11'd0;11:word_count=(LINKCFG!=0)?11'd66:11'd0;12:word_count=(ESCFG!=0)?11'd1024:11'd0;13:word_count=(ESCFG!=0)?11'd8:11'd0;default:word_count=0;endcase",
+        " wire setup_int=(&installed)&&((MUT==3)||(&sink_applied))&&(&local_configured)&&isa_seen&&!sink_fault&&!fault&&((DIECFG==0)||diecfg_sealed)&&((LINKCFG==0)||linkcfg_done)&&((ESCFG==0)||(es12_done&&es13_done));"
+      ]
+    },
+    "qkd_kv_ctl_c32_dcfg.sv": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-token-0719/vehicle/src/extra__scratch__binder4-1023__kv__kvsrc40__rtl__qwen_sys__static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv",
+      "sha256": "de8a97019f05a978bd5f3eb455a9e69419bebaa8f11f356612899e0a0665fcc9",
+      "evidence": [
+        "    localparam integer NA = (AGES != 0) ? 19 : 0;"
+      ]
+    }
+  },
+  "logs": {
+    "tok_short": {
+      "sha256": "fd414795faa09ceccfe0c2915d17fc61e59ca9dcb2f0771f8a03b73a100f1116",
+      "verdict": "KVSLICE_BOOT FAIL frames_sent 7161/7161 images_ready 13/13 errors 0 boot_fault 0 setup_ready 0 (cyc -1) cf_fault 0 pll_locked 1 host_faults 000000 die_to_host_words 3 last_ready_cyc 28899 cyc 50900"
+    },
+    "m1_cmdlate": {
+      "sha256": "fd414795faa09ceccfe0c2915d17fc61e59ca9dcb2f0771f8a03b73a100f1116",
+      "verdict": "KVSLICE_BOOT FAIL frames_sent 7161/7161 images_ready 13/13 errors 0 boot_fault 0 setup_ready 0 (cyc -1) cf_fault 0 pll_locked 1 host_faults 000000 die_to_host_words 3 last_ready_cyc 28899 cyc 50900"
+    },
+    "tok_full": {
+      "sha256": "ccb63e182c1c3310ad7929ebe5d7392372cbd9aae8b600d5a763c092fb9f8cda",
+      "verdict": "KVSLICE_BOOT FAIL frames_sent 7161/7161 images_ready 13/13 errors 0 boot_fault 0 setup_ready 0 (cyc -1) cf_fault 0 pll_locked 1 host_faults 000000 die_to_host_words 3 last_ready_cyc 28899 cyc 50900"
+    }
+  },
+  "other_bootstrap_roles": "START/HOST behavior remains unexercised past failed prerequisite; no single-cause whole-token closure claim"
+}
