@@ -1706,6 +1706,38 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+       "physical_stages": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "selector",
+          "xy_um"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "selector": {
+           "type": "string",
+           "minLength": 1
+          },
+          "xy_um": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          }
+         }
+        }
+       },
+       "keep_modules": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
        "tap_um": {
         "type": "array",
         "items": {
