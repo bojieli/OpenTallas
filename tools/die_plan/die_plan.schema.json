@@ -765,6 +765,36 @@
           "lsb_high"
          ]
         },
+        "in_layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1,
+         "maxItems": 3
+        },
+        "out_layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1,
+         "maxItems": 3
+        },
+        "in_order": {
+         "enum": [
+          "lsb_low",
+          "lsb_high"
+         ]
+        },
+        "out_order": {
+         "enum": [
+          "lsb_low",
+          "lsb_high"
+         ]
+        },
         "note": {
          "type": "string"
         }
