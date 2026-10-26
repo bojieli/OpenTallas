@@ -1,0 +1,3347 @@
+{
+ "schema": "hbm_core_rebuild_set/1",
+ "status": "UNCHECKED (model + diagnostic)",
+ "gates_src": "/srv/opentallas-scratch2/claude/codex-hbm-bit-roads-1026/master_exact/gates.json",
+ "model": {
+  "form": "TT = RCX x K x L_max(entry -> farthest corner); FF = FF_RATIO x TT",
+  "K_ps_per_um": 0.8963,
+  "RCX": 0.9429,
+  "FF_RATIO": 0.7998,
+  "calibration": [
+   [
+    "qfd_dv_s8x_vmr",
+    406.08,
+    341.8,
+    271.8
+   ],
+   [
+    "qfd_dv_s8x_prog",
+    436.32,
+    419.4,
+    337.1
+   ],
+   [
+    "qfd_dv_s8x_btab",
+    436.32,
+    384.9,
+    308.1
+   ]
+  ],
+  "calibration_err_ps": [
+   22.2,
+   -28.3,
+   6.2
+  ],
+  "calibration_rms_ps": 21.1,
+  "note": "shallow cores (pred < target) pad up with a designed fixed trunk (12.8c): not a FAIL"
+ },
+ "counts": {
+  "INTERNAL_HTREE_ISLANDS": 58,
+  "IP_DECLARED": 1,
+  "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW": 82,
+  "SHALLOW_FIXED_TRUNK (12.8c)": 10,
+  "OK_OR_CENTRE": 6,
+  "CENTRE_ENTRY_STRUCTURED_TREE": 2
+ },
+ "n_types": 159,
+ "measured19_model_pass_with_centre": [
+  "hfd_ep_static",
+  "ot_hgi_sm_xload_cl2_bfqg",
+  "hfd_vms_bank_native_q0_faces",
+  "ot_hbm_su_static_qcore_r13",
+  "ot_hgi_coll_inj_idx_join_rg",
+  "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "ot_hgi_qw_dec",
+  "ot_hbm_svc_sm_xcal_rel_t",
+  "ot_hgi_coll_gq_issue",
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+  "ot_hgi_coll_gq_land"
+ ],
+ "rows": [
+  {
+   "module": "hfd_hgi_vms_glue_nw_t",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 934.6,
+   "model_centre_ff_ps": 747.5,
+   "farthest_um": 1105.92,
+   "entry_um": [
+    436.32,
+    665.28
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    8
+   ],
+   "leaf_reach_um": 192.159,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "hnx_rp3lp3h_n",
+   "inst": 128,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 777.6,
+   "model_centre_ff_ps": 622.0,
+   "farthest_um": 920.16,
+   "entry_um": [
+    315.36,
+    604.8
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    8
+   ],
+   "leaf_reach_um": 154.44,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_programme_pslice_c5",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 719.2,
+   "model_centre_ff_ps": 575.3,
+   "farthest_um": 851.04,
+   "entry_um": [
+    470.88,
+    380.16
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    8,
+    4
+   ],
+   "leaf_reach_um": 153.765,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "hnx_rp3lp3h_s",
+   "inst": 128,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 704.6,
+   "model_centre_ff_ps": 563.6,
+   "farthest_um": 833.76,
+   "entry_um": [
+    315.36,
+    518.4
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    8
+   ],
+   "leaf_reach_um": 143.64,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hfd_coll_q3_body_core",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 690.0,
+   "model_centre_ff_ps": 551.9,
+   "farthest_um": 816.48,
+   "entry_um": [
+    289.44,
+    527.04
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    8
+   ],
+   "leaf_reach_um": 138.24,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hfd_coll_q2n2_body_core",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 646.2,
+   "model_centre_ff_ps": 516.8,
+   "farthest_um": 764.64,
+   "entry_um": [
+    393.12,
+    371.52
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 191.16,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes0_3",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 628.0,
+   "model_centre_ff_ps": 502.2,
+   "farthest_um": 743.04,
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 185.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 628.0,
+   "model_centre_ff_ps": 502.2,
+   "farthest_um": 743.04,
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 185.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes16_19",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 628.0,
+   "model_centre_ff_ps": 502.2,
+   "farthest_um": 743.04,
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 185.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes24_27",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 628.0,
+   "model_centre_ff_ps": 502.2,
+   "farthest_um": 743.04,
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 185.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes4_7",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 628.0,
+   "model_centre_ff_ps": 502.2,
+   "farthest_um": 743.04,
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 185.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes12_15",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 628.0,
+   "model_centre_ff_ps": 502.2,
+   "farthest_um": 743.04,
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 185.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes20_23",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 628.0,
+   "model_centre_ff_ps": 502.2,
+   "farthest_um": 743.04,
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 185.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes28_31",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 628.0,
+   "model_centre_ff_ps": 502.2,
+   "farthest_um": 743.04,
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 185.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hgi_sfu_core_split3__opstore_b",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 613.4,
+   "model_centre_ff_ps": 490.6,
+   "farthest_um": 725.76,
+   "entry_um": [
+    380.16,
+    345.6
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 181.44,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hfd_coll_q2n2_vm_core",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 606.1,
+   "model_centre_ff_ps": 484.7,
+   "farthest_um": 717.12,
+   "entry_um": [
+    462.24,
+    254.88
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 179.28,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_svc_sm_group_rel_id",
+   "inst": 8,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 602.4,
+   "model_centre_ff_ps": 481.8,
+   "farthest_um": 712.8,
+   "entry_um": [
+    388.8,
+    324.0
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 177.903,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hgi_sfu_programme_store_r10",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 1150,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 558.6,
+   "model_centre_ff_ps": 446.8,
+   "farthest_um": 660.96,
+   "entry_um": [
+    285.12,
+    371.52
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 164.16,
+   "r3_sink_inputs": true,
+   "r3_coords": "PROVISIONAL-SCALED (re-derive from first placement on plan outline)"
+  },
+  {
+   "module": "ot_hgi_sfu_core_split3__ctl",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 551.3,
+   "model_centre_ff_ps": 440.9,
+   "farthest_um": 652.32,
+   "entry_um": [
+    336.96,
+    311.04
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 162.0,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hfd_coll_q3_edge_core",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 525.7,
+   "model_centre_ff_ps": 420.5,
+   "farthest_um": 622.08,
+   "entry_um": [
+    95.04,
+    527.04
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    1,
+    8
+   ],
+   "leaf_reach_um": 160.92,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_pdie_serdes",
+   "inst": 5,
+   "measured_edge_entry_tt_ps": 627,
+   "old_action": "IP_DECLARED",
+   "model_centre_tt_ps": 510.8,
+   "model_centre_ff_ps": 408.5,
+   "farthest_um": 604.368,
+   "entry_um": [
+    298.08,
+    302.4
+   ],
+   "cls": "IP_DECLARED",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 150.066,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_topk_link_static",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 487.4,
+   "model_centre_ff_ps": 389.8,
+   "farthest_um": 576.72,
+   "entry_um": [
+    324.0,
+    250.56
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    4
+   ],
+   "leaf_reach_um": 143.775,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_selector_static_sel",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 446.0,
+   "model_centre_ff_ps": 356.7,
+   "farthest_um": 527.688,
+   "entry_um": [
+    298.08,
+    224.64
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    2
+   ],
+   "leaf_reach_um": 187.596,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hfd_coll_q3_vm_core",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 441.8,
+   "model_centre_ff_ps": 353.3,
+   "farthest_um": 522.72,
+   "entry_um": [
+    164.16,
+    358.56
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    4
+   ],
+   "leaf_reach_um": 171.72,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_svc_wb_kport_q",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 401.6,
+   "model_centre_ff_ps": 321.2,
+   "farthest_um": 475.2,
+   "entry_um": [
+    237.6,
+    237.6
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    2
+   ],
+   "leaf_reach_um": 178.2,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 379.7,
+   "model_centre_ff_ps": 303.7,
+   "farthest_um": 449.28,
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    4
+   ],
+   "leaf_reach_um": 167.4,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 379.7,
+   "model_centre_ff_ps": 303.7,
+   "farthest_um": 449.28,
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    4
+   ],
+   "leaf_reach_um": 167.4,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__side_softplus",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": 572,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 379.7,
+   "model_centre_ff_ps": 303.7,
+   "farthest_um": 449.28,
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    4
+   ],
+   "leaf_reach_um": 167.4,
+   "r3_sink_inputs": true,
+   "r3_coords": "MEASURED (placement on the plan outline)"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 379.7,
+   "model_centre_ff_ps": 303.7,
+   "farthest_um": 449.28,
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    4
+   ],
+   "leaf_reach_um": 167.4,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 379.7,
+   "model_centre_ff_ps": 303.7,
+   "farthest_um": 449.28,
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    4
+   ],
+   "leaf_reach_um": 167.4,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__side_rest",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": 515,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 379.7,
+   "model_centre_ff_ps": 303.7,
+   "farthest_um": 449.28,
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    4
+   ],
+   "leaf_reach_um": 167.4,
+   "r3_sink_inputs": true,
+   "r3_coords": "MEASURED (placement on the plan outline)"
+  },
+  {
+   "module": "ot_hbm_host_cp_rxs",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 367.5,
+   "model_centre_ff_ps": 293.9,
+   "farthest_um": 434.808,
+   "entry_um": [
+    216.0,
+    216.0
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    2
+   ],
+   "leaf_reach_um": 162.351,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_svc_vm_kshare_splitstrap",
+   "inst": 8,
+   "measured_edge_entry_tt_ps": 543,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 343.2,
+   "model_centre_ff_ps": 274.5,
+   "farthest_um": 406.08,
+   "entry_um": [
+    177.12,
+    224.64
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    4
+   ],
+   "leaf_reach_um": 145.26,
+   "r3_sink_inputs": true,
+   "r3_coords": "MEASURED (placement on the plan outline)"
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_ctlx",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 505,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 328.6,
+   "model_centre_ff_ps": 262.8,
+   "farthest_um": 388.8,
+   "entry_um": [
+    194.4,
+    194.4
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 194.4,
+   "r3_sink_inputs": true,
+   "r3_coords": "NO PLACED DB on the fleet (epyc3 retired / pruned)"
+  },
+  {
+   "module": "ot_hgi_sm_xload_xq_pegress",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": 448,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 314.0,
+   "model_centre_ff_ps": 251.1,
+   "farthest_um": 371.52,
+   "entry_um": [
+    185.76,
+    185.76
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 184.68,
+   "r3_sink_inputs": true,
+   "r3_coords": "NO PLACED DB on the fleet (epyc3 retired / pruned)"
+  },
+  {
+   "module": "ot_hgi_sfu_split3_lane_core__idpin",
+   "inst": 32,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 310.3,
+   "model_centre_ff_ps": 248.2,
+   "farthest_um": 367.2,
+   "entry_um": [
+    194.4,
+    172.8
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 183.6,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hgi_sfu_core_split3__opstore_a",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 310.3,
+   "model_centre_ff_ps": 248.2,
+   "farthest_um": 367.2,
+   "entry_um": [
+    194.4,
+    172.8
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 183.6,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_rootctl_static_am",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 310.3,
+   "model_centre_ff_ps": 248.2,
+   "farthest_um": 367.2,
+   "entry_um": [
+    237.6,
+    129.6
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 183.6,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 447,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 295.7,
+   "model_centre_ff_ps": 236.5,
+   "farthest_um": 349.92,
+   "entry_um": [
+    125.28,
+    224.64
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 174.96,
+   "r3_sink_inputs": true,
+   "r3_coords": "MEASURED (placement on the plan outline)"
+  },
+  {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+   "inst": 31,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 281.1,
+   "model_centre_ff_ps": 224.8,
+   "farthest_um": 332.64,
+   "entry_um": [
+    159.84,
+    172.8
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 166.32,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 281.1,
+   "model_centre_ff_ps": 224.8,
+   "farthest_um": 332.64,
+   "entry_um": [
+    159.84,
+    172.8
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 166.32,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hgi_coll_tkm_m_tp192__root",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 281.1,
+   "model_centre_ff_ps": 224.8,
+   "farthest_um": 332.64,
+   "entry_um": [
+    159.84,
+    172.8
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 166.32,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 550,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 281.1,
+   "model_centre_ff_ps": 224.8,
+   "farthest_um": 332.64,
+   "entry_um": [
+    168.48,
+    164.16
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 166.32,
+   "r3_sink_inputs": true,
+   "r3_coords": "PROVISIONAL-SCALED (re-derive from first placement on plan outline)"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp0",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp2",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp4",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp6",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp8",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp10",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp12",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp14",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp1",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp3",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp5",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp7",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp9",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp11",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp13",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 273.8,
+   "model_centre_ff_ps": 219.0,
+   "farthest_um": 324.0,
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "cls": "INTERNAL_HTREE_ISLANDS",
+   "island_grid": [
+    4,
+    1
+   ],
+   "leaf_reach_um": 158.76,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "hfd_ep_static",
+   "inst": 6,
+   "measured_edge_entry_tt_ps": 577,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 266.5,
+   "model_centre_ff_ps": 213.2,
+   "farthest_um": 315.36,
+   "entry_um": [
+    125.28,
+    185.76
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 156.6,
+   "r3_sink_inputs": true,
+   "r3_coords": "PROVISIONAL-SCALED (re-derive from first placement on plan outline)"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__pretree",
+   "inst": 8,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 262.9,
+   "model_centre_ff_ps": 210.2,
+   "farthest_um": 311.04,
+   "entry_um": [
+    82.08,
+    228.96
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    1,
+    2
+   ],
+   "leaf_reach_um": 196.56,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_bfqg",
+   "inst": 16,
+   "measured_edge_entry_tt_ps": 385,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 255.6,
+   "model_centre_ff_ps": 204.4,
+   "farthest_um": 302.4,
+   "entry_um": [
+    151.2,
+    146.88
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 150.12,
+   "r3_sink_inputs": true,
+   "r3_coords": "NO PLACED DB on the fleet (epyc3 retired / pruned)"
+  },
+  {
+   "module": "hfd_vms_bank_native_q0_faces",
+   "inst": 16,
+   "measured_edge_entry_tt_ps": 437,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 248.3,
+   "model_centre_ff_ps": 198.6,
+   "farthest_um": 293.76,
+   "entry_um": [
+    133.92,
+    155.52
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 145.8,
+   "r3_sink_inputs": true,
+   "r3_coords": "MEASURED (placement on the plan outline)"
+  },
+  {
+   "module": "ot_hbm_su_static_qcore_r13",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 434,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 248.3,
+   "model_centre_ff_ps": 198.6,
+   "farthest_um": 293.76,
+   "entry_um": [
+    151.2,
+    138.24
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    2
+   ],
+   "leaf_reach_um": 145.8,
+   "r3_sink_inputs": true,
+   "r3_coords": "NO PLACED DB on the fleet (epyc3 retired / pruned)"
+  },
+  {
+   "module": "ot_hgi_coll_inj_idx_join_rg",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 417,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 226.4,
+   "model_centre_ff_ps": 181.0,
+   "farthest_um": 267.84,
+   "entry_um": [
+    103.68,
+    155.52
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    1,
+    2
+   ],
+   "leaf_reach_um": 184.68,
+   "r3_sink_inputs": true,
+   "r3_coords": "PROVISIONAL-SCALED (re-derive from first placement on plan outline)"
+  },
+  {
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 356,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 226.4,
+   "model_centre_ff_ps": 181.0,
+   "farthest_um": 267.84,
+   "entry_um": [
+    69.12,
+    194.4
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    1,
+    2
+   ],
+   "leaf_reach_um": 168.48,
+   "r3_sink_inputs": true,
+   "r3_coords": "NO PLACED DB on the fleet (epyc3 retired / pruned)"
+  },
+  {
+   "module": "ot_hgi_qw_dec",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 368,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 220.4,
+   "model_centre_ff_ps": 176.3,
+   "farthest_um": 260.8,
+   "entry_um": [
+    129.6,
+    129.6
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 195.0,
+   "r3_sink_inputs": true,
+   "r3_coords": "MEASURED (placement on the plan outline)"
+  },
+  {
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "inst": 16,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 219.1,
+   "model_centre_ff_ps": 175.2,
+   "farthest_um": 259.2,
+   "entry_um": [
+    125.28,
+    133.92
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    1,
+    2
+   ],
+   "leaf_reach_um": 192.24,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "inst": 112,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 219.1,
+   "model_centre_ff_ps": 175.2,
+   "farthest_um": 259.2,
+   "entry_um": [
+    125.28,
+    133.92
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    1,
+    2
+   ],
+   "leaf_reach_um": 192.24,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "inst": 8,
+   "measured_edge_entry_tt_ps": 527,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 211.8,
+   "model_centre_ff_ps": 169.4,
+   "farthest_um": 250.56,
+   "entry_um": [
+    125.28,
+    125.28
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 187.92,
+   "r3_sink_inputs": true,
+   "r3_coords": "PROVISIONAL-SCALED (re-derive from first placement on plan outline)"
+  },
+  {
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 204.5,
+   "model_centre_ff_ps": 163.5,
+   "farthest_um": 241.92,
+   "entry_um": [
+    120.96,
+    120.96
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    1,
+    2
+   ],
+   "leaf_reach_um": 180.198,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hgi_coll_gq_issue",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 343,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 204.5,
+   "model_centre_ff_ps": 163.5,
+   "farthest_um": 241.92,
+   "entry_um": [
+    116.64,
+    116.64
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 178.2,
+   "r3_sink_inputs": true,
+   "r3_coords": "MEASURED (placement on the plan outline)"
+  },
+  {
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 197.1,
+   "model_centre_ff_ps": 157.7,
+   "farthest_um": 233.28,
+   "entry_um": [
+    116.64,
+    116.64
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 174.96,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 197.1,
+   "model_centre_ff_ps": 157.7,
+   "farthest_um": 233.28,
+   "entry_um": [
+    116.64,
+    116.64
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 174.96,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_hc_subtree32_core",
+   "inst": 8,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 189.8,
+   "model_centre_ff_ps": 151.8,
+   "farthest_um": 224.64,
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 165.24,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c0_k0h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c0_k0h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 255,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c0_k1h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c0_k1h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c0_k2h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 255,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c0_k2h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c0_k3h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 258,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c0_k3h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c1_k0h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 258,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c1_k0h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c1_k1h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c1_k1h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c1_k2h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c1_k2h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c1_k3h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c1_k3h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c2_k0h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c2_k0h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 259,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c2_k1h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c2_k1h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c2_k2h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c2_k2h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c2_k3h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c2_k3h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 255,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c3_k0h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 255,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c3_k0h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c3_k1h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 258,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c3_k1h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c3_k2h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 255,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c3_k2h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c3_k3h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r0c3_k3h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c0_k0h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c0_k0h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c0_k1h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c0_k1h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 255,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c0_k2h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c0_k2h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 258,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c0_k3h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c0_k3h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c1_k0h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 255,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c1_k0h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c1_k1h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c1_k1h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 255,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c1_k2h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 258,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c1_k2h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c1_k3h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c1_k3h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c2_k0h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c2_k0h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c2_k1h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c2_k1h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 258,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c2_k2h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 259,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c2_k2h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c2_k3h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c2_k3h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c3_k0h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c3_k0h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c3_k1h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 255,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c3_k1h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 258,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c3_k2h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 258,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c3_k2h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c3_k3h0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__r1c3_k3h1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__tail0",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 256,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__tail1",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 257,
+   "old_action": "OK",
+   "model_centre_tt_ps": 173.8,
+   "model_centre_ff_ps": 139.0,
+   "farthest_um": 205.632,
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+   "island_grid": [
+    2,
+    1
+   ],
+   "leaf_reach_um": 148.392,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_qctl_static",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 167.9,
+   "model_centre_ff_ps": 134.3,
+   "farthest_um": 198.72,
+   "entry_um": [
+    99.36,
+    99.36
+   ],
+   "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_bdring",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": 288,
+   "old_action": "OK",
+   "model_centre_tt_ps": 164.3,
+   "model_centre_ff_ps": 131.4,
+   "farthest_um": 194.4,
+   "entry_um": [
+    43.2,
+    151.2
+   ],
+   "cls": "OK_OR_CENTRE",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "inst": 16,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 157.0,
+   "model_centre_ff_ps": 125.6,
+   "farthest_um": 185.76,
+   "entry_um": [
+    129.6,
+    51.84
+   ],
+   "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "inst": 32,
+   "measured_edge_entry_tt_ps": 295,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 153.3,
+   "model_centre_ff_ps": 122.6,
+   "farthest_um": 181.44,
+   "entry_um": [
+    90.72,
+    90.72
+   ],
+   "cls": "CENTRE_ENTRY_STRUCTURED_TREE",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": true,
+   "r3_coords": "MEASURED (placement on the plan outline)"
+  },
+  {
+   "module": "hfd_hgi_vm_calendar_f20",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 241,
+   "old_action": "OK",
+   "model_centre_tt_ps": 153.3,
+   "model_centre_ff_ps": 122.6,
+   "farthest_um": 181.44,
+   "entry_um": [
+    120.96,
+    60.48
+   ],
+   "cls": "OK_OR_CENTRE",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hgi_coll_gq_land",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 328,
+   "old_action": "REBUILD",
+   "model_centre_tt_ps": 149.7,
+   "model_centre_ff_ps": 119.7,
+   "farthest_um": 177.12,
+   "entry_um": [
+    69.12,
+    103.68
+   ],
+   "cls": "CENTRE_ENTRY_STRUCTURED_TREE",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": true,
+   "r3_coords": "PROVISIONAL-SCALED (re-derive from first placement on plan outline)"
+  },
+  {
+   "module": "ot_hbm_idx_query_static",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 275,
+   "old_action": "OK",
+   "model_centre_tt_ps": 142.4,
+   "model_centre_ff_ps": 113.9,
+   "farthest_um": 168.48,
+   "entry_um": [
+    86.4,
+    82.08
+   ],
+   "cls": "OK_OR_CENTRE",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tail0_sk_step0",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 138.7,
+   "model_centre_ff_ps": 111.0,
+   "farthest_um": 164.16,
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tail0_sk_steady",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 138.7,
+   "model_centre_ff_ps": 111.0,
+   "farthest_um": 164.16,
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tail0_rest",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 138.7,
+   "model_centre_ff_ps": 111.0,
+   "farthest_um": 164.16,
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tail1_sk_step0",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 138.7,
+   "model_centre_ff_ps": 111.0,
+   "farthest_um": 164.16,
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tail1_sk_steady",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 138.7,
+   "model_centre_ff_ps": 111.0,
+   "farthest_um": 164.16,
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tail1_rest",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": null,
+   "old_action": "MEASURE",
+   "model_centre_tt_ps": 138.7,
+   "model_centre_ff_ps": 111.0,
+   "farthest_um": 164.16,
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_hc_root_static__hcp_sys1",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": 251,
+   "old_action": "OK",
+   "model_centre_tt_ps": 138.7,
+   "model_centre_ff_ps": 111.0,
+   "farthest_um": 164.16,
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "cls": "OK_OR_CENTRE",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_idx_vm_query_static_n12",
+   "inst": 2,
+   "measured_edge_entry_tt_ps": 259,
+   "old_action": "OK",
+   "model_centre_tt_ps": 138.7,
+   "model_centre_ff_ps": 111.0,
+   "farthest_um": 164.16,
+   "entry_um": [
+    108.0,
+    51.84
+   ],
+   "cls": "OK_OR_CENTRE",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_xp_aq_tree13_fmt",
+   "inst": 4,
+   "measured_edge_entry_tt_ps": 236,
+   "old_action": "OK",
+   "model_centre_tt_ps": 126.0,
+   "model_centre_ff_ps": 100.7,
+   "farthest_um": 149.04,
+   "entry_um": [
+    90.72,
+    51.84
+   ],
+   "cls": "OK_OR_CENTRE",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_argmax_static_sw_vm_r2",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": 191,
+   "old_action": "PAD",
+   "model_centre_tt_ps": 102.2,
+   "model_centre_ff_ps": 81.8,
+   "farthest_um": 120.96,
+   "entry_um": [
+    60.48,
+    60.48
+   ],
+   "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  },
+  {
+   "module": "ot_hbm_static_cfg_collar_idx256r",
+   "inst": 1,
+   "measured_edge_entry_tt_ps": 182,
+   "old_action": "PAD",
+   "model_centre_tt_ps": 94.9,
+   "model_centre_ff_ps": 75.9,
+   "farthest_um": 112.32,
+   "entry_um": [
+    51.84,
+    51.84
+   ],
+   "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+   "island_grid": null,
+   "leaf_reach_um": null,
+   "r3_sink_inputs": false,
+   "r3_coords": null
+  }
+ ]
+}

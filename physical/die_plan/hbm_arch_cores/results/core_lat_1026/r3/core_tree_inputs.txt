@@ -1,0 +1,19 @@
+ot_hgi_sfu_programme_store_r10                1150 inst2   574.56x738.72 leaves32  load   568-569   p95r<=334.9 trunk  578.9-1118.9 stages<=11 E->S 1471.1 PROVISIONAL-
+hfd_ep_static                                  577 inst6   276.48x315.36 leaves16  load   472-473   p95r<=127.2 trunk  159.8- 341.3 stages<=5 E->S  591.3 PROVISIONAL-
+ot_hbm_su_static_pgslice_lg__side_softplus     572 inst4   440.64x457.92 leaves16  load  1476-1477  p95r<=161.1 trunk  198.7- 233.3 stages<=5 E->S  526.7 MEASURED (pl
+ot_hbm_su_static_sfustore_hw                   550 inst2   293.76x354.24 leaves16  load   265-266   p95r<=145.4 trunk  263.5- 587.5 stages<=7 E->S  782.4 PROVISIONAL-
+ot_hbm_svc_vm_kshare_splitstrap                543 inst8   354.24x453.6 leaves16  load  1539-1540  p95r<=221.6 trunk  341.3- 561.6 stages<=5 E->S  793.4 MEASURED (pl
+ot_hbm_svc_sm_xcal_rel_t                       527 inst8   250.56x250.56 leaves16  load   165-166   p95r<=227.9 trunk   86.4- 349.9 stages<=7 E->S  583.7 PROVISIONAL-
+ot_hbm_su_static_pgslice_lg__side_rest         515 inst4   440.64x457.92 leaves16  load  1136-1137  p95r<=108.8 trunk  224.6- 276.5 stages<=5 E->S  612.3 MEASURED (pl
+ot_hgi_sm_xload_cl2_ctlx                       505 inst2   NO PLACED DB on the fleet (epyc3 retired / pruned)
+ot_hgi_sm_xload_xq_pegress                     448 inst4   NO PLACED DB on the fleet (epyc3 retired / pruned)
+ot_hbm_su_static_cxport_ij_q                   447 inst2   250.56x449.28 leaves16  load   436-437   p95r<=201.3 trunk  203.0- 367.2 stages<=5 E->S  577.7 MEASURED (pl
+hfd_vms_bank_native_q0_faces                   437 inst16  270x313.2 leaves16  load   495-496   p95r<=179.5 trunk  272.2- 393.1 stages<=5 E->S  602.0 MEASURED (pl
+ot_hbm_su_static_qcore_r13                     434 inst2   NO PLACED DB on the fleet (epyc3 retired / pruned)
+ot_hgi_coll_inj_idx_join_rg                    417 inst2   211.68x315.36 leaves16  load   626-627   p95r<=179.3 trunk  263.5- 371.5 stages<=5 E->S  570.2 PROVISIONAL-
+ot_hgi_sm_xload_cl2_bfqg                       385 inst16  NO PLACED DB on the fleet (epyc3 retired / pruned)
+ot_hgi_qw_dec                                  368 inst2   260x260   leaves8   load  4459-4460  p95r<= 82.7 trunk  190.1- 198.7 stages<=4 E->S  354.3 MEASURED (pl
+ot_hbm_sm_vm_wr_q_t_lanes4                     356 inst2   NO PLACED DB on the fleet (epyc3 retired / pruned)
+ot_hgi_coll_gq_issue                           343 inst2   237.6x237.6 leaves8   load  4356-4357  p95r<= 91.3 trunk  177.1- 194.4 stages<=4 E->S  323.7 MEASURED (pl
+ot_hgi_coll_gq_land                            328 inst2   142.56x207.36 leaves16  load   283-284   p95r<=166.3 trunk  190.1- 289.4 stages<=5 E->S  468.3 PROVISIONAL-
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b                295 inst32  177.984x177.984 leaves16  load   610-611   p95r<= 81.5 trunk  168.5- 254.9 stages<=5 E->S  346.4 MEASURED (pl
