@@ -4,7 +4,8 @@ WT=$(git rev-parse --show-toplevel);cd "$WT"
 [ -z "$(git status --porcelain --untracked-files=no)" ] || { echo 'DIRTY refuse';exit 2; }
 D=${1:?fresh output};[ ! -e "$D" ] || { echo 'OUTPUT EXISTS refuse';exit 2; };mkdir -p "$D"
 git rev-parse HEAD > "$D/source_commit.txt"
-python3 tools/hbm_b2/q3stageb/topk_rows.py "$D/prog" --done "${DONE_INSTR:-608}"
+CARGS=();[ -z "${WRITE_INSTR:-}" ] || CARGS=(--write "$WRITE_INSTR")
+python3 tools/hbm_b2/q3stageb/topk_rows.py "$D/prog" --done "${DONE_INSTR:-608}" "${CARGS[@]}"
 python3 tools/hbm_b2/q3sync/q3_sync_profile.py --root . --files tools/hbm_b2/q3sync/q3b.files --out "$D/gen" --census "$D/census.json" > "$D/gen.log" 2>&1
 ASM=rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hbm_q3_producer_native.sv
 python3 tools/hbm_b2/q3prog/q3_asm_alias_loops.py "$ASM" "$D/asm.sv" "$D/alias.json"
