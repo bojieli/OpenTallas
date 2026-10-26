@@ -64,16 +64,70 @@ def load_plan(path):
 
 
 # ------------------------------------------------------------------------------------------------------------- PG
+# ASAP7 M8/M9 SPACINGTABLE (asap7_tech_1x_201209.lef, identical for M8 and M9): rows = width thresholds, columns =
+# parallel run length thresholds 0 / 0.39975 / 1.19975 / 1.79975 um.  Die PG stripes are long, so a stripe beside
+# another uses the last column: 0.04 below 0.49975 um width, 0.5 to 0.99975, 1.0 above (the 1.92-um VDDPHY stripes).
+PG_SPACING_PRL = (0.0, 0.39975, 1.19975, 1.79975)
+PG_SPACING_TABLE = ((0.0, (0.04, 0.04, 0.04, 0.04)), (0.49975, (0.04, 0.04, 0.04, 0.5)),
+                    (0.99975, (0.04, 0.04, 0.04, 1.0)))
+
+
+def pg_spacing(w, prl=float("inf")):
+    """required same-layer M8/M9 spacing (um) for the wider shape width w at parallel run length prl."""
+    row = [v for t, v in PG_SPACING_TABLE if w >= t][-1]
+    return [s for t, s in zip(PG_SPACING_PRL, row) if prl >= t][-1] if prl > 0 else row[0]
+
+
 def pg_grid(P, pg=None):
-    """the die PG grid spec (list of die.pg.grid rows): pg.json["grid"] when given, else the plan's."""
-    if pg:
-        return json.loads(Path(pg).read_text())["grid"]
-    return P.die.get("pg", {}).get("grid", [])
+    """the die PG stripe rows in pg_rects form: the core grid (pg.json["grid"] when given, else the plan's die.pg.grid)
+    PLUS every die.pg.domains (OWNER decision 7 PHY supply) grid, with the same disjoint-region rule as the real PDN
+    (pg_regions.pdn_tcl: pdngen cuts the core domain at the PHY regions, every region on the die's global phase).
+
+    HBM-PG 10-26 root cause: the domain rows were overlaid on full-die core rows, and on a region-local phase, so the
+    1.92-um VDDPHY/VSS stripes lay on top of / beside the 0.48-um core VDD/VSS stripes (1,288 PG-PG overlaps in the HBM
+    PHY windows).  Now: core rows carry the domain rects as holes (bloated by the core stripe's own spacing), domain
+    rows stay inside their rect (by their own wide-metal spacing on edges that face the core, i.e. not the die edge),
+    and both use the die phase (net parity included), so no same-layer stripes of different nets touch or sit within
+    the LEF spacing.  A plan without domains returns the core rows unchanged (byte-identical PG)."""
+    core = json.loads(Path(pg).read_text())["grid"] if pg else P.die.get("pg", {}).get("grid", [])
+    doms = P.die.get("pg", {}).get("domains") or []
+    if not doms:
+        return core
+    import pg_regions
+    pg_regions.regions(dict(P.die, outline_um=[P.W, P.H], pg=dict(P.die.get("pg", {}), grid=core)))  # raises on
+    # overlapping domains with different supplies or mesh contracts (the same validity rule as the real PDN)
+    rows = []
+    for g in core:
+        rows.append(dict(g, phase="die", holes_um=[list(map(float, d["rect_um"])) for d in doms],
+                         clear_um=pg_spacing(g["width_um"])))
+    for d in doms:
+        for g in d.get("grid") or []:
+            rows.append(dict(g, nets=list(g.get("nets") or d["nets"]), rect_um=list(map(float, d["rect_um"])),
+                             phase="die", clear_um=pg_spacing(g["width_um"])))
+    return rows
+
+
+def _cut(lo, hi, holes):
+    """[lo, hi] minus the sorted (h0, h1) intervals -> list of kept (a, b)."""
+    out, a = [], lo
+    for h0, h1 in sorted(holes):
+        if h1 <= a or h0 >= hi:
+            continue
+        if h0 > a:
+            out.append((a, h0))
+        a = max(a, h1)
+    if a < hi:
+        out.append((a, hi))
+    return out
 
 
 def pg_rects(P, grid):
     """[(net, layer, x0, y0, x1, y1)] of every die PG stripe; the same stripe rule as die_trial.pg_stripes, with the
-    net of every stripe (VDD/VSS alternate within one pitch) and optional region-limited rows (row["rect_um"])."""
+    net of every stripe (VDD/VSS alternate within one pitch) and optional region-limited rows (row["rect_um"]).
+
+    Rows from pg_grid() with die.pg.domains also carry phase="die" (offset measured from the die origin, as
+    pg_regions.pdn_tcl), clear_um (the stripe's own spacing kept from every region edge that is not the die edge) and
+    holes_um (rects the stripe is cut out of, bloated by clear_um: the core grid around the PHY regions)."""
     out = []
     for g in grid:
         L = P.layers.get(g["layer"])
@@ -82,17 +136,75 @@ def pg_rects(P, grid):
         nets = g.get("nets", ["VDD", "VSS"]) or ["VDD"]
         k = len(nets)
         x0, y0, x1, y1 = g.get("rect_um") or (0.0, 0.0, P.W, P.H)
-        lo, hi = (x0, x1) if L["dir"] == "V" else (y0, y1)
-        pos = lo + g["offset_um"]
+        V = L["dir"] == "V"
+        lo, hi = (x0, x1) if V else (y0, y1)
+        alo, ahi = (y0, y1) if V else (x0, x1)
+        m = g.get("clear_um")
+        if g.get("phase") == "die":
+            pos = lo + (g["offset_um"] - lo) % g["pitch_um"]
+        else:
+            pos = lo + g["offset_um"]
+        die_lo, die_hi = 0.0, (P.W if V else P.H)
+        die_alo, die_ahi = 0.0, (P.H if V else P.W)
+        plo = lo + m if m is not None and lo > die_lo + 1e-9 else None       # keep-in from an inner region edge
+        phi = hi - m if m is not None and hi < die_hi - 1e-9 else hi
+        a0 = alo + m if m is not None and alo > die_alo + 1e-9 else alo
+        a1 = ahi - m if m is not None and ahi < die_ahi - 1e-9 else ahi
+        holes = g.get("holes_um") or ()
+        mh = m or 0.0
         while pos < hi:
             for j in range(k):
                 c = pos + j * g["pitch_um"] / k
-                if c + g["width_um"] / 2 > hi:
-                    continue
                 a, b = c - g["width_um"] / 2, c + g["width_um"] / 2
-                out.append((nets[j], g["layer"]) + ((a, y0, b, y1) if L["dir"] == "V" else (x0, a, x1, b)))
+                if b > phi or (plo is not None and a < plo):
+                    continue
+                # holes that the stripe's perpendicular band meets (bloated by the stripe's own spacing)
+                cut = [((h[1], h[3]) if V else (h[0], h[2])) for h in holes
+                       if ((h[0], h[2]) if V else (h[1], h[3]))[0] - mh < b and a < ((h[0], h[2]) if V else (h[1], h[3]))[1] + mh]
+                for s0, s1 in (_cut(a0, a1, [(h0 - mh, h1 + mh) for h0, h1 in cut]) if cut else [(a0, a1)]):
+                    out.append((nets[j], g["layer"]) + ((a, s0, b, s1) if V else (s0, a, s1, b)))
             pos += g["pitch_um"]
     return out
+
+
+def pg_conflicts(rects, limit=10):
+    """same-layer PG stripes of DIFFERENT nets (VDD vs VDDPHY counts) that overlap or sit closer than the ASAP7 LEF
+    spacing for their width / parallel run length.  -> dict(shorts, spacing, examples).  The HBM-PG 10-26 gate."""
+    B = 4.0
+    bins = defaultdict(list)
+    shorts = spacing = 0
+    ex = []
+    for k, r in enumerate(rects):
+        n, L, x0, y0, x1, y1 = r
+        V = (x1 - x0) < (y1 - y0)
+        p0, p1 = (x0, x1) if V else (y0, y1)
+        seen = set()
+        for i in range(int((p0 - 1.0) // B), int((p1 + 1.0) // B) + 1):
+            for j in bins.get((L, i), ()):
+                t = rects[j]
+                if j in seen or t[0] == n:
+                    continue
+                seen.add(j)
+                gx = max(t[2] - x1, x0 - t[4])
+                gy = max(t[3] - y1, y0 - t[5])
+                if gx < 0 and gy < 0:
+                    hit, kind = True, "short"
+                else:
+                    w = max(min(x1 - x0, y1 - y0), min(t[4] - t[2], t[5] - t[3]))
+                    prl = max(-gx, -gy, 0.0)
+                    d = math.hypot(max(gx, 0.0), max(gy, 0.0))
+                    hit, kind = d < pg_spacing(w, prl) - 1e-6, "spacing"
+                if hit:
+                    if kind == "short":
+                        shorts += 1
+                    else:
+                        spacing += 1
+                    if len(ex) < limit:
+                        ex.append(dict(kind=kind, a=list(r), b=list(t)))
+        for i in range(int(p0 // B), int(p1 // B) + 1):
+            if k not in bins[(L, i)][-1:]:
+                bins[(L, i)].append(k)
+    return dict(stripes=len(rects), shorts=shorts, spacing=spacing, examples=ex)
 
 
 def cmd_pg(a):
