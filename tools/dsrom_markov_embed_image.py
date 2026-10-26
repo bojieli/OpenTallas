@@ -42,6 +42,7 @@ def generate(snapshot,out,tokens=None):
             image=out/f'macro{macro:03}.hex'
             if not image.exists():image.write_text('@0\n'+'0'*64+'\n')
     for image in sorted(out.glob('macro*.hex')):
+        if image.name.endswith('.viamap.hex'):continue  #existing output is not a logical input on regeneration
         write_viamap(image.with_suffix('.viamap.hex'),read_sparse_hex(image),'ot_rom_4096x274_m8')
     meta.update(payload_sha256=payload.hexdigest(),tokens=tokens if tokens is not None else 'all',selected_rows=selection if tokens else {},bank_count=253,macros=506,bank_pair_rows=8192,macro_rows=4096,ROM_ECC=False)
     meta['image_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.glob('macro*.hex'))}
