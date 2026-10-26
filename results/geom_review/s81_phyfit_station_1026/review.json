@@ -1,0 +1,72 @@
+{
+ "verdict": "PASS-COND station geometry only; no route approval",
+ "image": "results/geom_review/s81_phyfit_station_1026/svc4_edge20.png",
+ "findings": "Viewed actual1369bit station arrays: banks fit west exterior corridor and horizontal inter-core channels; no macro intersections. Original center jog FAIL retained. Source bit-site census max388.3um; full composed G0C and actual placement remain pending.",
+ "attempt": {
+  "type": "svc_lo_dsdv_svc_rs__t2_phy1026_svc_4",
+  "verdict": "PASS",
+  "slots": [
+   {
+    "len_um": 2843.3,
+    "stations": 9,
+    "positions_um": [
+     196.0,
+     542.0,
+     888.0,
+     1234.0,
+     1432.0,
+     1778.0,
+     2124.0,
+     2470.0
+    ],
+    "proj_mean_um": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "max_proj_um": 40.0,
+    "hops_um": [
+     344.8,
+     388.0,
+     388.3,
+     384.7,
+     367.7,
+     349.9,
+     352.4,
+     349.9,
+     377.4
+    ],
+    "max_alloc_disp_um": 21.45,
+    "path": [
+     [
+      0.0,
+      422.07
+     ],
+     [
+      20.0,
+      422.07
+     ],
+     [
+      20.0,
+      1822.52
+     ],
+     [
+      1442.88,
+      1822.52
+     ]
+    ],
+    "slot": "ft_phy0",
+    "type": "svc_lo_dsdv_svc_rs__t2_phy1026_svc_4",
+    "old_stations": 8,
+    "final_stations": 9,
+    "new_slot": true
+   }
+  ]
+ },
+ "artifact": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-b2-1026/infra/phyfit_chunks/svc4_edge20.json"
+}
