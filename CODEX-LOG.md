@@ -4135,3 +4135,6 @@ All lanes assigned across die, token, flow, core and auxiliary workers; authorit
 
 OWNER?
 S81 PHY: published N7 assumptions need44.9–48.2mm shore for14links versus43.3mm current. We are trying same-area re-placement first. If insufficient, choose allowed die area/link architecture change; existing14links/reserve-pair contracts remain binding until decided.
+
+## OWNER? 2026-10-26 02:12 PDT
+OWNER? S81 published-size PHY fit needs a die-level choice: existing north/south SerDes rows provide43.3mm shoreline versus44.9–48.2mm required for14 macros; same-row re-lay cannot fit them. May B2 move gunit/bk_sel off north row or reserve W/E shoreline by shifting adjacent fabric? Existing14-link count and die size remain fixed pending a decision. Geometry alternatives continue without adopting a contract change.
