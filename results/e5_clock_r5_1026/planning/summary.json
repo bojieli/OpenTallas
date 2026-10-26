@@ -1,0 +1,37 @@
+{
+ "status": "CTS_NOT_RUN",
+ "source_data": "codex/s81-head-eng-1026@7f56929224",
+ "original_placements_unchanged": 96815,
+ "register_sinks": 18058,
+ "local_taps": 1119,
+ "master_dimensions_um": [
+  1.62,
+  0.27
+ ],
+ "bank6": {
+  "mode": "closed_loop",
+  "new_buffers": 2097,
+  "tap_buffers": 1119,
+  "trunk_levels": 17,
+  "reps": {
+   "0": 3,
+   "2": 3,
+   "3": 1,
+   "4": 5,
+   "5": 0
+  },
+  "max_hop_um": 116.532,
+  "rmax_um": 60.0,
+  "added_cycles": 0,
+  "island_span_max_um": 11.826,
+  "added_area_um2": 917.2278
+ },
+ "bank6_root_fanout": 5,
+ "bank6_backbone_fanout": 6,
+ "first_halves": {
+  "verdict": "FAIL_STRUCTURAL_NOT_ROUTED",
+  "backbone_fanout": 21,
+  "reason": "half spine still fans 21 BUFx24 leg starts; revised before CTS"
+ },
+ "next": "Independent CTS-only GEOM review; actual TT/FF routed-RC pair<=80 and normal clocks/PG gates; preserve250/202.5 IO/833/60,25; no hold padding"
+}

@@ -195,3 +195,23 @@ def test_even_sampling_edge_adds_only_common_input_stage():
     assert counts[0]%2==0
     assert p['summary']['trunk_levels']%2==0
     assert p['summary']['added_cycles']==0
+
+
+def test_spine_banks_bound_root_and_channel_fanout_without_dummy_leaves():
+    g=geometry(127)
+    p=S.plan_legs(g,topology="spine",rmax_um=60,min_rep=0,
+        spine=dict(x=175,ys=[20,80,320,440],hub=16,ribcap=6,bank_fanout=6))
+    S.validate(p)
+    assert all(len(c["legs"])<=6 for c in p["clusters"] if c["level"]<=3)
+    assert {t["name"] for t in p["taps"]}=={t["name"] for t in g["taps"]}
+    parents={b:a for a,b in p["edges"]}
+    def depth(name):
+        return 0 if name not in parents else 1+depth(parents[name])
+    assert len({depth(t["name"]) for t in p["taps"]})==1
+    assert p["summary"]["added_cycles"]==0
+
+
+def test_spine_banks_reject_a_silent_high_fanout_root():
+    with pytest.raises(ValueError,match="deeper backbone"):
+        S.plan_legs(geometry(127),topology="spine",rmax_um=60,min_rep=0,
+            spine=dict(x=175,ys=[20,80,320,440],hub=16,ribcap=6,bank_fanout=2))
