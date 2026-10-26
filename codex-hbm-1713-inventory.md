@@ -12,3 +12,6 @@ Selected actualNWq3→RAW2341TKMonly/BEAT1171×2→root+32tiles→compute/return
 | DIEPROTO | epyc1:/srv/opentallas-scratch2/claude/die-ft-hbm/s5/kit source84042c4cb4 | collectactualGRTunderflow/hops; notG2duplicate | FLOW/proto_kits |
 
 Ownparentwt epyc1:/srv/opentallas-scratch2/claude/wt/codex-hbm-hub-1713 branchcodex/hbm-hub-1713 fromc51dmain. Parentownsrootpinallocationtoolbug+integration/failurecoverage;3existingchildrenTOTAL4,no nestedchildren. OWNER?none newyet;plainlogonly.
+
+## 2026-10-25 18:08 PDT advances
+Rootpinrepairbaseline G0PASS/publication91 andindependentPINSEPARATIONGEOM, noGRT. Toolc6main, RT541combined10testsPASS(rootmergeromitsdeadduplicate). Growth501exact471.6073581mm2/worldall822cores2.851Mpinbitsunchangedor+501declared, packedG0/G2pending. PRendpointsage271/extra7838FF/phasefanout7/4 andmappedFACEbothPASS; source/bankexportpending. Noidrecipe984/4fmain, actualnewV2noidLECgenerictoolgapalias/SXownedTOKLEC; freshrootDLCHAIN3newcohortphysicalprepares. Wholeq3SYNCnamespacedsourceTOKENowned; actualproducerprogramme+nativeboundstillnotcomplete. AlloldFAILpreserved; no newSIGNED.
