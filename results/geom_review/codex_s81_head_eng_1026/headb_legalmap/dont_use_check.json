@@ -1,0 +1,11 @@
+{
+ "netlist": "/work/run/results/asap7/hd_elemB_l4_native/base/1_2_yosys.v",
+ "dont_use": [
+  "*x1p*_ASAP7*",
+  "*xp*_ASAP7*",
+  "SDF*",
+  "ICG*"
+ ],
+ "dont_use_cells": {},
+ "verdict": "PASS"
+}
