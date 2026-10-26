@@ -1,0 +1,6 @@
+{
+  "verdict": "PASS-COND CTS-only",
+  "picture": "results/geom_review/codex_hcpl_shiftclk_2144.png",
+  "findings": "Viewed32bounded delay-chain groups in macro-free114.48um square. 608delay-line FF +94zero-logic-connected FF =702sinks, each21-22 on dedicated clockbuffer; all5978 clockpins accounted,5276ordinary incl8control/reset sinks kept on root. Buffersplanned at groupcentres, maxL1radius<=40um, actuallegalization/checkplacement required. No pin/PDN/data/RTLchanges,0addedcycles. This CTS-onlytrial testsclockgroup topology; no routedgatecredit.",
+  "old_failure": "FF-1.4ps/4EP,TT+74.28ps,DRC0; worstline41->73 at4.9um but14.24psclockskew"
+}
