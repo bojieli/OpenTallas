@@ -433,6 +433,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     rec(0, nx, 0, ny, 0, n0, "h")
     # --- stubs: every partition tap
     taps = DC.plan_taps(P)
+    early_c = DC.plan_tap_early(P)
     tap_rows = []
     import numpy as np
     xa, ya = np.array(xs), np.array(ys)
@@ -448,7 +449,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             out["unplaced"].append([tp, "stub"])
         sb = cell(f"ckm_s_{len(tap_rows)}", fq[0], fq[1], "stub", **rk)
         nets.append(dict(name=f"ckm_w_{sb}", drv=sb, loads=["port:" + tp], level=99))
-        tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], early_ps=early, stub=sb, **rk, foot=[round(fq[0], 3),
+        tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], early_ps=early,
+                             early_corner_ps=early_c.get((part, port)), stub=sb, **rk, foot=[round(fq[0], 3),
                              round(fq[1], 3)], strap=("M8", j) if axis == 0 else ("M9", i), slide_um=round(fd, 2),
                              stub_um=round(abs(fq[0] - x) + abs(fq[1] - y), 2)))
     out["taps"] = tap_rows
@@ -496,7 +498,7 @@ def write_verilog(cells, nets, ports, path):
         y = mnet[c] if k == "drv" else drv_net.get(c)
         if a is None or y is None:
             raise SystemExit(f"die_clock_mesh: unconnected cell {c} A={a} Y={y}")
-        L.append(f"  {BUF} {c} (.A({a}), .Y({y}));")
+        L.append(f"  {cells[c].get('lib', BUF)} {c} (.A({a}), .Y({y}));")
     L.append("endmodule")
     txt = "\n".join(L) + "\n"
     # a net that drives a tap port IS that port (no assign statements in the GRT netlist)
@@ -962,6 +964,7 @@ def cmd_stubsta(a):
     Mz = json.loads((d / f"mesh_{a.corner}.json").read_text())
     M = json.loads((d / "mesh.json").read_text())
     data = json.loads((d / "nets.json").read_text())
+    placed = json.loads((d / "place.json").read_text())
     by_drv = {n["drv"]: n for n in data["nets"]}
     cells, nets = [], []
     for t in M["taps"]:
@@ -981,7 +984,7 @@ def cmd_stubsta(a):
     L = ["module die_stubs (" + ", ".join(ins + outs) + ");"] + [f"  input {p};" for p in ins] + \
         [f"  output {p};" for p in outs] + [f"  wire {w};" for w in sorted(set(nets) - set(outs))]
     for c, port, y in cells:
-        L.append(f"  {BUF} {c} (.A({port or in_net[c]}), .Y({y}));")
+        L.append(f"  {placed[c].get('lib', BUF)} {c} (.A({port or in_net[c]}), .Y({y}));")
     L.append("endmodule")
     (d / "stubs.v").write_text("\n".join(L) + "\n")
     (d / "stub_nets.txt").write_text("\n".join(sorted(set(nets))) + "\n")
@@ -1039,6 +1042,33 @@ def lca(a, b):
     return a[:k]
 
 
+def sink_arrivals(M, arr, corner, early_by_plan):
+    """Compare equivalent sink clocks: core pins must arrive earlier by their core insertion offset.
+
+    Add that offset back to both measured pin arrivals for pair checks.  The raw pin arrivals remain INFO.
+    Plan lookup also repairs measurements made before mesh.json carried per-corner offsets.
+    """
+    offsets = {t["port"]: float(early_by_plan.get((t["part"], t["tap"]), {}).get(
+        corner, (t.get("early_corner_ps") or {}).get(corner, t.get("early_ps", 0.0)))) for t in M["taps"]}
+    return ({p: v[0] + offsets[p] for p, v in arr.items()},
+            {p: v[1] + offsets[p] for p, v in arr.items()}, offsets)
+
+
+def regional_qualification(M, corners, crossings):
+    """A regional clock diagnostic is not evidence of implemented forwarded-clock landings."""
+    reasons = []
+    if M.get("unplaced") or M["meta"].get("unplaced", 0):
+        reasons.append("clock cells have no legal site")
+    if set(corners) != {"TT", "FF"}:
+        reasons.append("both TT and FF clock measurements are required")
+    if any(c["verdict"] != "PASS" or c.get("landed_verdict") == "FAIL" for c in corners.values()):
+        reasons.append("clock skew or landing window fails")
+    if crossings:
+        reasons.append("forwarded-clock landing implementation and token cycle pricing remain required")
+    return dict(scope="regional clock diagnostic; not a die freeze gate", release_verdict="BLOCKED" if reasons else
+                "CLOCK-PASS", blockers=reasons, proposed_landed_crossings=crossings)
+
+
 def cmd_report(a):
     P = S.Plan(S.load(a.plan))
     d = Path(a.dir)
@@ -1070,8 +1100,7 @@ def cmd_report(a):
     landed = [x for x in seam if reg[x[0]] != reg[x[1]]]
     seam_in = [x for x in seam if reg[x[0]] == reg[x[1]]]
     intra_x = [x for x in intra if reg[x[0]] != reg[x[1]]]
-    if regd:
-        write_landed(P, S.load(a.plan), M, d, a.landing_cycles)
+    crossing_table = write_landed(P, S.load(a.plan), M, d, a.landing_cycles) if regd else None
     if intra_x:
         raise SystemExit(f"die_clock_mesh report: {len(intra_x)} intra-partition pairs straddle a region seam")
     for corner in [c for c in a.corner if (d / f"taps_{c}.txt").exists()]:
@@ -1087,8 +1116,8 @@ def cmd_report(a):
         for line in open(d / f"taps_{corner}.txt"):
             f = line.split()
             arr[f[1]] = (float(f[2]), float(f[3]), float(f[4]))   # T port late early slew
-        late = {p: v[0] for p, v in arr.items()}
-        early = {p: v[1] for p, v in arr.items()}
+        raw_late = {p: v[0] for p, v in arr.items()}
+        late, early, core_offsets = sink_arrivals(M, arr, corner, DC.plan_tap_early(P))
         slew = {p: v[2] for p, v in arr.items()}
 
         def dmg(pa, pb):
@@ -1107,8 +1136,10 @@ def cmd_report(a):
         Mz = json.loads((d / f"mesh_{corner}.json").read_text())
         _, Nn = read_tree(d / f"tree_{corner}.txt")
         rep["corners"][corner] = dict(
-            insertion_ps=[round(min(late.values()), 2), round(max(late.values()), 2)],
-            tap_skew_ps=round(max(late.values()) - min(late.values()), 2),
+            insertion_ps=[round(min(raw_late.values()), 2), round(max(raw_late.values()), 2)],
+            tap_skew_ps=round(max(raw_late.values()) - min(raw_late.values()), 2),
+            compensated_sink_insertion_ps=[round(min(late.values()), 2), round(max(late.values()), 2)],
+            core_offset_taps=sum(v != 0.0 for v in core_offsets.values()),
             seam_pairs=len(sk), seam_max_ps=round(max(sk), 2), seam_p99_ps=round(DC.pctl(sk, .99), 2),
             intra_pairs=len(ik), intra_max_ps=round(max(ik), 2), pairs_over_80=sum(1 for v in sk + ik if v > 80),
             related_pair_max_ps=round(max(sk + ik), 2), gate_ps=DC.GATE_PS,
@@ -1132,6 +1163,8 @@ def cmd_report(a):
             + ncell * DC.BUF_CIN_FF / 1e3 + len(M["taps"]) * DC.TAP_LOAD_FF / 1e3
         r["clock_switched_cap_pF"] = round(c_tot, 1)
         r["clock_wire_power_W"] = round(c_tot * 1e-12 * VDD[corner] ** 2 / (DC.PERIOD_PS * 1e-12), 3)
+    if regd:
+        rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"])
     (d / "clock_report.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps({c: {k: v for k, v in r.items() if k != "worst"} for c, r in rep["corners"].items()}, indent=1))
     return 0

@@ -2,6 +2,7 @@
 """unit tests: tools/die_plan/die_clock_mesh.py site helpers (python3 -m pytest tools/die_plan/test_die_clock_mesh.py)"""
 import sys
 import unittest
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -73,6 +74,34 @@ class T(unittest.TestCase):
     def test_mesh_net_names(self):
         self.assertEqual(CM.mesh_net(None), "ck_mesh")         # default (no --regions) unchanged
         self.assertEqual(CM.mesh_net(3), "ck_mesh_r3")
+
+    def test_core_offsets_compare_sinks_at_each_corner(self):
+        M = {"taps": [dict(part="p", tap="core", port="tc", early_ps=100),
+                      dict(part="p", tap="ordinary", port="to", early_ps=0)]}
+        offsets = {("p", "core"): {"TT": 100, "FF": 70}}
+        for corner, core_arrival in (("TT", 900), ("FF", 930)):
+            late, early, _ = CM.sink_arrivals(M, {"tc": (core_arrival, core_arrival - 5, 10),
+                                                 "to": (1000, 995, 10)}, corner, offsets)
+            self.assertEqual(late["tc"], late["to"])
+            self.assertEqual(early["tc"], early["to"])
+
+    def test_mixed_stub_cells_preserve_the_real_library(self):
+        cells = {"s": dict(kind="stub", lib="BUFx2_ASAP7_75t_R"), "d": dict(kind="drv")}
+        nets = [dict(name="root", drv="port:root", loads=["d"]),
+                dict(name="ckm_w_s", drv="s", loads=["port:t_p__clk"])]
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "clock.v"
+            CM.write_verilog(cells, nets, [("output", "t_p__clk")], path)
+            self.assertIn("BUFx2_ASAP7_75t_R s", path.read_text())
+            self.assertIn(CM.BUF + " d", path.read_text())
+
+    def test_regional_diagnostic_never_qualifies_missing_landings(self):
+        M = dict(meta={"unplaced": 0}, unplaced=[])
+        corners = {c: dict(verdict="PASS", landed_verdict="PASS") for c in ("TT", "FF")}
+        self.assertEqual(CM.regional_qualification(M, corners, 3)["release_verdict"], "BLOCKED")
+        self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "CLOCK-PASS")
+        M["unplaced"] = [[0, 0]]
+        self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "BLOCKED")
 
 
 if __name__ == "__main__":
