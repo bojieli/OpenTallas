@@ -24,6 +24,12 @@ class T(unittest.TestCase):
         self.assertLessEqual(max(abs(v) for v in res.values()), 5.0)
         self.assertEqual(DI.trim_pads({}, 10.0), ({}, {}))
 
+    def test_trim_pads_reserve_two_sided(self):
+        k, res = DI.trim_pads({"slow": 20.0, "nom": 0.0, "fast": -20.0, "way_slow": 50.0}, 10.0, reserve=2)
+        self.assertEqual(k, {"slow": 0, "nom": 2, "fast": 4, "way_slow": 0})
+        self.assertEqual(res["way_slow"], -30.0)          # beyond the reserve: reported, not silently dropped
+        self.assertEqual(res["nom"], 0.0)
+
     def test_trim_end_to_end_netlist_and_offsets(self):
         with tempfile.TemporaryDirectory() as td:
             d = Path(td) / "m"

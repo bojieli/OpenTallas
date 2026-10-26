@@ -220,12 +220,18 @@ def clock_rects(mesh_dir, guide, layers=("M8", "M9")):
 
 
 # ----------------------------------------------------------------------------------------------------------- trim
-def trim_pads(offsets, quantum_ps):
+def trim_pads(offsets, quantum_ps, reserve=None):
     """COORD 01:4x (the die absorbs residuals): tap t whose tile's measured insertion exceeds plan by off[t] ps must
     get its clock off[t] earlier than the others; a mesh can only ADD delay below the strap, so every other tap gets
     k = round((off_max - off[t]) / quantum) trim pads after its stub buffer.  -> ({tap: k}, {tap: residual ps})."""
     if not offsets:
         return {}, {}
+    if reserve is not None:
+        # reserve mode: every stub carries `reserve` nominal trim pads (planned latency), so a tile may be faster OR
+        # slower than plan: k = reserve - round(off / q), clamped to [0, 2 reserve]; residual = what is not absorbed.
+        k = {t: min(2 * reserve, max(0, reserve - int(round(v / quantum_ps)))) for t, v in offsets.items()}
+        res = {t: round(-(v + (k[t] - reserve) * quantum_ps), 3) for t, v in offsets.items()}
+        return k, res
     top = max(offsets.values())
     k = {t: max(0, int(round((top - v) / quantum_ps))) for t, v in offsets.items()}
     res = {t: round((top - v) - k[t] * quantum_ps, 3) for t, v in offsets.items()}
@@ -258,7 +264,7 @@ def cmd_trim(a):
     for t in M["taps"]:
         off.setdefault(t["port"], 0.0)
     q = a.quantum_ps if a.quantum_ps else DCM.pad_delay(a.corner, a.libdir)
-    K, res = trim_pads(off, q)
+    K, res = trim_pads(off, q, a.reserve)
     by_load = {}
     for n in nets:
         for ld in n["loads"]:
@@ -288,7 +294,8 @@ def cmd_trim(a):
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
     M["meta"]["cells"] = len(cells)
-    M["meta"]["trim"] = dict(src=str(src), offsets=str(a.offsets), quantum_ps=round(q, 3), pads=added,
+    M["meta"]["trim"] = dict(src=str(src), offsets=str(a.offsets), quantum_ps=round(q, 3), pads=added, reserve=a.reserve,
+                             unabsorbed=sorted([t, r] for t, r in res.items() if abs(r) > q / 2 + 1e-6),
                              max_residual_ps=max([abs(v) for v in res.values()] or [0.0]))
     (out / "mesh.json").write_text(json.dumps(M) + "\n")
     (out / "place.json").write_text(json.dumps(cells) + "\n")
@@ -622,6 +629,7 @@ def main(argv=None):
     t.add_argument("--plan")
     t.add_argument("--corner", default="TT")
     t.add_argument("--quantum-ps", type=float, help="trim pad delay (default: BUFx24 pad delay from the liberty)")
+    t.add_argument("--reserve", type=int, help="nominal trim pads per stub (tiles may be faster or slower than plan)")
     t.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
     f = sub.add_parser("freeze")
     f.add_argument("plan")
