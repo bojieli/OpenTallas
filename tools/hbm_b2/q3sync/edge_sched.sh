@@ -33,6 +33,6 @@ sha256sum $leg $mac rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_col
 $V --binary --timing -j 2 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN $DEF --Mdir $D/obj --top-module tb \
    $D/tb.sv $leg $gen $mac > $D/build.log 2>&1
 brc=$?; echo "# build rc=$brc" >> $log
-[ $brc = 0 ] && { $D/obj/Vtb >> $log 2>&1; echo "# sim rc=$? $(date)" >> $log; }
+[ $brc = 0 ] && { $D/obj/Vtb +verilator+seed+$SEED >> $log 2>&1; echo "# sim rc=$? $(date)" >> $log; }
 rm -rf $D/obj
 grep -E "^EDGE_SCHED" $log
