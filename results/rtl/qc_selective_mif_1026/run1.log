@@ -1,0 +1,11 @@
+SELECTIVE all-output mismatch cycle798
+SELECTIVE all-output mismatch cycle799
+SELECTIVE all-output mismatch cycle800
+SELECTIVE all-output mismatch cycle801
+SELECTIVE all-output mismatch cycle802
+MIF_HEAD checked=2272 outputs=288 mismatches=975
+MIF_HEAD FAIL
+- tools/qwen_dv/selective_mif1026/tb_selective_head.sv:270: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.018 s; speed 1.340 ms/s
+- Verilator: cpu 0.018 s on 1 threads; allocated 7 MB

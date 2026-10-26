@@ -1,0 +1,47 @@
+{
+  "status": "SOURCE_CANDIDATE_NOT_ADOPTED",
+  "source": "codex/qc-selective-mif-1026",
+  "architecture": {
+    "globalMIF": 0,
+    "TABLE_MIF": 1,
+    "TABLE_HALF": 1,
+    "head_MEMORY_ALIGNMENT": 3,
+    "head_MEMORY_READ_EXTRA": 0,
+    "head_BTAB_READ_EXTRA": 1,
+    "extra_cycles_per_SU_command": 1,
+    "head_reply_extra": 0,
+    "alignment_FF_delta_at32heads": -8192,
+    "VM_CROM_physical_views": "unchanged parameter values; canonical child qualification still required"
+  },
+  "proofs": {
+    "native_head": {
+      "checks": 2272,
+      "outputs": 288,
+      "all_actual_output_ports": 30,
+      "mismatches": 0,
+      "wrong_BTAB_age_mutant_mismatches": 975
+    },
+    "memory_group": {
+      "cycles": 4096,
+      "checks": 48768,
+      "nonzero": 15619,
+      "wrong_table_age_mutant_caught_cycle": 73
+    },
+    "programme_fetch": {
+      "checks": 1335,
+      "live": 1293,
+      "wrong_start_mutant_caught_cycle": 105
+    }
+  },
+  "jobs": [
+    "epyc1 ot-run3069174 initial selected head; source-list failure3055422 preserved outsidequalification",
+    "epyc1 ot-run3088725 memorygroup/fetch positives andmutants EXIT0",
+    "epyc1 ot-run3138827 complete30-porthead positive/mutant EXIT0"
+  ],
+  "limitations": [
+    "No canonical profile/plan adoption",
+    "New matching SU hardcore source must be generated if selected",
+    "MIF0 zero-cycle structural alternative and globalMIF1 token cost being compared",
+    "Inherited SRAMIF routes diagnostic; parent IO40 receipt still owed"
+  ]
+}
