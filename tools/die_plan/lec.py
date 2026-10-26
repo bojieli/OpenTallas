@@ -1837,8 +1837,18 @@ def alias_arrays(L, log, words=4):
         L.gonly = sorted(set(L.gp) - set(L.tp))
         L.tonly = sorted(set(L.tp) - set(L.gp))
 
+    # never re-key a point an existing hypothesis names (e.g. trace/relaid-line proposals made before this pass):
+    # the re-key would orphan the hypothesis' key or representative
+    held = set()
+    for (_sd, k), h in L.hyp.items():
+        held.add(k)
+        for x in h[1:]:
+            if isinstance(x, str):
+                held.add(x)
+            elif isinstance(x, (list, tuple)):
+                held.update(y for y in x if isinstance(y, str))
     galias = getattr(L, "galias", {})
-    G, T = split(L.gonly), split(L.tonly)
+    G, T = split(k for k in L.gonly if k not in held), split(k for k in L.tonly if k not in held)
     for gb, g in sorted(G.items(), key=lambda x: -len(x[1])):
         votes = collections.Counter()
         for k in g:
