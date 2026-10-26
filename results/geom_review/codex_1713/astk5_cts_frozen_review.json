@@ -1,0 +1,18 @@
+{
+  "reviewed_at": "2026-10-25 18:11 PDT",
+  "source": "7f37eb202a",
+  "kit": "epyc2:/srv/opentallas-scratch2/claude/path-kv/astk5/kit/kv3_astk__190.08x181.44",
+  "checkpoint_sha256": "fb3965be281c53b56a8712053186ffce8b36deaaf3583082e0b877955c8d2884",
+  "image": "astk5_actual_place.png",
+  "verdict": "PASS-COND ONE exact CTS-only successor",
+  "findings": [
+    "Four contiguous data zones and bottom/perimeter control, macrofree; clear region boundaries and no macro wall.",
+    "Actual replica guard160wdec/8zh/68zk/320readaddr and LEC29376 equivalent reported by owner.",
+    "Five root centroids represent ownership; actual leaf clustering/load legality unproven. Include all4042 control/perimeter FFs and four data regions5468/5308/5298/5288.",
+    "Use exact current canonical helper/native library manifest; no old z3 token. Actual postCTS tree/pergroup TTFF/perpin LC1/exhaustive CPPR/postCTS gate before any GRT."
+  ],
+  "successor_kit": "epyc1:/srv/opentallas-scratch2/claude/codex-kv-cores-1713/astk5_cts1",
+  "freeze_sha256": "dafe249c8760531a8f6245abe7f7409ba55c5ab0dea6a36934de23f338e65424",
+  "recipe": "TC-only CTS SKIP_CTS_REPAIR_TIMING=1; face groups<=500/radius100; CTS clusters30/diameter60; guarded leaf_affinity; no core_tap_align",
+  "scope": "Fresh macrofree successor from actual reviewed placement. Native TT5/FF5 frozen. ROOT/INFRA admission required; no GRT/DRT/SIGNED. Actual postCTS tree/load/pergroup TTFF/perpin LC1/exhaustive CPPR/hold gates before GRT."
+}
