@@ -147,7 +147,7 @@ class BoundDie:
                 continue
             pins = self.inventory['drivers'].get(str(sn), [])
             if len(pins) != 1:
-                raise ValueError(f'transport bit{bit}: ambiguous/missing source driver')
+                raise ValueError(f'transport bit{bit}: ambiguous/missing source driver {pins[:4]}')
             source_pin = pins[0]
             targets = self.inventory['input_pins'].get(str(dn), [])
             if not targets:
@@ -161,7 +161,7 @@ class BoundDie:
                                 raise ValueError(f'{pin}: source variant ABI needs explicit projection')
                 desc = self.sinks.get(target_pin)
                 if not isinstance(desc, list) or len(desc) != 4 or desc[0] != 'pin' or desc[1] != source_pin:
-                    raise ValueError(f'transport bit{bit}: {target_pin} does not receive {source_pin}')
+                    raise ValueError(f'transport bit{bit}: {target_pin} receives {desc!r}, expected {source_pin}')
                 age = desc[2]
                 if type(age) is not int or age < 0:
                     raise ValueError(f'transport bit{bit}: missing exact bound age')
