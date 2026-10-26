@@ -124,10 +124,10 @@ module ot_v41_segtree6 #(
     wire [31:0] e_d = sv ? sum : h_v;
     localparam integer NH = NT * LV;
     reg [NH-1:0] e_oh, e_above;
-    integer li, hi;   // ti: loop-scoped below (S81-CORE-LAT/QB 10-26 rtl_lint: module-scope loop integer shared by 2 always blocks)
+    integer li; // loop-scoped: hi (S81-CORE-LAT/QB 10-26 rtl_lint shared loop integer)   // ti: loop-scoped below (S81-CORE-LAT/QB 10-26 rtl_lint: module-scope loop integer shared by 2 always blocks)
     always @* begin
         e_oh = '0; e_above = '0;
-        for (hi = 0; hi < NH; hi = hi + 1) begin
+        for (int hi = 0; hi < NH; hi = hi + 1) begin
             if (hi / LV == e_t && hi % LV == e_l) e_oh[hi] = 1'b1;
             if (hi / LV == e_t && hi % LV > e_l) e_above[hi] = 1'b1;
         end
@@ -183,10 +183,10 @@ module ot_v41_segtree6 #(
     // segtree3's local forms on the x2 event (have / infl are current here)
     reg [NT-1:0] t_inc, t_dec;
     reg [NH-1:0] s_hold, s_pair;
-    integer tj;
+    // loop-scoped: tj (S81-CORE-LAT/QB 10-26 rtl_lint shared loop integer)
     reg hv_t, ab_t, id_t, ea_t, tp_t;
     always @* begin
-        for (tj = 0; tj < NT; tj = tj + 1) begin
+        for (int tj = 0; tj < NT; tj = tj + 1) begin
             hv_t = |(have[tj*LV +: LV] & y_oh[tj*LV +: LV]);
             ab_t = |(have[tj*LV +: LV] & y_above[tj*LV +: LV]);
             id_t = infl[tj] == (y_add ? {{(IW-1){1'b0}}, 1'b1} : {IW{1'b0}});
@@ -195,7 +195,7 @@ module ot_v41_segtree6 #(
             t_inc[tj] = y_v && y_toh[tj] && !tp_t && (hv_t || y_f);
             t_dec[tj] = y_v && y_toh[tj] && y_add;
         end
-        for (tj = 0; tj < NH; tj = tj + 1) begin
+        for (int tj = 0; tj < NH; tj = tj + 1) begin
 `ifdef QP_MUTANT_TREE
             s_hold[tj] = y_v && y_oh[tj] && !y_f;                         // negative control: ignores the held bit
 `else
@@ -209,16 +209,16 @@ module ot_v41_segtree6 #(
     reg  [NG-1:0] r_hv, r_ab, r_he;
     reg  [32*NG-1:0] r_hd;
     reg  [IW-1:0] r_infl;
-    integer gi;
+    // loop-scoped: gi (S81-CORE-LAT/QB 10-26 rtl_lint shared loop integer)
     always @* begin
         r_hv = '0; r_ab = '0; r_he = '0; r_hd = '0; r_infl = '0;
-        for (gi = 0; gi < NH; gi = gi + 1) begin
+        for (int gi = 0; gi < NH; gi = gi + 1) begin
             r_hv[gi / GS] = r_hv[gi / GS] | (have_nx[gi] & x_oh[gi]);
             r_ab[gi / GS] = r_ab[gi / GS] | (have_nx[gi] & x_above[gi]);
             r_he[gi / GS] = r_he[gi / GS] | (herr[gi] & x_oh[gi]);
             if (x_oh[gi]) r_hd[32*(gi / GS) +: 32] = r_hd[32*(gi / GS) +: 32] | held[gi];
         end
-        for (gi = 0; gi < NT; gi = gi + 1)
+        for (int gi = 0; gi < NT; gi = gi + 1)
             if (x_toh[gi]) r_infl = r_infl | (infl[gi] + (t_inc[gi] ? 1'b1 : 1'b0) - (t_dec[gi] ? 1'b1 : 1'b0));
     end
     // YF: the in-flight read from registers
@@ -325,7 +325,7 @@ module ot_v41_segtree6 #(
                 end
             end
         end
-        for (hi = 0; hi < NH; hi = hi + 1) if (s_hold[hi]) held[hi] <= y_dc[hi / GS];
+        for (int hi = 0; hi < NH; hi = hi + 1) if (s_hold[hi]) held[hi] <= y_dc[hi / GS];
         oval <= y_d;
         otree <= y_t;
     end

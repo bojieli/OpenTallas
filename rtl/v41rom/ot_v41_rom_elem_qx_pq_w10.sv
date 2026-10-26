@@ -794,11 +794,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // the op, so they are held in registers for q and q + 1 (A, B) instead of being recomputed inside the walk
     // loop; A <= B and B <= f(q + 2) when q advances, both <= f(0), f(1) at go_e and at an MTP restart.
     function automatic [6*NSEG-1:0] sbf(input [3:0] q, input [1:0] sh, input [7*NSEG-1:0] nu, input [NSEG-1:0] base);
-        integer k;
+        // loop-scoped: k (S81-CORE-LAT/QB 10-26 rtl_lint shared loop integer)
         reg [6:0] q8, rem;
         begin
             q8 = {3'd0, q} << sh;
-            for (k = 0; k < NSEG; k = k + 1) begin
+            for (int k = 0; k < NSEG; k = k + 1) begin
                 rem = (nu[7*k +: 7] > q8) ? nu[7*k +: 7] - q8 : 7'd0;
                 sbf[k] = base[k] && rem != 7'd0;                                  // live
                 sbf[NSEG + 4*k +: 4] = (rem > (7'd1 << sh)) ? (4'd1 << sh) : rem[3:0];   // units in sub-block
@@ -1099,10 +1099,10 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     reg [8:0]  lo0 [0:NSEG-1];
     reg [8:0]  hi0 [0:NSEG-1];
     reg [8:0]  cend, glo, ghi;
-    integer bk, bc;
+    // loop-scoped: bk, bc (S81-CORE-LAT/QB 10-26 rtl_lint shared loop integer)
     always @* begin
         ntot = 7'd0; gtot = 7'd0; ltot = 7'd0;
-        for (bc = 0; bc < NSEG; bc = bc + 1) begin
+        for (int bc = 0; bc < NSEG; bc = bc + 1) begin
             cend = (FAST != 0) ? cend_r[bc] : {1'b0, c_u0[bc]} + {2'd0, c_nu[bc]};
             // next sub-block
             nlo[bc] = b_lo[bc] + sbn;
@@ -1115,9 +1115,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             if (base_go[bc]) gtot = gtot + (ghi - glo);
             if (base_live[bc]) ltot = ltot + (ghi - glo);
         end
-        for (bk = 0; bk < 4; bk = bk + 1) begin
+        for (int bk = 0; bk < 4; bk = bk + 1) begin
             bm[bk] = 1'b0;
-            for (bc = 0; bc < NSEG; bc = bc + 1)
+            for (int bc = 0; bc < NSEG; bc = bc + 1)
                 if (base_live[bc] && {1'b0, xb_u_e[8*bk +: 8]} >= b_lo[bc] && {1'b0, xb_u_e[8*bk +: 8]} < b_hi[bc])
                     bm[bk] = 1'b1;
             bm[bk] = bm[bk] && (BF16 != 0 || BP != 0) && bn_run && fam && xb_v_e && xb_sv_e[bk] && xb_b_e == bn_b && xb_pos_e == bn_pos;
@@ -1179,7 +1179,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire bn_adv = bnum != 0 && bn_cnt + {4'd0, bnum} == bn_tot && bn_b == 3'd7;
     wire bn_newpos = bn_adv && bn_q == qlast;
     always @(posedge wclk) if (wen) begin
-        for (bc = 0; bc < NSEG; bc = bc + 1)
+        for (int bc = 0; bc < NSEG; bc = bc + 1)
             if (FAST != 0) begin
                 if (go_e || bn_newpos) begin
                     b_lo[bc] <= {1'b0, c_u0[bc]};
@@ -1330,10 +1330,10 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     reg [LAT-1:0] hz_v;
     reg [HW-1:0] hz_s [0:LAT-1];
     reg hazard;
-    integer k;
+    // loop-scoped: k (S81-CORE-LAT/QB 10-26 rtl_lint shared loop integer)
     always @* begin
         hazard = 1'b0;
-        for (k = 0; k < LAT - 1; k = k + 1) if (hz_v[k] && hz_s[k] == w_cnt) hazard = 1'b1;   // LAT-cycle recurrence
+        for (int k = 0; k < LAT - 1; k = k + 1) if (hz_v[k] && hz_s[k] == w_cnt) hazard = 1'b1;   // LAT-cycle recurrence
     end
     // QX = 5: the hazard held in a register loaded with its next-cycle value.  hz_s[0] takes w_cnt and hz_v[0] takes
     // issue every cycle, so next cycle's hazard is H(c') || (issue && w_cnt == c') with H(c) the match of c against
@@ -1795,10 +1795,10 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             f_q0[f_wr] <= FAST != 0 ? fw_q0 : xs_q0_e; f_e0[f_wr] <= FAST != 0 ? fw_e0 : xs_e0_e;
             f_q1[f_wr] <= FAST != 0 ? fw_q1 : xs_q1_e; f_e1[f_wr] <= FAST != 0 ? fw_e1 : xs_e1_e;
         end
-        for (bk = 0; bk < 4; bk = bk + 1)
+        for (int bk = 0; bk < 4; bk = bk + 1)
             if (bmu[bk]) f_q0[f_wr + bpre[bk]] <= xbd[256*bk +: 256];
         hz_s[0] <= w_cnt;
-        for (k = 1; k < LAT; k = k + 1) hz_s[k] <= hz_s[k-1];
+        for (int k = 1; k < LAT; k = k + 1) hz_s[k] <= hz_s[k-1];
     end
 
     // ---------------- x alignment with the ROM read (issue -> ROM -> capture: 2 cycles) ---------------------
