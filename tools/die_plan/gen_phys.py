@@ -1117,6 +1117,26 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         (kd / "landing_exports.tcl").write_text(LC.export_tcl(P, tn))
         hook = kd / "clock_taps.tcl"
         hook.write_text(hook.read_text() + "\nsource /work/landing_exports.tcl\n")
+        import landing_place as LP
+        (kd / "landing_placement.tcl").write_text(LP.tcl(P, tn))
+        hook = kd / "face_flops.tcl"
+        hook.write_text(hook.read_text() + "\nsource /work/landing_placement.tcl\n")
+        # The new cells are packed to actual nonoverlapping rows/sites. Keep
+        # them FIRM through DPL; their bands are a timing/reach contract.
+        hook = kd / "face_flops_release.tcl"
+        hook.write_text(hook.read_text() + """
+set cland_refirm 0
+set cland_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt r]
+foreach cland_line [split [read $cland_fh] "\n"] {
+ set cland_fields [split $cland_line "\t"]
+ if {![string match "cland:*" [lindex $cland_fields 1]]} continue
+ set cland_i [$ff_blk findInst [lindex $cland_fields 0]]
+ if {$cland_i eq "NULL"} { error "OT_CLAND placed instance disappeared before DPL" }
+ $cland_i setPlacementStatus FIRM; incr cland_refirm
+}
+close $cland_fh
+puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
+""")
     stages = t.get("reset", {}).get("physical_stages", [])
     if stages:
         import fup_reset_groups as FGR
