@@ -136,7 +136,15 @@ def main():
         raw["clock"]["mesh"] = dict(mm, delta=a.delta_id, layers={"straps_h": "M8", "straps_v": "M9"},
                                     tool="tools/die_plan/die_clock_mesh.py build", sites_file=sp.name,
                                     sites_sha256=hashlib.sha256(sp.read_bytes()).hexdigest(), cells=len(sites))
+        if M["meta"].get("root_plan_um") is not None:
+            spine = raw["clock"].setdefault("spine", {})
+            spine["root_um"] = M["meta"]["root_um"]
+            if "die_root_um" in spine:
+                spine["die_root_um"] = M["meta"]["root_um"]
         types = raw["partition_types"]
+        # A new profile replaces the old profile completely, including types with no sites in the new mesh.
+        for t in types.values():
+            t.get("clock", {}).pop("die_islands_um", None)
         for tn, v in out_types.items():
             types[tn].setdefault("clock", {})["die_islands_um"] = v["rects"]
         Path(a.plan).write_text(json.dumps(raw, indent=1) + "\n")

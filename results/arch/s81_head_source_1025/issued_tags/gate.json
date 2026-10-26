@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS",
+  "source": "9336012efd",
+  "actual_reference": "04718b43a5 controller",
+  "tagged": {
+    "pushes": 2,
+    "pops": 2,
+    "fallback_position": 0
+  },
+  "untagged": {
+    "pushes": 2,
+    "pops": 2,
+    "fallback_position": 2
+  },
+  "mutants": [
+    "identity high-bit flip REJECTED",
+    "increment fallback on tagged issue REJECTED"
+  ],
+  "cycles_added": 0,
+  "scope": "source FIFO only, externally accepted issue and actual local-final accept; no die START authority or job retirement invented"
+}

@@ -1,0 +1,68 @@
+{
+ "source": "actual 439 physical clock ports /415 named lanes, K2 ring with +3 relative stages each crossing",
+ "nominal_only_scope": "Conditional source-model price; physical phase offsets and current canonical QC station/phase rebind remain unqualified",
+ "cases": {
+  "actual_ctl": {
+   "cycles_per_token": 296341,
+   "tok_s": 4051.0,
+   "delta_cycles": 0,
+   "cycle_increase_pct": 0.0,
+   "rate_loss_pct": 0.0,
+   "chained_per_layer": 8129,
+   "cold_l0": 8641
+  },
+  "actual_land": {
+   "cycles_per_token": 315385,
+   "tok_s": 3806.4,
+   "delta_cycles": 19044,
+   "cycle_increase_pct": 6.42638041985415,
+   "rate_loss_pct": 6.038334099592557,
+   "chained_per_layer": 8658,
+   "cold_l0": 9170
+  },
+  "actual_fe_land": {
+   "cycles_per_token": 321937,
+   "tok_s": 3728.9,
+   "delta_cycles": 25596,
+   "cycle_increase_pct": 8.637346840295468,
+   "rate_loss_pct": 7.950623879827424,
+   "chained_per_layer": 8840,
+   "cold_l0": 9352
+  }
+ },
+ "ranked_added_cycles_per_layer": [
+  {
+   "crossing": "SC forwarding fw->sc->fe",
+   "cycles": 240,
+   "reason": "two landed crossings, four passes per hop, ten hops"
+  },
+  {
+   "crossing": "all slice taps",
+   "cycles": 90
+  },
+  {
+   "crossing": "CB16 matvec paths",
+   "cycles": 64,
+   "reason": "max root+RS16->32 on four matvec boundaries, with30rephase pads"
+  },
+  {
+   "crossing": "ST forwarding",
+   "cycles": 60
+  },
+  {
+   "crossing": "CH forwarding",
+   "cycles": 60
+  },
+  {
+   "crossing": "L9 pair",
+   "cycles": 12
+  },
+  {
+   "crossing": "inter-slice hops",
+   "cycles": 3
+  }
+ ],
+ "additional_cb_rephase_logical_ff": 78816,
+ "source_table_sha256": "b6daaa9c6687d0952fcdd49789abaaf3dcc1a10936170c284347310cb7bb704c",
+ "recommendation": "Use dataflow-aligned whole-slice regions before adopting a clock table; keep fw/sc/fe together first, then ctl/SU/STM. No arithmetic or clock-rule relaxation."
+}

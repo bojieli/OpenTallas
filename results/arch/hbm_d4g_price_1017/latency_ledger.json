@@ -101,6 +101,41 @@
    "cycles": 2,
    "applies": "INDEX: +2 per SW operand read round trip (streamed; once per pass start); TOPK: +(m+3) per record (m rows); ARGMAX: 0. Compiler: tools/hbm_idx_static_calendar.py PIN table (SW operand reader VM_RT_EXTRA 4; TOPK go/row/ACK offsets as above).",
    "evidence": "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh (claude/hbm-idxam2-1018): eq bench (ref with 1-edge request delay; index_rr/fault/share_fault/TOPK outputs 1 edge late; argmax_m 3 edges after the ref leaf), path bench offsets rq 1 / write 6 / event 7 at TIES 0/1/2, TOPK bench offsets 1+r / 3+r / m+3 / 2; mutants AMMUT 1-7 FAIL; results/rtl/hbm_idxam2_1018/*.log"
+  },
+  {
+   "item": "SU31 attn.res_copy single-write-port guard and PIN_REG1 drain",
+   "lane": "TOK-HBM Codex1026",
+   "status": "plan",
+   "cycles": 52,
+   "unit": "historical serial3:4 edges",
+   "stream_cycles": 69.33333333333333,
+   "evidence": "results/token_pass/hbm_su_calendar_1026/bound_price.json",
+   "compiler_source": "claude/tok-hbm-su-0130@8fcc17a196",
+   "bound_operation": {
+    "segment": 0,
+    "index": 31,
+    "unit": "SU",
+    "op": "VOP",
+    "tag": "attn.res_copy",
+    "orig_op": "SU.VOP"
+   },
+   "matching_records": 40,
+   "cycle_components": {
+    "issue_wait_serial_edges": 48,
+    "pin_reg_drain_serial_edges": 4,
+    "total_serial_edges": 52,
+    "programme_edges_before": 134,
+    "programme_edges_after": 186,
+    "config_writes_before": 481,
+    "config_writes_after": 538
+   },
+   "conditional_model": {
+    "base_cycles": 608234.827598802,
+    "cycles": 608234.827598802,
+    "added_token_cycles": 0.0,
+    "loss_pct": 0.0
+   },
+   "scope": "Proposed diagnostic calendar cost, not currentB1 measured throughput. Nonzero52serial/69.333streamcycle work for each matchingrecord remains charged; S2 token delta0 because overlap hides it. Common833 row is unqualified sensitivity. No knob override, acceptance or headline change; positiveRTL/control results pending."
   }
  ]
 }

@@ -29,6 +29,7 @@ TOPS = {
     'reduce': 'ot_hfd_coll_q2_reduce_core',
     'ring_ag': 'ot_hfd_coll_q2_ring_ag_core',
 }
+VMFACE_BODY = 'rtl/hbm_accel/cores_split/ot_hfd_coll_q3_vmface2/ot_hfd_coll_q3_body_core.sv'
 
 
 def sha(path):
@@ -73,22 +74,35 @@ def literal_ports(text, top):
     return ports
 
 
-def materialize(core, profile_dir, root=REPO):
+def materialize(core, profile_dir, root=REPO, vm_face_contract=False):
     """Generate and verify the pinned closure; return recipe, staging map, receipt."""
     root = Path(root).resolve()
     profile_dir = Path(profile_dir).resolve()
     profile_dir.mkdir(parents=True, exist_ok=True)
     census_path = profile_dir / 'census.json'
-    subprocess.run([sys.executable, str(root / GEN_REL), '--root', str(root),
-                    '--files', LIST_REL, '--out', str(profile_dir / 'rtl'),
-                    '--census', str(census_path)], check=True)
+    cmd = [sys.executable, str(root / GEN_REL), '--root', str(root),
+           '--files', LIST_REL, '--out', str(profile_dir / 'rtl'), '--census', str(census_path)]
+    if vm_face_contract:
+        # Select the qualified extracted body while preserving the four other
+        # canonical pieces. The default profile continues to use VM_FACE_RT=0.
+        for name, top in TOPS.items():
+            family = 'ot_hfd_coll_q3_hard_v8x' if name in ('body', 'edge', 'vm') else 'ot_hfd_coll_q2_hard_v8g'
+            rel = VMFACE_BODY if name == 'body' else f'rtl/hbm_accel/cores_split/{family}/{top}.sv'
+            cmd += ['--top', f'{name}={rel}:{top}']
+    subprocess.run(cmd, check=True)
     census = json.loads(census_path.read_text())
     if (census['status'] != 'PASS_GENERATED' or census['unclassified_total'] or
             census['unresolved_instantiations'] or not census['inputs_clean_at_commit']):
         raise SystemExit('NOT BUILT: q3sync source closure is incomplete or dirty')
     if census['modules_in_closure'] != 32:
         raise SystemExit('NOT BUILT: qualified q3sync cohort is exactly 32 modules')
-    return recipe_from_census(core, census, profile_dir, root)
+    recipe, staged, receipt = recipe_from_census(core, census, profile_dir, root)
+    if vm_face_contract:
+        receipt['vm_face_contract'] = dict(VM_RT=81, VM_FACE_RT=2, VM_ASM_FACE_RT=2,
+            exported_select_added_cycles=0, checker_added_cycles=2, metadata_added_cycles=4,
+            assembled_valid_added_cycles=4, additional_control_metadata_flops=600,
+            source=VMFACE_BODY)
+    return recipe, staged, receipt
 
 
 def recipe_from_census(core, census, profile_dir, root=REPO):
@@ -142,10 +156,91 @@ def recipe_from_census(core, census, profile_dir, root=REPO):
     return recipe, staged, receipt
 
 
+
+
+def canonical_oneclk_map(core, recipe, receipt, native_clocks, root=REPO):
+    """Keep every legacy q2 data/reset alias; replace certified clock aggregate."""
+    path = Path(root) / 'physical/die_plan/hbm/cores/harden/canonical_ports_split.json'
+    types = json.loads(path.read_text())['types']
+    candidates = [(k, v) for k, v in types.items() if v.get('top') == TOPS[core]]
+    if len(candidates) != 1:
+        raise ValueError('ambiguous canonical q2 type')
+    key, canonical = candidates[0]
+    entries = list(canonical['type_ids'].values())
+    if len(entries) != 1:
+        raise ValueError('ambiguous canonical q2 interface')
+    old = entries[0]['cut_pins']
+    expected = {p[0]: (p[1], p[2]) for p in canonical['ports']}
+    native = {n: (d, w) for n, d, w in receipt['port_inventory']['ports']}
+    if native.get('clk') != ('input', 1):
+        raise ValueError('canonical q2 adapter requires one scalar input clk')
+    clocks = set(native_clocks)
+    mapping, covered, old_clocks = {}, set(), set()
+    for alias, destinations in old.items():
+        names = set(destinations)
+        if names & clocks:
+            if not names <= clocks:
+                raise ValueError('mixed clock/data canonical alias')
+            old_clocks |= names
+            continue
+        if len(destinations) != 1:
+            raise ValueError('ambiguous canonical data alias')
+        port, width = next(iter(destinations.items()))
+        if (port not in native or native[port] != expected.get(port) or
+                native[port][1] != width or port in covered):
+            raise ValueError('canonical data alias width/coverage mismatch: ' + alias)
+        mapping[alias] = dict(destinations)
+        covered.add(port)
+    if old_clocks != clocks or covered != set(native) - {'clk'} or 'clk' in mapping:
+        raise ValueError('canonical q2 map must cover every exact nonclock port')
+    mapping['clk'] = {'clk': 1}
+    recipe['canonical_pin_map'] = mapping
+    receipt['canonical_pin_map'] = dict(canonical_type=key, source_sha256=sha(path),
+        preserved_nonclock_aliases=len(mapping)-1, data_cycle_delta=0,
+        map=mapping, physical_clock_pin='clk')
+    return recipe, receipt
+
+
+def stage_physical_macros(recipe, staged, receipt, profile_dir, root=REPO):
+    """Use opaque physical SRAMs with the exact provider's fixed ANSI ports.
+
+    Token/simulation filelists retain behavioral providers. Physical LEF/lib
+    selection still uses the unchanged recipe macro names and provider paths.
+    """
+    macro_dir = Path(profile_dir).resolve() / 'physical_macros'
+    macro_dir.mkdir(parents=True, exist_ok=True)
+    receipt['physical_macros'] = {}
+    for rel, provider_hash in receipt['macros'].items():
+        provider = Path(root) / rel
+        if sha(provider) != provider_hash:
+            raise SystemExit('NOT BUILT: macro provider changed: ' + rel)
+        text = re.sub(r"//[^\n]*|/\*.*?\*/", "", provider.read_text(), flags=re.S)
+        top = Path(rel).stem
+        ports = literal_ports(text, top)
+        match = re.search(r"(?m)^\s*module\s+" + re.escape(top) + r"\b", text)
+        end = text.find(');', match.end()) + 2
+        header = text[match.start():end]
+        stub = '(* blackbox *) ' + header + '\nendmodule\n'
+        if literal_ports(stub, top) != ports:
+            raise SystemExit('NOT BUILT: macro header port identity changed: ' + rel)
+        out = macro_dir / Path(rel).name
+        out.write_text(stub)
+        staged[rel] = out
+        receipt['physical_macros'][rel] = dict(
+            module=top, provider_sha256=provider_hash,
+            header_sha256=hashlib.sha256(header.encode()).hexdigest(),
+            physical_sha256=sha(out), ports=ports,
+            scope='physical opaque macro only; simulation provider unchanged')
+    return recipe, staged, receipt
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--core', required=True, choices=TOPS)
     ap.add_argument('--profile-dir', required=True)
+    ap.add_argument('--vm-face-contract', action='store_true',
+                    help='opt-in qualified VM_RT81/direct-face2/assembly-face2 body; legacy remains default')
+    ap.add_argument('--common-clock-dir', help='opt-in qualified one-clock adapters; requires explicit matching plan clock-pin batch')
     ap.add_argument('--diagnostic-plan', action='store_true',
                     help='allow an external scratch plan; not release evidence')
     ap.add_argument('core_args', nargs=argparse.REMAINDER)
@@ -172,7 +267,15 @@ def main():
         for path in (views_path, plan_path.resolve()):
             if not path.is_relative_to(REPO):
                 ap.error('external plan requires --diagnostic-plan: ' + str(path))
-    recipe, staged, receipt = materialize(a.core, a.profile_dir)
+    recipe, staged, receipt = materialize(a.core, a.profile_dir, vm_face_contract=a.vm_face_contract)
+    native_clocks = list(receipt['clock_ports'])
+    if a.common_clock_dir:
+        sys.path.insert(0, str(REPO / 'tools/hbm_b2/q3sync'))
+        from q3_common_clock import adapt_recipe
+        recipe, staged, receipt = adapt_recipe(a.core, recipe, staged, receipt, a.common_clock_dir)
+        if a.core in ('reduce', 'ring_ag') and selected_view['module'] != TOPS[a.core]:
+            recipe, receipt = canonical_oneclk_map(a.core, recipe, receipt, native_clocks)
+    recipe, staged, receipt = stage_physical_macros(recipe, staged, receipt, a.profile_dir)
     receipt['diagnostic_inputs'] = bool(a.diagnostic_plan)
     receipt['plan_module'] = selected_view['module']
     p = REPO / 'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py'

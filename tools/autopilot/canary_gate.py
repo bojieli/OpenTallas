@@ -1,6 +1,7 @@
 """Hold production kit waves until a completed reference canary shows NO-REGRESSION for the kit's flow.
 
-Binding canary = the NEWEST COMPLETED canary run of the reference die (canary.json whose
+Binding canary (COORD 10-26 05:10) = ANY completed released run of the reference die <= 24 h old, or the newest
+completed one, whose flow equals the kit's; formerly only the NEWEST COMPLETED canary run of the reference die (canary.json whose
 'src' equals canary_meta.json 'src_commit'); still-pending newer runs never mask it.
 A releasing run binds a kit only when the kit's watched flow files equal the released canary's
 (main's flow is not consulted: a kit runs on the flow it was generated from, AUTOPILOT-FIX 10-25 23:30).  A corrective kit names the reference failure by path (after the last '@').
@@ -15,9 +16,17 @@ run that set the baseline) release; REGRESSION and NO-BASELINE hold.
 import fnmatch
 import importlib.util
 import json
+import os
+import time
 from pathlib import Path
 
 RELEASE = ("NO-REGRESSION", "INFO")
+# COORD RULING 2026-10-26 05:10 (CORES-KITS park (1), flow churn): a kit may route on ANY completed NO-REGRESSION
+# canary of its reference die whose flow covers the kit's flow inputs, if that canary completed <= 24 h ago (the newest
+# completed run stays eligible at any age, as before).  Newest-canary-only binding is dropped.  A completed canary of
+# the kit's exact flow that is NOT released (REGRESSION / NO-BASELINE) still holds: evidence against that flow wins.
+# AUTOPILOT_CANARY_NEWEST_ONLY=1 restores the old newest-only binding.
+ANY_CANARY_MAX_AGE_S = 24 * 3600
 
 
 def _baseline_mod(repo):
@@ -55,14 +64,16 @@ def _runs(root, die, item=None):
             continue
         source = meta.get('src_commit', '')
         verdict = None
+        finished = None
         try:
             result = json.loads((p.parent / 'canary.json').read_text())
             if source and result.get('src') == source:
                 verdict = result.get('verdict')
+                finished = (p.parent / 'canary.json').stat().st_mtime
         except (OSError, ValueError, AttributeError):
             pass
         runs.append({'mtime': mtime, 'run': str(p.parent), 'src': source, 'verdict': verdict,
-                     'done': verdict is not None,
+                     'done': verdict is not None, 'finished': finished,
                      'ref': source + '@' + str(p.parent / 'canary.json')})
     return sorted(runs, key=lambda r: (r['mtime'], r['run']))
 
@@ -163,23 +174,57 @@ def assess(row, root, repo, run_git, seed=True):
     if not completed:
         return False, ('newest reference canary pending: ' + newest['ref']
                        + '; reviewed corrective kit only: re-enqueue --canary-fix ' + newest['ref'])
-    bind = completed[-1]
+    if not spec or 'watch' not in spec:
+        return False, 'flow canary watch specification missing'
+    watch = spec['watch']
+    kit_source = row.get('src', '').rsplit('@', 1)[-1]
+    if not kit_source:
+        return False, 'queued kit source is missing'
+    if os.environ.get('AUTOPILOT_CANARY_NEWEST_ONLY') == '1':
+        return _bind_newest(completed[-1], kit_source, root, repo, run_git, seed, watch, spec, ref_die)
+    return _bind_any(completed, kit_source, root, repo, run_git, seed, watch, spec, ref_die)
+
+
+def _bind_any(completed, kit_source, root, repo, run_git, seed, watch, spec, ref_die, now=None):
+    """COORD 10-26 05:10: newest first over the newest completed run + every completed run <= 24 h old; the first run
+    whose flow equals the kit's flow decides (released -> route, else hold)."""
+    now = time.time() if now is None else now
+    newest = completed[-1]
+    cands = [r for r in reversed(completed)
+             if r is newest or (r.get('finished') and now - r['finished'] <= ANY_CANARY_MAX_AGE_S)]
+    first_diff = None
+    for r in cands:
+        changed = _flow_diff(run_git, repo, r['src'], kit_source, watch, spec, ref_die)
+        if changed is None:
+            continue
+        if changed:
+            first_diff = first_diff or (r, changed)
+            continue
+        rv, rwhy = regression(r, root, repo, seed)
+        if rv in RELEASE:
+            age = '' if r is newest else ' (not the newest; completed <= 24 h ago, COORD 10-26 05:10)'
+            return True, 'completed canary ' + rv + ' covers kit flow: ' + r['ref'] + age + ' (' + rwhy[:200] + ')'
+        return False, ("completed reference canary of the kit's flow " + rv + ' vs baseline: ' + r['ref'] + ' ('
+                       + rwhy[:300] + '); reviewed corrective kit only: re-enqueue --canary-fix ' + r['ref'])
+    rv, rwhy = regression(newest, root, repo, seed)
+    if rv not in RELEASE:
+        return False, ('newest completed reference canary ' + rv + ' vs baseline: ' + newest['ref'] + ' (' + rwhy[:300]
+                       + '); no completed canary <= 24 h old covers the kit flow; reviewed corrective kit only: '
+                       're-enqueue --canary-fix ' + newest['ref'])
+    if first_diff is None:
+        return False, 'cannot compare queued kit flow source to released canary source'
+    r, changed = first_diff
+    return False, ('queued kit flow differs from released canary ' + newest['ref'] + ' and from every completed canary '
+                   '<= 24 h old; regenerate from canaried flow: ' + ', '.join(changed[:4]) + ' (src ' + newest['src'] + ')')
+
+
+def _bind_newest(bind, kit_source, root, repo, run_git, seed, watch, spec, ref_die):
+    """pre-10-26 binding (AUTOPILOT_CANARY_NEWEST_ONLY=1): only the newest completed run binds"""
     rv, rwhy = regression(bind, root, repo, seed)
     if rv not in RELEASE:
         return False, ('newest completed reference canary ' + rv + ' vs baseline: ' + bind['ref'] + ' (' + rwhy[:300]
                        + '); reviewed corrective kit only: re-enqueue --canary-fix ' + bind['ref'])
-    if not spec or 'watch' not in spec:
-        return False, 'flow canary watch specification missing'
-    watch = spec['watch']
-    # AUTOPILOT-FIX 10-25 23:30 (rule 3: routes run on a released canary-passed flow): a row runs on the newest
-    # released canary's flow, judged by the KIT's own source (kits are self-contained: gen_phys copies the flow into
-    # the kit and the runner never reads main).  Main moving past the canary no longer holds rows: the old main check
-    # held every frozen QC / S81-HEAD row for hours as "flow changed since newest released canary" while main moved
-    # several times an hour.  A newer canary on main's flow, once completed, becomes the binding run and kits made
-    # from the older flow are then held below until regenerated.
-    kit_source = row.get('src', '').rsplit('@', 1)[-1]
-    if not kit_source:
-        return False, 'queued kit source is missing'
+    # AUTOPILOT-FIX 10-25 23:30: a row runs on the released canary's flow, judged by the KIT's own source.
     changed = _flow_diff(run_git, repo, bind['src'], kit_source, watch, spec, ref_die)
     if changed is None:
         return False, 'cannot compare queued kit flow source to released canary source'

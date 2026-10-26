@@ -676,7 +676,10 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     t.append("puts \"OT_T placed [expr {[clock seconds]-$t0}]\"")
     t.append("source /work/grt/obs.tcl")
     t.append("puts \"OT_T obs [expr {[clock seconds]-$t0}]\"")
-    t.append("set_routing_layers -signal M4-M7")          # ruling 9.3: signals <= M7; M8/M9 = clock/reset/PG
+    # METHODOLOGY 12.1c (owner 10-26): die-top signals on M4-M7 + leftover M8/M9 (PG stripes + clock NDR
+    # reservations are obstructions); OT_DIE_SIGNAL_M47=1 = the 9.3-era legacy diagnostic only
+    t.append("set_routing_layers -signal M4-M7" if os.environ.get("OT_DIE_SIGNAL_M47") == "1"
+             else "set_routing_layers -signal M4-M9")
     band_layers, band_regs = band_region_adjust(P, dict(adjust).get("M4", 0.75))
     for L, a in adjust:
         t.append(f"set_global_routing_layer_adjustment {L} {0 if L in band_layers else a:g}")

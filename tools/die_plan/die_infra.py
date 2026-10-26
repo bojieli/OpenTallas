@@ -22,6 +22,13 @@ signal GRT sees the exact leftover capacity.  Opt-in; die_trial.py / die_clock_m
     die_infra.py report  --pre D [--grt G ...] [--clock MESH] [--sites S.json] --out R.json
                                                              # (6) GRT overflow, skew TT/FF, IR, clock power, island
                                                              # area per type, leftover M8/M9
+    die_infra.py master-plan PLAN --out D [--mesh M] [--tracks T] [--pg P] [--ir R.json ...] [--entries E]
+                                                             # METHODOLOGY 12.7/12.8 master plan (master_plan.py):
+                                                             # census, roads, bays, entry pins, slices + static gates
+    die_infra.py sites   PLAN --out D [--mesh MESH] [--tracks D/preroute.json] [--pg D/pg.json] [--m89] [--bays B]
+                                                             # INFRA-SITE SUFFICIENCY gate (infra_sites.py): corridor
+                                                             # bay gaps <= reach, cut use, island via-stack porosity,
+                                                             # bay/island fill + power, H-tree snap to islands
 
 Pre-route geometry model (one list, three consumers):
   PG    die PG stripes (die.pg.grid or the sized pg.json grid), full-die STRIPE shapes on M8 (H) / M9 (V).
@@ -333,6 +340,66 @@ def footprint(layer, r, w, s):
     return (x0, y0 - s, x1, y1 + s) if horiz else (x0 - s, y0, x1 + s, y1)
 
 
+def clock_shields(P, pg_shapes, clock_shapes, shield_w=0.08, eps=1e-6):
+    """METHODOLOGY 12.7a clock shielding: for every clock wire rect (net, layer, x0, y0, x1, y1, ndr spacing) one PG shield on
+    each side at the clock NDR spacing s = the wire's footprint spacing.  A side whose shield track is already a
+    same-layer PG stripe running the whole wire length is satisfied by that stripe (any supply net); otherwise a
+    VSS shield wire of width shield_w is emitted.  A shield that would partly overlap a PG stripe of the same layer
+    (short / spacing clash) is a conflict -> shielding incomplete.  Returns (new shield shapes
+    [(net, layer, x0, y0, x1, y1)], report dict)."""
+    import bisect as _b
+    idx = {}
+    for net, layer, *box in pg_shapes:
+        horiz = P.layers[layer]["dir"] == "H"
+        lo, hi = (box[1], box[3]) if horiz else (box[0], box[2])
+        idx.setdefault(layer, []).append((lo, hi, net, box))
+    for layer, rows in idx.items():
+        rows.sort(key=lambda r: r[0])
+        idx[layer] = (rows, [r[0] for r in rows], max(r[1] - r[0] for r in rows))
+    out, n_seg, by_pg, conflicts, ex, mm = [], 0, 0, 0, [], 0.0
+    for cnet, layer, x0, y0, x1, y1, sp in clock_shapes:      # sp = the clock wire's NDR spacing
+        horiz = (x1 - x0) >= (y1 - y0)
+        n_seg += 1
+        for side in (-1, 1):
+            if horiz:
+                a, b = (y1 + sp, y1 + sp + shield_w) if side > 0 else (y0 - sp - shield_w, y0 - sp)
+                al0, al1 = x0, x1
+            else:
+                a, b = (x1 + sp, x1 + sp + shield_w) if side > 0 else (x0 - sp - shield_w, x0 - sp)
+                al0, al1 = y0, y1
+            hit, clash = None, None
+            if layer in idx:
+                rows, starts, widest = idx[layer]
+                for lo, hi, net, box in rows[_b.bisect_left(starts, a - widest - sp):_b.bisect_right(starts, b + sp)]:
+                    blo, bhi = (box[0], box[2]) if horiz else (box[1], box[3])
+                    if bhi < al0 - eps or blo > al1 + eps:
+                        continue
+                    # distance from the clock wire edge to this stripe's near edge on this side
+                    edge = (y1 if horiz else x1) if side > 0 else (y0 if horiz else x0)
+                    dist = (lo - edge) if side > 0 else (edge - hi)
+                    if dist < -eps and (hi < edge - eps if side > 0 else lo > edge + eps):
+                        continue                     # stripe lies on the other side of the wire
+                    full = blo <= al0 + eps and bhi >= al1 - eps
+                    if sp - eps <= dist < sp + SIG_W + SIG_S - eps and full:
+                        hit = net                    # PG stripe closer than one signal track: it IS the shield
+                    elif -eps < dist < sp - eps or (sp - eps <= dist < sp + shield_w + sp - eps and not full):
+                        clash = (net, box)           # spacing violation / partial stripe where the shield goes
+            if hit:
+                by_pg += 1
+            elif clash:
+                conflicts += 1
+                if len(ex) < 16:
+                    ex.append(dict(clock_net=cnet, layer=layer, side=side, shield_track=[a, b], pg=clash[0],
+                                   pg_rect_um=clash[1]))
+            else:
+                out.append(("VSS", layer) + ((al0, a, al1, b) if horiz else (a, al0, b, al1)))
+                mm += (al1 - al0) / 1000.0
+    rep_ = dict(rule="METHODOLOGY 12.7a", segments=n_seg, sides=2 * n_seg, shielded_by_pg_stripe=by_pg,
+                shield_wires=len(out), shield_wire_mm=round(mm, 2), conflicts=conflicts, examples=ex,
+                shield_w_um=shield_w, complete=conflicts == 0 and n_seg > 0)
+    return out, rep_
+
+
 def pg_clock_conflicts(P, pg_shapes, clock_shapes, clearance_um=0.08):
     """Intersect actual PG and mesh strap rectangles on the same metal layer.
 
@@ -429,6 +496,7 @@ def write_def(P, path, shapes):
             f.write(f"- {net}\n")
             first = True
             for L, x0, y0, x1, y1, shape in by[net]:
+                shape = "STRIPE" if shape == "SHIELD" else shape
                 horiz = (x1 - x0) >= (y1 - y0)
                 w = (y1 - y0) if horiz else (x1 - x0)
                 a = (u(x0), u((y0 + y1) / 2)) if horiz else (u((x0 + x1) / 2), u(y0))
@@ -470,6 +538,18 @@ def cmd_freeze(a):
             fp = footprint(L, (x0, y0, x1, y1), w, s)
             obs.append((L,) + fp)
             cls_rects.append(("clock", L) + fp)
+        if a.clock_shield:   # 12.7a: PG shields both sides; their footprint keeps signals out of the shield spacing
+            sh, srep = clock_shields(P, power_shapes, [r[:6] + (s,) for r in crs], a.shield_w)
+            meta["clock_shielding"] = srep
+            for net, L, x0, y0, x1, y1 in sh:
+                shapes.append((net, "pg", L, x0, y0, x1, y1, "SHIELD"))
+                fp = footprint(L, (x0, y0, x1, y1), a.shield_w, SIG_S)
+                obs.append((L,) + fp)
+                cls_rects.append(("shield", L) + fp)
+            if not srep["complete"]:
+                print(f"die_infra freeze: clock shielding INCOMPLETE ({srep['conflicts']} PG clashes)", file=sys.stderr)
+        else:
+            meta["clock_shielding"] = dict(rule="METHODOLOGY 12.7a", complete=False, note="freeze without --clock-shield")
     if a.reset:
         R = json.loads(Path(a.reset).read_text())
         meta["reset"] = dict(file=str(a.reset), nets=R["nets"], wire_mm=R["wire_mm"])
@@ -538,6 +618,21 @@ def cmd_clockkit(a):
     return 0
 
 
+def pg_ir_state(pg):
+    """{file, sha256, ir}: ir = PASS only when the sized PG json carries an IR-qualified verdict (psm verdict PASS
+    on every domain, or top-level ir_verdict PASS); no PG file / no IR result -> OPEN."""
+    import hashlib
+    if not pg or not Path(pg).exists():
+        return dict(file=str(pg) if pg else None, sha256=None, ir="OPEN")
+    raw = Path(pg).read_bytes()
+    d = json.loads(raw)
+    v = d.get("ir_verdict")
+    if v is None and isinstance(d.get("psm"), dict):
+        vs = [x.get("verdict") for x in d["psm"].values() if isinstance(x, dict) and "verdict" in x]
+        v = "PASS" if vs and all(x == "PASS" for x in vs) else ("FAIL" if vs else None)
+    return dict(file=str(pg), sha256=hashlib.sha256(raw).hexdigest(), ir=v or "OPEN")
+
+
 def cmd_grt(a):
     if a.iterations < 50:
         raise ValueError("infra-first die GRT requires at least 50 congestion iterations")
@@ -552,10 +647,28 @@ def cmd_grt(a):
     t = (kit / "grt" / "grt.tcl").read_text()
     t = t.replace("read_verilog /work/grt/route.v", "read_verilog /out/route.v")
     t = t.replace("source /work/grt/obs.tcl", "source /out/obs_base.tcl\nsource /pre/preroute_obs.tcl")
-    if a.m89:
+    # METHODOLOGY 12.1c (owner 10-26 D-INFRA-FIRST): die-top signals route on M4-M7 PLUS the leftover M8/M9 after
+    # the fixed PG/clock/reset pre-routes (their exact footprints incl. clock NDR spacing are preroute_obs.tcl, so
+    # the M8/M9 adjustment is 0: the obstructions ARE the taken capacity).  --m47-only = the 9.3-era legacy
+    # diagnostic (never freeze evidence).
+    if not any(f"set_routing_layers -signal M4-{L}" in t for L in ("M7", "M9")):
+        raise ValueError("die_infra grt: kit grt.tcl has no set_routing_layers -signal M4-M7 / M4-M9 line")
+    if a.m47_only:
+        t = t.replace("set_routing_layers -signal M4-M9", "set_routing_layers -signal M4-M7")
+    else:
         t = t.replace("set_routing_layers -signal M4-M7", "set_routing_layers -signal M4-M9")
+        t = re.sub(r"set_global_routing_layer_adjustment M[89] [0-9.]+\n", "", t)
         t = t.replace("global_route ", "set_global_routing_layer_adjustment M8 0\nset_global_routing_layer_adjustment "
                                        "M9 0\nglobal_route ", 1)
+    # METHODOLOGY 12.4e: PG IR is closed BEFORE signal GRT; the PG used is recorded so a later PG growth forces a re-route
+    pgq = pg_ir_state(pg)
+    if pgq["ir"] != "PASS" and not a.pg_ir_open_trial:
+        raise ValueError(f"die_infra grt: PG IR not closed ({pgq}); METHODOLOGY 12.4e -- close PG IR first, or pass "
+                         "--pg-ir-open-trial (result is a TRIAL, never freeze evidence)")
+    (out / "grt_meta.json").write_text(json.dumps(dict(
+        signal_layers="M4-M7" if a.m47_only else "M4-M9 (leftover M8/M9 after pre-routes)",
+        rule="METHODOLOGY 12.1c" if not a.m47_only else "LEGACY 9.3 diagnostic (--m47-only), not freeze evidence",
+        pg=pgq, pre=str(pre), trial=bool(a.pg_ir_open_trial and pgq["ir"] != "PASS")), indent=1) + "\n")
     t = re.sub(r"-congestion_iterations \d+", f"-congestion_iterations {a.iterations}", t)
     t = t.replace("/work/grt/congestion.rpt", "/out/congestion.rpt").replace("/work/grt/route.guide", "/out/route.guide")
     (out / "grt.tcl").write_text(t)
@@ -598,12 +711,34 @@ def cmd_report(a):
     rep["tracks_taken"] = pre["tracks_taken"]
     rep["leftover_M8_M9"] = {L: round(1 - v["all"], 4) for L, v in pre["tracks_taken"].items()}
     for g in a.grt or []:
-        rep.setdefault("grt", {})[str(g)] = parse_grt(Path(g) / "grt.log")
+        r_ = parse_grt(Path(g) / "grt.log")
+        gm = Path(g) / "grt_meta.json"
+        if gm.exists():                       # METHODOLOGY 12.4e: PG growth after signal GRT -> signal GRT is stale
+            m_ = json.loads(gm.read_text())
+            r_["meta"] = m_
+            now = pg_ir_state(m_["pg"]["file"]) if m_["pg"].get("file") else m_["pg"]
+            r_["pg_unchanged_since_grt"] = now.get("sha256") == m_["pg"].get("sha256")
+            if not r_["pg_unchanged_since_grt"] or m_.get("trial"):
+                r_["freeze_evidence"] = False
+        rep.setdefault("grt", {})[str(g)] = r_
     if a.clock:
         cr = json.loads((Path(a.clock) / "clock_report.json").read_text())
         rep["clock"] = {c: {k: r[k] for k in ("related_pair_max_ps", "verdict", "pairs_over_80", "seam_max_ps",
                                              "intra_max_ps", "insertion_ps", "tap_slew_max_ps", "clock_wire_power_W")
                             if k in r} for c, r in cr["corners"].items()}
+    if a.clock_post:   # METHODOLOGY 12.4d: the skew gate is re-run after signal GRT (signals on leftover M8/M9 next
+        # to the mesh/spine change the clock RC); freeze needs BOTH the clock-alone and the post-signal report to PASS
+        cp = json.loads((Path(a.clock_post) / "clock_report.json").read_text())
+        rep["clock_post_signal"] = {c: {k: r[k] for k in ("related_pair_max_ps", "verdict", "pairs_over_80",
+                                                          "region_root_related_pair_max_ps", "insertion_ps")
+                                        if k in r} for c, r in cp["corners"].items()}
+    clk_ok = all(v.get("verdict") == "PASS" for v in rep.get("clock", {}).values()) and bool(rep.get("clock"))
+    post_ok = all(v.get("verdict") == "PASS" for v in rep.get("clock_post_signal", {}).values()) and \
+        bool(rep.get("clock_post_signal"))
+    grt_ok = bool(rep.get("grt")) and all(g_["verdict"] == "PASS" and g_.get("freeze_evidence", True)
+                                          for g_ in rep["grt"].values())
+    rep["freeze_gate"] = dict(rule="METHODOLOGY 12.4a/d/e", clock_alone=clk_ok, clock_post_signal=post_ok,
+                              signal_grt0=grt_ok, verdict="PASS" if clk_ok and post_ok and grt_ok else "FAIL")
     if a.pg:
         pg = json.loads(Path(a.pg).read_text())
         rep["pg"] = {k: pg.get(k) for k in ("grid", "tracks", "regions", "psm")}
@@ -613,6 +748,28 @@ def cmd_report(a):
     Path(a.out).write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps(rep, indent=1)[:4000])
     return 0
+
+
+# ---------------------------------------------------------------------------------------------------------- sites
+def cmd_sites(a):
+    """INFRA-SITE SUFFICIENCY gate (opt-in, read-only): infra_sites.run -> D/infra_sites.json + summary + tables;
+    exit 1 unless every check PASSes (fail-closed: a check without data is NOT RUN, never PASS)."""
+    import infra_sites as IS
+    P = load_plan(a.plan)
+    bays = json.loads(Path(a.bays).read_text()) if a.bays else None
+    rep = IS.run(P, mesh_dir=a.mesh, tracks_file=a.tracks, pg_file=a.pg, m89=a.m89, bays=bays, reach=a.reach,
+                 detour=a.detour_um, core_obs_top=a.core_obs_top, stack_util=a.stack_util,
+                 lower_pg_frac=a.lower_pg_frac, island_w_mm2=a.island_w_mm2, via_imax_ma=a.via_imax_ma,
+                 clock_reach=a.clock_reach, reset_reach=a.reset_reach, with_reset=not a.no_reset)
+    IS.write(rep, a.out)
+    if a.render:
+        IS.render(P, rep, str(Path(a.out) / "infra_sites.png"))
+        for i, w in enumerate(a.window or []):
+            IS.render(P, rep, str(Path(a.out) / f"infra_sites_zoom{i}.png"), window=[float(v) for v in w.split(",")])
+    s = rep["summary"]
+    print(json.dumps({k: s[k] for k in ("verdict", "checks", "corridors", "corridors_fail", "cores_needing_in_core_bay",
+                                        "cuts_over", "stack_limit_per_gcell", "island_worst")}, indent=1, default=str))
+    return 0 if s["verdict"] == "PASS" else 1
 
 
 # --------------------------------------------------------------------------------------------------------- render
@@ -725,19 +882,25 @@ def main(argv=None):
     f.add_argument("--clock")
     f.add_argument("--guide")
     f.add_argument("--reset")
+    f.add_argument("--clock-shield", action="store_true", help="PG shields both sides of every clock wire (12.7a)")
+    f.add_argument("--shield-w", type=float, default=0.08, help="emitted VSS shield width um")
     g = sub.add_parser("grt")
     g.add_argument("plan")
     g.add_argument("--kit", required=True)
     g.add_argument("--pre", required=True)
     g.add_argument("--out", required=True)
     g.add_argument("--pg")
-    g.add_argument("--m89", action="store_true", help="signals may also use the leftover M8/M9 (FT-M89-PROBE)")
+    g.add_argument("--m89", action="store_true", help="no-op: leftover M8/M9 is the default now (METHODOLOGY 12.1c)")
+    g.add_argument("--m47-only", action="store_true", help="LEGACY 9.3 diagnostic: die signals M4-M7 only")
+    g.add_argument("--pg-ir-open-trial", action="store_true",
+                   help="allow signal GRT before PG IR is closed (TRIAL only, METHODOLOGY 12.4e)")
     g.add_argument("--iterations", type=int, default=50)
     g.add_argument("--mem", type=int, default=256)
     q = sub.add_parser("report")
     q.add_argument("--pre", required=True)
     q.add_argument("--grt", action="append")
     q.add_argument("--clock")
+    q.add_argument("--clock-post", help="clock report dir re-run AFTER signal GRT (METHODOLOGY 12.4d)")
     q.add_argument("--pg")
     q.add_argument("--sites")
     q.add_argument("--out", required=True)
@@ -748,8 +911,32 @@ def main(argv=None):
     v.add_argument("--out")
     v.add_argument("--dpi", type=int, default=200)
     v.add_argument("--pg-full", action="store_true")
+    st = sub.add_parser("sites")
+    st.add_argument("plan")
+    st.add_argument("--out", required=True)
+    st.add_argument("--mesh", help="die_clock_mesh build dir (mesh.json/place.json/clock_report.json)")
+    st.add_argument("--tracks", help="freeze preroute.json (tracks_taken -> leftover M8/M9)")
+    st.add_argument("--pg", help="sized pg.json (else the plan die.pg.grid)")
+    st.add_argument("--m89", action="store_true", help="count leftover M8/M9 tracks in the cut check")
+    st.add_argument("--bays", help="JSON {core module: [[x0,y0,x1,y1] core-local in-core bays]} (what-if)")
+    st.add_argument("--reach", type=float)
+    st.add_argument("--detour-um", type=float, default=405.0)
+    st.add_argument("--core-obs-top", default="M5")
+    st.add_argument("--stack-util", type=float, default=0.5)
+    st.add_argument("--lower-pg-frac", type=float, default=0.25)
+    st.add_argument("--island-w-mm2", type=float, default=2.0)
+    st.add_argument("--via-imax-ma", type=float, default=0.05)
+    st.add_argument("--clock-reach", type=float)
+    st.add_argument("--reset-reach", type=float, default=1000.0)
+    st.add_argument("--no-reset", action="store_true")
+    st.add_argument("--render", action="store_true")
+    st.add_argument("--window", action="append", help="x0,y0,x1,y1 zoom render (repeatable)")
+    import master_plan as MP                      # METHODOLOGY 12.7/12.8 master-plan mode (MASTER-PLAN lane)
+    MP.add_args(sub.add_parser("master-plan", help="master plan + static plan gates (master_plan.py)"))
     a = ap.parse_args(argv)
-    return dict(pg=cmd_pg, reset=cmd_reset, clockkit=cmd_clockkit, trim=cmd_trim, freeze=cmd_freeze, grt=cmd_grt,
+    if a.cmd == "master-plan":
+        return MP.cmd(a)
+    return dict(sites=cmd_sites, pg=cmd_pg, reset=cmd_reset, clockkit=cmd_clockkit, trim=cmd_trim, freeze=cmd_freeze, grt=cmd_grt,
                 report=cmd_report, render=cmd_render)[a.cmd](a)
 
 

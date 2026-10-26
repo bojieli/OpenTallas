@@ -87,7 +87,7 @@ def compose(program, control, timing, cadence, *, mux_config=None, host_booking=
         stage=program.get('stage');start_phase=program.get('start_phase')
         begin=stage is not None and start_phase is not None
         if not begin:
-            holds.append('actual calendar stage/start_phase identity missing; BEGIN omitted')
+            holds.append('actual calendar '+('/'.join(k for k,v in [('stage',stage),('start_phase',start_phase)] if v is None))+' identity missing; BEGIN omitted')
         words=[csr_len(len(rows))]
         if begin:
             if type(stage) is not int or not 0<=stage<128:raise ValueError('stage must fit7bits')
@@ -140,7 +140,7 @@ def compose(program, control, timing, cadence, *, mux_config=None, host_booking=
         measured_local_ages=ages,host_word_spacing_edges=5,
         measured_reset_phase_contract=timing.get('seqhost_input_clock'),
         actual_control_paths=control['paths'],commands=control.get('commands',[]),
-        mandatory_mux_initialization=mux,
+        mandatory_mux_initialization=mux,source_header_contract=program.get('native_boot_contract'),
         required_mux_csrs=dict(slot_gap_and_RL='0x15',window_events='8 explicit rows via0x16'),
         jobs=jobs,host_pin_bookings=bookings,holds=holds,
         native_job_sealed=False,host_boot_encoded=True,host_boot_complete=False,

@@ -3157,6 +3157,20 @@
     "object"
    ]
   },
+  "master_plan": {
+   "type": "object",
+   "properties": {
+    "required": {
+     "type": "boolean"
+    },
+    "sha256": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    }
+   }
+  },
   "budgets": {
    "type": "object",
    "additionalProperties": false,

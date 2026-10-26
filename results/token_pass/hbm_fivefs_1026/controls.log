@@ -1,0 +1,10 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-hbm-fs-vmface-1026/programme_r2
+ot-run: intel1         admits   597 GB (avail 879, reserve 0, fresh 0, peak 217.5, headroom 0, waiters 0/0 GB) load 22/112 running 8 disk 1969 GB 
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-hbm-fs-vmface-1026/programme_r2
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/codex-hbm-fs-vmface-1026/programme_r2
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-2579959-1793013613 after 0 s
+no_start CAUGHT
+wrong_slot CAUGHT
+FRESH_VMFACE_CONTROLS_PASS
+ot-run: RAN on intel1 (unit oth-ubuntu-2579959-1793013613): exit 0

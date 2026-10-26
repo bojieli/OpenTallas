@@ -546,6 +546,45 @@ def wavefront_cells_text(driver=False):
     return "\n".join(out)
 
 
+def instance_path_params(cells, defaults, rules):
+    """Opt-in simulation image selectors, using the original elaborated leaf path.
+
+    An empty ROM INSTANCE selects no image.  Unlike connectivity or timing
+    parameters, this string must remain unique when identical partition types
+    share one emitted wrapper.  Normal type parameterization carries it through.
+    An explicit nonempty selector must already equal the original path.
+    """
+    seen, audit = set(), []
+    for rule in rules:
+        if set(rule) != {"module", "param"}:
+            raise BindError("instance_path_params: each rule needs only module and param")
+        key = (rule["module"], rule["param"])
+        if key in seen:
+            raise BindError(f"instance_path_params: duplicate rule {key}")
+        seen.add(key)
+        matched = 0
+        for c in cells:
+            if c.module != key[0]:
+                continue
+            matched += 1
+            ps = defaults.get((c.ytype, c.module), {})
+            old = c.params.get(key[1], ps.get(key[1]))
+            if old is None or not isinstance(old, str) or not old.startswith('"') or not old.endswith('"'):
+                raise BindError(f"instance_path_params: {c.path}.{key[1]} is not a declared string selector")
+            if not c.path or any(x in c.path for x in ('/', '\\', '"', '\n', '\r')):
+                raise BindError(f"instance_path_params: unsafe image identity {c.path!r}")
+            if old != '\"\"':
+                if old != json.dumps(c.path):
+                    raise BindError(f"instance_path_params: {c.path}.{key[1]} explicit selector {old} differs from original path")
+                continue
+            c.params[key[1]] = json.dumps(c.path)
+            audit.append(dict(inst=c.path, module=c.module, param=key[1], old=old,
+                              value=c.params[key[1]]))
+        if not matched:
+            raise BindError(f"instance_path_params: module {key[0]} has no elaborated leaves")
+    return audit
+
+
 class Binder:
     def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
@@ -570,6 +609,8 @@ class Binder:
             if key not in self.param_defaults:
                 self.param_defaults[key] = {k: E._pval(v)[0] for k, v in
                     yjs["modules"].get(c.ytype, {}).get("parameter_default_values", {}).items()}
+        self.instance_path_params = instance_path_params(
+            self.F.cells, self.param_defaults, self.ab.get("instance_path_params", []))
         for r in self.F.parent_variants:
             if r["dropped_net_ports"]:
                 self.errors.append(f"PARENT_VARIANT_NET {r['inst']} -> {r['variant']}: as-built nets on ports the variant "
@@ -3197,11 +3238,33 @@ def _bus_note(L, side):
     return f"{lane}: {L['src']} {segs} -> {L['dst']}" if side == "in" else f"{lane}: {segs} -> {L['dst']}"
 
 
+_CONST_BIT = re.compile(r"1'b([01xzXZ])")
+
+
+def _const_run(vals):
+    """constant bits (LSB first, each '0'/'1'/'x'/'z') -> one short literal: {N{1'b0}} for a uniform run, else N'b..."""
+    n = len(vals)
+    if n == 1:
+        return f"1'b{vals[0]}"
+    if len(set(vals)) == 1:
+        return f"{{{n}{{1'b{vals[0]}}}}}"
+    return f"{n}'b" + "".join(reversed(vals))
+
+
 def _concat(bits):
-    """per-bit expressions (LSB first) -> one SV expression, runs of one vector merged into slices."""
+    """per-bit expressions (LSB first) -> one SV expression, runs of one vector merged into slices and runs of
+    constant bits merged into one short literal (TOK-DS 10-26: a 8,528-bit {1'b0, 1'b0, ...} pin connection made a
+    51k-char line that Verilator rejects, 'Too many preprocessor tokens on a line').  Same bits, same order."""
     runs = []
     for b in bits:
         m = re.fullmatch(r"(\w+)\[(\d+)\]", b)
+        k = _CONST_BIT.fullmatch(b)
+        if k:
+            if runs and runs[-1][0] is None:
+                runs[-1][1].append(k.group(1).lower())
+            else:
+                runs.append([None, [k.group(1).lower()], None])
+            continue
         if m and runs and runs[-1][0] == m.group(1) and runs[-1][2] + 1 == int(m.group(2)):
             runs[-1][2] += 1
             continue
@@ -3211,7 +3274,9 @@ def _concat(bits):
             runs.append([b, None, None])
     parts = []
     for v, lo, hi in reversed(runs):
-        if lo is None:
+        if v is None:
+            parts.append(_const_run(lo))
+        elif lo is None:
             parts.append(v)
         elif lo == hi:
             parts.append(f"{v}[{lo}]")
@@ -3404,6 +3469,8 @@ def cmd_bind(a):
         [dict(path=k[0], port=k[1], module=k[2], bits=[b[0] for b in v], values="".join(str(b[1]) for b in v),
               sources=sorted({b[2] for b in v})) for k, v in sorted(B.tied_pins.items())], indent=0) + "\n")
     rep, lat = B.report()
+    if B.instance_path_params:
+        rep["instance_path_params"] = B.instance_path_params
     if getattr(B, "_reg_hard", None):
         rep["registered_pins"] = {p: dict(v, stations_removed=len(B.in_bus.get(p, [])) + len(B.out_bus.get(p, [])),
                                           station_bits_removed=sum(L["width"] + 1 for L in B.in_bus.get(p, []) +

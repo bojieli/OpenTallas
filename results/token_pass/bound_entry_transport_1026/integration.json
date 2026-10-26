@@ -1,0 +1,396 @@
+{
+ "schema": "opentallas.s81.bound_entry_transport_integration.v1",
+ "source_commit": "32d6720b95",
+ "die_sha256": "1c11db22badf63d1365251ceae327ad65b9c05d470f5898ef20d35fd246d33d8",
+ "source_asbuilt_sha256": "003a165c92e792d35baa8406c777efe123b29ee4875e883ec3e66b41dff3d166",
+ "initial": {
+  "verdict": "BLOCKED",
+  "blocked": 70,
+  "path": "/srv/opentallas-scratch2/claude/native-control-1026/entry_transport1.json",
+  "diagnosis": "selected generated $buf bit identities form exact bound segment boundaries; direct one-segment origin match cannot cross them"
+ },
+ "current": {
+  "verdict": "PASS_BOUND_TRANSPORT",
+  "blocked": 0,
+  "path": "/srv/opentallas-scratch2/claude/native-control-1026/entry_transport2.json",
+  "leaves": 80,
+  "fields": 480,
+  "checked_leaf_inputs": 34880,
+  "exact_buffer_bit_proofs": 54936,
+  "actual_buffers": 126
+ },
+ "ages": {
+  "u_s_0N": {
+   "command": [
+    2,
+    2,
+    9,
+    9,
+    16
+   ],
+   "target5": [
+    2,
+    2,
+    9,
+    9,
+    16
+   ],
+   "vp_paths": [
+    "u_s_0N.u_sl.u_lf0.u_vp",
+    "u_s_0N.u_sl.u_lf1.u_vp",
+    "u_s_0N.u_sl.u_lf2.u_vp",
+    "u_s_0N.u_sl.u_lf3.u_vp",
+    "u_s_0N.u_sl.u_lf4.u_vp"
+   ]
+  },
+  "u_s_0S": {
+   "command": [
+    2,
+    2,
+    8,
+    7,
+    15
+   ],
+   "target5": [
+    2,
+    2,
+    8,
+    7,
+    15
+   ],
+   "vp_paths": [
+    "u_s_0S.u_sl.u_lf0.u_vp",
+    "u_s_0S.u_sl.u_lf1.u_vp",
+    "u_s_0S.u_sl.u_lf2.u_vp",
+    "u_s_0S.u_sl.u_lf3.u_vp",
+    "u_s_0S.u_sl.u_lf4.u_vp"
+   ]
+  },
+  "u_s_1N": {
+   "command": [
+    2,
+    2,
+    7,
+    10,
+    14
+   ],
+   "target5": [
+    2,
+    2,
+    7,
+    10,
+    14
+   ],
+   "vp_paths": [
+    "u_s_1N.u_lp.u_lf0.u_vp",
+    "u_s_1N.u_lp.u_lf1.u_vp",
+    "u_s_1N.u_lp.u_lf2.u_vp",
+    "u_s_1N.u_lp.u_lf3.u_vp",
+    "u_s_1N.u_lp.u_lf4.u_vp"
+   ]
+  },
+  "u_s_1S": {
+   "command": [
+    2,
+    2,
+    10,
+    8,
+    14
+   ],
+   "target5": [
+    2,
+    2,
+    10,
+    8,
+    14
+   ],
+   "vp_paths": [
+    "u_s_1S.u_lp.u_lf0.u_vp",
+    "u_s_1S.u_lp.u_lf1.u_vp",
+    "u_s_1S.u_lp.u_lf2.u_vp",
+    "u_s_1S.u_lp.u_lf3.u_vp",
+    "u_s_1S.u_lp.u_lf4.u_vp"
+   ]
+  },
+  "u_s_2N": {
+   "command": [
+    2,
+    2,
+    9,
+    9,
+    14
+   ],
+   "target5": [
+    2,
+    2,
+    9,
+    9,
+    14
+   ],
+   "vp_paths": [
+    "u_s_2N.u_lp.u_lf0.u_vp",
+    "u_s_2N.u_lp.u_lf1.u_vp",
+    "u_s_2N.u_lp.u_lf2.u_vp",
+    "u_s_2N.u_lp.u_lf3.u_vp",
+    "u_s_2N.u_lp.u_lf4.u_vp"
+   ]
+  },
+  "u_s_2S": {
+   "command": [
+    2,
+    2,
+    8,
+    7,
+    15
+   ],
+   "target5": [
+    2,
+    2,
+    8,
+    7,
+    15
+   ],
+   "vp_paths": [
+    "u_s_2S.u_lp.u_lf0.u_vp",
+    "u_s_2S.u_lp.u_lf1.u_vp",
+    "u_s_2S.u_lp.u_lf2.u_vp",
+    "u_s_2S.u_lp.u_lf3.u_vp",
+    "u_s_2S.u_lp.u_lf4.u_vp"
+   ]
+  },
+  "u_s_3N": {
+   "command": [
+    2,
+    2,
+    6,
+    6,
+    10
+   ],
+   "target5": [
+    2,
+    2,
+    6,
+    6,
+    10
+   ],
+   "vp_paths": [
+    "u_s_3N.u_slice.lf[0].u_lf.u_vp",
+    "u_s_3N.u_slice.lf[1].u_lf.u_vp",
+    "u_s_3N.u_slice.lf[2].u_lf.u_vp",
+    "u_s_3N.u_slice.lf[3].u_lf.u_vp",
+    "u_s_3N.u_slice.lf[4].u_lf.u_vp"
+   ]
+  },
+  "u_s_3S": {
+   "command": [
+    2,
+    2,
+    8,
+    9,
+    14
+   ],
+   "target5": [
+    2,
+    2,
+    8,
+    9,
+    14
+   ],
+   "vp_paths": [
+    "u_s_3S.u_sl.lf[0].u_lf.u_vp",
+    "u_s_3S.u_sl.lf[1].u_lf.u_vp",
+    "u_s_3S.u_sl.lf[2].u_lf.u_vp",
+    "u_s_3S.u_sl.lf[3].u_lf.u_vp",
+    "u_s_3S.u_sl.lf[4].u_lf.u_vp"
+   ]
+  },
+  "u_s_4N": {
+   "command": [
+    2,
+    2,
+    7,
+    10,
+    15
+   ],
+   "target5": [
+    2,
+    2,
+    7,
+    10,
+    15
+   ],
+   "vp_paths": [
+    "u_s_4N.u_lp.u_lf0.u_vp",
+    "u_s_4N.u_lp.u_lf1.u_vp",
+    "u_s_4N.u_lp.u_lf2.u_vp",
+    "u_s_4N.u_lp.u_lf3.u_vp",
+    "u_s_4N.u_lp.u_lf4.u_vp"
+   ]
+  },
+  "u_s_4S": {
+   "command": [
+    2,
+    2,
+    7,
+    8,
+    13
+   ],
+   "target5": [
+    2,
+    2,
+    7,
+    8,
+    13
+   ],
+   "vp_paths": [
+    "u_s_4S.u_lp.u_lf0.u_vp",
+    "u_s_4S.u_lp.u_lf1.u_vp",
+    "u_s_4S.u_lp.u_lf2.u_vp",
+    "u_s_4S.u_lp.u_lf3.u_vp",
+    "u_s_4S.u_lp.u_lf4.u_vp"
+   ]
+  },
+  "u_s_5N": {
+   "command": [
+    2,
+    2,
+    9,
+    7,
+    13
+   ],
+   "target5": [
+    2,
+    2,
+    9,
+    7,
+    13
+   ],
+   "vp_paths": [
+    "u_s_5N.u_lp.u_lf0.u_vp",
+    "u_s_5N.u_lp.u_lf1.u_vp",
+    "u_s_5N.u_lp.u_lf2.u_vp",
+    "u_s_5N.u_lp.u_lf3.u_vp",
+    "u_s_5N.u_lp.u_lf4.u_vp"
+   ]
+  },
+  "u_s_5S": {
+   "command": [
+    2,
+    2,
+    9,
+    10,
+    15
+   ],
+   "target5": [
+    2,
+    2,
+    9,
+    10,
+    15
+   ],
+   "vp_paths": [
+    "u_s_5S.u_lp.u_lf0.u_vp",
+    "u_s_5S.u_lp.u_lf1.u_vp",
+    "u_s_5S.u_lp.u_lf2.u_vp",
+    "u_s_5S.u_lp.u_lf3.u_vp",
+    "u_s_5S.u_lp.u_lf4.u_vp"
+   ]
+  },
+  "u_s_6N": {
+   "command": [
+    2,
+    2,
+    10,
+    7,
+    15
+   ],
+   "target5": [
+    2,
+    2,
+    10,
+    7,
+    15
+   ],
+   "vp_paths": [
+    "u_s_6N.u_lp.u_lf0.u_vp",
+    "u_s_6N.u_lp.u_lf1.u_vp",
+    "u_s_6N.u_lp.u_lf2.u_vp",
+    "u_s_6N.u_lp.u_lf3.u_vp",
+    "u_s_6N.u_lp.u_lf4.u_vp"
+   ]
+  },
+  "u_s_6S": {
+   "command": [
+    2,
+    2,
+    10,
+    8,
+    13
+   ],
+   "target5": [
+    2,
+    2,
+    10,
+    8,
+    13
+   ],
+   "vp_paths": [
+    "u_s_6S.u_lp.u_lf0.u_vp",
+    "u_s_6S.u_lp.u_lf1.u_vp",
+    "u_s_6S.u_lp.u_lf2.u_vp",
+    "u_s_6S.u_lp.u_lf3.u_vp",
+    "u_s_6S.u_lp.u_lf4.u_vp"
+   ]
+  },
+  "u_s_7N": {
+   "command": [
+    2,
+    2,
+    9,
+    9,
+    16
+   ],
+   "target5": [
+    2,
+    2,
+    9,
+    9,
+    16
+   ],
+   "vp_paths": [
+    "u_s_7N.u_sl.u_lf0.u_vp",
+    "u_s_7N.u_sl.u_lf1.u_vp",
+    "u_s_7N.u_sl.u_lf2.u_vp",
+    "u_s_7N.u_sl.u_lf3.u_vp",
+    "u_s_7N.u_sl.u_lf4.u_vp"
+   ]
+  },
+  "u_s_7S": {
+   "command": [
+    2,
+    2,
+    10,
+    7,
+    15
+   ],
+   "target5": [
+    2,
+    2,
+    10,
+    7,
+    15
+   ],
+   "vp_paths": [
+    "u_s_7S.u_sl.u_lf0.u_vp",
+    "u_s_7S.u_sl.u_lf1.u_vp",
+    "u_s_7S.u_sl.u_lf2.u_vp",
+    "u_s_7S.u_sl.u_lf3.u_vp",
+    "u_s_7S.u_sl.u_lf4.u_vp"
+   ]
+  }
+ },
+ "scope": "XR output pin event to actual VP input pin event; local decode/commit/execution and reset/clock phase remain separate",
+ "readiness_qualified": false,
+ "native_job_sealed": false,
+ "added_rtl_cycles": 0
+}

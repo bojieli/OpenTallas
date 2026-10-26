@@ -286,6 +286,10 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
         raise ValueError("safe calendar requires an explicit native return contract")
     fill_commit = FILL_COMMIT if timing is None else timing.fill_commit
     drain_done = DRAIN_DONE if timing is None else timing.drain_done
+    # TOK-HBM-SU 2026-10-26: first lane output from the die's own PIN_REG when the contract gives it (the leaf-split die
+    # binds PIN_REG 1: lane write-back +4); else the old leaf_split_latency environment default.
+    first_out = (FIRST_OUT if timing is None or timing.pin_reg is None
+                 else 8 + 23 + 4 * (4 - 3) + 0 + 1 + 4 * timing.pin_reg)
     import su_arith_lower as L
     import su_program_inventory as I
     from su_arith_compile import pack, physical_word
@@ -434,7 +438,17 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
                     preload[sec] = [int(a) for a in la]      # not produced earlier in this run: enters as an image
         e_issue.append(last_commit)
     # control lines: setup (ld) then one emit per issue group (issue edges non-decreasing, after the fills commit)
-    setup = max(0, min(e_issue) - SETUP_TO_EMIT) if e_issue else 0
+    # TOK-HBM-SU 2026-10-26 store-bank WRITE PORT: a pinned store bank has ONE write port shared by the fill return
+    # (pins sample E+fill_commit-1) and the lane write-back (issue + first_out - SETUP_TO_EMIT, every lane of the
+    # slice at once).  ot_hbm_su_static_pgslice.sv st_conflict = fw&&lw latches FAULT, so no lane write-back may land
+    # while a fill of this record is still returning: the setup line and every issue wait until the last fill write
+    # has passed.  (Historical SU31: fills 0..79 returned on 23..102 while groups wrote back from 53/57 -> fault.)
+    lw_lat = first_out - SETUP_TO_EMIT
+    last_fill_write = max((fe + fill_commit - 1 for _, fe in fills), default=-1)
+    first_issue_min = last_fill_write + 1 - lw_lat
+    setup = max(0, min(e_issue) - SETUP_TO_EMIT, first_issue_min - SETUP_TO_EMIT) if e_issue else 0
+    res["write_port_guard"] = dict(last_fill_write=last_fill_write, lane_write_latency=lw_lat,
+                                   first_issue_min=first_issue_min, setup_edge=setup)
     ctl0 = groups[0]["word"]
     vbmask = ((1 << 120) - 1) << off["vb"]
 
@@ -464,7 +478,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
         for g, G in enumerate(groups):
             # Pin-captured write and read coincide under the old calendar.
             # OLD-read SRAM requires the DRAIN to sample one serial edge later.
-            ready = setup + FIRST_OUT + (issue_at[g] - setup - SETUP_TO_EMIT) + int(safe_calendar) + drain_guard
+            ready = setup + first_out + (issue_at[g] - setup - SETUP_TO_EMIT) + int(safe_calendar) + drain_guard
             for k in range(16):
                 ln = slice(8 * k, 8 * k + 8)
                 m = G["act"][ln]
@@ -935,6 +949,7 @@ def main():
     ap.add_argument("--rank", default="0", help="fixture rank")
     ap.add_argument("--native-read-return", type=int, help="explicit native stream read-return edges")
     ap.add_argument("--native-write-return", type=int, help="explicit native stream write-return edges")
+    ap.add_argument("--native-pin-reg", type=int, choices=(0, 1), help="die su_<q><g> PIN_REG (contract); default = leaf_split_latency env")
     ap.add_argument("--connected-lowering", action="store_true", help="selected source-bound L0 reduction/scalar implementation; execution remains unqualified")
     ap.add_argument("--side-source", type=Path, help="actual repaired scoped SIDE source in compiled bundle")
     ap.add_argument("--su-lower2", action="store_true", help="TOK-FUNC2-HBM-SU opt-in production SU lowerings by "
@@ -989,7 +1004,7 @@ def main():
         ap.error("--safe-calendar requires an explicit native read/write return contract")
     from hbm_layer_vehicle.native_profile import NativeTiming
     native_timing = (None if a.native_read_return is None else
-                     NativeTiming(a.native_read_return, a.native_write_return))
+                     NativeTiming(a.native_read_return, a.native_write_return, a.native_pin_reg))
     if a.design == "qwen":
         sys.exit("layer_images: Qwen D4G8 programme source (qwen_d4g_proof program.hgi1) not wired yet -- see lane notes")
     bnd = json.loads(a.boundary.read_text())

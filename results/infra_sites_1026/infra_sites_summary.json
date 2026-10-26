@@ -1,0 +1,496 @@
+{
+ "verdict": "FAIL",
+ "checks": {
+  "htree_snap": "INFO",
+  "reset_demand": "INFO",
+  "a_corridor_gap": "PASS",
+  "b_cut_use": "PASS",
+  "d_bay_fill": "PASS",
+  "d_island": "PASS",
+  "c_porosity": "PASS",
+  "clock_leg_reach": "FAIL",
+  "reset_hop_reach": "PASS"
+ },
+ "corridors": 1456,
+ "corridors_fail": 0,
+ "worst_gap": {
+  "part": "sl_W5_su_c",
+  "name": "cws1",
+  "kind": "ft_slot",
+  "bits": 516,
+  "gap_um": 276.48,
+  "at_um": [
+   2255.04,
+   10644.48
+  ],
+  "straight_gap_um": 276.48,
+  "detour_um": 0.0,
+  "legs": 6,
+  "verdict": "PASS",
+  "route": [
+   [
+    2234.83,
+    11793.6
+   ],
+   [
+    2234.83,
+    11793.6
+   ],
+   [
+    2234.83,
+    11793.6
+   ],
+   [
+    2234.83,
+    11793.6
+   ],
+   [
+    2229.12,
+    11793.6
+   ],
+   [
+    2229.12,
+    11456.64
+   ],
+   [
+    2229.12,
+    11456.64
+   ],
+   [
+    2255.04,
+    11456.64
+   ],
+   [
+    2255.04,
+    11197.44
+   ],
+   [
+    2255.04,
+    11197.44
+   ],
+   [
+    2255.04,
+    11197.44
+   ],
+   [
+    2255.04,
+    10825.92
+   ],
+   [
+    2255.04,
+    10825.92
+   ],
+   [
+    2255.04,
+    10825.92
+   ],
+   [
+    2255.04,
+    10463.04
+   ],
+   [
+    2255.04,
+    10463.04
+   ],
+   [
+    2254.14,
+    10463.04
+   ],
+   [
+    2254.14,
+    10454.4
+   ]
+  ]
+ },
+ "worst_gaps": [
+  {
+   "part": "sl_W5_su_c",
+   "name": "cws1",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    2255.04,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W5_su_c",
+   "name": "cws2",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    2894.4,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W4_su_c",
+   "name": "cws1",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    4726.08,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W4_su_c",
+   "name": "cws2",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    5365.44,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W3_su_c",
+   "name": "cws1",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    7197.12,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W3_su_c",
+   "name": "cws2",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    7836.48,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W2_su_c",
+   "name": "cws1",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    9668.16,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W2_su_c",
+   "name": "cws2",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    10307.52,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W1_su_c",
+   "name": "cws1",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    12139.2,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W1_su_c",
+   "name": "cws2",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    12778.56,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W0_su_c",
+   "name": "cws1",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    14610.24,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_W0_su_c",
+   "name": "cws2",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    15249.6,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_E0_su_c",
+   "name": "cws1",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    17081.28,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_E0_su_c",
+   "name": "cws2",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    17720.64,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  },
+  {
+   "part": "sl_E1_su_c",
+   "name": "cws1",
+   "kind": "ft_slot",
+   "bits": 516,
+   "gap_um": 276.48,
+   "at_um": [
+    19552.32,
+    10644.48
+   ],
+   "straight_gap_um": 276.48,
+   "detour_um": 0.0,
+   "legs": 6,
+   "verdict": "PASS"
+  }
+ ],
+ "cores_over_reach": 52,
+ "cores_needing_in_core_bay": 0,
+ "core_types_needing_bay": [],
+ "worst_cut": {
+  "part": "sl_W5_sc",
+  "axis": "h",
+  "at_um": 12793.6,
+  "bits": 3707,
+  "tracks": 22365,
+  "use": 0.1658,
+  "ft_track_frac": 0.5
+ },
+ "cuts_over": 0,
+ "cut_max": 0.6,
+ "worst_bay_fill": {
+  "part": "sl_W5_hc1",
+  "type": "slw_hc1",
+  "soft_um2": 820847.0,
+  "base_fill": 0.22,
+  "ft_cell_um2": 0.9,
+  "fill": 0.22
+ },
+ "bay_fill_parts_without_fill_note": 57,
+ "stack_limit_per_gcell": 58,
+ "stack_limit_layer": "M9",
+ "free_tracks_per_gcell": {
+  "M2": 225.0,
+  "M3": 225.0,
+  "M4": 168.75,
+  "M5": 168.75,
+  "M6": 126.56,
+  "M7": 126.56,
+  "M8": 117.31,
+  "M9": 117.28
+ },
+ "island_worst": {
+  "fill": 0.0271,
+  "w_per_mm2": 1.9589,
+  "stacks_per_gcell": 28.12,
+  "power_mw": 2.555,
+  "side_need_um": 43.2
+ },
+ "island_min_free_side_um": 34.56,
+ "island_types_fail": [],
+ "htree_snap": {
+  "levels": {
+   "1": 2,
+   "2": 4,
+   "3": 8,
+   "4": 16,
+   "5": 32,
+   "6": 64,
+   "7": 128,
+   "8": 256,
+   "9": 512,
+   "10": 1024,
+   "11": 2048,
+   "12": 4096
+  },
+  "islands": 377,
+  "island_level": 8,
+  "max_node_disp_um": 3171.76,
+  "max_node_disp_to_island_level_um": 2221.8,
+  "disp_by_level_um": {
+   "1": 975.88,
+   "2": 807.4,
+   "3": 648.44,
+   "4": 1313.72,
+   "5": 1095.56,
+   "6": 1397.96,
+   "7": 2066.28,
+   "8": 2221.8,
+   "9": 2782.96,
+   "10": 2890.96,
+   "11": 3171.76,
+   "12": 3160.08
+  },
+  "worst_node": {
+   "disp_um": 3171.76,
+   "level": 11,
+   "tag": "h00100101000",
+   "node_um": [
+    280.36,
+    18467.559999999998
+   ],
+   "island_part": "c_W5_tn_01",
+   "island_um": [
+    2185.92,
+    19733.76
+   ]
+  },
+  "sibling_mismatch_max_um": 2617.92,
+  "sibling_mismatch_by_level_um": {
+   "1": 231.12,
+   "2": 1036.8,
+   "3": 1347.84,
+   "4": 2600.64,
+   "5": 1235.52,
+   "6": 2617.92,
+   "7": 1235.52,
+   "8": 2617.92
+  },
+  "equal_legs_hold": false,
+  "serpentine_extra_mm": 333.372,
+  "collapsed_families": 161,
+  "builder_rep_cells": 3413,
+  "clock_reach_um": 450.0,
+  "driver_sites": 4096,
+  "driver_move_to_island_max_um": 3160.08,
+  "driver_move_worst": [
+   {
+    "um": 3160.1,
+    "i": 0,
+    "j": 57,
+    "part": "c_W5_tf_00"
+   },
+   {
+    "um": 3113.4,
+    "i": 0,
+    "j": 51,
+    "part": "c_W5_tf_00"
+   },
+   {
+    "um": 3052.1,
+    "i": 0,
+    "j": 44,
+    "part": "c_W5_tn_00"
+   },
+   {
+    "um": 3004.6,
+    "i": 0,
+    "j": 63,
+    "part": "c_W5_tf_01"
+   },
+   {
+    "um": 2966.6,
+    "i": 0,
+    "j": 45,
+    "part": "c_W5_tn_01"
+   }
+  ],
+  "note": "levels <= island_level keep a node per island (nodes per level <= islands); deeper levels and the mesh drivers collapse into the island of their partition (in-island fan-out)",
+  "island_nn_hop_max_um": 1848.96,
+  "island_nn_hop_worst_part": "io_serdes_1",
+  "island_nn_hop_median_um": 1235.52,
+  "clock_leg_island_gap_max_um": 8180.56,
+  "clock_leg_island_gap_where": {
+   "level": 1,
+   "at_um": [
+    12430.3,
+    12806.4
+   ]
+  }
+ },
+ "reset_hops": {
+  "hops": 749,
+  "island_gap_max_um": 643.02,
+  "worst_net": "rst_n",
+  "at_um": [
+   15688.3,
+   12880.6
+  ],
+  "reset_reach_um": 1000.0
+ }
+}

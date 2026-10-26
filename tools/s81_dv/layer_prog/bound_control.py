@@ -322,7 +322,14 @@ def compile_control(*, layer, out, bound, inventory, timing, source_root, asbuil
         from layer_prog.bound_boot import emit
         read=lambda p:json.loads(Path(p).read_text()) if p else None
         measured=control.timing
-        kwargs=dict(seqhost_receipt=read(boot['seqhost_receipt']),
+        phase_receipt=read(boot['seqhost_receipt'])
+        from layer_prog.bound_boot_contract import resolve
+        contract=resolve(entry,dict(measured,seqhost_input_clock=phase_receipt['seqhost_input_clock']),source_root)
+        if entry.get('stage') is not None and entry['stage']!=contract['stage']:
+            raise ValueError('native programme header stage differs from actual selected source')
+        entry=dict(entry,stage=contract['stage'],native_boot_contract=contract)
+        (out/'native_boot_contract.json').write_text(json.dumps(contract,indent=1)+'\n')
+        kwargs=dict(seqhost_receipt=phase_receipt,
                     mux_config=read(boot.get('mux_config')),host_booking=read(boot.get('host_booking')))
         emit(entry,record,measured,read(boot['cadence']),out/'boot_norm',**kwargs)
         if boot.get('entry_rows'):
