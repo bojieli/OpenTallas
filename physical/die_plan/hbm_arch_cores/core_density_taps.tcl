@@ -13,11 +13,58 @@
 #        and its IF registers share one local tree (TritonCTS macro/register balance inside that tree).
 #      OT_DTAP_MACRO_SPLIT=1 (opt-in, CLOCK-RESET S1 10-25): a tap region never straddles a macro (sinks on both sides of
 #        a macro within its span are split at the macro), so no local leaf net is routed across a macro.
+# Uniform local-load prototype, opt-in only.  Merge sparse ordinary groups only
+# if the same geometric checks as the original density partition still pass.
+# Macro-interface groups keep their identity and are split by the same target.
+proc dt_uniform_merge {sets minimum maximum diameter} {
+  if {$minimum < 1 || $maximum < $minimum || $diameter <= 0} {
+    error "OT_DTAP uniform grouping requires 1 <= minimum <= target and DMAX > 0"
+  }
+  set live $sets
+  while {1} {
+    set bi -1; set bj -1; set best 1e99
+    for {set i 0} {$i < [llength $live]} {incr i} {
+      set A [lindex $live $i]
+      if {![llength $A] || [llength $A] >= $minimum} continue
+      set ax 0.0; set ay 0.0
+      foreach q $A { set ax [expr {$ax+[lindex $q 0]}]; set ay [expr {$ay+[lindex $q 1]}] }
+      set ax [expr {$ax/[llength $A]}]; set ay [expr {$ay/[llength $A]}]
+      for {set j 0} {$j < [llength $live]} {incr j} {
+        if {$i == $j} continue
+        set B [lindex $live $j]
+        if {![llength $B] || [llength $A]+[llength $B] > $maximum} continue
+        set AB [concat $A $B]
+        set xs [lsort -integer [lmap q $AB {lindex $q 0}]]
+        set ys [lsort -integer [lmap q $AB {lindex $q 1}]]
+        if {[lindex $xs end]-[lindex $xs 0] > $diameter || [lindex $ys end]-[lindex $ys 0] > $diameter} continue
+        if {$::dt_msplit_on && [llength [dt_straddle $AB]]} continue
+        set bx 0.0; set by 0.0
+        foreach q $B { set bx [expr {$bx+[lindex $q 0]}]; set by [expr {$by+[lindex $q 1]}] }
+        set cost [expr {abs($ax-$bx/[llength $B])+abs($ay-$by/[llength $B])}]
+        if {$cost < $best} { set best $cost; set bi $i; set bj $j }
+      }
+    }
+    if {$bi < 0} break
+    lset live $bj [concat [lindex $live $bj] [lindex $live $bi]]
+    lset live $bi {}
+  }
+  set result {}
+  foreach S $live { if {[llength $S]} { lappend result $S } }
+  return $result
+}
 uplevel #0 {
 set dt_blk [ord::get_db_block]
 set dt_u [$dt_blk getDbUnitsPerMicron]
 set dt_target [expr {[info exists ::env(OT_DTAP_TARGET)] ? $::env(OT_DTAP_TARGET) : 1250}]
 set dt_dmax [expr {([info exists ::env(OT_DTAP_DMAX_UM)] ? $::env(OT_DTAP_DMAX_UM) : 80) * $dt_u}]
+# A tighter uniform target bounds the number of local CTS levels independently
+# of the pre-existing maximum-load setting.  Unset means byte-identical grouping.
+if {[info exists ::env(OT_DTAP_UNIFORM_TARGET)]} {
+  if {![string is integer -strict $::env(OT_DTAP_UNIFORM_TARGET)] || $::env(OT_DTAP_UNIFORM_TARGET) < 16} {
+    error "OT_DTAP_UNIFORM_TARGET must be an integer >= 16"
+  }
+  set dt_target [expr {min($dt_target, $::env(OT_DTAP_UNIFORM_TARGET))}]
+}
 set dt_min [expr {[info exists ::env(OT_DTAP_MIN)] ? $::env(OT_DTAP_MIN) : 150}]
 set dt_cell [expr {[info exists ::env(OT_DTAP_CELL)] ? $::env(OT_DTAP_CELL) : "BUFx24_ASAP7_75t_R"}]
 set dt_port [expr {[info exists ::env(OT_DTAP_PORT)] ? $::env(OT_DTAP_PORT) : "clk"}]
@@ -129,6 +176,12 @@ if {$dt_mgrp_on} {
   set dt_ff_all $dt_ff; set dt_ff $rest
 }
 set dt_sets [dt_split $dt_ff]
+if {[info exists ::env(OT_DTAP_UNIFORM_TARGET)]} {
+  set before [llength $dt_sets]
+  set minimum [expr {[info exists ::env(OT_DTAP_UNIFORM_MIN)] ? $::env(OT_DTAP_UNIFORM_MIN) : $dt_target/2}]
+  set dt_sets [dt_uniform_merge $dt_sets $minimum $dt_target $dt_dmax]
+  puts "OT_DTAP UNIFORM target $dt_target minimum $minimum base groups $before -> [llength $dt_sets]"
+}
 # set index -> macro index for the S2 macro groups (each macro with >= 1 interface register)
 set dt_set_mac [dict create]; set dt_set_mif [dict create]
 if {$dt_mgrp_on} {
