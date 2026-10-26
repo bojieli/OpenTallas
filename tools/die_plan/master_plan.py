@@ -427,11 +427,11 @@ def pushdown_island(k, rect, centre, role, drive_len_um, sinks):
     the core-internal tree), fixed driver cells at the island centre, sizing per 12.8 d1."""
     cx, cy = centre
     return dict(name=f"isl{k}", role=role, rect_um=rect, centre_um=[r3(cx), r3(cy)], via_stack=["M9", "M5"],
-                ft_ports=[dict(name=f"mp_isl{k}_ck_i", dir="in", layer="M5", xy_um=[r3(cx), r3(cy)],
+                ft_ports=[dict(name=f"mp_isl{k}_ck_i", dir="in", layer="M5", xy_um=[r3(cx - 2.16), r3(cy + 2.16)],
                                connect="die M9 clock stack (M9->M5 at the island centre)"),
-                          dict(name=f"mp_isl{k}_ck_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy)],
+                          dict(name=f"mp_isl{k}_ck_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy + 2.16)],
                                connect="die mesh/tree net" if role != "clock_entry" else "core clock tree root"),
-                          dict(name=f"mp_isl{k}_rst_i", dir="in", layer="M5", xy_um=[r3(cx), r3(cy - 2.16)],
+                          dict(name=f"mp_isl{k}_rst_i", dir="in", layer="M5", xy_um=[r3(cx - 2.16), r3(cy - 2.16)],
                                connect="die regional reset stack (M9->M5)"),
                           dict(name=f"mp_isl{k}_rst_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy - 2.16)],
                                connect="core reset tree root")],

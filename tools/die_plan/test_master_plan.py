@@ -275,3 +275,12 @@ def test_clock_conflict_spatial_index_matches_all_pairs():
                    for L, r in roads for _, C, x0, y0, x1, y1, _ in clocks if L == C)
     assert M.road_clock_conflicts(roads, clocks, spacing) == expected
     assert M.road_clock_conflicts(roads, clocks, spacing, bucket_um=73) == expected
+
+
+def test_pushdown_feedthrough_pins_clear_core_clock_entry():
+    import master_plan as M
+    island = M.pushdown_island(0, [95.68,95.68,104.32,104.32], [100,100], "clock_entry", 100, 4)
+    ports = [tuple(p["xy_um"]) for p in island["ft_ports"]]
+    assert len(set(ports)) == 4
+    assert (100,100) not in ports
+    assert all(abs(abs(x-100)-2.16) < 1e-8 and abs(abs(y-100)-2.16) < 1e-8 for x,y in ports)
