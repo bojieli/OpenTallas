@@ -50,8 +50,18 @@ for i in seq.values():
  for t in i.getITerms():
   if t.getIoType()=='OUTPUT' and t.getSigType() not in ('POWER','GROUND','CLOCK'):sinks.update(ends(t.getNet(),False))
  targets[n]={'src':sorted(sources),'dst':sorted(sinks)}
+macro_cones={};reset_cones={}
+for i in mac.values():
+ for t in i.getITerms():
+  if t.getSigType() in ('POWER','GROUND','CLOCK') or t.getMTerm().getName().upper() in ('CLK','CK','CP'):continue
+  n=endpoint(t);rev=t.getIoType()=='INPUT'
+  macro_cones[n]={'direction':str(t.getIoType()),'ends':sorted(ends(t.getNet(),rev))}
+for i in seq.values():
+ for t in i.getITerms():
+  if t.getIoType()=='INPUT' and re.search(r'RST|RESET|CLR|^RN$|^SN$',t.getMTerm().getName(),re.I):
+   n=endpoint(t);reset_cones[n]={'ends':sorted(ends(t.getNet(),True))}
 print('N59_CONES',len(targets),'targets',sum(len(x['src'])+len(x['dst']) for x in targets.values()),'endpoint edges')
-Path(sys.argv[2]).write_text(json.dumps(dict(positions=positions,macros=boxes,targets=targets,all_registers=all_registers,registers=[i.getName() for i in seq.values()])))
+Path(sys.argv[2]).write_text(json.dumps(dict(positions=positions,macros=boxes,targets=targets,all_registers=all_registers,macro_cones=macro_cones,reset_cones=reset_cones,registers=[i.getName() for i in seq.values()])))
 from collections import Counter
 bins=Counter((int(positions[i.getName()][0]//10)*10+5,int(positions[i.getName()][1]//10)*10+5) for i in seq.values())
 Path(sys.argv[2]+'.clock_bins.json').write_text(json.dumps(dict(bin_um=10,bins=[[x,y,n] for (x,y),n in sorted(bins.items())])))
