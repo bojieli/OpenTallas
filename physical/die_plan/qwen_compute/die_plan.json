@@ -85032,6 +85032,74 @@
      "module": "slw_stm_v3_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m0",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m1",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m2",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m3",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
     }
    ],
    "note": "slice region partition stm (W slice, landed region stm)",
@@ -88119,6 +88187,74 @@
      "module": "slw_stm_v2_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m0",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m1",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m2",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m3",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
     }
    ],
    "note": "slice region partition stm (W slice, landed region stm)",
@@ -93220,6 +93356,74 @@
      "module": "slw_stm_v1_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m0",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m1",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m2",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      164.16,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m3",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
     }
    ],
    "note": "slice region partition stm (W slice, landed region stm)",
@@ -148200,6 +148404,74 @@
      "module": "sle_stm_v1_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m0",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m1",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m2",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m3",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
     }
    ],
    "note": "slice region partition stm (E slice, landed region stm)",
@@ -217399,6 +217671,74 @@
      "module": "sle_stm_v2_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m0",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m1",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m2",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m3",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
     }
    ],
    "note": "slice region partition stm (E slice, landed region stm)",
@@ -219844,6 +220184,74 @@
      "module": "sle_stm_v3_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m0",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m1",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      414.72
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m2",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      155.52,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m3",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.848,
+      62.952
+     ],
+     "origin_um": [
+      345.6,
+      708.48
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "actual table-loader maskROM; aligned-v2 TT/FF views,5.4um halo,+0cycles (QC batch 2 D-QC-STM-ROM-INVENTORY)"
     }
    ],
    "note": "slice region partition stm (E slice, landed region stm)",
