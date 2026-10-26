@@ -1942,6 +1942,22 @@ def alias_arrays(L, log, words=4, work=None):
                             cands.append(mp)
             if not cands:
                 continue
+            # A unique element-driver winner selects exactly the mapping the
+            # scored path below would select, independently of every simulation
+            # score. Avoid rebuilding/simulating the whole design for each
+            # small alias array (N59: thousands of arrays before the first SAT
+            # round). This changes candidate discovery only: simultaneous
+            # inductive proof/refinement still checks every selected relation.
+            structural = [sum(1 for tk, gk in mp.items() if elem.get(gk) == tk[len(tb):]) for mp in cands]
+            top = max(structural, default=0)
+            if top > 0 and structural.count(top) == 1:
+                mp = cands[structural.index(top)]
+                apply(mp)
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); unique slang element-driver layout "
+                           f"{top}/{len(mp)} bits (simulation scoring unnecessary; proof pending)")
+                continue
             base = mismatches()
             scored = []
             for mp in cands:
