@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "raw clock choice probe on FINALQC9b; not freeze",
+  "picture": "results/geom_review/qc_vertical4_pg130_1026.png",
+  "plan_sha256": "ec0cfafd4f5b984dcaeefbe8fb2e4aa745f41e1e7cb74fdfb24ed42847a8d700",
+  "findings": [
+    "Viewed four full-height vertical cohorts:clockcuts follow actual slice/SU seams; fw/sc/fe/ST/SU stayinsideoneclockregion; all377partitions assignedwhole.",
+    "RealHtreetopology splitsXthenX, localmeshesisolated; meancentresmake siblingtrunks equal-length evenwithunequalcohortwidths; fixedroot trunk586.88um<=750.",
+    "PG130IRcandidate shapesandactualkittracks used; meshstraps have0PGspacingconflicts/0metalshorts at.08umNDRspacing. PGIRremainsunqualified; nofreezeclaim.",
+    "22753clockcells,0actualbodyoverlaps,0hard/PHYbodyviolations,0unplaced; longeststub259.64um (priorgeometric8profile764.92).",
+    "Actual65portlandingsneednewRTL/pins/statusoverlay and phase/R8 integration. TOKprice+432cycles/token versusoldgeometric+19044; 70typesloadprobeonly.",
+    "NeedfreshFINAL9bbasekit/PGclock-onlyroute>=50iterations+actualTT/FFCPPR<=80. Noaddedmodeldatacyclesexceptproposedlandings+3pricedbyTOK."
+  ]
+}

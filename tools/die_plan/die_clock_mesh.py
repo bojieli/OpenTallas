@@ -82,12 +82,19 @@ def pow2(n):
     return n > 0 and (n & (n - 1)) == 0
 
 
-def htree_tag(i, j, nx, ny):
+def split_axis(ni, nj, level, axes=""):
+    axis = (0 if axes[level] == "x" else 1) if level < len(axes) else (0 if ni >= nj and ni > 1 else 1)
+    if (ni if axis == 0 else nj) <= 1:
+        raise ValueError("clock-region split profile exceeds the intersection grid")
+    return axis
+
+
+def htree_tag(i, j, nx, ny, axes=""):
     """H-tree tag ('h' + one bit per level) of intersection (i, j): replay the build's index bisection."""
     i0, i1, j0, j1, tag = 0, nx, 0, ny, "h"
     while (i1 - i0) * (j1 - j0) > 1:
         ni, nj = i1 - i0, j1 - j0
-        if ni >= nj and ni > 1:
+        if split_axis(ni, nj, len(tag) - 1, axes) == 0:
             h = (i0 + i1) // 2
             c = int(i >= h)
             i0, i1 = (i0, h) if not c else (h, i1)
@@ -99,17 +106,17 @@ def htree_tag(i, j, nx, ny):
     return tag
 
 
-def region_boxes(nx, ny, depth, W=None, H=None):
+def region_boxes(nx, ny, depth, W=None, H=None, axes="", x_edges=None, y_edges=None):
     """the 2^depth clock regions = the H-tree subtrees below level `depth`, in index space [i0, i1) x [j0, j1)
     (same bisection as the build), each with its geometric box (cut half-way between straps) when W, H are given."""
     regs = [("h", 0, nx, 0, ny)]
-    for _ in range(depth):
+    for level in range(depth):
         nxt = []
         for tag, i0, i1, j0, j1 in regs:
             ni, nj = i1 - i0, j1 - j0
             if ni * nj <= 1:
                 raise ValueError(f"--regions {depth} deeper than the {nx}x{ny} mesh")
-            if ni >= nj and ni > 1:
+            if split_axis(ni, nj, level, axes) == 0:
                 h = (i0 + i1) // 2
                 nxt += [(tag + "0", i0, h, j0, j1), (tag + "1", h, i1, j0, j1)]
             else:
@@ -121,9 +128,23 @@ def region_boxes(nx, ny, depth, W=None, H=None):
         r = dict(k=k, tag=tag, i0=i0, i1=i1, j0=j0, j1=j1)
         if W is not None:
             px, py = W / nx, H / ny
-            r["box_um"] = [round(i0 * px, 3), round(j0 * py, 3), round(i1 * px, 3), round(j1 * py, 3)]
+            r["box_um"] = [round(x_edges[i0] if x_edges is not None else i0 * px, 3),
+                           round(y_edges[j0] if y_edges is not None else j0 * py, 3),
+                           round(x_edges[i1] if x_edges is not None else i1 * px, 3),
+                           round(y_edges[j1] if y_edges is not None else j1 * py, 3)]
         out.append(r)
     return out
+
+
+def cohort_axis_grid(n, span, cuts, count):
+    """Keep a power-of-two driver count per cohort while placing physical cuts on real dataflow seams."""
+    edges = [0.] + list(map(float, cuts)) + [float(span)]
+    if len(edges) != 2**count + 1 or any(b <= a for a, b in zip(edges, edges[1:])) or n % (len(edges)-1):
+        raise ValueError("clock cohort cuts must be ordered internal seams matching the split-axis profile")
+    each = n // (len(edges) - 1)
+    grid = [a + (i + .5) * (b-a)/each for a, b in zip(edges, edges[1:]) for i in range(each)]
+    cell_edges = [a + i * (b-a)/each for a, b in zip(edges, edges[1:]) for i in range(each)] + [float(span)]
+    return grid, cell_edges
 
 
 def strap_bounds(g, xs, ys, axis):
@@ -447,7 +468,8 @@ def part_regions(P, R):
 
 
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
-          regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None):
+          regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None,
+          region_spec=None):
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
@@ -456,6 +478,14 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     K = DC.KeepIndex(ko, die=(W, H))
     xs = [(i + 0.5) * W / nx for i in range(nx)]
     ys = [(j + 0.5) * H / ny for j in range(ny)]
+    axes, x_edges, y_edges = "", None, None
+    if region_spec is not None:
+        axes = region_spec["split_axes"].lower()
+        if not axes or set(axes) - {"x", "y"} or regions not in (0, len(axes)):
+            raise ValueError("region-spec split_axes must match --regions and contain only x/y")
+        regions = len(axes)
+        xs, x_edges = cohort_axis_grid(nx, W, region_spec.get("x_cuts_um", []), axes.count("x"))
+        ys, y_edges = cohort_axis_grid(ny, H, region_spec.get("y_cuts_um", []), axes.count("y"))
     axis_snap = None
     if pg_shapes is not None:
         if track_profile is None:
@@ -470,9 +500,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                xs=xs, ys=ys, drivers={}, htree=[], stubs=[], unplaced=[])
     if axis_snap is not None:
         out["meta"].update(pg_aware=True, pg_tracks=track_profile, pg_axis_snap_max_um=axis_snap)
+    if region_spec is not None:
+        out["meta"].update(region_spec=region_spec, region_axes=axes)
     if delta_id:
         out["meta"]["delta_id"] = delta_id
-    R = region_boxes(nx, ny, regions, W, H)
+    R = region_boxes(nx, ny, regions, W, H, axes, x_edges, y_edges)
     if region_edge_straps:
         if not regions:
             raise ValueError("--region-edge-straps requires --regions")
@@ -521,6 +553,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     nid = [0]
 
     def node_xy(i0, i1, j0, j1):
+        if region_spec is not None:
+            # Mean children give equal sibling leg lengths even for unequal physical cohort widths.
+            return (sum(xs[i0:i1])/(i1-i0), sum(ys[j0:j1])/(j1-j0))
         return ((xs[i0] + xs[i1 - 1]) / 2, (ys[j0] + ys[j1 - 1]) / 2)
 
     def rec(i0, i1, j0, j1, level, drv_cell, path):
@@ -528,7 +563,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         ni, nj = i1 - i0, j1 - j0
         if ni == 1 and nj == 1:
             raise AssertionError
-        ax = 0 if ni >= nj and ni > 1 else 1
+        ax = split_axis(ni, nj, level, axes)
         if ax == 0:
             h = (i0 + i1) // 2
             kids = [(i0, h, j0, j1), (h, i1, j0, j1)]
@@ -610,6 +645,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         out["unplaced"].append(["root", "node"])
     n0 = cell("ckm_n0", q[0], q[1], "node", level=0)
     trunk = abs(root[0] - c0[0]) + abs(root[1] - c0[1])
+    if region_spec is not None and trunk + BUF_W + ROW_Y > 750.0:
+        out["unplaced"].append(["root", "STRUCTURAL root-to-tree span exceeds 750 um", round(trunk, 3)])
     out["meta"]["root_um"] = list(root)
     out["meta"]["trunk_um"] = round(trunk, 2)
     nets.append(dict(name="root", drv="port:root", loads=[n0], level=-1))
@@ -713,8 +750,9 @@ def cmd_build(a):
         pg = json.loads(Path(a.pg_json).read_text())
         pg_shapes = DI.pg_rects(P, pg["grid"])
         tracks = mesh_tracks(a.track_file, P)
+    region_spec = json.loads(Path(a.region_spec).read_text()) if a.region_spec else None
     cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
-                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks)
+                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks, region_spec)
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
@@ -1325,7 +1363,7 @@ def cmd_report(a):
     nx, ny = len(xs), len(ys)
 
     def path_of(i, j):
-        return htree_tag(i, j, nx, ny)
+        return htree_tag(i, j, nx, ny, M["meta"].get("region_axes", ""))
     import numpy as np
     xa, ya = np.array(xs), np.array(ys)
     rep = dict(meta=M["meta"], corners={})
@@ -1348,7 +1386,8 @@ def cmd_report(a):
     landed = [x for x in seam if reg[x[0]] != reg[x[1]]]
     seam_in = [x for x in seam if reg[x[0]] == reg[x[1]]]
     intra_x = [x for x in intra if reg[x[0]] != reg[x[1]]]
-    crossing_table = write_landed(P, S.load(a.plan), M, d, a.landing_cycles) if regd else None
+    landing_cycles = M["meta"].get("region_spec", {}).get("landing_cycles", a.landing_cycles)
+    crossing_table = write_landed(P, S.load(a.plan), M, d, landing_cycles) if regd else None
     if intra_x:
         raise SystemExit(f"die_clock_mesh report: {len(intra_x)} intra-partition pairs straddle a region seam")
     for corner in [c for c in a.corner if (d / f"taps_{c}.txt").exists()]:
@@ -1496,6 +1535,7 @@ def main(argv=None):
                    help="reserve every clock cell body while searching later sites; prevent overlapping clock cells")
     b.add_argument("--pg-json", help="actual IR-sized PG file; consumes die_infra.pg_rects geometry (trial-only if infeasible)")
     b.add_argument("--track-file", help="actual die kit grt/tracks.tcl, required with --pg-json")
+    b.add_argument("--region-spec", help="opt-in dataflow clock cohorts: split_axes plus actual x_cuts_um/y_cuts_um")
     b.add_argument("--delta-id", help="plan delta tag recorded in mesh.json meta (e.g. D-QC-CLKMESH)")
     bl = sub.add_parser("balance")
     bl.add_argument("dir")

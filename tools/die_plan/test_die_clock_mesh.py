@@ -60,6 +60,16 @@ class T(unittest.TestCase):
         self.assertEqual(R[0]["box_um"], [0.0, 0.0, 200.0, 400.0])   # x, y, x halvings
         self.assertEqual(CM.region_boxes(8, 8, 0)[0]["tag"], "h")
 
+    def test_dataflow_cohort_cuts_match_real_xx_tree_tags(self):
+        _, edges = CM.cohort_axis_grid(8, 800., [100., 300., 650.], 2)
+        R = CM.region_boxes(8, 8, 2, W=800., H=800., axes="xx", x_edges=edges)
+        self.assertEqual([g["box_um"] for g in R], [[0.,0.,100.,800.], [100.,0.,300.,800.],
+                                                    [300.,0.,650.,800.], [650.,0.,800.,800.]])
+        for g in R:
+            for i in range(g["i0"],g["i1"]):
+                for j in range(8):
+                    self.assertTrue(CM.htree_tag(i,j,8,8,"xx").startswith(g["tag"]))
+
     def test_free_along_bounds(self):
         K = Box((90, -5, 110, 5))
         q, d = CM.free_along(K, (100.0, 0.0), 0, 50.0)
