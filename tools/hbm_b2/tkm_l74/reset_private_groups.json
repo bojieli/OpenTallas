@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.hbm.actual_private_reset_groups.v1",
+  "status": "ROOT_GROUPS_VERIFIED_Q3_WHOLE_SYNC_PROFILE_IN_PROGRESS",
+  "clock_domain": {
+    "period_ps": 833,
+    "domains": 1,
+    "all_actual_clock_pins": "retained taps of the same parent core source; no independent clocks or CDC"
+  },
+  "root": {
+    "canonical": "ot_hgi_coll_tkm_tp192_root_core__delivered_reset",
+    "rtl_sha256": "5cd6679d901745ced7b2b003841087ba65363b9f94344ee13c39564d540142dd",
+    "input_reset_face_extra": 0,
+    "groups": [
+      {
+        "name": "main_FSM_controls",
+        "reset_port": "rst_n",
+        "notes": "direct timed delivered input; does not pass through private SRAM buffer relay",
+        "reset_deassert_depth": 0,
+        "first_active_sample_edge": 1,
+        "legacy_conservative_published_depth": 1
+      },
+      {
+        "name": "private_buffer_controls",
+        "clock_port": "buffer_clk",
+        "published_reset_deassert_depth": 3,
+        "first_active_sample_edge": 4,
+        "implementation": "three ordinary data pipeline reset FF, local controls sample prior rr_n; no second async synchronizer"
+      }
+    ],
+    "reset_depth_MAX": 3,
+    "prior_default_depth": 1,
+    "publication_correction_boot_edges": 2,
+    "RTL_release_change": 0,
+    "transaction_data_delta": 0,
+    "physical_context": "fresh DLchain3 E-mid source/runtime only; old1309DLchain2S-clock views do not qualifycurrentplan"
+  },
+  "q3_producer": {
+    "actual_cores": [
+      "body_core",
+      "edge_core",
+      "vm_core",
+      "q2_reduce_core",
+      "q2_ring_ag_core"
+    ],
+    "bootstrap": "programme config/descriptor writes remain live under raw delivered bootstrap reset before mission START",
+    "mission": "one registered local launch admission after actual program_configured && !program_init_busy && !program_fault and published private reset bound",
+    "early_event": "retain pending mission event until readiness; do not drop pre-ready pulse; inputs valid only after raw delivered reset release",
+    "source_conversion": "all actual core/helper reset events require synchronous-input profile, not four edge PR edits only",
+    "published_group_depths": "PENDING exact source-closure census/profile and cold/warm gate"
+  },
+  "serializer_PR": {
+    "groups": [
+      {
+        "name": "native_control",
+        "reset_port": "rst_n",
+        "sampled_reset_depth": 1
+      },
+      {
+        "name": "boundary_status_cohort",
+        "flush_under_reset_edges": 2,
+        "face_control_data_reset": false
+      }
+    ],
+    "boot_input_capture_edges": 1,
+    "boot_only_start": "exactly once after both raw reset and actual producer/bootstrap ready; distinct from per-operation runtime start bit",
+    "runtime_data_extra_edges": 4,
+    "reset_falsepath": false
+  },
+  "admission_rule": "absolute earliest root mission working sample = partition wavefront release +4, subject also to actual bootstrap readiness and explicit global START; reset depth3 is not an additional4 (no+7)"
+}
