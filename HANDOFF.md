@@ -1024,3 +1024,5 @@ CODEX: 2026-10-26 02:13 PDT KITS-WAVE fresh VQ canaried-flow kit25817a7cc prepla
 CODEX: 2026-10-26 02:16 PDT HEAD/ENG native HEADB packaging fixed exposes TT-58.74/FF-120.12 (HAxp5+IOclock), legaladder successor synth LIVE; eng364-pin zero-cycle reach placement LIVE intel2; sourcebc656c7441.
 
 CODEX: 2026-10-26 02:17 PDT S81 takeover: signal-only 50-it GRT0 retained; HEADB actual TT -58.74/FF -120.12 diagnosed and successor live; head transport/source-row mapping READY 9412fd850b (1024 lockstep + mutants each, no whole-head closure). B2 composer 977bd9756 and legacy XRT3 terminal generator dd6cb07d5 READY; independent jobs continue.
+
+CODEX: 2026-10-26 02:17 PDT TOKENS checker cb183e0648 READY16testsPASS; recovered real PV calendar fault4..100cy vs113/114, candidate d01c094a88 +115581FF0cycles sent KV batch. Eboot compile live intel2 unit1533480; DS checkpoint recovered, HBM/QC integration active.
