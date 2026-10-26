@@ -1,0 +1,3541 @@
+{
+ "plan_sha256_8": "e6326d34",
+ "base": "origin/main 43447659a3 + claude/path-kv-sysc2-1025@becb8f371d (sysc2 does not touch die_plan.json)",
+ "die_grt_evidence": "DIE-FT it5 epyc1:/srv/opentallas-scratch2/claude/die-ft-1830/qwen_kvsys (ovf 816,190 M6 418,373 / M7 397,815; 2D hot gcells 152)",
+ "finding_1_window_density": "v3.9 (ee1aee20, die GRT 0) packed every N/S/E/W ft window at 5.1-5.2 bits/um; v3.9g/f7ch channel-mouth packing (face_pins_per_um 13.2, G2-proven at partition level) packs them at 11.4-12.5 bits/um. Die-GRT share capacity (adj 0.75 on M4-M7) is 0.25*(1/0.048+1/0.064)=9.11 bits/um per direction, so every window >9.1/um overflows in the die model. W-column hgi N/S faces carry 12,846+7,494 bits in such windows; the E column carries none (E hgi types have no >9.1/um N/S window) -> the asymmetry of the ovf map.",
+ "finding_2_channel_budget": "hgi W column (hgi_v6/v7/v8) has 4 full-height core-free x channels (233-337, 553-657, 873-976 um, plus the 86-um E strip 1192-1279 and the 17-um W strip). N-S ft through every row boundary = 3,461 bits = 0.92 of the die-share channel capacity (3,776); channels c2 (ft4 L663 1044 b) 1.10 and c3 (ft9 L751 549 + ft23 L2048 523) 1.13 are over 1.0 even if spread over the full mouth; at the hgi_WN_7|hub_Wi boundary c1-c3 are 1.11-1.14 (hgi_v8 also jogs L663/L350 from c1 to c2 = the chan3 G2 FAIL). hg W column (hg/hg_v1/hg_v3) carries 2,451 bits at 0.60-0.70. Both W columns together: 5,912 bits / 7,552 = 0.78.",
+ "conclusion": "Respreading windows inside the current mouths cannot reach overflow 0: c2/c3 stay >1.0 of the die share. The structural fix needs capacity-constrained channel assignment across BOTH W columns (hg + hgi) -- e.g. move L2048 (523 b serdes_W rx, source sys_SW/io_W2 side) and ~half of L751 or L1524 into the hg column channels (io_W2 -> hg_WN_0..7 -> hub_Wo -> hub_Wi), which is a lane re-path (ft slots added to kv3_hg/hg_v1/hg_v3, removed from hgi_v6/v7/v8; hub_Wo|hub_Wi and io_W2|io_W3 crossings), target every channel <= ~0.8 and every window <= 9.1/um (<= 7.5/um preferred). Alternative (b): widen the hgi channels (head-core column pitch) -- outline growth. Alternative (c): COORD/DIE-FT model ruling (see model_note).",
+ "model_note": "die_trial.core_obs obstructs a planned core only to M5 unless it has a LEF, but kv3_head_eighth_* harden with sigmax M7 (cores/harden/recipes_kv.json) and g2.probe_blockages already obstructs them to M7. So the die GRT is optimistic over head cores (M6/M7 free) and pessimistic inside channels (25% share, M1-M3 removed) -- the v3.9 zero was obtained by spilling over the head cores, which the real cores do not allow.",
+ "channel_budget": {
+  "cap_per_um_die_share": 9.11,
+  "boundaries": {
+   "hg_WN_0|hg_WN_1": {
+    "0": {
+     "bits": 44,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.28,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+       44,
+       6.2,
+       12.6
+      ]
+     ]
+    },
+    "1": {
+     "bits": 657,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+       1,
+       332.0,
+       332.3
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+       651,
+       237.5,
+       330.6
+      ],
+      [
+       "o_idhg_Q_N_y",
+       5,
+       330.9,
+       331.7
+      ]
+     ]
+    },
+    "2": {
+     "bits": 656,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 0.69,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+       44,
+       639.3,
+       645.7
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+       572,
+       557.2,
+       639.0
+      ],
+      [
+       "o_kvs_hroot_Q_o_cN",
+       40,
+       645.9,
+       651.8
+      ]
+     ]
+    },
+    "3": {
+     "bits": 571,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 0.6,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+       4,
+       958.1,
+       958.8
+      ],
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+       4,
+       959.1,
+       959.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+       522,
+       876.9,
+       951.6
+      ],
+      [
+       "o_fch_hg_Q_N_q",
+       1,
+       960.5,
+       960.8
+      ],
+      [
+       "o_fch_hg_Q_N_q",
+       1,
+       960.0,
+       960.3
+      ],
+      [
+       "o_kvs_attn_acal_Q",
+       16,
+       955.5,
+       957.9
+      ],
+      [
+       "o_kvs_hroot_Q_o_kg",
+       23,
+       951.8,
+       955.2
+      ]
+     ]
+    },
+    "4": {
+     "bits": 523,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.66,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+       256,
+       1235.0,
+       1271.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+       267,
+       1196.5,
+       1234.8
+      ]
+     ]
+    }
+   },
+   "hg_WN_1|hg_WN_2": {
+    "0": {
+     "bits": 44,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.28,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+       44,
+       6.2,
+       12.6
+      ]
+     ]
+    },
+    "1": {
+     "bits": 657,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+       1,
+       332.0,
+       332.3
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+       651,
+       237.5,
+       330.6
+      ],
+      [
+       "o_idhg_Q_N_y",
+       5,
+       330.9,
+       331.7
+      ]
+     ]
+    },
+    "2": {
+     "bits": 656,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 0.69,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+       44,
+       639.3,
+       645.7
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+       572,
+       557.2,
+       639.0
+      ],
+      [
+       "o_kvs_hroot_Q_o_cN",
+       40,
+       645.9,
+       651.8
+      ]
+     ]
+    },
+    "3": {
+     "bits": 571,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 0.6,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+       4,
+       958.1,
+       958.8
+      ],
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+       4,
+       959.1,
+       959.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+       522,
+       876.9,
+       951.6
+      ],
+      [
+       "ft2_o",
+       1,
+       960.5,
+       960.8
+      ],
+      [
+       "o_fch_hg_Q_N_q",
+       1,
+       960.0,
+       960.3
+      ],
+      [
+       "o_kvs_attn_acal_Q",
+       16,
+       955.5,
+       957.9
+      ],
+      [
+       "o_kvs_hroot_Q_o_kg",
+       23,
+       951.8,
+       955.2
+      ]
+     ]
+    },
+    "4": {
+     "bits": 523,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.66,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+       256,
+       1235.0,
+       1271.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+       267,
+       1196.5,
+       1234.8
+      ]
+     ]
+    }
+   },
+   "hg_WN_2|hg_WN_3": {
+    "0": {
+     "bits": 44,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.28,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+       44,
+       6.2,
+       12.6
+      ]
+     ]
+    },
+    "1": {
+     "bits": 657,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+       1,
+       332.0,
+       332.3
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+       651,
+       237.5,
+       330.6
+      ],
+      [
+       "o_idhg_Q_N_y",
+       5,
+       330.9,
+       331.7
+      ]
+     ]
+    },
+    "2": {
+     "bits": 656,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 0.69,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+       44,
+       639.3,
+       645.7
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+       572,
+       557.2,
+       639.0
+      ],
+      [
+       "o_kvs_hroot_Q_o_cN",
+       40,
+       645.9,
+       651.8
+      ]
+     ]
+    },
+    "3": {
+     "bits": 571,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 0.6,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+       4,
+       958.1,
+       958.8
+      ],
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+       4,
+       959.1,
+       959.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+       522,
+       876.9,
+       951.6
+      ],
+      [
+       "ft2_o",
+       1,
+       960.5,
+       960.8
+      ],
+      [
+       "o_fch_hg_Q_N_q",
+       1,
+       960.0,
+       960.3
+      ],
+      [
+       "o_kvs_attn_acal_Q",
+       16,
+       955.5,
+       957.9
+      ],
+      [
+       "o_kvs_hroot_Q_o_kg",
+       23,
+       951.8,
+       955.2
+      ]
+     ]
+    },
+    "4": {
+     "bits": 523,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.66,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+       256,
+       1235.0,
+       1271.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+       267,
+       1196.5,
+       1234.8
+      ]
+     ]
+    }
+   },
+   "hg_WN_3|hg_WN_4": {
+    "0": {
+     "bits": 44,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.28,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+       44,
+       6.2,
+       12.6
+      ]
+     ]
+    },
+    "1": {
+     "bits": 657,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+       1,
+       332.0,
+       332.3
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+       651,
+       237.5,
+       330.6
+      ],
+      [
+       "o_idhg_Q_N_y",
+       5,
+       330.9,
+       331.7
+      ]
+     ]
+    },
+    "2": {
+     "bits": 656,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 0.69,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+       44,
+       639.3,
+       645.7
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+       572,
+       557.2,
+       639.0
+      ],
+      [
+       "o_kvs_hroot_Q_o_cN",
+       40,
+       645.9,
+       651.8
+      ]
+     ]
+    },
+    "3": {
+     "bits": 571,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 0.6,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+       4,
+       958.1,
+       958.8
+      ],
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+       4,
+       959.1,
+       959.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+       522,
+       876.9,
+       951.6
+      ],
+      [
+       "ft2_o",
+       1,
+       960.5,
+       960.8
+      ],
+      [
+       "o_fch_hg_Q_N_q",
+       1,
+       960.0,
+       960.3
+      ],
+      [
+       "o_kvs_attn_acal_Q",
+       16,
+       955.5,
+       957.9
+      ],
+      [
+       "o_kvs_hroot_Q_o_kg",
+       23,
+       951.8,
+       955.2
+      ]
+     ]
+    },
+    "4": {
+     "bits": 523,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.66,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+       256,
+       1235.0,
+       1271.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+       267,
+       1196.5,
+       1234.8
+      ]
+     ]
+    }
+   },
+   "hg_WN_4|hg_WN_5": {
+    "0": {
+     "bits": 44,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.28,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+       44,
+       6.2,
+       12.6
+      ]
+     ]
+    },
+    "1": {
+     "bits": 657,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+       1,
+       332.0,
+       332.3
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+       651,
+       237.5,
+       330.6
+      ],
+      [
+       "o_idhg_Q_N_y",
+       5,
+       330.9,
+       331.7
+      ]
+     ]
+    },
+    "2": {
+     "bits": 656,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 0.69,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+       44,
+       639.3,
+       645.7
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+       572,
+       557.2,
+       639.0
+      ],
+      [
+       "o_kvs_hroot_Q_o_cN",
+       40,
+       645.9,
+       651.8
+      ]
+     ]
+    },
+    "3": {
+     "bits": 571,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 0.6,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+       4,
+       958.1,
+       958.8
+      ],
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+       4,
+       959.1,
+       959.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+       522,
+       876.9,
+       951.6
+      ],
+      [
+       "ft2_o",
+       1,
+       960.5,
+       960.8
+      ],
+      [
+       "o_fch_hg_Q_N_q",
+       1,
+       960.0,
+       960.3
+      ],
+      [
+       "o_kvs_attn_acal_Q",
+       16,
+       955.5,
+       957.9
+      ],
+      [
+       "o_kvs_hroot_Q_o_kg",
+       23,
+       951.8,
+       955.2
+      ]
+     ]
+    },
+    "4": {
+     "bits": 523,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.66,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+       256,
+       1235.0,
+       1271.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+       267,
+       1196.5,
+       1234.8
+      ]
+     ]
+    }
+   },
+   "hg_WN_5|hg_WN_6": {
+    "0": {
+     "bits": 44,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.28,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+       44,
+       6.2,
+       12.6
+      ]
+     ]
+    },
+    "1": {
+     "bits": 657,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+       1,
+       332.0,
+       332.3
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+       651,
+       237.5,
+       330.6
+      ],
+      [
+       "o_idhg_Q_N_y",
+       5,
+       330.9,
+       331.7
+      ]
+     ]
+    },
+    "2": {
+     "bits": 656,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 0.69,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+       44,
+       639.3,
+       645.7
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+       572,
+       557.2,
+       639.0
+      ],
+      [
+       "o_kvs_hroot_Q_o_cN",
+       40,
+       645.9,
+       651.8
+      ]
+     ]
+    },
+    "3": {
+     "bits": 571,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 0.6,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+       4,
+       958.1,
+       958.8
+      ],
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+       4,
+       959.1,
+       959.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+       522,
+       876.9,
+       951.6
+      ],
+      [
+       "ft2_o",
+       1,
+       960.5,
+       960.8
+      ],
+      [
+       "o_fch_hg_Q_N_q",
+       1,
+       960.0,
+       960.3
+      ],
+      [
+       "o_kvs_attn_acal_Q",
+       16,
+       955.5,
+       957.9
+      ],
+      [
+       "o_kvs_hroot_Q_o_kg",
+       23,
+       951.8,
+       955.2
+      ]
+     ]
+    },
+    "4": {
+     "bits": 523,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.66,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+       256,
+       1235.0,
+       1271.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+       267,
+       1196.5,
+       1234.8
+      ]
+     ]
+    }
+   },
+   "hg_WN_6|hg_WN_7": {
+    "0": {
+     "bits": 44,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.28,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+       44,
+       6.2,
+       12.6
+      ]
+     ]
+    },
+    "1": {
+     "bits": 657,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+       1,
+       332.0,
+       332.3
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+       651,
+       237.5,
+       330.6
+      ],
+      [
+       "o_idhg_Q_N_y",
+       5,
+       330.9,
+       331.7
+      ]
+     ]
+    },
+    "2": {
+     "bits": 656,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 0.69,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+       44,
+       639.3,
+       645.7
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+       572,
+       557.2,
+       639.0
+      ],
+      [
+       "o_kvs_hroot_Q_o_cN",
+       40,
+       645.9,
+       651.8
+      ]
+     ]
+    },
+    "3": {
+     "bits": 571,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 0.6,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+       4,
+       958.1,
+       958.8
+      ],
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+       4,
+       959.1,
+       959.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+       522,
+       876.9,
+       951.6
+      ],
+      [
+       "o_efault_hg_Q_N_fault",
+       1,
+       960.0,
+       960.3
+      ],
+      [
+       "ft2_o",
+       1,
+       960.5,
+       960.8
+      ],
+      [
+       "o_kvs_attn_acal_Q",
+       16,
+       955.5,
+       957.9
+      ],
+      [
+       "o_kvs_hroot_Q_o_kg",
+       23,
+       951.8,
+       955.2
+      ]
+     ]
+    },
+    "4": {
+     "bits": 523,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.66,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+       256,
+       1235.0,
+       1271.8
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+       267,
+       1196.5,
+       1234.8
+      ]
+     ]
+    }
+   },
+   "hg_WN_7|S-nbr": {
+    "-1": {
+     "bits": 1057,
+     "chan_um": null,
+     "util_vs_die_share": null,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+       267,
+       3.9,
+       55.7
+      ],
+      [
+       "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+       138,
+       56.6,
+       83.4
+      ],
+      [
+       "o_astk_WN__u_strip_u_strip_u_ctl_qo",
+       572,
+       84.2,
+       194.8
+      ],
+      [
+       "ft2_o",
+       1,
+       195.7,
+       196.6
+      ],
+      [
+       "o_kvs_attn_acal_WN",
+       16,
+       197.4,
+       200.9
+      ],
+      [
+       "ft23_o",
+       40,
+       201.7,
+       210.4
+      ],
+      [
+       "ft20_o",
+       23,
+       211.3,
+       216.5
+      ]
+     ]
+    },
+    "0": {
+     "bits": 1,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.01,
+     "slots": [
+      [
+       "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+       1,
+       2.2,
+       3.0
+      ]
+     ]
+    }
+   },
+   "hgi_WN_0|hgi_WN_1": {
+    "0": {
+     "bits": 39,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.25,
+     "slots": [
+      [
+       "ft17_o",
+       1,
+       6.4,
+       6.8
+      ],
+      [
+       "ft18_o",
+       1,
+       7.3,
+       7.4
+      ],
+      [
+       "ft19_o",
+       2,
+       7.9,
+       8.2
+      ],
+      [
+       "ft20_o",
+       32,
+       8.6,
+       11.5
+      ],
+      [
+       "ft23_o",
+       3,
+       12.0,
+       12.3
+      ]
+     ]
+    },
+    "1": {
+     "bits": 758,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.8,
+     "slots": [
+      [
+       "ft21_o",
+       552,
+       237.7,
+       285.8
+      ],
+      [
+       "ft22_o",
+       174,
+       286.3,
+       301.5
+      ],
+      [
+       "ft24_o",
+       6,
+       302.0,
+       302.6
+      ],
+      [
+       "ft2_o",
+       1,
+       303.1,
+       303.2
+      ],
+      [
+       "ft3_o",
+       1,
+       303.7,
+       303.9
+      ],
+      [
+       "ft5_o",
+       1,
+       304.3,
+       304.9
+      ],
+      [
+       "ft6_o",
+       1,
+       305.3,
+       305.5
+      ],
+      [
+       "ft7_o",
+       2,
+       306.0,
+       306.3
+      ],
+      [
+       "ft8_o",
+       1,
+       306.7,
+       307.3
+      ],
+      [
+       "ft10_o",
+       16,
+       307.8,
+       309.3
+      ],
+      [
+       "ft12_o",
+       1,
+       309.7,
+       309.9
+      ],
+      [
+       "ft26_o",
+       1,
+       310.4,
+       310.5
+      ],
+      [
+       "ft28_o",
+       1,
+       311.0,
+       311.2
+      ]
+     ]
+    },
+    "2": {
+     "bits": 1044,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 1.1,
+     "slots": [
+      [
+       "ft4_o",
+       1044,
+       557.4,
+       648.3
+      ]
+     ]
+    },
+    "3": {
+     "bits": 1072,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 1.13,
+     "slots": [
+      [
+       "ft9_o",
+       549,
+       877.1,
+       924.9
+      ],
+      [
+       "ft27_o",
+       523,
+       925.4,
+       971.0
+      ]
+     ]
+    },
+    "4": {
+     "bits": 548,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "ft11_o",
+       548,
+       1196.8,
+       1244.5
+      ]
+     ]
+    }
+   },
+   "hgi_WN_1|hgi_WN_2": {
+    "0": {
+     "bits": 39,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.25,
+     "slots": [
+      [
+       "ft13_o",
+       1,
+       6.4,
+       6.8
+      ],
+      [
+       "ft14_o",
+       1,
+       7.3,
+       7.4
+      ],
+      [
+       "ft15_o",
+       2,
+       7.9,
+       8.2
+      ],
+      [
+       "ft16_o",
+       32,
+       8.6,
+       11.5
+      ],
+      [
+       "ft19_o",
+       3,
+       12.0,
+       12.3
+      ]
+     ]
+    },
+    "1": {
+     "bits": 758,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.8,
+     "slots": [
+      [
+       "ft17_o",
+       552,
+       237.7,
+       285.8
+      ],
+      [
+       "ft18_o",
+       174,
+       286.3,
+       301.5
+      ],
+      [
+       "ft20_o",
+       6,
+       302.0,
+       302.6
+      ],
+      [
+       "ft2_o",
+       1,
+       303.1,
+       303.2
+      ],
+      [
+       "ft3_o",
+       1,
+       303.7,
+       303.9
+      ],
+      [
+       "ft5_o",
+       1,
+       304.3,
+       304.9
+      ],
+      [
+       "ft6_o",
+       1,
+       305.3,
+       305.5
+      ],
+      [
+       "ft7_o",
+       2,
+       306.0,
+       306.3
+      ],
+      [
+       "ft8_o",
+       1,
+       306.7,
+       307.3
+      ],
+      [
+       "ft10_o",
+       16,
+       307.8,
+       309.3
+      ],
+      [
+       "ft12_o",
+       1,
+       309.7,
+       309.9
+      ],
+      [
+       "ft22_o",
+       1,
+       310.4,
+       310.5
+      ],
+      [
+       "ft24_o",
+       1,
+       311.0,
+       311.2
+      ]
+     ]
+    },
+    "2": {
+     "bits": 1044,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 1.1,
+     "slots": [
+      [
+       "ft4_o",
+       1044,
+       557.4,
+       648.3
+      ]
+     ]
+    },
+    "3": {
+     "bits": 1072,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 1.13,
+     "slots": [
+      [
+       "ft9_o",
+       549,
+       877.1,
+       924.9
+      ],
+      [
+       "ft23_o",
+       523,
+       925.4,
+       971.0
+      ]
+     ]
+    },
+    "4": {
+     "bits": 548,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "ft11_o",
+       548,
+       1196.8,
+       1244.5
+      ]
+     ]
+    }
+   },
+   "hgi_WN_2|hgi_WN_3": {
+    "0": {
+     "bits": 39,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.25,
+     "slots": [
+      [
+       "ft13_o",
+       1,
+       6.4,
+       6.8
+      ],
+      [
+       "ft14_o",
+       1,
+       7.3,
+       7.4
+      ],
+      [
+       "ft15_o",
+       2,
+       7.9,
+       8.2
+      ],
+      [
+       "ft16_o",
+       32,
+       8.6,
+       11.5
+      ],
+      [
+       "ft19_o",
+       3,
+       12.0,
+       12.3
+      ]
+     ]
+    },
+    "1": {
+     "bits": 758,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.8,
+     "slots": [
+      [
+       "ft17_o",
+       552,
+       237.7,
+       285.8
+      ],
+      [
+       "ft18_o",
+       174,
+       286.3,
+       301.5
+      ],
+      [
+       "ft20_o",
+       6,
+       302.0,
+       302.6
+      ],
+      [
+       "ft2_o",
+       1,
+       303.1,
+       303.2
+      ],
+      [
+       "ft3_o",
+       1,
+       303.7,
+       303.9
+      ],
+      [
+       "ft5_o",
+       1,
+       304.3,
+       304.9
+      ],
+      [
+       "ft6_o",
+       1,
+       305.3,
+       305.5
+      ],
+      [
+       "ft7_o",
+       2,
+       306.0,
+       306.3
+      ],
+      [
+       "ft8_o",
+       1,
+       306.7,
+       307.3
+      ],
+      [
+       "ft10_o",
+       16,
+       307.8,
+       309.3
+      ],
+      [
+       "ft12_o",
+       1,
+       309.7,
+       309.9
+      ],
+      [
+       "ft22_o",
+       1,
+       310.4,
+       310.5
+      ],
+      [
+       "ft24_o",
+       1,
+       311.0,
+       311.2
+      ]
+     ]
+    },
+    "2": {
+     "bits": 1044,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 1.1,
+     "slots": [
+      [
+       "ft4_o",
+       1044,
+       557.4,
+       648.3
+      ]
+     ]
+    },
+    "3": {
+     "bits": 1072,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 1.13,
+     "slots": [
+      [
+       "ft9_o",
+       549,
+       877.1,
+       924.9
+      ],
+      [
+       "ft23_o",
+       523,
+       925.4,
+       971.0
+      ]
+     ]
+    },
+    "4": {
+     "bits": 548,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "ft11_o",
+       548,
+       1196.8,
+       1244.5
+      ]
+     ]
+    }
+   },
+   "hgi_WN_3|hgi_WN_4": {
+    "0": {
+     "bits": 39,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.25,
+     "slots": [
+      [
+       "ft13_o",
+       1,
+       6.4,
+       6.8
+      ],
+      [
+       "ft14_o",
+       1,
+       7.3,
+       7.4
+      ],
+      [
+       "ft15_o",
+       2,
+       7.9,
+       8.2
+      ],
+      [
+       "ft16_o",
+       32,
+       8.6,
+       11.5
+      ],
+      [
+       "ft19_o",
+       3,
+       12.0,
+       12.3
+      ]
+     ]
+    },
+    "1": {
+     "bits": 758,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.8,
+     "slots": [
+      [
+       "ft17_o",
+       552,
+       237.7,
+       285.8
+      ],
+      [
+       "ft18_o",
+       174,
+       286.3,
+       301.5
+      ],
+      [
+       "ft20_o",
+       6,
+       302.0,
+       302.6
+      ],
+      [
+       "ft2_o",
+       1,
+       303.1,
+       303.2
+      ],
+      [
+       "ft3_o",
+       1,
+       303.7,
+       303.9
+      ],
+      [
+       "ft5_o",
+       1,
+       304.3,
+       304.9
+      ],
+      [
+       "ft6_o",
+       1,
+       305.3,
+       305.5
+      ],
+      [
+       "ft7_o",
+       2,
+       306.0,
+       306.3
+      ],
+      [
+       "ft8_o",
+       1,
+       306.7,
+       307.3
+      ],
+      [
+       "ft10_o",
+       16,
+       307.8,
+       309.3
+      ],
+      [
+       "ft12_o",
+       1,
+       309.7,
+       309.9
+      ],
+      [
+       "ft22_o",
+       1,
+       310.4,
+       310.5
+      ],
+      [
+       "ft24_o",
+       1,
+       311.0,
+       311.2
+      ]
+     ]
+    },
+    "2": {
+     "bits": 1044,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 1.1,
+     "slots": [
+      [
+       "ft4_o",
+       1044,
+       557.4,
+       648.3
+      ]
+     ]
+    },
+    "3": {
+     "bits": 1072,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 1.13,
+     "slots": [
+      [
+       "ft9_o",
+       549,
+       877.1,
+       924.9
+      ],
+      [
+       "ft23_o",
+       523,
+       925.4,
+       971.0
+      ]
+     ]
+    },
+    "4": {
+     "bits": 548,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "ft11_o",
+       548,
+       1196.8,
+       1244.5
+      ]
+     ]
+    }
+   },
+   "hgi_WN_4|hgi_WN_5": {
+    "0": {
+     "bits": 39,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.25,
+     "slots": [
+      [
+       "ft13_o",
+       1,
+       6.4,
+       6.8
+      ],
+      [
+       "ft14_o",
+       1,
+       7.3,
+       7.4
+      ],
+      [
+       "ft15_o",
+       2,
+       7.9,
+       8.2
+      ],
+      [
+       "ft16_o",
+       32,
+       8.6,
+       11.5
+      ],
+      [
+       "ft19_o",
+       3,
+       12.0,
+       12.3
+      ]
+     ]
+    },
+    "1": {
+     "bits": 758,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.8,
+     "slots": [
+      [
+       "ft17_o",
+       552,
+       237.7,
+       285.8
+      ],
+      [
+       "ft18_o",
+       174,
+       286.3,
+       301.5
+      ],
+      [
+       "ft20_o",
+       6,
+       302.0,
+       302.6
+      ],
+      [
+       "ft2_o",
+       1,
+       303.1,
+       303.2
+      ],
+      [
+       "ft3_o",
+       1,
+       303.7,
+       303.9
+      ],
+      [
+       "ft5_o",
+       1,
+       304.3,
+       304.9
+      ],
+      [
+       "ft6_o",
+       1,
+       305.3,
+       305.5
+      ],
+      [
+       "ft7_o",
+       2,
+       306.0,
+       306.3
+      ],
+      [
+       "ft8_o",
+       1,
+       306.7,
+       307.3
+      ],
+      [
+       "ft10_o",
+       16,
+       307.8,
+       309.3
+      ],
+      [
+       "ft12_o",
+       1,
+       309.7,
+       309.9
+      ],
+      [
+       "ft22_o",
+       1,
+       310.4,
+       310.5
+      ],
+      [
+       "ft24_o",
+       1,
+       311.0,
+       311.2
+      ]
+     ]
+    },
+    "2": {
+     "bits": 1044,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 1.1,
+     "slots": [
+      [
+       "ft4_o",
+       1044,
+       557.4,
+       648.3
+      ]
+     ]
+    },
+    "3": {
+     "bits": 1072,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 1.13,
+     "slots": [
+      [
+       "ft9_o",
+       549,
+       877.1,
+       924.9
+      ],
+      [
+       "ft23_o",
+       523,
+       925.4,
+       971.0
+      ]
+     ]
+    },
+    "4": {
+     "bits": 548,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "ft11_o",
+       548,
+       1196.8,
+       1244.5
+      ]
+     ]
+    }
+   },
+   "hgi_WN_5|hgi_WN_6": {
+    "0": {
+     "bits": 39,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.25,
+     "slots": [
+      [
+       "ft13_o",
+       1,
+       6.4,
+       6.8
+      ],
+      [
+       "ft14_o",
+       1,
+       7.3,
+       7.4
+      ],
+      [
+       "ft15_o",
+       2,
+       7.9,
+       8.2
+      ],
+      [
+       "ft16_o",
+       32,
+       8.6,
+       11.5
+      ],
+      [
+       "ft19_o",
+       3,
+       12.0,
+       12.3
+      ]
+     ]
+    },
+    "1": {
+     "bits": 758,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.8,
+     "slots": [
+      [
+       "ft17_o",
+       552,
+       237.7,
+       285.8
+      ],
+      [
+       "ft18_o",
+       174,
+       286.3,
+       301.5
+      ],
+      [
+       "ft20_o",
+       6,
+       302.0,
+       302.6
+      ],
+      [
+       "ft2_o",
+       1,
+       303.1,
+       303.2
+      ],
+      [
+       "ft3_o",
+       1,
+       303.7,
+       303.9
+      ],
+      [
+       "ft5_o",
+       1,
+       304.3,
+       304.9
+      ],
+      [
+       "ft6_o",
+       1,
+       305.3,
+       305.5
+      ],
+      [
+       "ft7_o",
+       2,
+       306.0,
+       306.3
+      ],
+      [
+       "ft8_o",
+       1,
+       306.7,
+       307.3
+      ],
+      [
+       "ft10_o",
+       16,
+       307.8,
+       309.3
+      ],
+      [
+       "ft12_o",
+       1,
+       309.7,
+       309.9
+      ],
+      [
+       "ft22_o",
+       1,
+       310.4,
+       310.5
+      ],
+      [
+       "ft24_o",
+       1,
+       311.0,
+       311.2
+      ]
+     ]
+    },
+    "2": {
+     "bits": 1044,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 1.1,
+     "slots": [
+      [
+       "ft4_o",
+       1044,
+       557.4,
+       648.3
+      ]
+     ]
+    },
+    "3": {
+     "bits": 1072,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 1.13,
+     "slots": [
+      [
+       "ft9_o",
+       549,
+       877.1,
+       924.9
+      ],
+      [
+       "ft23_o",
+       523,
+       925.4,
+       971.0
+      ]
+     ]
+    },
+    "4": {
+     "bits": 548,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "ft11_o",
+       548,
+       1196.8,
+       1244.5
+      ]
+     ]
+    }
+   },
+   "hgi_WN_6|hgi_WN_7": {
+    "0": {
+     "bits": 39,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.25,
+     "slots": [
+      [
+       "ft13_o",
+       1,
+       6.4,
+       6.8
+      ],
+      [
+       "ft14_o",
+       1,
+       7.3,
+       7.4
+      ],
+      [
+       "ft15_o",
+       2,
+       7.9,
+       8.2
+      ],
+      [
+       "ft16_o",
+       32,
+       8.6,
+       11.5
+      ],
+      [
+       "ft19_o",
+       3,
+       12.0,
+       12.3
+      ]
+     ]
+    },
+    "1": {
+     "bits": 758,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 0.8,
+     "slots": [
+      [
+       "ft17_o",
+       552,
+       237.7,
+       285.8
+      ],
+      [
+       "ft18_o",
+       174,
+       286.3,
+       301.5
+      ],
+      [
+       "ft20_o",
+       6,
+       302.0,
+       302.6
+      ],
+      [
+       "ft2_o",
+       1,
+       303.1,
+       303.2
+      ],
+      [
+       "ft3_o",
+       1,
+       303.7,
+       303.9
+      ],
+      [
+       "ft5_o",
+       1,
+       304.3,
+       304.9
+      ],
+      [
+       "ft6_o",
+       1,
+       305.3,
+       305.5
+      ],
+      [
+       "ft7_o",
+       2,
+       306.0,
+       306.3
+      ],
+      [
+       "ft8_o",
+       1,
+       306.7,
+       307.3
+      ],
+      [
+       "ft10_o",
+       16,
+       307.8,
+       309.3
+      ],
+      [
+       "ft12_o",
+       1,
+       309.7,
+       309.9
+      ],
+      [
+       "ft22_o",
+       1,
+       310.4,
+       310.5
+      ],
+      [
+       "ft24_o",
+       1,
+       311.0,
+       311.2
+      ]
+     ]
+    },
+    "2": {
+     "bits": 1044,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 1.1,
+     "slots": [
+      [
+       "ft4_o",
+       1044,
+       557.4,
+       648.3
+      ]
+     ]
+    },
+    "3": {
+     "bits": 1072,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 1.13,
+     "slots": [
+      [
+       "ft9_o",
+       549,
+       877.1,
+       924.9
+      ],
+      [
+       "ft23_o",
+       523,
+       925.4,
+       971.0
+      ]
+     ]
+    },
+    "4": {
+     "bits": 548,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.7,
+     "slots": [
+      [
+       "ft11_o",
+       548,
+       1196.8,
+       1244.5
+      ]
+     ]
+    }
+   },
+   "hgi_WN_7|S-nbr": {
+    "0": {
+     "bits": 54,
+     "chan_um": [
+      0,
+      17.28
+     ],
+     "util_vs_die_share": 0.34,
+     "slots": [
+      [
+       "ft16_o",
+       32,
+       6.4,
+       9.3
+      ],
+      [
+       "ft20_o",
+       6,
+       11.5,
+       12.2
+      ],
+      [
+       "o_host_token_epoch",
+       16,
+       9.7,
+       11.1
+      ]
+     ]
+    },
+    "1": {
+     "bits": 1053,
+     "chan_um": [
+      233.28,
+      336.96
+     ],
+     "util_vs_die_share": 1.11,
+     "slots": [
+      [
+       "ft13_o",
+       1,
+       331.3,
+       331.5
+      ],
+      [
+       "ft14_o",
+       1,
+       331.9,
+       332.0
+      ],
+      [
+       "ft15_o",
+       2,
+       329.7,
+       329.9
+      ],
+      [
+       "ft19_o",
+       3,
+       328.9,
+       329.3
+      ],
+      [
+       "o_host_fdi",
+       1044,
+       237.7,
+       328.5
+      ],
+      [
+       "o_host_lrc",
+       2,
+       330.3,
+       330.9
+      ]
+     ]
+    },
+    "2": {
+     "bits": 1075,
+     "chan_um": [
+      552.96,
+      656.64
+     ],
+     "util_vs_die_share": 1.14,
+     "slots": [
+      [
+       "ft17_o",
+       552,
+       557.3,
+       605.4
+      ],
+      [
+       "o_host_boot_go_d1",
+       1,
+       651.7,
+       651.9
+      ],
+      [
+       "ft27_o",
+       522,
+       605.8,
+       651.3
+      ]
+     ]
+    },
+    "3": {
+     "bits": 1073,
+     "chan_um": [
+      872.64,
+      976.32
+     ],
+     "util_vs_die_share": 1.14,
+     "slots": [
+      [
+       "o_host_die_rst_n_d1",
+       1,
+       971.2,
+       971.4
+      ],
+      [
+       "o_host_rec_tx",
+       549,
+       877.0,
+       924.9
+      ],
+      [
+       "ft23_o",
+       523,
+       925.3,
+       970.8
+      ]
+     ]
+    },
+    "4": {
+     "bits": 728,
+     "chan_um": [
+      1192.32,
+      1278.72
+     ],
+     "util_vs_die_share": 0.92,
+     "slots": [
+      [
+       "ft18_o",
+       174,
+       1244.8,
+       1260.1
+      ],
+      [
+       "o_host_host_drained_local",
+       1,
+       1260.5,
+       1260.6
+      ],
+      [
+       "o_host_link_rst_n",
+       1,
+       1261.0,
+       1261.2
+      ],
+      [
+       "o_host_program_begin_v",
+       1,
+       1261.6,
+       1261.8
+      ],
+      [
+       "o_kvs_emb_rowtx__emb_tx_payload",
+       548,
+       1196.7,
+       1244.5
+      ],
+      [
+       "o_kvs_emb_rowtx__emb_tx_v",
+       1,
+       1262.1,
+       1262.3
+      ],
+      [
+       "ft22_o",
+       1,
+       1262.7,
+       1262.9
+      ],
+      [
+       "ft24_o",
+       1,
+       1263.3,
+       1263.4
+      ]
+     ]
+    }
+   }
+  }
+ },
+ "guide_estimate_25pct": {
+  "M4": {
+   "cap": 56,
+   "est_overflow": 50674,
+   "hot_gcells": 2119,
+   "bins": [
+    [
+     [
+      3.0,
+      13.0
+     ],
+     1823
+    ],
+    [
+     [
+      3.0,
+      6.5
+     ],
+     1028
+    ],
+    [
+     [
+      3.0,
+      5.0
+     ],
+     1011
+    ],
+    [
+     [
+      3.0,
+      2.0
+     ],
+     994
+    ],
+    [
+     [
+      3.0,
+      8.0
+     ],
+     967
+    ],
+    [
+     [
+      3.0,
+      21.0
+     ],
+     939
+    ],
+    [
+     [
+      3.0,
+      0.5
+     ],
+     927
+    ],
+    [
+     [
+      3.0,
+      3.5
+     ],
+     925
+    ],
+    [
+     [
+      8.0,
+      5.0
+     ],
+     921
+    ],
+    [
+     [
+      3.0,
+      25.5
+     ],
+     919
+    ],
+    [
+     [
+      8.0,
+      6.5
+     ],
+     917
+    ],
+    [
+     [
+      3.0,
+      22.5
+     ],
+     911
+    ],
+    [
+     [
+      3.0,
+      18.0
+     ],
+     897
+    ],
+    [
+     [
+      8.0,
+      18.0
+     ],
+     896
+    ],
+    [
+     [
+      8.0,
+      8.0
+     ],
+     893
+    ]
+   ],
+   "parts": [
+    [
+     "hub_Wi",
+     3039
+    ],
+    [
+     "hgi_WN_0",
+     1871
+    ],
+    [
+     "hgi_WS_0",
+     1685
+    ],
+    [
+     "pv_N_0",
+     1624
+    ],
+    [
+     "hg_EN_0",
+     1148
+    ],
+    [
+     "pv_S_0",
+     1135
+    ],
+    [
+     "hg_EN_7",
+     1085
+    ],
+    [
+     "hg_ES_0",
+     1081
+    ],
+    [
+     "hg_ES_4",
+     1053
+    ],
+    [
+     "hg_EN_5",
+     1038
+    ],
+    [
+     "hub_Eo",
+     1027
+    ],
+    [
+     "hg_ES_5",
+     1025
+    ],
+    [
+     "hg_EN_6",
+     1018
+    ],
+    [
+     "hg_EN_1",
+     1016
+    ],
+    [
+     "hg_ES_3",
+     1011
+    ]
+   ],
+   "fams": [
+    [
+     "ft_pv_N_0__ft5",
+     1109
+    ],
+    [
+     "ft_hgi_WS_0__ft6",
+     776
+    ],
+    [
+     "ft_hgi_ES_0__ft6",
+     732
+    ],
+    [
+     "ft_hg_ES_4__ft3",
+     731
+    ],
+    [
+     "ft_hg_EN_7__ft3",
+     714
+    ],
+    [
+     "ft_hg_ES_5__ft3",
+     707
+    ],
+    [
+     "ft_hg_EN_5__ft3",
+     705
+    ],
+    [
+     "ft_hg_WS_4__ft3",
+     694
+    ],
+    [
+     "ft_hg_WS_5__ft3",
+     694
+    ],
+    [
+     "ft_hgi_WN_0__ft29",
+     691
+    ],
+    [
+     "ft_hub_Wi__ft6",
+     686
+    ],
+    [
+     "ft_hg_ES_3__ft3",
+     670
+    ],
+    [
+     "ft_hg_EN_6__ft3",
+     666
+    ],
+    [
+     "ft_hg_EN_1__ft3",
+     666
+    ],
+    [
+     "ft_hgi_EN_0__ft27",
+     655
+    ]
+   ]
+  },
+  "M5": {
+   "cap": 56,
+   "est_overflow": 29902,
+   "hot_gcells": 1520,
+   "bins": [
+    [
+     [
+      4.0,
+      23.0
+     ],
+     1480
+    ],
+    [
+     [
+      4.0,
+      21.5
+     ],
+     1474
+    ],
+    [
+     [
+      4.0,
+      20.0
+     ],
+     1459
+    ],
+    [
+     [
+      4.0,
+      24.5
+     ],
+     1458
+    ],
+    [
+     [
+      4.0,
+      17.0
+     ],
+     1453
+    ],
+    [
+     [
+      4.0,
+      15.5
+     ],
+     1440
+    ],
+    [
+     [
+      7.5,
+      15.5
+     ],
+     679
+    ],
+    [
+     [
+      4.5,
+      24.5
+     ],
+     642
+    ],
+    [
+     [
+      3.5,
+      15.5
+     ],
+     633
+    ],
+    [
+     [
+      3.5,
+      21.5
+     ],
+     621
+    ],
+    [
+     [
+      3.5,
+      24.5
+     ],
+     618
+    ],
+    [
+     [
+      7.5,
+      24.5
+     ],
+     616
+    ],
+    [
+     [
+      3.5,
+      23.0
+     ],
+     610
+    ],
+    [
+     [
+      3.5,
+      20.0
+     ],
+     609
+    ],
+    [
+     [
+      3.5,
+      17.0
+     ],
+     573
+    ]
+   ],
+   "parts": [
+    [
+     "hgi_WN_0",
+     2940
+    ],
+    [
+     "hgi_WN_5",
+     2682
+    ],
+    [
+     "hgi_WN_3",
+     2643
+    ],
+    [
+     "hgi_WN_4",
+     2598
+    ],
+    [
+     "hgi_WN_6",
+     2595
+    ],
+    [
+     "hgi_WN_1",
+     2542
+    ],
+    [
+     "hgi_EN_0",
+     1465
+    ],
+    [
+     "hgi_EN_6",
+     1021
+    ],
+    [
+     "hgi_WN_2",
+     733
+    ],
+    [
+     "hgi_EN_4",
+     708
+    ],
+    [
+     "hgi_EN_3",
+     692
+    ],
+    [
+     "hgi_EN_1",
+     690
+    ],
+    [
+     "hgi_EN_5",
+     690
+    ],
+    [
+     "hub_Wi",
+     644
+    ],
+    [
+     "hub_Ei",
+     467
+    ]
+   ],
+   "fams": [
+    [
+     "ft_hgi_WN_1__ft4",
+     818
+    ],
+    [
+     "ft_hgi_WN_3__ft4",
+     769
+    ],
+    [
+     "ft_hgi_WN_6__ft4",
+     765
+    ],
+    [
+     "ft_hgi_WN_2__ft4",
+     757
+    ],
+    [
+     "ft_hgi_WN_5__ft4",
+     570
+    ],
+    [
+     "ft_hgi_WN_7__ft4",
+     549
+    ],
+    [
+     "ft_hgi_WN_0__ft8",
+     520
+    ],
+    [
+     "ft_hgi_WN_4__ft4",
+     505
+    ],
+    [
+     "ft_hgi_WN_2__ft9",
+     415
+    ],
+    [
+     "ft_hgi_WN_1__ft9",
+     404
+    ],
+    [
+     "ft_hgi_WN_6__ft9",
+     402
+    ],
+    [
+     "ft_hgi_WN_3__ft9",
+     397
+    ],
+    [
+     "ft_hgi_WN_3__ft23",
+     392
+    ],
+    [
+     "ft_hgi_WN_3__ft17",
+     387
+    ],
+    [
+     "ft_hgi_EN_0__ft21",
+     386
+    ]
+   ]
+  },
+  "M6": {
+   "cap": 42,
+   "est_overflow": 549505,
+   "hot_gcells": 57816,
+   "bins": [
+    [
+     [
+      7.0,
+      24.5
+     ],
+     10319
+    ],
+    [
+     [
+      4.5,
+      24.5
+     ],
+     8621
+    ],
+    [
+     [
+      4.0,
+      24.5
+     ],
+     7366
+    ],
+    [
+     [
+      7.0,
+      1.5
+     ],
+     7134
+    ],
+    [
+     [
+      3.5,
+      13.0
+     ],
+     7081
+    ],
+    [
+     [
+      8.0,
+      25.5
+     ],
+     6729
+    ],
+    [
+     [
+      8.0,
+      0.5
+     ],
+     6274
+    ],
+    [
+     [
+      4.0,
+      13.0
+     ],
+     6085
+    ],
+    [
+     [
+      3.5,
+      5.0
+     ],
+     5480
+    ],
+    [
+     [
+      3.5,
+      19.5
+     ],
+     5318
+    ],
+    [
+     [
+      6.5,
+      24.5
+     ],
+     5284
+    ],
+    [
+     [
+      3.5,
+      25.5
+     ],
+     4932
+    ],
+    [
+     [
+      4.0,
+      5.0
+     ],
+     4889
+    ],
+    [
+     [
+      3.0,
+      13.0
+     ],
+     4834
+    ],
+    [
+     [
+      3.5,
+      21.0
+     ],
+     4691
+    ]
+   ],
+   "parts": [
+    [
+     "hgi_WN_0",
+     36336
+    ],
+    [
+     "hgi_EN_0",
+     34206
+    ],
+    [
+     "hub_Wi",
+     34133
+    ],
+    [
+     "hgi_ES_0",
+     24386
+    ],
+    [
+     "hgi_WS_0",
+     18933
+    ],
+    [
+     "hgi_WN_7",
+     18112
+    ],
+    [
+     "hgi_WN_4",
+     13217
+    ],
+    [
+     "hgi_WS_3",
+     13091
+    ],
+    [
+     "hg_EN_0",
+     12835
+    ],
+    [
+     "hg_ES_0",
+     11859
+    ],
+    [
+     "hgi_WN_6",
+     11756
+    ],
+    [
+     "hgi_WN_3",
+     11495
+    ],
+    [
+     "hgi_WN_5",
+     10818
+    ],
+    [
+     "hgi_WS_7",
+     10005
+    ],
+    [
+     "hgi_WN_1",
+     9594
+    ]
+   ],
+   "fams": [
+    [
+     "ft_hgi_EN_0__ft27",
+     17386
+    ],
+    [
+     "ft_hgi_WN_0__ft29",
+     15234
+    ],
+    [
+     "ft_hgi_ES_0__ft6",
+     14954
+    ],
+    [
+     "ft_hgi_WS_3__ft2",
+     12688
+    ],
+    [
+     "ft_hub_Wi__ft5",
+     12208
+    ],
+    [
+     "ft_hgi_WN_4__ft25",
+     11943
+    ],
+    [
+     "ft_hg_EN_0__ft2",
+     11541
+    ],
+    [
+     "ft_hgi_WN_7__ft26",
+     11175
+    ],
+    [
+     "ft_hgi_WN_3__ft25",
+     10791
+    ],
+    [
+     "ft_hg_ES_0__ft2",
+     10771
+    ],
+    [
+     "ft_hgi_WN_6__ft25",
+     10676
+    ],
+    [
+     "ft_hgi_WS_0__ft6",
+     10182
+    ],
+    [
+     "ft_hgi_EN_6__ft23",
+     10022
+    ],
+    [
+     "ft_hgi_WN_5__ft25",
+     9797
+    ],
+    [
+     "ft_hgi_ES_2__ft2",
+     9781
+    ]
+   ]
+  },
+  "M7": {
+   "cap": 42,
+   "est_overflow": 170149,
+   "hot_gcells": 29014,
+   "bins": [
+    [
+     [
+      4.0,
+      15.5
+     ],
+     6051
+    ],
+    [
+     [
+      4.0,
+      17.0
+     ],
+     5678
+    ],
+    [
+     [
+      4.0,
+      20.0
+     ],
+     5601
+    ],
+    [
+     [
+      4.0,
+      24.5
+     ],
+     5482
+    ],
+    [
+     [
+      4.0,
+      23.0
+     ],
+     5396
+    ],
+    [
+     [
+      4.0,
+      21.5
+     ],
+     5370
+    ],
+    [
+     [
+      4.0,
+      18.5
+     ],
+     4760
+    ],
+    [
+     [
+      3.5,
+      14.0
+     ],
+     3760
+    ],
+    [
+     [
+      7.5,
+      25.5
+     ],
+     3030
+    ],
+    [
+     [
+      7.5,
+      25.0
+     ],
+     2968
+    ],
+    [
+     [
+      3.5,
+      15.5
+     ],
+     2929
+    ],
+    [
+     [
+      3.5,
+      15.0
+     ],
+     2637
+    ],
+    [
+     [
+      4.0,
+      19.5
+     ],
+     2566
+    ],
+    [
+     [
+      4.0,
+      26.0
+     ],
+     2532
+    ],
+    [
+     [
+      7.5,
+      24.5
+     ],
+     2429
+    ]
+   ],
+   "parts": [
+    [
+     "hgi_EN_0",
+     16320
+    ],
+    [
+     "hgi_WN_5",
+     15171
+    ],
+    [
+     "hgi_WN_4",
+     15069
+    ],
+    [
+     "hgi_WN_0",
+     14701
+    ],
+    [
+     "hgi_WN_7",
+     13281
+    ],
+    [
+     "hgi_WN_6",
+     12871
+    ],
+    [
+     "hgi_WN_1",
+     12695
+    ],
+    [
+     "hgi_WN_3",
+     12253
+    ],
+    [
+     "hgi_WN_2",
+     8789
+    ],
+    [
+     "hgi_EN_7",
+     7369
+    ],
+    [
+     "hub_Wi",
+     3934
+    ],
+    [
+     "hgi_WS_3",
+     2295
+    ],
+    [
+     "hgi_EN_6",
+     1833
+    ],
+    [
+     "hgi_EN_3",
+     1501
+    ],
+    [
+     "hgi_EN_1",
+     1458
+    ]
+   ],
+   "fams": [
+    [
+     "ft_hgi_EN_0__ft21",
+     8574
+    ],
+    [
+     "ft_hgi_WN_7__ft4",
+     6446
+    ],
+    [
+     "ft_hgi_WN_4__ft4",
+     4808
+    ],
+    [
+     "ft_hgi_WN_1__ft4",
+     4716
+    ],
+    [
+     "ft_hgi_WN_5__ft4",
+     4692
+    ],
+    [
+     "ft_hgi_WN_2__ft4",
+     4647
+    ],
+    [
+     "ft_hgi_WN_3__ft4",
+     4610
+    ],
+    [
+     "ft_hgi_WN_6__ft4",
+     4609
+    ],
+    [
+     "ft_hgi_EN_0__ft6",
+     4515
+    ],
+    [
+     "ft_hgi_EN_7__ft19",
+     4151
+    ],
+    [
+     "ft_hgi_WN_0__ft8",
+     3502
+    ],
+    [
+     "ft_hgi_WN_7__ft17",
+     3467
+    ],
+    [
+     "ft_hgi_WN_0__ft13",
+     3296
+    ],
+    [
+     "ft_hgi_WN_2__ft9",
+     3022
+    ],
+    [
+     "ft_hgi_WN_4__ft9",
+     3006
+    ]
+   ]
+  }
+ }
+}
