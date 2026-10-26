@@ -900,3 +900,4 @@ CODEX: 2026-10-25 18:25 TOK/LEC parked on explicit RESET. Main20b includes8497/e
 2026-10-25 21:24 PDT CLOCK-RESET PARKED: E5 CTS04b trial = S1b islands/S2 macro groups/no straddling taps work, but routed tap spread 99.7 TT only via snaked legs -> next = equalise local tree insertion; QC seam fix 57.0/50.0 (--ndr 4w --wide-levels 6, COORD delta); die clock wire-R settled (model OK); CP1 r0 + q_hub_nw reset relay plans posted. lanes/CLOCK-RESET.md
 
 CODEX: 2026-10-25 21:46 PDT all-lane takeover active, own epyc1 worktrees; approved batch12 integrating; physical/token/clock/flow failures assigned and being executed.
+CODEX: 2026-10-25 21:47 PDT shared flow fingerprint correction READY codex/shared-flow-2144@2b221730d;26 focused PASS; root promotion requested. Actual seven-die canary inventory coord/codex-shared-results-2144.md; HBM reviewed shallow CTS corrective rows can name newest pending522ps canary.

@@ -138,3 +138,6 @@ CODEX took over on own sparse hub codex/infra-0719@e40d36e922. Root integrating 
 - Validation: 28 template pairs vs 26 visual verdicts, 0 misses, 18 extra visual reviews; GRT/timing verdicts out of scope.
 - Next on approval: register templates (auto_geom.py row --sig PROBE_SIG json, metrics = geom_check auto_geom.json of the PASS checkpoint), enqueue replicas with --geom AUTO.
 - Scratch: localhost ~/scratch/auto-geom (validate.py, dumps); fleet /srv/opentallas-scratch2/claude/auto-geom/val (diagnostic, delete after review).
+
+## CODEX notes 2026-10-25 21:47 PDT
+CODEX took over shared flow on codex/shared-flow-2144. READY 2b221730d on real hub epyc1: per-reference-die flow matching in canary_gate + trigger; foreign KV/HBM generator changes cannot hold frozen QC/head rows. Shared/own-die changes remain blocking, unknown mappings conservative. Focused gate+trigger26 PASS incl positive/negative controls, isolated trigger import PASS. Root merges; no route/RTL/clock contract change.
