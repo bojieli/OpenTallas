@@ -8,7 +8,8 @@ under NEW_ROOT.  lv_top (lec_top.sv) instantiates both q elements at the S81 die
 elaborated at its in-context parameters.  Per frontend (Yosys read_verilog -sv, and read_slang: two independent HDL
 frontends), per module pair (old paramod <-> new paramod with the same parameters) of the five changed / containing
 modules: flatten both, memory_map, async2sync, equiv_make old new, equiv_simple -seq, equiv_struct (ROM black boxes
-merged once their input pins are proved equal), equiv_simple -seq, equiv_induct -seq, equiv_status -assert.
+merged once their input pins are proved equal; the merged cell's outputs then become one shared free $anyseq input),
+equiv_simple -seq, equiv_induct -seq, equiv_status.
 Verdict per pair: EQUIVALENT (every $equiv proved) / NOT_PROVEN (equiv_status lists the unproven signals).
 Defines: SYNTHESIS (as the kit synthesis reads them).  Results: WORK/lec_lv.json.
 """
@@ -97,7 +98,12 @@ def main():
             cmds += ["design -load elab", "setattr -mod -unset keep_hierarchy", f"rename {o} lv_gold", f"rename {n} lv_gate", "flatten lv_gold lv_gate",
                      "memory -nomap lv_gold lv_gate", "memory_map lv_gold lv_gate", "opt_clean lv_gold lv_gate",
                      "async2sync lv_gold lv_gate", "equiv_make lv_gold lv_gate lv_eq",
-                     "equiv_simple -seq 5 lv_eq", "equiv_struct lv_eq", "equiv_simple -seq 5 lv_eq",
+                     "equiv_simple -seq 5 lv_eq", "equiv_struct lv_eq",
+                     # the merged (shared) ROM macro cell -> a free per-cycle input ($anyseq) so equiv_induct has a SAT
+                     # model; the ROM input-pin $equiv cells stay compare points.  An unmerged gate-side ROM gets its
+                     # own $anyseq and fails the proof (never a false pass).
+                     f"tee -q -o {w}/{tag}.roms select -count lv_eq/t:ot_rom_*", "cd lv_eq", "delete t:ot_rom_*",
+                     "setundef -undriven -anyseq", "cd ..", "equiv_simple -seq 5 lv_eq",
                      "equiv_induct -seq 5 lv_eq", f"tee -o {w}/{tag}.status equiv_status lv_eq"]
         s = w / "check.ys"
         s.write_text("\n".join(cmds) + "\n")
