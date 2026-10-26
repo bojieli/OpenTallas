@@ -61,7 +61,8 @@ def main():
    if not b or index>=b['bits']:missing.append(r);continue
    x,y,_,_=b['box_um'];col=index%b['columns'];row=index//b['columns'];sites.append(dict(**r,x_um=x+col*C.PITCH_X,y_um=y+row*C.CELL_H));continue
   root=r['register'].split('/')[0].split('.')[0];groups[root].append(r)
- for root,regs in groups.items():
+ ft_previous={}
+ for root,regs in sorted(groups.items(),key=lambda kv: re.sub(r"_(\d+)$",lambda m:"_"+m[1].zfill(6),kv[0])):
   face='N';region=None
   if root in homes:
    region=homes[root];target=region['center_um'];# existing reserved 40x40 region has space for actual 1032FF
@@ -80,7 +81,10 @@ def main():
     target=slot['regs_um'][int(m[2])];face='N'
    elif root in anchors:target=anchors[root]
    else:missing.extend(regs);continue
-   b=C.pack(target,len(regs),face,t['outline_um'],C.boxes(t),used)
+   previous=ft_previous.get(m[1]) if root.startswith('u_ft_') else None
+   accept=(lambda xy,pr=previous:abs(xy[0]-pr[0])+abs(xy[1]-pr[1])<=405) if previous else None
+   b=C.pack(target,len(regs),face,t['outline_um'],C.boxes(t),used,accept=accept)
+   if root.startswith('u_ft_'):ft_previous[m[1]]=((b['box_um'][0]+b['box_um'][2])/2,(b['box_um'][1]+b['box_um'][3])/2)
   b.update(instance=root,scope='actual mapped soft state',category='feedthrough' if root.startswith('u_ft_') else regs[0]['category']);extra.append(b)
   for i,r in enumerate(regs):
    x,y,_,_=b['box_um'];sites.append(dict(**r,x_um=x+(i%b['columns'])*C.PITCH_X,y_um=y+(i//b['columns'])*C.CELL_H))

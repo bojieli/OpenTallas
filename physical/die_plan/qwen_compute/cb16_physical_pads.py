@@ -98,8 +98,8 @@ def fabric_homes(t,ls,plan_dir):
         pin=core_pin(t,core,'tap',plan_dir);hc=next((h for h in t.get('hard_cores',[]) if h['inst']==core),None)
         if pin is None or hc is None:continue
         x,y=pin;x0,y0=hc['origin_um'];w,h=hc['outline_um'];faces=[(abs(x-x0),'W'),(abs(x-x0-w),'E'),(abs(y-y0),'S'),(abs(y-y0-h),'N')];face=min(faces)[1]
-        x += -30 if face=='W' else 30 if face=='E' else 0
-        y += -30 if face=='S' else 30 if face=='N' else 0
+        x += -22 if face=='W' else 22 if face=='E' else 0
+        y += -22 if face=='S' else 22 if face=='N' else 0
         homes[leaf['inst']]=dict(inst=leaf['inst'],module=leaf['module'],center_um=[x,y],box_um=[x-20,y-20,x+20,y+20],tap_core=core,reason='actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view')
     return homes
 
@@ -117,19 +117,26 @@ def bank_shape(bits,face):
     return cols,cols*PITCH_X,math.ceil(bits/cols)*CELL_H
 
 
-def pack(target,bits,face,outline,blocks,used):
-    cols,bw,bh=bank_shape(bits,face);w,h=outline
-    cx,cy=target
-    # Deterministic grid search, always preserving a real placement envelope and core halos.
+def pack(target,bits,face,outline,blocks,used,accept=None):
+    w,h=outline;cx,cy=target
+    preferred=36 if face in ('N','S') else 2
+    # FF banks are soft placement envelopes. Their aspect ratio follows the available
+    # corridor, not the remote partition face (an E-facing bus can route above a core).
+    shapes=[]
+    for n in [preferred,2,36,12,18]:
+        cols=min(bits,n);shape=(cols,cols*PITCH_X,math.ceil(bits/cols)*CELL_H)
+        if shape not in shapes:shapes.append(shape)
     for radius in range(0,401,4):
         offsets=[(0,0)] if not radius else [(sx*radius,sy*j) for j in range(-radius,radius+1,4) for sx,sy in ((1,1),(-1,1),(1,-1),(-1,-1))]+[(sx*j,sy*radius) for j in range(-radius,radius+1,4) for sx,sy in ((1,1),(-1,1),(1,-1),(-1,-1))]
         for dx,dy in offsets:
-            x=round((cx+dx-bw/2-MARGIN)/.054)*.054+MARGIN;y=round((cy+dy-bh/2-MARGIN)/CELL_H)*CELL_H+MARGIN
-            b=(x,y,x+bw,y+bh)
-            if x<MARGIN or y<MARGIN or b[2]>w-MARGIN or b[3]>h-MARGIN:continue
-            if any(overlap(b,z,2.0) for z in blocks) or any(overlap(b,z,1.08) for z in used):continue
-            used.append(b)
-            return dict(box_um=list(b),columns=cols,bits=bits,cell_size_um=[CELL_W,CELL_H],pitch_um=[PITCH_X,CELL_H],target_um=list(target),movement_um=abs(x+bw/2-cx)+abs(y+bh/2-cy))
+            for cols,bw,bh in shapes:
+                x=round((cx+dx-bw/2-MARGIN)/.054)*.054+MARGIN;y=round((cy+dy-bh/2-MARGIN)/CELL_H)*CELL_H+MARGIN
+                b=(x,y,x+bw,y+bh)
+                if x<MARGIN or y<MARGIN or b[2]>w-MARGIN or b[3]>h-MARGIN:continue
+                if any(overlap(b,z,2.0) for z in blocks) or any(overlap(b,z,1.08) for z in used):continue
+                if accept is not None and not accept(((b[0]+b[2])/2,(b[1]+b[3])/2)):continue
+                used.append(b)
+                return dict(box_um=list(b),columns=cols,bits=bits,cell_size_um=[CELL_W,CELL_H],pitch_um=[PITCH_X,CELL_H],target_um=list(target),movement_um=abs(x+bw/2-cx)+abs(y+bh/2-cy))
     raise ValueError(f'no legal {bits}-FF bank near {target}')
 
 
@@ -289,15 +296,21 @@ def build(raw,tn,txt,plan_dir):
             unplaced.append(dict(instance=name,W=W,D=D,ff=W*D,reason='no exact source/capture placement anchor'));continue
         try:route=manhattan(pts,bs)
         except ValueError as e:unplaced.append(dict(instance=name,W=W,D=D,ff=W*D,reason=str(e),endpoints=pts));continue
-        start=len(banks)
+        start=len(banks);previous=route[0];route_length=sum(abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(route,route[1:]));minimum=max(0,math.ceil(route_length/405)-1);placement_warnings=[]
         for stage in range(D):
-            target=at(route,(stage+1)/(D+1));bank=pack(target,W,face,t['outline_um'],bs,used);bank.update(instance=name,stage=stage,depth=D,basis=basis);
+            target=at(route,(stage+1)/(D+1));accept=(lambda xy,pr=previous,left=D-stage: abs(xy[0]-pr[0])+abs(xy[1]-pr[1])<=405 and abs(xy[0]-route[-1][0])+abs(xy[1]-route[-1][1])<=405*left) if D>=minimum else None
+            try:bank=pack(target,W,face,t['outline_um'],bs,used,accept=accept)
+            except ValueError:
+                placement_warnings.append('no legal bank found under forward405um centre constraint; unconstrained diagnostic fallback')
+                bank=pack(target,W,face,t['outline_um'],bs,used)
+            previous=((bank['box_um'][0]+bank['box_um'][2])/2,(bank['box_um'][1]+bank['box_um'][3])/2)
+            bank.update(instance=name,stage=stage,depth=D,basis=basis);
             if members:bank['member_instances']=members
             banks.append(bank)
         here=banks[start:];centers=[(sum(z['box_um'][::2])/2,sum(z['box_um'][1::2])/2) for z in here]
         hops=[abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip([route[0]]+centers,centers+[route[-1]])]
         route_length=sum(abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(route,route[1:]));minimum=max(0,math.ceil(route_length/405)-1)
-        chains.append(dict(instance=name,width=W,depth=D,registers=W*D,centre_max_hop_um=max(hops),shortest_route_um=route_length,minimum_stages_at405=minimum,additional_stages_lower_bound=max(0,minimum-D),basis=basis))
+        chains.append(dict(instance=name,width=W,depth=D,registers=W*D,centre_max_hop_um=max(hops),shortest_route_um=route_length,minimum_stages_at405=minimum,additional_stages_lower_bound=max(0,minimum-D),basis=basis,placement_warnings=placement_warnings))
     hard_missing=[dict(inst=c['inst'],module=c.get('module'),missing=[k for k in ('lef','lib') if not c.get(k)]) for c in t.get('hard_cores',[]) if not c.get('lef') or not c.get('lib')]
     routes=interface_routes(raw,tn,t,ls,homes,plan_dir,txt)
     other_soft=[dict(inst=l['inst'],module=l['module']) for l in ls if not physical_name(l['inst']).startswith('u_t')]
