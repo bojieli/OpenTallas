@@ -1,0 +1,17 @@
+/srv/opentallas-scratch2/claude/codex-eng-f-bind-1026/src/tools/die_plan/kit_istations.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpv8_gmwsu/native_internal_stations/sys/plan.json' mode='r' encoding='UTF-8'>
+  raw = json.load(open(plan))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.../srv/opentallas-scratch2/claude/codex-eng-f-bind-1026/src/tools/die_plan/kit_istations.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmplj5jloq7/native_internal_stations/sys/plan.json' mode='r' encoding='UTF-8'>
+  raw = json.load(open(plan))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..
+----------------------------------------------------------------------
+Ran 5 tests in 0.077s
+
+OK
+nominal 0 CYCLE22_PASS
+/tmp/tmpv8_gmwsu/nominal.sv:96: $finish called at 1200000 (1ps)
+missing 1 FATAL: /tmp/tmpv8_gmwsu/missing.sv:96: EDGE_MISMATCH          41
+       Time: 410000  Scope: tb
+double 1 FATAL: /tmp/tmpv8_gmwsu/double.sv:96: EDGE_MISMATCH          41
+       Time: 410000  Scope: tb

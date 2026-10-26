@@ -1,4 +1,4 @@
-import copy,json,subprocess,tempfile,unittest
+import copy,json,os,subprocess,tempfile,unittest
 from pathlib import Path
 from types import SimpleNamespace
 import bind,native_istations
@@ -6,8 +6,8 @@ import bind,native_istations
 class NativeStations(unittest.TestCase):
  def fixture(self):
   typ={'module':'vehicle','buses':[{'name':'o','dir':'out','width':8}], 'internal_stations':[{'conn':'bus:o','regs_um':[[i,0] for i in range(8)]}], 'contents':[]}
-  L={'lane':'L0','oname':'o','cycles':22,'ft':[]}
-  b=SimpleNamespace(ab={'internal_stations_types':['sys']},types={'sys':typ},parts={'p':{'type':'sys'}},out_bus={'p':[L]},plan={'lanes':[{'id':'L0','fixed_cycles':8}]})
+  L={'lane':'L0','oname':'o','cycles':22,'ft':[],'width':8}
+  b=SimpleNamespace(ab={'internal_stations_types':['sys']},types={'sys':typ},parts={'p':{'type':'sys'}},by_type={'sys':['p']},out_bus={'p':[L]},plan={'lanes':[{'id':'L0','fixed_cycles':8}]})
   return b,L
  def test_pricing_and_guards(self):
   b,L=self.fixture();native_istations.annotate(b);self.assertEqual(bind.lane_pad(L),12);self.assertEqual(2+bind.lane_pad(L)+L['internal_source_cycles'],22)
@@ -23,6 +23,23 @@ class NativeStations(unittest.TestCase):
   native_istations.annotate(b);self.assertEqual(L['internal_source_cycles'],8);self.assertEqual(len(native_istations.source_entries(t)),1)
   t['internal_stations'][1]['regs_um'][0]=[1,999]
   with self.assertRaisesRegex(ValueError,'conflicting OUT'):native_istations.annotate(b)
+
+ def test_narrow_payload_and_relative_path(self):
+  b,L=self.fixture();L['width']=3
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp);f=root/'rtl/vehicle.sv';f.parent.mkdir()
+   f.write_text('module vehicle(input clk,input arst_n,input [2:0] d,output [3:0] o);\nwire rst_n=arst_n;\n ot_dp_st #(.W(3)) u_bout_o (.clk(clk), .rst_n(rst_n), .d(d), .ea(rst_n), .q(o[2:0]), .eq(o[3]));\nendmodule\n')
+   previous=Path.cwd()
+   try:
+    os.chdir(root);native_istations.materialize(b,'sys',Path('rtl/vehicle.sv'))
+   finally:os.chdir(previous)
+   text=f.read_text();self.assertIn('ot_dp_st #(.W(3)) u_ist_o_0',text)
+   self.assertEqual(b.types['sys']['buses'][0]['width'],8)
+   self.assertEqual(text.count('FIRM plan station'),8)
+ def test_mixed_bound_widths_fail_closed(self):
+  b,L=self.fixture();b.by_type['sys'].append('q');b.out_bus['q']=[dict(L,width=7)]
+  with self.assertRaisesRegex(ValueError,'unique bound payload width'):
+   native_istations.materialize(b,'sys',Path('/tmp/never_native_width.sv'))
 
  def test_cycle_and_mutants(self):
   b,L=self.fixture();b.types['sys']['buses'].append(dict(name='i',dir='in',width=8));b.types['sys']['internal_stations'].append(dict(conn='bus:i',regs_um=[[99,99]]));native_istations.annotate(b)
