@@ -1,0 +1,65 @@
+{
+ "peak_rss_gb": 1.86,
+ "wall_s": 27.3,
+ "marks_s": {
+  "pdngen": 4,
+  "bumps": 5,
+  "psm": 27
+ },
+ "worst_ir_drop_mv": 30.6,
+ "avg_ir_drop_mv": 16.1,
+ "worst_voltage": 0.669,
+ "avg_voltage": 0.684,
+ "status": "OK",
+ "pg_check": [
+  [
+   "OK",
+   "VDD"
+  ],
+  [
+   "OK",
+   "VSS"
+  ]
+ ],
+ "errors": [],
+ "psm_regions_mv": {
+  "core": 30.607
+ },
+ "ir_budget_mv": 35.0,
+ "ir_verdict": "PASS",
+ "die": "qwen_compute",
+ "window": "core_centre",
+ "window_um": [
+  15171.84,
+  12700.800000000001,
+  16035.84,
+  13564.800000000001
+ ],
+ "grid": [
+  {
+   "layer": "M8",
+   "width_um": 0.48,
+   "pitch_um": 2.88,
+   "offset_um": 1.44,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 0.48,
+   "pitch_um": 1.728,
+   "offset_um": 0.864,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  }
+ ],
+ "power_w": 0.4347,
+ "est_regions_mv": {
+  "core": 62.03
+ },
+ "est_worst_mv": 62.03
+}

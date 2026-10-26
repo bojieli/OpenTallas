@@ -127,7 +127,7 @@ def phy_power(P, w, phy_w_per_macro):
     return PHY_W_MM2 * a, f"{iface or 'PHY'}: {PHY_W_MM2} W/mm2 x {a:.3f} mm2 (PHY_ASSUMPTIONS PHY power density)"
 
 
-def load_model(P, plan_dir, power=None, phy_w_per_macro=4.37, core_w_mm2=None):
+def load_model(P, plan_dir, power=None, phy_w_per_macro=4.37, core_w_mm2=None, core_watts=None):
     """-> dict(loads=[(rect, W/mm2)], regions=[...], part_w={part: W}, basis=[...])"""
     power = power or {}
     io = D.io_windows(P, plan_dir)
@@ -145,6 +145,11 @@ def load_model(P, plan_dir, power=None, phy_w_per_macro=4.37, core_w_mm2=None):
             src = ent[1]
         else:
             core, src = FALLBACK_CORE
+    core_watts = core_watts if core_watts is not None else power.get("core_watts")
+    if core_watts is not None:
+        if core_w_mm2 is not None: raise ValueError("choose core watts or core density, not both")
+        if float(core_watts) < 0: raise ValueError("core watts must be non-negative")
+        core, src = None, "explicit non-PHY core watts (PHY power added separately)"
     rects = {n: _rect_of(P, n) for n in P.parts}
     win = [dict(name=w["name"], rect=list(map(float, w["rect_um"])), part=w.get("part")) for w in io]
     phy_parts = {n for n, r in rects.items() if any(all(abs(r[i] - x["rect"][i]) < 1.0 for i in range(4)) for x in win)}
@@ -152,7 +157,7 @@ def load_model(P, plan_dir, power=None, phy_w_per_macro=4.37, core_w_mm2=None):
     core_area = sum((rects[n][2] - rects[n][0]) * (rects[n][3] - rects[n][1]) for n in core_parts) \
         - sum(_ov(x["rect"], rects[n]) for x in win for n in core_parts)
     if core is None:   # die-watt form
-        core = DIE_CORE[P.name][2] / (core_area * 1e-6)
+        core = (float(core_watts) if core_watts is not None else DIE_CORE[P.name][2]) / (core_area * 1e-6)
         src += f" -> {core:.4f} W/mm2 over {core_area * 1e-6:.1f} mm2 of core partitions"
     basis.append(f"core: {core:.6g} W/mm2 -- {src}")
     tdens = {tn: float(v) for tn, v in (power.get("types") or {}).items()}
@@ -164,6 +169,7 @@ def load_model(P, plan_dir, power=None, phy_w_per_macro=4.37, core_w_mm2=None):
         r = rects[n]
         loads.append((r, d))
         part_w[n] = d * ((r[2] - r[0]) * (r[3] - r[1]) - sum(_ov(x["rect"], r) for x in win)) * 1e-6
+    core_part_w = dict(part_w)  # PHY watts below belong to the physical owner, not the core region.
     for x in win:
         wpw, b = phy_power(P, dict(x, iface=next((w.get("iface") for w in io if w["name"] == x["name"]), "")),
                            phy_w_per_macro)
@@ -189,10 +195,10 @@ def load_model(P, plan_dir, power=None, phy_w_per_macro=4.37, core_w_mm2=None):
             ns = [n for n in core_parts if P.parts[n]["type"] == tn]
             a = sum((rects[n][2] - rects[n][0]) * (rects[n][3] - rects[n][1]) for n in ns) * 1e-6
             regions.append(dict(name=f"core:{tn}", kind="core", rect_um=[0, 0, P.W, P.H], parts=ns,
-                                power_w=round(sum(part_w[n] for n in ns), 3), area_mm2=round(a, 3),
+                                power_w=round(sum(core_part_w[n] for n in ns), 3), area_mm2=round(a, 3),
                                 w_mm2=round(tdens.get(tn, core), 4)))
     regions.insert(0, dict(name="core", kind="core", rect_um=[0.0, 0.0, P.W, P.H], parts=core_parts,
-                           power_w=round(sum(part_w[n] for n in core_parts), 3), area_mm2=round(core_area * 1e-6, 3),
+                           power_w=round(sum(core_part_w[n] for n in core_parts), 3), area_mm2=round(core_area * 1e-6, 3),
                            w_mm2=round(core, 4)))
     basis.append("channels (die.channels): bump keep-out, no logic -> 0 W; whitespace between partitions -> 0 W")
     basis.append("PHY windows: no core bumps (die_trial.bump_grid excludes IO windows); PHY supply on core VDD "
@@ -451,11 +457,11 @@ def tracks_of(P, grid):
 
 # --------------------------------------------------------------------------------------------------------- sizing
 def size_grid(P, plan_dir, power=None, ir_budget_frac=0.05, vdd=0.7, phy_w_per_macro=4.37, core_w_mm2=None,
-              m8_max_frac=0.5, m9_max_frac=0.85, bump_pitch_um=150.0, gate="all"):
+              m8_max_frac=0.5, m9_max_frac=0.85, bump_pitch_um=150.0, gate="all", core_watts=None):
     """Smallest M8 share (then M9) whose worst per-region VDD IR <= ir_budget_frac x vdd.
     gate="all": every region (core + PHY windows) must meet the budget; "core": only the core region (PHY windows
     reported, to be met by a PHY-local grid / domain)."""
-    model = load_model(P, plan_dir, power, phy_w_per_macro, core_w_mm2)
+    model = load_model(P, plan_dir, power, phy_w_per_macro, core_w_mm2, core_watts)
     budget = ir_budget_frac * vdd * 1e3
     opts = []
     for p in PITCHES:
@@ -605,7 +611,7 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     regs.append(dict(name="core", kind="core", parts=[n for n in model["core_parts"]
                                                       if _ov(model["rects"][n], [x0, y0, x1, y1]) > 0]))
     est, worst, det = estimate(P, model, pg["grid"], bp, pg.get("vdd", 0.7), domain=(x0, y0, x1, y1), regions=regs)
-    meta = dict(die=P.name, window=name, window_um=[x0, y0, x1, y1], area_mm2=round(w * h * 1e-6, 3), grid=pg["grid"],
+    meta = dict(die=P.name, ir_budget_mv=pg.get("budget_mv"), window=name, window_um=[x0, y0, x1, y1], area_mm2=round(w * h * 1e-6, 3), grid=pg["grid"],
                 power_w=round(sum(b[3] for b in blks), 4), load_blocks=len(blks), bumps=len(bumps),
                 bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), est_regions_mv=est, est_worst_mv=worst, est_detail=det,
                 scope="window PDNSim: window edges open (no feed from outside), window-local bumps; the estimate "
@@ -635,7 +641,7 @@ def die_kit(P, plan_dir, pg, kit, out):
     (out / "run_psm.sh").write_text(D.run_sh("psm", 64, 16, "/usr/bin/time -v openroad -no_init -threads 16 -exit "
                                                         "/work/psm/psm.tcl > /work/psm/psm.log 2>&1"))
     os.chmod(out / "run_psm.sh", 0o755)
-    meta = dict(die=P.name, mode="die", grid=pg["grid"], total_w=round(sum(power.values()), 3), bumps=len(bumps),
+    meta = dict(die=P.name, ir_budget_mv=pg.get("budget_mv"), mode="die", grid=pg["grid"], total_w=round(sum(power.values()), 3), bumps=len(bumps),
                 est_regions_mv={r["name"]: r["ir_est_mv"] for r in pg["regions"]}, est_worst_mv=pg["worst_mv"])
     (out / "irwin.json").write_text(json.dumps(meta, indent=1) + "\n")
     return meta
@@ -661,6 +667,11 @@ def report(run):
                 if v:
                     per[rg["name"]] = round(max(v), 3)
         r["psm_regions_mv"] = per
+    budget = m.get("ir_budget_mv")
+    drop = r.get("worst_ir_drop_mv")
+    r["ir_budget_mv"] = budget
+    r["ir_verdict"] = ("NOT RUN" if r.get("status") != "OK" or budget is None or drop is None
+                       else "PASS" if drop <= budget else "FAIL")
     r.update({k: m.get(k) for k in ("die", "window", "window_um", "grid", "power_w", "est_regions_mv", "est_worst_mv")})
     (run / "result.json").write_text(json.dumps(r, indent=1) + "\n")
     return r
@@ -674,6 +685,7 @@ def main(argv=None):
     s.add_argument("--out", required=True)
     s.add_argument("--ir-budget-frac", type=float, default=0.05)
     s.add_argument("--core-w-mm2", type=float)
+    s.add_argument("--core-watts", type=float, help="explicit non-PHY watts; PHY windows are charged separately")
     s.add_argument("--phy-w", type=float, default=4.37)
     s.add_argument("--vdd", type=float, default=0.7)
     s.add_argument("--m8-max-frac", type=float, default=0.5)
@@ -696,14 +708,15 @@ def main(argv=None):
     r.add_argument("run")
     a = ap.parse_args(argv)
     if a.cmd == "report":
-        print(json.dumps(report(a.run), indent=1))
-        return 0
+        result = report(a.run)
+        print(json.dumps(result, indent=1))
+        return 0 if result["ir_verdict"] == "PASS" else 1
     P = S.Plan(S.load(a.plan), Path(a.plan))
     plan_dir = Path(a.plan).parent
     if a.cmd == "size":
         power = json.loads(Path(a.power).read_text()) if a.power else None
         res = size_grid(P, plan_dir, power, a.ir_budget_frac, a.vdd, a.phy_w, a.core_w_mm2, a.m8_max_frac,
-                        a.m9_max_frac, a.bump_pitch, a.gate)
+                        a.m9_max_frac, a.bump_pitch, a.gate, a.core_watts)
         res.update(plan=os.path.relpath(Path(a.plan).resolve(), HERE.parent.parent),
                    plan_sha256=__import__("hashlib").sha256(Path(a.plan).read_bytes()).hexdigest(),
                    core_w_mm2=a.core_w_mm2, phy_w_per_macro=a.phy_w, tool="tools/die_plan/infra_pg.py")

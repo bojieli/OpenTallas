@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "separate PHY-local PG only, diagnostic PDNSim; no die freeze or signal route approval",
+ "image": "qc_pg_domain3_review.png",
+ "findings": [
+  "Viewed full grid and25umPHY/core seam. Every thirdVSSrail lands at the original die phase using odd subdivision3.",
+  "Naive1.08um grid rejected before routing for shared-ground phase mismatch.",
+  "Independent VDDPHY metal requires144nm end isolation from coreVDD; generated power stripes/vias clipped, M7couponpowerpins shortened144nm at ends; ground stays continuous.",
+  "LocalM8width.432/pitch.96 andM9width.24/pitch.576 meet48nmspacing; original core grid, bumps and2.778441Wloadunchanged.",
+  "Native connectivity, power isolation and IR still must pass. Local dense M8/M9 usage must be reserved inside PHY domain in any adopted die event."
+ ]
+}
