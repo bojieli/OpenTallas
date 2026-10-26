@@ -1783,7 +1783,13 @@ def cmd_report(a):
     reg = {t["port"]: t.get("region") for t in M["taps"]}
     if regd:   # the region also follows from the tag (H-tree prefix): a stub on a foreign strap is a build bug
         tags = {g["tag"]: g["k"] for g in M["meta"]["regions"]}
-        bad = [p for p, tg in tagof.items() if tags.get(tg[:1 + regd]) != reg[p]]
+        sbox = {g["k"]: g.get("strap_box_um") for g in M["meta"]["regions"]}
+        foot = {t["port"]: t["foot"] for t in M["taps"]}
+
+        def on_own_edge(p):   # --region-edge-straps: a foot ON its own region edge strap is nearest a foreign index
+            b = sbox.get(reg[p])
+            return bool(b) and b[0] - 1e-3 <= foot[p][0] <= b[2] + 1e-3 and b[1] - 1e-3 <= foot[p][1] <= b[3] + 1e-3
+        bad = [p for p, tg in tagof.items() if tags.get(tg[:1 + regd]) != reg[p] and not on_own_edge(p)]
         if bad:
             raise SystemExit(f"die_clock_mesh report: {len(bad)} taps fed from another region's strap, e.g. {bad[:3]}")
     landed = [x for x in seam if reg[x[0]] != reg[x[1]]]
@@ -1851,7 +1857,7 @@ def cmd_report(a):
             worst=[[round(w, 2), x, y] for w, x, y in worst])
         if C128.enabled(M):
             Dt, _ = read_tree(d / f"tree_{corner}.txt")
-            g12 = C128.gate(M, P, list(seam_in) + [(i[0], i[1]) for i in intra], late, early, rng, regd, Mz["stubs"], Dt,
+            g12 = C128.gate(M, P, [(x[0], x[1]) for x in seam_in] + [(i[0], i[1]) for i in intra], late, early, rng, regd, Mz["stubs"], Dt,
                             M.get("rule_12_8", {}).get("early_offset_taps", []))
             r_ = rep["corners"][corner]
             r_.update(related_pair_max_ps=g12["related_pair_max_ps"], pairs_over_80=g12["pairs_over_80"],
