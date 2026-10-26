@@ -1111,3 +1111,18 @@ def test_json_q_alias_rejects_scalar_unpacked_vector_slices(tmp_path):
     before = dict(L.tp)
     assert lec.json_alias_keys(L, [], work=tmp_path) == 0
     assert L.tp == before
+
+
+def test_relay_keying_preserves_main_scalar_element_normalization(tmp_path, monkeypatch):
+    # The gate retaining index4 makes the original flat gold0..3 array relaid.
+    # Main restores actual gold1..4 names first; relay matching must use those
+    # restored indices rather than applying the old flattened layout again.
+    from types import SimpleNamespace
+    raw = {f'ff:u.rv[{i}]': f'[{4-i}]' for i in range(4)}
+    L = SimpleNamespace(hyp={}, gp={k:i for i,k in enumerate(raw)}, gc={k:i for i,k in enumerate(raw)},
+                        tp={'ff:u.rv#t[4]': 40}, tc={'ff:u.rv#t[4]': 41}, galias={})
+    lec.normalize_gold_elements(L, raw, [])
+    monkeypatch.setattr(lec, 'slang_elements', lambda path: raw)
+    assert lec.slang_element_keys(L, [], work=tmp_path) == 1
+    assert L.tp == {'ff:u.rv[4]': 40}
+    assert L.tc == {'ff:u.rv[4]': 41}
