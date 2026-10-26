@@ -633,7 +633,16 @@ def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
 
     def near(x, y):
         return min(flop_taps, key=lambda q: abs(q[1] - x) + abs(q[2] - y))[0]
-    ports = [f"  input {n};" for n in tapn] + ["  input arst_n;"]
+    # reset wavefront + START broadcast (OWNER DECISIONS 13/13c; reset_tree.py): the registered entries arst_n (u_rst_in)
+    # and start_i, and the registered outs rst_o_<k> / start_o_<k>, are partition pins the die top wires parent ->
+    # child.  Each gets ONE pin register at its own plan site on the nearest type tap, exactly like a data face flop,
+    # so die STA times every wavefront / START hop (PATH-QC 10-25: without these ports die STA dropped 373 START nets
+    # as 'port not found' and timed data seams only).  The partition-internal equal-depth relay tree is its own closure.
+    tp = {n: (x, y) for n, x, y in gen_phys.tap_pins(P, tn)}
+    rin = [(n,) + tuple(tp[n]) for n in ("arst_n", "start_i") if n in tp]
+    rout = [tuple(r[:3]) for r in gen_phys.reset_out_pins(P, tn)]
+    ports = [f"  input {n};" for n in tapn] + [f"  input {n};" for n, _, _ in rin] + \
+        [f"  output {n};" for n, _, _ in rout]
     for b in sorted(bits):
         ports.append(f"  {'input' if dirs.get(b) == 'in' else 'output'} [{bits[b] - 1}:0] {b};")
     ckn, ckcells, ckwires = {n: n for n in tapn}, [], []
@@ -661,12 +670,45 @@ def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
         else:
             cells.append(f"  {FLOP} f{k} (.CLK({ck}), .D(1'b0), .QN({bus}[{bit}]));")
         k += 1
-    names = tapn + ["arst_n"] + sorted(bits)
+    for n, x, y in rin:
+        ck = ckn[near(x, y)]
+        if hold_contract:
+            cells.append(f"  {bh} h{k} (.A({n}), .Y(d{k}));\n  {FLOP} f{k} (.CLK({ck}), .D(d{k}), .QN(q{k}));")
+        else:
+            cells.append(f"  {FLOP} f{k} (.CLK({ck}), .D({n}), .QN(q{k}));")
+        k += 1
+    for n, x, y in rout:
+        cells.append(f"  {FLOP} f{k} (.CLK({ckn[near(x, y)]}), .D(1'b0), .QN({n}));")
+        k += 1
+    names = tapn + [n for n, _, _ in rin] + [n for n, _, _ in rout] + sorted(bits)
     v = [f"module {t['module']} ({', '.join(names)});"] + ports + ckwires
     v += [f"  wire q{i};" for i in range(k) if f".QN(q{i})" in cells[i]]
     v += [f"  wire d{i};" for i in range(k) if f".Y(d{i})" in cells[i]]
     v += ckcells + cells + ["endmodule"]
     return "\n".join(v) + "\n", k
+
+
+def standin_module_names(P):
+    """{type: stand-in module name}.  Plan types that share one RTL module (slice variants, e.g. QC slw_fw_v1/v2/v3)
+    have different pins (buses, ft slots, rst_o / start_o sets), so ONE PARTS/<module> stand-in (last type written)
+    left the other variants' die-top connections dangling ('port not found': 308 on QC plan 441d).  Each such type
+    gets its own stand-in module <module>__<type>; types with a unique module keep the module name (closed views)."""
+    from collections import Counter
+    n = Counter(t["module"] for t in P.types.values())
+    return {tn: (t["module"] if n[t["module"]] == 1 else f"{t['module']}__{tn}") for tn, t in P.types.items()}
+
+
+def retarget_shared_modules(P, top, smod):
+    """die top text with every instance of a shared-module type re-pointed at its per-type stand-in module."""
+    for name, p in P.parts.items():
+        m, tn = P.types[p["type"]]["module"], p["type"]
+        if smod[tn] == m:
+            continue
+        pat = re.compile(r"^(\s*)" + re.escape(m) + r"(\s+" + re.escape(gen_rtl.sv_id(name)) + r"\s*\()", re.M)
+        top, k = pat.subn(lambda mm: mm.group(1) + smod[tn] + mm.group(2), top, count=1)
+        if k != 1:
+            raise ValueError(f"die top: instance {name} of {m} not found for stand-in retarget")
+    return top
 
 
 _STANDIN_IN = re.compile(r"^(\s*)(" + re.escape(FLOP) + r") f(\d+) \(\.CLK\(([^)]*)\), \.D\(([^)']+)\), \.QN\(q\3\)\);\s*$")
@@ -802,16 +844,20 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                                          "/work/psm/psm.tcl > /work/psm/psm.log 2>&1"))
     # sta stand-ins
     nff = 0
+    smod = standin_module_names(P)
     for tn, t in sorted(P.types.items()):
-        d = out / "sta" / "parts" / t["module"]
+        d = out / "sta" / "parts" / smod[tn]
         d.mkdir(parents=True, exist_ok=True)
         v, k = standin_netlist(P, tn)
+        if smod[tn] != t["module"]:
+            v = v.replace(f"module {t['module']} (", f"module {smod[tn]} (", 1)
         (d / "6_final.v").write_text(v)
         nff += k * sum(1 for p in P.parts.values() if p["type"] == tn)
-    v = gen_rtl.die_top(P, gen_rtl.bus_epochs(P), {})
+    v = retarget_shared_modules(P, gen_rtl.die_top(P, gen_rtl.bus_epochs(P), {}), smod)
     plain = "\n".join(re.sub(r"^endmodule\s*:.*$", "endmodule", ln) for ln in v.splitlines() if not ln.startswith("`"))
     (out / "sta" / "die_top.v").write_text(plain + "\n")
-    meta["sta"] = dict(standin_flops=nff, seam_bits=seam_bits)
+    meta["sta"] = dict(standin_flops=nff, seam_bits=seam_bits,
+                       per_type_modules=sorted(tn for tn, m in smod.items() if m != P.types[tn]["module"]))
     for x in ("run_grt.sh", "run_clock.sh", "run_psm.sh"):
         os.chmod(out / x, 0o755)
     (out / "kit.json").write_text(json.dumps(meta, indent=1) + "\n")
