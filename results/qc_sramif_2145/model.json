@@ -1,0 +1,13 @@
+{
+  "candidate": "ROW_WRITE_RELAY=1 with MIF=1",
+  "added_production_cycles": 0,
+  "added_boot_cycles": 0,
+  "flops": {
+    "btab": 24,
+    "prog": 27
+  },
+  "boundary_bits_per_cycle": "unchanged",
+  "macro_area": "unchanged",
+  "physical_status": "NOT RUN: render/GEOM required before candidate placement",
+  "exactness": "20000-cycle lockstep vs MIF1 ROW_WRITE_RELAY0; zero mismatches on btab/prog/fault; PROG inverted-write-enable mutant caught19704 mismatches"
+}

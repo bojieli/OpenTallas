@@ -484,7 +484,7 @@ endmodule
 // (u_twp* becomes the shared relay stage in front of the per-SRAM landings) so that MIF=1 is exactly MIF=0 delayed by one
 // cycle on bs_q (bs_q(t+1) = bs_q_MIF0(t); write/read ordering unchanged); fault is unchanged (0 cycles).
 // PRICE vs MIF=0: BTAB read +1, table write +1.  The parent must schedule the +1 (static schedule).
-module qfd_dv_s8x_btab #(parameter integer MIF = 0) (
+module qfd_dv_s8x_btab #(parameter integer MIF = 0, parameter integer ROW_WRITE_RELAY = 0) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire            bs_re,
@@ -527,11 +527,20 @@ module qfd_dv_s8x_btab #(parameter integer MIF = 0) (
             assign m_rce = pbs_re && bs_word[1:0] == bk[1:0]; assign m_ra = bs_word[8:2];
             assign m_we = twp_w; assign m_wa = twp_a; assign m_wd = twp_d[256*bk +: 256];
         end else begin : g_r
+            // ROW_WRITE_RELAY replicates the existing write-control stage into each SRAM row.
+            // Same edge count, +24 BTAB / +27 PROG control flops; place these beside the row landings.
+            wire row_twpw; wire [6:0] row_twpa;
+            if (ROW_WRITE_RELAY != 0) begin : g_wrrelay
+                qfd_dv_s8x_kff #(.W(1), .ID(7350 + 2*bk)) u_w (.ck(ck), .d(ptw_w), .q(row_twpw));
+                qfd_dv_s8x_kff #(.W(7), .ID(7351 + 2*bk)) u_a (.ck(ck), .d(ptw_addr), .q(row_twpa));
+            end else begin : g_wrshared
+                assign row_twpw = twp_w; assign row_twpa = twp_a;
+            end
             // per-SRAM landing registers (distinct IDs: distinct kept modules, never merged), decode in front
             qfd_dv_s8x_kff #(.W(1), .ID(7150 + bk)) u_rce (.ck(ck), .d(pbs_re && bs_word[1:0] == bk[1:0]), .q(m_rce));
             qfd_dv_s8x_kff #(.W(7), .ID(7160 + bk)) u_ra (.ck(ck), .d(bs_word[8:2]), .q(m_ra));
-            qfd_dv_s8x_kff #(.W(1), .ID(7170 + bk)) u_we (.ck(ck), .d(twp_w), .q(m_we));
-            qfd_dv_s8x_kff #(.W(7), .ID(7180 + bk)) u_wa (.ck(ck), .d(twp_a), .q(m_wa));
+            qfd_dv_s8x_kff #(.W(1), .ID(7170 + bk)) u_we (.ck(ck), .d(row_twpw), .q(m_we));
+            qfd_dv_s8x_kff #(.W(7), .ID(7180 + bk)) u_wa (.ck(ck), .d(row_twpa), .q(m_wa));
             qfd_dv_s8x_kff #(.W(256), .ID(7190 + bk)) u_wd (.ck(ck), .d(twp_d[256*bk +: 256]), .q(m_wd));
         end
         ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(ck), .r_ce_in(m_rce), .r_addr_in(m_ra),
@@ -563,7 +572,7 @@ endmodule
 // MIF (PATH-QC-SRAMIF 2026-10-25, GEOM-REVIEW F6 on prog_s6): as qfd_dv_s8x_btab.  MIF=1 = per-SRAM read-address /
 // read-enable / write-address / write-enable / write-data landing registers with the bank decode in front; MIF=1 is
 // exactly MIF=0 delayed by one cycle on p_q (read +1, table write +1, write/read ordering unchanged).
-module qfd_dv_s8x_prog #(parameter integer MIF = 0) (
+module qfd_dv_s8x_prog #(parameter integer MIF = 0, parameter integer ROW_WRITE_RELAY = 0) (
     input  wire            ck,
     input  wire            p_re,
     input  wire [8:0]      p_idx,
@@ -602,15 +611,26 @@ module qfd_dv_s8x_prog #(parameter integer MIF = 0) (
             assign lo_we = twp_w; assign hi_we = twp_w; assign lo_wa = twp_a; assign hi_wa = twp_a;
             assign lo_wd = twd[bk][255:0]; assign hi_wd = twd[bk][456:256];
         end else begin : g_r
+            // Separate kept write-control relays for the low and high SRAM rows, at the original edge.
+            wire row_lo_w, row_hi_w; wire [7:0] row_lo_a, row_hi_a;
+            if (ROW_WRITE_RELAY != 0) begin : g_wrrelay
+                qfd_dv_s8x_kff #(.W(1), .ID(7450 + 4*bk)) u_lw (.ck(ck), .d(ptw_w), .q(row_lo_w));
+                qfd_dv_s8x_kff #(.W(1), .ID(7451 + 4*bk)) u_hw (.ck(ck), .d(ptw_w), .q(row_hi_w));
+                qfd_dv_s8x_kff #(.W(8), .ID(7452 + 4*bk)) u_la (.ck(ck), .d(ptw_addr), .q(row_lo_a));
+                qfd_dv_s8x_kff #(.W(8), .ID(7453 + 4*bk)) u_ha (.ck(ck), .d(ptw_addr), .q(row_hi_a));
+            end else begin : g_wrshared
+                assign row_lo_w = twp_w; assign row_hi_w = twp_w;
+                assign row_lo_a = twp_a; assign row_hi_a = twp_a;
+            end
             // per-SRAM landing registers (distinct IDs: distinct kept modules, never merged), decode in front
             qfd_dv_s8x_kff #(.W(1), .ID(7250 + 2*bk)) u_lo_rce (.ck(ck), .d(pp_re && pp_idx[0] == bk[0]), .q(lo_rce));
             qfd_dv_s8x_kff #(.W(1), .ID(7251 + 2*bk)) u_hi_rce (.ck(ck), .d(pp_re && pp_idx[0] == bk[0]), .q(hi_rce));
             qfd_dv_s8x_kff #(.W(8), .ID(7260 + 2*bk)) u_lo_ra (.ck(ck), .d(pp_idx[8:1]), .q(lo_ra));
             qfd_dv_s8x_kff #(.W(8), .ID(7261 + 2*bk)) u_hi_ra (.ck(ck), .d(pp_idx[8:1]), .q(hi_ra));
-            qfd_dv_s8x_kff #(.W(1), .ID(7270 + 2*bk)) u_lo_we (.ck(ck), .d(twp_w), .q(lo_we));
-            qfd_dv_s8x_kff #(.W(1), .ID(7271 + 2*bk)) u_hi_we (.ck(ck), .d(twp_w), .q(hi_we));
-            qfd_dv_s8x_kff #(.W(8), .ID(7280 + 2*bk)) u_lo_wa (.ck(ck), .d(twp_a), .q(lo_wa));
-            qfd_dv_s8x_kff #(.W(8), .ID(7281 + 2*bk)) u_hi_wa (.ck(ck), .d(twp_a), .q(hi_wa));
+            qfd_dv_s8x_kff #(.W(1), .ID(7270 + 2*bk)) u_lo_we (.ck(ck), .d(row_lo_w), .q(lo_we));
+            qfd_dv_s8x_kff #(.W(1), .ID(7271 + 2*bk)) u_hi_we (.ck(ck), .d(row_hi_w), .q(hi_we));
+            qfd_dv_s8x_kff #(.W(8), .ID(7280 + 2*bk)) u_lo_wa (.ck(ck), .d(row_lo_a), .q(lo_wa));
+            qfd_dv_s8x_kff #(.W(8), .ID(7281 + 2*bk)) u_hi_wa (.ck(ck), .d(row_hi_a), .q(hi_wa));
             qfd_dv_s8x_kff #(.W(256), .ID(7290 + 2*bk)) u_lo_wd (.ck(ck), .d(twd[bk][255:0]), .q(lo_wd));
             qfd_dv_s8x_kff #(.W(201), .ID(7291 + 2*bk)) u_hi_wd (.ck(ck), .d(twd[bk][456:256]), .q(hi_wd));
         end
