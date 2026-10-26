@@ -10,8 +10,11 @@
     "head_BTAB_READ_EXTRA": 1,
     "extra_cycles_per_SU_command": 1,
     "head_reply_extra": 0,
-    "alignment_FF_delta_at32heads": -8192,
-    "VM_CROM_physical_views": "unchanged parameter values; canonical child qualification still required"
+    "VM_CROM_physical_views": "unchanged parameter values; canonical child qualification still required",
+    "alignment_FF_delta_per_head": -256,
+    "actual_die_head_instances": 96,
+    "alignment_FF_delta_at96heads": -24576,
+    "head_census": "Canonical70plan: six partitions each of four SU_Ltypes, four exact grouped cores/head instances per partition"
   },
   "proofs": {
     "native_head": {
@@ -43,5 +46,15 @@
     "New matching SU hardcore source must be generated if selected",
     "MIF0 zero-cycle structural alternative and globalMIF1 token cost being compared",
     "Inherited SRAMIF routes diagnostic; parent IO40 receipt still owed"
-  ]
+  ],
+  "price": {
+    "source": "TOK exact FE/aligned-clock model 2026-10-26 04:00",
+    "selective_extra_token_cycles": 433,
+    "global_extra_token_cycles": 866,
+    "four_region_MIF0_cycles": 303397,
+    "four_region_selective_cycles": 303830,
+    "four_region_global_cycles": 304263,
+    "four_region_selective_tok_s": 3951.2,
+    "four_region_global_tok_s": 3945.5
+  }
 }
