@@ -48,8 +48,14 @@ def extra(b, ci, port):
 
 
 def layout(b):
-    if getattr(b, 'ab', {}).get('position_banks') != ABI:
+    mode = getattr(b, 'ab', {}).get('position_banks')
+    wrapped = [c for c in b.F.cells if c.module in WRAPPERS.values()]
+    if mode is None:
+        if wrapped:
+            raise ValueError('position-bank wrapper is present without its timing declaration')
         return None
+    if mode != ABI:
+        raise ValueError(f'unknown position-bank declaration {mode}')
     cells = []
     for ci, c in enumerate(b.F.cells):
         s = spec(b, ci, 'x__tok')
@@ -70,7 +76,7 @@ def physical_key(meta, landed_pad):
     maximum, width = (2, 18) if port == 'x__tok' else (1, 16) if port == 'x__tep' else (-1, -1)
     if meta.get('max_depth') != maximum or meta.get('width') != width:
         raise ValueError('position-bank physical shape mismatch')
-    if not 0 <= meta['stack'] < 4 or not 0 <= meta['group'] < 7:
+    if type(meta.get('stack')) is not int or type(meta.get('group')) is not int or not 0 <= meta['stack'] < 4 or not 0 <= meta['group'] < 7:
         raise ValueError('position-bank ID outside declared physical positions')
     expected = decode(meta['stack'], meta['group'], port)
     if meta.get('pad') != expected or landed_pad != expected:

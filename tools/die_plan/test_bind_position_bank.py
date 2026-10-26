@@ -32,3 +32,15 @@ def test_arbitrary_delay_selector_is_not_a_position_id():
 def test_position_must_match_template():
     with pytest.raises(ValueError,match='does not match'):
         P.spec(bank('slg_EN_2'),0,'x__tok')
+
+
+def test_wrapper_cannot_hide_its_hardware_delay_by_omitting_declaration():
+    b=bank();b.ab={}
+    with pytest.raises(ValueError,match='without its timing declaration'):
+        P.layout(b)
+
+
+def test_unknown_timing_declaration_fails_closed():
+    b=bank();b.ab['position_banks']='phase_selector_v0'
+    with pytest.raises(ValueError,match='unknown position-bank declaration'):
+        P.layout(b)
