@@ -1352,17 +1352,29 @@ def main(argv=None):
     j.add_argument("plan")
     j.add_argument("--out", required=True)
     j.add_argument("--no-clock-contract", action="store_true", help="legacy: face flops load the tap port directly")
+    j.add_argument("--top", help="also write the matching die_top.v (shared-module types re-pointed to their stand-ins)")
     a = ap.parse_args(argv)
     if a.cmd == "standins":
-        P = S.Plan(S.load(a.plan))
+        P = S.Plan(S.load(a.plan), Path(a.plan))
+        smod = standin_module_names(P)
         tot = {}
         for tn, t in sorted(P.types.items()):
-            d = Path(a.out) / t["module"]
+            d = Path(a.out) / smod[tn]
             d.mkdir(parents=True, exist_ok=True)
             v, k = standin_netlist(P, tn, clock_contract=not a.no_clock_contract)
+            if smod[tn] != t["module"]:
+                v = v.replace(f"module {t['module']} (", f"module {smod[tn]} (", 1)
             (d / "6_final.v").write_text(v)
-            tot[t["module"]] = k
-        print(json.dumps(dict(types=len(tot), face_flops=sum(tot.values()),
+            tot[smod[tn]] = k
+        shared = sorted(tn for tn, m in smod.items() if m != P.types[tn]["module"])
+        if a.top:   # per-type stand-in modules need the matching die top (instances re-pointed)
+            v = retarget_shared_modules(P, gen_rtl.die_top(P, gen_rtl.bus_epochs(P), {}), smod)
+            Path(a.top).write_text("\n".join(re.sub(r"^endmodule\s*:.*$", "endmodule", ln)
+                                             for ln in v.splitlines() if not ln.startswith("`")) + "\n")
+        elif shared:
+            print(f"WARNING: {len(shared)} shared-module types got per-type stand-in modules; pass --top to write "
+                  "the matching die_top.v (an old die top would instantiate the bare module name)", file=sys.stderr)
+        print(json.dumps(dict(types=len(tot), face_flops=sum(tot.values()), per_type_modules=shared,
                               clock_contract=not a.no_clock_contract), indent=1))
         return 0
     if a.cmd == "standin-contract":
