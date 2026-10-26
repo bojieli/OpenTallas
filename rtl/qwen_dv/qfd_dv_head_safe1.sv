@@ -94,7 +94,7 @@ endmodule
 
 // safe2 = safe1 with fixed-age rings <=2048bits in flops; MIF1 adds a separate133-bit reply stage: qfd_dv_s1_flop_ring (16-bit slices, own pointer,
 // N = D - 1 slots, write and read the same slot each edge = age D), no 32x64 macros; TLS 128x64 natives kept.
-module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=0, MEMORY_READ_EXTRA=0) (
+module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=0, MEMORY_READ_EXTRA=0, BTAB_READ_EXTRA=0) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              emit0,
@@ -156,6 +156,7 @@ module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=
 );
     // All-memory MIF staging adds one reply edge without changing relative operand alignment.
 `ifndef SYNTHESIS
+    initial if (BTAB_READ_EXTRA < 0 || BTAB_READ_EXTRA > 1 || BTAB_READ_EXTRA > MEMORY_ALIGNMENT) $fatal(1,"BTAB extra must fit aligned0/1 edge");
     initial if (MEMORY_READ_EXTRA != 0 && MEMORY_READ_EXTRA != 1) $fatal(1,"memory read extra must be0 or1");
 `endif
     // S8 memory contract: CROM answers3 edges after VM and1 after BTAB. Match data and
@@ -172,7 +173,8 @@ module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=
 `else
         assign {aligned_va,aligned_vb,aligned_vc} = vm_pipe[2];
 `endif
-        assign aligned_wr = wr_pipe;
+        // Selective BTAB MIF1 already supplies this alignment edge; global MIF1 retains it.
+        assign aligned_wr = BTAB_READ_EXTRA != 0 ? wrom_q : wr_pipe;
     end else begin : g_memory_unmodified
         assign {aligned_va,aligned_vb,aligned_vc,aligned_wr} = {va_q,vb_q,vc_q,wrom_q};
     end endgenerate

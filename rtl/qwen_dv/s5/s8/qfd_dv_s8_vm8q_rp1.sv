@@ -53,7 +53,7 @@ module qfd_dv_s8_vm8q_rp1_twc (input wire ck, input wire [538:0] d, output reg [
     always @(posedge ck) q <= d;
 endmodule
 
-module qfd_dv_s8_vm8q_rp1 #(parameter integer MUT = 0, parameter integer MIF = 0) (
+module qfd_dv_s8_vm8q_rp1 #(parameter integer MUT = 0, parameter integer MIF = 0, parameter integer TABLE_MIF = MIF, parameter integer TABLE_HALF = 0) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire [7:0]      a_re, b_re, c_re,
@@ -121,7 +121,7 @@ module qfd_dv_s8_vm8q_rp1 #(parameter integer MUT = 0, parameter integer MIF = 0
     wire [1033:0] twb;
     qfd_dv_s8_vm8q_rp1_twb u_twb (.ck(ck), .d({tw_we, tw_kind, tw_addr[8:2], tw_data}), .q(twb));
     wire [255:0] qbs;  wire fbt;
-    qfd_dv_s8x_btab #(.MIF(MIF)) u_bt (.ck(ck), .rst_n(rsbt), .bs_re(bs_re1), .bs_addr(bs_addr1), .bs_q(qbs),
+    qfd_dv_s8x_btab #(.MIF(TABLE_MIF), .ROW_WRITE_RELAY(TABLE_HALF), .WR_HALF_CYCLE(TABLE_HALF), .RD_HALF_CYCLE(TABLE_HALF)) u_bt (.ck(ck), .rst_n(rsbt), .bs_re(bs_re1), .bs_addr(bs_addr1), .bs_q(qbs),
         .tw_we(twb[1033]), .tw_kind(twb[1032:1031]), .tw_addr(twb[1030:1024]), .tw_data(twb[1023:0]), .fault(fbt));
 
     // ---- PROG (d = 1; no reset pin): own read relay, own table-write copy ----
@@ -131,7 +131,7 @@ module qfd_dv_s8_vm8q_rp1 #(parameter integer MUT = 0, parameter integer MIF = 0
     wire [924:0] twp;
     qfd_dv_s8_vm8q_rp1_twp u_twp (.ck(ck), .d({tw_we, tw_kind, tw_addr[7:0], tw_data[456:0], tw_data[968:512]}), .q(twp));
     wire [456:0] qpg;
-    qfd_dv_s8x_prog #(.MIF(MIF)) u_pg (.ck(ck), .p_re(p_re1), .p_idx(p_idx1), .p_q(qpg),
+    qfd_dv_s8x_prog #(.MIF(TABLE_MIF), .ROW_WRITE_RELAY(TABLE_HALF), .WR_HALF_CYCLE(TABLE_HALF), .RD_HALF_CYCLE(TABLE_HALF)) u_pg (.ck(ck), .p_re(p_re1), .p_idx(p_idx1), .p_q(qpg),
         .tw_we(twp[924]), .tw_kind(twp[923:922]), .tw_addr(twp[921:914]), .tw_d0(twp[913:457]), .tw_d1(twp[456:0]));
 
     // ---- CROM halves (d = 2): per-half read relays, per-half table-write chains, per-half reset relays ----
