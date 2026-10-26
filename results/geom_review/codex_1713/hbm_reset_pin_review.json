@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-10-25 17:59 PDT",
+  "scope": "Pin-separation only; no P&R request",
+  "image": "reset_entry_review.png",
+  "verdict": "PASS-COND pin-separationONLY",
+  "type": "HBM baseline root",
+  "entry_xy_um": [
+    1676.64,
+    2676.768
+  ],
+  "rst_o2_xy_um": [
+    1676.64,
+    2678.432
+  ],
+  "M7_pin_size_um": [
+    0.032,
+    0.768
+  ],
+  "edge_gap_um": 0.896,
+  "findings": [
+    "Independentlyviewedbothrootcoreoverviewandactualpinrectzoom",
+    "Esidechanneloutsidecoresclear;oldentryoutputcoincidencefixed"
+  ],
+  "reported_gates": {
+    "G0_errors": 0,
+    "max_release": 91,
+    "max_die_hop_um": 378.5,
+    "unreachable": [],
+    "G0C_inherited_face_errors": 4
+  },
+  "conditions": [
+    "No GRT/STA/P&R/nativeclosuretoken",
+    "Grown501planseparate; preservebaselinefailure"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-10-25 17:59 PDT",
+  "kit": "epyc1:codex-s81-hcore-1713/native_0890_place01",
+  "source_cohort": "TIMED eafc9/net0890 (fullidentity/admissionownedROOT)",
+  "verdict": "PASS-COND carryONEPLACEMENT-ONLY AFTER officialROOTreceiptadmission",
+  "image": "hcore_pin_plan.png",
+  "findings": [
+    "Re-viewedunchanged157.68x259.2pinplan1214pins:N580W590E42,Sclockreset",
+    "Privateentry/relaytarget81.852x8/129.6 uses_v2actualLLsite/roworient snapping andQNrestoringINVplacement"
+  ],
+  "conditions": [
+    "NooldphysicalODB/CTS/signofftoken",
+    "+2resetcyclespriced",
+    "Actualresetfullsink/DFFINVwholecellreachimage beforeCTS",
+    "FreshcanonicalREQ/fullfreezeidentity whenadmitted"
+  ]
+}
