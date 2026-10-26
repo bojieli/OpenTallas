@@ -600,6 +600,17 @@
     "tile position ROW0/TEN must be mapped from current264-slot/253-active plan, not copied from old253-tile17-SerDes top",
     "physical SerDes PMA boundary must remain explicit and status live"
   ],
+  "rankmerge": {
+    "provider": "rtl/dsrom_sys/s81_head/ot_s81hd_rank_merge_hsf0.sv",
+    "role": "exact extracted real controller mechanism; transport independent",
+    "input": "own81-bit BEST and6x553-bit HSF0 peer frames(two copies/peer)",
+    "live_record": "position21,user10,bits32,row17,valid1",
+    "held_payload_bits": 672,
+    "merge": "hold until all7records; compare4ranks in2registered levels",
+    "checks": "identity equality,duplicate copies,NaN,overwrite",
+    "added_cycles": 0,
+    "physical_mapping": "unmeasured; current mesh64 codec remains external"
+  },
   "historical_controller_component": "results/arch/s81_head_source_1025/hsf0_component.json",
   "wholehead_implementation_allowed": false
 }
