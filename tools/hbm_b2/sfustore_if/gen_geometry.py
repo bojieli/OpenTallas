@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[3]
 LEF='physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef'
 OLDPINS='physical/die_plan/hbm_arch/B2n/cores/ot_hbm_su_static_sfustore_hw__293.76x354.24__q_hub_u_sfus_Q.json'
 W,H=311.04,354.24
-CW,CH=1.08,0.270
+CW,CH=2.16,0.270
 
 def mapping(n):
     m=re.fullmatch(r'(wd_in|w_mask_in|rd_out|r_addr_in|w_addr_in)\[(\d+)\]',n)
@@ -33,7 +33,7 @@ def main():
     occupied=set();anchors=[];macros=[];maxd=0
     for bank in range(16):
         x=38.88 if bank<8 else 172.8;y=4.32+43.2*(bank%8)
-        macros.append(dict(inst=f'g_bank[{bank}].u_bank.u_data.g_read[0].u_m',origin_um=[x,y],outline_um=[mw,mh],orient='R0'))
+        macros.append(dict(k=bank,macro='ot_sram_1r1w_128x256_m1_r2c2',inst=f'g_bank[{bank}].u_bank.u_data.g_read[0].u_m',origin_um=[x,y],outline_um=[mw,mh],orient='R0'))
         for q in sorted(macro_pins,key=lambda q:(q['face'],q['y'],q['pin'])):
             px,py=x+q['x'],y+q['y'];row=round((py-CH/2)/CH);opts=[]
             for k in range(12):
@@ -44,7 +44,7 @@ def main():
                     if dist>17.5 or fy<CH/2 or fy>H-CH/2:continue
                     opts.append((dist,abs(dy),k,site,rr,fx,fy))
             for dist,_,_,site,rr,fx,fy in sorted(opts):
-                cells={(sx,rr) for sx in range(site,site+20)}
+                cells={(sx,rr) for sx in range(site,site+round(CW/0.054))}
                 if cells&occupied:continue
                 occupied|=cells;break
             else:raise RuntimeError(f'no legal per-pin FF site bank{bank} {q}')
@@ -76,7 +76,7 @@ def main():
         lef=LEF,lef_sha256=hashlib.sha256(txt.encode()).hexdigest(),old_pin_sha256=hashlib.sha256(raw).hexdigest())
     for name,obj in [('anchors.json',anchors),('macro_placement.json',dict(macro_placement=macros)),('pins.json',pins),('summary.json',summary)]:
         (out/name).write_text(json.dumps(obj,indent=1)+'\n')
-    (out/'anchors.tsv').write_text('register\tx_um\ty_um\n'+''.join(f"{r['register']}\t{r['center_um'][0]}\t{r['center_um'][1]}\n" for r in anchors))
+    (out/'anchors.tsv').write_text('bank\tmacro_pin\tregister\tx_um\ty_um\n'+''.join(f"{r['bank']}\t{r['macro_pin']}\t{r['register']}\t{r['center_um'][0]}\t{r['center_um'][1]}\n" for r in anchors))
     import matplotlib;matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from matplotlib.patches import Rectangle
