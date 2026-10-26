@@ -1486,7 +1486,7 @@ def _count(it):
 
 def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, gates, common, plan_sha, mp_sha):
     gv = {k: g["verdict"] for k, g in gates.items()}
-    lat = dict(common_clock_latency_ps=dict(TT=common, FF=round(common * 0.81, 1)), tol_ps=40, early_taps=False)
+    lat = dict(common_clock_latency_ps=dict(TT=common, FF=round(common * 0.81, 1)), tol_ps=20, early_taps=False)
     by_type = defaultdict(list)
     for p, v in P.parts.items():
         by_type[v["type"]].append(p)
