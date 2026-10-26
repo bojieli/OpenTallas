@@ -1,0 +1,580 @@
+{
+ "meta": {
+  "nx": 32,
+  "ny": 64,
+  "m": 2,
+  "rep_um": 450.0,
+  "ndr": "4w",
+  "sites": "any",
+  "W": 11076.48,
+  "H": 27043.2,
+  "pitch_um": [
+   346.14,
+   422.55
+  ],
+  "pg_aware": true,
+  "pg_tracks": {
+   "M8": {
+    "pitch_um": 0.08,
+    "offset_um": 0.04
+   },
+   "M9": {
+    "pitch_um": 0.08,
+    "offset_um": 0.04
+   }
+  },
+  "pg_axis_snap_max_um": {
+   "M9": 0.02,
+   "M8": 0.44
+  },
+  "tap_layer": "M7",
+  "tap_pin_size_um": [
+   0.032,
+   0.768
+  ],
+  "region_spec": {
+   "split_axes": "yxy",
+   "y_cuts_um": [
+    6082.56,
+    13841.28,
+    19923.84
+   ],
+   "x_cuts_um": [
+    6618.24
+   ],
+   "landing_cycles": 2
+  },
+  "region_axes": "yxy",
+  "delta_id": "D-KV-CLKMESH-c3-PROTO",
+  "regions_depth": 3,
+  "regions": [
+   {
+    "k": 0,
+    "tag": "h000",
+    "i0": 0,
+    "i1": 16,
+    "j0": 0,
+    "j1": 16,
+    "box_um": [
+     0.0,
+     0.0,
+     6618.24,
+     6082.56
+    ]
+   },
+   {
+    "k": 1,
+    "tag": "h001",
+    "i0": 0,
+    "i1": 16,
+    "j0": 16,
+    "j1": 32,
+    "box_um": [
+     0.0,
+     6082.56,
+     6618.24,
+     13841.28
+    ]
+   },
+   {
+    "k": 2,
+    "tag": "h010",
+    "i0": 16,
+    "i1": 32,
+    "j0": 0,
+    "j1": 16,
+    "box_um": [
+     6618.24,
+     0.0,
+     11076.48,
+     6082.56
+    ]
+   },
+   {
+    "k": 3,
+    "tag": "h011",
+    "i0": 16,
+    "i1": 32,
+    "j0": 16,
+    "j1": 32,
+    "box_um": [
+     6618.24,
+     6082.56,
+     11076.48,
+     13841.28
+    ]
+   },
+   {
+    "k": 4,
+    "tag": "h100",
+    "i0": 0,
+    "i1": 16,
+    "j0": 32,
+    "j1": 48,
+    "box_um": [
+     0.0,
+     13841.28,
+     6618.24,
+     19923.84
+    ]
+   },
+   {
+    "k": 5,
+    "tag": "h101",
+    "i0": 0,
+    "i1": 16,
+    "j0": 48,
+    "j1": 64,
+    "box_um": [
+     0.0,
+     19923.84,
+     6618.24,
+     27043.2
+    ]
+   },
+   {
+    "k": 6,
+    "tag": "h110",
+    "i0": 16,
+    "i1": 32,
+    "j0": 32,
+    "j1": 48,
+    "box_um": [
+     6618.24,
+     13841.28,
+     11076.48,
+     19923.84
+    ]
+   },
+   {
+    "k": 7,
+    "tag": "h111",
+    "i0": 16,
+    "i1": 32,
+    "j0": 48,
+    "j1": 64,
+    "box_um": [
+     6618.24,
+     19923.84,
+     11076.48,
+     27043.2
+    ]
+   }
+  ],
+  "driver_pair_fixes": [
+   [
+    13,
+    62,
+    1127.5,
+    445.0
+   ]
+  ],
+  "root_plan_um": [
+   5538.24,
+   13003.2
+  ],
+  "root_pg_shift_um": 0.44,
+  "root_um": [
+   5538.68,
+   13003.2
+  ],
+  "trunk_um": 878.75,
+  "trunk_reps": 1,
+  "split_reps": 170,
+  "reserve_cell_sites": true,
+  "cells": 10444,
+  "drivers": 2048,
+  "bufx24_drivers": 4096,
+  "nodes": 2047,
+  "reps": 777,
+  "stubs": 2090,
+  "taps_early_nonzero": 0,
+  "unplaced": 0,
+  "clock_cell_overlap_pairs": 0,
+  "clock_hard_keepout_violations": 0,
+  "driver_moves": 660,
+  "driver_move_max_um": 358.56,
+  "rep_slide_max_um": 170.64,
+  "node_move_max_um": 263.52,
+  "stub_max_um": 364.3,
+  "htree_wire_mm": 1196.32,
+  "mesh_wire_mm": 1475.88,
+  "stub_wire_mm": 111.98,
+  "plan": "/srv/opentallas-scratch2/claude/codex-kv-mesh-1026/plan.json",
+  "plan_sha256": "d34cbb519c9b627111eb46f2c5ecf00ef29273b4bebb520169e4a834e68f4509",
+  "pg_source": "/srv/opentallas-scratch2/claude/path-kv-clk-1026/pg_plan.json",
+  "pg_sha256": "c025b84bcb4decbd33355fe99c9cce8060c1ac10d3372e58be50a3447850a72a",
+  "pg_feasible": null,
+  "build_s": 2.6,
+  "balance": {
+   "src": "/srv/opentallas-scratch2/claude/path-kv-clk-1026/c3c",
+   "corner": "TT",
+   "pad_ps": 37.26,
+   "pads": 160,
+   "total_pad_ns": 4.02,
+   "hist": {
+    "0": 160
+   },
+   "fine_lib": "BUFx6f_ASAP7_75t_R",
+   "fine_pad_ps": 24.71,
+   "fine_hist": {
+    "0": 5,
+    "1": 155
+   }
+  },
+  "stubtrim": {
+   "src": "c3e",
+   "pairs": 62520,
+   "coverage": "complete tap superset (intra-partition + connected same-region)",
+   "lp_bound_ps": 32.4,
+   "untrimmed": {
+    "TT": [
+     85.06,
+     "t_pv_S_4__clk_t14",
+     "t_pv_S_4__clk_t23"
+    ],
+    "FF": [
+     79.74,
+     "t_hroot_ES__clk_t1",
+     "t_hub_Eo__clk_t17"
+    ]
+   },
+   "predicted": {
+    "TT": [
+     55.3,
+     "t_hg_EN_6__clk_t9",
+     "t_pc_EN_6__clk_t5"
+    ],
+    "FF": [
+     48.12,
+     "t_hg_EN_7__clk_t5",
+     "t_hgi_EN_7__clk_t12"
+    ]
+   },
+   "pads": 779,
+   "trimmed_taps": 755,
+   "pad_ps": {
+    "TT": 37.26,
+    "FF": 29.27
+   },
+   "fine_lib": "BUFx6f_ASAP7_75t_R",
+   "fine_ps": {
+    "TT": 24.71,
+    "FF": 18.76
+   },
+   "xmax_ps": 120.0,
+   "min_ratio": 0.97
+  }
+ },
+ "corners": {
+  "TT": {
+   "insertion_ps": [
+    4775.83,
+    4877.11
+   ],
+   "tap_skew_ps": 101.28,
+   "compensated_sink_insertion_ps": [
+    4775.83,
+    4877.11
+   ],
+   "core_offset_taps": 0,
+   "seam_pairs": 3410,
+   "seam_max_ps": 57.54,
+   "seam_p99_ps": 48.83,
+   "intra_pairs": 3182,
+   "intra_max_ps": 54.01,
+   "pairs_over_80": 0,
+   "related_pair_max_ps": 57.54,
+   "gate_ps": 80.0,
+   "regions": 8,
+   "landed_seam_pairs": 691,
+   "landed_damage_max_ps": 122.12,
+   "landed_nominal_offset_max_ps": 62.45,
+   "landing_budget_ps": 416.5,
+   "landed_verdict": "PASS",
+   "landed_worst": [
+    [
+     122.12,
+     "t_hgi_WN_7__clk_t12",
+     "t_hub_Wi__clk_t16",
+     "L349_9"
+    ],
+    [
+     122.12,
+     "t_hgi_WN_7__clk_t12",
+     "t_hub_Wi__clk_t16",
+     "L358_9"
+    ],
+    [
+     122.12,
+     "t_hub_Wi__clk_t16",
+     "t_hgi_WN_7__clk_t12",
+     "L663_0"
+    ],
+    [
+     122.12,
+     "t_hub_Wi__clk_t16",
+     "t_hgi_WN_7__clk_t12",
+     "L752_0"
+    ],
+    [
+     117.57,
+     "t_pv_S_4__clk_t1",
+     "t_pv_S_3__clk_t19",
+     "L603_1"
+    ],
+    [
+     117.57,
+     "t_pv_S_4__clk_t1",
+     "t_pv_S_3__clk_t19",
+     "L1439_1"
+    ],
+    [
+     117.57,
+     "t_pv_S_3__clk_t19",
+     "t_pv_S_4__clk_t1",
+     "L1800_0"
+    ],
+    [
+     117.57,
+     "t_pv_S_4__clk_t1",
+     "t_pv_S_3__clk_t19",
+     "L1845_1"
+    ],
+    [
+     117.57,
+     "t_pv_S_3__clk_t19",
+     "t_pv_S_4__clk_t1",
+     "L2262_0"
+    ],
+    [
+     117.57,
+     "t_pv_S_3__clk_t19",
+     "t_pv_S_4__clk_t1",
+     "L2290_0"
+    ]
+   ],
+   "verdict": "PASS",
+   "tap_slew_max_ps": 105.87,
+   "mesh_stub_in_slew_max_ps": 136.74,
+   "tree_slew_max_ps": 75.64,
+   "mesh_cap_pF": 192.65,
+   "worst": [
+    [
+     57.54,
+     "t_hub_Wo__clk_t19",
+     "t_hub_Wi__clk_t16"
+    ],
+    [
+     54.01,
+     "t_hub_Wi__clk_t1",
+     "t_hub_Wi__clk_t5"
+    ],
+    [
+     51.29,
+     "t_pc_WS_5__clk_t7",
+     "t_pc_WS_5__clk_t8"
+    ],
+    [
+     51.12,
+     "t_hgi_WS_6__clk_t8",
+     "t_hgi_WS_6__clk_t12"
+    ],
+    [
+     50.98,
+     "t_phy_EN_2__clk",
+     "t_pc_EN_2__clk"
+    ],
+    [
+     50.98,
+     "t_phy_EN_2__clk",
+     "t_pc_EN_2__clk"
+    ],
+    [
+     50.98,
+     "t_pc_EN_2__clk",
+     "t_phy_EN_2__clk"
+    ],
+    [
+     50.98,
+     "t_pc_EN_2__clk",
+     "t_phy_EN_2__clk"
+    ],
+    [
+     50.98,
+     "t_pc_EN_2__clk",
+     "t_phy_EN_2__clk"
+    ],
+    [
+     50.98,
+     "t_pc_EN_2__clk",
+     "t_phy_EN_2__clk"
+    ]
+   ],
+   "clock_switched_cap_pF": 390.8,
+   "clock_wire_power_W": 0.23
+  },
+  "FF": {
+   "insertion_ps": [
+    3955.04,
+    4052.15
+   ],
+   "tap_skew_ps": 97.11,
+   "compensated_sink_insertion_ps": [
+    3955.04,
+    4052.15
+   ],
+   "core_offset_taps": 0,
+   "seam_pairs": 3410,
+   "seam_max_ps": 46.22,
+   "seam_p99_ps": 39.49,
+   "intra_pairs": 3182,
+   "intra_max_ps": 45.2,
+   "pairs_over_80": 0,
+   "related_pair_max_ps": 46.22,
+   "gate_ps": 80.0,
+   "regions": 8,
+   "landed_seam_pairs": 691,
+   "landed_damage_max_ps": 114.98,
+   "landed_nominal_offset_max_ps": 62.34,
+   "landing_budget_ps": 416.5,
+   "landed_verdict": "PASS",
+   "landed_worst": [
+    [
+     114.98,
+     "t_hgi_WN_7__clk_t12",
+     "t_hub_Wi__clk_t16",
+     "L349_9"
+    ],
+    [
+     114.98,
+     "t_hgi_WN_7__clk_t12",
+     "t_hub_Wi__clk_t16",
+     "L358_9"
+    ],
+    [
+     114.98,
+     "t_hub_Wi__clk_t16",
+     "t_hgi_WN_7__clk_t12",
+     "L663_0"
+    ],
+    [
+     114.98,
+     "t_hub_Wi__clk_t16",
+     "t_hgi_WN_7__clk_t12",
+     "L752_0"
+    ],
+    [
+     113.3,
+     "t_hroot_EN__clk_t4",
+     "t_pc_EN_7__clk_t11",
+     "L1545_0"
+    ],
+    [
+     110.53,
+     "t_hroot_EN__clk_t2",
+     "t_pc_EN_7__clk_t9",
+     "L528_1"
+    ],
+    [
+     110.53,
+     "t_pc_EN_7__clk_t9",
+     "t_hroot_EN__clk_t2",
+     "L568_7"
+    ],
+    [
+     110.53,
+     "t_hroot_EN__clk_t2",
+     "t_pc_EN_7__clk_t9",
+     "L642_1"
+    ],
+    [
+     110.53,
+     "t_hroot_EN__clk_t2",
+     "t_pc_EN_7__clk_t9",
+     "L653_4"
+    ],
+    [
+     110.53,
+     "t_hroot_EN__clk_t2",
+     "t_pc_EN_7__clk_t9",
+     "L700_0"
+    ]
+   ],
+   "verdict": "PASS",
+   "tap_slew_max_ps": 89.08,
+   "mesh_stub_in_slew_max_ps": 125.07,
+   "tree_slew_max_ps": 55.46,
+   "mesh_cap_pF": 193.19,
+   "worst": [
+    [
+     46.22,
+     "t_hub_Wo__clk_t19",
+     "t_hub_Wi__clk_t16"
+    ],
+    [
+     45.2,
+     "t_pc_WN_3__clk_t7",
+     "t_pc_WN_3__clk_t8"
+    ],
+    [
+     44.98,
+     "t_hub_Eo__clk_t10",
+     "t_hub_Eo__clk_t11"
+    ],
+    [
+     42.99,
+     "t_hg_ES_7__clk_t8",
+     "t_hg_ES_7__clk_t9"
+    ],
+    [
+     42.93,
+     "t_pc_EN_6__clk_t2",
+     "t_pc_EN_5__clk_t11"
+    ],
+    [
+     42.93,
+     "t_pc_EN_6__clk_t2",
+     "t_pc_EN_5__clk_t11"
+    ],
+    [
+     42.93,
+     "t_pc_EN_6__clk_t2",
+     "t_pc_EN_5__clk_t11"
+    ],
+    [
+     42.93,
+     "t_pc_EN_6__clk_t2",
+     "t_pc_EN_5__clk_t11"
+    ],
+    [
+     42.93,
+     "t_pc_EN_6__clk_t2",
+     "t_pc_EN_5__clk_t11"
+    ],
+    [
+     42.93,
+     "t_pc_EN_6__clk_t2",
+     "t_pc_EN_5__clk_t11"
+    ]
+   ],
+   "clock_switched_cap_pF": 391.4,
+   "clock_wire_power_W": 0.279
+  }
+ },
+ "related_pair_coverage": {
+  "complete": false,
+  "kind": "surrogate spatial tap pairs",
+  "required": "actual endpoint-to-tap pair ledger or qualified conservative all-tap superset"
+ },
+ "qualification": {
+  "scope": "mesh clock diagnostic; not a complete die related-pair gate",
+  "release_verdict": "BLOCKED",
+  "blockers": [
+   "related-pair coverage unproven: spatial tap pairs need an actual endpoint-to-tap ledger or conservative superset proof",
+   "PG grid is not IR-qualified",
+   "forwarded-clock landing implementation and token cycle pricing remain required"
+  ],
+  "proposed_landed_crossings": 662
+ }
+}

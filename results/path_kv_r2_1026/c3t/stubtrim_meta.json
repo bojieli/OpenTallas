@@ -1,0 +1,43 @@
+{
+ "src": "c3e",
+ "pairs": 62520,
+ "coverage": "complete tap superset (intra-partition + connected same-region)",
+ "lp_bound_ps": 32.4,
+ "untrimmed": {
+  "TT": [
+   85.06,
+   "t_pv_S_4__clk_t14",
+   "t_pv_S_4__clk_t23"
+  ],
+  "FF": [
+   79.74,
+   "t_hroot_ES__clk_t1",
+   "t_hub_Eo__clk_t17"
+  ]
+ },
+ "predicted": {
+  "TT": [
+   55.3,
+   "t_hg_EN_6__clk_t9",
+   "t_pc_EN_6__clk_t5"
+  ],
+  "FF": [
+   48.12,
+   "t_hg_EN_7__clk_t5",
+   "t_hgi_EN_7__clk_t12"
+  ]
+ },
+ "pads": 779,
+ "trimmed_taps": 755,
+ "pad_ps": {
+  "TT": 37.26,
+  "FF": 29.27
+ },
+ "fine_lib": "BUFx6f_ASAP7_75t_R",
+ "fine_ps": {
+  "TT": 24.71,
+  "FF": 18.76
+ },
+ "xmax_ps": 120.0,
+ "min_ratio": 0.97
+}

@@ -1,0 +1,52 @@
+{
+ "pairs": 62520,
+ "landed_part_pairs": 43,
+ "xmax_ps": 300.0,
+ "TT": {
+  "region_credit_ps": {
+   "h000": 41.8,
+   "h001": 36.1,
+   "h010": 43.5,
+   "h011": 38.9,
+   "h100": 42.4,
+   "h101": 36.7,
+   "h110": 44.0,
+   "h111": 42.1
+  },
+  "no_trim_bound_ps": 85.06,
+  "floor_uncredited_ps": 26.12,
+  "corner_alone": null
+ },
+ "FF": {
+  "region_credit_ps": {
+   "h000": 36.8,
+   "h001": 31.9,
+   "h010": 38.3,
+   "h011": 34.4,
+   "h100": 37.4,
+   "h101": 32.6,
+   "h110": 38.7,
+   "h111": 37.1
+  },
+  "no_trim_bound_ps": 79.74,
+  "floor_uncredited_ps": 23.41,
+  "corner_alone": null
+ },
+ "joint_lp": {
+  "success": true,
+  "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "bound_ps": 32.13,
+  "trimmed_taps": 1650,
+  "max_trim_ps": 61.3,
+  "TT": [
+   32.13,
+   "t_pv_S_6__clk_t11",
+   "t_pv_S_6__clk_t8"
+  ],
+  "FF": [
+   32.13,
+   "t_sys_c__clk_t3",
+   "t_sys_c__clk_t6"
+  ]
+ }
+}
