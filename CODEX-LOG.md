@@ -4129,3 +4129,9 @@ Exact paths/commands are in `codex-token-coverage-2144.md` (both coordinator and
 ### Coordination publication
 
 All group notes and source are saved; parent agents are parked. Concurrent coord appends caused some serialized coord/state pushes to fail, without stash or overwriting. Local coverage files and commits retain everything; reconcile before relying on remote mirrors. Read the latest local and actual-hub coverage timestamps. Root handoff is written here regardless of optional publication success. No half-written source or main merge remains.
+
+## Takeover 2026-10-26 02:09 PDT
+All lanes assigned across die, token, flow, core and auxiliary workers; authoritative central repo epyc1, local checkout stale. Follow review-before-route. No existing process killed.
+
+OWNER?
+S81 PHY: published N7 assumptions need44.9–48.2mm shore for14links versus43.3mm current. We are trying same-area re-placement first. If insufficient, choose allowed die area/link architecture change; existing14links/reserve-pair contracts remain binding until decided.
