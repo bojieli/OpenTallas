@@ -2403,6 +2403,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         import traceback
         log.append(traceback.format_exc())
     rec["t_total_s"] = round(time.time() - t0, 1)
+    rec["provenance"] = _provenance()
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
     (out / "lec.log").write_text("\n".join(log))
     return rec
@@ -2445,6 +2446,16 @@ def via_docker(args, image, mem):
     return subprocess.run(cmd + [sh]).returncode
 
 
+def _provenance():
+    """closure order rule 3 (OWNER 10-25): the LEC verdict names the tool commit (manifest_paths.provenance)."""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import manifest_paths
+        return manifest_paths.provenance()
+    except Exception as e:  # noqa: BLE001 -- a missing commit fails the evidence gate, never the proof
+        return dict(commit=None, dirty=None, source=f"error: {type(e).__name__}")
+
+
 def main(argv=None):
     global PROVE_JOBS
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -2468,6 +2479,9 @@ def main(argv=None):
         p = Path(a.out or Path(a.kit) / "lec") / "lec.json"
         if p.is_file():
             r = json.loads(p.read_text())
+            if not (r.get("provenance") or {}).get("commit"):   # the image may not see .git: stamp from the host
+                r["provenance"] = _provenance()
+                p.write_text(json.dumps(r, indent=1) + "\n")
             print(f"LEC {r['verdict']}: {r.get('top')} {r.get('reason', r.get('note', ''))} "
                   f"({r.get('t_total_s')} s)")
         return rc
