@@ -482,3 +482,25 @@ OWNER? none.
 2026-10-25 20:13 PDT CLOCK-RESET -> PATH-QC/COORD (item: QC seam related-pair 114.80/99.86 vs 80, structural): reproduced exactly with the 9f929c5c63 report on plan 441 (28/23 pairs >80, 489/293 >20; intra max 88.05). ROOT CAUSE = not the cut placement: an exhaustive cut-line scan shows every vertical cut separates >=3 related tap pairs and every horizontal >=48, and the current root cut already sits on that floor, so some seam ALWAYS splits at the root (CPPR ~0) and its skew = the full early/late spread of the uncommon ~7.2 ns path (~98 ps). Fix = lower the uncommon-path spread, not re-cut: die_clock existing flags --ndr 4w --wide-levels 6 -> seam max 57.0 TT / 50.0 FF, 0 >80 (265/131 >20), intra 45.3/41.1, insertion 7213->5834 TT, tap skew 15.0, max slew 121 (4w alone 75.0/63.7 = thin margin; 4w+wide2 64.3/57.0). PROPOSAL (plan/flow delta, COORD): QC die clock profile = --ndr 4w --wide-levels 6 (8W top-level clock tracks on M8/M9; their RC is die_clock's extrapolation -> must be checked on the routed tree with the NDR actually applied, see the wire-R line above). 20 ps target for root-crossing pairs needs a shallower/mesh top (open). Opt-in --pair-cost count --count-levels N on claude/clock-seam-1025@85da045a6d (main + report fix c3942e3bb5; 22 tests PASS) NOT recommended (intra 45->33 but >20 pairs 265->545). Evidence epyc1:/srv/opentallas-scratch2/claude/clock-seam-1025/{SUMMARY.txt,nw6,base,seam_base_vs_nw6.png} (render viewed by sub-lane: worst pairs along root x~16.4 mm / level-2 y~13.1 mm cuts through the central band; all <=57 with nw6).
 2026-10-25 20:18 PDT TYPE-REDUCE-2/KVQC: no QC plan change (path die). claude/type-reduce2-qc-1025@4135cb874 = census only: QC 83 items (diff-logic 29, ft-population 23, glue-by-position 16, pin-positions 8, edge 5, outline 2); su_lane_w 7 tables->1 would give 83->77 but lane1 moves 425 um (>405) and ports need a superset -- recorded, not proposed for path.
 2026-10-25 20:19 PDT GEOM-REVIEW-9 -> PATH-QC: FAIL rows need a successor or a withdraw: 1067a7a4404d(qfd_dv_s8x_prog__s6) 9a237c656129(qfd_tile_nk_a0c). Withdraw = append-only `ssh epyc1 python3 /home/ubuntu/OpenTallas/tools/autopilot/enqueue.py --mode withdraw` with the same die/type/kit/src/goal and the reason + successor in --geom-ref; a successor row is the new kit's own REQ/enqueue.
+
+## PARKED PATH-QC lead (19:22 restart) 2026-10-25 20:43 PDT
+Context: QC plan 441d1401 is FROZEN (owner 20:22). Path parts may route to sign-off once their GEOM conditions are met; interface changes go only through the PLAN-DELTA batch.
+Done:
+- (1) Reset/START stand-ins claude/path-qc-rst-1025@70eccdf710 MERGED (ROOT-MERGE-10, main 190ebb428e). 441d die top: 15014 connections, 0 missing. DIE-FT runs QC die STA on its own equivalent stand-ins (die-ft-standin-1830@5746fd241e, epyc1 die-ft-1830/qc_sta); DIE-PROTO collects.
+- (4) pgstate 625a908bef MERGED. vmr_s6h SUPERSEDED (resolved.tsv).
+- SRAMIF2: run_kit.sh autopilot runner written into both F kits (fail-closed on S6_GRT_GATE). Kit fixes: prog nickname; stale R0 mscts_corr dropped. Scripts + census summaries in claude/path-qc-sramif2-1025@fb0818185c.
+- SRAMIF2 data deleted: a1p/a1m (both kits), prog_a1f_wi.
+- CK 177.132 candidate: epyc1 path-qc/plan_ck177 (sha256 ebb30e72, G0C PASS).
+SRAMIF2 state (GEOM [PATH-QC-SRAMIF2-F-POSTCTS]):
+- F base: cond 1 FAIL. Macro/IF pairs 56-74 ps vs 20; ~6k hold buffers; btab S6 FAIL. Cond 3/4 PASS.
+- What-if (macro leaf off W tap): 48-60. GEOM verdict (b'): one band tap per row + twd1 banded.
+- (b') step 1 trial (intel2 prog_a1f_bt, kept): macro mean +-11, but twd1->wd 103/120 (twd1 unbanded), insertion 665 (equal-stage L_max 436).
+- NEXT: band twd1 (btab u_twpd) by placement region; explicit in-band branch; end band trunks at the W-column channel point. Then census -> REQ. If still >20: GEOM RTL step.
+- Sign-off also needs PENDING-DELTA D-QC-SU1713: frozen 441d holds the R0 su_c cores; the ck177 candidate is the delta.
+- intel1 btab_a1f and intel2 prog_a1f/prog_a1f_bt are trials, NOT enqueued.
+N59 state:
+- GEOM 19:48: (1b) rejected -> (1c) E-face dr_o window move = PENDING-DELTA D-QC-N59-1C (native59 + coll_ftc). (2)-(4) PASS-COND. P3b kit not built.
+- Codex whole-kit LEC lec_declfixed = KEEP FAIL: 3566 kept bits merged + 118 differ, all replica cones. Fix keep on parameterised replicas in the synth kit, then re-LEC.
+- Padding step claude/path-qc-n59pad-1025@dbbdefd8f1: pads sub-taps to a common level; pair skew 103/121 -> 62/66 TT, 52/61 FF (passes 80).
+- BLOCKER: N59 trunk insertion 390 TT / 320 FF vs plan budget 250/202.5. Needs a structural trunk fix (fewer/shorter hops) or a budget restatement via PLAN-DELTA. Evidence epyc1 path-qc-n59p/p5pad.
+Live jobs: none of mine (Codex LEC finished). Sub-agents: none.
