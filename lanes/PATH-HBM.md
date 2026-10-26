@@ -504,3 +504,6 @@ Claude reset. Source97c5614e0 and child adapterdbba0e8676 parked; no live jobs, 
   - (5) BIND: 24 undeclared outputs + vm_status4 wiring gap; _rc master kit/GEOM/LEC; strict die_port_bind.
   - (6) TOK-HBM price reply.
 - OWNER?: none. COORD?: see the 06:5x line in COORD-REVIEW-QUEUE.
+
+## CODEX notes 2026-10-26 07:42 PDT
+CODEX took over HBM/KV collection + D-HBM-B1 VM status wiring on codex/hbm-bind-1026@bb3c530e4. COLLECTED EXP LEC EQUIVALENT 41418/41418 (clean git 1a20967d65, 3825s); HC first EQUIVALENT 27349/27349 (4409s), subtree EQUIVALENT 18912/18912 (1749s), but HC receipts have ModuleNotFoundError provenance gap, no release claim. HC pair/TOPK/Q3/ROOT proofs still live; b1n6 master-plan still live. VM status root cause: B2 uses static host ingress/targets instead of ot_hgi_cp_die, leaving aggregate vm_status4.vmstat19 unread (individual fault bits already reach hleaf). COORD approved append to obs_C 125->144 bits in D-HBM-B1: previous bits unchanged, status at125..143, host ABI same, 0 cycles. Actual obs_leaf19-bit walking bench PASS+drop-top-bit mutant CAUGHT; replay native top in epyc1:/srv/opentallas-scratch2/claude/codex-hbm-bind-1026/top_vmstat. Root observer core/pins rebuild remains required; no route launched.

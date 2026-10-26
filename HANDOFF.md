@@ -1152,3 +1152,5 @@ CODEX: 2026-10-26 04:25 PDT HANDOFF TO CLAUDE. All parents/children told PARK; l
 2026-10-26 07:27 PDT FLOW-TAG-17 parked: main 9dcc59f349 (9 approved merges, gates baseline); per-die tags flow-20261025-b-qc/-s81/-head cut; -kv waits on re-grade after the missed hold step (false REGRESSION = canary recipe bug, fix READY 09b685d39); -hbm waits on HBM canary; flow stack staged claude/flowtag17-flow2-1026@f4b8580e0d; URGENT mscts_core PG hole (s8b sign-off invalid). lanes/FLOW.md PARKED.
 
 2026-10-26 07:38 PDT CODEX: FLOW combined KV canary hold-step+runtime packaging fix READY328b71b81; native HBM SU PR0/PR1 positives collected, mutants still live; DS L14 build progressing.
+
+CODEX: 2026-10-26 07:42 PDT HBM VM status orphan fixed in D-HBM-B1 candidate bb3c530e4: obs_C125->144,0cycles,actual leaf bench PASS+mutantCAUGHT; EXP LEC41418/41418 EQ,HCfirst27349/27349 EQ; inherited remaining proofs preserved.
