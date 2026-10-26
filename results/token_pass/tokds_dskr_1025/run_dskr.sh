@@ -12,6 +12,7 @@ export OT_S81_SELECTED_SOURCE_ROOT=$W/src OT_SVC_ALLQ=1 OT_XS_FRAME_SCHEDULE_DIR
 T=$W/veh/tree_fc31; F=$W/fix/L0; C=$W/veh/cuts; B=$W/builds; O=$W/runs; DIE=$T/results/arch/s81_dv_1016/bind9/die.v.gz
 PF=$O/prog_full; P=$O/prog_L0_su; REC=$O/entry_mechanism_dskr.json; EJ=$O/entry_jobs; EP=$O/entry_replay
 PROOF=$EP/entry_replay.json; mkdir -p $O
+mut_in() { [ $1 = cut_0S ] && echo corrupt:xrW_0S_l0:91; [ $1 = cut_0N ] && echo corrupt:xrW_0N_l0:91; [ $1 = cut_7 ] && echo corrupt:xrE_6S_l0:91:14; true; }
 case $STEP in
 fs)
   python3 - $R/results/rtl/s81_layer_tput_1018/fixtures/L0.sha256.json $F <<'PY' || exit 2
@@ -61,7 +62,7 @@ cuts)
     echo "$CUT $2 t0 $T0: $(grep -h '^DV_SLICE ' $RUN/run.log) | $(tail -1 $R2/check.log | cut -c1-300)"
   }
   for CUT in "$@"; do
-    case $CUT in cut_0S) MI=corrupt:xrW_0S_l0:91;; cut_0N) MI=corrupt:xrW_0N_l0:91;; cut_7) MI=corrupt:xrE_6S_l0:91:14;; esac
+    MI=$(mut_in $CUT)
     [ -x $B/out_$CUT/obj/sim ] || { echo "$CUT NOT RUN: no binary"; continue; }
     replay $CUT base "" 1; replay $CUT mut_in $MI 1; replay $CUT mut_ex expect-shift:NX:1 0 base
   done; echo REPLAY_DONE;;
