@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.infra_connectivity.v1",
+  "database": "/work/mesh_before.odb",
+  "verdict": "CONNECTED",
+  "nets": {
+    "ck_mesh": {
+      "verdict": "CONNECTED",
+      "route_objects": 64,
+      "terminals": 8,
+      "physical_3d_components": 1,
+      "errors": []
+    },
+    "VDD": {
+      "verdict": "CONNECTED",
+      "route_objects": 5,
+      "terminals": 9,
+      "physical_3d_components": 1,
+      "errors": []
+    },
+    "VSS": {
+      "verdict": "CONNECTED",
+      "route_objects": 5,
+      "terminals": 9,
+      "physical_3d_components": 1,
+      "errors": []
+    }
+  },
+  "failures": {},
+  "cross_net_overlaps": [],
+  "freeze_qualified": false,
+  "note": "Actual routing-layer metal/via and transformed terminal geometry only; no DRC/timing/IR qualification"
+}

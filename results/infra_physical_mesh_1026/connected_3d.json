@@ -1,0 +1,25 @@
+{
+  "nets": {
+    "ck_mesh": {
+      "physical_3d_components": 1,
+      "terminals": 8,
+      "route_objects": 64,
+      "verdict": "CONNECTED"
+    },
+    "VDD": {
+      "physical_3d_components": 1,
+      "terminals": 9,
+      "route_objects": 5,
+      "verdict": "CONNECTED"
+    },
+    "VSS": {
+      "physical_3d_components": 1,
+      "terminals": 9,
+      "route_objects": 5,
+      "verdict": "CONNECTED"
+    }
+  },
+  "same_layer_cross_net_overlaps": 0,
+  "verdict": "CONNECTED_NO_CROSS_NET_OVERLAPS",
+  "scope": "geometric routing/via/terminal connectivity; no extraction/timing/IR/DRC signoff"
+}

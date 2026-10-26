@@ -1,0 +1,11 @@
+ASAP7 actual connected 2x2 clock mesh physical vehicle.
+
+Copy committed tools/die_plan/infra_replay.py beside these files for fingerprint verification. Run generate.py, then (through ot-run) run_build.sh and run_route.sh with the directory mounted at /work in openroad/orfs:latest. build.tcl reads the native ASAP7 technology/stdcell LEF and RVT TT libraries; source has actual mesh cross vias, pin stacks and PG connections. route.tcl performs GRT50 and true detailed routing of rootclk and four stub outputs.
+
+Run infra_connectivity.py --db /work/mesh_routed.odb --nets ck_mesh VDD VSS clk o0 o1 o2 o3 --out /work/routed_connected_generic.json under OpenROAD Python. It uses actual transformed terminal geometry and routing-layer metal/via graphs. check_preserved.py compares actual source/final mesh+PG objects and creates a missing-VIA89 mutant. The checker rejects that mutant with four disconnected physical components.
+
+The first DRT trial failed on undersized/off-grid M6 port landing windows; route_v1_pinaccess_fail.log is preserved. The corrected pins use canonical M6 track positions and 160nm landing windows. Setup controls also preserve duplicate-block and default-negative-track-offset failures; build.tcl uses canonical platform track construction.
+
+Final actual result: GRT0, DRC0, five regular routed nets, 238um ordinary wiring, 48 ordinary vias; source mesh60vias and PG4vias unchanged. No timing, skew, IR or die freeze claim.
+
+Shared production tools: stage tools/die_plan/{infra_replay.py,infra_connectivity.py,infra_mesh_connect.py,infra_clock_route.py} beside this fixture. run_generic_connected.sh builds a bare-straps ODB, lands actual native intersection vias and transformed pin-access stacks with infra_mesh_connect.py, then runs infra_clock_route.py GRT50+DRT+actual3D checks. This passed unit1067656. The generic center-based pin access adds68nativevias+6shortfeeders; the original hand fixture used60vias at manually selected inside-pin points. They are separate physical candidates; measure RC on the exact selected result. Width inference preserves the exact generic result, unit1257178. Interval-index connectivity matches brute-force exact contact enumeration on300rectangles/1254contacts. No timing/skew/IR/freeze claim.

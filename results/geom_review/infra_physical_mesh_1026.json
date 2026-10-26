@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "small ASAP7 physical infrastructure mechanism only",
+  "image": "results/infra_physical_mesh_1026/review.png",
+  "findings": [
+    "Four real driver/stub pairs; open 60um mesh channels and sub405um branches.",
+    "Native M1 pin-access stacks join actual M8/M9 clock straps; real M1/M2 PG rails/trunks remain separate.",
+    "Ports use canonical track locations after recorded first pin-access failure.",
+    "Physical route may proceed as mechanism probe; timing, CPPR skew and IR remain separate."
+  ],
+  "reviewed_before_grt": true
+}
