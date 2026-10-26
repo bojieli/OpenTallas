@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "core PG source prototype only",
+ "image": "core100_review.png",
+ "findings": [
+  "Viewed unchanged continuous M8/M9 grid and100um C4 source pattern;64 sources in864um core coupon.",
+  "100um is the lower published C4 bound; source count and native IR must be reported, no adopted plan.",
+  "No PHY source/rate/power change and no new routing metal; clock corridor geometry remains that of the130um source candidate."
+ ]
+}

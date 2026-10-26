@@ -1,0 +1,21 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "PG-only native IR prototype, no plan adoption or vendor electrical qualification",
+ "image": "ucie_field50_review.png",
+ "source": "https://hc2023.hotchips.org/assets/program/tutorials/ucie/Electrical%20Form%20Factor%20and%20Compliance.pdf",
+ "original_sites": 240,
+ "added_sites": 74,
+ "counts": {
+  "POWER": 79,
+  "GND": 79,
+  "SIGNAL": 156
+ },
+ "minimum_spacing_um": 44.99999985251608,
+ "findings": [
+  "Viewed TX/RX groups, control lanes and original PG positions. Rigid16-column template at45um keeps every published signal/control/ground/supply row and column.",
+  "Only74 previously vacant hexagonal sites gain39 supply and35 ground; no signal bump moves or field growth.",
+  "All314 sites fit777.6um square with22.5um edge guard. Published16-column optimum is25-37um, so45um is explicitly a prototype assumption.",
+  "Same32GT/s,2.4576W PHY power and0.7V; native PG connectivity, source census and35mV IR still required.",
+  "Root determined SER.SIG_GND applies to boardSerDes; every published UCIe ground is retained and35 added. Not a new UCIe electrical claim."
+ ]
+}

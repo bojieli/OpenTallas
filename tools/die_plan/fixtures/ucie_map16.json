@@ -1,0 +1,1214 @@
+{
+ "source": "https://hc2023.hotchips.org/assets/program/tutorials/ucie/Electrical%20Form%20Factor%20and%20Compliance.pdf",
+ "pdf_page": 23,
+ "slide": 74,
+ "map_columns": 16,
+ "map_rows": 30,
+ "original_pitch_recommendation_um": [
+  25,
+  37
+ ],
+ "note": "Functional bump names and row/column coordinates from the published16-columntemplate.45um instantiation is a prototype assumption outside the shoreline optimum; no vendor electricalqualification.",
+ "points": [
+  {
+   "row": 0,
+   "col": 0,
+   "name": "vccio"
+  },
+  {
+   "row": 0,
+   "col": 2,
+   "name": "vccio"
+  },
+  {
+   "row": 0,
+   "col": 4,
+   "name": "vccio"
+  },
+  {
+   "row": 0,
+   "col": 6,
+   "name": "vccio"
+  },
+  {
+   "row": 0,
+   "col": 8,
+   "name": "vccio"
+  },
+  {
+   "row": 0,
+   "col": 10,
+   "name": "vccio"
+  },
+  {
+   "row": 0,
+   "col": 12,
+   "name": "vccio"
+  },
+  {
+   "row": 0,
+   "col": 14,
+   "name": "vccio"
+  },
+  {
+   "row": 1,
+   "col": 1,
+   "name": "vccio"
+  },
+  {
+   "row": 1,
+   "col": 3,
+   "name": "vccio"
+  },
+  {
+   "row": 1,
+   "col": 5,
+   "name": "vccio"
+  },
+  {
+   "row": 1,
+   "col": 7,
+   "name": "vccio"
+  },
+  {
+   "row": 1,
+   "col": 9,
+   "name": "vccio"
+  },
+  {
+   "row": 1,
+   "col": 11,
+   "name": "vccio"
+  },
+  {
+   "row": 1,
+   "col": 13,
+   "name": "vccio"
+  },
+  {
+   "row": 1,
+   "col": 15,
+   "name": "vccio"
+  },
+  {
+   "row": 2,
+   "col": 0,
+   "name": "txdataRD0"
+  },
+  {
+   "row": 2,
+   "col": 2,
+   "name": "txdata11"
+  },
+  {
+   "row": 2,
+   "col": 4,
+   "name": "txdata14"
+  },
+  {
+   "row": 2,
+   "col": 6,
+   "name": "txdata29"
+  },
+  {
+   "row": 2,
+   "col": 8,
+   "name": "vss"
+  },
+  {
+   "row": 2,
+   "col": 10,
+   "name": "txdata35"
+  },
+  {
+   "row": 2,
+   "col": 12,
+   "name": "txdata50"
+  },
+  {
+   "row": 2,
+   "col": 14,
+   "name": "txdata54"
+  },
+  {
+   "row": 3,
+   "col": 1,
+   "name": "txdata9"
+  },
+  {
+   "row": 3,
+   "col": 3,
+   "name": "txdata13"
+  },
+  {
+   "row": 3,
+   "col": 5,
+   "name": "txdata28"
+  },
+  {
+   "row": 3,
+   "col": 7,
+   "name": "txdataRD1"
+  },
+  {
+   "row": 3,
+   "col": 9,
+   "name": "txdata34"
+  },
+  {
+   "row": 3,
+   "col": 11,
+   "name": "txdata49"
+  },
+  {
+   "row": 3,
+   "col": 13,
+   "name": "txdata52"
+  },
+  {
+   "row": 3,
+   "col": 15,
+   "name": "vss"
+  },
+  {
+   "row": 4,
+   "col": 0,
+   "name": "vss"
+  },
+  {
+   "row": 4,
+   "col": 2,
+   "name": "txdata10"
+  },
+  {
+   "row": 4,
+   "col": 4,
+   "name": "txdata15"
+  },
+  {
+   "row": 4,
+   "col": 6,
+   "name": "txdata30"
+  },
+  {
+   "row": 4,
+   "col": 8,
+   "name": "txdataRD2"
+  },
+  {
+   "row": 4,
+   "col": 10,
+   "name": "txdata36"
+  },
+  {
+   "row": 4,
+   "col": 12,
+   "name": "txdata51"
+  },
+  {
+   "row": 4,
+   "col": 14,
+   "name": "txdata55"
+  },
+  {
+   "row": 5,
+   "col": 1,
+   "name": "txdata8"
+  },
+  {
+   "row": 5,
+   "col": 3,
+   "name": "txdata12"
+  },
+  {
+   "row": 5,
+   "col": 5,
+   "name": "txdata27"
+  },
+  {
+   "row": 5,
+   "col": 7,
+   "name": "vss"
+  },
+  {
+   "row": 5,
+   "col": 9,
+   "name": "txdata33"
+  },
+  {
+   "row": 5,
+   "col": 11,
+   "name": "txdata48"
+  },
+  {
+   "row": 5,
+   "col": 13,
+   "name": "txdata53"
+  },
+  {
+   "row": 5,
+   "col": 15,
+   "name": "txdataRD3"
+  },
+  {
+   "row": 6,
+   "col": 0,
+   "name": "txdata0"
+  },
+  {
+   "row": 6,
+   "col": 2,
+   "name": "vss"
+  },
+  {
+   "row": 6,
+   "col": 4,
+   "name": "txdata16"
+  },
+  {
+   "row": 6,
+   "col": 6,
+   "name": "txdata31"
+  },
+  {
+   "row": 6,
+   "col": 8,
+   "name": "vss"
+  },
+  {
+   "row": 6,
+   "col": 10,
+   "name": "txdata37"
+  },
+  {
+   "row": 6,
+   "col": 12,
+   "name": "vss"
+  },
+  {
+   "row": 6,
+   "col": 14,
+   "name": "txdata61"
+  },
+  {
+   "row": 7,
+   "col": 1,
+   "name": "txdata2"
+  },
+  {
+   "row": 7,
+   "col": 3,
+   "name": "txdata17"
+  },
+  {
+   "row": 7,
+   "col": 5,
+   "name": "txdata26"
+  },
+  {
+   "row": 7,
+   "col": 7,
+   "name": "txckRD"
+  },
+  {
+   "row": 7,
+   "col": 9,
+   "name": "txdata32"
+  },
+  {
+   "row": 7,
+   "col": 11,
+   "name": "txdata47"
+  },
+  {
+   "row": 7,
+   "col": 13,
+   "name": "txdata56"
+  },
+  {
+   "row": 7,
+   "col": 15,
+   "name": "txdata63"
+  },
+  {
+   "row": 8,
+   "col": 0,
+   "name": "vss"
+  },
+  {
+   "row": 8,
+   "col": 2,
+   "name": "txdata7"
+  },
+  {
+   "row": 8,
+   "col": 4,
+   "name": "vss"
+  },
+  {
+   "row": 8,
+   "col": 6,
+   "name": "txdata25"
+  },
+  {
+   "row": 8,
+   "col": 8,
+   "name": "txvldRD"
+  },
+  {
+   "row": 8,
+   "col": 10,
+   "name": "vss"
+  },
+  {
+   "row": 8,
+   "col": 12,
+   "name": "txdata46"
+  },
+  {
+   "row": 8,
+   "col": 14,
+   "name": "txdata60"
+  },
+  {
+   "row": 9,
+   "col": 1,
+   "name": "txdata3"
+  },
+  {
+   "row": 9,
+   "col": 3,
+   "name": "txdata18"
+  },
+  {
+   "row": 9,
+   "col": 5,
+   "name": "txdata23"
+  },
+  {
+   "row": 9,
+   "col": 7,
+   "name": "txckn"
+  },
+  {
+   "row": 9,
+   "col": 9,
+   "name": "txdata38"
+  },
+  {
+   "row": 9,
+   "col": 11,
+   "name": "txdata43"
+  },
+  {
+   "row": 9,
+   "col": 13,
+   "name": "txdata57"
+  },
+  {
+   "row": 9,
+   "col": 15,
+   "name": "vss"
+  },
+  {
+   "row": 10,
+   "col": 0,
+   "name": "txdata1"
+  },
+  {
+   "row": 10,
+   "col": 2,
+   "name": "txdata6"
+  },
+  {
+   "row": 10,
+   "col": 4,
+   "name": "txdata20"
+  },
+  {
+   "row": 10,
+   "col": 6,
+   "name": "vss"
+  },
+  {
+   "row": 10,
+   "col": 8,
+   "name": "txvld"
+  },
+  {
+   "row": 10,
+   "col": 10,
+   "name": "txdata40"
+  },
+  {
+   "row": 10,
+   "col": 12,
+   "name": "txdata45"
+  },
+  {
+   "row": 10,
+   "col": 14,
+   "name": "txdata59"
+  },
+  {
+   "row": 11,
+   "col": 1,
+   "name": "txdata4"
+  },
+  {
+   "row": 11,
+   "col": 3,
+   "name": "txdata19"
+  },
+  {
+   "row": 11,
+   "col": 5,
+   "name": "txdata22"
+  },
+  {
+   "row": 11,
+   "col": 7,
+   "name": "txckp"
+  },
+  {
+   "row": 11,
+   "col": 9,
+   "name": "txdata39"
+  },
+  {
+   "row": 11,
+   "col": 11,
+   "name": "txdata42"
+  },
+  {
+   "row": 11,
+   "col": 13,
+   "name": "txdata58"
+  },
+  {
+   "row": 11,
+   "col": 15,
+   "name": "txdata62"
+  },
+  {
+   "row": 12,
+   "col": 0,
+   "name": "vss"
+  },
+  {
+   "row": 12,
+   "col": 2,
+   "name": "txdata5"
+  },
+  {
+   "row": 12,
+   "col": 4,
+   "name": "txdata21"
+  },
+  {
+   "row": 12,
+   "col": 6,
+   "name": "txdata24"
+  },
+  {
+   "row": 12,
+   "col": 8,
+   "name": "txtrk"
+  },
+  {
+   "row": 12,
+   "col": 10,
+   "name": "txdata41"
+  },
+  {
+   "row": 12,
+   "col": 12,
+   "name": "txdata44"
+  },
+  {
+   "row": 12,
+   "col": 14,
+   "name": "vss"
+  },
+  {
+   "row": 13,
+   "col": 1,
+   "name": "vccio"
+  },
+  {
+   "row": 13,
+   "col": 3,
+   "name": "vccio"
+  },
+  {
+   "row": 13,
+   "col": 5,
+   "name": "vccio"
+  },
+  {
+   "row": 13,
+   "col": 7,
+   "name": "vccio"
+  },
+  {
+   "row": 13,
+   "col": 9,
+   "name": "vccio"
+  },
+  {
+   "row": 13,
+   "col": 11,
+   "name": "vccio"
+  },
+  {
+   "row": 13,
+   "col": 13,
+   "name": "vccio"
+  },
+  {
+   "row": 13,
+   "col": 15,
+   "name": "vccio"
+  },
+  {
+   "row": 14,
+   "col": 0,
+   "name": "vccfwdio"
+  },
+  {
+   "row": 14,
+   "col": 2,
+   "name": "vccfwdio"
+  },
+  {
+   "row": 14,
+   "col": 4,
+   "name": "vccfwdio"
+  },
+  {
+   "row": 14,
+   "col": 6,
+   "name": "vccfwdio"
+  },
+  {
+   "row": 14,
+   "col": 8,
+   "name": "vccfwdio"
+  },
+  {
+   "row": 14,
+   "col": 10,
+   "name": "vccfwdio"
+  },
+  {
+   "row": 14,
+   "col": 12,
+   "name": "vccfwdio"
+  },
+  {
+   "row": 14,
+   "col": 14,
+   "name": "vccfwdio"
+  },
+  {
+   "row": 15,
+   "col": 1,
+   "name": "vss"
+  },
+  {
+   "row": 15,
+   "col": 3,
+   "name": "rxdata44"
+  },
+  {
+   "row": 15,
+   "col": 5,
+   "name": "rxdata41"
+  },
+  {
+   "row": 15,
+   "col": 7,
+   "name": "rxtrk"
+  },
+  {
+   "row": 15,
+   "col": 9,
+   "name": "rxdata24"
+  },
+  {
+   "row": 15,
+   "col": 11,
+   "name": "rxdata21"
+  },
+  {
+   "row": 15,
+   "col": 13,
+   "name": "rxdata5"
+  },
+  {
+   "row": 15,
+   "col": 15,
+   "name": "vss"
+  },
+  {
+   "row": 16,
+   "col": 0,
+   "name": "rxdata62"
+  },
+  {
+   "row": 16,
+   "col": 2,
+   "name": "rxdata58"
+  },
+  {
+   "row": 16,
+   "col": 4,
+   "name": "rxdata42"
+  },
+  {
+   "row": 16,
+   "col": 6,
+   "name": "rxdata39"
+  },
+  {
+   "row": 16,
+   "col": 8,
+   "name": "rxckp"
+  },
+  {
+   "row": 16,
+   "col": 10,
+   "name": "rxdata22"
+  },
+  {
+   "row": 16,
+   "col": 12,
+   "name": "rxdata19"
+  },
+  {
+   "row": 16,
+   "col": 14,
+   "name": "rxdata4"
+  },
+  {
+   "row": 17,
+   "col": 1,
+   "name": "rxdata59"
+  },
+  {
+   "row": 17,
+   "col": 3,
+   "name": "rxdata45"
+  },
+  {
+   "row": 17,
+   "col": 5,
+   "name": "rxdata40"
+  },
+  {
+   "row": 17,
+   "col": 7,
+   "name": "rxvld"
+  },
+  {
+   "row": 17,
+   "col": 9,
+   "name": "vss"
+  },
+  {
+   "row": 17,
+   "col": 11,
+   "name": "rxdata20"
+  },
+  {
+   "row": 17,
+   "col": 13,
+   "name": "rxdata6"
+  },
+  {
+   "row": 17,
+   "col": 15,
+   "name": "rxdata1"
+  },
+  {
+   "row": 18,
+   "col": 0,
+   "name": "vss"
+  },
+  {
+   "row": 18,
+   "col": 2,
+   "name": "rxdata57"
+  },
+  {
+   "row": 18,
+   "col": 4,
+   "name": "rxdata43"
+  },
+  {
+   "row": 18,
+   "col": 6,
+   "name": "rxdata38"
+  },
+  {
+   "row": 18,
+   "col": 8,
+   "name": "rxckn"
+  },
+  {
+   "row": 18,
+   "col": 10,
+   "name": "rxdata23"
+  },
+  {
+   "row": 18,
+   "col": 12,
+   "name": "rxdata18"
+  },
+  {
+   "row": 18,
+   "col": 14,
+   "name": "rxdata3"
+  },
+  {
+   "row": 19,
+   "col": 1,
+   "name": "rxdata60"
+  },
+  {
+   "row": 19,
+   "col": 3,
+   "name": "rxdata46"
+  },
+  {
+   "row": 19,
+   "col": 5,
+   "name": "vss"
+  },
+  {
+   "row": 19,
+   "col": 7,
+   "name": "rxvldRD"
+  },
+  {
+   "row": 19,
+   "col": 9,
+   "name": "rxdata25"
+  },
+  {
+   "row": 19,
+   "col": 11,
+   "name": "vss"
+  },
+  {
+   "row": 19,
+   "col": 13,
+   "name": "rxdata7"
+  },
+  {
+   "row": 19,
+   "col": 15,
+   "name": "vss"
+  },
+  {
+   "row": 20,
+   "col": 0,
+   "name": "rxdata63"
+  },
+  {
+   "row": 20,
+   "col": 2,
+   "name": "rxdata56"
+  },
+  {
+   "row": 20,
+   "col": 4,
+   "name": "rxdata47"
+  },
+  {
+   "row": 20,
+   "col": 6,
+   "name": "rxdata32"
+  },
+  {
+   "row": 20,
+   "col": 8,
+   "name": "rxckRD"
+  },
+  {
+   "row": 20,
+   "col": 10,
+   "name": "rxdata26"
+  },
+  {
+   "row": 20,
+   "col": 12,
+   "name": "rxdata17"
+  },
+  {
+   "row": 20,
+   "col": 14,
+   "name": "rxdata2"
+  },
+  {
+   "row": 21,
+   "col": 1,
+   "name": "rxdata61"
+  },
+  {
+   "row": 21,
+   "col": 3,
+   "name": "vss"
+  },
+  {
+   "row": 21,
+   "col": 5,
+   "name": "rxdata37"
+  },
+  {
+   "row": 21,
+   "col": 7,
+   "name": "vss"
+  },
+  {
+   "row": 21,
+   "col": 9,
+   "name": "rxdata31"
+  },
+  {
+   "row": 21,
+   "col": 11,
+   "name": "rxdata16"
+  },
+  {
+   "row": 21,
+   "col": 13,
+   "name": "vss"
+  },
+  {
+   "row": 21,
+   "col": 15,
+   "name": "rxdata0"
+  },
+  {
+   "row": 22,
+   "col": 0,
+   "name": "rxdataRD3"
+  },
+  {
+   "row": 22,
+   "col": 2,
+   "name": "rxdata53"
+  },
+  {
+   "row": 22,
+   "col": 4,
+   "name": "rxdata48"
+  },
+  {
+   "row": 22,
+   "col": 6,
+   "name": "rxdata33"
+  },
+  {
+   "row": 22,
+   "col": 8,
+   "name": "vss"
+  },
+  {
+   "row": 22,
+   "col": 10,
+   "name": "rxdata27"
+  },
+  {
+   "row": 22,
+   "col": 12,
+   "name": "rxdata12"
+  },
+  {
+   "row": 22,
+   "col": 14,
+   "name": "rxdata8"
+  },
+  {
+   "row": 23,
+   "col": 1,
+   "name": "rxdata55"
+  },
+  {
+   "row": 23,
+   "col": 3,
+   "name": "rxdata51"
+  },
+  {
+   "row": 23,
+   "col": 5,
+   "name": "rxdata36"
+  },
+  {
+   "row": 23,
+   "col": 7,
+   "name": "rxdataRD2"
+  },
+  {
+   "row": 23,
+   "col": 9,
+   "name": "rxdata30"
+  },
+  {
+   "row": 23,
+   "col": 11,
+   "name": "rxdata15"
+  },
+  {
+   "row": 23,
+   "col": 13,
+   "name": "rxdata10"
+  },
+  {
+   "row": 23,
+   "col": 15,
+   "name": "vss"
+  },
+  {
+   "row": 24,
+   "col": 0,
+   "name": "vss"
+  },
+  {
+   "row": 24,
+   "col": 2,
+   "name": "rxdata52"
+  },
+  {
+   "row": 24,
+   "col": 4,
+   "name": "rxdata49"
+  },
+  {
+   "row": 24,
+   "col": 6,
+   "name": "rxdata34"
+  },
+  {
+   "row": 24,
+   "col": 8,
+   "name": "rxdataRD1"
+  },
+  {
+   "row": 24,
+   "col": 10,
+   "name": "rxdata28"
+  },
+  {
+   "row": 24,
+   "col": 12,
+   "name": "rxdata13"
+  },
+  {
+   "row": 24,
+   "col": 14,
+   "name": "rxdata9"
+  },
+  {
+   "row": 25,
+   "col": 1,
+   "name": "rxdata54"
+  },
+  {
+   "row": 25,
+   "col": 3,
+   "name": "rxdata50"
+  },
+  {
+   "row": 25,
+   "col": 5,
+   "name": "rxdata35"
+  },
+  {
+   "row": 25,
+   "col": 7,
+   "name": "vss"
+  },
+  {
+   "row": 25,
+   "col": 9,
+   "name": "rxdata29"
+  },
+  {
+   "row": 25,
+   "col": 11,
+   "name": "rxdata14"
+  },
+  {
+   "row": 25,
+   "col": 13,
+   "name": "rxdata11"
+  },
+  {
+   "row": 25,
+   "col": 15,
+   "name": "rxdataRD0"
+  },
+  {
+   "row": 26,
+   "col": 0,
+   "name": "vss"
+  },
+  {
+   "row": 26,
+   "col": 2,
+   "name": "txdatasbRD"
+  },
+  {
+   "row": 26,
+   "col": 4,
+   "name": "txdatasb"
+  },
+  {
+   "row": 26,
+   "col": 6,
+   "name": "vss"
+  },
+  {
+   "row": 26,
+   "col": 8,
+   "name": "vss"
+  },
+  {
+   "row": 26,
+   "col": 10,
+   "name": "txcksb"
+  },
+  {
+   "row": 26,
+   "col": 12,
+   "name": "txcksbRD"
+  },
+  {
+   "row": 26,
+   "col": 14,
+   "name": "vss"
+  },
+  {
+   "row": 27,
+   "col": 1,
+   "name": "vss"
+  },
+  {
+   "row": 27,
+   "col": 3,
+   "name": "rxcksbRD"
+  },
+  {
+   "row": 27,
+   "col": 5,
+   "name": "rxcksb"
+  },
+  {
+   "row": 27,
+   "col": 7,
+   "name": "vss"
+  },
+  {
+   "row": 27,
+   "col": 9,
+   "name": "rxdatasb"
+  },
+  {
+   "row": 27,
+   "col": 11,
+   "name": "rxdatasbRD"
+  },
+  {
+   "row": 27,
+   "col": 13,
+   "name": "vss"
+  },
+  {
+   "row": 27,
+   "col": 15,
+   "name": "vss"
+  },
+  {
+   "row": 28,
+   "col": 0,
+   "name": "vss"
+  },
+  {
+   "row": 28,
+   "col": 2,
+   "name": "vss"
+  },
+  {
+   "row": 28,
+   "col": 4,
+   "name": "vccio"
+  },
+  {
+   "row": 28,
+   "col": 6,
+   "name": "vccio"
+  },
+  {
+   "row": 28,
+   "col": 8,
+   "name": "vccio"
+  },
+  {
+   "row": 28,
+   "col": 10,
+   "name": "vccio"
+  },
+  {
+   "row": 28,
+   "col": 12,
+   "name": "vss"
+  },
+  {
+   "row": 28,
+   "col": 14,
+   "name": "vss"
+  },
+  {
+   "row": 29,
+   "col": 1,
+   "name": "vss"
+  },
+  {
+   "row": 29,
+   "col": 3,
+   "name": "vss"
+  },
+  {
+   "row": 29,
+   "col": 5,
+   "name": "vccio"
+  },
+  {
+   "row": 29,
+   "col": 7,
+   "name": "vccio"
+  },
+  {
+   "row": 29,
+   "col": 9,
+   "name": "vccio"
+  },
+  {
+   "row": 29,
+   "col": 11,
+   "name": "vccio"
+  },
+  {
+   "row": 29,
+   "col": 13,
+   "name": "vss"
+  },
+  {
+   "row": 29,
+   "col": 15,
+   "name": "vss"
+  }
+ ]
+}

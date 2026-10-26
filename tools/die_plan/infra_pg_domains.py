@@ -97,7 +97,7 @@ foreach ot_mesh_name {VDD VSS} {
 puts "OT_PG_CORE_SEAM_STITCHES $ot_mesh_count"
 '''
 
-def make(P, plan_dir, pg, window, out, pitch):
+def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None):
     core_grid={g['layer']:g for g in pg['grid']}
     division=round(core_grid['M8']['pitch_um']/pitch)
     if division < 1 or division%2 != 1 or abs(core_grid['M8']['pitch_um']/division-pitch)>1e-6:
@@ -150,7 +150,19 @@ def make(P, plan_dir, pg, window, out, pitch):
     (out/'psm/pdn.tcl').write_text(pdn)
     (out/'psm/isolate.tcl').write_text(isolation_tcl(phy))
     (out/'psm/stitch.tcl').write_text(stitch_tcl(pg['grid']))
-    bumps=[('VDDPHY'if n=='VDD'and any(q['rect_um'][0]<=x-x0<=q['rect_um'][2]and q['rect_um'][1]<=y-y0<=q['rect_um'][3]for q in phy)else n,round(x-x0,3),round(y-y0,3))for n,x,y in I.pg_bumps(P,D.io_windows(P,plan_dir),pitch=pg['bump_pitch_um'])if x0<x<x1 and y0<y<y1]
+    io=D.io_windows(P,plan_dir)
+    all_bumps=I.pg_bumps(P,io,pitch=pg['bump_pitch_um'])
+    if phy_bumps is not None:
+        if len(phy)!=1:raise ValueError('explicit source-map prototype requires one complete PHY window')
+        seen=set()
+        for n,x,y in phy_bumps:
+            if n not in {'VDD','VSS'} or not all(math.isfinite(v)for v in (x,y)):raise ValueError('invalid PHY source')
+            if not any(q['rect_um'][0]<x-x0<q['rect_um'][2] and q['rect_um'][1]<y-y0<q['rect_um'][3]for q in phy):raise ValueError('PHY source outside its window')
+            key=round(x,6),round(y,6)
+            if key in seen:raise ValueError('duplicate PHY source site')
+            seen.add(key)
+        all_bumps=list(D.bump_grid(P,io,pitch=pg['bump_pitch_um']))+list(phy_bumps)
+    bumps=[('VDDPHY'if n=='VDD'and any(q['rect_um'][0]<=x-x0<=q['rect_um'][2]and q['rect_um'][1]<=y-y0<=q['rect_um'][3]for q in phy)else n,round(x-x0,3),round(y-y0,3))for n,x,y in all_bumps if x0<x<x1 and y0<y<y1]
     t=D.bumps_tcl(P,bumps).replace('foreach net_name {VDD VSS}','foreach net_name {VDD VSS VDDPHY}')
     # Legacy helper labels every secondary supply GROUND. Preserve true supply type.
     import re
@@ -165,10 +177,10 @@ def make(P, plan_dir, pg, window, out, pitch):
     (out/'psm/psm.tcl').write_text('\n'.join(t)+'\n');(out/'psm/tracks.tcl').write_text(D.coarse_tracks(P,.72))
     (out/'run_psm.sh').write_text(D.run_sh('psm',32,8,'/usr/bin/time -v openroad -no_init -threads 8 -exit /work/psm/psm.tcl > /work/psm/psm.log 2>&1'))
     os.chmod(out/'run_psm.sh',0o755)
-    meta=dict(window=window['window'],window_um=window['window_um'],die=die,bumps=bumps,load_blocks=len(blocks),power_w=round(sum(b[4]for b in blocks),6),phy_grid=phy_grid,subdivision=division,contacts='native per-domain macro PG grid',scope='separate PHY-local grid; original bump positions and load densities unchanged; open window boundaries; no plan adoption')
+    meta=dict(window=window['window'],window_um=window['window_um'],die=die,bumps=bumps,load_blocks=len(blocks),power_w=round(sum(b[4]for b in blocks),6),phy_grid=phy_grid,subdivision=division,contacts='native per-domain macro PG grid',explicit_phy_sources=phy_bumps is not None,scope='separate PHY-local grid; original bump positions and load densities unchanged; open window boundaries; no plan adoption')
     (out/'domains.json').write_text(json.dumps(meta,indent=1)+'\n');return meta
 
 def main():
-    a=argparse.ArgumentParser(description=__doc__);a.add_argument('plan');a.add_argument('--pg',required=True);a.add_argument('--window',required=True);a.add_argument('--out',required=True);a.add_argument('--phy-pitch',type=float,required=True);args=a.parse_args()
-    p=Path(args.plan);P=S.Plan(S.load(p),p);m=make(P,p.parent,json.loads(Path(args.pg).read_text()),json.loads(Path(args.window).read_text()),args.out,args.phy_pitch);print(json.dumps({k:v for k,v in m.items()if k not in {'bumps','die'}},indent=1))
+    a=argparse.ArgumentParser(description=__doc__);a.add_argument('plan');a.add_argument('--pg',required=True);a.add_argument('--window',required=True);a.add_argument('--out',required=True);a.add_argument('--phy-pitch',type=float,required=True);a.add_argument('--phy-bumps',help='explicit global PHY PG source-map JSON from ucIe_bump_field');args=a.parse_args()
+    p=Path(args.plan);P=S.Plan(S.load(p),p);m=make(P,p.parent,json.loads(Path(args.pg).read_text()),json.loads(Path(args.window).read_text()),args.out,args.phy_pitch,json.loads(Path(args.phy_bumps).read_text())['bumps'] if args.phy_bumps else None);print(json.dumps({k:v for k,v in m.items()if k not in {'bumps','die'}},indent=1))
 if __name__=='__main__':main()
