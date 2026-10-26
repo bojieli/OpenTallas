@@ -1,0 +1,594 @@
+{
+ "clock_output_nets": 92,
+ "clock_guides_by_layer": {
+  "M1": 2421,
+  "M2": 3073,
+  "M3": 1514,
+  "M4": 227,
+  "M5": 91
+ },
+ "nets_with_zero_M4_M5": [
+  "mp_core_Q0B0L0_out",
+  "mp_core_Q0B0L1_out",
+  "mp_core_Q0B0L2_out",
+  "mp_core_Q0B0L3_out",
+  "mp_core_Q0B1L0_out",
+  "mp_core_Q0B1L1_out",
+  "mp_core_Q0B1L2_out",
+  "mp_core_Q0B1L3_out",
+  "mp_core_Q0B2L0_out",
+  "mp_core_Q0B2L1_out",
+  "mp_core_Q0B2L2_out",
+  "mp_core_Q0B2L3_out",
+  "mp_core_Q0B3L0_out",
+  "mp_core_Q0B3L1_out",
+  "mp_core_Q0B3L2_out",
+  "mp_core_Q0B3L3_out",
+  "mp_core_Q1B0L0_out",
+  "mp_core_Q1B0L1_out",
+  "mp_core_Q1B0L2_out",
+  "mp_core_Q1B0L3_out",
+  "mp_core_Q1B1L0_out",
+  "mp_core_Q1B1L1_out",
+  "mp_core_Q1B1L2_out",
+  "mp_core_Q1B1L3_out",
+  "mp_core_Q1B2L0_out",
+  "mp_core_Q1B2L1_out",
+  "mp_core_Q1B2L2_out",
+  "mp_core_Q1B2L3_out",
+  "mp_core_Q1B3L0_out",
+  "mp_core_Q1B3L1_out",
+  "mp_core_Q1B3L2_out",
+  "mp_core_Q1B3L3_out",
+  "mp_core_Q2B0L0_out",
+  "mp_core_Q2B0L1_out",
+  "mp_core_Q2B0L2_out",
+  "mp_core_Q2B0L3_out",
+  "mp_core_Q2B1L0_out",
+  "mp_core_Q2B1L1_out",
+  "mp_core_Q2B1L2_out",
+  "mp_core_Q2B1L3_out",
+  "mp_core_Q2B2L0_out",
+  "mp_core_Q2B2L1_out",
+  "mp_core_Q2B2L2_out",
+  "mp_core_Q2B2L3_out",
+  "mp_core_Q2B3L0_out",
+  "mp_core_Q2B3L1_out",
+  "mp_core_Q2B3L2_out",
+  "mp_core_Q2B3L3_out",
+  "mp_core_Q3B0L0_out",
+  "mp_core_Q3B0L1_out",
+  "mp_core_Q3B0L2_out",
+  "mp_core_Q3B0L3_out",
+  "mp_core_Q3B1L0_out",
+  "mp_core_Q3B1L1_out",
+  "mp_core_Q3B1L2_out",
+  "mp_core_Q3B1L3_out",
+  "mp_core_Q3B2L0_out",
+  "mp_core_Q3B2L1_out",
+  "mp_core_Q3B2L2_out",
+  "mp_core_Q3B2L3_out",
+  "mp_core_Q3B3L0_out",
+  "mp_core_Q3B3L1_out",
+  "mp_core_Q3B3L2_out",
+  "mp_core_Q3B3L3_out"
+ ],
+ "per_net": {
+  "mp_core_M0_out": {
+   "M1": 2,
+   "M2": 2,
+   "M3": 2,
+   "M4": 6,
+   "M5": 2
+  },
+  "mp_core_M1_out": {
+   "M1": 2,
+   "M2": 2,
+   "M3": 2,
+   "M4": 6,
+   "M5": 2
+  },
+  "mp_core_M2_out": {
+   "M1": 2,
+   "M2": 2,
+   "M3": 2,
+   "M4": 6,
+   "M5": 2
+  },
+  "mp_core_M3_out": {
+   "M1": 2,
+   "M2": 2,
+   "M3": 2,
+   "M4": 6,
+   "M5": 2
+  },
+  "mp_core_Q0B0L0_out": {
+   "M1": 37,
+   "M2": 41,
+   "M3": 22
+  },
+  "mp_core_Q0B0L1_out": {
+   "M2": 62,
+   "M1": 42,
+   "M3": 21
+  },
+  "mp_core_Q0B0L2_out": {
+   "M1": 40,
+   "M2": 51,
+   "M3": 20
+  },
+  "mp_core_Q0B0L3_out": {
+   "M1": 44,
+   "M2": 65,
+   "M3": 32
+  },
+  "mp_core_Q0B0_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 7,
+   "M5": 3
+  },
+  "mp_core_Q0B1L0_out": {
+   "M2": 74,
+   "M1": 43,
+   "M3": 29
+  },
+  "mp_core_Q0B1L1_out": {
+   "M1": 34,
+   "M2": 36,
+   "M3": 21
+  },
+  "mp_core_Q0B1L2_out": {
+   "M1": 32,
+   "M2": 37,
+   "M3": 21
+  },
+  "mp_core_Q0B1L3_out": {
+   "M1": 32,
+   "M2": 36,
+   "M3": 22
+  },
+  "mp_core_Q0B1_out": {
+   "M1": 6,
+   "M2": 6,
+   "M3": 6,
+   "M4": 11,
+   "M5": 5
+  },
+  "mp_core_Q0B2L0_out": {
+   "M2": 39,
+   "M3": 22,
+   "M1": 31
+  },
+  "mp_core_Q0B2L1_out": {
+   "M1": 33,
+   "M2": 40,
+   "M3": 22
+  },
+  "mp_core_Q0B2L2_out": {
+   "M1": 34,
+   "M2": 37,
+   "M3": 21
+  },
+  "mp_core_Q0B2L3_out": {
+   "M1": 32,
+   "M2": 40,
+   "M3": 20
+  },
+  "mp_core_Q0B2_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 8,
+   "M5": 4
+  },
+  "mp_core_Q0B3L0_out": {
+   "M1": 32,
+   "M2": 39,
+   "M3": 20
+  },
+  "mp_core_Q0B3L1_out": {
+   "M1": 32,
+   "M2": 36,
+   "M3": 20
+  },
+  "mp_core_Q0B3L2_out": {
+   "M1": 30,
+   "M2": 36,
+   "M3": 19
+  },
+  "mp_core_Q0B3L3_out": {
+   "M1": 39,
+   "M2": 46,
+   "M3": 22
+  },
+  "mp_core_Q0B3_out": {
+   "M4": 7,
+   "M5": 4,
+   "M3": 5,
+   "M2": 5,
+   "M1": 5
+  },
+  "mp_core_Q0_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 11,
+   "M5": 4
+  },
+  "mp_core_Q1B0L0_out": {
+   "M2": 40,
+   "M1": 33,
+   "M3": 18
+  },
+  "mp_core_Q1B0L1_out": {
+   "M2": 59,
+   "M1": 41,
+   "M3": 27
+  },
+  "mp_core_Q1B0L2_out": {
+   "M2": 40,
+   "M1": 33,
+   "M3": 20
+  },
+  "mp_core_Q1B0L3_out": {
+   "M1": 38,
+   "M2": 47,
+   "M3": 27
+  },
+  "mp_core_Q1B0_out": {
+   "M4": 8,
+   "M5": 4,
+   "M3": 5,
+   "M2": 5,
+   "M1": 5
+  },
+  "mp_core_Q1B1L0_out": {
+   "M2": 49,
+   "M1": 37,
+   "M3": 24
+  },
+  "mp_core_Q1B1L1_out": {
+   "M1": 32,
+   "M2": 38,
+   "M3": 24
+  },
+  "mp_core_Q1B1L2_out": {
+   "M2": 42,
+   "M1": 34,
+   "M3": 22
+  },
+  "mp_core_Q1B1L3_out": {
+   "M1": 35,
+   "M2": 39,
+   "M3": 19
+  },
+  "mp_core_Q1B1_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 7,
+   "M5": 3
+  },
+  "mp_core_Q1B2L0_out": {
+   "M1": 31,
+   "M2": 37,
+   "M3": 18
+  },
+  "mp_core_Q1B2L1_out": {
+   "M1": 34,
+   "M2": 45,
+   "M3": 17
+  },
+  "mp_core_Q1B2L2_out": {
+   "M1": 38,
+   "M2": 46,
+   "M3": 20
+  },
+  "mp_core_Q1B2L3_out": {
+   "M1": 29,
+   "M2": 35,
+   "M3": 22
+  },
+  "mp_core_Q1B2_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 6,
+   "M5": 4
+  },
+  "mp_core_Q1B3L0_out": {
+   "M1": 37,
+   "M2": 44,
+   "M3": 20
+  },
+  "mp_core_Q1B3L1_out": {
+   "M1": 39,
+   "M2": 49,
+   "M3": 19
+  },
+  "mp_core_Q1B3L2_out": {
+   "M2": 57,
+   "M1": 41,
+   "M3": 27
+  },
+  "mp_core_Q1B3L3_out": {
+   "M2": 59,
+   "M1": 40,
+   "M3": 25
+  },
+  "mp_core_Q1B3_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 9,
+   "M5": 4
+  },
+  "mp_core_Q1_out": {
+   "M5": 5,
+   "M4": 12,
+   "M3": 5,
+   "M2": 5,
+   "M1": 5
+  },
+  "mp_core_Q2B0L0_out": {
+   "M2": 44,
+   "M1": 36,
+   "M3": 22
+  },
+  "mp_core_Q2B0L1_out": {
+   "M2": 47,
+   "M1": 38,
+   "M3": 21
+  },
+  "mp_core_Q2B0L2_out": {
+   "M2": 45,
+   "M1": 38,
+   "M3": 18
+  },
+  "mp_core_Q2B0L3_out": {
+   "M1": 31,
+   "M2": 36,
+   "M3": 20
+  },
+  "mp_core_Q2B0_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 7,
+   "M5": 1
+  },
+  "mp_core_Q2B1L0_out": {
+   "M1": 41,
+   "M2": 62,
+   "M3": 27
+  },
+  "mp_core_Q2B1L1_out": {
+   "M1": 40,
+   "M2": 60,
+   "M3": 26
+  },
+  "mp_core_Q2B1L2_out": {
+   "M2": 37,
+   "M1": 32,
+   "M3": 20
+  },
+  "mp_core_Q2B1L3_out": {
+   "M1": 28,
+   "M2": 32,
+   "M3": 19
+  },
+  "mp_core_Q2B1_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 12,
+   "M5": 5
+  },
+  "mp_core_Q2B2L0_out": {
+   "M1": 34,
+   "M2": 54,
+   "M3": 27
+  },
+  "mp_core_Q2B2L1_out": {
+   "M2": 29,
+   "M1": 27,
+   "M3": 23
+  },
+  "mp_core_Q2B2L2_out": {
+   "M1": 28,
+   "M2": 30,
+   "M3": 24
+  },
+  "mp_core_Q2B2L3_out": {
+   "M2": 28,
+   "M1": 26,
+   "M3": 20
+  },
+  "mp_core_Q2B2_out": {
+   "M4": 11,
+   "M3": 6,
+   "M2": 6,
+   "M1": 6,
+   "M5": 5
+  },
+  "mp_core_Q2B3L0_out": {
+   "M1": 41,
+   "M2": 50,
+   "M3": 19
+  },
+  "mp_core_Q2B3L1_out": {
+   "M1": 41,
+   "M2": 55,
+   "M3": 30
+  },
+  "mp_core_Q2B3L2_out": {
+   "M1": 39,
+   "M2": 51,
+   "M3": 21
+  },
+  "mp_core_Q2B3L3_out": {
+   "M2": 44,
+   "M1": 35,
+   "M3": 17
+  },
+  "mp_core_Q2B3_out": {
+   "M4": 17,
+   "M5": 6,
+   "M3": 5,
+   "M2": 5,
+   "M1": 5
+  },
+  "mp_core_Q2_out": {
+   "M4": 9,
+   "M3": 5,
+   "M2": 5,
+   "M1": 5,
+   "M5": 4
+  },
+  "mp_core_Q3B0L0_out": {
+   "M2": 48,
+   "M1": 39,
+   "M3": 18
+  },
+  "mp_core_Q3B0L1_out": {
+   "M2": 44,
+   "M1": 36,
+   "M3": 20
+  },
+  "mp_core_Q3B0L2_out": {
+   "M1": 35,
+   "M2": 40,
+   "M3": 17
+  },
+  "mp_core_Q3B0L3_out": {
+   "M1": 33,
+   "M2": 43,
+   "M3": 24
+  },
+  "mp_core_Q3B0_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 9,
+   "M5": 2
+  },
+  "mp_core_Q3B1L0_out": {
+   "M1": 39,
+   "M2": 50,
+   "M3": 18
+  },
+  "mp_core_Q3B1L1_out": {
+   "M1": 41,
+   "M2": 54,
+   "M3": 20
+  },
+  "mp_core_Q3B1L2_out": {
+   "M2": 63,
+   "M1": 42,
+   "M3": 25
+  },
+  "mp_core_Q3B1L3_out": {
+   "M2": 56,
+   "M1": 39,
+   "M3": 27
+  },
+  "mp_core_Q3B1_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 9,
+   "M5": 3
+  },
+  "mp_core_Q3B2L0_out": {
+   "M1": 36,
+   "M2": 44,
+   "M3": 17
+  },
+  "mp_core_Q3B2L1_out": {
+   "M1": 37,
+   "M2": 43,
+   "M3": 16
+  },
+  "mp_core_Q3B2L2_out": {
+   "M1": 40,
+   "M2": 63,
+   "M3": 28
+  },
+  "mp_core_Q3B2L3_out": {
+   "M1": 44,
+   "M2": 76,
+   "M3": 31
+  },
+  "mp_core_Q3B2_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 10,
+   "M5": 5
+  },
+  "mp_core_Q3B3L0_out": {
+   "M2": 37,
+   "M1": 33,
+   "M3": 21
+  },
+  "mp_core_Q3B3L1_out": {
+   "M1": 37,
+   "M2": 47,
+   "M3": 22
+  },
+  "mp_core_Q3B3L2_out": {
+   "M2": 57,
+   "M1": 43,
+   "M3": 17
+  },
+  "mp_core_Q3B3L3_out": {
+   "M2": 42,
+   "M1": 34,
+   "M3": 17
+  },
+  "mp_core_Q3B3_out": {
+   "M1": 5,
+   "M2": 5,
+   "M3": 5,
+   "M4": 9,
+   "M5": 4
+  },
+  "mp_core_Q3_out": {
+   "M4": 9,
+   "M5": 4,
+   "M3": 5,
+   "M2": 5,
+   "M1": 5
+  },
+  "mp_core_entry0_out": {
+   "M1": 2,
+   "M2": 2,
+   "M3": 2,
+   "M4": 2,
+   "M5": 1
+  },
+  "mp_core_macro0_out": {
+   "M1": 1,
+   "M2": 2,
+   "M3": 1,
+   "M4": 1
+  },
+  "mp_core_macro1_out": {
+   "M1": 1,
+   "M2": 2,
+   "M3": 1,
+   "M4": 1
+  },
+  "mp_core_root_out": {
+   "M4": 11,
+   "M3": 5,
+   "M2": 5,
+   "M1": 5,
+   "M5": 3
+  }
+ },
+ "diagnosis": "OpenROAD GRT clock layer range applies only non-leaf clocks; FF leaf nets use signal range. M4/M5-only NDR on 64 leaf nets is not physically implemented by their M1-M3 guides. DB assignment and zero fallback alone are insufficient.",
+ "source": "https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/src/grt/src/GlobalRouter.cpp#getNetLayerRange"
+}

@@ -3,7 +3,7 @@
  "unchecked_by_number_check": true,
  "unit": "oth-ubuntu-3028858-1793032376",
  "source_commit": "9793d4280",
- "ndr_implementation": "PASS: native2WM4/M5 and0fallbackTT/FF",
+ "ndr_implementation": "PARTIAL/FAIL: native2W rule assigned,0fallbackTT/FF, but64leafnet guides routeM1-M3 withnoM4/M5; plannedleafwirewidth/RCnotimplemented",
  "corners": {
   "TT": {
    "sinks": 2790,
@@ -29,7 +29,7 @@
   },
   "qualification": "UNCHECKED; native TT/FF GRT RC diagnostics only, no detail route/signoff;2W Cx1.1 model assumption before build"
  },
- "diagnosis": "Mean bias largely explained by model40ps versus diagnostic ideal0 input slew. Leaf-window mismatch remains actualGRTtopology/cap-range versusnominalMSTmodel; no measuredretuning authorized.",
+ "diagnosis": "Mean bias largely explained by model40ps versus diagnostic ideal0 input slew. Leaf-window mismatch remains actualGRTtopology/cap-range versusnominalMSTmodel; no measuredretuning authorized. Exactguidecensus reveals64leafnetsuseM1-M3 outsideM4/M5-onlyNDR; leafRC model invalidated.",
  "relative_residuals": {
   "TT": {
    "common_bias_ps": 2.062248617295699,
