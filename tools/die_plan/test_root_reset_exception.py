@@ -45,3 +45,16 @@ def test_root_role_and_replication_fail_closed(monkeypatch):
     p.parts['duplicate_root'] = {'type': root}
     with pytest.raises(ValueError, match='unique root'):
         gen_phys.root_async_reset(p, root)
+
+
+def test_standalone_linter_without_generator(tmp_path):
+    import json
+    import subprocess
+    import shutil
+    text,ctx=_kit(TINY)
+    ctx['root_async_reset']=True
+    (tmp_path/'constraint.sdc').write_text(text+gen_phys.ROOT_RESET_FALSE_PATH+'\n')
+    (tmp_path/'sdc_lint.json').write_text(json.dumps(ctx))
+    shutil.copyfile(Path(__file__).with_name('sdc_lint.py'),tmp_path/'sdc_lint.py')
+    result=subprocess.run([sys.executable,'-I',str(tmp_path/'sdc_lint.py'),str(tmp_path)],capture_output=True,text=True)
+    assert result.returncode==0,result.stdout+result.stderr

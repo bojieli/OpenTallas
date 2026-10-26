@@ -39,6 +39,12 @@ EPS = 1e-3
 # AGENTS.md sign-off policy (user decision 2026-09-30), held HERE and not read from the generator under test
 POLICY_SETUP_PS, POLICY_HOLD_PS = 60.0, 25.0
 
+# Standalone kits copy this linter without gen_phys.py; the allowed policy is independent of the generator.
+ROOT_RESET_FALSE_PATH = (
+    r"set_false_path -from [get_ports {arst_n}] -to "
+    r"[get_pins -hierarchical -regexp {^u_rst_root[./]p\[[01]\]\$_DFF_PN0_/RESETN$}]"
+)
+
 
 class SdcLintError(Exception):
     pass
@@ -246,8 +252,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
             w = _words(cmd)
             c = w[0]
             if c == "set_false_path" and root_async_reset:
-                import gen_phys
-                if w == _words(gen_phys.ROOT_RESET_FALSE_PATH):
+                if w == _words(ROOT_RESET_FALSE_PATH):
                     root_fp += 1
                     continue
             if c == "set_false_path" and strap_l:
