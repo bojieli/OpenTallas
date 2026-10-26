@@ -489,6 +489,15 @@ class Rule128Export(unittest.TestCase):
         self.assertFalse(r["vss_tied"])
         self.assertFalse(r["freeze_evidence_ok"])
 
+    def test_rule_12_8_is_the_default_build(self):
+        seen = {}
+        with patch.object(CM, "cmd_build", side_effect=lambda a: seen.update(r=a.rule_12_8) or 0):
+            CM.main(["build", "plan.json", "--out", "o"])
+            self.assertTrue(seen["r"])
+            CM.main(["build", "plan.json", "--out", "o", "--legacy-pre-12-8"])
+            self.assertFalse(seen["r"])
+
+
 if __name__ == "__main__":
     unittest.main()
 
