@@ -102,7 +102,8 @@ def main():
         clock_proof = None
         if cmap and any(len(mp) != 1 for mp in cmap.values()):
             bus, layout, clock_proof = clock_slices(core, root, ports)
-            if (set(cmap[bus]) != set(layout) or
+            if (pb[bus][0] != sum(hi-lo+1 for hi, lo in layout.values()) or
+                    cmap[bus] != {n: hi-lo+1 for n, (hi, lo) in layout.items()} or
                     any(len(mp) != 1 for n, mp in cmap.items() if n != bus)):
                 raise SystemExit(f'{core}: ambiguous mapping outside qualified packed clock')
             wrapper_pb, wrapper_cmap = dict(pb), dict(cmap)
