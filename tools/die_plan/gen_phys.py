@@ -372,6 +372,13 @@ def input_hold_min(P, tn):
                 break
             for pid, pr in prs:
                 s = pr["src"]["part"]
+                dv = (P.clock.get("io_hold_driver_views") or {}).get(pid)
+                if s == DIE_PART and dv:
+                    # CP1 proof harness: explicit registered upstream driver view of the full plan (COORD 23:26 (3));
+                    # the seam itself is checked on the real parent (io_hold_parent.py)
+                    vals.append((float(dv["out_hold_guarantee_ps"]), f"driver view {dv['type']} ({dv['basis']})",
+                                 dv["type"]))
+                    continue
                 if s == DIE_PART or s not in P.parts:
                     why = f"{pid} from the die edge"
                 elif P.channel_of(pid) is not None:

@@ -2173,6 +2173,40 @@
       "sender_min"
      ]
     },
+    "io_hold_driver_views": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "part",
+       "type",
+       "bus",
+       "out_hold_guarantee_ps",
+       "basis"
+      ],
+      "properties": {
+       "part": {
+        "type": "string"
+       },
+       "type": {
+        "type": "string"
+       },
+       "bus": {
+        "type": "string"
+       },
+       "out_hold_guarantee_ps": {
+        "type": "number"
+       },
+       "basis": {
+        "type": "string"
+       },
+       "source_plan": {
+        "type": "string"
+       }
+      }
+     }
+    },
     "common_latency_ps": {
      "type": "number",
      "exclusiveMinimum": 0
