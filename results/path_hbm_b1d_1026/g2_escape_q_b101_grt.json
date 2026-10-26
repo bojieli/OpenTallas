@@ -1,0 +1,86 @@
+{
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 9274606,
+   "demand": 1269507,
+   "usage_pct": 13.69,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 10402792,
+   "demand": 808377,
+   "usage_pct": 7.77,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 7789610,
+   "demand": 1161329,
+   "usage_pct": 14.91,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 7801717,
+   "demand": 480276,
+   "usage_pct": 6.16,
+   "overflow": 0
+  },
+  "M6": {
+   "resource": 13882608,
+   "demand": 3151205,
+   "usage_pct": 22.7,
+   "overflow": 0
+  },
+  "M7": {
+   "resource": 13888611,
+   "demand": 68772,
+   "usage_pct": 0.5,
+   "overflow": 0
+  }
+ },
+ "total_overflow": 0,
+ "wirelength_um": 3997976.0,
+ "errors": [],
+ "pin_access_warnings": 0,
+ "pin_access_no_ap": {
+  "stdCellPin": 0,
+  "macro": 0
+ },
+ "pin_access_done": true,
+ "reach": {},
+ "done": true,
+ "capacity_valid": true,
+ "exit": "EXIT 0",
+ "kind": "g2-partition",
+ "die": "hbm_arch_B2o",
+ "type": "q_b101",
+ "instance": "NE_b101",
+ "outline_um": [
+  725.76,
+  1555.2
+ ],
+ "pins": 9572,
+ "flops": 14803,
+ "leaf_blockages": 17,
+ "adjust": 0.5,
+ "route_layers": "M2-M7",
+ "ft_hops": {
+  "slots": 8,
+  "max_hop_um": 387.18,
+  "over_reach": {},
+  "over_reach_bits": 0,
+  "st_in_core": 0,
+  "st_in_core_slots": {},
+  "actual_sites": true,
+  "errors": [],
+  "station_cells": 14273,
+  "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+  "explicit_anchor_drift_um": 0.0
+ },
+ "geometry_verdict": "PASS"
+}
