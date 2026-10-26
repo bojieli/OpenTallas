@@ -249,7 +249,11 @@ def emit_wrapper(sl, logic_module, interface):
             raise InfraError(f"invalid original interface {name}")
         word(name)
         sign = " signed" if port.get("signed", False) else ""
-        packed = f" [{width-1}:0]" if width > 1 else ""
+        offset = port.get("offset", 0)
+        if not isinstance(offset, int) or isinstance(offset, bool):
+            raise InfraError(f"invalid packed range offset for {name}")
+        left, right = ((offset, offset + width - 1) if port.get("upto", False) else (offset + width - 1, offset))
+        packed = f" [{left}:{right}]" if width > 1 or offset else ""
         allports.append(f"{direction} wire{sign}{packed} {verilog_name(name)}")
     for port in p["ports"]:
         allports.append(f"{port['direction'].lower()} wire {port['name']}")
