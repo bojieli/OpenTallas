@@ -54,7 +54,11 @@ namespace eval ot_sfi {
    lassign [split $line "\t"] bank pin logical x y
    set macro [dict get $macros $bank];set it [$macro findITerm $pin]
    if {$it eq "NULL"} {error "SFI missing bank$bank pin$pin"}
-   set fs [expr {[$it isInputSignal] ? [driver [$it getNet] 4] : [capture [$it getNet] 4]}]
+   if {[$it isInputSignal]} {
+    set fs [driver [$it getNet] 4]
+   } else {
+    set fs [capture [$it getNet] 4]
+   }
    if {[llength $fs]!=1} {error "SFI $logical pin$pin has [llength $fs] sequential endpoints"}
    set in [lindex $fs 0];set name [$in getName]
    if {[dict exists $matched $name]} {error "SFI kept pin FF merged/shared: $logical and [dict get $matched $name]"}
