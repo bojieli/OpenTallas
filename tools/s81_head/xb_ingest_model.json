@@ -1,0 +1,25 @@
+{
+  "component": "single-group XB ingestion and admission",
+  "clock_ps": 833,
+  "macs_per_cycle": 0,
+  "raw_stage_bits_per_cycle": 1104,
+  "tag_bits": 32,
+  "xb_payload_bits_per_cycle": 1024,
+  "distinct_load_addresses": 80,
+  "buffer_bits": 81920,
+  "metadata_bits_estimate": {
+    "seen": 80,
+    "message_identity": 32,
+    "beat_count": 7,
+    "job_active": 1
+  },
+  "storage": "existing xstore80x1024 load form, banked logical A/B arrays; physical SRAM mapping unmeasured",
+  "pipeline": "actual HSF0 P1/P2 input landing; compile authority chooses public GO; xstore stream remains GO+5",
+  "issue_authority": "live external compiled issue; no clock dates invented",
+  "retire_authority": "live external token retirement with full position/user match",
+  "job_active": "from accepted issue through matching retirement, longer than replay busy",
+  "indexed_load": "opt-in; repeated/missing/out-of-range gidx cannot count as a complete vector",
+  "added_public_stream_cycles": 0,
+  "replicas": 1,
+  "physical_slot": "unassigned source component; no P&R/area/route claim"
+}
