@@ -1,7 +1,7 @@
 {
  "variant": "B",
  "partitions": 377,
- "types": 69,
+ "types": 77,
  "types_merged": 122,
  "ports": 3005,
  "lanes": 1933,
@@ -25,85 +25,94 @@
  ],
  "cells_per_type": {
   "cbf_q00": {
-   "cells": 782764,
-   "instances": 23,
+   "cells": 790474,
+   "instances": 17,
    "outline_um": [
     1235.52,
     2609.28
    ],
-   "macros": 40
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
   },
   "cbf_q00_s2": {
-   "cells": 782764,
+   "cells": 790474,
    "instances": 1,
    "outline_um": [
     1235.52,
     2609.28
    ],
-   "macros": 40
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
   },
   "cbf_q01": {
-   "cells": 782764,
-   "instances": 23,
+   "cells": 787904,
+   "instances": 17,
    "outline_um": [
     1235.52,
     2617.92
    ],
-   "macros": 40
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
   },
   "cbf_q01_s2": {
-   "cells": 782764,
+   "cells": 787904,
    "instances": 1,
    "outline_um": [
     1235.52,
     2617.92
    ],
-   "macros": 40
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
   },
   "cbf_q11": {
-   "cells": 782764,
-   "instances": 24,
+   "cells": 784306,
+   "instances": 18,
    "outline_um": [
     1235.52,
     2617.92
    ],
-   "macros": 40
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
   },
   "cbn_q00": {
-   "cells": 782764,
-   "instances": 24,
+   "cells": 790474,
+   "instances": 12,
    "outline_um": [
     1235.52,
     2609.28
    ],
-   "macros": 40
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
   },
   "cbn_q01": {
-   "cells": 782764,
-   "instances": 24,
+   "cells": 787904,
+   "instances": 18,
    "outline_um": [
     1235.52,
     2617.92
    ],
-   "macros": 40
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
   },
   "cbn_q11": {
-   "cells": 782764,
-   "instances": 24,
+   "cells": 784306,
+   "instances": 18,
    "outline_um": [
     1235.52,
     2617.92
    ],
-   "macros": 40
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
   },
   "cbx_q10": {
    "cells": 782764,
-   "instances": 48,
+   "instances": 36,
    "outline_um": [
     1235.52,
     2609.28
    ],
-   "macros": 40
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
   },
   "coll_core": {
    "cells": 120000,
@@ -644,6 +653,96 @@
     518.4
    ],
    "macros": 0
+  },
+  "cbf_q00_na00d16": {
+   "cells": 790988,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+  },
+  "cbf_q01_nb12d11": {
+   "cells": 788418,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+  },
+  "cbf_q11_na22d2": {
+   "cells": 783792,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+  },
+  "cbn_q00_xb10d1_na00d16": {
+   "cells": 791504,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+  },
+  "cbn_q00_xb00d1": {
+   "cells": 798700,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+  },
+  "cbn_q01_nb12d11": {
+   "cells": 788418,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+  },
+  "cbn_q11_na22d2": {
+   "cells": 783792,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+  },
+  "cbx_q10_xb30d1": {
+   "cells": 783280,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
+  },
+  "cbx_q10_xb30d2": {
+   "cells": 783796,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 4,
+   "basis": "MODEL base-family cells plus max phase FFs; actual soft wrapper synthesis required"
   }
  },
  "su_core_cells": {
@@ -5328,5 +5427,10 @@
    "bits": 598
   }
  ],
- "census_dropped_bits": {}
+ "census_dropped_bits": {},
+ "cb16_phase_model": {
+  "additional_ff": 712464,
+  "max_ff_per_part": 8740,
+  "note": "MODEL only; source-defined hard-core and clock/buffer overhead must be measured"
+ }
 }
