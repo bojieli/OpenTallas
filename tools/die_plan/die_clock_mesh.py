@@ -550,7 +550,7 @@ def part_regions(P, R):
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
           regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None,
           region_spec=None, early_taps="mesh", early_ref=None, early_margin_ps=40.0, early_stage_ps=45.0,
-          pad_ps=37.26, early_min_level=None):
+          pad_ps=37.26, early_min_level=None, early_hop_um=None):
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
@@ -754,6 +754,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         plain = [dict(part=pa, port=f"t_{DC.sv(pa)}__{po}", early_ps=e) for pa, po, _, _, e in taps]
         reg_of = (lambda u: out["part_region"][u["part"]]) if regions else None
         out["meta"]["early_taps"] = dict(mode="tree", ref=str(early_ref.get("src", "")), margin_ps=early_margin_ps,
+                                         hop_um=early_hop_um or rep_um,
                                          stage_ps=early_stage_ps, pad_ps=pad_ps)
     for part, port, x, y, early in taps:
         tp = f"t_{DC.sv(part)}__{port}"
@@ -764,7 +765,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             mean = early_target(dict(part=part, port=tp, early_ps=early), plain, early_ref["tap_late"], reg_of)
             e_tt = float((early_c.get((part, port)) or {}).get("TT", early))
             pick = None if mean is None else choose_early_node(
-                tree_nodes, (x, y), mean - e_tt, early_ref["node_late"], rep_um, early_stage_ps, early_margin_ps,
+                tree_nodes, (x, y), mean - e_tt, early_ref["node_late"], early_hop_um or rep_um, early_stage_ps, early_margin_ps,
                 g["tag"] if regions else None, early_min_level if early_min_level is not None else regions + 1)
             if pick is None:
                 out["unplaced"].append([tp, "STRUCTURAL early tap: no H-tree node early enough in its region"])
@@ -784,7 +785,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             reps = []
             for s in range(1, nh):
                 p = l_path_point(hq, (x, y), s * L / nh)
-                q, _ = free_near(K, p, limit=rep_um / 2)
+                q, _ = free_near(K, p, limit=(early_hop_um or rep_um) / 2)
+                if q is None:      # a hard core under the ideal site: nearest legal site within the die hop rule
+                    q, _ = free_near(K, p, limit=rep_um / 2)
                 if q is None:
                     out["unplaced"].append([tp, "early rep", s])
                     break
@@ -914,7 +917,7 @@ def cmd_build(a):
     cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
                                   a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks, region_spec,
                                   early_taps=a.early_taps, early_ref=early_ref, early_margin_ps=a.early_margin_ps,
-                                  early_stage_ps=a.early_stage_ps,
+                                  early_stage_ps=a.early_stage_ps, early_hop_um=a.early_hop_um,
                                   pad_ps=pad_delay("TT", a.libdir) if a.early_taps == "tree" else 37.26)
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
@@ -1870,6 +1873,9 @@ def main(argv=None):
     b.add_argument("--early-ref", help="measured combo+post dir of the same tree (tree_TT.txt, taps_TT.txt) for node choice")
     b.add_argument("--early-margin-ps", type=float, default=40.0, help="node choice margin before the target arrival")
     b.add_argument("--early-stage-ps", type=float, default=45.0, help="estimated delay per early-branch hop (TT)")
+    b.add_argument("--early-hop-um", type=float, default=None,
+                   help="early-branch repeater spacing (default --rep-um); shorter hops keep the core-tap slew near "
+                        "the mesh stubs' so the core insertion the offset assumes holds")
     b.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
     bl = sub.add_parser("balance")
     bl.add_argument("dir")
