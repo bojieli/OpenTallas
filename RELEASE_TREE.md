@@ -19,14 +19,17 @@ Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574f
 - [ ] QC.INFRA One QC plan event: infra-first PG/clock/reset + batch 2 (STM ROMs, SRAM, DEAD-FAULT) + D-QC-FE-REACH stations (all FE variants) + COLLFTM-CTL + CB ID straps + SCROOT + vmr_s6kc · INFRA-FIRST + PATH-QC · RUNNING · PENDING-DELTA D-INFRA-FIRST-QC holds all 68 type routes
 - [ ] QC.CLK Related-pair <=80 TT/FF · CLOCK-MESH-2 · FAIL · single mesh 146/132 (8W 139/119): pairs across root/L1/L2 split share only root → regional mesh + landed seams (COORD approved) → IF.MESH
 - [ ] QC.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · → QC.INFRA
+- [ ] QC.BIND Strict bind on the QC plan event (wavefront reset/START, CB16 phase classes) · PATH-QC · WAITS · → QC.INFRA
 - [ ] QC.STA Die STA on real views · DIE-PROTO · WAITS · → QC.GRT, → QC.TILES
   - [ ] QC.TILES Tile sign-offs · PATH-QC · WAITS · hard cores continue (4/9 signed; no island overlap); types wait for re-freeze; SC kits need LEC fix fffc9dd55 on flow tag
 
 ## DIE s81_head · S81 head die · rev UNFROZEN d7b8d1eb · after QC
 - [ ] HEAD.INFRA Infra-first plan event (+ HEAD8 batch 187b63494b if approved) · INFRA-FIRST · WAITS · PENDING-DELTA D-INFRA-FIRST-HEAD holds all 16 type routes → IF.TOOL
 - [ ] HEAD.CLK Related-pair <=80 · CLOCK-MESH-B · FAIL · old tree 268/254; channel-only mesh impossible (0 interior channel area); in-tile islands 229/193 (serdes bands undriven) → HEAD.INFRA
+- [ ] HEAD.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · old d7b8d1eb signal GRT0 no longer counts → HEAD.INFRA
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX / PATH-S81 · WAITS · source d0eb3d3d01; host/mesh/rank-row contract = spec item (no owner input)
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
+  - [ ] HEAD.TILES Head tile sign-offs · S81-HEAD / KITS-WAVE-3 · WAITS · types held by D-INFRA-FIRST-HEAD; 1/2 hard cores signed → HEAD.INFRA
 
 ## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
 - [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · sys_c RTL has 8 N-channel stations vs plan 5 (L747); finish codex/kv-sysc-g3-1025 SYS3
