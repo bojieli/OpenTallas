@@ -1,0 +1,7 @@
+QC batch1 opt-in physical clock folds, dbde0a022
+
+Viewed fold0_review.png before STA/P&R. PASS-COND for a one-shot model STA and then a separately legalized/routed diagnostic if timing is plausible. This does not release a die or modify its FROZEN interfaces.
+
+The top H-tree uses exact midpoint cuts (window0), and repeated slice columns show matched, short out-and-back local wire folds on M8/M9. Every fold turn is a real clock buffer waypoint; the router must preserve it. Internal hard cores and PHY footprints keep their original clearances; the generated geometry reports zero non-dummy clock buffers on those keepouts. The central SU/control band remains denser than the repeated field, which is appropriate to its tap population. No new signal bus or macro wall is introduced, and the clock-only delta leaves PG/tile boundaries unchanged.
+
+Costs: 7121 taps, 73771 BUFx24 cells (up26359 from47412, +0.01153mm²), real modeled wire10.094m rather than old4.899m geometry plus5.218m invisible electrical pads. Last-mile stages4X+4Y, zero added datapath cycles. Parent DIE-PROTO must legalize coincident leaf driver banks on real sites as for its raw model. 3736 added long-hop repeaters reflect keepout avoidance; longest geometric segment519.741µm is a conditional slew check, not a reach waiver. Any residual timing failure must be fixed in physical geometry; this profile disables iterative electrical-only padding.

@@ -1,0 +1,142 @@
+*SPEF "ieee 1481-1999"
+*DESIGN "die_ctree"
+*DATE "11:11:11 Fri 11 11, 1111"
+*VENDOR "The OpenROAD Project"
+*PROGRAM "OpenROAD"
+*VERSION "1.0"
+*DESIGN_FLOW "NAME_SCOPE LOCAL" "PIN_CAP NONE"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER []
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 KOHM
+*L_UNIT 1 HENRY
+
+*PORTS
+root I
+t_c_E0_bf_00__clk_t26 O
+t_c_E0_bf_01__clk_t2 O
+
+*D_NET root 1.98602
+*CONN
+*P root I
+*I nroot:A I *D BUFx24_ASAP7_75t_R
+*CAP
+1 root:2 0.547131
+2 root:9 0.445877
+*RES
+1 root:1 root:2 0.0172
+2 root:2 root:3 0.0172
+3 root:3 root:4 0.0172
+4 root:4 root:5 0.0118
+5 root:5 root:6 0.0118
+6 root:6 root:7 0.0082
+7 root:7 root:8 0.0082
+8 root:8 root:9 0.0063
+9 nroot:A root:2 0.203053
+10 root root:9 0.00166875
+*END
+
+*D_NET t_c_E0_bf_00__clk_t26 23.0187
+*CONN
+*P t_c_E0_bf_00__clk_t26 O
+*I n_pair0:Y O *D BUFx24_ASAP7_75t_R
+*CAP
+1 t_c_E0_bf_00__clk_t26:1 8.82395
+2 t_c_E0_bf_00__clk_t26:2 9.32917
+3 t_c_E0_bf_00__clk_t26:3 1.79646
+4 t_c_E0_bf_00__clk_t26:4 1.79646
+5 t_c_E0_bf_00__clk_t26:10 0.383735
+*RES
+1 t_c_E0_bf_00__clk_t26:1 t_c_E0_bf_00__clk_t26:2 0.0330248
+2 t_c_E0_bf_00__clk_t26:1 t_c_E0_bf_00__clk_t26:3 0.0063
+3 t_c_E0_bf_00__clk_t26:3 t_c_E0_bf_00__clk_t26:4 0.00570216
+4 t_c_E0_bf_00__clk_t26:4 t_c_E0_bf_00__clk_t26:5 0.0082
+5 t_c_E0_bf_00__clk_t26:5 t_c_E0_bf_00__clk_t26:6 0.0082
+6 t_c_E0_bf_00__clk_t26:6 t_c_E0_bf_00__clk_t26:7 0.0118
+7 t_c_E0_bf_00__clk_t26:7 t_c_E0_bf_00__clk_t26:8 0.0118
+8 t_c_E0_bf_00__clk_t26:8 t_c_E0_bf_00__clk_t26:9 0.0172
+9 t_c_E0_bf_00__clk_t26:9 t_c_E0_bf_00__clk_t26:10 0.0172
+10 t_c_E0_bf_00__clk_t26:10 t_c_E0_bf_00__clk_t26:11 0.0172
+11 n_pair0:Y t_c_E0_bf_00__clk_t26:10 0.14755
+12 t_c_E0_bf_00__clk_t26 t_c_E0_bf_00__clk_t26:2 0.00189086
+*END
+
+*D_NET t_c_E0_bf_01__clk_t2 21.7117
+*CONN
+*P t_c_E0_bf_01__clk_t2 O
+*I n_pair1:Y O *D BUFx24_ASAP7_75t_R
+*CAP
+1 t_c_E0_bf_01__clk_t2:2 0.201971
+2 t_c_E0_bf_01__clk_t2:8 5.38939
+3 t_c_E0_bf_01__clk_t2:9 5.38939
+4 t_c_E0_bf_01__clk_t2:10 4.81306
+5 t_c_E0_bf_01__clk_t2:11 5.26451
+*RES
+1 t_c_E0_bf_01__clk_t2:1 t_c_E0_bf_01__clk_t2:2 0.0172
+2 t_c_E0_bf_01__clk_t2:2 t_c_E0_bf_01__clk_t2:3 0.0172
+3 t_c_E0_bf_01__clk_t2:3 t_c_E0_bf_01__clk_t2:4 0.0172
+4 t_c_E0_bf_01__clk_t2:4 t_c_E0_bf_01__clk_t2:5 0.0118
+5 t_c_E0_bf_01__clk_t2:5 t_c_E0_bf_01__clk_t2:6 0.0118
+6 t_c_E0_bf_01__clk_t2:6 t_c_E0_bf_01__clk_t2:7 0.0082
+7 t_c_E0_bf_01__clk_t2:7 t_c_E0_bf_01__clk_t2:8 0.0082
+8 t_c_E0_bf_01__clk_t2:8 t_c_E0_bf_01__clk_t2:9 0.0171065
+9 t_c_E0_bf_01__clk_t2:9 t_c_E0_bf_01__clk_t2:10 0.0063
+10 t_c_E0_bf_01__clk_t2:11 t_c_E0_bf_01__clk_t2:10 0.0180135
+11 n_pair1:Y t_c_E0_bf_01__clk_t2:2 0.0858066
+12 t_c_E0_bf_01__clk_t2 t_c_E0_bf_01__clk_t2:11 0.0016896
+*END
+
+*D_NET w_root 43.9971
+*CONN
+*I n_pair0:A I *D BUFx24_ASAP7_75t_R
+*I n_pair1:A I *D BUFx24_ASAP7_75t_R
+*I nroot:Y O *D BUFx24_ASAP7_75t_R
+*CAP
+1 w_root:2 0.227512
+2 w_root:8 5.38939
+3 w_root:9 5.38939
+4 w_root:10 4.81306
+5 w_root:11 4.81306
+6 w_root:12 1.79646
+7 w_root:18 0.589992
+8 w_root:20 1.79646
+9 w_root:21 8.82395
+10 w_root:22 8.82395
+11 w_root:29 0.358194
+*RES
+1 w_root:1 w_root:2 0.0172
+2 w_root:2 w_root:3 0.0172
+3 w_root:3 w_root:4 0.0172
+4 w_root:4 w_root:5 0.0118
+5 w_root:5 w_root:6 0.0118
+6 w_root:6 w_root:7 0.0082
+7 w_root:7 w_root:8 0.0082
+8 w_root:8 w_root:9 0.0171065
+9 w_root:9 w_root:10 0.0063
+10 w_root:10 w_root:11 0.0180135
+11 w_root:11 w_root:12 0.0063
+12 w_root:12 w_root:13 0.0082
+13 w_root:13 w_root:14 0.0082
+14 w_root:14 w_root:15 0.0118
+15 w_root:15 w_root:16 0.0118
+16 w_root:16 w_root:17 0.0172
+17 w_root:17 w_root:18 0.0172
+18 w_root:18 w_root:19 0.0172
+19 w_root:12 w_root:20 0.00570216
+20 w_root:20 w_root:21 0.0063
+21 w_root:21 w_root:22 0.0330248
+22 w_root:22 w_root:23 0.0063
+23 w_root:23 w_root:24 0.0082
+24 w_root:24 w_root:25 0.0082
+25 w_root:25 w_root:26 0.0118
+26 w_root:26 w_root:27 0.0118
+27 w_root:27 w_root:28 0.0172
+28 w_root:28 w_root:29 0.0172
+29 w_root:29 w_root:30 0.0172
+30 nroot:Y w_root:18 0.217612
+31 n_pair1:A w_root:2 0.0944827
+32 n_pair0:A w_root:29 0.138874
+*END
+

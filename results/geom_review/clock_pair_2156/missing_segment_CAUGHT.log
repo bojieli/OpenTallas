@@ -1,0 +1,14 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-clockfold-2156
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-clockfold-2156
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-clockfold-2156
+ot-run: localhost      admits   230 GB (avail 411, reserve 0, fresh 115.7, peak 1.3, headroom 0, waiters 0/0 GB) load 47/256 running 29 disk 573 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-702021-1792992565 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+[ERROR GRT-0263] Pin(s) t_c_E0_bf_00__clk_t26 not covered in net t_c_E0_bf_00__clk_t26.
+Error: replay_mutant.tcl, 4 GRT-0263
+ot-run: RAN on localhost (unit oth-ubuntu-702021-1792992565): exit 1
