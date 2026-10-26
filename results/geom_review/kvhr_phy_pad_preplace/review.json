@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.geom_review.v1",
+  "design": "qkd_hr_phy_pad",
+  "scope": "planned core frame before trial placement",
+  "verdict": "PASS-COND",
+  "image": "results/geom_review/kvhr_phy_pad_preplace/pin_frame.png",
+  "outline_um": [138.24, 129.6],
+  "source_kit_hash": "686b7bd14b4a8d85",
+  "findings": [
+    "Viewed image: 1024-bit input spans the east face, 546-bit output spans the north face; short east-to-north data flow, no macro walls or internal notches.",
+    "1026 east pins /129.6um =7.92pins/um,549 north pins /138.24um =3.97pins/um. Both below one 48nm-pitch layer's20.83tracks/um; actual placed pin-register bands still need checking.",
+    "No macros. Core dimensions are integral8.64um units;4.32um row margin and M5 PDN stripe phase can match parent grid. Actual rail/stripe continuity is not yet measured.",
+    "Clock enters north center, reset south near east data band. Max possible in-core Manhattan reach267.84um is below405um; this does not replace the required placed r2r census.",
+    "No reset on payload dq/q/out_d in the source; reset remains on control/valid/credit state. Clock latency/load/related-pair skew require actual placement and CTS review."
+  ],
+  "conditions": [
+    "Corrected phy_pad2 nominal/emitted equivalence and mutant gate must finish; actual raw and ODB face preflight must pass, including distinct in_cr/out_v registers.",
+    "Allowed next action after those gates: floorplan/place trial only.",
+    "Before CTS/route: view actual placement, run complete r2r census, check face-flop bands and clock loads, and obtain independent per-row GEOM review."
+  ],
+  "not_claimed": ["placed-cell geometry", "clock balance", "routed PDN", "timing closure", "SIGNED"]
+}
