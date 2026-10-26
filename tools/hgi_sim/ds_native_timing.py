@@ -66,7 +66,11 @@ ROW_BYTES = 288          # a DS compressed KV row as shipped: 9 sectors of 32 B 
 
 
 class NativeCost:
-    def __init__(self, ops, recs, row_gather=None):
+    def __init__(self, ops, recs, row_gather=None, native_tail_profile=None):
+        self.native_tail_contract = None
+        if native_tail_profile is not None:
+            from hbm_layer_vehicle.native_hc_tail_profile import load
+            self.native_tail_contract = load(native_tail_profile)
         self.wc = WalkCost()
         self.ops = ops
         self.rg = row_gather or {}          # layer -> {max_owned, k, G}: the bypass ROW_GATHER pricing
@@ -150,7 +154,8 @@ class NativeCost:
             n = r.desc["A"].n
             return coll_cycles("ALL_GATHER", n * 4, 96)[0], "measured_tu_budget", f"row-gather slots ({n} words)"
         if u == "HC" and op == "HC_MIX_POST":
-            return T.cv("units", "HC.HC_MIX_POST"), "measured", "G22 post (sigmoid + Sinkhorn)"
+            extra = self.native_tail_contract["additional_core_cycles"] if self.native_tail_contract else 0
+            return T.cv("units", "HC.HC_MIX_POST") + extra, "measured" if not extra else "source_contract_model", f"G22 post (sigmoid + Sinkhorn); explicit native split-tail +{extra} core cycles"
         if u == "HC" and op == "HC_MIX_ROWS":
             c, g, how = self.walk(r)
             return c / 24, g, "G22 one mix row (1/24 of the measured 24-row mix)"
@@ -173,6 +178,7 @@ def main():
     ap.add_argument("--program", type=Path, required=True)
     ap.add_argument("--out", type=Path)
     ap.add_argument("--run", type=Path, help="the ds_native result of the same program: ROW_GATHER bypass pricing")
+    ap.add_argument("--native-tail-profile", type=Path, help="explicit native NQ2 tail503 source contract; charges HC_MIX_POST only")
     a = ap.parse_args()
     d, recs = load(a.program)
     recs = T.rebuild_waits(recs)           # (copies keep src_key / layer)
@@ -182,7 +188,7 @@ def main():
             for s in x.get("row_gather") or []:
                 rg[x["layer"]] = s
     apply_dyn_counts(recs, rg)
-    cf = NativeCost(d["ops"], recs, row_gather=rg)
+    cf = NativeCost(d["ops"], recs, row_gather=rg, native_tail_profile=a.native_tail_profile)
     image = encode_program(recs)
     walk_us, _ = cf.wc.DA.walk({"layers": []}, cf.wc.sm, cf.wc.su1, cf.wc.coll, cf.wc.local, cf.wc.hbm, use=cf.wc.use)
     res = dict(program=dict(rank=d["rank"], records=len(recs), image_bytes=len(image),
@@ -224,7 +230,7 @@ def main():
                grade="pathfinding: walk-priced engine records (measured adapters), SU per record by the measured-depth "
                      "model, CP entries estimates (calibration.json)",
                program_source=str(a.program.name), program_sha256=hashlib.sha256(a.program.read_bytes()).hexdigest(),
-               result=res, calibration_cp=T.CAL["cp"],
+               result=res, calibration_cp=T.CAL["cp"], native_tail_contract=cf.native_tail_contract,
                run_source=str(a.run) if a.run else None,
                row_gather_bypass=dict(rule="owner read padded to the max owned count + one exact gather pass "
                                            "(perf.coll_cycles ALL_GATHER, measured TU endpoint model) + head HBM write",

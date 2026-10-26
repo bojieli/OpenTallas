@@ -138,14 +138,20 @@ def event_word(time, **fields):
     return word
 
 
-def root_rows(parameters, response_phase):
+def root_rows(parameters, response_phase, *, native_tail_profile=None):
     """F20 rows for actual input table and a sparse, fixed-time G22 programme."""
     data = parameters["base"] + parameters["scale"] + [0]
     table = [(0xc7a1 << 240) | (pc << 224) |
              sum(data[7 * pc + k] << (32 * k) for k in range(7)) for pc in range(4)]
     g0 = HC.PROG_OUT + 1 + response_phase + 2
     tail = g0 + 32                    # last mix commits at g0+24; no ready polling
-    emit = tail + TAIL_RESULT_LATENCY + TAIL_EMIT_GUARD
+    tail_latency = TAIL_RESULT_LATENCY
+    native_contract = None
+    if native_tail_profile is not None:
+        from hbm_layer_vehicle.native_hc_tail_profile import load
+        native_contract = load(native_tail_profile)
+        tail_latency = native_contract["tail_latency"]
+    emit = tail + tail_latency + TAIL_EMIT_GUARD
     origin = ROOT_APPLY_AFTER_LAUNCH
     schedule = [(g0 - 4, dict(clear=1)), (g0 - 3, dict(gm=1, gmq=0, gmo=1)),
                 (g0 + 24, dict(tf=1, tset=0)), (g0 + 26, dict(gm=1, gmq=0, gmo=0)),
@@ -155,7 +161,8 @@ def root_rows(parameters, response_phase):
              for pc, (edge, fields) in enumerate(schedule)]
     return table, words, dict(root_apply_origin=origin, gather_row0_at=g0,
                              tail_launch_after=tail, result_after=emit,
-                             tail_latency=TAIL_RESULT_LATENCY, emit_guard=TAIL_EMIT_GUARD,
+                             tail_latency=tail_latency, emit_guard=TAIL_EMIT_GUARD,
+                             **({"native_tail_contract": native_contract} if native_contract else {}),
                              gather_period=max(24,response_phase+1), npos=1,
                              extra_edges_per_additional_position=max(0,response_phase+1-24),
                              emit_after_row0=emit - (g0 - 1),
@@ -173,7 +180,7 @@ def validate_connected_boundary(boundary):
 
 
 def lower_mix_post(A, expected_O, parameters, timing, *, a_sector, o_sector,
-                   component_allocation, record=30, t0=16, boundary=None, source_profile=None, profile_contract=None):
+                   component_allocation, record=30, t0=16, boundary=None, source_profile=None, profile_contract=None, native_tail_profile=None):
     """Emit real root inputs/programme plus downstream expected checks.
 
     component_allocation=True is explicitly the bounded relocated probe.  Shared
@@ -187,8 +194,10 @@ def lower_mix_post(A, expected_O, parameters, timing, *, a_sector, o_sector,
         raise ValueError("bounded G22 allocation requires disjoint input/output spans")
     check_parameters_reproduce(A, expected_O, parameters)
     if source_profile is None:
-        table, programme, schedule = root_rows(parameters, timing["resp_phase"])
+        table, programme, schedule = root_rows(parameters, timing["resp_phase"], native_tail_profile=native_tail_profile)
     else:
+        if native_tail_profile is not None:
+            raise ValueError("native NQ2 tail and legacy SAFE2 profiles must be lowered separately")
         from hbm_layer_vehicle import hc_safe2_phase40_1021 as HP
         if source_profile != HP.SAFE2_P40:
             raise ValueError("only explicit SAFE2 phase40 candidate profile is supported")
@@ -508,6 +517,7 @@ def main():
     ap.add_argument("--checkpoint", type=Path, default=RELEASED_SNAPSHOT,
                     help="released V4.1-Flash snapshot dir (default) -- the fixtures' golden weights")
     ap.add_argument("--boundary", type=Path)
+    ap.add_argument("--native-tail-profile", type=Path, help="explicit native NQ2 split-tail503 source contract")
     ap.add_argument("--source-plan", action="store_true")
     ap.add_argument("--record", type=int, default=30)
     ap.add_argument("--rank", default="0")
@@ -519,7 +529,11 @@ def main():
         ap.error("connected mode requires --boundary; --source-plan never qualifies execution")
     contract = json.loads(a.contract.read_text())
     root = contract["instances"]["hc_eng"]
-    if root["master"] != "ot_hbm_hc_root_static":
+    selected_master = "ot_hbm_hc_root_static"
+    if a.native_tail_profile:
+        from hbm_layer_vehicle.native_hc_tail_profile import load
+        selected_master = load(a.native_tail_profile)["top"]
+    if root["master"] != selected_master:
         raise ValueError(f"unsupported selected root: {root['master']}")
     meta = json.loads((a.fixtures/"records.json").read_text())
     tag = next(x["tag"] for x in meta["priced_records_unmatched"] if x["i"] == a.record)
@@ -531,7 +545,8 @@ def main():
     boundary = json.loads(a.boundary.read_text()) if a.boundary else None
     tim = HC.timing_from_contract(a.contract, a.l12)
     doc = lower_mix_post(A, O, values, tim, record=a.record, a_sector=a.a_sector,
-                        o_sector=a.o_sector, component_allocation=a.component_allocation, boundary=boundary)
+                        o_sector=a.o_sector, component_allocation=a.component_allocation, boundary=boundary,
+                        native_tail_profile=a.native_tail_profile)
     files = json.loads((a.bundle/"master_files.json").read_text())
     paths = sorted(set(files[root["master"]]+files["ot_hbm_host_cfg_leaf_se2"]))
     doc.update(record=a.record, fixture_record=rec["k"], tag=tag, checkpoint_input_provenance=provenance,
