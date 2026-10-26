@@ -243,6 +243,8 @@ def main(argv):
     (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in nf) + "\n")
     man["files"] = [str(x) for x in nf]
     (kd / "reset_tree.tcl").write_text(reset_tree.tcl_text(tree))
+    if tree.get("relay_driver"):
+        (kd / "reset_pair_place.tcl").write_text(HERE.joinpath("reset_pair_place.tcl").read_text())
     man["kit_rsync"] = dict(taps=len(taps), firm_repointed=nfirm, firm_nearest=nnear, ste=nste, converted_from=conv,
                             bound_sync_stages=ns, leaf_tap=leaf, reset_tree=reset_tree.summary(tree),
                             reset_outs=[n for n, _, _ in routs])

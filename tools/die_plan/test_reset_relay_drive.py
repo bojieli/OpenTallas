@@ -41,3 +41,39 @@ def test_kit_driver_cells_and_replacement():
     assert "module ot_dp_rrelay_drive" in text and "module ot_dp_rgate_drive" in text
     assert K.TREE.match("    ot_dp_rgate_drive u_rrl_2_g (.clk(clk), .d(a), .run(b), .q(c));")
     assert K.TREE.match("    ot_dp_rrelay_drive u_srl_12 (.clk(clk), .d(a), .q(c));")
+
+
+def test_pair_hook_precedes_legacy_placement_and_reuses_fixed_slots():
+    t = R.build([('a',100,0)],(0,0),depth=3)
+    t.update(taps=['a'],entry='relayed',sync_stages=2,relay_driver=True,relay_pair_boxes=[])
+    text = R.tcl_text(t)
+    assert text.index('ot_reset_pair_place [ord::get_db_block]') < text.index('rtr_place rst_root_n {')
+    assert 'dict get $::ot_reset_pair_locs $nm' in text
+    assert 'ot_reset_pair_fixed.txt' in text
+    assert 'rtr_drive_place' not in text
+
+
+def test_paired_controls_remain_fixed_while_ordinary_faces_release(tmp_path):
+    import os,subprocess
+    from pathlib import Path
+    (tmp_path/'ot_face_flops.txt').write_text('relay\treset\t0\t0\t-\nface\tE\t0\t0\t-\n')
+    (tmp_path/'ot_reset_pair_fixed.txt').write_text('relay\n')
+    hook=Path(__file__).with_name('face_flops_release.tcl')
+    script='''
+set state(relay) FIRM; set state(face) FIRM
+proc block {m args} {if {$m eq "findInst"} {return [lindex $args 0]}}
+namespace eval ord {proc get_db_block {} {return block}}
+foreach name {relay face} {
+ proc $name {m args} [string map [list NAME $name] {
+  global state
+  if {$m eq "getPlacementStatus"} {return $state(NAME)}
+  if {$m eq "setPlacementStatus"} {set state(NAME) [lindex $args 0]}
+ }]
+}
+source HOOK
+puts "PAIR_STATE $state(relay) $state(face)"
+'''.replace('HOOK',str(hook))
+    for mode,expected in [('1','PAIR_STATE FIRM PLACED'),('0','PAIR_STATE PLACED PLACED')]:
+        env=dict(os.environ,RESULTS_DIR=str(tmp_path),OT_RESET_PAIR_FIXED=mode)
+        p=subprocess.run(['tclsh'],input=script,text=True,capture_output=True,env=env)
+        assert p.returncode==0 and expected in p.stdout,p.stdout+p.stderr

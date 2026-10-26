@@ -765,6 +765,8 @@ def for_type(P, tn, reach=None):
             lk = pad_spec(P)["lock"]
             T["lock"] = dict(inst=lk["inst"], pin=lk["pin"], stable=int(lk.get("stable_cycles", 16)),
                              stages=lock_stages(P))
+        if T["relay_driver"]:
+            T["relay_pair_boxes"] = blockages(P.types[tn])
         role, core_roles = start_roles(P, tn)
         if T["start"]:
             T["start_in"] = list(start_in_pin(P, tn))
@@ -793,6 +795,8 @@ def for_type(P, tn, reach=None):
         T = _type_tree(P, tn, None, reach)
     T.update(entry=ent, sync_stages=sync_stages(P, tn), type=tn,
              relay_driver=bool(P.reset.get("relay_driver")))
+    if T["relay_driver"]:
+        T["relay_pair_boxes"] = blockages(P.types[tn])
     return T
 
 
@@ -1626,7 +1630,11 @@ proc rtr_place {key pat x y tag} {
     set nm [$i getName]
     if {![string match $pat $nm]} continue
     if {![string match "*DFF*" [[$i getMaster] getName]]} continue
-    set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
+    if {[info exists ::ot_reset_pair_locs] && [dict exists $::ot_reset_pair_locs $nm]} {
+      set got [dict get $::ot_reset_pair_locs $nm]
+    } else {
+      set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
+    }
     if {$got eq ""} { lappend rtr_miss $nm; continue }
     puts $rtr_fh "$nm\\t$tag\\t[expr {[lindex $got 0] / double($ff_dbu)}]\\t[expr {[lindex $got 1] / double($ff_dbu)}]\\t-"
     dict set rtr_at $key $got
@@ -1674,23 +1682,28 @@ def tcl_text(T):
          f"rtr_place rst_root_n {{*{ent}[./]*}} {T['root'][0]:.3f} {T['root'][1]:.3f} rentry"]
     rel = start_relays(T) if T.get("start") else [dict(r, dlab=r["d"]) for r in T["relays"]]
     if T.get("relay_driver"):
-        t.append("""proc rtr_drive_place {pat x y} {
-  global ff_blk ff_dbu rtr_fh
-  set found 0
-  foreach i [$ff_blk getInsts] {
-    if {![string match $pat [$i getName]]} continue
-    if {![string match "BUF*" [[$i getMaster] getName]]} continue
-    set got [ff_put_near $i [expr {round($x*$ff_dbu)}] [expr {round($y*$ff_dbu)}]]
-    if {$got eq ""} {error "reset driver has no legal placement [$i getName]"}
-    $i setDoNotTouch true
-    puts $rtr_fh "[$i getName]\\treset_driver\\t[expr {[lindex $got 0]/double($ff_dbu)}]\\t[expr {[lindex $got 1]/double($ff_dbu)}]\\t-"
-    incr found
-  }
-  if {$found != 1} {error "expected one kept reset driver $pat, got $found"}
-}""")
+        specs = []
+        if T["entry"] != "sync":
+            specs.append(("*u_rst_in[./]*", "", *T["root"]))
+            if T.get("start"):
+                specs.append(("*u_run_in[./]*", "", *T["start_in"]))
         for r in rel:
-            if relay_cell(T, r, gated=r.get("role") == "gated").endswith("_drive"):
-                t.append(f"rtr_drive_place {{*{r['name']}[./]u_drive}} {r['xy'][0]:.3f} {r['xy'][1]:.3f}")
+            driver = (f"*{r['name']}[./]u_drive" if relay_cell(T, r, gated=r.get("role") == "gated").endswith("_drive") else "")
+            specs.append((f"*{r['name']}[./]*", driver, *r["xy"]))
+        # The physical pair allocator reserves a legal joint footprint and keeps
+        # both cells FIRM. Ordinary pin/station cells retain their usual release.
+        spec_text = " ".join("{" + f"{{{f}}} {{{d}}} {x:.6f} {y:.6f}" + "}" for f,d,x,y in specs)
+        boxes = " ".join("{" + " ".join(str(x) for x in b) + "}" for b in T.get("relay_pair_boxes", []))
+        pair_call = ["source /work/reset_pair_place.tcl",
+                     f"ot_reset_pair_place [ord::get_db_block] {{{spec_text}}} {{{boxes}}} 8.0",
+                     "set rtr_pf [open $::env(RESULTS_DIR)/ot_reset_pair_fixed.txt w]",
+                     "foreach n [dict keys $::ot_reset_pair_locs] { puts $rtr_pf $n }", "close $rtr_pf"]
+        t[1:1] = pair_call
+        t += ["dict for {n xy} $::ot_reset_pair_locs {",
+              "  set i [$ff_blk findInst $n]",
+              "  if {![string match {BUF*} [[$i getMaster] getName]]} continue",
+              '  puts $rtr_fh "$n\\treset_driver\\t[expr {[lindex $xy 0]/double($ff_dbu)}]\\t[expr {[lindex $xy 1]/double($ff_dbu)}]\\t-"',
+              "}"]
     if T.get("start"):
         rent = "u_run_root" if T["entry"] == "sync" else "u_run_in"
         t.append(f"rtr_place run_root {{*{rent}[./]*}} {T['start_in'][0]:.3f} {T['start_in'][1]:.3f} sentry")

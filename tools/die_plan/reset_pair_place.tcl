@@ -131,7 +131,9 @@ proc ot_reset_pair_place {block specs boxes max_offset_um} {
     lassign $a i x y orient driver
     if {[$i getPlacementStatus] in {FIRM LOCKED COVER}} { $i setPlacementStatus PLACED }
     $i setOrient $orient; $i setLocation $x $y; $i setPlacementStatus FIRM
-    if {$driver} { $i setDoNotTouch true }
+    # Both cell masters belong to the checked joint footprint. Resizing either
+    # one after allocation would invalidate its free-space certificate.
+    $i setDoNotTouch true
     set b [$i getBBox]
     if {[$b xMin] != $x || [$b yMin] != $y} { error "OT_RESET_PAIR actual lower-left mismatch for [$i getName]" }
   }
@@ -151,6 +153,31 @@ proc ot_reset_pair_check {block} {
     }
   }
   puts "OT_RESET_PAIR CHECK PASS [dict size $::ot_reset_pair_locs] actual controls unchanged after DPL"
+}
+# Follow repair buffers and the AND of a gated reset/START tap. An inserted
+# combinational cell is not a registered station and must not hide a long hop.
+proc ::ot_rpp::launches {net locs seen {depth 0}} {
+  if {$depth > 40} { error "OT_RESET_PAIR combinational control cone exceeds 40 levels" }
+  if {$net eq "NULL" || $net eq ""} { return {} }
+  set key [$net getName]
+  if {[dict exists $seen $key]} { error "OT_RESET_PAIR combinational reset loop at $key" }
+  dict set seen $key 1
+  set sources {}
+  foreach p [$net getITerms] { if {[$p isOutputSignal]} { lappend sources $p } }
+  if {![llength $sources]} { return {} } ;# external input or constant
+  if {[llength $sources] != 1} { error "OT_RESET_PAIR multi-driver reset net $key" }
+  set src [lindex $sources 0]; set i [$src getInst]; set m [$i getMaster]
+  if {[string match "*DFF*" [$m getName]] ||
+      ([dict exists $locs [$i getName]] && [string match "BUF*" [$m getName]])} { return [list $src] }
+  if {[$m isBlock]} { return {} } ;# hard-core interface is checked by its own contract
+  set out {}
+  foreach p [$i getITerms] {
+    if {![$p isInputSignal] || [$p getSigType] in {POWER GROUND CLOCK}} continue
+    set n [$p getNet]
+    if {$n eq "NULL" || $n eq "" || [$n getSigType] eq "CLOCK"} continue
+    lappend out {*}[::ot_rpp::launches $n $locs $seen [expr {$depth+1}]]
+  }
+  return [lsort -unique $out]
 }
 proc ot_reset_pair_verify_hops {block reach_um} {
   if {[info exists ::ot_reset_pair_locs]} {
@@ -175,15 +202,12 @@ proc ot_reset_pair_verify_hops {block reach_um} {
     foreach sink [$i getITerms] {
       if {[[$sink getMTerm] getName] ne "D"} continue
       set net [$sink getNet]; if {$net eq "NULL" || $net eq ""} continue
-      set sources {}
-      foreach p [$net getITerms] { if {[$p isOutputSignal]} { lappend sources $p } }
-      if {[llength $sources] != 1} continue
-      set src [lindex $sources 0]
-      if {![dict exists $locs [[$src getInst] getName]]} continue
-      set a [$src getBBox]; set b [$sink getBBox]
-      set d [expr {(abs(([$a xMin]+[$a xMax]-[$b xMin]-[$b xMax])/2.0)+abs(([$a yMin]+[$a yMax]-[$b yMin]-[$b yMax])/2.0))/$dbu}]
-      set maxhop [expr {max($maxhop,$d)}]; incr n
-      if {$d > $reach_um+1e-6} { lappend bad [list [[$src getInst] getName] $name $d] }
+      foreach src [::ot_rpp::launches $net $locs {}] {
+        set a [$src getBBox]; set b [$sink getBBox]
+        set d [expr {(abs(([$a xMin]+[$a xMax]-[$b xMin]-[$b xMax])/2.0)+abs(([$a yMin]+[$a yMax]-[$b yMin]-[$b yMax])/2.0))/$dbu}]
+        set maxhop [expr {max($maxhop,$d)}]; incr n
+        if {$d > $reach_um+1e-6} { lappend bad [list [[$src getInst] getName] $name $d] }
+      }
     }
   }
   puts "OT_RESET_PAIR HOPS n $n max $maxhop um over_reach [llength $bad]"
