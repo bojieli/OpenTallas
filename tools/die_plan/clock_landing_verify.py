@@ -134,6 +134,21 @@ class Verification:
             self._hard_reset[part]=ref
         return self._hard_reset[part]
 
+    def ring_reset_node(self,part,bus,info):
+        """Ring reset follows nearest physical clock tap, independently of status collector tap."""
+        t=self.raw['partition_types'][self.parts[part]['type']]
+        geom=next((b for b in t.get('buses',[]) if b['name']==bus and 'face' in b and 'window_um' in b),None)
+        if geom is None:geom=info.get('bus_geometry',{}).get(bus)
+        if geom is None:
+            slot=next((x for x in t.get('ft_slots',[]) if x['name']+'_i'==bus),None)
+            if slot and 'in_window_um' in slot:geom=dict(face=slot['in_face'],window_um=slot['in_window_um'])
+        if geom is None:raise ValueError('landing verify: missing planned ring geometry '+part+'.'+bus)
+        face=geom['face'];at=sum(geom['window_um'])/2;w,h=t['outline_um']
+        x,y=(0 if face=='W' else w,at) if face in 'EW' else (at,0 if face=='S' else h)
+        taps=t.get('clock',{}).get('taps',[])
+        tap=min(range(len(taps)),key=lambda i:abs(taps[i]['xy'][0]-x)+abs(taps[i]['xy'][1]-y)) if taps else 0
+        return f'rst_n_t{tap}'
+
     def _check_all(self):
         rows=self.table['ports'];ports={p['id']:p for p in self.raw['ports']}
         for r in rows:
@@ -143,7 +158,7 @@ class Verification:
                 self.clock(c,r['dst']);self.clock(c,r['src'],'fclk')
                 info=self.collector['types'][self.parts[r['dst']]['type']]
                 local=next(x for x in info['local_sources'] if x['name']==bus)
-                self.check_reset(c,r['dst'],local.get('node') or f"rst_n_t{local['tap']}",'u_cland_rst_'+bus)
+                self.check_reset(c,r['dst'],self.ring_reset_node(r['dst'],bus,info),'u_cland_rst_'+bus)
                 import schema
                 lane=r.get('lane',r['port'])
                 data_width=int(r['width']) if self.live_widths is None else self.live_widths.get(lane)
@@ -161,7 +176,11 @@ class Verification:
                 path=ident(pn)+'.u_cland_'+src['name']
                 sources.append(dict(node=src.get('node') or f"rst_n_t{src['tap']}",ready=self.output(path,'ready'),fault=self.output(path,'fault')))
             for child in info['children']:
-                cn=child['part'];root=self.root_collect[cn];r=self.output(root,'ready_o');f=self.output(root,'fault_o')
+                edges=[e for e in self.collector['edges'] if e['dst']==pn and e['dst_index']==child['index']]
+                if len(edges)!=1:raise ValueError('landing verify: exact collector child edge absent/ambiguous')
+                edge=edges[0]
+                if bool(edge['seam'])!=bool(child['seam']):raise ValueError('landing verify: collector seam mismatch')
+                cn=edge['src'];root=self.root_collect[cn];r=self.output(root,'ready_o');f=self.output(root,'fault_o')
                 if child['seam']:
                     path=ident(pn)+'.u_cland_monitor_'+str(child['index']);c=self.instance(path,'ot_dp_clk_landing')
                     if c:
