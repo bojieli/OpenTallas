@@ -30,10 +30,38 @@ def module_hash(path, module):
     return hashlib.sha256(m.group().encode()).hexdigest()
 
 
+DECLARATION_KEYS = ('module', 'parameters', 'ports', 'source', 'module_sha256')
+
+
+def plan_declaration(row, proof):
+    return dict(proof=proof, **{k: row[k] for k in DECLARATION_KEYS})
+
+
+def apply_plan_declarations(plan, proof, repo):
+    """Generator hook: publish exact per-type dead pin lists beside the physical contract."""
+    rows = json.loads((Path(repo) / proof).read_text())['declarations']
+    missing = sorted({row['partition_type'] for row in rows} - set(plan['partition_types']))
+    if missing:
+        raise ValueError('dead-input proof names absent plan types: ' + ', '.join(missing))
+    for t in plan['partition_types'].values():
+        if 'dead_inputs' in t:
+            t['dead_inputs'] = [d for d in t['dead_inputs'] if d.get('proof') != proof]
+    for row in rows:
+        plan['partition_types'][row['partition_type']].setdefault('dead_inputs', []).append(plan_declaration(row, proof))
+    return len(rows)
+
+
 class ProvenDead:
-    def __init__(self, manifest, repo):
+    def __init__(self, manifest, repo, plan_types=None):
         self.rows = []
         repo = Path(repo).resolve()
+        refs = manifest.get('dead_input_proofs', [])
+        if refs and plan_types is None:
+            raise ValueError('dead inputs require explicit per-type plan declarations')
+        for tn, typ in (plan_types or {}).items():
+            for decl in typ.get('dead_inputs', []):
+                if decl.get('proof') not in refs:
+                    raise ValueError('plan dead-input proof is not selected by manifest: ' + tn)
         for rel in manifest.get('dead_input_proofs', []):
             path = (repo / rel).resolve()
             if not path.is_relative_to(repo) or Path(rel).is_absolute():
@@ -66,6 +94,9 @@ class ProvenDead:
                     raise ValueError('stale dead-input source ' + row['source'])
                 if row.get('method') != 'yosys.proc.opt.no_fanout' or row.get('remaining_loads') != 0:
                     raise ValueError('missing optimized no-fanout proof')
+                typ = (plan_types or {}).get(row['partition_type'], {})
+                if plan_declaration(row, rel) not in typ.get('dead_inputs', []):
+                    raise ValueError('missing or mismatched per-type plan dead-input declaration: ' + row['partition_type'])
                 self.rows.append(row)
 
     def allows(self, partition_type, cell, port, bit, defaults=()):

@@ -599,7 +599,7 @@ class Binder:
         self.types = {k: dict(v) for k, v in plan["partition_types"].items()}
         import dead_inputs
         try:
-            self.proven_dead = dead_inputs.ProvenDead(self.ab, E.REPO)
+            self.proven_dead = dead_inputs.ProvenDead(self.ab, E.REPO, self.types)
         except ValueError as exc:
             raise BindError(str(exc)) from exc
         self.findings, self.type_splits = [], []

@@ -2641,6 +2641,10 @@ def emit(parts, lanes, routes, chans, fmap, out):
         plan, RowAllocator, types=[n for n in ft_types if n not in reused], reach_um=FT_KIT_REACH_UM, margin=.98)
     STATS_V4["frame_ft_bit_sites"] = [x for x in STATS_V4["ft_bit_sites"] if x["type"].startswith("col_")]
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
+    # COORD21:21: dead pins are part of each type's plan contract, never a manifest-only waiver.
+    from tools.die_plan.dead_inputs import apply_plan_declarations
+    apply_plan_declarations(plan, "results/token_pass/s81_dead_inputs_2148/proof_closing.json",
+                            Path(__file__).resolve().parents[3])
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
     json.dump(TYPE_NAMES_OUT, open(out / "type_names.json", "w"), indent=0, sort_keys=True)
