@@ -1,0 +1,16 @@
+{
+  "upstream": "https://github.com/The-OpenROAD-Project/OpenROAD/tree/6cb3f2b704",
+  "methods": [
+    "bool Graph2D::hasNDRCapacity\\(",
+    "double Graph2D::getCostNDRAware\\(",
+    "void Graph2D::updateNDRCapLayer\\(",
+    "void Graph2D::updateEstUsageV\\(const int x,\\s+const int y,",
+    "void Graph2D::addEstUsageToUsage\\("
+  ],
+  "source_sha256": {
+    "pinned_DataType.h": "332baabd51f956ecca65837caade5a59d20f4332748819ad1abf0bdafad051c3",
+    "pinned_graph2d.cpp": "72f6c6c22e208eed7619fc1bfd913dd05af01db8bca5264c9abdb89e2238e298",
+    "pinned_Graph2D.h": "14de6c2b5ae79e0e731c1804519fd26a9401bfc541ea31a04fda3cdd7bca2297"
+  },
+  "model_scope": "One edge, one layer; exact accounting bodies; stub FrNet/capacity; synthetic event stream, not actual E5 trace"
+}

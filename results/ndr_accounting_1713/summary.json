@@ -1,0 +1,22 @@
+{
+  "model_results": {
+    "same_cost_negative_delta_safe": {
+      "signed_before_conversion": 20.0,
+      "stored_usage": 20
+    },
+    "heterogeneous": {
+      "signed_before_conversion": -180.0,
+      "stored_usage": 65356
+    },
+    "heterogeneous_reverse_remove_safe": {
+      "signed_before_conversion": 16.0,
+      "stored_usage": 16
+    },
+    "positive_control": {
+      "signed_before_conversion": 65356.0,
+      "stored_usage": 65356
+    }
+  },
+  "ubsan_exit": 1,
+  "actual_e5_trigger": "UNPROVEN: requires actual per-operation trace; synthetic candidate only"
+}

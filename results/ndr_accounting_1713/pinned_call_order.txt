@@ -1,0 +1,96 @@
+Official commit6cb3f2b704 src/grt/src/fastroute/src/FastRoute.cpp
+2021:   if (logger_->debugCheck(GRT, "grtSteps", 1)) {
+2022:     logger_->report("After routeLAll");
+2023:   }
+2024: 
+2025:   // Congestion-driven rip-up and reroute L
+2026:   {
+2027:     const DebugScopedTimer timer(timings.congestion_rsmt,
+2028:                                  logger_,
+2029:                                  GRT,
+2030:                                  "timer",
+2031:                                  1,
+2032:                                  "Congestion-driven RSMT: {}");
+2033:     gen_brk_RSMT(true, true, true, false, noADJ);
+2034:   }
+2035:   getOverflow2D(&maxOverflow);
+2036:   if (logger_->debugCheck(GRT, "grtSteps", 1)) {
+2037:     logger_->report("After congestion-driven RSMT");
+2038:   }
+2039: 
+2040:   // New rip-up and reroute L via-guided
+2041:   {
+2042:     const DebugScopedTimer timer(timings.new_route_l,
+2043:                                  logger_,
+2044:                                  GRT,
+2045:                                  "timer",
+2046:                                  1,
+2047:                                  "Via-guided routeLAll: {}");
+2048:     newrouteLAll(false, true);
+2049:   }
+2050:   getOverflow2D(&maxOverflow);
+2051:   if (logger_->debugCheck(GRT, "grtSteps", 1)) {
+2052:     logger_->report("After newRouteLAll");
+2053:   }
+2054: 
+2055:   // Rip-up and reroute using spiral route
+2056:   {
+2057:     const DebugScopedTimer timer(
+2058:         timings.spiral, logger_, GRT, "timer", 1, "Spiral routing: {}");
+2059:     spiralRouteAll();
+2060:   }
+2061:   if (logger_->debugCheck(GRT, "grtSteps", 1)) {
+2062:     logger_->report("After spiralRouteAll");
+2063:   }
+2064: 
+2065:   // Rip-up a tree edge according to its ripup type and Z-route it
+2066:   {
+2067:     const DebugScopedTimer timer(
+2068:         timings.route_z, logger_, GRT, "timer", 1, "Initial routeZAll: {}");
+2069:     newrouteZAll(10);
+2070:   }
+2071:   int past_cong = getOverflow2D(&maxOverflow);
+2072: 
+2073:   if (logger_->debugCheck(GRT, "grtSteps", 1)) {
+2074:     logger_->report("After newRouteZAll");
+2075:   }
+2076: 
+2077:   convertToMazeroute();
+2078: 
+2079:   int enlarge_ = 10;
+2080:   int newTH = 10;
+2081:   bool stopDEC = false;
+2082:   int upType = 1;
+2083: 
+2084:   costheight_ = COSHEIGHT;
+2085:   if (maxOverflow > 700) {
+2086:     costheight_ = 8;
+2087:     logistic_coef = 1.33;
+2088:     VIA = 0;
+2089:     THRESH_M = 0;
+2090:     CSTEP1 = 30;
+2091:   }
+2092: 
+2093:   for (int i = 0; i < LVIter; i++) {
+2094:     const DebugScopedTimer timer(
+2095:         timings.monotonic, logger_, GRT, "timer", 1, "Monotonic routing: {}");
+2096:     logistic_coef = 2.0 / (1 + log(maxOverflow));
+2097:     debugPrint(logger_,
+2098:                GRT,
+2099:                "patternRouting",
+2100:                1,
+2101:                "LV routing round {}, enlarge {}.",
+2102:                i,
+2103:                enlarge_);
+2104:     routeMonotonicAll(newTH, enlarge_, logistic_coef);
+2105: 
+2106:     past_cong = getOverflow2Dmaze(&maxOverflow, &tUsage);
+2107: 
+2108:     enlarge_ += 5;
+2109:     newTH -= 5;
+2110:     newTH = std::max(newTH, 1);
+2111:   }
+2112: 
+2113:   graph2d_.InitEstUsage();
+2114: 
+2115:   int i = 1;
