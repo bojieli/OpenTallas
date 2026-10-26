@@ -1,0 +1,11 @@
+# CODEX physical clock geometry and native RC — 2026-10-25 22:43 PDT
+
+Owner child /root/die_proto/clock_physical_folds; branch codex/clockfold-2156, hub WT /srv/opentallas-scratch/claude/wt/codex-clockfold-2156, fleet source/data epyc1:/srv/opentallas-scratch2/claude/codex-clockfold-2156. No main merges.
+
+Full QC actual-geometry fold0 model FAIL501.76/416.13ps TT/FF: inherited core avoidance changes clock paths to26.41..32.08mm and83..93 buffer stages. Real-depth normalization8024 native BUFx24 cells (+0.00351mm²) makes all7121 tap paths93 stages and improves to418.27/352.06ps FAIL. Neither full failed model was routed. Sources dbde0a022 /886286b0c, failures+images committed1a17c44f8.
+
+Minimal actual adjacent pair has3 BUF,2 clock stages/tap,276.48µm physical wire/branch, maxleg138.24µm and no core/PHY overlaps. Initial native GRT0 pair proof retained; corrected R-once replay in pair0_grt/correct_ndr supersedes initial manually-R-scaled diagnostics. Native RC method investigation found actual NDR R credit already applied by current image; manual R/4 causes R/16. Use standard layerR, profile C1.3/1.6, native `estimate_parasitics -global_routing -spef_file`. ODB+read_global_route_segments replay is byte-identical to live export. Missing-segment native mutant CAUGHT GRT0263 exit1. Native exporter omits terminal wire caps; new d98a957a8 restores them with graph/CAP checks and full clock-net coverage; mixer ab9a39cfd selects assigned8W nets. Parent integrated the method and measured full actual QC mixedRC FAIL573.97/505.91ps, confirming geometry remains the blocker.
+
+Active: constant-distance physical waypoints after native legalization. Contour0 (two equal legs) failsclosed atstage65: common-radius feasibility intervals do not overlap between BF ROM and SU core. Successor contour1 admits a whole stage to use3 equal legs when needed (identical added clock depth on every path), plus coherent NDR per normalized physical stage. Live epyc1 ot-run client1371069, contour1_build.log, input fold_depth, --max-legs3. No invisible wire padding, no data cycles, no route before geometry/model verdict.
+
+Next: collect contour1, diagnose any free-contour failure or render+look before one-shot modelSTA; only route a physically plausible candidate. Native RC scripts/tool dependencies delivered through parent DIE-PROTO.
