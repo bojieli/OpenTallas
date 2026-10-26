@@ -86,3 +86,44 @@ def test_native_combinational_primitives(tmp_path, mutant):
         assert "FAIL" in out and "MISMATCH $bmux" in out
     else:
         assert "PASS" in out, out
+
+
+def test_native_memory_shared_write_clock(tmp_path):
+    """two write ports on ONE clock (WR_CLK [c, c]): the helper keeps one clock net (Yosys mem.cc would assert on
+    distinct clocks with a write priority) and matches the RTL; both write processes use that one clock."""
+    import json
+    src = """module gold(input clk, input we0, we1, input [1:0] a0, a1, ra, input [7:0] d0, d1, output [7:0] q);
+reg [7:0] mem [0:3]; integer i; initial for (i = 0; i < 4; i = i + 1) mem[i] = 8'h30 + i;
+always @(posedge clk) if (we0) mem[a0] <= d0;
+always @(posedge clk) if (we1) mem[a1] <= d1;
+assign q = mem[ra];
+endmodule
+"""
+    (tmp_path / "gold.sv").write_text(src)
+    (tmp_path / "x.ys").write_text(f"read_verilog -sv {tmp_path / 'gold.sv'}\nproc\nmemory_collect\n"
+                                   f"write_json {tmp_path / 'gold.json'}\n")
+    E.run_yosys(tmp_path / "x.ys", tmp_path / "x.log", [tmp_path], mem_gb=2)
+    cells = json.loads((tmp_path / "gold.json").read_text())["modules"]["gold"]["cells"]
+    mem = next(c for c in cells.values() if c["type"] == "$mem_v2")
+    assert int(mem["parameters"]["WR_PORTS"], 2) == 2
+    wc = mem["connections"]["WR_CLK"]
+    assert len(wc) == 2 and wc[0] == wc[1]
+    m = NS(ytype="$mem_v2", yparams=mem["parameters"], dirs=mem["port_directions"], ports=mem["connections"])
+    nets = json.loads((tmp_path / "gold.json").read_text())["modules"]["gold"]["netnames"]
+    name = {}
+    for n, v in nets.items():
+        for k, bit in enumerate(v["bits"]):
+            name.setdefault(bit, f"{n}[{k}]" if len(v["bits"]) > 1 else n)
+
+    def expr(bits):
+        return "{" + ", ".join(("1'b" + b) if isinstance(b, str) else name[b] for b in reversed(bits)) + "}"
+    conns = {p: expr(bits) for p, bits in mem["connections"].items()}
+    native = NativeGlue(tmp_path / "h", ["$mem_v2"])
+    inst = native.emit(m, conns, "u_mem")
+    # (Icarus cannot parse the per-bit memory-word writes Yosys prints, so check the structure here; the
+    # combinational primitives above are simulated.)  Yosys itself built the helper (it asserted before the fix).
+    sv = native.files[0].read_text()
+    import re
+    clocks = set(re.findall(r"always @\(posedge (\S+?)\)", sv))
+    assert clocks == {"WR_CLK[0]"}, clocks
+    assert inst.count(".WR_CLK(") == 1

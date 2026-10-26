@@ -43,18 +43,38 @@ class NativeGlue:
             raise NativeGlueError("unsupported native glue port identifier")
         constants = {p: [b if isinstance(b, str) else None for b in cell.ports[p]] for p in widths}
         exposed = {p for p in widths if any(b is None for b in constants[p])}
-        signature = json.dumps([cell.ytype, params, widths, dirs, constants], sort_keys=True)
+        # TOK-SCHED 10-25: input bits that are the SAME design net (e.g. the one clock of several write ports,
+        # WR_CLK [2, 2]) must stay one net inside the helper too; otherwise Yosys sees distinct write clocks with a
+        # priority relation (mem.cc assert port.clk == wport.clk) and the helper would not be faithful anyway.
+        first, share = {}, {}
+        for p in widths:
+            if dirs[p] != "input":
+                continue
+            for i, b in enumerate(cell.ports[p]):
+                if isinstance(b, str):
+                    continue
+                if b in first:
+                    share[(p, i)] = first[b]
+                else:
+                    first[b] = (p, i)
+        signature = json.dumps([cell.ytype, params, widths, dirs, constants,
+                                sorted([list(k) + list(v) for k, v in share.items()])], sort_keys=True)
         key = hashlib.sha256(signature.encode()).hexdigest()[:24]
         module = "ot_bind_native_" + key
         if key not in self.cache:
             self.directory.mkdir(parents=True, exist_ok=True)
-            ports, conns, next_bit = {}, {}, 2
+            ports, conns, next_bit, allbits = {}, {}, 2, {}
             for p, width in widths.items():
                 bits = list(range(next_bit, next_bit + width))
                 next_bit += width
+                allbits[p] = bits
+            for p, width in widths.items():
+                bits = allbits[p]
                 # Native memory validation requires static async-read enables,
                 # reset values, and unused clocks to remain literal, not ports.
-                conns[p] = [c if c is not None else b for b, c in zip(bits, constants[p])]
+                inner = [allbits[share[(p, i)][0]][share[(p, i)][1]] if (p, i) in share else b
+                         for i, b in enumerate(bits)]
+                conns[p] = [c if c is not None else b for b, c in zip(inner, constants[p])]
                 if width and p in exposed:
                     ports[p] = {"direction": dirs[p], "bits": bits}
             data = {"modules": {module: {
