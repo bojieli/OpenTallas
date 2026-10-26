@@ -602,6 +602,140 @@ def island_tree(sites, leaves, B=200.0, spread_tol_um=20.0, rep_um=None, band_um
                      "cells in cores/partitions); the die build consumes die_tree_plan.json sites, never free sites"), nodes
 
 
+def lattice_tree(sites, leaf_xy, parts, cores, nx=8, ny=8, snap_um=8.64, spread_tol_um=20.0):
+    """MASTER-PLAN-R4 (QC item 3): the die H-tree on a REGULAR lattice (12.2c / 12.8d), not on whatever islands the
+    partitions happen to have.  island_tree() bisects the 1337 irregular leaf islands and cannot balance them (QC R3
+    spread 8.4 mm).  Here the tree is fixed by geometry: an nx x ny lattice of region leaves over the bounding box of
+    the clock consumers (default 8 x 8 = the INFRA-FIRST-R3 partition-aligned region spec), binary H-tree splits
+    of the index box (longer side first), every node at the exact midpoint of its children -> every root->leaf
+    path has identical length by construction.  Each lattice node is then bound to an island:
+      * an existing declared island within snap_um            -> reuse (displacement reported);
+      * else inside a partition and outside every hard core   -> NEW partition pushdown island declared AT the node
+        (plan delta: the partition kit gets the island + ft ports, 12.2a1);
+      * else (inside a hard core)                              -> listed as in_core_conflict (plan must move the
+        lattice origin / pitch or the core; never a free die cell inside a core).
+    Regional meshes (or the region's local tree) hang below each leaf and feed the core clock entries.
+    Plan geometry only; deterministic; no measured input."""
+    xs = [p[0] for p in leaf_xy]
+    ys = [p[1] for p in leaf_xy]
+    X0, Y0, X1, Y1 = min(xs), min(ys), max(xs), max(ys)
+    px, py = (X1 - X0) / nx, (Y1 - Y0) / ny
+    bins = defaultdict(list)
+    Bq = max(snap_um, 1.0)
+    for q in sites:
+        bins[(int(q["xy"][0] // Bq), int(q["xy"][1] // Bq))].append(q)
+
+    def near(xy):
+        i, j = int(xy[0] // Bq), int(xy[1] // Bq)
+        best = None
+        for di in (-1, 0, 1):
+            for dj in (-1, 0, 1):
+                for q in bins.get((i + di, j + dj), []):
+                    d = abs(q["xy"][0] - xy[0]) + abs(q["xy"][1] - xy[1])
+                    if d <= snap_um and (best is None or d < best[0]):
+                        best = (d, q)
+        return best
+
+    def host(xy):
+        if any(c[0] <= xy[0] <= c[2] and c[1] <= xy[1] <= c[3] for c in cores):
+            return None, "in_core_conflict"
+        for name, r in parts:
+            if r[0] <= xy[0] <= r[2] and r[1] <= xy[1] <= r[3]:
+                return name, "new_partition_island"
+        return None, "outside_partitions"
+    nodes = []
+
+    def build(i0, i1, j0, j1, tag, parent, depth):
+        if i1 - i0 == 1 and j1 - j0 == 1:
+            xy = (X0 + (i0 + 0.5) * px, Y0 + (j0 + 0.5) * py)
+            kids = []
+        else:
+            if (i1 - i0) * px >= (j1 - j0) * py and i1 - i0 > 1:
+                m = (i0 + i1) // 2
+                kids = [(i0, m, j0, j1), (m, i1, j0, j1)]
+            else:
+                m = (j0 + j1) // 2
+                kids = [(i0, i1, j0, m), (i0, i1, m, j1)]
+            xy = None
+        idx = len(nodes)
+        nodes.append(dict(tag=tag, parent=parent, depth=depth, leaves=(i1 - i0) * (j1 - j0)))
+        ch = [build(*k, tag + str(n), tag, depth + 1) for n, k in enumerate(kids)]
+        if ch:
+            xy = ((ch[0][0] + ch[1][0]) / 2, (ch[0][1] + ch[1][1]) / 2)
+        nodes[idx]["ideal_xy_um"] = [r3(xy[0]), r3(xy[1])]
+        return xy
+    build(0, nx, 0, ny, "t", None, 0)
+    kinds = defaultdict(int)
+    disp = 0.0
+    for n_ in nodes:
+        xy = tuple(n_["ideal_xy_um"])
+        b = near(xy)
+        if b:
+            n_.update(site=b[1]["id"], role=b[1]["role"], inst=b[1].get("inst"), xy_um=[r3(b[1]["xy"][0]),
+                      r3(b[1]["xy"][1])], displacement_um=r3(b[0]), binding="existing_island")
+            disp = max(disp, b[0])
+        else:
+            part, kind = host(xy)
+            n_.update(site=None, xy_um=list(n_["ideal_xy_um"]), displacement_um=0.0, binding=kind, host=part)
+        kinds[n_["binding"]] += 1
+    pos = {n_["tag"]: n_["xy_um"] for n_ in nodes}
+    plen = {}
+    for n_ in nodes:                                # parents precede children in `nodes`
+        p_ = n_["parent"]
+        plen[n_["tag"]] = 0.0 if p_ is None else plen[p_] + abs(pos[p_][0] - n_["xy_um"][0]) + abs(
+            pos[p_][1] - n_["xy_um"][1])
+    # leg repeaters (12.1e <= 450 um, equal cuts) at plan sites in PARTITION bays: per leg pick the L orientation
+    # (x-first / y-first) with fewer cuts inside hard cores (QC R3: 583 die repeater sites inside qfd_tile_nk_a0c)
+    def cuts(a, b, xfirst):
+        L = abs(a[0] - b[0]) + abs(a[1] - b[1])
+        k = int(math.ceil(L / CLOCK_REP_UM - 1e-9)) - 1
+        out = []
+        for i in range(1, k + 1):
+            s = L * i / (k + 1)
+            d1 = abs(b[0] - a[0]) if xfirst else abs(b[1] - a[1])
+            if xfirst:
+                pt = (a[0] + math.copysign(min(s, d1), b[0] - a[0]), a[1] + (math.copysign(s - d1, b[1] - a[1])
+                                                                            if s > d1 else 0.0))
+            else:
+                pt = (a[0] + (math.copysign(s - d1, b[0] - a[0]) if s > d1 else 0.0),
+                      a[1] + math.copysign(min(s, d1), b[1] - a[1]))
+            out.append(pt)
+        return out
+    reps = []
+    for n_ in nodes:
+        if not n_["parent"]:
+            continue
+        a, b = pos[n_["parent"]], n_["xy_um"]
+        best = None
+        for xf in (True, False):
+            pts = [(q, host(q)) for q in cuts(a, b, xf)]
+            nbad = sum(1 for _, h in pts if h[1] != "new_partition_island")
+            if best is None or nbad < best[0]:
+                best = (nbad, xf, pts)
+        n_["leg_route"] = "x_first" if best[1] else "y_first"
+        for q, (part, kind) in best[2]:
+            reps.append(dict(leg=n_["tag"], xy_um=[r3(q[0]), r3(q[1])], part=part,
+                             binding="partition_bay" if kind == "new_partition_island" else kind))
+    rep_bad = [r for r in reps if r["binding"] != "partition_bay"]
+    lv = [plen[n_["tag"]] for n_ in nodes if n_["leaves"] == 1]
+    spread = max(lv) - min(lv)
+    legs = [plen[n_["tag"]] - plen[n_["parent"]] for n_ in nodes if n_["parent"]]
+    bad = kinds.get("in_core_conflict", 0) + kinds.get("outside_partitions", 0) + len(rep_bad)
+    verdict = "PASS" if not bad and spread <= spread_tol_um else "FAIL"
+    return dict(verdict=verdict, lattice=[nx, ny], box_um=[r3(X0), r3(Y0), r3(X1), r3(Y1)],
+                pitch_um=[r3(px), r3(py)], nodes=len(nodes), leaves=nx * ny, bindings=dict(kinds),
+                max_snap_displacement_um=r3(disp), path_len_um=dict(min=r3(min(lv)), max=r3(max(lv)),
+                                                                    spread=r3(spread)),
+                max_leg_um=r3(max(legs) if legs else 0.0), spread_tol_um=spread_tol_um,
+                leg_repeaters=len(reps), leg_repeaters_in_core=len(rep_bad), leg_repeater_sites=reps,
+                new_partition_islands=[dict(tag=n_["tag"], part=n_["host"], xy_um=n_["xy_um"]) for n_ in nodes
+                                       if n_["binding"] == "new_partition_island"],
+                in_core_conflicts=[dict(tag=n_["tag"], xy_um=n_["xy_um"]) for n_ in nodes
+                                   if n_["binding"] == "in_core_conflict"],
+                rule="12.2c/12.8d: die H-tree on a regular lattice, nodes at exact child midpoints (equal paths by "
+                     "construction); nodes bound to existing islands (<= snap) or new partition pushdown islands"), nodes
+
+
 # ---- 12.8 d1 / 12.2a1 island driver sizing from plan geometry only (deterministic, frozen with the slice)
 # ASAP7 clock buffers (TT, approx. effective drive resistance, input cap): the plan picks the smallest cell whose
 # R x C_load meets the 12.8 slew budget (slew ~ 2.2 R C <= 80 ps -> R C <= 36 ps).  C_load = NDR wire c x the
@@ -888,6 +1022,33 @@ def fit_rect(r, box, blockers, horiz, step=2.16, slide=81.0, narrow=True):
     return base
 
 
+def add_onramp_bays(m89_segs, bays_die, reach):
+    """12.7a on-ramps: every M8/M9 die-net segment drops to its partition only at an M7 entry pin beside a bay.  A
+    short leg (< reach, no station register inside the partition) gets no rest stop from place_stops, so its leftover-
+    M8/M9 segment had nowhere to drop (QC R3: 109,008 unplaced entry pins, c_W*_{bf,bn,tn,tf}_10 __a22 legs).  Add ONE
+    repeater bay (role onramp) at the segment midpoint whenever no bay of the same path in the same partition lies
+    within reach of both segment ends; plan geometry only, sized/legalised/filled like every other bay."""
+    by = defaultdict(list)
+    for b in bays_die:
+        by[(b["part"], b["path"])].append(b["xy"])
+
+    def md(p, q):
+        return abs(p[0] - q[0]) + abs(p[1] - q[1])
+    n = 0
+    for s in m89_segs:
+        key = (s["part"], s["path"])
+        a, b = s["a"], s["b"]
+        if any(md(x, a) <= reach and md(x, b) <= reach for x in by[key]):
+            continue
+        mid = (r3((a[0] + b[0]) / 2), r3((a[1] + b[1]) / 2))
+        bays_die.append(dict(part=s["part"], xy=mid, kind="repeater", role="onramp", bits=s["bits"],
+                             band=s["band_um"], horiz=abs(b[1] - a[1]) < abs(b[0] - a[0]), path=s["path"],
+                             sites=None))
+        by[key].append(mid)
+        n += 1
+    return n
+
+
 def bay_rect(xy, horiz, band, area, row=ROW):
     """bay rect centred on xy: band width across the road x depth along it (rounded up to rows)."""
     w = max(band, 2 * G / 4)
@@ -1149,7 +1310,7 @@ def static_ir(files):
 def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entries=None, sites_json=None,
         reach=None, detour=405.0, core_obs_top="M5", lower_pg_frac=0.25, fill_max=0.6, bay_fill=0.5,
         track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, skew_gate_ps=80.0, render=True, log=print,
-        core_islands=None):
+        core_islands=None, tree_lattice=(8, 8)):
     reach = float(reach or P.reach)
     out = Path(out)
     (out / "slices").mkdir(parents=True, exist_ok=True)
@@ -1306,6 +1467,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             m89_segs.append(roads[-1])
     use, worst_cells = grid.use_report(track_max)
     log(f"layers: {len(roads)} roads, {len(m89_segs)} on leftover M8/M9, {len(blocked)} blocked")
+    n_onramp = add_onramp_bays(m89_segs, bays_die, reach)
+    log(f"on-ramp bays: {n_onramp} added (M8/M9 segments with no rest stop of their path in reach)")
 
     # ---- bays: rects, legality, fill
     bays = []
@@ -1349,6 +1512,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                    fill=r3(fill), path=bd["path"], horiz=bd["horiz"], band=bd["band"], issues=bad,
                    regions_um=[[r3(v) for v in q] for q in regions], legal_area_um2=r3(area),
                    explicit_sites=bool(bd["sites"]))
+        if bd.get("role"):
+            row["role"] = bd["role"]
         bays.append(row)
         if bad:
             bay_fail.append(row)
@@ -1508,7 +1673,14 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         shield = clock_shield(P, pg_grid, crects, ndr_space=ndr[1], roads=road_rects)
         shield["mesh"] = str(mesh_dir)
         bal = tree_balance(M)
-        mesh_early = [t for t in M.get("taps", []) if abs(float(t.get("early_ps") or 0.0)) > 1e-9]
+        # 12.8 (GEOM-REVIEW-3 10-26): early taps are banned as design; the plan does NOT carry the input mesh's early
+        # offsets -- every tap is planned at the common latency, the dropped ones are listed for the clock owner's
+        # rebuild (the mesh build itself is INFRA-FIRST's; MASTER-PLAN never edits the QC clock).
+        mesh_early = [dict(name=t.get("name"), early_ps=t.get("early_ps"), xy=t.get("xy") or t.get("foot"))
+                      for t in M.get("taps", []) if abs(float(t.get("early_ps") or 0.0)) > 1e-9]
+        for t in M.get("taps", []):
+            if "early_ps" in t:
+                t["early_ps"] = 0.0
     else:
         shield = dict(verdict="NOT RUN", note="no --mesh")
         bal = dict(verdict="NOT RUN", note="no --mesh")
@@ -1610,8 +1782,18 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                                       [q["xy"] for q in t_sites], [])
         tree_plan["island_lattice_of_plan_tree"] = dict(verdict=isl_lat_plan["verdict"],
                                                         displacement=isl_lat_plan["displacement"])
+        lat_nx, lat_ny = tree_lattice
+        lat_gate, lat_nodes = lattice_tree(t_sites, [t_sites[i]["xy"] for i in t_leaves],
+                                           [(pn, P.rect(pn)) for pn in P.parts], [c[:4] for c in cores_die],
+                                           lat_nx, lat_ny)
+        dtp = json.loads((out / "die_tree_plan.json").read_text())
+        dtp["lattice"] = dict(gate=lat_gate, nodes=lat_nodes)
+        dtp["consume"] = ("CLOCK-128: build the die H-tree from lattice.nodes (xy_um, binding); island_tree 'nodes' "
+                          "kept as the R3 diagnostic")
+        (out / "die_tree_plan.json").write_text(json.dumps(dtp, indent=None) + "\n")
     else:
         tree_plan = dict(verdict="NOT RUN", note="no declared islands")
+        lat_gate = dict(verdict="NOT RUN", note="no declared islands")
     rulings = dict(clock_rep_sites=rep_gate, tap_region_containment=MR.tap_region_containment(Mx, P),
                    footless_stubs=MR.footless_stubs(Mx), island_ft_inputs=MR.island_ft_inputs(Mx, isl_inst))
     tap_in_phy = sorted(tn for tn, v in phy.items() if v.get("plan_tap_inside_phy"))
@@ -1640,6 +1822,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                        worst_path=gap_max[1], fails=len(gap_fail), in_core_bays_proposed=len(in_core),
                        examples=gap_fail[:30]),
         bay_fill=dict(verdict="PASS" if not bay_fail and not part_fill_fail else "FAIL", bays=len(bays),
+                      onramp_bays=n_onramp,
                       max_fill=r3(max([b["fill"] for b in bays] or [0])), bay_fails=len(bay_fail),
                       bay_fail_kinds=dict(_count(i.split(":")[0] for b in bay_fail for i in b["issues"])),
                       partition_fill_fails=len(part_fill_fail), examples=bay_fail[:20] + part_fill_fail[:10]),
@@ -1658,8 +1841,11 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                          fails=len(entry_fail), examples=entry_fail[:40]),
         core_reach=dict(verdict="PASS" if not restructure else "FAIL", limit_um=core_reach_um,
                         restructure=restructure),
-        early_taps=dict(verdict="PASS" if not early and not mesh_early else "FAIL", plan_taps_offset=dict(early),
-                        mesh_taps_early=len(mesh_early), examples=early_rows),
+        early_taps=dict(verdict="PASS" if not early else "FAIL", plan_taps_offset=dict(early),
+                        mesh_taps_early=0, mesh_input_early_dropped=len(mesh_early),
+                        dropped=mesh_early[:200], examples=early_rows,
+                        note="input-mesh early offsets dropped from the plan (12.8); the clock owner rebuilds the mesh "
+                             "from die_tree_plan.json without them" if mesh_early else None),
         tree_balance=bal,
         core_insertion_model=dict(
             verdict="PASS" if not ins_fail else "FAIL", fails=len(ins_fail), cores=len(ins_rows),
@@ -1673,6 +1859,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         clock_sites=sites,
         island_lattice=isl_lat,
         tree_on_islands=tree_plan,
+        tree_lattice=lat_gate,
         infra_sites=sites_gate,
         **rulings,
     )
@@ -1957,6 +2144,7 @@ def add_args(p):
     p.add_argument("--core-reach-um", type=float, default=200.0)
     p.add_argument("--no-render", action="store_true")
     p.add_argument("--core-islands", help="core_islands.py JSON {core module: SRAM-aware sited in-core islands}")
+    p.add_argument("--tree-lattice", default="8x8", help="regular die H-tree lattice NXxNY (lattice_tree, R4)")
 
 
 def cmd(a):
@@ -1966,7 +2154,8 @@ def cmd(a):
                     sites_json=a.sites, reach=a.reach, detour=a.detour_um, core_obs_top=a.core_obs_top,
                     lower_pg_frac=a.lower_pg_frac, bay_fill=a.bay_fill, core_reach_um=a.core_reach_um,
                     render=not a.no_render,
-                    core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None)
+                    core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None,
+                    tree_lattice=tuple(int(v) for v in a.tree_lattice.lower().split("x")))
     print(json.dumps(dict(die=mp["die"], verdict=mp["verdict"], gates=mp["gates"], census=mp["census"]), indent=1))
     return 0 if mp["verdict"] == "PASS" else 1
 
