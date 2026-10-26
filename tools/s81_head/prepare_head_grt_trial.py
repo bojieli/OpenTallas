@@ -9,7 +9,7 @@ repo=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(repo/'tools/die_plan'))
 from core_flow import binding,apply
 if a.out.exists():raise SystemExit('refuse existing output')
-a.out.mkdir()
+a.out.mkdir(parents=True)
 for f in a.seed.iterdir():
  if f.is_file() and not f.name.endswith('.log') and not f.name.startswith(('postcts_gate_','setup_','hold_')):shutil.copy2(f,a.out/f.name)
 for sub in ['rtl','macros']:shutil.copytree(a.seed/sub,a.out/sub)
@@ -27,7 +27,7 @@ cfg+=['export SKIP_INCREMENTAL_REPAIR = 0','export CORNER = BC','export CORNERS 
 (a.out/'grt_clock_protect.tcl').write_text('set_dont_touch [get_nets -of_objects [get_ports clk]]\n')
 (a.out/'DIAGNOSTIC_SCOPE.txt').write_text(basis+'\nTT setup / FF hold,833ps,60/25ps uncertainty, pair80. No DRT or SIGNED. Intrinsic network means521.36TT/419.29FF differ from absolute insertion by source-120.\n')
 # do-grt avoids make prerequisites; only the reviewed4_cts checkpoint is consumed.
-(a.out/'run_grt_trial.sh').write_text('''#!/bin/bash
+(a.out/'run_grt_trial.sh').write_text(r'''#!/bin/bash
 set -euo pipefail
 K=$(realpath "$1")
 test "${2:-grt}" = grt || { echo GRT_ONLY; exit 2; }
