@@ -1243,11 +1243,67 @@ SHARED_LANES = {"git-mirror", "flowhold", "ttbatch", "ttviews"}   # provisioned 
 LANE_RE = re.compile(r"/srv/opentallas-scratch[^/\s'\";|&()<>]*/claude/[A-Za-z0-9_+-][A-Za-z0-9_.+-]*")
 
 
+def command_srv_paths(cmd):
+    """Host paths, recognizing only Docker run/create volume flags before its image.
+
+    A Docker bind argument is host:container[:mode], not one host filename. Never
+    split arbitrary colon paths, other commands, or the container command after the
+    image. Compound shell scripts keep the original conservative path scan.
+    """
+    args = list(cmd)
+    if len(args) == 3 and os.path.basename(args[0]) in ("bash", "sh") and args[1] in ("-c", "-lc", "-ec", "-euc"):
+        if not any(c in args[2] for c in ";&|\n"):
+            try:
+                args = shlex.split(args[2])
+            except ValueError:
+                pass
+    start = 0
+    if args[:1] == ["sudo"]:
+        start = 2 if args[1:2] == ["-n"] else 1
+    if args[start:start+1] == ["exec"]:
+        start += 1
+    is_docker = (len(args) > start+1 and os.path.basename(args[start]) == "docker"
+                 and args[start+1] in ("run", "create"))
+    if is_docker:
+        modes = {"ro", "rw", "z", "Z", "cached", "delegated", "consistent", "private", "rprivate",
+                 "shared", "rshared", "slave", "rslave", "nocopy"}
+        values = {"--cpus", "--memory", "--memory-swap", "--name", "--entrypoint", "--user", "-u",
+                  "--workdir", "-w", "--env", "-e", "--env-file", "--network", "--hostname", "-h",
+                  "--label", "-l", "--gpus", "--device", "--shm-size", "--ulimit"}
+        flags = {"--rm", "--init", "--privileged", "--read-only", "--detach", "-d", "--interactive",
+                 "--tty", "-i", "-t", "-it", "-ti"}
+        i = start+2
+        while i < len(args):
+            a = args[i]
+            if a in ("-v", "--volume") and i+1 < len(args):
+                at, prefix = i+1, ""
+                step = 2
+            elif a.startswith("--volume="):
+                at, prefix, step = i, "--volume=", 1
+            elif a.startswith("-v") and len(a) > 2:
+                at, prefix, step = i, "-v", 1
+            elif a in values:
+                i += 2
+                continue
+            elif a in flags or (a.startswith("--") and "=" in a):
+                i += 1
+                continue
+            else:
+                break  # image, --, or an unknown option: never guess its arity
+            spec = args[at][len(prefix):]
+            parts = spec.split(":")
+            if (len(parts) in (2, 3) and parts[0].startswith("/") and parts[1].startswith("/")
+                    and (len(parts) == 2 or (parts[2] and set(parts[2].split(",")) <= modes))):
+                args[at] = prefix + parts[0]
+            i += step
+    return re.findall(r"/srv/[^\s'\";|&()<>]*", " ".join(args))
+
+
 def spill_paths_ok(cmd, d, root):
     """-> (reason, extra lane roots).  /srv paths the command names must lie in a lane root (copied with it);
     '../' only when --dir is below its root"""
     j, extra = " ".join(cmd), set()
-    for p in re.findall(r"/srv/[^\s'\";|&()<>]*", j):
+    for p in command_srv_paths(cmd):
         p = os.path.normpath(p)
         if p == root or p.startswith(root + "/"):
             continue
@@ -1296,7 +1352,7 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
     if STAGE:                    # v14 STAGE: exactly the caller's paths, no lane-root closure
         if not under(d, STAGE):
             return None, f"--dir {d} is not inside a --stage path", True
-        for p in re.findall(r"/srv/[^\s'\";|&()<>]*", " ".join(cmd)):
+        for p in command_srv_paths(cmd):
             m = SCRATCH_RE.match(os.path.normpath(p))
             if not under(p, STAGE) and not (m and m.group(1).rsplit("/", 1)[-1] in SHARED_LANES):
                 return None, f"command names {p} outside the --stage paths", True
