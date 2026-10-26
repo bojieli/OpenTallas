@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Opt-in measured per-tap die stub compensation; no tile or data-cycle changes.
 
-Insert a delay chain after each existing mesh stub at its legal foot.
-The original stub remains the mesh load. Match TT and FF measured tap arrivals jointly,
+Append a delay chain at each existing routed tap endpoint, keeping its long stub.
+The original stub remains the mesh load and drives its original long wire. Match TT and FF measured tap arrivals jointly,
 including the declared per-corner core insertion. Reroute and remeasure required.
 """
 import argparse
@@ -103,10 +103,10 @@ def run(a):
         shortlist=sorted(table,key=lambda x:max(abs(x[1][c]-need[c]) for c in ('TT','FF')))[:24]
         actual=[]
         for ch,_ in shortlist:
-            ds={c:chain_delay(libs[c],ch,mesh_rc[c]['stubs'][old]['slew_late'],libs[c][M.BUF][1],wire_ff=.05)[0] for c in ('TT','FF')}
+            ds={c:chain_delay(libs[c],ch,arr[c][t['port']][2],3.0,wire_ff=1.0)[0] for c in ('TT','FF')}
             actual.append((max(abs(ds[c]-need[c]) for c in ('TT','FF')),len(ch),ch,ds))
         err,_,ch,ds=min(actual)
-        base=cells[old]; names=[]
+        base={'x':t['xy'][0]-M.BUF_W/2,'y':t['xy'][1]-M.ROW_Y/2}; names=[]
         for k,lib in enumerate(ch):
             # Row-aligned local island; never move a cell into a hard keep-out.
             q=(base['x']+M.BUF_W/2+(k+1)*M.BUF_W*1.12,base['y']+M.ROW_Y/2+2*M.ROW_Y)
@@ -119,9 +119,10 @@ def run(a):
             cells[nm]={'x':M.snap(q[0]-M.BUF_W/2,M.SITE_X),'y':M.snap(q[1]-M.ROW_Y/2,M.ROW_Y),'kind':'stub_trim','lib':lib}
             reserve(cells[nm]['x'],cells[nm]['y'])
             names.append(nm)
-        original=next(n for n in data['nets'] if n['drv']==old)
-        original['drv']=names[-1]
-        for u,v in zip([old]+names[:-1],names):
+        original=next(n for n in data['nets'] if 'port:'+t['port'] in n['loads'])
+        original['name']=f'ckm_w_leaftrim_{ti}_input'
+        original['loads']=[names[0] if x=='port:'+t['port'] else x for x in original['loads']]
+        for u,v in zip(names,names[1:]+['port:'+t['port']]):
             data['nets'].append({'name':f'ckm_w_leaftrim_{ti}_{u}','drv':u,'loads':[v],'level':99})
         t['leaftrim']={'cells':names,'TT_added_ps':round(ds['TT'],3),'FF_added_ps':round(ds['FF'],3),'fit_error_ps':round(err,3)}
         residuals.append(err)
