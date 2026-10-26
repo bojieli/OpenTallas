@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "ONE CTS-only corrective trial each common and terminal no-ID tile; no GRT/DRT/signoff",
+  "image": "results/geom_review/codex_hbm_tkm_cts_20261025_2155/source_geometry.png",
+  "reviewer": "Codex",
+  "findings": [
+    "Macro-free319.68x345.6 outlines; ordered S-face terminal input/return groups share abutting face; common ordered N/S groups.",
+    "Terminal two control pins at NW form sparse island; post-CTS must inspect branch reach and per-third insertion.",
+    "Clock E-mid entry has <=20um first-buffer box; shallow-clock topology corrects inherited density CTS insertion522ps vs250ps.",
+    "Far clock-to-pin Manhattan481um requires repeated balanced trunk; leg unbuffered>450um is structural FAIL.",
+    "No macro walls or PDN obstruction in these tile outlines. Final routing density, actual CTS skew and hold await post-CTS review."
+  ],
+  "prior_review": "GEOM-REVIEW20:50 and21:10 PATH-HBM-TKMTERM-CTS",
+  "canary_fix": "43447659a3093659b602805cbc5f31a23f74c51b@/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_43447659a_1025_184713_745561/canary.json",
+  "rows": [
+    "6df1037d6735",
+    "22791dba0c4a"
+  ],
+  "data_cycle_delta": 0
+}
