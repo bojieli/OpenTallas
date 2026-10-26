@@ -12227,7 +12227,7 @@
     {"inst":"u_ctrl_a","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
     {"inst":"u_ctrl_b","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
     {"inst":"u_etap_a","module":"dsdv_eng_tap","status":"reuse"},
-    {"inst":"u_etap_b","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_etap_b","module":"dsdv_eng_tap_entry39","status":"reuse"},
     {"inst":"u_irg","module":"dsdv_idx_rg3","status":"rework","note":"irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"}
    ],
    "hard_cores": [
