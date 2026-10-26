@@ -762,14 +762,11 @@ def shield_stripes(segs, nd):
     return out
 
 
-def pg_grid(P):
-    """the die PG stripe rules (die.pg.grid + each PHY domain's grid limited to its rect_um), die_infra.pg_rects form."""
-    pg = P.die.get("pg") or {}
-    grid = [dict(g) for g in pg.get("grid") or []]
-    for dm in pg.get("domains") or []:
-        for g in dm.get("grid") or []:
-            grid.append(dict(g, rect_um=list(dm["rect_um"])))
-    return grid
+def pg_grid(P, pg=None):
+    """the die PG stripe rules (die.pg.grid + each PHY domain's grid on its own region, core grid cut around it, die
+    phase): die_infra.pg_grid -- ONE PG model for the clock, reset and shield tools (HBM-PG 10-26)."""
+    import die_infra as DI
+    return DI.pg_grid(P, pg)
 
 
 def shield_ties(stripes, pg_rects, w_shield, net="VSS", tile_um=50.0, tie_pitch_um=34.56):

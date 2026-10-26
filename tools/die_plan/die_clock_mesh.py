@@ -1371,7 +1371,7 @@ def cmd_build(a):
         # (the grid the combo ties land on when the build had no --pg-json)
         import die_infra as DI
         pg = json.loads(Path(a.pg_json).read_text()) if a.pg_json else None
-        pg_shapes = DI.pg_rects(P, pg["grid"] if pg else C128.pg_grid(P))
+        pg_shapes = DI.pg_rects(P, DI.pg_grid(P, a.pg_json) if a.pg_json else C128.pg_grid(P))   # + die.pg.domains (HBM-PG 10-26)
         tracks = mesh_tracks(a.track_file, P)
     region_spec = json.loads(Path(a.region_spec).read_text()) if a.region_spec else None
     fp = json.loads(Path(a.clock_floorplan).read_text()) if a.clock_floorplan else None
@@ -1901,7 +1901,7 @@ def cmd_combo(a):
         # the build's actual IR-sized PG file (--pg-json, the same rects the mesh axes avoided) when it had one, else
         # the plan's die.pg grid (CLOCK-128-R2: the ties must land on the grid the die is really built with)
         pg_src = M["meta"].get("pg_source")
-        grid_ = json.loads(Path(pg_src).read_text())["grid"] if pg_src else C128.pg_grid(Pp)
+        grid_ = C128.pg_grid(Pp, pg_src)         # core grid (IR-sized pg.json or plan) + die.pg.domains, one model
         pgr = DI.pg_rects(Pp, grid_)
         stripes = C128.shield_stripes(shield_segs_all, nd)
         ties = C128.shield_ties(stripes, pgr, nd["width"], net=shield_net)
