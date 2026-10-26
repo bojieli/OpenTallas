@@ -12,10 +12,17 @@ for k,(w,d) in enumerate(classes):
  v=0 if w==516 else 512
  body += [f'reg [{w-1}:0] din{k}=0; wire [{w-1}:0] q{k};reg [{w-1}:0] h{k}[0:{d-1}];reg [63:0] rng{k}=64\'h{0x123456789abcdef0+k:016x};',f'genvar g{k}; generate for(g{k}=0;g{k}<{w};g{k}=g{k}+1)begin : field{k}',f'ot_dp_dly #(.W(1),.D({d})) u(.clk(clk),.d(din{k}[g{k}]),.q(q{k}[g{k}]));end endgenerate']
  body += [f'wire [{w-1}:0] check{k};']
- if (w,d)==mut1:body += [f'assign check{k}=(mut==1)?din{k}:q{k};']
- elif (w,d)==mut2:body += [f'wire early{k};ot_dp_dly #(.W(1),.D({d-1})) early(.clk(clk),.d(din{k}[512]),.q(early{k}));',f'assign check{k}={{q{k}[513],(mut==2?early{k}:q{k}[512]),q{k}[511:0]}};']
- elif (w,d)==mut3:body += [f'wire earlyfault{k};ot_dp_dly #(.W(1),.D({d-1})) earlyfault(.clk(clk),.d(din{k}[513]),.q(earlyfault{k}));',f'assign check{k}={{(mut==3?earlyfault{k}:q{k}[513]),q{k}[512:0]}};']
- else:body += [f'assign check{k}=q{k};']
+ conditions=[]
+ if (w,d)==mut1:conditions.append((1,f'din{k}'))
+ if (w,d)==mut2:
+  body += [f'wire early{k};ot_dp_dly #(.W(1),.D({d-1})) early(.clk(clk),.d(din{k}[512]),.q(early{k}));']
+  conditions.append((2,f'{{q{k}[513],early{k},q{k}[511:0]}}'))
+ if (w,d)==mut3:
+  body += [f'wire earlyfault{k};ot_dp_dly #(.W(1),.D({d-1})) earlyfault(.clk(clk),.d(din{k}[513]),.q(earlyfault{k}));']
+  conditions.append((3,f'{{earlyfault{k},q{k}[512:0]}}'))
+ expression=f'q{k}'
+ for mutant,value in reversed(conditions):expression=f'(mut=={mutant}?{value}:{expression})'
+ body += [f'assign check{k}={expression};']
  body += [f'always @(posedge clk) begin : replay{k}',f'integer j,b;if(cycle>64)begin',f'if(check{k}!==h{k}[{d-1}])begin $display("CB16_FLOW_MISMATCH class={k} W={w} D={d} cycle=%0d mut=%0d",cycle,mut);$fatal(1,"packet/timing mismatch");end',f'end for(j={d-1};j>0;j=j-1)h{k}[j]=h{k}[j-1];h{k}[0]=din{k};',f'for(b=0;b<{w};b=b+1)begin rng{k}=rng{k}^(rng{k}<<13);rng{k}=rng{k}^(rng{k}>>7);rng{k}=rng{k}^(rng{k}<<17);din{k}[b]<=rng{k}[0];end',f'din{k}[{v}]<=((cycle%11)<7);din{k}[513]<=((cycle%251)==0);end']
 body += ['always @(posedge clk) begin cycle<=cycle+1;if(cycle==4096)begin $display("CB16_PAD_FLOW_PASS cycles=%0d classes='+str(len(classes))+'",cycle);$finish;end end','endmodule']
 (r/'tb.sv').write_text('\n'.join(body)+'\n');(r/'classes.json').write_text(json.dumps(classes));print('CLASSES',classes)
