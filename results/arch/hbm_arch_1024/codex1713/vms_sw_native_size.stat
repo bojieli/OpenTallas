@@ -1,0 +1,186 @@
+
+43. Printing statistics.
+
+=== ot_vms_rcl_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       43 wires
+     3834 wire bits
+       24 public wires
+     2948 public wire bits
+       12 ports
+     1727 port bits
+     1721 cells
+        3   $_ANDNOT_
+        3   $_AND_
+        1   $_DFFE_PN0P_
+     1411   $_DFF_PN0_
+      287   $_MUX_
+        7   $_NAND_
+        3   $_NOR_
+        3   $_NOT_
+        1   $_ORNOT_
+        2   $_OR_
+
+=== ot_vms_status_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      545 wires
+     1125 wire bits
+       16 public wires
+      284 public wire bits
+        6 ports
+      169 port bits
+      766 cells
+        1   $_ANDNOT_
+       61   $_AND_
+       27   $_DFF_PN0_
+      104   $_DFF_P_
+      336   $_NAND_
+       11   $_NOR_
+        1   $_ORNOT_
+       34   $_OR_
+       38   $_XNOR_
+      153   $_XOR_
+
+=== $paramod$9111afeec0f9712f8982a2f5fd6f1e667ac0f888\ot_vms_slice_static_glue ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       59 wires
+    37123 wire bits
+       57 public wires
+    37121 public wire bits
+       34 ports
+    21401 port bits
+        2 cells
+        2   $_OR_
+        5 submodules
+        2   $paramod$15250b73f4818af2963d267631f33104fdc1402a\ot_vms_rstop_static
+        1   $paramod$f2495707096e9cb2d5699d31b5b96752887f1d3b\ot_vms_hub_static
+        1   ot_vms_rcl_static
+        1   ot_vms_status_static
+
+=== hfd_hgi_vms_static_SW_glue ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       33 wires
+    21399 wire bits
+       33 public wires
+    21399 public wire bits
+       33 ports
+    21399 port bits
+        1 submodules
+        1   $paramod$9111afeec0f9712f8982a2f5fd6f1e667ac0f888\ot_vms_slice_static_glue
+
+=== hfd_hgi_vms_glue_sw_t ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       95 wires
+    32588 wire bits
+       95 public wires
+    32588 public wire bits
+       87 ports
+    21396 port bits
+        1 submodules
+        1   hfd_hgi_vms_static_SW_glue
+
+=== $paramod$f2495707096e9cb2d5699d31b5b96752887f1d3b\ot_vms_hub_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+   111435 wires
+   155462 wire bits
+      186 public wires
+    37488 public wire bits
+       21 ports
+     7404 port bits
+   125622 cells
+      598   $_ANDNOT_
+    30679   $_AND_
+       32   $_DFFE_PN0P_
+      192   $_DFFE_PP_
+       90   $_DFF_PN0_
+     3691   $_DFF_P_
+    25208   $_MUX_
+    52473   $_NAND_
+     2495   $_NOR_
+       35   $_NOT_
+      308   $_ORNOT_
+     3026   $_OR_
+     3072   $_SDFFE_PP0P_
+       51   $_SDFF_PN0_
+     3582   $_SDFF_PP0_
+       59   $_XNOR_
+       31   $_XOR_
+
+=== $paramod$15250b73f4818af2963d267631f33104fdc1402a\ot_vms_rstop_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    15426 wires
+    35494 wire bits
+       50 public wires
+    17324 public wire bits
+       21 ports
+     9999 port bits
+    30444 cells
+       22   $_ANDNOT_
+     8524   $_AND_
+    10071   $_DFF_PN0_
+        6   $_MUX_
+    11693   $_NAND_
+       34   $_NOR_
+        2   $_NOT_
+       23   $_ORNOT_
+       35   $_OR_
+       23   $_XNOR_
+       11   $_XOR_
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+   188999 hfd_hgi_vms_glue_sw_t
+        2   $paramod$9111afeec0f9712f8982a2f5fd6f1e667ac0f888\ot_vms_slice_static_glue
+    30444     $paramod$15250b73f4818af2963d267631f33104fdc1402a\ot_vms_rstop_static
+   125622     $paramod$f2495707096e9cb2d5699d31b5b96752887f1d3b\ot_vms_hub_static
+     1721     ot_vms_rcl_static
+      766     ot_vms_status_static
+
+        +----------Count including submodules.
+        | 
+   143062 wires
+   322519 wire bits
+      511 public wires
+   166476 public wire bits
+      235 ports
+    93494 port bits
+        - memories
+        - memory bits
+        - processes
+   188999 cells
+      646   $_ANDNOT_
+    47791   $_AND_
+       33   $_DFFE_PN0P_
+      192   $_DFFE_PP_
+    21670   $_DFF_PN0_
+     3795   $_DFF_P_
+    25507   $_MUX_
+    76202   $_NAND_
+     2577   $_NOR_
+       42   $_NOT_
+      356   $_ORNOT_
+     3134   $_OR_
+     3072   $_SDFFE_PP0P_
+       51   $_SDFF_PN0_
+     3582   $_SDFF_PP0_
+      143   $_XNOR_
+      206   $_XOR_
+        1 submodules
+        1   hfd_hgi_vms_static_SW_glue
+

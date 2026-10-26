@@ -1,0 +1,554 @@
+{
+ "status": "PARKED_UNADOPTED_RESET",
+ "cut_y_um": 8484.48,
+ "growth_um": 501.12,
+ "area_before_mm2": 457.37571041279995,
+ "area_after_mm2": 471.60735805440004,
+ "area_added_mm2": 14.2316476416,
+ "stretched_types": [
+  "NE_io",
+  "NW_io",
+  "q_b000",
+  "q_b001",
+  "q_b002",
+  "q_b003",
+  "q_b010",
+  "q_b011",
+  "q_b012",
+  "q_b013",
+  "q_hub_ne",
+  "q_hub_nw",
+  "root"
+ ],
+ "shifted_partitions": [
+  "NW_b112",
+  "NW_b113",
+  "NW_mca",
+  "NW_mcb",
+  "NW_sm0",
+  "NW_sm1",
+  "NW_spt0",
+  "NW_spt1",
+  "NW_spt2",
+  "NW_spu0",
+  "NW_su00",
+  "NW_su01",
+  "NW_su10",
+  "NW_su11",
+  "PHY_N",
+  "vsN4",
+  "vsN5",
+  "vsN6",
+  "NE_b112",
+  "NE_b113",
+  "NE_mca",
+  "NE_mcb",
+  "NE_sm0",
+  "NE_sm1",
+  "NE_spt0",
+  "NE_spt1",
+  "NE_spt2",
+  "NE_spu0",
+  "NE_su00",
+  "NE_su01",
+  "NE_su10",
+  "NE_su11"
+ ],
+ "slot_changes": [
+  {
+   "type": "q_b010",
+   "slot": "L28x2",
+   "stations_before": 3,
+   "stations_after": 5,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new perbit sites required",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "q_b010",
+   "slot": "L148x4",
+   "stations_before": 8,
+   "stations_after": 10,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    0.0
+   ],
+   "mode": "extra registered top-band hops; exact new perbit sites required",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "q_b001",
+   "slot": "L36x3",
+   "stations_before": 2,
+   "stations_after": 4,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new perbit sites required",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "root",
+   "slot": "L9x1",
+   "stations_before": 8,
+   "stations_after": 10,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new perbit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  },
+  {
+   "type": "root",
+   "slot": "L9mx1",
+   "stations_before": 8,
+   "stations_after": 10,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new perbit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  },
+  {
+   "type": "root",
+   "slot": "L150x2",
+   "stations_before": 7,
+   "stations_after": 7,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "rigid slot translation; depth unchanged",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "root",
+   "slot": "L150mx2",
+   "stations_before": 7,
+   "stations_after": 7,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "rigid slot translation; depth unchanged",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "root",
+   "slot": "L63x1",
+   "stations_before": 6,
+   "stations_after": 8,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new perbit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  },
+  {
+   "type": "root",
+   "slot": "L63mx1",
+   "stations_before": 8,
+   "stations_after": 10,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new perbit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  },
+  {
+   "type": "root",
+   "slot": "L114x4",
+   "stations_before": 4,
+   "stations_after": 4,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "rigid slot translation; depth unchanged",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "root",
+   "slot": "L114mx4",
+   "stations_before": 5,
+   "stations_after": 5,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "rigid slot translation; depth unchanged",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "root",
+   "slot": "L140x5",
+   "stations_before": 11,
+   "stations_after": 13,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    0.0
+   ],
+   "mode": "extra registered top-band hops; exact new perbit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  },
+  {
+   "type": "root",
+   "slot": "L140mx5",
+   "stations_before": 11,
+   "stations_after": 13,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    0.0
+   ],
+   "mode": "extra registered top-band hops; exact new perbit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  }
+ ],
+ "lane_changes": {
+  "L9": {
+   "before": {
+    "cycles": 36,
+    "stations": 34,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 36,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 38,
+    "stations": 36,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 38,
+    "pad": 0
+   }
+  },
+  "L9m": {
+   "before": {
+    "cycles": 28,
+    "stations": 26,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 28,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 30,
+    "stations": 28,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 30,
+    "pad": 0
+   }
+  },
+  "L28": {
+   "before": {
+    "cycles": 21,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 21,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 23,
+    "stations": 21,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 23,
+    "pad": 0
+   }
+  },
+  "L28m": {
+   "before": {
+    "cycles": 21,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 21,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 23,
+    "stations": 21,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 23,
+    "pad": 0
+   }
+  },
+  "L36": {
+   "before": {
+    "cycles": 9,
+    "stations": 7,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 9,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   }
+  },
+  "L36m": {
+   "before": {
+    "cycles": 9,
+    "stations": 7,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 9,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   }
+  },
+  "L63": {
+   "before": {
+    "cycles": 29,
+    "stations": 27,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 29,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 31,
+    "stations": 29,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 31,
+    "pad": 0
+   }
+  },
+  "L63m": {
+   "before": {
+    "cycles": 31,
+    "stations": 29,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 31,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 33,
+    "stations": 31,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 33,
+    "pad": 0
+   }
+  },
+  "L140": {
+   "before": {
+    "cycles": 38,
+    "stations": 36,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 38,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 40,
+    "stations": 38,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 40,
+    "pad": 0
+   }
+  },
+  "L140m": {
+   "before": {
+    "cycles": 38,
+    "stations": 36,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 38,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 40,
+    "stations": 38,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 40,
+    "pad": 0
+   }
+  },
+  "L148": {
+   "before": {
+    "cycles": 32,
+    "stations": 30,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 32,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 34,
+    "stations": 32,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 34,
+    "pad": 0
+   }
+  },
+  "L148m": {
+   "before": {
+    "cycles": 32,
+    "stations": 30,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 32,
+    "pad": 0
+   },
+   "after": {
+    "cycles": 34,
+    "stations": 32,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 34,
+    "pad": 0
+   }
+  },
+  "L156": {
+   "before": null,
+   "after": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   }
+  }
+ },
+ "new_lane_window": [
+  8490.24,
+  8979.84
+ ],
+ "widths_preserved": true,
+ "source548": "native SW-client VMS/profile and explicit calendar/bank plumbing required; currentNWmaster has no cr",
+ "source_plan_sha256": "f2859a48f5b6e1ff7d4d815aa3acf788374f523a5862a7c9392674750697f840",
+ "open": [
+  "actual perbit extension sites and fullendpointgraph",
+  "inline die.io matches translated sidecar; PG/bump review",
+  "currentclockregen and explicitreset/startpublisher",
+  "548nativeSWpin/calendar/arrayplumbing",
+  "currentnewPRTXRXbanks +4edges/load",
+  "725.76both-lanegrowthcomparison notimplemented"
+ ]
+}
