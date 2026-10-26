@@ -21,7 +21,7 @@ def port_bit_points(P,part,pid):
 
 def indexed_chains(P,part,slot,pin,pout,reach=405.):
  s=P.slot(part,slot);sites=s.get('bit_sites_um');k=int(s['stations']);n=int(s['width'])+1
- if not sites or len(sites)!=k-1:raise ValueError(f'{part}/{slot}: missing explicit stages (need {k-1})')
+ if sites is None or len(sites)!=k-1:raise ValueError(f'{part}/{slot}: missing explicit stages (need {k-1})')
  pi,po=port_bit_points(P,part,pin),port_bit_points(P,part,pout);expected=set(range(n))
  if set(pi)!=expected or set(po)!=expected:raise ValueError(f'{part}/{slot}: endpoint/epoch bit coverage does not match 0..{n-1}')
  if any(len(stage)!=n for stage in sites):raise ValueError(f'{part}/{slot}: station bit coverage does not match {n}')
@@ -66,6 +66,15 @@ def candidates(a,b,box,reach,gcell):
   x=min(box[2]-1e-6,max(box[0]+1e-6,round(x/gcell)*gcell));raw.append([a,(x,ay),(x,by),b])
  for y in [(ay+by)/2,min(ay,by)-slack,max(ay,by)+slack]:
   y=min(box[3]-1e-6,max(box[1]+1e-6,round(y/gcell)*gcell));raw.append([a,(ax,y),(bx,y),b])
+ # Remaining legal gcell spines use the same priced hop, not extra stations.
+ for axis in (0,1):
+  lo=min(a[axis],b[axis])-slack;hi=max(a[axis],b[axis])+slack;mid=(a[axis]+b[axis])/2
+  coords=sorted((i*gcell for i in range(math.ceil(lo/gcell),math.floor(hi/gcell)+1)),key=lambda v:(abs(v-mid),v))
+  for v in coords:
+   if axis==0:
+    if box[0]<v<box[2]:raw.append([a,(v,ay),(v,by),b])
+   else:
+    if box[1]<v<box[3]:raw.append([a,(ax,v),(bx,v),b])
  for points in raw:
   points=[p for i,p in enumerate(points) if not i or p!=points[i-1]];key=tuple(points)
   length=sum(abs(u[0]-v[0])+abs(u[1]-v[1]) for u,v in zip(points,points[1:]))

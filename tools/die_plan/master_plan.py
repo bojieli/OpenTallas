@@ -1024,7 +1024,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             iv = IS.make_site_iv(box, blockers, cb)
             band = lg["band_um"] or max(G, pth["bits"] * 0.064 * 2)
             pts = lg["pts"]
-            if lg.get("bit_sites") and lg.get("pin"):
+            if lg.get("bit_sites") is not None and lg.get("pin"):
                 try:
                     groups, stat = BR.plan(P,part,lg["slot"],lg["pin"],lg["pout"],grid,G,reach,track_max)
                     exact_stats.append(dict(path=pth["id"],part=part,slot=lg["slot"],**stat))
