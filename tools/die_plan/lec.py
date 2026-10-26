@@ -262,10 +262,18 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
 
 
+# Formal preparation must retain every FF already present in the physical netlist.
+# Flatten discards wrapper keep attributes; opt_clean otherwise deletes unloaded
+# but physically required copies and produces a false KEEP failure. This does not
+# create a register or forgive a synthesis merge: a missing physical FF stays absent.
+GATE_PHYSICAL_FF_KEEP = "setattr -set keep 1 t:$*ff* t:$_*FF*_"
+
+
 def gate_script(env, netlist, stubs, wrap, lecff, out):
     s = [f"read_liberty -ignore_miss_func {NLDM}/{l}" for l in STD_LIBS]
     s += [f"read_verilog {stubs}", f"read_verilog {netlist}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
-          "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc", "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
+          "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc",
+          GATE_PHYSICAL_FF_KEEP, "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
 
 
