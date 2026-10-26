@@ -1,0 +1,18 @@
+{
+  "source": "codex/qc-n59-1026@b376bb752 + standard REMOVE_ABC_BUFFERS=1",
+  "cells": 173823,
+  "registers": 41779,
+  "port_bind": "5696/5696 PASS",
+  "face_guard": "5690/5690 PASS",
+  "reg_fanout_over64": 0,
+  "reset_bp": {
+    "old_coarse_loads": 1340,
+    "new_bit_loads": 5516,
+    "copies": 40,
+    "max_loads": 138
+  },
+  "floorplan": "PASS on own cached synth after diagnosed unplaced setup-resize oscillation; original failed log preserved",
+  "original_failed_log": "intel2:/srv/opentallas-scratch2/claude/codex-qc-n59-1026/trial_flat/FAIL_floorplan_preplace_resize.log",
+  "placement": "RUNNING (place-only);4892 model data anchors; actual reset/data census pending",
+  "timing": "NOT RUN; CTS/route held"
+}

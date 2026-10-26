@@ -47,6 +47,9 @@ for old,new in (('export VERILOG_DEFINES = -DSYNTHESIS','export VERILOG_DEFINES 
 assert 'SYNTH_CANONICALIZE_TCL' not in c
 c+=('\n# PATH-QC-N59-5 kit-local N59 hooks\nexport MIN_CLK_ROUTING_LAYER = M6\nexport MAX_CLK_ROUTING_LAYER = M7\n'
     'export SYNTH_CANONICALIZE_TCL = /work/n59_canon_rst.tcl\nexport OT_RST_COPIES_MAX = 200\nexport OT_RST_COPIES_RE = (^|[.])rst_cp_[a-z0-9]+$$\n')
+if a.flatten_reset_wrappers:
+    # Place before any timing repair; unplaced wire-load resizing oscillated on 679 endpoints.
+    c+='\nexport REMOVE_ABC_BUFFERS = 1\n'
 (k/'config.mk').write_text(c)
 if a.anchors:install(a.anchors)
 else:(k/'n59_reach405.tcl').write_text('error "N59_REACH405 anchors not installed: build_kit.py --install-anchors"\n')
