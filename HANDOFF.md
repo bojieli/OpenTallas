@@ -1167,3 +1167,4 @@ CODEX: 2026-10-26 07:42 PDT HBM VM status orphan fixed in D-HBM-B1 candidate bb3
 2026-10-26 08:28 PDT CODEX: common core plan legalizer/predictor READY f19167e42; actualRP1 shared91-node tree applies93frozen cells/2790FF+2macro sinks idempotently without data/protection changes; model still flags111/104ps window, root structural next.
 
 2026-10-26 08:52 PDT CODEX: nativePG/sharedcorehelperworking; QC model-first4Wclockstructurecandidateunderprep; HBMbaybboxfalsefailfixedwithlegalregions/actualFFchecks; routinechecker nowretriescapacitycontinue every3min perowner. MergedBFS81optins/maina96cdebef; KVflowtagreleased.
+2026-10-26 09:18 PDT CODEX: B2singleevent12a0c04f0 composed+minimum277-bittransportPASS;7corefaces/PG/reset/native/tokenblockers retained. HEADGRTstructuralFAIL diagnosed/modelstillNO_BUILD. Packetcodex_s81_head_20261026_0918.md; now HBMROOTtargetedphaseinvariant259/259PASS, base/fullcomparelive.
