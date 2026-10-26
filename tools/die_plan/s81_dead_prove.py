@@ -29,11 +29,23 @@ def run(root,instances,stubs,out):
   text=p.read_text()
   for n in wanted:
    if re.search(r'^module\s+'+n+r'\b',text,re.M):src[n]=(f,extract(text,n))
- stubtext=pathlib.Path(stubs).read_text()
- # The hrow is a child rather than a blackbox of the whole-die source graph.
- h=extract((root/'rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv').read_text(),'dsdv_svc_sx_hrow')
- stubtext+='\n'+h[:h.index(');')+2]+'\nendmodule\n'
- stubtext+='\n'+(root/'physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v').read_text()
+ # Dependency bodies are never assumed. Each actual current repository
+ # declaration becomes an opaque child; every input remains a live load.
+ deps = ['dsdv_svc_sx_hrow','dsdv_sx_rly_in','dsdv_sx_rly_out','ot_sram_1r1w_32x64_m1']
+ dep_sources = {}
+ for f in man['prefer']:
+  p = root/f
+  if not p.is_file(): continue
+  text = p.read_text()
+  for n in deps:
+   if re.search(r'^module\s+'+n+r'\b',text,re.M): dep_sources[n]=(f,extract(text,n))
+ fallback='physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v'
+ if 'ot_sram_1r1w_32x64_m1' not in dep_sources:
+  dep_sources['ot_sram_1r1w_32x64_m1']=(fallback,extract((root/fallback).read_text(),'ot_sram_1r1w_32x64_m1'))
+ if set(dep_sources)!=set(deps): raise ValueError('missing current dependency headers: '+str(set(deps)-set(dep_sources)))
+ stubtext='\n'.join(body[:body.index(');')+2]+'\nendmodule\n' for _,body in dep_sources.values())
+ defines = man['defines']
+ if 'SVCQ_ENG_FG3' in defines: raise ValueError('legacy simulation engine define is not a closing source proof')
  declarations=[];cache={}
  for row in json.loads(pathlib.Path(instances).read_text()):
   mt=re.match(r'(\w+) #\((.*)\) \w+ \(',row['line']);mod=mt[1]
@@ -43,7 +55,7 @@ def run(root,instances,stubs,out):
    d=out/('p'+str(len(cache)));d.mkdir()
    text=re.sub(r'^module\s+'+mod+r'\b.*?^endmodule','',stubtext,flags=re.M|re.S)+'\n'+src[mod][1]+'\n'
    (d/'input.sv').write_text(text)
-   overrides=' '.join('-G '+k+'='+v for k,v in params.items())
+   overrides=' '.join('-G '+k+'='+v for k,v in params.items())+' '+' '.join('-D '+v for v in defines)
    script=f'read_slang --keep-hierarchy --empty-blackboxes --allow-use-before-declare --top {mod} {overrides} {d}/input.sv\nproc\nopt\nwrite_json {d}/opt.json\n'
    (d/'run.ys').write_text(script)
    with (d/'yosys.log').open('w') as log:
@@ -53,7 +65,7 @@ def run(root,instances,stubs,out):
    cache[key]=ports
    print(mod,params,'dead',sum(hi-lo+1 for v in ports.values() for lo,hi in v),flush=True)
   declarations.append(dict(partition_type=row['type'].removeprefix('s81p_'),module=mod,parameters=params,source=src[mod][0],module_sha256=module_hash(root/src[mod][0],mod),method='yosys.proc.opt.no_fanout',remaining_loads=0,ports=cache[key]))
- rec=dict(schema='opentallas.dead_inputs.v1',verdict='PASS',source_commit=subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip(),note='Exact optimized top-module ports. Every opaque child input is conservatively live; output aliases are live. Per-type declarations only; no functional ports removed or extra type created.',declarations=declarations)
+ rec=dict(schema='opentallas.dead_inputs.v1',verdict='PASS',defines=defines,dependency_modules=[dict(module=n,source=f,module_sha256=module_hash(root/f,n),assumption='opaque child: all inputs conservatively live') for n,(f,_) in dep_sources.items()],source_commit=subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip(),note='Exact optimized top-module ports. Every opaque child input is conservatively live; output aliases are live. Per-type declarations only; no functional ports removed or extra type created.',declarations=declarations)
  (out/'proof.json').write_text(json.dumps(rec,indent=1)+'\n')
  print('S81_DEAD_INPUTS_PROVED',len(declarations),'declarations',len(cache),'specializations',flush=True)
 if __name__=='__main__':

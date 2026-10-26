@@ -41,6 +41,12 @@ class ProvenDead:
             proof = json.loads(path.read_text())
             if proof.get('schema') != 'opentallas.dead_inputs.v1' or proof.get('verdict') != 'PASS':
                 raise ValueError('invalid dead-input proof ' + rel)
+            if proof.get('defines', []) != manifest.get('defines', []):
+                raise ValueError('stale dead-input preprocessor defines')
+            for dep in proof.get('dependency_modules', []):
+                source = (repo / dep['source']).resolve()
+                if not source.is_relative_to(repo) or module_hash(source, dep['module']) != dep['module_sha256']:
+                    raise ValueError('stale dead-input dependency ' + dep['module'])
             for row in proof['declarations']:
                 source = (repo / row['source']).resolve()
                 if not source.is_relative_to(repo) or Path(row['source']).is_absolute():
