@@ -34,6 +34,7 @@ module tb_xrt_vctl_inject #(parameter integer HB=0);
         for(k=1;k<=11;k=k+1) begin
           @(posedge clk);#0.01;
           checks=checks+2;
+          if(rf!==1'b0 || xf!==1'b0) begin errors=errors+1;if(errors<5)$display("XRT_INJECT_FAULT sid=%0d job=%0d edge=%0d rf=%b xf=%b",s,j,k,rf,xf);end
           if(re!==(k==expected_age?ee:1104'd0)) begin errors=errors+1;if(errors<5)$display("XRT_INJECT_BAD E sid=%0d job=%0d edge=%0d expected_age=%0d got=%h exp=%h",s,j,k,expected_age,re,ee);end
           if(rw!==(k==expected_age?ew:1104'd0)) begin errors=errors+1;if(errors<5)$display("XRT_INJECT_BAD W sid=%0d job=%0d edge=%0d expected_age=%0d got=%h exp=%h",s,j,k,expected_age,rw,ew);end
           @(negedge clk);vi=0;

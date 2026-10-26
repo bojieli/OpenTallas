@@ -20,7 +20,12 @@ XRT_PATH = 'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv'
 XRT_MODEL = {'cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64': 7,
              # TOK-DS NORM-DESKEW 10-25: cfc3feb9 + the static per-leaf partial deskew (PDSK, claude/s81-norm-deskew-1025);
              # the change is on the leaf-partial path only, V-CTL injection is unchanged (7 edges)
-             'ec43bbd4be16faa8428c107e7db613f21f0b760ed79711da31f068879c7d6282': 7}
+             'ec43bbd4be16faa8428c107e7db613f21f0b760ed79711da31f068879c7d6282': 7,
+             # Current FACE_LAND/PDSK/QREL source: real rstop -> XRT -> rstop V-CTL
+             # component measured 7 edges for both HB variants and all 16 sids.
+             # Leaf landing/partial deskew/release do not add a V-CTL edge.
+             # HOST/control entry runtime proof remains mandatory below.
+             'd09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3': 7}
 
 
 def source_contract(tree, fallback, instances=None):
