@@ -36,7 +36,8 @@ module tb_s81hd_native_l4;
     for(cyc=0;cyc<8500;cyc=cyc+1) begin
       edge_sample();
       if(nv) $fatal(1,"EARLY_GO_ACCEPTED cycle=%0d",cyc);
-      if(!nf) $fatal(1,"EARLY_GO did not fault");
+      if(cyc==0 && nf) $fatal(1,"EARLY_GO fault before go_q edge");
+      if(cyc>0 && !nf) $fatal(1,"EARLY_GO did not fault");
     end
     @(negedge clk);rst_n=0;
     edge_sample();if(dut.ready!==1'b1) $fatal(1,"RESET assertion bypassed registered delivery");
