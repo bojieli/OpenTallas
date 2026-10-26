@@ -906,7 +906,7 @@ def _corner_libs(mlib, kd, corner):
     return out
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
-                   skip_ir=False, max_wire_um=None, rc_cal=True):
+                   skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False):
     t = P.types[tn]
     import core_clock_groups as CG
     grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
@@ -1158,6 +1158,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         (kd / "die_islands.tcl").write_text(islands)
         hook = kd / "face_flops.tcl"
         hook.write_text("source /work/die_islands.tcl\n" + hook.read_text())
+    # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
+    # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
+    import master_slice as MS
+    ms = MS.kit_apply(kd, tn, [w, h], master_slice, P.raw, trial, kind="partition", gpl_hook=kd / "face_flops.tcl")
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
@@ -1220,6 +1224,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if ioh:
         from io_hold_qualification import plan_digest
         bud['io_hold'] = dict(mode='sender_min',plan_sha256=plan_digest(P.raw),requires_parent=True)
+    if ms is not None:
+        bud["master_plan"] = ms
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
@@ -1334,13 +1340,20 @@ exit $rc
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True):
+               rc_cal=True, master_slice=None, trial=False):
     """margins (slew_pct, cap_pct): opt-in repair_design SLEW_MARGIN / CAP_MARGIN (None: not exported)."""
     """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
     import gen_rtl
+    import master_slice as MS
+    if not master_slice and not trial and MS.required(raw):     # 12.7c: refuse before writing anything
+        raise SystemExit(MS.REFUSE)
     # plan-relative declarations (hard-core pins_file for the reset wavefront) resolve against the plan file
     P = S.Plan(raw, plan_path)
+    if master_slice:                                            # 12.7c: every slice checked before any kit is written
+        for tn, t in sorted(P.types.items()):
+            if not t.get("hard") and (not types or tn in types):
+                MS.resolve(master_slice, tn, t["outline_um"], raw, trial, kind="partition")
     out = Path(out)
     rtl_dir = out / "_rtl"
     gtypes = types
@@ -1369,7 +1382,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
-                                   skip_ir, max_wire_um, rc_cal))
+                                   skip_ir, max_wire_um, rc_cal, master_slice, trial))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

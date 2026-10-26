@@ -660,6 +660,10 @@ SCHEMA = {
                                "param": {"type": "string"}}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
         "census": {"type": ["array", "object"]},
+        # METHODOLOGY 12.7c (OWNER 10-26): the die master plan the kits consume, set at the plan freeze through COORD;
+        # required=true -> gen.py phys / core kit generators refuse a sign-off kit without a slice (master_slice.py)
+        "master_plan": {"type": "object", "properties": {"required": {"type": "boolean"}, "sha256": {"type": "string"},
+                                                         "path": {"type": "string"}}},
         "budgets": {"type": "object", "additionalProperties": False, "properties": dict(
             {k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS},
             # S81 10-24 (coordinator ruling (a)): R3 reach inside hardened types with declared core connectivity

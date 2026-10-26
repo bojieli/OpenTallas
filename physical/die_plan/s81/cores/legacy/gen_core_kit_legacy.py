@@ -549,6 +549,15 @@ def git_show(spec):
     return subprocess.run(["git", "-C", str(REPO), "show", spec], capture_output=True, text=True, check=True).stdout
 
 
+def _ms():
+    """METHODOLOGY 12.7c master-plan slice helper (this repo's tools/die_plan/master_slice.py, loaded by path)."""
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("master_slice", REPO / "tools/die_plan/master_slice.py")
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--module", required=True, help="recipe key (= plan module unless the recipe names plan_module)")
@@ -561,6 +570,8 @@ def main():
     ap.add_argument("--hold-ff-margin", type=float, default=None, help="FF-only GRT hold margin ps (recipe hold_ff_margin, 5)")
     ap.add_argument("--regional-taps", default=None, help="NXxNY: override / add the recipe regional_taps grid")
     ap.add_argument("--suffix", default=None, help="kit suffix (variant), default recipe suffix or c")
+    MS = _ms()
+    MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
     modern = not a.legacy_flow
     rec = json.load(open(a.recipes))[a.module]
@@ -617,6 +628,7 @@ def main():
     shapes = lef_pin_rects(REPO / hc["lef"])
     suffix = a.suffix or rec.get("suffix", "c")
     kd = Path(a.out) / f"{mod}_{suffix}"
+    MS.precheck(a.master_slice, a.trial, plan, mod)
     if kd.exists():
         shutil.rmtree(kd)
     (kd / "rtl").mkdir(parents=True)
@@ -958,6 +970,10 @@ def main():
         # F4 follows regional balancing/repair as it does the scalar tap path.
         with (kd / "regional_taps_balance.tcl").open("a") as hook:
             hook.write("\nsource /work/leaf_affinity.tcl\nestimate_parasitics -placement\n")
+    # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
+    # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
+    ms = MS.kit_apply(kd, mod, [w, h], a.master_slice, plan, a.trial, kind="core",
+                      gpl_hook=kd / "face_flops.tcl")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
@@ -980,6 +996,8 @@ def main():
               signoff_sha256=sha(TOOL / "signoff.py"), macros=mplace,
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())
                            for f, pt in patches.items()], kit_hash=kit_hash(kd))
+    if ms is not None:
+        fz["master_plan"] = ms
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, ins=len(buses_in),
                           outs=len(buses_out), macros=sum(len(v) for v in mplace.values()), kit_hash=fz["kit_hash"])))
