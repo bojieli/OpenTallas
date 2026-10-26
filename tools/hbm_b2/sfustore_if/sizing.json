@@ -1,0 +1,28 @@
+{
+ "scope": "Opt-in physical F6 successor; exactness/geometry gates pending",
+ "lanes": 16,
+ "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+ "macro_instances": 16,
+ "active_bytes": 32768,
+ "read_bytes_per_cycle": 64,
+ "write_bytes_per_cycle": 64,
+ "added_data_cycles": 0,
+ "read_output_edge": "unchanged legacy n+3 bank edge, existing outer-shell edges separate",
+ "write_commit_edge": "unchanged legacy n+1 bank edge",
+ "added_ff_per_bank": 704,
+ "added_ff_per_tile": 11264,
+ "derivation": "WD 32->256 (+224), new registered 256-bit mask (+256), rd_cap32 ->raw_cap256 +ks_cap3 (+227), wa_pin9->6 (-3)",
+ "old_outline_um": [
+  293.76,
+  354.24
+ ],
+ "candidate_outline_um": [
+  311.04,
+  354.24
+ ],
+ "outline_area_delta_um2": 6121.26720000001,
+ "physical_cell_area": "PENDING synthesis measurement; no claimed savings",
+ "macro_pin_contract": "Each live WD/mask/read bit has an independent kept interface flop; address/CE flops remain bank-local",
+ "clock_ps": 833,
+ "corners": "TT setup / FF hold, 60/25ps uncertainty"
+}
