@@ -1,0 +1,561 @@
+{
+ "ports_windowed": 1945,
+ "runs_moved": 370,
+ "runs_already_ok": 10,
+ "runs_nofit": 33,
+ "disp_um": {
+  "n": 370,
+  "p50": 43.16,
+  "max": 479.61
+ },
+ "slot_windows_declared": 2012,
+ "replica_window_disagreements": 43,
+ "slots_bit_sites_shifted": 544,
+ "split_candidates_gt668": [
+  {
+   "lane": "L663",
+   "ports": [
+    "L663_0",
+    "L663_1",
+    "L663_2",
+    "L663_3",
+    "L663_4",
+    "L663_5",
+    "L663_6",
+    "L663_7",
+    "L663_8"
+   ],
+   "bits": 1044,
+   "band_um": 148.46,
+   "parts": [
+    "hgi_WN_0",
+    "hgi_WN_1",
+    "hgi_WN_2",
+    "hgi_WN_3",
+    "hgi_WN_4",
+    "hgi_WN_5",
+    "hgi_WN_6",
+    "hgi_WN_7"
+   ],
+   "coord": 3746.84,
+   "axis": "x"
+  },
+  {
+   "lane": "L2056",
+   "ports": [
+    "L2056_0",
+    "L2056_1",
+    "L2056_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_EN_2",
+    "hgi_EN_2"
+   ],
+   "coord": 22093.73,
+   "axis": "y"
+  },
+  {
+   "lane": "L2061",
+   "ports": [
+    "L2061_0",
+    "L2061_1",
+    "L2061_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_EN_3",
+    "hgi_EN_3"
+   ],
+   "coord": 20573.09,
+   "axis": "y"
+  },
+  {
+   "lane": "L2066",
+   "ports": [
+    "L2066_0",
+    "L2066_1",
+    "L2066_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_EN_4",
+    "hgi_EN_4"
+   ],
+   "coord": 19052.45,
+   "axis": "y"
+  },
+  {
+   "lane": "L2071",
+   "ports": [
+    "L2071_0",
+    "L2071_1",
+    "L2071_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_EN_5",
+    "hgi_EN_5"
+   ],
+   "coord": 17531.81,
+   "axis": "y"
+  },
+  {
+   "lane": "L2075",
+   "ports": [
+    "L2075_0",
+    "L2075_1",
+    "L2075_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_EN_0",
+    "hgi_EN_0"
+   ],
+   "coord": 25225.1,
+   "axis": "y"
+  },
+  {
+   "lane": "L2080",
+   "ports": [
+    "L2080_0",
+    "L2080_1",
+    "L2080_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_EN_1",
+    "hgi_EN_1"
+   ],
+   "coord": 23614.37,
+   "axis": "y"
+  },
+  {
+   "lane": "L2085",
+   "ports": [
+    "L2085_0",
+    "L2085_1",
+    "L2085_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_EN_6",
+    "hgi_EN_6"
+   ],
+   "coord": 16011.17,
+   "axis": "y"
+  },
+  {
+   "lane": "L2090",
+   "ports": [
+    "L2090_0",
+    "L2090_1",
+    "L2090_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_EN_7",
+    "hgi_EN_7"
+   ],
+   "coord": 14483.52,
+   "axis": "y"
+  },
+  {
+   "lane": "L2095",
+   "ports": [
+    "L2095_0",
+    "L2095_1",
+    "L2095_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_ES_2",
+    "hgi_ES_2"
+   ],
+   "coord": 3912.67,
+   "axis": "y"
+  },
+  {
+   "lane": "L2100",
+   "ports": [
+    "L2100_0",
+    "L2100_1",
+    "L2100_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_ES_3",
+    "hgi_ES_3"
+   ],
+   "coord": 5433.31,
+   "axis": "y"
+  },
+  {
+   "lane": "L2105",
+   "ports": [
+    "L2105_0",
+    "L2105_1",
+    "L2105_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_ES_4",
+    "hgi_ES_4"
+   ],
+   "coord": 6953.95,
+   "axis": "y"
+  },
+  {
+   "lane": "L2110",
+   "ports": [
+    "L2110_0",
+    "L2110_1",
+    "L2110_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_ES_5",
+    "hgi_ES_5"
+   ],
+   "coord": 8474.59,
+   "axis": "y"
+  },
+  {
+   "lane": "L2114",
+   "ports": [
+    "L2114_0",
+    "L2114_1",
+    "L2114_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_ES_0",
+    "hgi_ES_0"
+   ],
+   "coord": 749.55,
+   "axis": "y"
+  },
+  {
+   "lane": "L2119",
+   "ports": [
+    "L2119_0",
+    "L2119_1",
+    "L2119_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_ES_1",
+    "hgi_ES_1"
+   ],
+   "coord": 2392.03,
+   "axis": "y"
+  },
+  {
+   "lane": "L2124",
+   "ports": [
+    "L2124_0",
+    "L2124_1",
+    "L2124_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_ES_6",
+    "hgi_ES_6"
+   ],
+   "coord": 9995.23,
+   "axis": "y"
+  },
+  {
+   "lane": "L2129",
+   "ports": [
+    "L2129_0",
+    "L2129_1",
+    "L2129_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_ES_7",
+    "hgi_ES_7"
+   ],
+   "coord": 11515.87,
+   "axis": "y"
+  },
+  {
+   "lane": "L2134",
+   "ports": [
+    "L2134_0",
+    "L2134_1",
+    "L2134_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WN_2",
+    "hgi_WN_2"
+   ],
+   "coord": 22093.73,
+   "axis": "y"
+  },
+  {
+   "lane": "L2139",
+   "ports": [
+    "L2139_0",
+    "L2139_1",
+    "L2139_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WN_3",
+    "hgi_WN_3"
+   ],
+   "coord": 20573.09,
+   "axis": "y"
+  },
+  {
+   "lane": "L2144",
+   "ports": [
+    "L2144_0",
+    "L2144_1",
+    "L2144_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WN_4",
+    "hgi_WN_4"
+   ],
+   "coord": 19052.45,
+   "axis": "y"
+  },
+  {
+   "lane": "L2149",
+   "ports": [
+    "L2149_0",
+    "L2149_1",
+    "L2149_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WN_5",
+    "hgi_WN_5"
+   ],
+   "coord": 17531.81,
+   "axis": "y"
+  },
+  {
+   "lane": "L2153",
+   "ports": [
+    "L2153_0",
+    "L2153_1",
+    "L2153_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WN_0",
+    "hgi_WN_0"
+   ],
+   "coord": 25225.1,
+   "axis": "y"
+  },
+  {
+   "lane": "L2158",
+   "ports": [
+    "L2158_0",
+    "L2158_1",
+    "L2158_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WN_1",
+    "hgi_WN_1"
+   ],
+   "coord": 23614.37,
+   "axis": "y"
+  },
+  {
+   "lane": "L2163",
+   "ports": [
+    "L2163_0",
+    "L2163_1",
+    "L2163_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WN_6",
+    "hgi_WN_6"
+   ],
+   "coord": 16011.17,
+   "axis": "y"
+  },
+  {
+   "lane": "L2168",
+   "ports": [
+    "L2168_0",
+    "L2168_1",
+    "L2168_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WN_7",
+    "hgi_WN_7"
+   ],
+   "coord": 14483.52,
+   "axis": "y"
+  },
+  {
+   "lane": "L2173",
+   "ports": [
+    "L2173_0",
+    "L2173_1",
+    "L2173_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WS_2",
+    "hgi_WS_2"
+   ],
+   "coord": 3912.67,
+   "axis": "y"
+  },
+  {
+   "lane": "L2178",
+   "ports": [
+    "L2178_0",
+    "L2178_1",
+    "L2178_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WS_3",
+    "hgi_WS_3"
+   ],
+   "coord": 5433.31,
+   "axis": "y"
+  },
+  {
+   "lane": "L2183",
+   "ports": [
+    "L2183_0",
+    "L2183_1",
+    "L2183_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WS_4",
+    "hgi_WS_4"
+   ],
+   "coord": 6953.95,
+   "axis": "y"
+  },
+  {
+   "lane": "L2188",
+   "ports": [
+    "L2188_0",
+    "L2188_1",
+    "L2188_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WS_5",
+    "hgi_WS_5"
+   ],
+   "coord": 8474.59,
+   "axis": "y"
+  },
+  {
+   "lane": "L2192",
+   "ports": [
+    "L2192_0",
+    "L2192_1",
+    "L2192_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WS_0",
+    "hgi_WS_0"
+   ],
+   "coord": 749.55,
+   "axis": "y"
+  },
+  {
+   "lane": "L2197",
+   "ports": [
+    "L2197_0",
+    "L2197_1",
+    "L2197_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WS_1",
+    "hgi_WS_1"
+   ],
+   "coord": 2392.03,
+   "axis": "y"
+  },
+  {
+   "lane": "L2202",
+   "ports": [
+    "L2202_0",
+    "L2202_1",
+    "L2202_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WS_6",
+    "hgi_WS_6"
+   ],
+   "coord": 9995.23,
+   "axis": "y"
+  },
+  {
+   "lane": "L2207",
+   "ports": [
+    "L2207_0",
+    "L2207_1",
+    "L2207_2"
+   ],
+   "bits": 1056,
+   "band_um": 150.16,
+   "parts": [
+    "hg_WS_7",
+    "hgi_WS_7"
+   ],
+   "coord": 11515.87,
+   "axis": "y"
+  }
+ ],
+ "nofit_le668": [],
+ "nofit_counts": {
+  "gt668": 33,
+  "le668": 0
+ }
+}
