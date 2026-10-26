@@ -123,3 +123,5 @@ CODEX took over: contract-budget result collection + current B2o PG-corridor clo
 
 ## CODEX notes 2026-10-25 07:24 PDT
 Collected completed historical833.333ps budget-standin TT/FF runs intel2:/srv/opentallas-scratch2/claude/clock-reset/hold: S81 TTsetup+666.115/FFhold+32.849ps,pair3.53/3.47; QC+664.336/+31.090,pair5.31/5.23; KV+666.839/+33.790,pair2.81/2.53. All6 exit0. Contract stand-ins resolve prior zero-data-delay floor, not current physical die SIGNED or833.000 release gates. No reruns.
+
+2026-10-25 17:44 PDT CODEX collection: QC441d contract-standin treeSTA complete, TT setup+557.538ps, FFhold-73.026ps/30,925negativeendpoints; reportedpairboundsTT116.73/FF110.22. Bothnativeprocessesexit0/peak15.1GB/5574s. All46viewsstandins;373missingstart_i/rst_o/start_o =>controltimingNOTRUN, actualG4/AqualificationINCOMPLETE. CLOCKapprovedtwo-pairclock-onlytag-vs-arrivalproperty/CPPRdiagnostic onimmutablegraph (epyc1codex-parentsta-1713/qc441_pair_probe); nofullSTAduplication.
