@@ -85,6 +85,13 @@ module tb_kvslice;
     wire       locked   = dut.x_hub_C_o_pll_locked_hub_Wi[0];
     // ------------------------------------------------------------------ stimulus
     reg [527:0] frames [0:16383];
+    // KV-TOK 10-26 host pacing contract (docs/QWEN_KV_HOST_BOOT_ABI.md section 2; COORD RULING KV-TOK boot 12:32): a static
+    // host schedule, no die feedback.  The loader replays an AUTHed image's pw + dw words on fixed loader cycles and refuses a
+    // BEGIN during the replay (sticky fault, B33 BOOT_FAULT@923).  send(BEGIN n+1) >= send(AUTH n) + HOST_LINK_LAT_MAX +
+    // pw + dw + REPLAY_FIXED, HOST_LINK_LAT_MAX = the DECLARED host->loader one-way bound (160 core cycles; measured 122 on
+    // B33: first BEGIN sent cyc 531, at the loader 653), REPLAY_FIXED = 16.  Counted in core cycles from the AUTH send edge.
+    localparam integer REPLAY_FIXED = 16, HOST_LINK_LAT_MAX = 160;
+    integer hold_core = 0, img_pw = 0, img_dw = 0;
     integer nfr = 0, mut_frame = -1, cyc_host = 0, sent = 0, credits = 4, rx_words = 0;
     integer n_ready = 0, n_exp = 0, errors = 0, ready_cyc [0:31], cyc_core = 0, t_setup = -1, t_bfault = -1, t_last = 0;
     reg [3:0] exp_t [0:31]; reg [63:0] exp_d [0:31];
@@ -100,9 +107,11 @@ module tb_kvslice;
     always @(posedge ck_host) if (host_up) begin
         automatic integer c = credits + (hc_tx_cr ? 1 : 0);
         hc_tx_v <= 1'b0;
-        if (sent < nfr && c > 0) begin
+        if (sent < nfr && c > 0 && cyc_core >= hold_core) begin
             hc_tx_v <= 1'b1; hc_tx_d <= frames[sent] ^ ((sent == mut_frame) ? (528'd1 << 19) : 528'd0);
             sent <= sent + 1; c = c - 1;
+            if (frames[sent][7:0] == 8'd1) begin img_pw = frames[sent][34:24]; img_dw = frames[sent][38:35]; end   // BEGIN
+            if (frames[sent][7:0] == 8'd4) hold_core = cyc_core + HOST_LINK_LAT_MAX + img_pw + img_dw + REPLAY_FIXED; // AUTH
         end
         credits <= c;
     end
