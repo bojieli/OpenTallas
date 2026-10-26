@@ -1,6 +1,6 @@
 # Native59 P4: density buffers for shared shallow_clock_multi.
 # After clock_taps.tcl. No private trunk or CTS wrapper; preview performs no CTS.
-global n59st_blk n59st_dbu n59st_subtaps n59st_trunk n59st_blocks n59st_halo n59st_tmaster n59st_seq
+global n59st_smaster n59st_blk n59st_dbu n59st_subtaps n59st_trunk n59st_blocks n59st_halo n59st_tmaster n59st_seq n59st_core n59st_pg
 set n59st_blk [ord::get_db_block]
 set n59st_dbu [$n59st_blk getDefUnits]
 proc n59st_env {k d} { return [expr {[info exists ::env($k)] && $::env($k) ne "" ? $::env($k) : $d}] }
@@ -8,6 +8,9 @@ set n59st_port_re [n59st_env N59_ST_PORT_RE {^clk(_t[0-9]+)?$}]
 set n59st_target  [n59st_env N59_ST_TARGET 400]
 set n59st_cap     [n59st_env N59_ST_CAP 500]
 set n59st_rlim    [expr {[n59st_env N59_ST_RADIUS_UM 100] * $n59st_dbu}]
+# clustering radius = policy radius minus a pin/DPL margin: the policy check below measures actual clock PIN centres after
+# detailed_placement, the clustering uses cell centres before it (P4 probe 10-25: 100.86 um vs 100 on a 25-sink group)
+set n59st_crlim   [expr {$n59st_rlim - [n59st_env N59_ST_RADIUS_MARGIN_UM 3.0] * $n59st_dbu}]
 set n59st_fan     [n59st_env N59_ST_FANOUT 4]
 set n59st_halo    [expr {int([n59st_env N59_ST_HALO_UM 5.4] * $n59st_dbu)}]
 set n59st_smaster [[ord::get_db] findMaster [n59st_env N59_ST_BUF BUFx12f_ASAP7_75t_R]]
@@ -16,6 +19,10 @@ if {$n59st_smaster eq "NULL" || $n59st_tmaster eq "NULL"} { error "OT_N59ST buff
 set n59st_blocks {}
 foreach inst [$n59st_blk getInsts] { if {[[$inst getMaster] isBlock]} { lappend n59st_blocks [$inst getBBox] } }
 set n59st_core [$n59st_blk getCoreArea]
+# PG nets for every created buffer (dbInst_create leaves PG ITerms unconnected; global_connect may not rerun before CTS)
+set n59st_pg [dict create POWER NULL GROUND NULL]
+foreach n [$n59st_blk getNets] { set st [$n getSigType]; if {$st in {POWER GROUND} && [$n isSpecial] && [dict get $n59st_pg $st] eq "NULL"} { dict set n59st_pg $st $n } }
+if {[dict get $n59st_pg POWER] eq "NULL" || [dict get $n59st_pg GROUND] eq "NULL"} { error "OT_N59ST special VDD/VSS net missing" }
 set n59st_subtaps {}   ;# list of dicts: name port kind inst innet outnet x y n
 set n59st_trunk {}     ;# trunk buffer insts
 set n59st_seq 0
@@ -81,11 +88,11 @@ proc n59st_site {x y m} {
   return [list [expr {int($x)}] [expr {int($y)}]]
 }
 proc n59st_buf {name m x y innet outnet} {
-  global n59st_blk
+  global n59st_blk n59st_pg
   set inst [odb::dbInst_create $n59st_blk $m $name]
   foreach t [$inst getITerms] {
     set mt [$t getMTerm]
-    if {[$mt getSigType] in {POWER GROUND}} continue
+    if {[$mt getSigType] in {POWER GROUND}} { $t connect [dict get $n59st_pg [$mt getSigType]]; continue }
     if {[$mt getIoType] eq "INPUT"} { $t connect $innet } elseif {[$mt getIoType] eq "OUTPUT"} { $t connect $outnet }
   }
   lassign [n59st_site $x $y $m] lx ly
@@ -121,6 +128,21 @@ proc n59st_merge_small {groups cap radius} {
   }
   return $groups
 }
+# A group is fit only when its radius from the buffer LEGAL site (pushed out of macro halos, not the raw centroid)
+# stays within the clustering radius; otherwise it splits in two (P4 probe 10-25: halo push of ot_dtap_113 -> 100.86 um).
+proc n59st_fit {groups rlim} {
+  global n59st_smaster
+  set out {}
+  foreach g $groups {
+    lassign [n59st_cent $g] cx cy
+    lassign [n59st_site $cx $cy $n59st_smaster] lx ly
+    set sx [expr {$lx + [$n59st_smaster getWidth]/2.0}]; set sy [expr {$ly + [$n59st_smaster getHeight]/2.0}]
+    set r 0
+    foreach u $g { set r [expr {max($r, abs([lindex $u 0]-$sx)+abs([lindex $u 1]-$sy))}] }
+    if {$r <= $rlim || [n59st_w $g] < 2} { lappend out $g } else { set out [concat $out [n59st_fit [n59st_splitk $g 2] $rlim]] }
+  }
+  return $out
+}
 set n59st_rows {}
 foreach bt [$n59st_blk getBTerms] {
   set port [$bt getName]
@@ -143,8 +165,9 @@ foreach bt [$n59st_blk getBTerms] {
   foreach {kind us} [list reg $regs mac $macs] {
     if {![llength $us]} continue
     set j 0
-    set groups [n59st_bisect $us $n59st_target $n59st_cap $n59st_rlim]
-    if {$kind eq "reg"} { set groups [n59st_merge_small $groups $n59st_cap $n59st_rlim] }
+    set groups [n59st_bisect $us $n59st_target $n59st_cap $n59st_crlim]
+    if {$kind eq "reg"} { set groups [n59st_merge_small $groups $n59st_cap $n59st_crlim] }
+    set groups [n59st_fit $groups $n59st_crlim]
     foreach g $groups {
       incr j
       set id [incr n59st_seq]
