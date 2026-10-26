@@ -198,6 +198,54 @@ class T(unittest.TestCase):
             self.assertEqual(nets[0]["loads"], ["port:t"])
             self.assertEqual(bool(out["unplaced"]), structural)
 
+    def test_floorplan_tail_tries_y_first_l_through_channel(self):
+        # node in a vertical channel (x 600-700), driver in a row gap (y 1000-1020); the x-first L crosses the core
+        ko = [(0., 0., 600., 1000., "c0"), (700., 0., 1400., 1000., "c1"), (0., 1020., 1400., 2000., "c2")]
+        for both, splits in ((False, 0), (True, 1)):
+            cells = dict(n=dict(x=650., y=500., kind="node"), d=dict(x=200., y=1010., kind="drv"))
+            nets = [dict(name="w", drv="n", loads=["d"], level=9)]
+            K = CM.DC.KeepIndex(ko, die=(1400., 2000.))
+            out = dict(unplaced=[])
+            made = []
+            def cell(name, x, y, kind, **kw):
+                made.append((x, y)); cells[name] = dict(x=x, y=y, kind=kind); return name
+            self.assertEqual(CM.split_long(cells, nets, K, {}, 480., cell, out, both_l=both), splits)
+            self.assertEqual(bool(out["unplaced"]), not both)
+            for x, y in made:
+                self.assertIsNone(K.hit(x, y, m=0.))
+
+    def test_floorplan_tail_single_repeater_within_reach(self):
+        # 770-um straight tail whose midpoint sits in a 600-um macro: one legal repeater near the start keeps both
+        # hops inside the 750-um reach; without both_l the tail is structural
+        ko = [(100., 0., 700., 1000., "macro")]
+        for both in (False, True):
+            cells = dict(n=dict(x=10., y=500., kind="node"), d=dict(x=780., y=500., kind="drv"))
+            nets = [dict(name="w", drv="n", loads=["d"], level=9)]
+            out = dict(unplaced=[])
+            made = []
+            def cell(name, x, y, kind, **kw):
+                made.append((x, y)); cells[name] = dict(x=x, y=y, kind=kind); return name
+            CM.split_long(cells, nets, CM.DC.KeepIndex(ko, die=(1000., 1000.)), {}, 480., cell, out, both_l=both)
+            self.assertEqual(bool(out["unplaced"]), not both)
+            if both:
+                (x, y), = made
+                self.assertLessEqual(max(abs(x - 10.), abs(780. - x)) + CM.BUF_W + CM.ROW_Y, 750.)
+
+    def test_floorplan_tail_detours_around_a_wall(self):
+        ko = [(300., 0., 1300., 1600., "wall")]
+        K = CM.DC.KeepIndex(ko, die=(2000., 2000.))
+        cells = dict(n=dict(x=200., y=800., kind="node"), d=dict(x=1400., y=800., kind="drv"))
+        nets = [dict(name="w", drv="n", loads=["d"], level=9)]
+        out = dict(unplaced=[])
+        made = []
+        def cell(name, x, y, kind, **kw):
+            made.append((x, y)); cells[name] = dict(x=x, y=y, kind=kind); return name
+        CM.split_long(cells, nets, K, {}, 480., cell, out, both_l=True)
+        self.assertEqual(out["unplaced"], [])
+        pts = [(200., 800.)] + made + [(1400., 800.)]
+        self.assertTrue(all(K.hit(x, y, m=0.) is None for x, y in made))
+        self.assertLessEqual(max(abs(b[0] - a[0]) + abs(b[1] - a[1]) for a, b in zip(pts, pts[1:])), 480.)
+
     def test_hard_keepout_census_checks_the_whole_real_cell_body(self):
         P = SimpleNamespace(W=100., H=100.)
         with patch.object(CM.DC, "keepouts", return_value=[(11.5, 0., 20., 100., "macro")]):

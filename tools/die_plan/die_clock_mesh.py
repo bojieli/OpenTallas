@@ -467,7 +467,56 @@ def stub_foot(K, xs, ys, x, y, limit, box=None, extent=None, span=None):
     return best[1], best[2], best[3], best[4], best[5]
 
 
-def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None):
+def detour_sites(K, pa, pb, hop, grid=10.8, margin=900.0):
+    """shortest 4-connected path pa -> pb over legal clock-cell sites (grid points free of every keep-out) inside the
+    pa/pb box grown by margin; returns repeater sites, one wherever the walked path would exceed hop, or None."""
+    from collections import deque
+    x0, y0 = min(pa[0], pb[0]) - margin, min(pa[1], pb[1]) - margin
+    nx_ = int((abs(pa[0] - pb[0]) + 2 * margin) / grid) + 2
+    ny_ = int((abs(pa[1] - pb[1]) + 2 * margin) / grid) + 2
+
+    def ij(p):
+        return (min(max(int(round((p[0] - x0) / grid)), 0), nx_ - 1), min(max(int(round((p[1] - y0) / grid)), 0), ny_ - 1))
+    s_, t_ = ij(pa), ij(pb)
+    free = {}
+
+    def ok(c):
+        if c in (s_, t_):
+            return True
+        if c not in free:
+            free[c] = not hitf(K, (x0 + c[0] * grid, y0 + c[1] * grid))
+        return free[c]
+    prev = {s_: None}
+    dq = deque([s_])
+    while dq:
+        c = dq.popleft()
+        if c == t_:
+            break
+        for dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            n_ = (c[0] + dc[0], c[1] + dc[1])
+            if 0 <= n_[0] < nx_ and 0 <= n_[1] < ny_ and n_ not in prev and ok(n_):
+                prev[n_] = c
+                dq.append(n_)
+    if t_ not in prev:
+        return None
+    path = []
+    c = t_
+    while c is not None:
+        path.append(c)
+        c = prev[c]
+    path.reverse()
+    sites, run = [], 0.0
+    pts = [(x0 + c[0] * grid, y0 + c[1] * grid) for c in path]
+    pts[0], pts[-1] = tuple(pa), tuple(pb)
+    for a_, b_ in zip(pts, pts[1:]):
+        run += abs(b_[0] - a_[0]) + abs(b_[1] - a_[1])
+        if run > hop - 2 * grid and b_ != pts[-1]:
+            sites.append(b_)
+            run = 0.0
+    return sites or None
+
+
+def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, both_l=False):
     """every driver -> load branch longer than hop_max (a slide / jog / node move made it long) gets equal-cut
     repeaters on its own L path (x first, then y), each at the nearest free site: no hop exceeds ~hop_max, so slew
     stays inside the limit.  Returns the number of repeaters added."""
@@ -486,23 +535,70 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None):
             if k <= 0:
                 loads.append(ld)
                 continue
-            corner = (pb[0], pa[1])
-            planned, reservations = [], []
-            for c in range(1, k + 1):
-                t = c * L / (k + 1)
-                dx = abs(corner[0] - pa[0])
-                if t <= dx:
-                    p = (pa[0] + math.copysign(t, corner[0] - pa[0]), pa[1])
-                else:
-                    p = (corner[0], pa[1] + math.copysign(t - dx, pb[1] - pa[1]))
-                q, _ = free_near(K, p, limit=hop_max / 2)
-                if q is None:
+            for orient in ("xy", "yx") if both_l else ("xy",):
+                # both_l (--clock-floorplan): when the x-first L crosses a hard wall, try the y-first L (e.g. up a
+                # core channel, then along the core row gap) before declaring the tail unsplittable
+                planned, reservations = [], []
+                for c in range(1, k + 1):
+                    t = c * L / (k + 1)
+                    if orient == "xy":
+                        corner = (pb[0], pa[1])
+                        dx = abs(corner[0] - pa[0])
+                        if t <= dx:
+                            p = (pa[0] + math.copysign(t, corner[0] - pa[0]), pa[1])
+                        else:
+                            p = (corner[0], pa[1] + math.copysign(t - dx, pb[1] - pa[1]))
+                    else:
+                        dy = abs(pb[1] - pa[1])
+                        if t <= dy:
+                            p = (pa[0], pa[1] + math.copysign(t, pb[1] - pa[1]))
+                        else:
+                            p = (pa[0] + math.copysign(t - dy, pb[0] - pa[0]), pb[1])
+                    q, _ = free_near(K, p, limit=hop_max / 2)
+                    if q is None:
+                        break
+                    probe = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y))
+                    reservations.append(reserve_cell(K, f"split_probe_{c}", probe))
+                    planned.append(q)
+                for r in reservations:
+                    release_cell_reservation(K, r)
+                if len(planned) == k:
                     break
-                probe = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y))
-                reservations.append(reserve_cell(K, f"split_probe_{c}", probe))
-                planned.append(q)
-            for r in reservations:
-                release_cell_reservation(K, r)
+            if both_l and len(planned) != k and k == 1 and L <= 2 * (750.0 - BUF_W - ROW_Y):
+                # one repeater anywhere on either L whose two hops both stay inside the 750-um reach (the
+                # equal-split site sits in a macro): scan the path, keep the most balanced legal site
+                best_q = None
+                for orient in ("xy", "yx"):
+                    n_ = int(L // 10.8)
+                    for s_ in range(1, n_):
+                        t = s_ * 10.8
+                        if orient == "xy":
+                            dx = abs(pb[0] - pa[0])
+                            p = ((pa[0] + math.copysign(t, pb[0] - pa[0]), pa[1]) if t <= dx else
+                                 (pb[0], pa[1] + math.copysign(t - dx, pb[1] - pa[1])))
+                        else:
+                            dy = abs(pb[1] - pa[1])
+                            p = ((pa[0], pa[1] + math.copysign(t, pb[1] - pa[1])) if t <= dy else
+                                 (pa[0] + math.copysign(t - dy, pb[0] - pa[0]), pb[1]))
+                        if hitf(K, p):
+                            p, _ = free_near(K, p, limit=hop_max / 2)   # off-path site: still both hops <= reach
+                            if p is None:
+                                continue
+                        h1 = abs(p[0] - pa[0]) + abs(p[1] - pa[1]) + BUF_W + ROW_Y
+                        h2 = abs(pb[0] - p[0]) + abs(pb[1] - p[1]) + BUF_W + ROW_Y
+                        if max(h1, h2) <= 750.0 and (best_q is None or max(h1, h2) < best_q[0]):
+                            best_q = (max(h1, h2), p)
+                if best_q is not None:
+                    planned = [best_q[1]]
+            if both_l and len(planned) != k:
+                # no repeater set on either L: route around the macro on legal sites (maze detour), one repeater per
+                # <= hop_max of detour path, so every hop is a real legal site inside the reach
+                det = detour_sites(K, pa, pb, hop_max)
+                if det:
+                    planned, k = det, len(det)
+                    if out is not None:
+                        out.setdefault("detours", []).append(dict(driver=n["drv"], load=ld, direct_um=round(L, 2),
+                                                                  reps=len(det)))
             if len(planned) != k:
                 # A clock tail can traverse a PHY with its driver outside it. Never manufacture an illegal cell.
                 # Keep the direct tail only within the binding 750-um reach; actual routed slew still decides.
@@ -636,8 +732,10 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                     best = (q, d, axis)
             if best is None:
                 hc = next((c[4] for c in cores if in_rect(c, x, y)), None) if fp is not None else None
+                if hc is None and fp is not None and fp.get("io_macro_drivers") == "drop":
+                    hc = next((r[4] for r in ko if str(r[4]).startswith("io/") and in_rect(r, x, y)), None)
                 if hc is not None:
-                    out["hole_drivers"].append([i, j, "hard_core", hc])
+                    out["hole_drivers"].append([i, j, "io_macro" if hc.startswith("io/") else "hard_core", hc])
                     continue
                 out["unplaced"].append([i, j])
                 continue
@@ -775,7 +873,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                                        box=(g["i0"], g["i1"], g["j0"], g["j1"]) if regions else None,
                                        extent=g.get("strap_box_um"),
                                        span=(lambda ax_, k_, g=g: span(ax_, k_, g)) if fp is not None else None)
-        if fp is not None and any(in_rect(h["rect_um"], x, y) for h in holes):
+        if fp is not None and any(in_rect(h["rect_um"], x, y) and h["name"] != part for h in holes):
             out["unplaced"].append([tp, "tap inside a declared macro hole"])
         if fq is None:
             fq, fd = (x, y), -1.0
@@ -789,7 +887,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     out["taps"] = tap_rows
     if hop_max:
         out["meta"]["split_reps"] = split_long(cells, nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows}, hop_max,
-                                               cell, out)
+                                               cell, out, both_l=fp is not None)
     overlaps = placement_overlaps(cells)
     out["clock_cell_overlaps"] = overlaps
     out["clock_hard_keepout_violations"] = hard_keepout_violations(P, cells)
@@ -1680,7 +1778,8 @@ def main(argv=None):
     b.add_argument("--clock-floorplan", help="opt-in JSON: x_cuts_um (region seams on partition edges) + region_nx "
                    "(power-of-two columns per region), macro_holes (part names / {name, rect_um}: straps stop at the "
                    "macro edge, no cells inside, dead branches pruned), hard_core_drivers='drop' (cores <= M7 under the "
-                   "mesh: an intersection with no legal site is driverless; the core tree is its declared tap latency)")
+                   "mesh: an intersection with no legal site is driverless; the core tree is its declared tap latency), "
+                   "io_macro_drivers='drop' (same for die PHY io macros; straps crossing them are reported)")
     bl = sub.add_parser("balance")
     bl.add_argument("dir")
     bl.add_argument("--out", required=True)
