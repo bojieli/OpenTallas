@@ -243,6 +243,7 @@ def compose(plan,table,plan_path=None,observer_part="glue"):
             try:band=_storage_band(t,bus,int(r["width"]),used);used.append(band["rect_um"])
             except ValueError as e:
                 placement_failures.append(dict(type=tn,bus=bus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
+            band["instance"]="u_cland_"+bus
             info["bands"][bus]=band
             info["local_sources"].append(dict(name=bus,ready="landing_ready_"+bus,fault="landing_fault_"+bus,tap=tap,
                 xy_um=point,band=band))
@@ -269,6 +270,13 @@ def compose(plan,table,plan_path=None,observer_part="glue"):
                     b=_scalar(t,f"fclk_in_cland_dn_{i}","in",c["xy_um"],"clock",shift=2.16)
                     t["buses"].append(b);t["clock"].setdefault("edge_clocks",[]).append(dict(port=b["name"],tap_um=c["xy_um"],period_mult=1,
                         note="reverse monitor forwarded clock; 2bit landed ring, boot-only cost"))
+                if c["seam"]:
+                    monbus=f"cland_dn_ready_{i}"
+                    try:band=_storage_band(t,monbus,2,used);used.append(band["rect_um"])
+                    except ValueError as e:
+                        placement_failures.append(dict(type=tn,bus=monbus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
+                    band["instance"]=f"u_cland_monitor_{i}"
+                    info["bands"][f"monitor_{i}"]=band
                 info["children"].append(row)
         bytype[tn]=info
     # Separate physical transport: clock and monitor ports never carry epochs.
@@ -349,7 +357,10 @@ def compose(plan,table,plan_path=None,observer_part="glue"):
         if pins:
             t["clock"]["landing_contract"]=dict(pins=pins,bands=bytype[tn]["bands"],
                 base_type=bytype[tn]["base_type"],registered_monitor=bytype[tn]["mask"]["active"],
-                physical_qualified=False,collector_tree=bytype[tn]["tree"])
+                physical_qualified=False,collector_tree=bytype[tn]["tree"],
+                collector_root_node=bytype[tn].get("collector_root_node"),
+                collector_local_sources=bytype[tn]["local_sources"],
+                collector_children=bytype[tn]["children"])
         t["buses"]=[b for b in t["buses"] if b not in special]
     infra_edges=[]
     for pr in raw["ports"]:

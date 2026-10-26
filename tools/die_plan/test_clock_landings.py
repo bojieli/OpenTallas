@@ -110,3 +110,19 @@ def test_actual_observer_port_transform():
     assert ".obs_fault((((a | b)) | cland_up_fault))" in out
     assert ".seq_cfg_image_ready(((c[0]) & cland_up_ready))" in out
     with pytest.raises(LandingError):gate_observer(text.replace(".obs_fault", ".wrong"),spec)
+
+
+def test_native_observer_uses_exact_emitted_identity(monkeypatch):
+    import sys
+    from types import SimpleNamespace as N
+    from clock_landings import LandingError
+    monkeypatch.setitem(sys.modules,'bind',N(short_id=lambda s,n:s))
+    c=Landings.__new__(Landings)
+    c.collector=dict(observer=dict(part='glue',module='qfd_sys_face_lctx3_wrapped',instance_suffix='u_sys_face',fault_port='obs_fault',ready_port='seq_cfg_image_ready'))
+    leaf=N(path='sys_face',module='qfd_sys_face_lctx3_wrapped',ports=dict(obs_fault=[1],seq_cfg_image_ready=[2]))
+    b=N(members=dict(glue=[0]),F=N(cells=[leaf]),G=N(dirs=[dict(obs_fault='input',seq_cfg_image_ready='input')]),rel_of=lambda ci:'sys_face')
+    c.validate_observer(b)
+    assert c.observer_source['path']=='sys_face'
+    assert c.observer_source['emitted_instance']=='u_sys_face'
+    b.rel_of=lambda ci:'wrong_face'
+    with pytest.raises(LandingError):c.validate_observer(b)
