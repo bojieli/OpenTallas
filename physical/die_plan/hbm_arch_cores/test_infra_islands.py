@@ -54,7 +54,7 @@ def test_kit_hook_writes_pdn_prefix_and_abstract_inputs(tmp_path):
     cfg = ["export PRE_GLOBAL_PLACE_TCL = /work/x.tcl"]
     r = G.infra_islands_hook(tmp_path, cfg, isl, "m_big", 630.72, 1036.8)
     pdn = (tmp_path / "pdn.tcl").read_text()
-    assert pdn.index("dbObstruction_create") < pdn.index("pdngen")
+    assert pdn.index("dbObstruction_create") < pdn.index("\npdngen\n")
     assert (tmp_path / "island_abstract.py").is_file() and json.loads((tmp_path / "infra_islands.json").read_text())["module"] == "m_big"
     assert cfg[-1].endswith("/work/infra_islands_gpl.tcl") and r["previous_gpl_hook"] == "/work/x.tcl"
 
