@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND PLACE ONLY",
+  "image": "results/geom_review/codex_s81_xrt3_1026/plan.png",
+  "findings": [
+    "Viewed compact 207.36x164.16 macro-free floorplan; S/N faces use M3+M5, E/W use M4+M6; buses stay in contiguous edge bands. E/W peak14.5pins/um below two-layer capacity18.2; image renderer red E/W line counts only M4 and is inapplicable to M6 pins.",
+    "Clock/reset E mid-edge; no macro walls; continuous M1/M2/M5 PDN; full outline diagonal264.5um below405um reach. Actual placed r2r census and clock balance remain required before CTS/route.",
+    "Plan M6 pins need local y track phase0.004 from MX parent contract; existing generator used0.016 and had no M6 pin support. New recipe preserves all9122 pin centres and all RTL; max signal routing layer remainsM5, M6 access legality requires actual trial."
+  ],
+  "pins_on_tracks": 9122,
+  "bad_pins": 0,
+  "wrong_phase_control_rejected": 2112,
+  "legacy_default_tracks": "BYTE_IDENTICAL",
+  "rtl_change_cycles": 0,
+  "route": "NOT RUN"
+}
