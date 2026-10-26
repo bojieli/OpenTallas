@@ -1,0 +1,9 @@
+{"generated":"2026-10-25 19:34 PDT","source_commit":"3d3acec7d47d276f90008c8045164c3f8d79a2df","bench":"tools/hbm_b2/q3sync/lockstep.sh (legacy vs __q3sync core top, identical random stimulus, cold reset + warm reset at cycle 2000)",
+ "vm":{"hold":64,"verdict":"PASS","compared":3873,"mismatches":0,"commit":"265fd232aa"},
+ "reduce":{"hold":128,"verdict":"PASS","compared":3745,"mismatches":0},
+ "ring_ag":{"hold":128,"verdict":"PASS","compared":3745,"mismatches":0},
+ "body":{"hold":256,"verdict":"PASS","compared":2489,"mismatches":0},
+ "edge":{"hold":128,"verdict":"FAIL_RANDOM_STIMULUS_DONT_CARE_ONLY","compared":3745,"mismatches":18,
+   "diagnosis":"all 18 diffs are arg_out_flit (15 bits) in cycles 2128-2145 after the WARM reset only; cold reset clean. Every diff cycle has arg_out_v=0 or arg_fault=1 in BOTH versions (diag log lockstep_edge_diag_valid_fault.log). Cause: ot_hgi_coll_argmax_static out_flit and ot_hgi_coll_amerge datapath are non-reset registers; in the reset-assert cycle legacy async flops clear before the posedge while sync flops clear at it, so a non-reset register captures a different stale value. Result is disqualified by the sticky fault / not valid, so no functional difference observed, but this random bench cannot sign it off.",
+   "next":"production-shaped argmax schedule bench (start/cfg, in_slot==in_v, flush/publish) cold+warm; or compare flit only when v&&!fault"},
+ "not_claimed":"no native q3 assembly/programme/root32 gate; sync profile not adopted by any kit"}
