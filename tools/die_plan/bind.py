@@ -542,6 +542,11 @@ class Binder:
         self.ab = plan["asbuilt"]
         self.base = base or str(E.REPO)
         self.errors, self.warns = [], []
+        import reset_boot_contract
+        try:
+            self.reset_boot_contract = reset_boot_contract.check_binding(plan, self.base)
+        except (ValueError, OSError) as exc:
+            raise BindError(f"RESET_BOOT_CONTRACT {exc}") from exc
         self.R = Rules(self.ab)
         self.F = E.flatten(yjs, self.ab["top"], self.ab.get("substitute_parent", []))
         # Yosys omits instance parameters when a leaf uses its declared defaults. Keep their
