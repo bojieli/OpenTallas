@@ -118,6 +118,14 @@ class TestGates(TickBase):
         (j,) = self.tick().values()
         self.assertEqual(j["status"], "RUNNING")
         self.assertIn("cts", j["trial"])
+        self.f.kits[QPATH] = {"classify": {"goal": "cts", "cts_odb": QPATH + "/run/results/asap7/x/base/4_cts.odb"},
+                              "mtime": 9e9}
+        self.finish_client(self.f.launched[0][0], "ot-run: RAN on epyc2: exit 0\nAP_RC=0\n")
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "CTS-DONE")
+        self.assertFalse((Path(self.tmp.name) / "structural.tsv").exists())
+        self.assertIn("CTS-DONE", (Path(self.tmp.name) / "trial.tsv").read_text())
+        self.assertEqual(self.ap.classify({"goal": "route"}, {"exit": 0})[0], "CRASH")
 
     def test_pending_plan_delta_holds_spare_kits(self):
         self.delta("PENDING-DELTA s81-d1 s81 slice_station__t5,bk_sel\n")

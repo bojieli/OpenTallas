@@ -447,6 +447,9 @@ out["cells"] = cells
 g = rd(next(iter(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "5_1_grt.log"))), ""))
 tot = re.findall(r"^Total\s+.*?(\d+)\s*$", g, re.M)
 out["grt_overflow"] = int(tot[-1]) if tot else None
+out["goal"] = goal
+cts = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "4_cts.odb")) if os.path.getmtime(p) >= since]
+if cts: out["cts_odb"] = max(cts, key=os.path.getmtime)
 done()
 '''
 
@@ -578,6 +581,9 @@ def classify(c, client):
         return "CRASH", "infra-lost", client.get("msg", "ot-run NOT COMPLETED")
     if c.get("oom") or client.get("exit") in (137, 143):
         return "CRASH", "infra-oom", c.get("oom") or f"exit {client.get('exit')}"
+    if client.get("exit") == 0 and c.get("goal") == "cts" and c.get("cts_odb"):
+        return "CTS-DONE", "cts-only", (f"CTS-only diagnostic finished: {c['cts_odb']} -- no sign-off scope; collect "
+                                        "placement / clock / reset images and review before the next scope")
     if client.get("exit") == 0:
         return "CRASH", "no-signoff", "flow exit 0 but no signoff.json"
     return "CRASH", "flow-error", c.get("orfs_error") or (c.get("runlog_tail") or "")[-300:] or f"exit {client.get('exit')}"
@@ -1214,6 +1220,12 @@ def finish(st, j, c, client):
 
 def after_class(st, j):
     cls = j["status"]
+    if cls == "CTS-DONE":
+        j["delete_pending"] = False
+        tsv_append("trial.tsv", j["id"], [j["die"], j["type"], j["src"], ssh_host(j.get("probe") or j["host"]), j["kit"],
+                                          "CTS-DONE", "", "", j.get("reasons", "")[:300], j.get("lane", "")])
+        log(f"CTS-DONE {j['id']} {j['die']}/{j['type']}: {j.get('reasons', '')[:200]}; checkpoint kept, trial.tsv")
+        return
     if cls == "SIGNED":
         trial = j.get("trial") or path_gate_hold(j)
         if trial:
