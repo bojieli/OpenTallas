@@ -69,7 +69,7 @@ def fit_reach(raw):
     for sx,sy in [(1,1),(1,-1),(-1,1),(-1,-1)]:
      co={};
      for sign,(j,sg,axis) in zip([1,-1],coeff):co[j]=co.get(j,0)+sign*sg*(sx if axis==0 else sy)
-     add(co,slot['stations']*405.-1.-sx*(xy[0][0]-xy[1][0])-sy*(xy[0][1]-xy[1][1]))
+     add(co,slot['stations']*393.-1.-sx*(xy[0][0]-xy[1][0])-sy*(xy[0][1]-xy[1][1]))
  for j in range(n):add({j:1,n+j:-1},0);add({j:-1,n+j:-1},0)
  A=coo_matrix((vals,(rows,cols)),shape=(len(rhs),2*n)).tocsr();res=linprog(np.r_[np.zeros(n),np.ones(n)],A_ub=A,b_ub=rhs,bounds=[(lo,hi) for _,lo,hi in STATE]+[(0,None)]*n,method='highs')
  if not res.success:return dict(status='FAIL',reason=res.message)
