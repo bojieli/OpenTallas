@@ -1836,37 +1836,37 @@ def cmd_report(a):
                 return ebr[p]["early_branch"]["node_tag"]
             return M["meta"]["regions"][reg[p]]["tag"] if regd else "h"
 
-        # COORD RULING 2026-10-26 05:42 (CPPR common point on a regional mesh): two taps on the SAME connected
+        # SUPERSEDED as gate by METHODOLOGY v4 12.4b/12.8d (owner 10-26 ~07:3x): the mesh-node credit below is INFO only. Was COORD 05:42 ruling: two taps on the SAME connected
         # regional mesh share the MESH NODE: the credit is the early/late range common at the mesh, i.e. the smaller
         # of the two stub-input ranges (mesh_<corner>.json transient, all drivers).  The mesh->tap arrival spread
         # stays in full (each tap keeps its own measured arrival), and the per-tap stub buffer + stub early/late
         # range downstream of the mesh is never credited (pair_clock_damage also caps the credit at each tap range).
-        # Different meshes / EARLY-TAP branches: last common H-tree node (unchanged).  Gate = mesh-credited, only
-        # when the mesh is ONE connected net in the emitted geometry; the region-root-credited number is INFO.
+        # Different meshes / EARLY-TAP branches: last common H-tree node.  v4: GATE = last common tree node for ALL pairs;
+        # mesh-node numbers are INFO (mesh_connected still checks the routed-DB crossing vias for that INFO).
         Mz_ = json.loads((d / f"mesh_{corner}.json").read_text())
         srng = {s_["port"]: s_["late"] - s_["early"] for s_ in Mz_["stubs"].values()}
         mesh_ok = mesh_connected(M, d) if regd else {}
 
-        def dmg(pa, pb, mesh=True):
+        def dmg(pa, pb, mesh=False):   # METHODOLOGY v4 12.4b/12.8d: GATE credits the last common TREE node only
             c = lca(common(pa), common(pb)) or "h"
             while c not in rng and len(c) > 1:
                 c = c[:-1]
             cr = rng.get(c, 0.0)
             if (mesh and regd and pa not in ebr and pb not in ebr and reg[pa] == reg[pb]
-                    and (mesh_ok.get(reg[pa]) or mesh == "info") and pa in srng and pb in srng):
+                    and mesh == "info" and pa in srng and pb in srng):
                 cr = max(cr, min(srng[pa], srng[pb]))
             return DC.pair_clock_damage(late[pa], early[pa], late[pb], early[pb], cr)["max_damage_ps"]
         rk_ = [dmg(x[0], x[1], mesh=False) for x in list(seam_in) + [(i[0], i[1]) for i in intra]]
         mk_ = [dmg(x[0], x[1], mesh="info") for x in list(seam_in) + [(i[0], i[1]) for i in intra]]
         allp_ = list(seam_in) + [(i[0], i[1]) for i in intra]
-        mo_ = [dmg(x[0], x[1]) for x in allp_ if x[0] not in ebr and x[1] not in ebr]   # no EARLY-TAP branch end
+        mo_ = [dmg(x[0], x[1]) for x in allp_ if x[0] not in ebr and x[1] not in ebr]   # no EARLY-TAP end, gate basis
         moi_ = [dmg(x[0], x[1], mesh="info") for x in allp_ if x[0] not in ebr and x[1] not in ebr]
         mspread = {}
         for v_ in Mz_["stubs"].values():
             k_ = reg.get(v_["port"])
             lo_, hi_ = mspread.get(k_, (1e18, -1e18))
             mspread[k_] = (min(lo_, v_["late"]), max(hi_, v_["late"]))
-        mesh_info = dict(cppr_rule="COORD 2026-10-26 05:42: mesh node common point (gate); region root (info)",
+        mesh_info = dict(cppr_rule="METHODOLOGY v4 12.4b: GATE = last common tree node (region root for same-mesh pairs); mesh-node credit = INFO only (mesh_credit_if_connected_*, mesh_only_if_connected_*)",
                          region_root_related_pair_max_ps=round(max(rk_), 2),
                          region_root_pairs_over_80=sum(1 for v in rk_ if v > 80),
                          mesh_credit_if_connected_related_pair_max_ps=round(max(mk_), 2),
