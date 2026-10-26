@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+"""CLOCK-128 shield lane: shielded clock wiring legal by construction.
+python3 -m pytest tools/die_plan/test_clock128_shield.py"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import die_clock_128 as C  # noqa: E402
+
+ND = dict(width=0.16, space=0.08)
+TR = {"M8": dict(pitch_um=0.08, offset_um=0.04), "M9": dict(pitch_um=0.08, offset_um=0.04)}
+
+
+def grid(m9_pitch, W=60.0, H=60.0, w=0.48, m8_pitch=8.64):
+    """die_infra.pg_rects-form VDD/VSS grid: M8 rows (pitch m8_pitch), M9 columns (pitch m9_pitch), VDD/VSS alternate"""
+    out = []
+    for L, pitch, span, other in (("M8", m8_pitch, H, W), ("M9", m9_pitch, W, H)):
+        pos = pitch / 2
+        while pos < span:
+            for j, net in enumerate(("VDD", "VSS")):
+                c = pos + j * pitch / 2
+                if c + w / 2 > span:
+                    continue
+                out.append((net, L, 0.0, c - w / 2, other, c + w / 2) if L == "M8" else
+                           (net, L, c - w / 2, 0.0, c + w / 2, other))
+            pos += pitch
+    return out
+
+
+def router(pg):
+    r = C.TrackRouter(ND, "VSS", TR, 8.64)
+    r.reserve(C.pg_shapes(pg))
+    return r
+
+
+def census(pg, segs):
+    return C.metal_census(C.pg_shapes(pg) + C.clock_shapes(segs, ND, "VSS"), ND["space"])
+
+
+def test_census_catches_shield_on_vdd_and_clock_on_pg():
+    pg = grid(8.64)
+    vdd_m9 = next(r for r in pg if r[0] == "VDD" and r[1] == "M9")
+    x = (vdd_m9[2] + vdd_m9[4]) / 2
+    bad = census(pg, [("M9", x + 0.24, 5.0, x + 0.24, 40.0, "ck_a", "tree"),     # its shield sits on the VDD stripe
+                      ("M9", x, 45.0, x, 50.0, "ck_b", "tree")])                  # clock metal on the VDD stripe
+    assert bad["shorts_by_kind"].get("pg-shield") and bad["shorts_by_kind"].get("pg-tree")
+
+
+def test_dense_m9_grid_uses_pg_flank_shields_sparse_m8_drawn_and_tied():
+    pg = grid(0.864 * 2)                         # KV: 0.48 um stripes every 0.864 um, VDD/VSS alternate
+    r = router(pg)
+    c9, m9, _ = r.place("M9", 20.0, 3.0, 50.0, "ck_a")
+    c8, m8, e8 = r.place("M8", 20.0, 3.0, 50.0, "ck_b")
+    assert m9 == C.FLANK and m8 == C.DRAWN and e8 is not None
+    segs = [("M9", c9, 3.0, c9, 50.0, "ck_a", "tree", m9), ("M8", 3.0, c8, 50.0, c8, "ck_b", "tree", m8, e8)]
+    cen = census(pg, segs)
+    assert cen["shorts"] == 0 and cen["spacing"] == 0
+    assert not C.flank_census(pg, segs, ND)
+    st = C.shield_stripes([("M8", 3.0, c8, 50.0, c8, e8)], ND)
+    ties = C.shield_ties(st, pg, ND["width"])
+    assert not ties["untied"] and not ties["shorts"]
+
+
+def test_flank_needs_pg_on_both_sides_over_the_whole_span():
+    pg = [r for r in grid(1.728) if not (r[1] == "M9" and r[3] == 0.0 and r[2] > 30.0)]   # M9 grid only for x <= 30
+    ix = C.MetalIndex(ND["space"])
+    for s in C.pg_shapes(pg):
+        ix.add(s)
+    r = router(pg)
+    c, m, _ = r.place("M9", 20.0, 3.0, 50.0, "ck_a")
+    assert m == C.FLANK and C.flanked(ix, C.seg_shapes("M9", c, 3.0, 50.0, "ck_a", ND, None)[0], C.flank_gap(ND))
+    edge = max(x for n, L, x, *_ in pg if L == "M9")        # beside the last stripe: PG on one side only
+    s = C.seg_shapes("M9", edge + 0.40, 3.0, 50.0, "ck_b", ND, None)[0]
+    assert not C.flanked(ix, s, C.flank_gap(ND))
+
+
+def test_short_segment_shield_extends_to_a_vss_tie():
+    pg = grid(8.64)
+    r = router(pg)
+    c, m, e = r.place("M8", 20.0, 10.10, 10.60, "ck_a")      # 0.5-um drop between two VSS M9 stripes
+    assert m == C.DRAWN and e > C.shield_geom(ND)[2]
+    st = C.shield_stripes([("M8", 10.10, c, 10.60, c, e)], ND)
+    assert not C.shield_ties(st, pg, ND["width"])["untied"]
+
+
+def test_fixed_wires_router_separates_collinear_parent_drop_and_child_trunk():
+    # parent net n0 -> cell A (drop along x = A + off), A's own net runs vertically from A: before the lane both sat on
+    # the same M9 line (a clock-clock short between two nets)
+    cells = {"A": dict(x=20.0, y=20.0), "B": dict(x=20.0, y=40.0), "P": dict(x=5.0, y=10.0)}
+    M = dict(taps=[], meta=dict(root_um=[0.0, 0.0]))
+    nets = [dict(name="n0", drv="P", loads=["A"]), dict(name="n1", drv="A", loads=["B"])]
+    free = C.fixed_wires(M, cells, nets, 0.0, 0.0)
+    pg = grid(8.64)
+    assert census(pg, C.tree_segs(free))["shorts"]
+    r = router(pg)
+    w = C.fixed_wires(M, cells, nets, 0.0, 0.0, router=r)
+    cen = census(pg, C.tree_segs(w))
+    assert cen["shorts"] == 0 and cen["spacing"] == 0
+    assert all(len(x["shield_modes"]) == len(x["segs"]) == len(x["shield_ext"]) for x in w)
+    tcl = "\n".join(C.combo_tcl(w, ND, "VSS"))
+    assert "proc fw {sw L x0 y0 x1 y1 {sh 1} {ex" in tcl
+    assert abs(sum(x["wire_um"] for x in w) - sum(x["wire_um"] for x in free)) < 2 * 8.64
+
+
+def test_no_legal_track_is_a_plan_error():
+    # a solid VDD sheet on M8 and M9: nothing fits
+    pg = [("VDD", "M8", 0.0, 0.0, 60.0, 60.0), ("VDD", "M9", 0.0, 0.0, 60.0, 60.0)]
+    cells = {"A": dict(x=20.0, y=20.0), "P": dict(x=5.0, y=10.0)}
+    M = dict(taps=[], meta=dict(root_um=[0.0, 0.0]))
+    try:
+        C.fixed_wires(M, cells, [dict(name="n0", drv="P", loads=["A"])], 0.0, 0.0, router=router(pg))
+    except C.PlanError as e:
+        assert {r["kind"] for r in e.rows} == {"no_clock_track"}
+    else:
+        raise AssertionError("expected a plan error")
