@@ -2,7 +2,8 @@
 # (repair_ff.tcl, run_swr.sh); the former mixed tc+bc `repair_timing -hold` here was the hcore_eh1 stall (pads the FF corner
 # against the TT bound, 6k pin-reg endpoints, hours).  Setup is checked independently at TT after the FF repair.
 global_route -start_incremental
-set_max_fanout 16 [current_design]
+# Match the placement-stage cap; do not split legal 17-24-load data nets.
+set_max_fanout 24 [current_design]
 set_max_transition 200 [current_design]
 repair_design -slew_margin 20 -cap_margin 20
 detailed_placement
