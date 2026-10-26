@@ -2,7 +2,7 @@
 """otrun-hub-retarget.py SRC DST NEWHUB OLDHUB [--drop-old]   (INFRA2 2026-10-24; see lanes/OTRUN-HUB-RECOVERY.md)
 
 Rewrites an ot-run or ot-sizes-sync copy for a new hub.  In those tools "localhost" = THE HUB ITSELF (reached by
-`ssh localhost`), so moving the hub from OLDHUB (e.g. epyc1) to NEWHUB (e.g. epyc3) swaps the two names in the host
+`ssh localhost`), so moving the hub from OLDHUB (e.g. epyc1) to NEWHUB (e.g. intel2, standby since 2026-10-25; epyc3 retired) swaps the two names in the host
 tables HOSTS, HOST_ROLE, NO_AVX512, HOST_MAX_DIE (code part only, comments untouched):
   NEWHUB -> "localhost"  (its role / Zen-3 NO_AVX512 flag move with it)     "localhost" -> OLDHUB  (old hub = plain worker)
 HOST_RESERVE stays on "localhost" (the hub keeps its 8-thread/16-GB reserve for ot-run clients).
