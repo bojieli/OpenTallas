@@ -1,0 +1,9 @@
+6 [854, 357, 631, 675, 282, 643] [4, 2, 3, 3, 2, 3] {'T1': 178.2, 'T2': 62.1, 'T3': 30.24} {'mean': 229.06, 'min': 220.35, 'max': 233.71, 'window': 13.36} {'mean': 180.57, 'min': 173.61, 'max': 184.24, 'window': 10.63}
+BEST 6 {'TT': {'mean': 229.06, 'min': 220.35, 'max': 233.71, 'window': 13.36}, 'FF': {'mean': 180.57, 'min': 173.61, 'max': 184.24, 'window': 10.63}}
+btab_m0_r3 VERDICT FAIL {'G1_macro_orient': 'PASS', 'G2_island_rows': 'FAIL', 'G3_cell_rows': 'PASS', 'G4_detour_sites': 'FAIL', 'G5_sram_structure': 'FAIL', 'P_asbuilt': 'FAIL'}
+ pred {'TT': {'mean': 230.96, 'window': 13.36}, 'FF': {'mean': 175.47, 'window': 10.63}} trunk {'TT': {'mean': 257.68, 'window': 32.63}, 'FF': {'mean': 193.6, 'window': 32.48}} BUFx4_ASAP7_75t_R 1 30.0
+ asbuilt {'verdict': 'FAIL', 'TT': {'mean_raw': 217.62, 'mean': 219.52, 'min': 197.47, 'max': 230.1, 'window': 32.63}, 'FF': {'mean_raw': 170.67, 'mean': 165.57, 'min': 150.82, 'max': 183.3, 'window': 32.48}, 'FF_early': {'mean_raw': 167.79, 'mean': 162.69, 'min': 147.82, 'max': 180.4, 'window': 32.58}, 'FF_late': {'mean_raw': 171.53, 'mean': 166.43, 'min': 152.11, 'max': 184.25, 'window': 32.14}, 'TT_early': {'mean_raw': 212.24, 'mean': 214.14, 'min': 191.64, 'max': 224.75, 'window': 33.1}, 'TT_late': {'mean_raw': 219.02, 'mean': 220.92, 'min': 199.95, 'max': 231.63, 'window': 31.67}, 'band': 'TT mean 250 +- 20 (rise/fall-average model), TT window <= 20, FF EARLY window <= 20', 'with_trunk': {'TT': {'mean': 257.68, 'window': 32.63}, 'FF': {'mean': 193.6, 'window': 32.48}}}
+ G5 FAIL nodes_in_pin_column 1 legs_across 0
+  G2_island_rows FAIL {'max_disp_um': 7.02} fail 1
+  G3_cell_rows PASS {'n_sites': 81} fail 0
+  G4_detour_sites FAIL {'n_edges': 87, 'repeaters_per_edge': {'L1': 1, 'L2': 1, 'L3': 0}, 'n_straight': 69, 'n_length_not_fixed': 0, 'n_repeaters': 23, 'n_detours': 15, 'max_shift_um': 0.0} fail 1
