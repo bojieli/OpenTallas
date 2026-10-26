@@ -108,3 +108,11 @@ def test_wrapper_preserves_original_packed_bus_range():
     s=sample()
     v=CI.emit_wrapper(s,"logic_only",{"d":{"direction":"input","width":8,"offset":4,"upto":True}})
     assert "input wire [4:11] d" in v
+
+
+def test_tcl_word_preserves_real_yosys_sink_identity():
+    import tkinter
+    interp=tkinter.Tcl()
+    name=r"c1_off\[0\]$_DFF_P_/CLK"
+    assert interp.eval("set x "+CI.word(name)) == name
+    with pytest.raises(CI.InfraError): CI.word("unsafe"+chr(92))

@@ -1,0 +1,2549 @@
+{
+ "basis": "Geometry/ASAP7 NLDM + Manhattan-MST branch C + Elmore path R; no clock measurements/pad selection",
+ "wire_r_kohm_um": 0.0214161,
+ "wire_c_ff_um": 0.113298,
+ "input_slew_ps": 40.0,
+ "corners": {
+  "TT": {
+   "sinks": 2792,
+   "min_ps": 170.65347622082032,
+   "mean_ps": 202.93317637322602,
+   "max_ps": 282.00462783376906,
+   "window_ps": 111.35115161294874,
+   "leaf_means": [
+    {
+     "node": "mp_core_Q0B0L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 179.60922382377487,
+     "mean_ps": 179.63540902798496,
+     "max_ps": 179.6743525175274
+    },
+    {
+     "node": "mp_core_Q0B0L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 179.91817425268633,
+     "mean_ps": 180.0088899982554,
+     "max_ps": 180.55858174807813
+    },
+    {
+     "node": "mp_core_Q0B0L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 179.70283227912884,
+     "mean_ps": 179.75608841993696,
+     "max_ps": 180.6430782574956
+    },
+    {
+     "node": "mp_core_Q0B0L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 182.52082939205138,
+     "mean_ps": 183.10197714081576,
+     "max_ps": 183.86963171464353
+    },
+    {
+     "node": "mp_core_Q0B1L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 175.18289329905406,
+     "mean_ps": 175.39751671591804,
+     "max_ps": 175.66488113718003
+    },
+    {
+     "node": "mp_core_Q0B1L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 172.6196606165225,
+     "mean_ps": 172.6428199089619,
+     "max_ps": 172.66661094059228
+    },
+    {
+     "node": "mp_core_Q0B1L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 172.7521178433955,
+     "mean_ps": 172.77372108409892,
+     "max_ps": 172.79991721380742
+    },
+    {
+     "node": "mp_core_Q0B1L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 173.13945734748006,
+     "mean_ps": 173.1624587755431,
+     "max_ps": 173.1940184382926
+    },
+    {
+     "node": "mp_core_Q0B2L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 170.88324655072495,
+     "mean_ps": 170.90528517381983,
+     "max_ps": 170.93970384503487
+    },
+    {
+     "node": "mp_core_Q0B2L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 170.84574711855453,
+     "mean_ps": 170.871431823375,
+     "max_ps": 170.90306323550394
+    },
+    {
+     "node": "mp_core_Q0B2L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 170.72251860344628,
+     "mean_ps": 170.74566841785034,
+     "max_ps": 170.7840317748586
+    },
+    {
+     "node": "mp_core_Q0B2L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 170.9971790923884,
+     "mean_ps": 171.02110825344437,
+     "max_ps": 171.06084385642856
+    },
+    {
+     "node": "mp_core_Q0B3L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 172.4738207974469,
+     "mean_ps": 172.49858081691838,
+     "max_ps": 172.53364867649177
+    },
+    {
+     "node": "mp_core_Q0B3L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 172.36161596014568,
+     "mean_ps": 172.38265798205487,
+     "max_ps": 172.40860603562143
+    },
+    {
+     "node": "mp_core_Q0B3L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 172.33571493068305,
+     "mean_ps": 172.3617572861444,
+     "max_ps": 172.4005626346716
+    },
+    {
+     "node": "mp_core_Q0B3L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 172.65582456931867,
+     "mean_ps": 172.68446055553153,
+     "max_ps": 172.73402455438443
+    },
+    {
+     "node": "mp_core_Q1B0L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 182.72466925897913,
+     "mean_ps": 182.75216976259023,
+     "max_ps": 182.78037083742294
+    },
+    {
+     "node": "mp_core_Q1B0L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 185.0400975567726,
+     "mean_ps": 185.2662145153071,
+     "max_ps": 185.65834720439298
+    },
+    {
+     "node": "mp_core_Q1B0L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 182.90545579642387,
+     "mean_ps": 182.93641941651092,
+     "max_ps": 182.97183818398662
+    },
+    {
+     "node": "mp_core_Q1B0L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 183.28954535448062,
+     "mean_ps": 183.3634791295549,
+     "max_ps": 183.76554539021123
+    },
+    {
+     "node": "mp_core_Q1B1L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 185.6087598057448,
+     "mean_ps": 185.6633624313553,
+     "max_ps": 185.73365637030258
+    },
+    {
+     "node": "mp_core_Q1B1L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 185.2320818828783,
+     "mean_ps": 185.2587598600905,
+     "max_ps": 185.3114853588232
+    },
+    {
+     "node": "mp_core_Q1B1L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 185.17992246715013,
+     "mean_ps": 185.21434191829965,
+     "max_ps": 185.3252409740389
+    },
+    {
+     "node": "mp_core_Q1B1L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 185.43722627844028,
+     "mean_ps": 185.46531952636377,
+     "max_ps": 185.6067645364772
+    },
+    {
+     "node": "mp_core_Q1B2L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 182.76540424663605,
+     "mean_ps": 182.79208882914614,
+     "max_ps": 182.83025195062459
+    },
+    {
+     "node": "mp_core_Q1B2L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 182.6352274260575,
+     "mean_ps": 182.65956226549724,
+     "max_ps": 182.68938319417416
+    },
+    {
+     "node": "mp_core_Q1B2L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 182.45636879824906,
+     "mean_ps": 182.48469298455524,
+     "max_ps": 182.51619667729392
+    },
+    {
+     "node": "mp_core_Q1B2L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 182.9485647911441,
+     "mean_ps": 182.97481613674674,
+     "max_ps": 183.00768378111493
+    },
+    {
+     "node": "mp_core_Q1B3L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 183.6883402893001,
+     "mean_ps": 183.72917339086186,
+     "max_ps": 183.79137355842866
+    },
+    {
+     "node": "mp_core_Q1B3L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 183.75668267249023,
+     "mean_ps": 183.7932719117227,
+     "max_ps": 183.84696136911998
+    },
+    {
+     "node": "mp_core_Q1B3L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 183.8535486978973,
+     "mean_ps": 183.9609214397904,
+     "max_ps": 184.10816175153474
+    },
+    {
+     "node": "mp_core_Q1B3L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 185.20594651491987,
+     "mean_ps": 185.36317504236516,
+     "max_ps": 185.91382048947975
+    },
+    {
+     "node": "mp_core_Q2B0L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 221.61181802863837,
+     "mean_ps": 221.6458240462904,
+     "max_ps": 221.77298710315523
+    },
+    {
+     "node": "mp_core_Q2B0L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 221.24852160090353,
+     "mean_ps": 221.27969113046686,
+     "max_ps": 221.32375497347465
+    },
+    {
+     "node": "mp_core_Q2B0L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 221.1086530753991,
+     "mean_ps": 221.13625252863665,
+     "max_ps": 221.17789526943594
+    },
+    {
+     "node": "mp_core_Q2B0L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 221.4689954540625,
+     "mean_ps": 221.49279926991377,
+     "max_ps": 221.53119998763754
+    },
+    {
+     "node": "mp_core_Q2B1L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 234.09094422976483,
+     "mean_ps": 234.83708153542645,
+     "max_ps": 237.30491922060205
+    },
+    {
+     "node": "mp_core_Q2B1L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 224.48058944061162,
+     "mean_ps": 224.65551239487087,
+     "max_ps": 224.9970020565441
+    },
+    {
+     "node": "mp_core_Q2B1L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 224.91609624207786,
+     "mean_ps": 224.95971308171508,
+     "max_ps": 225.11467223713495
+    },
+    {
+     "node": "mp_core_Q2B1L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 226.29879884515938,
+     "mean_ps": 226.34015639692134,
+     "max_ps": 226.39489923416332
+    },
+    {
+     "node": "mp_core_Q2B2L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 234.24249521893478,
+     "mean_ps": 235.45842246496824,
+     "max_ps": 236.4713361008241
+    },
+    {
+     "node": "mp_core_Q2B2L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 225.6452862339466,
+     "mean_ps": 225.6738979367424,
+     "max_ps": 225.7094745765644
+    },
+    {
+     "node": "mp_core_Q2B2L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 226.2437677272755,
+     "mean_ps": 226.274408394865,
+     "max_ps": 226.31424946435018
+    },
+    {
+     "node": "mp_core_Q2B2L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 227.21859602209616,
+     "mean_ps": 227.2504156918293,
+     "max_ps": 227.28515024461072
+    },
+    {
+     "node": "mp_core_Q2B3L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 249.37191407305752,
+     "mean_ps": 249.40095911649715,
+     "max_ps": 249.43475606661693
+    },
+    {
+     "node": "mp_core_Q2B3L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 262.4020305985665,
+     "mean_ps": 264.18063516204353,
+     "max_ps": 265.1725455778434
+    },
+    {
+     "node": "mp_core_Q2B3L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 250.99554757554546,
+     "mean_ps": 252.4468728091716,
+     "max_ps": 281.0326091938879
+    },
+    {
+     "node": "mp_core_Q2B3L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 281.9288587575313,
+     "mean_ps": 281.9599318239484,
+     "max_ps": 282.00462783376906
+    },
+    {
+     "node": "mp_core_Q3B0L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 217.68687033333757,
+     "mean_ps": 217.71994548945068,
+     "max_ps": 217.76862486317904
+    },
+    {
+     "node": "mp_core_Q3B0L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 217.29827931560092,
+     "mean_ps": 217.32652058739734,
+     "max_ps": 217.36037334390815
+    },
+    {
+     "node": "mp_core_Q3B0L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 217.22971791982192,
+     "mean_ps": 217.26082107715445,
+     "max_ps": 217.30141932423146
+    },
+    {
+     "node": "mp_core_Q3B0L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 217.75064040924698,
+     "mean_ps": 217.78339853313435,
+     "max_ps": 217.8258737818181
+    },
+    {
+     "node": "mp_core_Q3B1L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 214.90239642525447,
+     "mean_ps": 214.956659650053,
+     "max_ps": 215.02007037097357
+    },
+    {
+     "node": "mp_core_Q3B1L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 214.91350437603563,
+     "mean_ps": 214.95843059331284,
+     "max_ps": 215.0581803732372
+    },
+    {
+     "node": "mp_core_Q3B1L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 215.9995771948977,
+     "mean_ps": 216.23819021627034,
+     "max_ps": 219.6535009581168
+    },
+    {
+     "node": "mp_core_Q3B1L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 220.62564091633092,
+     "mean_ps": 220.82795998037906,
+     "max_ps": 221.0864002181009
+    },
+    {
+     "node": "mp_core_Q3B2L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 211.58042735343054,
+     "mean_ps": 211.60579997308386,
+     "max_ps": 211.63106025445515
+    },
+    {
+     "node": "mp_core_Q3B2L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 210.95842972231492,
+     "mean_ps": 210.98320340846115,
+     "max_ps": 211.00952252344152
+    },
+    {
+     "node": "mp_core_Q3B2L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 211.6085594253354,
+     "mean_ps": 213.29761034229756,
+     "max_ps": 214.46489152358274
+    },
+    {
+     "node": "mp_core_Q3B2L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 216.3009058965116,
+     "mean_ps": 216.41531247091643,
+     "max_ps": 216.6405601004049
+    },
+    {
+     "node": "mp_core_Q3B3L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 225.74920874980896,
+     "mean_ps": 225.7918378374416,
+     "max_ps": 225.95621558117838
+    },
+    {
+     "node": "mp_core_Q3B3L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 225.98889680781937,
+     "mean_ps": 226.0682828017537,
+     "max_ps": 226.20731926112367
+    },
+    {
+     "node": "mp_core_Q3B3L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 225.89698453607932,
+     "mean_ps": 225.97611379015586,
+     "max_ps": 226.08277395784566
+    },
+    {
+     "node": "mp_core_Q3B3L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 227.0825086865802,
+     "mean_ps": 227.2575404084059,
+     "max_ps": 229.03848629794746
+    },
+    {
+     "node": "mp_core_macro0",
+     "kind": "macro",
+     "sinks": 1,
+     "min_ps": 223.32723087784618,
+     "mean_ps": 223.32723087784618,
+     "max_ps": 223.32723087784618
+    },
+    {
+     "node": "mp_core_macro1",
+     "kind": "macro",
+     "sinks": 1,
+     "min_ps": 170.65347622082032,
+     "mean_ps": 170.65347622082032,
+     "max_ps": 170.65347622082032
+    }
+   ],
+   "nets": [
+    {
+     "driver": "mp_core_root",
+     "fanout": 4,
+     "wire_um": 201.96,
+     "load_ff": 9.399,
+     "cell_delay_ps": 39.536,
+     "input_arrival_ps": 0.0
+    },
+    {
+     "driver": "mp_core_M0",
+     "fanout": 1,
+     "wire_um": 60.21,
+     "load_ff": 2.35,
+     "cell_delay_ps": 30.549,
+     "input_arrival_ps": 46.964
+    },
+    {
+     "driver": "mp_core_Q0",
+     "fanout": 4,
+     "wire_um": 81.324,
+     "load_ff": 9.399,
+     "cell_delay_ps": 29.905,
+     "input_arrival_ps": 84.942
+    },
+    {
+     "driver": "mp_core_Q0B0",
+     "fanout": 4,
+     "wire_um": 37.206,
+     "load_ff": 9.399,
+     "cell_delay_ps": 28.996,
+     "input_arrival_ps": 120.725
+    },
+    {
+     "driver": "mp_core_Q0B1",
+     "fanout": 5,
+     "wire_um": 25.056,
+     "load_ff": 11.749,
+     "cell_delay_ps": 27.818,
+     "input_arrival_ps": 115.586
+    },
+    {
+     "driver": "mp_core_Q0B2",
+     "fanout": 4,
+     "wire_um": 9.99,
+     "load_ff": 9.399,
+     "cell_delay_ps": 26.811,
+     "input_arrival_ps": 115.407
+    },
+    {
+     "driver": "mp_core_Q0B3",
+     "fanout": 4,
+     "wire_um": 11.556,
+     "load_ff": 9.399,
+     "cell_delay_ps": 26.996,
+     "input_arrival_ps": 116.663
+    },
+    {
+     "driver": "mp_core_M1",
+     "fanout": 1,
+     "wire_um": 76.14,
+     "load_ff": 2.35,
+     "cell_delay_ps": 32.529,
+     "input_arrival_ps": 50.401
+    },
+    {
+     "driver": "mp_core_Q1",
+     "fanout": 4,
+     "wire_um": 68.742,
+     "load_ff": 9.399,
+     "cell_delay_ps": 31.793,
+     "input_arrival_ps": 93.795
+    },
+    {
+     "driver": "mp_core_Q1B0",
+     "fanout": 4,
+     "wire_um": 34.074,
+     "load_ff": 9.399,
+     "cell_delay_ps": 27.281,
+     "input_arrival_ps": 126.102
+    },
+    {
+     "driver": "mp_core_Q1B1",
+     "fanout": 4,
+     "wire_um": 16.632,
+     "load_ff": 9.399,
+     "cell_delay_ps": 27.316,
+     "input_arrival_ps": 128.938
+    },
+    {
+     "driver": "mp_core_Q1B2",
+     "fanout": 4,
+     "wire_um": 15.822,
+     "load_ff": 9.399,
+     "cell_delay_ps": 26.842,
+     "input_arrival_ps": 126.875
+    },
+    {
+     "driver": "mp_core_Q1B3",
+     "fanout": 4,
+     "wire_um": 30.51,
+     "load_ff": 9.399,
+     "cell_delay_ps": 27.24,
+     "input_arrival_ps": 126.785
+    },
+    {
+     "driver": "mp_core_M2",
+     "fanout": 1,
+     "wire_um": 110.43,
+     "load_ff": 2.35,
+     "cell_delay_ps": 37.917,
+     "input_arrival_ps": 59.888
+    },
+    {
+     "driver": "mp_core_Q2",
+     "fanout": 4,
+     "wire_um": 162.324,
+     "load_ff": 9.399,
+     "cell_delay_ps": 40.272,
+     "input_arrival_ps": 118.157
+    },
+    {
+     "driver": "mp_core_Q2B0",
+     "fanout": 4,
+     "wire_um": 15.12,
+     "load_ff": 9.399,
+     "cell_delay_ps": 29.439,
+     "input_arrival_ps": 162.867
+    },
+    {
+     "driver": "mp_core_Q2B1",
+     "fanout": 4,
+     "wire_um": 89.154,
+     "load_ff": 9.399,
+     "cell_delay_ps": 31.206,
+     "input_arrival_ps": 161.682
+    },
+    {
+     "driver": "mp_core_Q2B2",
+     "fanout": 5,
+     "wire_um": 69.228,
+     "load_ff": 11.749,
+     "cell_delay_ps": 31.722,
+     "input_arrival_ps": 163.542
+    },
+    {
+     "driver": "mp_core_Q2B3",
+     "fanout": 4,
+     "wire_um": 247.806,
+     "load_ff": 9.399,
+     "cell_delay_ps": 38.516,
+     "input_arrival_ps": 169.167
+    },
+    {
+     "driver": "mp_core_M3",
+     "fanout": 1,
+     "wire_um": 90.99,
+     "load_ff": 2.35,
+     "cell_delay_ps": 34.881,
+     "input_arrival_ps": 54.159
+    },
+    {
+     "driver": "mp_core_Q3",
+     "fanout": 4,
+     "wire_um": 195.156,
+     "load_ff": 9.399,
+     "cell_delay_ps": 37.862,
+     "input_arrival_ps": 103.663
+    },
+    {
+     "driver": "mp_core_Q3B0",
+     "fanout": 4,
+     "wire_um": 17.55,
+     "load_ff": 9.399,
+     "cell_delay_ps": 33.646,
+     "input_arrival_ps": 154.554
+    },
+    {
+     "driver": "mp_core_Q3B1",
+     "fanout": 4,
+     "wire_um": 84.24,
+     "load_ff": 9.399,
+     "cell_delay_ps": 33.036,
+     "input_arrival_ps": 149.493
+    },
+    {
+     "driver": "mp_core_Q3B2",
+     "fanout": 4,
+     "wire_um": 84.888,
+     "load_ff": 9.399,
+     "cell_delay_ps": 31.871,
+     "input_arrival_ps": 146.107
+    },
+    {
+     "driver": "mp_core_Q3B3",
+     "fanout": 4,
+     "wire_um": 20.466,
+     "load_ff": 9.399,
+     "cell_delay_ps": 36.264,
+     "input_arrival_ps": 160.063
+    },
+    {
+     "driver": "mp_core_Q0B0L0",
+     "fanout": 43,
+     "wire_um": 29.7,
+     "load_ff": 20.414,
+     "cell_delay_ps": 29.18,
+     "input_arrival_ps": 150.422
+    },
+    {
+     "driver": "mp_core_Q0B0L1",
+     "fanout": 44,
+     "wire_um": 50.22,
+     "load_ff": 20.888,
+     "cell_delay_ps": 29.846,
+     "input_arrival_ps": 150.066
+    },
+    {
+     "driver": "mp_core_Q0B0L2",
+     "fanout": 43,
+     "wire_um": 50.76,
+     "load_ff": 20.414,
+     "cell_delay_ps": 29.741,
+     "input_arrival_ps": 149.958
+    },
+    {
+     "driver": "mp_core_Q0B0L3",
+     "fanout": 44,
+     "wire_um": 87.588,
+     "load_ff": 20.888,
+     "cell_delay_ps": 31.014,
+     "input_arrival_ps": 151.286
+    },
+    {
+     "driver": "mp_core_Q0B1L0",
+     "fanout": 43,
+     "wire_um": 77.922,
+     "load_ff": 20.414,
+     "cell_delay_ps": 30.711,
+     "input_arrival_ps": 144.465
+    },
+    {
+     "driver": "mp_core_Q0B1L1",
+     "fanout": 44,
+     "wire_um": 20.088,
+     "load_ff": 20.888,
+     "cell_delay_ps": 29.159,
+     "input_arrival_ps": 143.459
+    },
+    {
+     "driver": "mp_core_Q0B1L2",
+     "fanout": 43,
+     "wire_um": 20.034,
+     "load_ff": 20.414,
+     "cell_delay_ps": 29.046,
+     "input_arrival_ps": 143.703
+    },
+    {
+     "driver": "mp_core_Q0B1L3",
+     "fanout": 44,
+     "wire_um": 20.304,
+     "load_ff": 20.888,
+     "cell_delay_ps": 29.182,
+     "input_arrival_ps": 143.956
+    },
+    {
+     "driver": "mp_core_Q0B2L0",
+     "fanout": 43,
+     "wire_um": 23.004,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.394,
+     "input_arrival_ps": 142.484
+    },
+    {
+     "driver": "mp_core_Q0B2L1",
+     "fanout": 44,
+     "wire_um": 24.084,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.537,
+     "input_arrival_ps": 142.308
+    },
+    {
+     "driver": "mp_core_Q0B2L2",
+     "fanout": 43,
+     "wire_um": 23.652,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.409,
+     "input_arrival_ps": 142.311
+    },
+    {
+     "driver": "mp_core_Q0B2L3",
+     "fanout": 44,
+     "wire_um": 23.058,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.512,
+     "input_arrival_ps": 142.481
+    },
+    {
+     "driver": "mp_core_Q0B3L0",
+     "fanout": 43,
+     "wire_um": 24.948,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.483,
+     "input_arrival_ps": 143.987
+    },
+    {
+     "driver": "mp_core_Q0B3L1",
+     "fanout": 44,
+     "wire_um": 25.002,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.595,
+     "input_arrival_ps": 143.759
+    },
+    {
+     "driver": "mp_core_Q0B3L2",
+     "fanout": 44,
+     "wire_um": 24.462,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.58,
+     "input_arrival_ps": 143.753
+    },
+    {
+     "driver": "mp_core_Q0B3L3",
+     "fanout": 44,
+     "wire_um": 27.864,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.68,
+     "input_arrival_ps": 143.973
+    },
+    {
+     "driver": "mp_core_Q1B0L0",
+     "fanout": 43,
+     "wire_um": 25.488,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.96,
+     "input_arrival_ps": 153.764
+    },
+    {
+     "driver": "mp_core_Q1B0L1",
+     "fanout": 44,
+     "wire_um": 66.474,
+     "load_ff": 20.888,
+     "cell_delay_ps": 30.299,
+     "input_arrival_ps": 154.65
+    },
+    {
+     "driver": "mp_core_Q1B0L2",
+     "fanout": 43,
+     "wire_um": 24.408,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.941,
+     "input_arrival_ps": 153.959
+    },
+    {
+     "driver": "mp_core_Q1B0L3",
+     "fanout": 44,
+     "wire_um": 44.658,
+     "load_ff": 20.888,
+     "cell_delay_ps": 29.606,
+     "input_arrival_ps": 153.676
+    },
+    {
+     "driver": "mp_core_Q1B1L0",
+     "fanout": 43,
+     "wire_um": 39.042,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.981,
+     "input_arrival_ps": 156.62
+    },
+    {
+     "driver": "mp_core_Q1B1L1",
+     "fanout": 44,
+     "wire_um": 24.354,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.686,
+     "input_arrival_ps": 156.544
+    },
+    {
+     "driver": "mp_core_Q1B1L2",
+     "fanout": 44,
+     "wire_um": 29.862,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.835,
+     "input_arrival_ps": 156.338
+    },
+    {
+     "driver": "mp_core_Q1B1L3",
+     "fanout": 44,
+     "wire_um": 28.404,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.803,
+     "input_arrival_ps": 156.634
+    },
+    {
+     "driver": "mp_core_Q1B2L0",
+     "fanout": 43,
+     "wire_um": 25.38,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.588,
+     "input_arrival_ps": 154.175
+    },
+    {
+     "driver": "mp_core_Q1B2L1",
+     "fanout": 44,
+     "wire_um": 27.378,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.749,
+     "input_arrival_ps": 153.881
+    },
+    {
+     "driver": "mp_core_Q1B2L2",
+     "fanout": 43,
+     "wire_um": 26.46,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.606,
+     "input_arrival_ps": 153.847
+    },
+    {
+     "driver": "mp_core_Q1B2L3",
+     "fanout": 44,
+     "wire_um": 26.406,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.735,
+     "input_arrival_ps": 154.208
+    },
+    {
+     "driver": "mp_core_Q1B3L0",
+     "fanout": 43,
+     "wire_um": 31.59,
+     "load_ff": 20.414,
+     "cell_delay_ps": 29.069,
+     "input_arrival_ps": 154.617
+    },
+    {
+     "driver": "mp_core_Q1B3L1",
+     "fanout": 44,
+     "wire_um": 31.32,
+     "load_ff": 20.888,
+     "cell_delay_ps": 29.175,
+     "input_arrival_ps": 154.581
+    },
+    {
+     "driver": "mp_core_Q1B3L2",
+     "fanout": 44,
+     "wire_um": 48.978,
+     "load_ff": 20.888,
+     "cell_delay_ps": 29.649,
+     "input_arrival_ps": 154.16
+    },
+    {
+     "driver": "mp_core_Q1B3L3",
+     "fanout": 44,
+     "wire_um": 71.982,
+     "load_ff": 20.888,
+     "cell_delay_ps": 30.326,
+     "input_arrival_ps": 154.833
+    },
+    {
+     "driver": "mp_core_Q2B0L0",
+     "fanout": 43,
+     "wire_um": 33.21,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.841,
+     "input_arrival_ps": 192.767
+    },
+    {
+     "driver": "mp_core_Q2B0L1",
+     "fanout": 44,
+     "wire_um": 28.35,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.811,
+     "input_arrival_ps": 192.435
+    },
+    {
+     "driver": "mp_core_Q2B0L2",
+     "fanout": 43,
+     "wire_um": 27.378,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.667,
+     "input_arrival_ps": 192.435
+    },
+    {
+     "driver": "mp_core_Q2B0L3",
+     "fanout": 44,
+     "wire_um": 25.974,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.753,
+     "input_arrival_ps": 192.708
+    },
+    {
+     "driver": "mp_core_Q2B1L0",
+     "fanout": 43,
+     "wire_um": 100.224,
+     "load_ff": 20.414,
+     "cell_delay_ps": 34.072,
+     "input_arrival_ps": 199.846
+    },
+    {
+     "driver": "mp_core_Q2B1L1",
+     "fanout": 44,
+     "wire_um": 63.774,
+     "load_ff": 20.888,
+     "cell_delay_ps": 31.302,
+     "input_arrival_ps": 193.154
+    },
+    {
+     "driver": "mp_core_Q2B1L2",
+     "fanout": 43,
+     "wire_um": 32.508,
+     "load_ff": 20.414,
+     "cell_delay_ps": 30.43,
+     "input_arrival_ps": 194.48
+    },
+    {
+     "driver": "mp_core_Q2B1L3",
+     "fanout": 44,
+     "wire_um": 27.216,
+     "load_ff": 20.888,
+     "cell_delay_ps": 30.631,
+     "input_arrival_ps": 195.661
+    },
+    {
+     "driver": "mp_core_Q2B2L0",
+     "fanout": 43,
+     "wire_um": 101.898,
+     "load_ff": 20.414,
+     "cell_delay_ps": 33.204,
+     "input_arrival_ps": 199.956
+    },
+    {
+     "driver": "mp_core_Q2B2L1",
+     "fanout": 44,
+     "wire_um": 15.768,
+     "load_ff": 20.888,
+     "cell_delay_ps": 30.0,
+     "input_arrival_ps": 195.641
+    },
+    {
+     "driver": "mp_core_Q2B2L2",
+     "fanout": 43,
+     "wire_um": 18.684,
+     "load_ff": 20.414,
+     "cell_delay_ps": 30.002,
+     "input_arrival_ps": 196.237
+    },
+    {
+     "driver": "mp_core_Q2B2L3",
+     "fanout": 44,
+     "wire_um": 17.604,
+     "load_ff": 20.888,
+     "cell_delay_ps": 30.187,
+     "input_arrival_ps": 197.029
+    },
+    {
+     "driver": "mp_core_Q2B3L0",
+     "fanout": 43,
+     "wire_um": 30.51,
+     "load_ff": 20.414,
+     "cell_delay_ps": 34.703,
+     "input_arrival_ps": 214.662
+    },
+    {
+     "driver": "mp_core_Q2B3L1",
+     "fanout": 44,
+     "wire_um": 120.96,
+     "load_ff": 20.888,
+     "cell_delay_ps": 40.09,
+     "input_arrival_ps": 220.85
+    },
+    {
+     "driver": "mp_core_Q2B3L2",
+     "fanout": 44,
+     "wire_um": 187.92,
+     "load_ff": 20.888,
+     "cell_delay_ps": 38.521,
+     "input_arrival_ps": 212.419
+    },
+    {
+     "driver": "mp_core_Q2B3L3",
+     "fanout": 44,
+     "wire_um": 30.24,
+     "load_ff": 20.888,
+     "cell_delay_ps": 44.801,
+     "input_arrival_ps": 237.12
+    },
+    {
+     "driver": "mp_core_Q3B0L0",
+     "fanout": 43,
+     "wire_um": 31.05,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.953,
+     "input_arrival_ps": 188.733
+    },
+    {
+     "driver": "mp_core_Q3B0L1",
+     "fanout": 44,
+     "wire_um": 26.919,
+     "load_ff": 20.888,
+     "cell_delay_ps": 28.939,
+     "input_arrival_ps": 188.357
+    },
+    {
+     "driver": "mp_core_Q3B0L2",
+     "fanout": 43,
+     "wire_um": 28.89,
+     "load_ff": 20.414,
+     "cell_delay_ps": 28.877,
+     "input_arrival_ps": 188.351
+    },
+    {
+     "driver": "mp_core_Q3B0L3",
+     "fanout": 44,
+     "wire_um": 28.944,
+     "load_ff": 20.888,
+     "cell_delay_ps": 29.011,
+     "input_arrival_ps": 188.737
+    },
+    {
+     "driver": "mp_core_Q3B1L0",
+     "fanout": 43,
+     "wire_um": 32.616,
+     "load_ff": 20.414,
+     "cell_delay_ps": 30.44,
+     "input_arrival_ps": 184.462
+    },
+    {
+     "driver": "mp_core_Q3B1L1",
+     "fanout": 44,
+     "wire_um": 33.588,
+     "load_ff": 20.888,
+     "cell_delay_ps": 30.564,
+     "input_arrival_ps": 184.345
+    },
+    {
+     "driver": "mp_core_Q3B1L2",
+     "fanout": 44,
+     "wire_um": 106.38,
+     "load_ff": 20.888,
+     "cell_delay_ps": 32.479,
+     "input_arrival_ps": 183.511
+    },
+    {
+     "driver": "mp_core_Q3B1L3",
+     "fanout": 44,
+     "wire_um": 51.354,
+     "load_ff": 20.888,
+     "cell_delay_ps": 32.283,
+     "input_arrival_ps": 188.331
+    },
+    {
+     "driver": "mp_core_Q3B2L0",
+     "fanout": 43,
+     "wire_um": 22.626,
+     "load_ff": 20.414,
+     "cell_delay_ps": 30.429,
+     "input_arrival_ps": 181.151
+    },
+    {
+     "driver": "mp_core_Q3B2L1",
+     "fanout": 44,
+     "wire_um": 19.386,
+     "load_ff": 20.888,
+     "cell_delay_ps": 30.322,
+     "input_arrival_ps": 180.636
+    },
+    {
+     "driver": "mp_core_Q3B2L2",
+     "fanout": 43,
+     "wire_um": 110.268,
+     "load_ff": 20.414,
+     "cell_delay_ps": 32.466,
+     "input_arrival_ps": 179.087
+    },
+    {
+     "driver": "mp_core_Q3B2L3",
+     "fanout": 44,
+     "wire_um": 69.228,
+     "load_ff": 20.888,
+     "cell_delay_ps": 32.685,
+     "input_arrival_ps": 183.583
+    },
+    {
+     "driver": "mp_core_Q3B3L0",
+     "fanout": 43,
+     "wire_um": 26.352,
+     "load_ff": 20.414,
+     "cell_delay_ps": 29.019,
+     "input_arrival_ps": 196.725
+    },
+    {
+     "driver": "mp_core_Q3B3L1",
+     "fanout": 44,
+     "wire_um": 36.234,
+     "load_ff": 20.888,
+     "cell_delay_ps": 29.405,
+     "input_arrival_ps": 196.567
+    },
+    {
+     "driver": "mp_core_Q3B3L2",
+     "fanout": 44,
+     "wire_um": 34.83,
+     "load_ff": 20.888,
+     "cell_delay_ps": 29.365,
+     "input_arrival_ps": 196.531
+    },
+    {
+     "driver": "mp_core_Q3B3L3",
+     "fanout": 44,
+     "wire_um": 67.608,
+     "load_ff": 20.888,
+     "cell_delay_ps": 30.286,
+     "input_arrival_ps": 196.791
+    },
+    {
+     "driver": "mp_core_macro0",
+     "fanout": 1,
+     "wire_um": 5.355,
+     "load_ff": 9.346,
+     "cell_delay_ps": 26.872,
+     "input_arrival_ps": 195.348
+    },
+    {
+     "driver": "mp_core_macro1",
+     "fanout": 1,
+     "wire_um": 5.355,
+     "load_ff": 9.346,
+     "cell_delay_ps": 25.92,
+     "input_arrival_ps": 143.627
+    }
+   ]
+  },
+  "FF": {
+   "sinks": 2792,
+   "min_ps": 136.59645787774897,
+   "mean_ps": 166.68909224664262,
+   "max_ps": 240.319784365002,
+   "window_ps": 103.72332648725302,
+   "leaf_means": [
+    {
+     "node": "mp_core_Q0B0L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 145.5426573611316,
+     "mean_ps": 145.5688425653417,
+     "max_ps": 145.60778605488414
+    },
+    {
+     "node": "mp_core_Q0B0L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 145.65707887674617,
+     "mean_ps": 145.74779462231515,
+     "max_ps": 146.29748637213797
+    },
+    {
+     "node": "mp_core_Q0B0L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 145.4552558642411,
+     "mean_ps": 145.50851200504923,
+     "max_ps": 146.39550184260787
+    },
+    {
+     "node": "mp_core_Q0B0L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 148.12073935069998,
+     "mean_ps": 148.70188709946427,
+     "max_ps": 149.46954167329213
+    },
+    {
+     "node": "mp_core_Q0B1L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 140.41604653081743,
+     "mean_ps": 140.63066994768138,
+     "max_ps": 140.8980343689434
+    },
+    {
+     "node": "mp_core_Q0B1L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 138.1131120140486,
+     "mean_ps": 138.13627130648794,
+     "max_ps": 138.16006233811837
+    },
+    {
+     "node": "mp_core_Q0B1L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 138.29784784034064,
+     "mean_ps": 138.3194510810441,
+     "max_ps": 138.34564721075256
+    },
+    {
+     "node": "mp_core_Q0B1L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 138.67915800745246,
+     "mean_ps": 138.7021594355155,
+     "max_ps": 138.733719098265
+    },
+    {
+     "node": "mp_core_Q0B2L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 136.7788446160883,
+     "mean_ps": 136.8008832391832,
+     "max_ps": 136.83530191039821
+    },
+    {
+     "node": "mp_core_Q0B2L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 136.68910083740286,
+     "mean_ps": 136.71478554222335,
+     "max_ps": 136.74641695435227
+    },
+    {
+     "node": "mp_core_Q0B2L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 136.59645787774897,
+     "mean_ps": 136.619607692153,
+     "max_ps": 136.6579710491613
+    },
+    {
+     "node": "mp_core_Q0B2L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 136.86464853996952,
+     "mean_ps": 136.88857770102547,
+     "max_ps": 136.9283133040097
+    },
+    {
+     "node": "mp_core_Q0B3L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 138.44752338456863,
+     "mean_ps": 138.47228340404013,
+     "max_ps": 138.5073512636135
+    },
+    {
+     "node": "mp_core_Q0B3L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 138.28479460140662,
+     "mean_ps": 138.30583662331586,
+     "max_ps": 138.33178467688236
+    },
+    {
+     "node": "mp_core_Q0B3L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 138.2618157737021,
+     "mean_ps": 138.28785812916348,
+     "max_ps": 138.32666347769063
+    },
+    {
+     "node": "mp_core_Q0B3L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 138.58164430601886,
+     "mean_ps": 138.61028029223164,
+     "max_ps": 138.65984429108462
+    },
+    {
+     "node": "mp_core_Q1B0L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 147.9500300925459,
+     "mean_ps": 147.9775305961569,
+     "max_ps": 148.0057316709897
+    },
+    {
+     "node": "mp_core_Q1B0L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 150.0474346102886,
+     "mean_ps": 150.2735515688231,
+     "max_ps": 150.665684257909
+    },
+    {
+     "node": "mp_core_Q1B0L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 148.15588463086561,
+     "mean_ps": 148.18684825095272,
+     "max_ps": 148.22226701842837
+    },
+    {
+     "node": "mp_core_Q1B0L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 148.35345578869365,
+     "mean_ps": 148.4273895637679,
+     "max_ps": 148.82945582442426
+    },
+    {
+     "node": "mp_core_Q1B1L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 151.19712539249346,
+     "mean_ps": 151.25172801810396,
+     "max_ps": 151.32202195705125
+    },
+    {
+     "node": "mp_core_Q1B1L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 150.88193084441306,
+     "mean_ps": 150.90860882162522,
+     "max_ps": 150.96133432035796
+    },
+    {
+     "node": "mp_core_Q1B1L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 150.77309422359193,
+     "mean_ps": 150.80751367474147,
+     "max_ps": 150.9184127304807
+    },
+    {
+     "node": "mp_core_Q1B1L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 151.06919095412243,
+     "mean_ps": 151.0972842020459,
+     "max_ps": 151.23872921215934
+    },
+    {
+     "node": "mp_core_Q1B2L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 148.30324331848888,
+     "mean_ps": 148.32992790099897,
+     "max_ps": 148.36809102247742
+    },
+    {
+     "node": "mp_core_Q1B2L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 148.10413252078527,
+     "mean_ps": 148.128467360225,
+     "max_ps": 148.15828828890193
+    },
+    {
+     "node": "mp_core_Q1B2L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 147.95530339900074,
+     "mean_ps": 147.98362758530692,
+     "max_ps": 148.0151312780456
+    },
+    {
+     "node": "mp_core_Q1B2L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 148.45536463386426,
+     "mean_ps": 148.48161597946688,
+     "max_ps": 148.5144836238351
+    },
+    {
+     "node": "mp_core_Q1B3L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 148.99813354384307,
+     "mean_ps": 149.03896664540474,
+     "max_ps": 149.10116681297163
+    },
+    {
+     "node": "mp_core_Q1B3L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 149.03756133609943,
+     "mean_ps": 149.07415057533188,
+     "max_ps": 149.12784003272918
+    },
+    {
+     "node": "mp_core_Q1B3L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 148.97852632665845,
+     "mean_ps": 149.08589906855153,
+     "max_ps": 149.23313938029588
+    },
+    {
+     "node": "mp_core_Q1B3L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 150.24268030174883,
+     "mean_ps": 150.39990882919412,
+     "max_ps": 150.9505542763087
+    },
+    {
+     "node": "mp_core_Q2B0L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 184.14729881276847,
+     "mean_ps": 184.18130483042052,
+     "max_ps": 184.30846788728533
+    },
+    {
+     "node": "mp_core_Q2B0L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 183.7562489877706,
+     "mean_ps": 183.78741851733392,
+     "max_ps": 183.8314823603417
+    },
+    {
+     "node": "mp_core_Q2B0L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 183.65020647984346,
+     "mean_ps": 183.67780593308098,
+     "max_ps": 183.7194486738803
+    },
+    {
+     "node": "mp_core_Q2B0L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 184.01893882166652,
+     "mean_ps": 184.0427426375178,
+     "max_ps": 184.08114335524155
+    },
+    {
+     "node": "mp_core_Q2B1L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 195.58093159656082,
+     "mean_ps": 196.32706890222244,
+     "max_ps": 198.79490658739803
+    },
+    {
+     "node": "mp_core_Q2B1L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 185.75750421979623,
+     "mean_ps": 185.93242717405553,
+     "max_ps": 186.2739168357287
+    },
+    {
+     "node": "mp_core_Q2B1L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 186.53866306804662,
+     "mean_ps": 186.5822799076839,
+     "max_ps": 186.73723906310371
+    },
+    {
+     "node": "mp_core_Q2B1L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 188.02018771238295,
+     "mean_ps": 188.0615452641449,
+     "max_ps": 188.11628810138689
+    },
+    {
+     "node": "mp_core_Q2B2L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 195.76307672283883,
+     "mean_ps": 196.97900396887235,
+     "max_ps": 197.99191760472814
+    },
+    {
+     "node": "mp_core_Q2B2L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 187.3751884849247,
+     "mean_ps": 187.4038001877205,
+     "max_ps": 187.4393768275425
+    },
+    {
+     "node": "mp_core_Q2B2L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 188.0333903970175,
+     "mean_ps": 188.06403106460698,
+     "max_ps": 188.1038721340922
+    },
+    {
+     "node": "mp_core_Q2B2L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 189.05088950213346,
+     "mean_ps": 189.08270917186658,
+     "max_ps": 189.117443724648
+    },
+    {
+     "node": "mp_core_Q2B3L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 209.10883458789124,
+     "mean_ps": 209.1378796313308,
+     "max_ps": 209.17167658145064
+    },
+    {
+     "node": "mp_core_Q2B3L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 221.36401728283494,
+     "mean_ps": 223.1426218463119,
+     "max_ps": 224.1345322621118
+    },
+    {
+     "node": "mp_core_Q2B3L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 209.62465167374177,
+     "mean_ps": 211.07597690736796,
+     "max_ps": 239.66171329208422
+    },
+    {
+     "node": "mp_core_Q2B3L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 240.24401528876422,
+     "mean_ps": 240.2750883551813,
+     "max_ps": 240.319784365002
+    },
+    {
+     "node": "mp_core_Q3B0L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 180.90539607146152,
+     "mean_ps": 180.93847122757452,
+     "max_ps": 180.987150601303
+    },
+    {
+     "node": "mp_core_Q3B0L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 180.48097230214412,
+     "mean_ps": 180.50921357394063,
+     "max_ps": 180.54306633045135
+    },
+    {
+     "node": "mp_core_Q3B0L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 180.42633808236056,
+     "mean_ps": 180.457441239693,
+     "max_ps": 180.4980394867701
+    },
+    {
+     "node": "mp_core_Q3B0L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 180.95584742762378,
+     "mean_ps": 180.98860555151109,
+     "max_ps": 181.0310808001949
+    },
+    {
+     "node": "mp_core_Q3B1L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 177.52412864319717,
+     "mean_ps": 177.57839186799575,
+     "max_ps": 177.64180258891628
+    },
+    {
+     "node": "mp_core_Q3B1L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 177.49225671338115,
+     "mean_ps": 177.53718293065836,
+     "max_ps": 177.63693271058273
+    },
+    {
+     "node": "mp_core_Q3B1L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 178.03319140117785,
+     "mean_ps": 178.2718044225505,
+     "max_ps": 181.68711516439691
+    },
+    {
+     "node": "mp_core_Q3B1L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 183.37767242885644,
+     "mean_ps": 183.5799914929046,
+     "max_ps": 183.8384317306264
+    },
+    {
+     "node": "mp_core_Q3B2L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 174.31745613903252,
+     "mean_ps": 174.34282875868584,
+     "max_ps": 174.36808904005713
+    },
+    {
+     "node": "mp_core_Q3B2L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 173.65138914348677,
+     "mean_ps": 173.67616282963297,
+     "max_ps": 173.70248194461337
+    },
+    {
+     "node": "mp_core_Q3B2L2",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 173.60995605687273,
+     "mean_ps": 175.29900697383496,
+     "max_ps": 176.46628815512008
+    },
+    {
+     "node": "mp_core_Q3B2L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 178.88157500709448,
+     "mean_ps": 178.99598158149928,
+     "max_ps": 179.2212292109878
+    },
+    {
+     "node": "mp_core_Q3B3L0",
+     "kind": "register",
+     "sinks": 43,
+     "min_ps": 188.6275872302233,
+     "mean_ps": 188.67021631785593,
+     "max_ps": 188.83459406159272
+    },
+    {
+     "node": "mp_core_Q3B3L1",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 188.76003644057064,
+     "mean_ps": 188.83942243450485,
+     "max_ps": 188.97845889387494
+    },
+    {
+     "node": "mp_core_Q3B3L2",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 188.67385442373484,
+     "mean_ps": 188.75298367781144,
+     "max_ps": 188.85964384550118
+    },
+    {
+     "node": "mp_core_Q3B3L3",
+     "kind": "register",
+     "sinks": 44,
+     "min_ps": 189.66880119333103,
+     "mean_ps": 189.84383291515667,
+     "max_ps": 191.62477880469828
+    },
+    {
+     "node": "mp_core_macro0",
+     "kind": "macro",
+     "sinks": 1,
+     "min_ps": 185.76684027691246,
+     "mean_ps": 185.76684027691246,
+     "max_ps": 185.76684027691246
+    },
+    {
+     "node": "mp_core_macro1",
+     "kind": "macro",
+     "sinks": 1,
+     "min_ps": 136.92901931639219,
+     "mean_ps": 136.92901931639219,
+     "max_ps": 136.92901931639219
+    }
+   ],
+   "nets": [
+    {
+     "driver": "mp_core_root",
+     "fanout": 4,
+     "wire_um": 201.96,
+     "load_ff": 10.429,
+     "cell_delay_ps": 31.199,
+     "input_arrival_ps": 0.0
+    },
+    {
+     "driver": "mp_core_M0",
+     "fanout": 1,
+     "wire_um": 60.21,
+     "load_ff": 2.607,
+     "cell_delay_ps": 23.421,
+     "input_arrival_ps": 38.96
+    },
+    {
+     "driver": "mp_core_Q0",
+     "fanout": 4,
+     "wire_um": 81.324,
+     "load_ff": 10.429,
+     "cell_delay_ps": 23.657,
+     "input_arrival_ps": 70.141
+    },
+    {
+     "driver": "mp_core_Q0B0",
+     "fanout": 4,
+     "wire_um": 37.206,
+     "load_ff": 10.429,
+     "cell_delay_ps": 22.646,
+     "input_arrival_ps": 99.963
+    },
+    {
+     "driver": "mp_core_Q0B1",
+     "fanout": 5,
+     "wire_um": 25.056,
+     "load_ff": 13.037,
+     "cell_delay_ps": 21.299,
+     "input_arrival_ps": 94.601
+    },
+    {
+     "driver": "mp_core_Q0B2",
+     "fanout": 4,
+     "wire_um": 9.99,
+     "load_ff": 10.429,
+     "cell_delay_ps": 20.477,
+     "input_arrival_ps": 94.408
+    },
+    {
+     "driver": "mp_core_Q0B3",
+     "fanout": 4,
+     "wire_um": 11.556,
+     "load_ff": 10.429,
+     "cell_delay_ps": 20.678,
+     "input_arrival_ps": 95.742
+    },
+    {
+     "driver": "mp_core_M1",
+     "fanout": 1,
+     "wire_um": 76.14,
+     "load_ff": 2.607,
+     "cell_delay_ps": 25.121,
+     "input_arrival_ps": 42.484
+    },
+    {
+     "driver": "mp_core_Q1",
+     "fanout": 4,
+     "wire_um": 68.742,
+     "load_ff": 10.429,
+     "cell_delay_ps": 25.206,
+     "input_arrival_ps": 78.89
+    },
+    {
+     "driver": "mp_core_Q1B0",
+     "fanout": 4,
+     "wire_um": 34.074,
+     "load_ff": 10.429,
+     "cell_delay_ps": 20.886,
+     "input_arrival_ps": 104.657
+    },
+    {
+     "driver": "mp_core_Q1B1",
+     "fanout": 4,
+     "wire_um": 16.632,
+     "load_ff": 10.429,
+     "cell_delay_ps": 21.106,
+     "input_arrival_ps": 107.643
+    },
+    {
+     "driver": "mp_core_Q1B2",
+     "fanout": 4,
+     "wire_um": 15.822,
+     "load_ff": 10.429,
+     "cell_delay_ps": 20.581,
+     "input_arrival_ps": 105.482
+    },
+    {
+     "driver": "mp_core_Q1B3",
+     "fanout": 4,
+     "wire_um": 30.51,
+     "load_ff": 10.429,
+     "cell_delay_ps": 20.879,
+     "input_arrival_ps": 105.387
+    },
+    {
+     "driver": "mp_core_M2",
+     "fanout": 1,
+     "wire_um": 110.43,
+     "load_ff": 2.607,
+     "cell_delay_ps": 29.535,
+     "input_arrival_ps": 52.16
+    },
+    {
+     "driver": "mp_core_Q2",
+     "fanout": 4,
+     "wire_um": 162.324,
+     "load_ff": 10.429,
+     "cell_delay_ps": 31.712,
+     "input_arrival_ps": 102.657
+    },
+    {
+     "driver": "mp_core_Q2B0",
+     "fanout": 4,
+     "wire_um": 15.12,
+     "load_ff": 10.429,
+     "cell_delay_ps": 22.663,
+     "input_arrival_ps": 139.046
+    },
+    {
+     "driver": "mp_core_Q2B1",
+     "fanout": 4,
+     "wire_um": 89.154,
+     "load_ff": 10.429,
+     "cell_delay_ps": 23.947,
+     "input_arrival_ps": 137.816
+    },
+    {
+     "driver": "mp_core_Q2B2",
+     "fanout": 5,
+     "wire_um": 69.228,
+     "load_ff": 13.037,
+     "cell_delay_ps": 24.489,
+     "input_arrival_ps": 139.744
+    },
+    {
+     "driver": "mp_core_Q2B3",
+     "fanout": 4,
+     "wire_um": 247.806,
+     "load_ff": 10.429,
+     "cell_delay_ps": 29.939,
+     "input_arrival_ps": 145.525
+    },
+    {
+     "driver": "mp_core_M3",
+     "fanout": 1,
+     "wire_um": 90.99,
+     "load_ff": 2.607,
+     "cell_delay_ps": 27.135,
+     "input_arrival_ps": 46.324
+    },
+    {
+     "driver": "mp_core_Q3",
+     "fanout": 4,
+     "wire_um": 195.156,
+     "load_ff": 10.429,
+     "cell_delay_ps": 29.918,
+     "input_arrival_ps": 88.585
+    },
+    {
+     "driver": "mp_core_Q3B0",
+     "fanout": 4,
+     "wire_um": 17.55,
+     "load_ff": 10.429,
+     "cell_delay_ps": 26.239,
+     "input_arrival_ps": 132.0
+    },
+    {
+     "driver": "mp_core_Q3B1",
+     "fanout": 4,
+     "wire_um": 84.24,
+     "load_ff": 10.429,
+     "cell_delay_ps": 25.511,
+     "input_arrival_ps": 126.817
+    },
+    {
+     "driver": "mp_core_Q3B2",
+     "fanout": 4,
+     "wire_um": 84.888,
+     "load_ff": 10.429,
+     "cell_delay_ps": 24.424,
+     "input_arrival_ps": 123.328
+    },
+    {
+     "driver": "mp_core_Q3B3",
+     "fanout": 4,
+     "wire_um": 20.466,
+     "load_ff": 10.429,
+     "cell_delay_ps": 28.437,
+     "input_arrival_ps": 137.617
+    },
+    {
+     "driver": "mp_core_Q0B0L0",
+     "fanout": 43,
+     "wire_um": 29.7,
+     "load_ff": 20.414,
+     "cell_delay_ps": 22.165,
+     "input_arrival_ps": 123.371
+    },
+    {
+     "driver": "mp_core_Q0B0L1",
+     "fanout": 44,
+     "wire_um": 50.22,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.664,
+     "input_arrival_ps": 122.987
+    },
+    {
+     "driver": "mp_core_Q0B0L2",
+     "fanout": 43,
+     "wire_um": 50.76,
+     "load_ff": 20.414,
+     "cell_delay_ps": 22.582,
+     "input_arrival_ps": 122.869
+    },
+    {
+     "driver": "mp_core_Q0B0L3",
+     "fanout": 44,
+     "wire_um": 87.588,
+     "load_ff": 20.888,
+     "cell_delay_ps": 23.612,
+     "input_arrival_ps": 124.288
+    },
+    {
+     "driver": "mp_core_Q0B1L0",
+     "fanout": 43,
+     "wire_um": 77.922,
+     "load_ff": 20.414,
+     "cell_delay_ps": 23.364,
+     "input_arrival_ps": 117.046
+    },
+    {
+     "driver": "mp_core_Q0B1L1",
+     "fanout": 44,
+     "wire_um": 20.088,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.15,
+     "input_arrival_ps": 115.961
+    },
+    {
+     "driver": "mp_core_Q0B1L2",
+     "fanout": 43,
+     "wire_um": 20.034,
+     "load_ff": 20.414,
+     "cell_delay_ps": 22.066,
+     "input_arrival_ps": 116.229
+    },
+    {
+     "driver": "mp_core_Q0B1L3",
+     "fanout": 44,
+     "wire_um": 20.304,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.175,
+     "input_arrival_ps": 116.502
+    },
+    {
+     "driver": "mp_core_Q0B2L0",
+     "fanout": 43,
+     "wire_um": 23.004,
+     "load_ff": 20.414,
+     "cell_delay_ps": 21.596,
+     "input_arrival_ps": 115.178
+    },
+    {
+     "driver": "mp_core_Q0B2L1",
+     "fanout": 44,
+     "wire_um": 24.084,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.703,
+     "input_arrival_ps": 114.985
+    },
+    {
+     "driver": "mp_core_Q0B2L2",
+     "fanout": 43,
+     "wire_um": 23.652,
+     "load_ff": 20.414,
+     "cell_delay_ps": 21.605,
+     "input_arrival_ps": 114.989
+    },
+    {
+     "driver": "mp_core_Q0B2L3",
+     "fanout": 44,
+     "wire_um": 23.058,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.686,
+     "input_arrival_ps": 115.174
+    },
+    {
+     "driver": "mp_core_Q0B3L0",
+     "fanout": 43,
+     "wire_um": 24.948,
+     "load_ff": 20.414,
+     "cell_delay_ps": 21.664,
+     "input_arrival_ps": 116.78
+    },
+    {
+     "driver": "mp_core_Q0B3L1",
+     "fanout": 44,
+     "wire_um": 25.002,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.747,
+     "input_arrival_ps": 116.53
+    },
+    {
+     "driver": "mp_core_Q0B3L2",
+     "fanout": 44,
+     "wire_um": 24.462,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.735,
+     "input_arrival_ps": 116.524
+    },
+    {
+     "driver": "mp_core_Q0B3L3",
+     "fanout": 44,
+     "wire_um": 27.864,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.814,
+     "input_arrival_ps": 116.765
+    },
+    {
+     "driver": "mp_core_Q1B0L0",
+     "fanout": 43,
+     "wire_um": 25.488,
+     "load_ff": 20.414,
+     "cell_delay_ps": 21.989,
+     "input_arrival_ps": 125.959
+    },
+    {
+     "driver": "mp_core_Q1B0L1",
+     "fanout": 44,
+     "wire_um": 66.474,
+     "load_ff": 20.888,
+     "cell_delay_ps": 23.049,
+     "input_arrival_ps": 126.907
+    },
+    {
+     "driver": "mp_core_Q1B0L2",
+     "fanout": 43,
+     "wire_um": 24.408,
+     "load_ff": 20.414,
+     "cell_delay_ps": 21.98,
+     "input_arrival_ps": 126.17
+    },
+    {
+     "driver": "mp_core_Q1B0L3",
+     "fanout": 44,
+     "wire_um": 44.658,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.481,
+     "input_arrival_ps": 125.865
+    },
+    {
+     "driver": "mp_core_Q1B1L0",
+     "fanout": 43,
+     "wire_um": 39.042,
+     "load_ff": 20.414,
+     "cell_delay_ps": 22.04,
+     "input_arrival_ps": 129.149
+    },
+    {
+     "driver": "mp_core_Q1B1L1",
+     "fanout": 44,
+     "wire_um": 24.354,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.813,
+     "input_arrival_ps": 129.067
+    },
+    {
+     "driver": "mp_core_Q1B1L2",
+     "fanout": 44,
+     "wire_um": 29.862,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.924,
+     "input_arrival_ps": 128.842
+    },
+    {
+     "driver": "mp_core_Q1B1L3",
+     "fanout": 44,
+     "wire_um": 28.404,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.904,
+     "input_arrival_ps": 129.165
+    },
+    {
+     "driver": "mp_core_Q1B2L0",
+     "fanout": 43,
+     "wire_um": 25.38,
+     "load_ff": 20.414,
+     "cell_delay_ps": 21.739,
+     "input_arrival_ps": 126.562
+    },
+    {
+     "driver": "mp_core_Q1B2L1",
+     "fanout": 44,
+     "wire_um": 27.378,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.856,
+     "input_arrival_ps": 126.242
+    },
+    {
+     "driver": "mp_core_Q1B2L2",
+     "fanout": 43,
+     "wire_um": 26.46,
+     "load_ff": 20.414,
+     "cell_delay_ps": 21.747,
+     "input_arrival_ps": 126.205
+    },
+    {
+     "driver": "mp_core_Q1B2L3",
+     "fanout": 44,
+     "wire_um": 26.406,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.852,
+     "input_arrival_ps": 126.598
+    },
+    {
+     "driver": "mp_core_Q1B3L0",
+     "fanout": 43,
+     "wire_um": 31.59,
+     "load_ff": 20.414,
+     "cell_delay_ps": 22.085,
+     "input_arrival_ps": 126.911
+    },
+    {
+     "driver": "mp_core_Q1B3L1",
+     "fanout": 44,
+     "wire_um": 31.32,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.165,
+     "input_arrival_ps": 126.872
+    },
+    {
+     "driver": "mp_core_Q1B3L2",
+     "fanout": 44,
+     "wire_um": 48.978,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.519,
+     "input_arrival_ps": 126.416
+    },
+    {
+     "driver": "mp_core_Q1B3L3",
+     "fanout": 44,
+     "wire_um": 71.982,
+     "load_ff": 20.888,
+     "cell_delay_ps": 23.053,
+     "input_arrival_ps": 127.142
+    },
+    {
+     "driver": "mp_core_Q2B0L0",
+     "fanout": 43,
+     "wire_um": 33.21,
+     "load_ff": 20.414,
+     "cell_delay_ps": 21.931,
+     "input_arrival_ps": 162.212
+    },
+    {
+     "driver": "mp_core_Q2B0L1",
+     "fanout": 44,
+     "wire_um": 28.35,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.902,
+     "input_arrival_ps": 161.851
+    },
+    {
+     "driver": "mp_core_Q2B0L2",
+     "fanout": 43,
+     "wire_um": 27.378,
+     "load_ff": 20.414,
+     "cell_delay_ps": 21.793,
+     "input_arrival_ps": 161.851
+    },
+    {
+     "driver": "mp_core_Q2B0L3",
+     "fanout": 44,
+     "wire_um": 25.974,
+     "load_ff": 20.888,
+     "cell_delay_ps": 21.863,
+     "input_arrival_ps": 162.148
+    },
+    {
+     "driver": "mp_core_Q2B1L0",
+     "fanout": 43,
+     "wire_um": 100.224,
+     "load_ff": 20.414,
+     "cell_delay_ps": 26.367,
+     "input_arrival_ps": 169.04
+    },
+    {
+     "driver": "mp_core_Q2B1L1",
+     "fanout": 44,
+     "wire_um": 63.774,
+     "load_ff": 20.888,
+     "cell_delay_ps": 23.677,
+     "input_arrival_ps": 162.056
+    },
+    {
+     "driver": "mp_core_Q2B1L2",
+     "fanout": 43,
+     "wire_um": 32.508,
+     "load_ff": 20.414,
+     "cell_delay_ps": 23.061,
+     "input_arrival_ps": 163.472
+    },
+    {
+     "driver": "mp_core_Q2B1L3",
+     "fanout": 44,
+     "wire_um": 27.216,
+     "load_ff": 20.888,
+     "cell_delay_ps": 23.303,
+     "input_arrival_ps": 164.71
+    },
+    {
+     "driver": "mp_core_Q2B2L0",
+     "fanout": 43,
+     "wire_um": 101.898,
+     "load_ff": 20.414,
+     "cell_delay_ps": 25.508,
+     "input_arrival_ps": 169.173
+    },
+    {
+     "driver": "mp_core_Q2B2L1",
+     "fanout": 44,
+     "wire_um": 15.768,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.725,
+     "input_arrival_ps": 164.646
+    },
+    {
+     "driver": "mp_core_Q2B2L2",
+     "fanout": 43,
+     "wire_um": 18.684,
+     "load_ff": 20.414,
+     "cell_delay_ps": 22.743,
+     "input_arrival_ps": 165.286
+    },
+    {
+     "driver": "mp_core_Q2B2L3",
+     "fanout": 44,
+     "wire_um": 17.604,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.925,
+     "input_arrival_ps": 166.124
+    },
+    {
+     "driver": "mp_core_Q2B3L0",
+     "fanout": 43,
+     "wire_um": 30.51,
+     "load_ff": 20.414,
+     "cell_delay_ps": 26.34,
+     "input_arrival_ps": 182.762
+    },
+    {
+     "driver": "mp_core_Q2B3L1",
+     "fanout": 44,
+     "wire_um": 120.96,
+     "load_ff": 20.888,
+     "cell_delay_ps": 30.799,
+     "input_arrival_ps": 189.102
+    },
+    {
+     "driver": "mp_core_Q2B3L2",
+     "fanout": 44,
+     "wire_um": 187.92,
+     "load_ff": 20.888,
+     "cell_delay_ps": 29.12,
+     "input_arrival_ps": 180.448
+    },
+    {
+     "driver": "mp_core_Q2B3L3",
+     "fanout": 44,
+     "wire_um": 30.24,
+     "load_ff": 20.888,
+     "cell_delay_ps": 34.583,
+     "input_arrival_ps": 205.654
+    },
+    {
+     "driver": "mp_core_Q3B0L0",
+     "fanout": 43,
+     "wire_um": 31.05,
+     "load_ff": 20.414,
+     "cell_delay_ps": 22.085,
+     "input_arrival_ps": 158.82
+    },
+    {
+     "driver": "mp_core_Q3B0L1",
+     "fanout": 44,
+     "wire_um": 26.919,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.067,
+     "input_arrival_ps": 158.411
+    },
+    {
+     "driver": "mp_core_Q3B0L2",
+     "fanout": 43,
+     "wire_um": 28.89,
+     "load_ff": 20.414,
+     "cell_delay_ps": 22.02,
+     "input_arrival_ps": 158.405
+    },
+    {
+     "driver": "mp_core_Q3B0L3",
+     "fanout": 44,
+     "wire_um": 28.944,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.129,
+     "input_arrival_ps": 158.824
+    },
+    {
+     "driver": "mp_core_Q3B1L0",
+     "fanout": 43,
+     "wire_um": 32.616,
+     "load_ff": 20.414,
+     "cell_delay_ps": 23.128,
+     "input_arrival_ps": 154.395
+    },
+    {
+     "driver": "mp_core_Q3B1L1",
+     "fanout": 44,
+     "wire_um": 33.588,
+     "load_ff": 20.888,
+     "cell_delay_ps": 23.215,
+     "input_arrival_ps": 154.273
+    },
+    {
+     "driver": "mp_core_Q3B1L2",
+     "fanout": 44,
+     "wire_um": 106.38,
+     "load_ff": 20.888,
+     "cell_delay_ps": 24.633,
+     "input_arrival_ps": 153.39
+    },
+    {
+     "driver": "mp_core_Q3B1L3",
+     "fanout": 44,
+     "wire_um": 51.354,
+     "load_ff": 20.888,
+     "cell_delay_ps": 24.951,
+     "input_arrival_ps": 158.415
+    },
+    {
+     "driver": "mp_core_Q3B2L0",
+     "fanout": 43,
+     "wire_um": 22.626,
+     "load_ff": 20.414,
+     "cell_delay_ps": 23.202,
+     "input_arrival_ps": 151.115
+    },
+    {
+     "driver": "mp_core_Q3B2L1",
+     "fanout": 44,
+     "wire_um": 19.386,
+     "load_ff": 20.888,
+     "cell_delay_ps": 23.073,
+     "input_arrival_ps": 150.578
+    },
+    {
+     "driver": "mp_core_Q3B2L2",
+     "fanout": 43,
+     "wire_um": 110.268,
+     "load_ff": 20.414,
+     "cell_delay_ps": 24.605,
+     "input_arrival_ps": 148.949
+    },
+    {
+     "driver": "mp_core_Q3B2L3",
+     "fanout": 44,
+     "wire_um": 69.228,
+     "load_ff": 20.888,
+     "cell_delay_ps": 25.214,
+     "input_arrival_ps": 153.635
+    },
+    {
+     "driver": "mp_core_Q3B3L0",
+     "fanout": 43,
+     "wire_um": 26.352,
+     "load_ff": 20.414,
+     "cell_delay_ps": 22.133,
+     "input_arrival_ps": 166.49
+    },
+    {
+     "driver": "mp_core_Q3B3L1",
+     "fanout": 44,
+     "wire_um": 36.234,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.425,
+     "input_arrival_ps": 166.318
+    },
+    {
+     "driver": "mp_core_Q3B3L2",
+     "fanout": 44,
+     "wire_um": 34.83,
+     "load_ff": 20.888,
+     "cell_delay_ps": 22.394,
+     "input_arrival_ps": 166.279
+    },
+    {
+     "driver": "mp_core_Q3B3L3",
+     "fanout": 44,
+     "wire_um": 67.608,
+     "load_ff": 20.888,
+     "cell_delay_ps": 23.102,
+     "input_arrival_ps": 166.561
+    },
+    {
+     "driver": "mp_core_macro0",
+     "fanout": 1,
+     "wire_um": 5.355,
+     "load_ff": 9.346,
+     "cell_delay_ps": 20.333,
+     "input_arrival_ps": 164.327
+    },
+    {
+     "driver": "mp_core_macro1",
+     "fanout": 1,
+     "wire_um": 5.355,
+     "load_ff": 9.346,
+     "cell_delay_ps": 19.677,
+     "input_arrival_ps": 116.145
+    }
+   ]
+  }
+ },
+ "sink_cap_basis": {
+  "DFFHQNx1_CLK_fF": 0.474736,
+  "SRAM_clk_fF": 9.3458,
+  "source": "ASAP7 RVT TT SEQ and actual RP1 SRAM liberty; cap held corner-independent"
+ },
+ "rc_basis": "tools/die_plan/setRC_rcx_asap7.tcl clock RC (common flow, not fit to R4)",
+ "source_geometry_caveat": "RP1 source snapshot-placement hook must precede final sink clustering before any production build"
+}

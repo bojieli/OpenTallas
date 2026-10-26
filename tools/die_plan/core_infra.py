@@ -24,7 +24,10 @@ class InfraError(ValueError):
 
 def word(value):
     value = str(value)
-    if any(c in value for c in "{}\\\n\r"):
+    # OpenDB/Yosys instance identities commonly contain literal \[ and \].
+    # Braced Tcl words preserve these; only a trailing odd backslash run can
+    # escape our closing brace. Never strip or canonicalize the instance name.
+    if any(c in value for c in "{}\n\r") or (len(value) - len(value.rstrip("\\"))) % 2:
         raise InfraError(f"unsupported Tcl name {value!r}")
     return "{" + value + "}"
 
@@ -137,7 +140,7 @@ def compile_slice(sl):
             nn.add(n)
             depth[n] = depth[par] + 1
         leaves = tree.get("leaves", [])
-        used, counts, levels = set(), [], set()
+        used, counts, levels = set(), {}, set()
         if not leaves:
             raise InfraError("core_tree requires explicitly assigned sink leaves")
         for leaf in leaves:
@@ -153,11 +156,16 @@ def compile_slice(sl):
                 if s in used:
                     raise InfraError(f"clock sink assigned twice: {s}")
                 used.add(s)
-            counts.append(len(sinks))
+            group = leaf.get("load_class", "register")
+            if group not in ("register", "macro"):
+                raise InfraError(f"{n}: unknown load_class {group!r}")
+            counts.setdefault(group, []).append(len(sinks))
         if len(levels) != 1:
             raise InfraError(f"core tree leaves have unequal stage counts: {sorted(levels)}")
-        if tree.get("equal_load", True) and max(counts) - min(counts) > 1:
-            raise InfraError(f"core tree leaf sink counts are unequal: {min(counts)}..{max(counts)}")
+        if tree.get("equal_load", True):
+            for group, cc in counts.items():
+                if max(cc) - min(cc) > 1:
+                    raise InfraError(f"core tree {group} leaf sink counts are unequal: {min(cc)}..{max(cc)}")
         tree["depth"] = next(iter(levels))
     for b in sl.get("bays", []):
         assignments = b.get("cells", [])
@@ -181,9 +189,55 @@ def compile_slice(sl):
         for other, q in pin_shapes[:k]:
             if abs(loc[0] - q[0]) < .032 - 1e-9 and abs(loc[1] - q[1]) < .192 - 1e-9:
                 raise InfraError(f"M5 planned pin shapes overlap: {name}, {other}; revise the slice")
+    placements = sl.get("cell_placements", {})
+    if placements:
+        if set(placements) != {c["name"] for c in cells}:
+            raise InfraError("frozen cell_placements must cover exactly the planned infrastructure cells")
+        for c in cells:
+            p = placements[c["name"]]
+            if p.get("master") != c["master"]:
+                raise InfraError(f"frozen placement master differs for {c['name']}")
+            c["xy_um"] = xy(p.get("centre_um"), c["name"], outline)
+            c["origin_um"] = xy(p.get("origin_um"), c["name"], outline)
+            c["orient"] = p["orient"]
     return dict(module=sl["module"], outline_um=outline, cells=cells, ports=ports, arcs=arcs,
                 core_tree=tree, core_clock_port=clock_port, clock_entry=entry,
                 bays=bays, entry_pins=sl.get("entry_pins", []))
+
+
+def named_tree_report(report, clock_port, macro_pins=None):
+    """Normalize a pre-build named-sink H-tree report, including same-stage macro
+    branches. Used by the shared core helper, not a per-die physical recipe.
+    Sink identities must come from the actual placement after mandatory data
+    placement hooks. No nearest-sink assignment or clock measurement is read.
+    """
+    if report.get("entry_chain", 0):
+        raise InfraError("named tree report entry chain needs explicit planned nodes")
+    if not report.get("leaf_assignments"):
+        raise InfraError("named tree report lacks explicit leaf_assignments")
+    root = "mp_core_root"
+    names = {"root": root}
+    names.update({row[0]: "mp_core_" + row[0] for row in report["nodes"]})
+    nodes = [dict(name=root, master="BUFx24_ASAP7_75t_R", xy_um=report["entry"], parent="port:" + clock_port)]
+    for name, parent, point, cell in report["nodes"]:
+        nodes.append(dict(name=names[name], master=cell, xy_um=point, parent=names[parent]))
+    leaves = []
+    by_leaf = {}
+    for leaf in report["leaf_assignments"]:
+        name = "mp_core_" + leaf["name"]
+        nodes.append(dict(name=name, master=leaf["cell"], xy_um=leaf["xy_um"], parent=names[leaf["parent"]]))
+        leaves.append(dict(node=name, sinks=list(leaf["sinks"]), load_class="register"))
+        by_leaf[leaf["name"]] = leaf
+    for k, (inst, matched_leaf, point) in enumerate(report.get("macros", [])):
+        if not macro_pins or inst not in macro_pins:
+            raise InfraError(f"named tree report requires explicit clock pin for macro {inst}")
+        leaf = by_leaf[matched_leaf]
+        name = f"mp_core_macro{k}"
+        nodes.append(dict(name=name, master=leaf["cell"], xy_um=point, parent=names[leaf["parent"]]))
+        leaves.append(dict(node=name, sinks=[inst + "/" + macro_pins[inst]], load_class="macro"))
+    return dict(clock_port=clock_port, nodes=nodes, leaves=leaves, equal_load=True,
+                source_geometry=report.get("source_geometry"),
+                load_basis="equal register counts per leaf; macro leaves separately classified and timed")
 
 
 def emit_tcl(sl):
@@ -200,6 +254,9 @@ def emit_tcl(sl):
         x, y = c["xy_um"]
         r = " ".join(f"{v:g}" for v in c["rect_um"])
         lines.append(f"ot_ci_cell {word(c['name'])} {c['master']} {x:g} {y:g} {{{r}}}")
+        if c.get("origin_um") is not None:
+            ox, oy = c["origin_um"]
+            lines.append(f"ot_ci_origin_assert {word(c['name'])} {ox:g} {oy:g} {word(c['orient'])}")
     for a in plan["arcs"]:
         lines.append(f"ot_ci_arc {word(a['cell'])} {word(a['source'])} {word(a['sink'])}")
     if plan["core_tree"]:
