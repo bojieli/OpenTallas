@@ -67,7 +67,7 @@ def run(a):
     libs = {c: lib_cells(c, a.libdir) for c in ('TT','FF')}
     mesh_rc = {c: json.loads((src/f'mesh_{c}.json').read_text()) for c in ('TT','FF')}
     options = [M.BUF, 'BUFx12f_ASAP7_75t_R', 'BUFx4f_ASAP7_75t_R', 'BUFx2_ASAP7_75t_R']
-    chains = [[M.BUF]+list(comb) for n in range(a.max_cells) for comb in itertools.combinations_with_replacement(options,n)]
+    chains = [[M.BUF]+list(comb)+[M.BUF] for n in range(a.max_cells-1) for comb in itertools.combinations_with_replacement(options,n)]
     # Preserve the original stub and its routed load. The new first cell replaces
     # exactly its mesh capacitance, and the final new cell drives the original.
     table = []
