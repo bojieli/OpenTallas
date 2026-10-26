@@ -235,6 +235,8 @@ class TickBase(Base):
         self.ap.rbash = lambda host, script, timeout=0: (0, "", "")
         self.ap.sh = lambda cmd, timeout=0, input=None: (0, "", "")
         self.ap.hub_procs = lambda path: []
+        self.ap.resolve_provenance = lambda src, flow="": {"src_commit": "0123456789ab" + "0" * 28,
+                                                           "flow_tag": "flow-20261025-a"}
 
     def tick(self):
         self.ap.tick(type("A", (), {"dry_run": False})())
@@ -796,10 +798,12 @@ class TestOwnership(TickBase):
             {"plan": "x", "types": {"q_b000": {"verdict": "FAIL"}, "root": {"verdict": "PASS"}}}))
         (repo / "results/proto_1025/g2/res_qwen_kvsys.json").write_text(json.dumps(
             {"kv3_hg": {"classify": {"cls": "STRUCTURAL", "why": "GRT ov 5000"}}, "kv3_hg_v2": {"classify": {"cls": "CLEAN"}}}))
-        (p / "release_cache.json").write_text(json.dumps({"plans": {"s81": {"signed_types": {"slice_station__t7": ["x"]},
+        (p / "release_cache.json").write_text(json.dumps({"provenance_rule": "v1", "plans": {"s81": {"signed_types": {"slice_station__t7": ["x"]},
                                                                             "signed_cores": {}}},
                                                           "signed_records": [{"name": "kr_dsdv_gunit_l1_lfp", "top": None,
-                                                                              "path": "/a/signoff.json", "scan_host": "epyc1"}]}))
+                                                                              "path": "/a/signoff.json", "scan_host": "epyc1",
+                                                                              "versioned": True, "src_commit": "ab" * 20,
+                                                                              "flow_tag": "flow-20261025-a"}]}))
 
     def lane(self, name, text):
         (Path(self.tmp.name) / "coord" / "lanes" / f"{name}.md").write_text(text)
@@ -920,7 +924,7 @@ class TestDistinctDesigns(unittest.TestCase):
         import ownership as O
         plan, pins, canonical = self.hbm()
         sha_y = O.pin_sig(pins["cores/pc_y.json"])[0]
-        cache = {"plans": {"hbm_arch/B2n": {"signed_types": {}, "signed_cores": {
+        cache = {"provenance_rule": "v1", "plans": {"hbm_arch/B2n": {"signed_types": {}, "signed_cores": {
                      "piece__r1": ["host:/k/piece__r1/signoff.json"],
                      "pc_ctrl": [f"host:/kits/pc_ctrl_{sha_y}/signoff.json"]}}},
                  "signed_records": [{"name": "kl_pc_ctrl_c", "top": "pc_ctrl", "path": "/k/unknown/signoff.json"}]}
