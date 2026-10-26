@@ -22,6 +22,6 @@ def test_actual_coefficient_table_exhaustive_and_mutant(tmp_path):
         subprocess.run(['iverilog','-g2012','-DSYNTHESIS','-s','tb','-o',str(exe),str(p)],check=True,capture_output=True,text=True)
         return subprocess.run(['vvp',str(exe)],capture_output=True,text=True)
     assert run(newfn,'nominal').returncode==0
-    # Flip the least significant coefficient bit at the first packed row.
-    bad=re.sub(r"(16384'h)([0-9a-f])",lambda m:m[1]+format(int(m[2],16)^1,'x'),newfn,count=1)
+    # Flip one actual decoder coefficient bit.
+    bad=re.sub(r"(64'h)([0-9a-f]{16})",lambda m:m[1]+format(int(m[2],16)^1,'016x'),newfn,count=1)
     assert run(bad,'wrong_coefficient').returncode!=0
