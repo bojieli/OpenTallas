@@ -3006,8 +3006,10 @@ class Binder:
                     if nm in self.__dict__.get("parent_id_ports", {}).get(tn, {}):
                         actual_bits = {kk[3]: val for kk, val in self.tvals[tn][p].items()
                                        if kk[0] == "strap" and kk[1] == r and kk[2] == port}
-                        if set(actual_bits) != set(range(width)) or any(val not in "01" for val in actual_bits.values()):
-                            raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID bits")
+                        parameter_bits = {kk[3] for kk in self.tparams[tn]
+                                          if kk[0] == "strap" and kk[1] == r and kk[2] == port}
+                        if not parameter_bits or set(actual_bits) != parameter_bits or any(val not in "01" for val in actual_bits.values()):
+                            raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID parameter bits")
                         expr = f"{width}'b{''.join(reversed(v))}"
                         parent_ids.append((nm, expr))
                         self.__dict__.setdefault("parent_id_values", {}).setdefault(p, {})[nm] = dict(width=width,
