@@ -28,7 +28,10 @@ import uf_phys_predict as UP  # noqa: E402
 
 # buffer list the plan may choose from (per-branch sizing, 12.8 d1); uf_phys parses these NLDM tables
 SIZES_ALL = ["BUFx4_ASAP7_75t_R", "BUFx4f_ASAP7_75t_R", "BUFx5_ASAP7_75t_R", "BUFx6f_ASAP7_75t_R", "BUFx8_ASAP7_75t_R",
-             "BUFx10_ASAP7_75t_R", "BUFx12f_ASAP7_75t_R", "BUFx16f_ASAP7_75t_R", "BUFx24_ASAP7_75t_R"]
+             "BUFx10_ASAP7_75t_R", "BUFx12f_ASAP7_75t_R", "BUFx16f_ASAP7_75t_R", "BUFx24_ASAP7_75t_R"]   # parsed (spec may name any)
+# COORD ruling (QC-SU-PROG-L1 ASK 2): the sizer may only choose CALIBRATED sizes (3 fit builds use BUFx8..x24) until the refit;
+# prog k5 build: BUFx4/x6f islands read +10 ps vs +5 without -> sizes below BUFx8 are model extrapolation.
+SIZES_SIZER = ["BUFx8_ASAP7_75t_R", "BUFx10_ASAP7_75t_R", "BUFx12f_ASAP7_75t_R", "BUFx16f_ASAP7_75t_R", "BUFx24_ASAP7_75t_R"]
 for _s in SIZES_ALL:
     if _s not in U.SIZES:
         U.SIZES.append(_s)

@@ -47,6 +47,10 @@ class GuardBand(unittest.TestCase):
         self.assertEqual(b["TT_rise_mean"], [238.0, 262.0])
         self.assertEqual(b["FF_early_mean"], [187.5, 217.5])
 
+    def test_sizer_list_calibrated_only(self):
+        self.assertEqual(PG.SIZES_SIZER, ["BUFx8_ASAP7_75t_R", "BUFx10_ASAP7_75t_R", "BUFx12f_ASAP7_75t_R",
+                                          "BUFx16f_ASAP7_75t_R", "BUFx24_ASAP7_75t_R"])
+
     def test_frozen_params(self):
         self.assertEqual(PG.PMAX, dict(alpha=0.2, beta=0.5, gslew=5.0, kleaf=1.2955))
         self.assertEqual(PG.PMIN, dict(alpha=0.2, beta=0.4, gslew=4.0, kleaf=1.2955))

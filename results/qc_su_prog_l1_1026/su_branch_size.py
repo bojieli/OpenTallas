@@ -3,7 +3,7 @@
 
 Input = the spec the gate would build (sites, membership, repeater chain and stage count all fixed by su_kit_gate).
 Only the CELL of each tree node (island drivers, L1/L2/L3 chain repeaters, B drivers) is chosen, from the fixed
-buffer list phys_gate.SIZES_ALL, by the gating predictor uf_phys itself, before any build: no measured input, no
+buffer list phys_gate.SIZES_SIZER (calibrated BUFx8..x24, COORD ruling), by the gating predictor uf_phys itself, before any build: no measured input, no
 added or removed stage (every root->leaf path keeps its stage count), no site moved, root / leaf / macro-leaf cells
 unchanged.  Deterministic coordinate descent (nodes in spec order, sizes in list order, strict improvement only):
   J = max(TT rise window, FF early window) - 0.5 min(m_TT, m_FF),  m_TT = 12 - |TT rise mean - 250|,
@@ -57,7 +57,7 @@ def _eval(s):
 
 def size(spec, asb, geo, libdir, passes=3, slew_max=SLEW_MAX, sizes=None, workers=None):
     workers = workers if workers is not None else int(os.environ.get("OT_SIZE_WORKERS", "9"))
-    sizes = sizes or PG.SIZES_ALL
+    sizes = sizes or PG.SIZES_SIZER
     L = PG.libs(libdir)
     plan = U.Plan(spec, geo, json.load(open(asb))["seg_um"])
     nodes = [n for n, v in plan.nodes.items() if v["kind"] == "node"]
