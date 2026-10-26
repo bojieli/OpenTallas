@@ -1,0 +1,45 @@
+{
+  "kind": "S81_HEAD_FADD_L4_SOURCE_QUALIFICATION",
+  "default_enabled": false,
+  "arithmetic_files_changed": false,
+  "scalar_checks": 351253,
+  "scalar_mutant": "175535mismatchesCAUGHT",
+  "B": {
+    "rows": 128,
+    "cadence": 64,
+    "old_first": 263,
+    "new_first": 144,
+    "old_last": 8391,
+    "new_last": 8272,
+    "cycle_delta": -119,
+    "wrong_skew_mutant": "128mismatchesCAUGHT"
+  },
+  "A": {
+    "rows": 32,
+    "cadence": 256,
+    "argmax_exact": true,
+    "old_first": 468,
+    "new_first": 342,
+    "old_last": 8404,
+    "new_last": 8278,
+    "cycle_delta": -126,
+    "wrong_skew_mutant": "CAUGHT"
+  },
+  "native_transport": {
+    "path": "spo->tile0(4A+1B)->tile1(4A+1B)->spr",
+    "weights": "releasedhead.weight S81tile1021images, reskewSK8to4",
+    "scenarios": "4/4PASS goldenrow/bits,tie,enable,fault",
+    "positions_in_A": 2,
+    "cycles": 8304,
+    "legacy_cycles": 8430,
+    "delta": -126,
+    "scope": "componenttransport, notdiehost/wholeG5"
+  },
+  "profile_requirements": [
+    "FADD_L4=1 selectsSK4 in element,bundle,tile andROM/xstream packing",
+    "CV=1 oldphysicalviews forbidden; freshnative synth/LEC andnewSIGNEDviewsrequired",
+    "nativeclock/resetSTART andphysicalF6/ROMlocalclock/matchingIOcontract stillowed"
+  ],
+  "physical_signed": false,
+  "token_rate_claim": false
+}
