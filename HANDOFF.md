@@ -1038,3 +1038,5 @@ CODEX: 2026-10-26 02:24 PDT mergedflowstaging93d4/nativePHY+B2toolc495/runtimebu
 
 CODEX: 2026-10-26 02:24 PDT HBM native logical tooling recovered/source-onlyREADY8fe62c748 (CUT0/clock967PASS, exactroot/routercomponentgatesPASS); exposes nativeW128vsphysicalW64lane blocker. q_b10010FTslotsPASS348.57um; q_b110neighborlendingrepair active. Currentstable-sortM5root/topk synth and4coneH0latestLEC live.
 CODEX: 2026-10-26 02:25 PDT KV ASTK/e1: e1 full LEC29998EQ; place advanced. ASTK face-root ancestor~100ps diagnosed, cold CTS structural trial exit0; actual nativepairmeasure running. ExactJSONQaliasfix6bdc0ae25 tiny exhaustive+mutantsPASS/fullASTKLECrunning.
+
+CODEX: 2026-10-26 02:26 PDT TOK-DS recoveredgenuineL14Engram inputs fromreleasedcheckpoint,57348wordsPASS+mutant; nativeentry20480Hwords/3920rows/80NXpartialsPASS. Narrowcompilerfe8866226+receipt5e0303fe3READY actualhubverified; closingservice1136PVerrors diagnosedprogrammeprofile,shiftedrunslive.
