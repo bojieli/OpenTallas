@@ -3137,7 +3137,27 @@ def load_plan(path):
         raw["asbuilt"] = ab
     if "asbuilt" not in raw:
         raise BindError(f"{path}: no `asbuilt` section (README: As-built binding)")
+    _gate_manifest_paths(raw["asbuilt"], Path(_AB_OVERRIDE.get("path") or path), bool(_AB_OVERRIDE.get("path")))
     return raw
+
+
+def _gate_manifest_paths(ab, mpath, override):
+    """TOK-SCHED 10-25: a manifest that lives in this repository must bind this checkout's sources only: every path
+    repository-relative and inside the repository (tools/die_plan/manifest_paths.py).  The S81 main manifest once read
+    a frozen worktree via absolute paths (12,800 false multi-driven nets).  Manifests outside the repository
+    (scratch diagnostics) are not gated; --allow-external-paths records an explicit diagnostic exception."""
+    import manifest_paths
+    if not manifest_paths._inside(mpath, E.REPO):
+        return
+    errs = manifest_paths.check(ab, mpath.parent, E.REPO, override=override)
+    if not errs:
+        return
+    if _AB_OVERRIDE.get("allow_external_paths"):
+        print(f"bind: WARNING {mpath}: {len(errs)} external manifest path(s) allowed by --allow-external-paths "
+              f"(diagnostic only, not a result of record): {errs[0]}", file=sys.stderr)
+        return
+    raise BindError(f"{mpath}: {len(errs)} absolute or out-of-repository manifest path(s), first: {errs[0]} "
+                    f"(tools/die_plan/manifest_paths.py lists all; make them repository-relative)")
 
 
 def plan_base(path, raw):
@@ -3150,8 +3170,29 @@ def plan_base(path, raw):
     return str(E.REPO)
 
 
+def _write_provenance(a, step):
+    """closure order rule 3 (OWNER 10-25): every bind result names the commit and the repository-relative plan and
+    manifest it was made from (out/provenance_<step>.json; tools/die_plan/manifest_paths.py --result checks it)."""
+    import manifest_paths
+    rec = manifest_paths.provenance(E.REPO)
+
+    def rel(p):
+        if not p:
+            return None
+        try:
+            return str(Path(p).resolve().relative_to(E.REPO.resolve()))
+        except ValueError:
+            return str(Path(p).resolve())
+    rec.update(step=step, plan=rel(a.plan), manifest=rel(getattr(a, "asbuilt", None)),
+               external_paths_allowed=bool(_AB_OVERRIDE.get("allow_external_paths")))
+    rec["inputs"] = [x for x in (rec["plan"], rec["manifest"]) if x]
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    (Path(a.out) / f"provenance_{step}.json").write_text(json.dumps(dict(provenance=rec), indent=1) + "\n")
+
+
 def cmd_elab(a):
     raw = load_plan(a.plan)
+    _write_provenance(a, "elab")
     rec = E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem)
     print(json.dumps({k: (v if k not in ("ambiguous", "undefined") else len(v)) for k, v in rec.items()}))
     return 0
@@ -3159,6 +3200,7 @@ def cmd_elab(a):
 
 def cmd_bind(a):
     raw = load_plan(a.plan)
+    _write_provenance(a, "bind")
     out = Path(a.out)
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
@@ -3781,8 +3823,11 @@ def main(argv=None):
         s.add_argument("--mem", type=int, default=32)
         s.add_argument("--strict", action="store_true")
         s.add_argument("--asbuilt", help="as-built binding section in its own file (overrides the plan's `asbuilt`)")
+        s.add_argument("--allow-external-paths", action="store_true",
+                       help="diagnostic only: do not fail on absolute / out-of-repository paths in an in-repo manifest")
     a = ap.parse_args(argv)
     _AB_OVERRIDE["path"] = a.asbuilt
+    _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
     try:
         if a.cmd == "kit-rtl":
             return cmd_kit_rtl(a)
