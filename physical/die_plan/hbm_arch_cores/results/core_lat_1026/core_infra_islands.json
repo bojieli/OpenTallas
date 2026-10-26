@@ -1,0 +1,975 @@
+{
+ "schema": "opentallas.hbm.core_infra_islands.v1",
+ "lane": "HBM-CORE-LAT",
+ "plan_sha256": "61cd45deb1146092d5b353924d38abc72c3bb980d03b15ecf446bc5b6b4d0c1e",
+ "mesh_meta": {
+  "delta_id": "D-HBM-CLKMESH",
+  "clock_floorplan": {
+   "note": "CLOCK-2 10-26: regions NW|centre|NE on partition edges x=13357.44 (NW_hub/NW_sm1 E edge = root W edge) and 15042.24 (root E edge = NE_hub/NE_sm1 W edge); PHY_N tap-free macro hole; SM hard cores (obs_max M5) driverless where no legal site <= max-move",
+   "x_cuts_um": [
+    13357.44,
+    15042.24
+   ],
+   "region_nx": [
+    32,
+    4,
+    32
+   ],
+   "macro_holes": [
+    "PHY_N"
+   ],
+   "hard_core_drivers": "drop",
+   "io_macro_drivers": "drop"
+  },
+  "driverless_hard_cores": 908,
+  "hole_drivers": 281
+ },
+ "latency_target": {
+  "tt_ps": 250.0,
+  "ff_ps": 202.5,
+  "tol_ps": 40.0,
+  "rule": "one die-wide core clock-latency target at the core clock pin = plan common latency; die feeds every core pin with ZERO early offset; PAD/OK/REBUILD/MEASURE per core"
+ },
+ "islands": {
+  "hfd_hgi_vms_glue_nw_t": {
+   "action": "ISLAND",
+   "instances": 2,
+   "outline_um": [
+    869.832,
+    1334.88
+   ],
+   "points": 4,
+   "max_points_per_instance": 2,
+   "strip_um": [
+    430.596,
+    4.32,
+    439.236,
+    1330.56
+   ],
+   "strip_w_um": 8.64,
+   "windows_um": [
+    [
+     430.596,
+     8.64,
+     439.236,
+     12.96
+    ],
+    [
+     430.596,
+     77.76,
+     439.236,
+     82.08
+    ],
+    [
+     430.596,
+     146.88,
+     439.236,
+     151.2
+    ],
+    [
+     430.596,
+     216.0,
+     439.236,
+     220.32
+    ],
+    [
+     430.596,
+     285.12,
+     439.236,
+     289.44
+    ],
+    [
+     430.596,
+     354.24,
+     439.236,
+     358.56
+    ],
+    [
+     430.596,
+     423.36,
+     439.236,
+     427.68
+    ],
+    [
+     430.596,
+     492.48,
+     439.236,
+     496.8
+    ],
+    [
+     430.596,
+     561.6,
+     439.236,
+     565.92
+    ],
+    [
+     430.596,
+     630.72,
+     439.236,
+     635.04
+    ],
+    [
+     430.596,
+     699.84,
+     439.236,
+     704.16
+    ],
+    [
+     430.596,
+     768.96,
+     439.236,
+     773.28
+    ],
+    [
+     430.596,
+     838.08,
+     439.236,
+     842.4
+    ],
+    [
+     430.596,
+     907.2,
+     439.236,
+     911.52
+    ],
+    [
+     430.596,
+     976.32,
+     439.236,
+     980.64
+    ],
+    [
+     430.596,
+     1045.44,
+     439.236,
+     1049.76
+    ],
+    [
+     430.596,
+     1114.56,
+     439.236,
+     1118.88
+    ],
+    [
+     430.596,
+     1183.68,
+     439.236,
+     1188.0
+    ],
+    [
+     430.596,
+     1252.8,
+     439.236,
+     1257.12
+    ],
+    [
+     430.596,
+     1321.92,
+     439.236,
+     1326.24
+    ]
+   ],
+   "n_windows": 20,
+   "win_pitch_um": 69.12,
+   "win_h_um": 4.32,
+   "core_blockage": {
+    "placement": "strip",
+    "routing_strip": [
+     "M1",
+     "M2"
+    ],
+    "routing_windows": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "die_owner": "clock mesh drivers (2 x BUFx24 per intersection) + regional reset drivers only",
+   "worst_slide_um": 166.81,
+   "worst_jog_um": 32.4,
+   "all_legal": true,
+   "strip_area_um2": 11458.7,
+   "strip_area_pct": 0.99,
+   "window_porosity_pct": 6.2,
+   "window_fill_pct": 56.3
+  },
+  "hnx_rp3lp3h_n": {
+   "action": "ISLAND",
+   "instances": 128,
+   "outline_um": [
+    630.72,
+    1209.6
+   ],
+   "points": 84,
+   "max_points_per_instance": 2,
+   "strip_um": [
+    311.04,
+    4.32,
+    319.68,
+    1205.28
+   ],
+   "strip_w_um": 8.64,
+   "windows_um": [
+    [
+     311.04,
+     15.12,
+     319.68,
+     19.44
+    ],
+    [
+     311.04,
+     84.24,
+     319.68,
+     88.56
+    ],
+    [
+     311.04,
+     153.36,
+     319.68,
+     157.68
+    ],
+    [
+     311.04,
+     222.48,
+     319.68,
+     226.8
+    ],
+    [
+     311.04,
+     291.6,
+     319.68,
+     295.92
+    ],
+    [
+     311.04,
+     360.72,
+     319.68,
+     365.04
+    ],
+    [
+     311.04,
+     429.84,
+     319.68,
+     434.16
+    ],
+    [
+     311.04,
+     498.96,
+     319.68,
+     503.28
+    ],
+    [
+     311.04,
+     568.08,
+     319.68,
+     572.4
+    ],
+    [
+     311.04,
+     637.2,
+     319.68,
+     641.52
+    ],
+    [
+     311.04,
+     706.32,
+     319.68,
+     710.64
+    ],
+    [
+     311.04,
+     775.44,
+     319.68,
+     779.76
+    ],
+    [
+     311.04,
+     844.56,
+     319.68,
+     848.88
+    ],
+    [
+     311.04,
+     913.68,
+     319.68,
+     918.0
+    ],
+    [
+     311.04,
+     982.8,
+     319.68,
+     987.12
+    ],
+    [
+     311.04,
+     1051.92,
+     319.68,
+     1056.24
+    ],
+    [
+     311.04,
+     1121.04,
+     319.68,
+     1125.36
+    ],
+    [
+     311.04,
+     1190.16,
+     319.68,
+     1194.48
+    ]
+   ],
+   "n_windows": 18,
+   "win_pitch_um": 69.12,
+   "win_h_um": 4.32,
+   "core_blockage": {
+    "placement": "strip",
+    "routing_strip": [
+     "M1",
+     "M2"
+    ],
+    "routing_windows": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "die_owner": "clock mesh drivers (2 x BUFx24 per intersection) + regional reset drivers only",
+   "worst_slide_um": 102.33,
+   "worst_jog_um": 25.92,
+   "all_legal": true,
+   "strip_area_um2": 10376.3,
+   "strip_area_pct": 1.36,
+   "window_porosity_pct": 6.2,
+   "window_fill_pct": 56.3
+  },
+  "hnx_rp3lp3h_s": {
+   "action": "ISLAND",
+   "instances": 128,
+   "outline_um": [
+    630.72,
+    1036.8
+   ],
+   "points": 88,
+   "max_points_per_instance": 2,
+   "strip_um": [
+    311.04,
+    4.32,
+    319.68,
+    1032.48
+   ],
+   "strip_w_um": 8.64,
+   "windows_um": [
+    [
+     311.04,
+     32.4,
+     319.68,
+     36.72
+    ],
+    [
+     311.04,
+     101.52,
+     319.68,
+     105.84
+    ],
+    [
+     311.04,
+     170.64,
+     319.68,
+     174.96
+    ],
+    [
+     311.04,
+     239.76,
+     319.68,
+     244.08
+    ],
+    [
+     311.04,
+     308.88,
+     319.68,
+     313.2
+    ],
+    [
+     311.04,
+     378.0,
+     319.68,
+     382.32
+    ],
+    [
+     311.04,
+     447.12,
+     319.68,
+     451.44
+    ],
+    [
+     311.04,
+     516.24,
+     319.68,
+     520.56
+    ],
+    [
+     311.04,
+     585.36,
+     319.68,
+     589.68
+    ],
+    [
+     311.04,
+     654.48,
+     319.68,
+     658.8
+    ],
+    [
+     311.04,
+     723.6,
+     319.68,
+     727.92
+    ],
+    [
+     311.04,
+     792.72,
+     319.68,
+     797.04
+    ],
+    [
+     311.04,
+     861.84,
+     319.68,
+     866.16
+    ],
+    [
+     311.04,
+     930.96,
+     319.68,
+     935.28
+    ],
+    [
+     311.04,
+     1000.08,
+     319.68,
+     1004.4
+    ]
+   ],
+   "n_windows": 15,
+   "win_pitch_um": 69.12,
+   "win_h_um": 4.32,
+   "core_blockage": {
+    "placement": "strip",
+    "routing_strip": [
+     "M1",
+     "M2"
+    ],
+    "routing_windows": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "die_owner": "clock mesh drivers (2 x BUFx24 per intersection) + regional reset drivers only",
+   "worst_slide_um": 174.69,
+   "worst_jog_um": 25.92,
+   "all_legal": true,
+   "strip_area_um2": 8883.3,
+   "strip_area_pct": 1.36,
+   "window_porosity_pct": 6.2,
+   "window_fill_pct": 56.3
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes0_3": {
+   "action": "ISLAND",
+   "instances": 4,
+   "outline_um": [
+    760.32,
+    725.76
+   ],
+   "points": 2,
+   "max_points_per_instance": 1,
+   "strip_um": [
+    375.84,
+    4.32,
+    384.48,
+    721.44
+   ],
+   "strip_w_um": 8.64,
+   "windows_um": [
+    [
+     375.84,
+     15.12,
+     384.48,
+     19.44
+    ],
+    [
+     375.84,
+     84.24,
+     384.48,
+     88.56
+    ],
+    [
+     375.84,
+     153.36,
+     384.48,
+     157.68
+    ],
+    [
+     375.84,
+     222.48,
+     384.48,
+     226.8
+    ],
+    [
+     375.84,
+     291.6,
+     384.48,
+     295.92
+    ],
+    [
+     375.84,
+     360.72,
+     384.48,
+     365.04
+    ],
+    [
+     375.84,
+     429.84,
+     384.48,
+     434.16
+    ],
+    [
+     375.84,
+     498.96,
+     384.48,
+     503.28
+    ],
+    [
+     375.84,
+     568.08,
+     384.48,
+     572.4
+    ],
+    [
+     375.84,
+     637.2,
+     384.48,
+     641.52
+    ],
+    [
+     375.84,
+     706.32,
+     384.48,
+     710.64
+    ]
+   ],
+   "n_windows": 11,
+   "win_pitch_um": 69.12,
+   "win_h_um": 4.32,
+   "core_blockage": {
+    "placement": "strip",
+    "routing_strip": [
+     "M1",
+     "M2"
+    ],
+    "routing_windows": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "die_owner": "clock mesh drivers (2 x BUFx24 per intersection) + regional reset drivers only",
+   "worst_slide_um": 125.01,
+   "worst_jog_um": 17.28,
+   "all_legal": true,
+   "strip_area_um2": 6195.9,
+   "strip_area_pct": 1.12,
+   "window_porosity_pct": 6.2,
+   "window_fill_pct": 56.3
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes24_27": {
+   "action": "ISLAND",
+   "instances": 4,
+   "outline_um": [
+    760.32,
+    725.76
+   ],
+   "points": 2,
+   "max_points_per_instance": 1,
+   "strip_um": [
+    375.84,
+    4.32,
+    384.48,
+    721.44
+   ],
+   "strip_w_um": 8.64,
+   "windows_um": [
+    [
+     375.84,
+     15.12,
+     384.48,
+     19.44
+    ],
+    [
+     375.84,
+     84.24,
+     384.48,
+     88.56
+    ],
+    [
+     375.84,
+     153.36,
+     384.48,
+     157.68
+    ],
+    [
+     375.84,
+     222.48,
+     384.48,
+     226.8
+    ],
+    [
+     375.84,
+     291.6,
+     384.48,
+     295.92
+    ],
+    [
+     375.84,
+     360.72,
+     384.48,
+     365.04
+    ],
+    [
+     375.84,
+     429.84,
+     384.48,
+     434.16
+    ],
+    [
+     375.84,
+     498.96,
+     384.48,
+     503.28
+    ],
+    [
+     375.84,
+     568.08,
+     384.48,
+     572.4
+    ],
+    [
+     375.84,
+     637.2,
+     384.48,
+     641.52
+    ],
+    [
+     375.84,
+     706.32,
+     384.48,
+     710.64
+    ]
+   ],
+   "n_windows": 11,
+   "win_pitch_um": 69.12,
+   "win_h_um": 4.32,
+   "core_blockage": {
+    "placement": "strip",
+    "routing_strip": [
+     "M1",
+     "M2"
+    ],
+    "routing_windows": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "die_owner": "clock mesh drivers (2 x BUFx24 per intersection) + regional reset drivers only",
+   "worst_slide_um": 67.77,
+   "worst_jog_um": 34.56,
+   "all_legal": true,
+   "strip_area_um2": 6195.9,
+   "strip_area_pct": 1.12,
+   "window_porosity_pct": 6.2,
+   "window_fill_pct": 56.3
+  },
+  "ot_hfd_coll_q3_body_core": {
+   "action": "ISLAND",
+   "instances": 1,
+   "outline_um": [
+    578.88,
+    1054.08
+   ],
+   "points": 1,
+   "max_points_per_instance": 1,
+   "strip_um": [
+    285.12,
+    4.32,
+    293.76,
+    1049.76
+   ],
+   "strip_w_um": 8.64,
+   "windows_um": [
+    [
+     285.12,
+     6.48,
+     293.76,
+     10.8
+    ],
+    [
+     285.12,
+     75.6,
+     293.76,
+     79.92
+    ],
+    [
+     285.12,
+     144.72,
+     293.76,
+     149.04
+    ],
+    [
+     285.12,
+     213.84,
+     293.76,
+     218.16
+    ],
+    [
+     285.12,
+     282.96,
+     293.76,
+     287.28
+    ],
+    [
+     285.12,
+     352.08,
+     293.76,
+     356.4
+    ],
+    [
+     285.12,
+     421.2,
+     293.76,
+     425.52
+    ],
+    [
+     285.12,
+     490.32,
+     293.76,
+     494.64
+    ],
+    [
+     285.12,
+     559.44,
+     293.76,
+     563.76
+    ],
+    [
+     285.12,
+     628.56,
+     293.76,
+     632.88
+    ],
+    [
+     285.12,
+     697.68,
+     293.76,
+     702.0
+    ],
+    [
+     285.12,
+     766.8,
+     293.76,
+     771.12
+    ],
+    [
+     285.12,
+     835.92,
+     293.76,
+     840.24
+    ],
+    [
+     285.12,
+     905.04,
+     293.76,
+     909.36
+    ],
+    [
+     285.12,
+     974.16,
+     293.76,
+     978.48
+    ],
+    [
+     285.12,
+     1043.28,
+     293.76,
+     1047.6
+    ]
+   ],
+   "n_windows": 16,
+   "win_pitch_um": 69.12,
+   "win_h_um": 4.32,
+   "core_blockage": {
+    "placement": "strip",
+    "routing_strip": [
+     "M1",
+     "M2"
+    ],
+    "routing_windows": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "die_owner": "clock mesh drivers (2 x BUFx24 per intersection) + regional reset drivers only",
+   "worst_slide_um": 15.39,
+   "worst_jog_um": 17.28,
+   "all_legal": true,
+   "strip_area_um2": 9032.6,
+   "strip_area_pct": 1.48,
+   "window_porosity_pct": 6.2,
+   "window_fill_pct": 56.3
+  },
+  "ot_hgi_sfu_programme_store_r10": {
+   "action": "ISLAND",
+   "instances": 2,
+   "outline_um": [
+    574.56,
+    738.72
+   ],
+   "points": 2,
+   "max_points_per_instance": 1,
+   "strip_um": [
+    282.96,
+    4.32,
+    291.6,
+    734.4
+   ],
+   "strip_w_um": 8.64,
+   "windows_um": [
+    [
+     282.96,
+     21.6,
+     291.6,
+     25.92
+    ],
+    [
+     282.96,
+     90.72,
+     291.6,
+     95.04
+    ],
+    [
+     282.96,
+     159.84,
+     291.6,
+     164.16
+    ],
+    [
+     282.96,
+     228.96,
+     291.6,
+     233.28
+    ],
+    [
+     282.96,
+     298.08,
+     291.6,
+     302.4
+    ],
+    [
+     282.96,
+     367.2,
+     291.6,
+     371.52
+    ],
+    [
+     282.96,
+     436.32,
+     291.6,
+     440.64
+    ],
+    [
+     282.96,
+     505.44,
+     291.6,
+     509.76
+    ],
+    [
+     282.96,
+     574.56,
+     291.6,
+     578.88
+    ],
+    [
+     282.96,
+     643.68,
+     291.6,
+     648.0
+    ],
+    [
+     282.96,
+     712.8,
+     291.6,
+     717.12
+    ]
+   ],
+   "n_windows": 11,
+   "win_pitch_um": 69.12,
+   "win_h_um": 4.32,
+   "core_blockage": {
+    "placement": "strip",
+    "routing_strip": [
+     "M1",
+     "M2"
+    ],
+    "routing_windows": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "die_owner": "clock mesh drivers (2 x BUFx24 per intersection) + regional reset drivers only",
+   "worst_slide_um": 10.53,
+   "worst_jog_um": 2.16,
+   "all_legal": true,
+   "strip_area_um2": 6307.9,
+   "strip_area_pct": 1.49,
+   "window_porosity_pct": 6.2,
+   "window_fill_pct": 56.3
+  },
+  "ot_pdie_serdes": {
+   "action": "DRIVERLESS_IP",
+   "instances": 5,
+   "points": 7,
+   "note": "IP macro: no in-core island; CLOCK-2 keeps the intersection driverless (io-macro class)"
+  }
+ },
+ "latency_actions": {
+  "REBUILD": 19,
+  "OK": 64,
+  "MEASURE": 73,
+  "PAD": 2,
+  "IP_DECLARED": 1
+ },
+ "latency_instances": {
+  "REBUILD": 118,
+  "OK": 131,
+  "MEASURE": 652,
+  "PAD": 2,
+  "IP_DECLARED": 5
+ }
+}

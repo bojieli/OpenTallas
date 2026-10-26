@@ -1,0 +1,797 @@
+{
+ "hfd_ep_static": {
+  "instances": 6,
+  "measured_tt_ps": 577,
+  "action": "REBUILD"
+ },
+ "hfd_hgi_vm_calendar_f20": {
+  "instances": 2,
+  "measured_tt_ps": 241,
+  "action": "OK"
+ },
+ "hfd_hgi_vms_glue_nw_t": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "hfd_vms_bank_native_q0_faces": {
+  "instances": 16,
+  "measured_tt_ps": 437,
+  "action": "REBUILD"
+ },
+ "hnx_rp3lp3h_n": {
+  "instances": 128,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "hnx_rp3lp3h_s": {
+  "instances": 128,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_argmax_static_sw_vm_r2": {
+  "instances": 1,
+  "measured_tt_ps": 191,
+  "action": "PAD"
+ },
+ "ot_hbm_hc_bank128_pair_core": {
+  "instances": 112,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_hc_bank128_pair_first_core": {
+  "instances": 16,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_hc_root_static__hcp_sys1": {
+  "instances": 1,
+  "measured_tt_ps": 251,
+  "action": "OK"
+ },
+ "ot_hbm_hc_root_static__tail0_rest": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_hc_root_static__tail0_sk_steady": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_hc_root_static__tail0_sk_step0": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_hc_root_static__tail1_rest": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_hc_root_static__tail1_sk_steady": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_hc_root_static__tail1_sk_step0": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_hc_subtree32_core": {
+  "instances": 8,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_host_cp_rxs": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_qctl_static": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_query_static": {
+  "instances": 2,
+  "measured_tt_ps": 275,
+  "action": "OK"
+ },
+ "ot_hbm_idx_rootctl_static_am": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k0h0": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k0h1": {
+  "instances": 2,
+  "measured_tt_ps": 255,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k1h0": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k1h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k2h0": {
+  "instances": 2,
+  "measured_tt_ps": 255,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k2h1": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k3h0": {
+  "instances": 2,
+  "measured_tt_ps": 258,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k3h1": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k0h0": {
+  "instances": 2,
+  "measured_tt_ps": 258,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k0h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k1h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k1h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k2h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k2h1": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k3h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k3h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k0h0": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k0h1": {
+  "instances": 2,
+  "measured_tt_ps": 259,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k1h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k1h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k2h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k2h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k3h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k3h1": {
+  "instances": 2,
+  "measured_tt_ps": 255,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k0h0": {
+  "instances": 2,
+  "measured_tt_ps": 255,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k0h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k1h0": {
+  "instances": 2,
+  "measured_tt_ps": 258,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k1h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k2h0": {
+  "instances": 2,
+  "measured_tt_ps": 255,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k2h1": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k3h0": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k3h1": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k0h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k0h1": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k1h0": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k1h1": {
+  "instances": 2,
+  "measured_tt_ps": 255,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k2h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k2h1": {
+  "instances": 2,
+  "measured_tt_ps": 258,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k3h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k3h1": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k0h0": {
+  "instances": 2,
+  "measured_tt_ps": 255,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k0h1": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k1h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k1h1": {
+  "instances": 2,
+  "measured_tt_ps": 255,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k2h0": {
+  "instances": 2,
+  "measured_tt_ps": 258,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k2h1": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k3h0": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k3h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k0h0": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k0h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k1h0": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k1h1": {
+  "instances": 2,
+  "measured_tt_ps": 258,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k2h0": {
+  "instances": 2,
+  "measured_tt_ps": 259,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k2h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k3h0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k3h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k0h0": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k0h1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k1h0": {
+  "instances": 2,
+  "measured_tt_ps": 255,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k1h1": {
+  "instances": 2,
+  "measured_tt_ps": 258,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k2h0": {
+  "instances": 2,
+  "measured_tt_ps": 258,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k2h1": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k3h0": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k3h1": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_score_quarter_static__tail0": {
+  "instances": 2,
+  "measured_tt_ps": 256,
+  "action": "OK"
+ },
+ "ot_hbm_idx_score_quarter_static__tail1": {
+  "instances": 2,
+  "measured_tt_ps": 257,
+  "action": "OK"
+ },
+ "ot_hbm_idx_selector_static_sel": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_topk_link_static": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_idx_vm_query_static_n12": {
+  "instances": 2,
+  "measured_tt_ps": 259,
+  "action": "OK"
+ },
+ "ot_hbm_sm_vm_wr_q_t_lanes4": {
+  "instances": 2,
+  "measured_tt_ps": 356,
+  "action": "REBUILD"
+ },
+ "ot_hbm_static_cfg_collar_idx256r": {
+  "instances": 1,
+  "measured_tt_ps": 182,
+  "action": "PAD"
+ },
+ "ot_hbm_su_programme_pslice_c5": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_cxport_ij_q": {
+  "instances": 2,
+  "measured_tt_ps": 447,
+  "action": "REBUILD"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp0": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp1": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp10": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp11": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp12": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp13": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp14": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp2": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp3": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp4": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp5": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp6": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp7": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp8": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp9": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp_l": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes0_3": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes12_15": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes16_19": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes20_23": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes24_27": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes28_31": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes4_7": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes8_11": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes_plain0_3": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes_plain12_15": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes_plain4_7": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes_plain8_11": {
+  "instances": 4,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__pretree": {
+  "instances": 8,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_su_static_pgslice_lg__side_rest": {
+  "instances": 4,
+  "measured_tt_ps": 515,
+  "action": "REBUILD"
+ },
+ "ot_hbm_su_static_pgslice_lg__side_softplus": {
+  "instances": 4,
+  "measured_tt_ps": 572,
+  "action": "REBUILD"
+ },
+ "ot_hbm_su_static_qcore_r13": {
+  "instances": 2,
+  "measured_tt_ps": 434,
+  "action": "REBUILD"
+ },
+ "ot_hbm_su_static_sfustore_hw": {
+  "instances": 2,
+  "measured_tt_ps": 550,
+  "action": "REBUILD"
+ },
+ "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+  "instances": 32,
+  "measured_tt_ps": 295,
+  "action": "REBUILD"
+ },
+ "ot_hbm_svc_sm_group_rel_id": {
+  "instances": 8,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_svc_sm_xcal_rel_t": {
+  "instances": 8,
+  "measured_tt_ps": 527,
+  "action": "REBUILD"
+ },
+ "ot_hbm_svc_vm_kshare_splitstrap": {
+  "instances": 8,
+  "measured_tt_ps": 543,
+  "action": "REBUILD"
+ },
+ "ot_hbm_svc_vmdel_lane_n": {
+  "instances": 16,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_svc_wb_kport_q": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hbm_xp_aq_tree13_fmt": {
+  "instances": 4,
+  "measured_tt_ps": 236,
+  "action": "OK"
+ },
+ "ot_hfd_coll_q2_hard_v8g__reduce": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hfd_coll_q2_hard_v8g__ring_ag": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hfd_coll_q2n2_body_core": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hfd_coll_q2n2_vm_core": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hfd_coll_q3_body_core": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hfd_coll_q3_edge_core": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hfd_coll_q3_vm_core": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hgi_coll_gq_issue": {
+  "instances": 2,
+  "measured_tt_ps": 343,
+  "action": "REBUILD"
+ },
+ "ot_hgi_coll_gq_land": {
+  "instances": 2,
+  "measured_tt_ps": 328,
+  "action": "REBUILD"
+ },
+ "ot_hgi_coll_inj_idx_join_rg": {
+  "instances": 2,
+  "measured_tt_ps": 417,
+  "action": "REBUILD"
+ },
+ "ot_hgi_coll_tkm_m_tp192__root": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
+  "instances": 31,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap": {
+  "instances": 1,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hgi_dma_back_static_vp4_banks_cp": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hgi_qw_dec": {
+  "instances": 2,
+  "measured_tt_ps": 368,
+  "action": "REBUILD"
+ },
+ "ot_hgi_sfu_core_split3__ctl": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hgi_sfu_core_split3__opstore_a": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hgi_sfu_core_split3__opstore_b": {
+  "instances": 2,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hgi_sfu_programme_store_r10": {
+  "instances": 2,
+  "measured_tt_ps": 1150,
+  "action": "REBUILD"
+ },
+ "ot_hgi_sfu_split3_lane_core__idpin": {
+  "instances": 32,
+  "measured_tt_ps": null,
+  "action": "MEASURE"
+ },
+ "ot_hgi_sm_xload_cl2_bdring": {
+  "instances": 4,
+  "measured_tt_ps": 288,
+  "action": "OK"
+ },
+ "ot_hgi_sm_xload_cl2_bfqg": {
+  "instances": 16,
+  "measured_tt_ps": 385,
+  "action": "REBUILD"
+ },
+ "ot_hgi_sm_xload_cl2_ctlx": {
+  "instances": 2,
+  "measured_tt_ps": 505,
+  "action": "REBUILD"
+ },
+ "ot_hgi_sm_xload_xq_pegress": {
+  "instances": 4,
+  "measured_tt_ps": 448,
+  "action": "REBUILD"
+ },
+ "ot_pdie_serdes": {
+  "instances": 5,
+  "measured_tt_ps": 627,
+  "action": "IP_DECLARED"
+ }
+}
