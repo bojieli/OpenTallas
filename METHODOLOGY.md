@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v2, 2026-10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v3, 2026-10-26 ~07:0x; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -298,3 +298,29 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-25 proposal of over-tile ft (type count) withdrawn: no measured failure. Lesson: no layer change without a measured failure.
   - 10-26 01:1x OWNER D-INFRA-FIRST: PG/clock/reset first, die signals on M4-M7 + leftover M8/M9 = CURRENT (12.1).
   - 10-26 ~06:3x OWNER: common core clock-latency target + in-core islands on all dies, rebuilt in parallel = CURRENT (12.2a, 12.3).
+  - 10-26 ~07:0x OWNER: master plan first (city-planning model, 12.7) on all dies; leftover M8/M9 stays free for the router, entry via planned M7 pins = CURRENT.
+
+- 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 ~07:0x, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
+  Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
+  on-ramps (entry pins) -> only then buildings (partitions / hard cores). Nothing is carved into a finished block afterwards.
+  a. ONE MASTER PLAN PER DIE, produced by one shared tool (die_infra.py master-plan mode) for all five dies:
+     - traffic census: every die-level path with its bit count (die_plan ports + census);
+     - roads: corridor + layer per path (M4-M7, leftover M8/M9 free per 12.1c), track use <= 0.6;
+     - rest stops: repeater bays <= 405 um apart along every path (any layer, incl. M6/M7 feedthroughs over hard cores), sized from the
+       bits passing at <= 60 % fill; in-core bays where a core longer than reach lies on a path and no channel route exists;
+     - on-ramps: every M8/M9 die net enters a partition/core only at a pre-declared M7 entry pin beside a bay (one M8->M7 via), pins spread
+       so pins per gcell stay below the pitch-derived limit;
+     - infra: PG sized for WORST-CASE power per region (peak activity + margin; PHY hot spots locally reinforced, published PHY power),
+       clock H-tree snapped to the partition lattice, islands (clock/reset only), every clock strap/segment shielded by PG stripes on both
+       sides, no signal track adjacent/parallel to clock within the shield spacing, reset;
+     - one common core clock latency per die (12.3).
+  b. STATIC PLAN GATES before ANY block (partition/core) build: reach gap <= 405 um on every path; bay fill <= 60 %; corridor tracks <= 0.6;
+     entry pins per gcell <= limit; clock shielding complete; static IR PASS per region at worst-case power; every hard core fits its lot
+     with its islands/bays. These run on the plan in minutes; a FAIL is fixed in the plan, never in a block.
+  c. BUILDINGS FOLLOW THE PLAN: every partition/core kit consumes its slice of the master plan (outline, keep-outs, islands, bays, entry
+     pins, latency target). The kit generator refuses a kit without a slice from the current frozen master plan; GEOM-REVIEW checks the
+     kit against its slice. LEF/abstracts expose islands/windows and their PG rails.
+  d. ONE FREEZE PER DIE: the master plan freezes when 12.7b passes; later changes only as one batched PLAN-DELTA (7.11b); no local fixes.
+  e. MARGINS so routing confirms rather than discovers: 60 % fill/tracks, 405 um plan reach (measured repeated 600-750), worst-case power.
+  f. ORDER: QC first (all 68 types held), then S81-HEAD, S81, KV, HBM in parallel lanes on the same tool; running core rebuilds and
+     early-tap work feed in. In-flight trials may finish, but sign-off kits must carry a master-plan slice.
