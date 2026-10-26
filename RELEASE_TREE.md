@@ -32,12 +32,12 @@ Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574f
   - [ ] HEAD.TILES Head tile sign-offs · S81-HEAD / KITS-WAVE-3 · WAITS · types held by D-INFRA-FIRST-HEAD; 1/2 hard cores signed → HEAD.INFRA
 
 ## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
-- [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · b29 @6f8f4cce4d strict PASS 0 err/unbound/tied/undriven/MD + R8 PASS (L747 = 8 plan fix, odd-head strap_bsel compose); b30 @2fadbbc172 adds KVN_A0/QK_ISSUE_AGE/TXDP regen
-- [ ] KV.CLK Legal mesh placement + routed skew · PATH-KV / CLOCK-MESH · FAIL · old73.16/73.50ps timing diagnostic: actual1.62um bodies2210overlap-pairs/4370cells in9503reservedcells; ONE batch legalization+RC successor running
-- [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · WAITS · → IF.TOOL
+- [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · B31 a8c24031c strict PASS 160 parts/51 types + R8 0 unequal + full verify 2553368/2553368; final batch (8-region landings, q2 rename, B32 PV) needs one re-bind
+- [ ] KV.CLK Legal mesh + routed skew · PATH-KV · FAIL · 8 partition-aligned regions claude/path-kv-clk-1026@a9b21f10ad c3c GRT0 incl clock, 0 overlaps/PG shorts, pair 80.88/81.10 (1 pair, hg_ES_7); fine trim next; 662 landed ports → OWNER?
+- [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · RUNNING · die_infra reset 287 nets max hop 377um PASS; signal GRT50 M4-M9 w/ clock reservation ovf0; PG needs KV power figure (0.15 W/mm2 fallback) → IF.TOOL
 - [ ] KV.GRT GRT0 incl. clock on the batch · PATH-KV · PASS · batch 650841e1ef one global_route signals M4-M7 + mesh M8-M9: ovf 0 TT+FF; freeze waits KV.BIND + D-INFRA-FIRST PG/pre-route
 - [ ] KV.STA Die STA on real views · DIE-PROTO · WAITS · → KV.CLK, → KV.TILES
-  - [ ] KV.TILES Tile sign-offs · PATH-KV / CORES-KITS · WAITS · 3 head-eighth routes held on flow canary; PC833 LEC fix 070a15290 READY (urgent); ASTK face clock = structural sub-root (COORD)
+  - [ ] KV.TILES Tile sign-offs · PATH-KV / CORES-KITS · WAITS · ASTK strict LEC EQ + S2 GRT done (remeasure); PC833 fix in main; 3 head-eighth routes held on flow canary
 
 ## DIE s81 · S81 (DeepSeek ROM layer die) · rev main · B2 batch
 - [ ] S81.B2 One plan event D-S81-B2: A25 + stations v4 + PHY pins + leaf pins + eng SRAM r0c0 + FT alignment/corridors + D-S81-PHY + infra-first · PATH-S81 · RUNNING · gate: lateral jog <5M bit-um → GRT0 → skew
