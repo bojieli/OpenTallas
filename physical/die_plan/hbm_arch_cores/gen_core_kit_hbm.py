@@ -928,6 +928,15 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if not a.no_f4:
         nxt = "/work/core_tap_align.tcl" if a.clock_taps == "density" else "/work/tap_balance.tcl"
         cfg += ["override export POST_CTS_TCL = /work/f4_chain_leaf.tcl", f"export OT_F4_NEXT_TCL = {nxt}"]
+    if source_profile and len(clks) > 1:
+        # Every q3 cut has multiple named taps of one core domain.  The ordinary
+        # density helper selects one port (or falls back to clk), so it cannot
+        # qualify their common tree.  A reviewed multi-port stage must replace
+        # this explicit hold before CTS; never drop or short the native pins.
+        (kd / "q3_clock_stage_hold.tcl").write_text(
+            'error "Q3_CTS_HOLD: reviewed common-domain multi-port clock stage required"\n')
+        cfg += ["override export PRE_CTS_TCL = /work/q3_clock_stage_hold.tcl"]
+        source_profile["clock_stage"] = "HOLD_CTS: common-domain multi-port stage required"
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
