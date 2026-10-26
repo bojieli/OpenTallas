@@ -1,0 +1,33 @@
+BEGIN cyc 10 target 10 pw 96 dw 0 -> loader state 0
+IMAGE 0 target 10 ready 1 fault 0/0 digest 5cc969acb628cdd1 epoch 2827
+BEGIN cyc 308 target 1 pw 471 dw 0 -> loader state 5
+IMAGE 1 target 1 ready 1 fault 0/0 digest 575f4135875f4c16 epoch 2827
+BEGIN cyc 1731 target 2 pw 181 dw 0 -> loader state 5
+IMAGE 2 target 2 ready 1 fault 0/0 digest abe7ba21416eb901 epoch 2827
+BEGIN cyc 2284 target 3 pw 4 dw 0 -> loader state 5
+IMAGE 3 target 3 ready 1 fault 0/0 digest 35450525f1e7eebb epoch 2827
+BEGIN cyc 2306 target 4 pw 192 dw 0 -> loader state 5
+IMAGE 4 target 4 ready 1 fault 0/0 digest bea9d9a9eee491ec epoch 2827
+BEGIN cyc 2892 target 5 pw 192 dw 0 -> loader state 5
+IMAGE 5 target 5 ready 1 fault 0/0 digest ebfc8cfcbbb1c4b8 epoch 2827
+BEGIN cyc 3478 target 6 pw 1024 dw 0 -> loader state 5
+IMAGE 6 target 6 ready 1 fault 0/0 digest 51484f5354505241 epoch 2827
+BEGIN cyc 6560 target 7 pw 1024 dw 0 -> loader state 5
+IMAGE 7 target 7 ready 1 fault 0/0 digest 51484f5354505240 epoch 2827
+BEGIN cyc 9642 target 8 pw 1024 dw 0 -> loader state 5
+IMAGE 8 target 8 ready 1 fault 0/0 digest 51484f535450524f epoch 2827
+BEGIN cyc 12724 target 9 pw 1024 dw 0 -> loader state 5
+IMAGE 9 target 9 ready 1 fault 0/0 digest 51484f535450524e epoch 2827
+BEGIN cyc 15806 target 11 pw 66 dw 0 -> loader state 5
+IMAGE 10 target 11 ready 1 fault 0/0 digest 63c475adcf704f85 epoch 2827
+BEGIN cyc 16014 target 12 pw 1024 dw 0 -> loader state 5
+IMAGE 11 target 12 ready 1 fault 0/0 digest 6bd4156b58914277 epoch 2827
+BEGIN cyc 19096 target 13 pw 8 dw 0 -> loader state 5
+IMAGE 12 target 13 ready 1 fault 0/0 digest 0f9a6d5d67dd0275 epoch 2827
+BEGIN cyc 19130 target 0 pw 1024 dw 8 -> loader state 5
+IMAGE 13 target 0 ready 1 fault 0/0 digest 514bb0b28004c8e8 epoch 2827
+HOSTLOAD PASS images 14
+- /srv/opentallas-scratch2/claude/kvtok-hostload-1026/repo/results/rtl/kv_host_boot_abi_1026/tb_hostload.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 19us; walltime 0.056 s; speed 329.702 us/s
+- Verilator: cpu 0.056 s on 1 threads; allocated 7 MB
