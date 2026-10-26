@@ -31,16 +31,16 @@
   "rtl/physical/ot_fdi_join2.sv",
   "rtl/physical/ot_fdi_tx_pace.sv",
   "physical/die_plan/qwen_kvsys/bind/kv45/qkd_astk_ctl_s_g0.sv",
-  "rtl/qwen_sys/kv_pc_r8_positionbank_1025/qkd_kvs_grp_r2c_r8pos.sv",
-  "rtl/qwen_sys/kv_pc_r8_positionbank_1025/qkd_kvs_grp_h_r2c_r8pos.sv",
+  "rtl/qwen_sys/kv_pc_r8_positionbank_cland_r3/qkd_kvs_grp_r2c_r8pos.sv",
+  "rtl/qwen_sys/kv_pc_r8_positionbank_cland_r3/qkd_kvs_grp_h_r2c_r8pos.sv",
   "rtl/physical/kv_pc_r8_position_bank.sv",
   "physical/die_plan/qwen_kvsys/dcal_rom/bind/position2144b19/qkd_d2d_cal_seq_bc4_rom64.sv",
   "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_rom64_core.sv",
   "physical/asap7_memory_macros_v2/ot_rom_64x32_m2/ot_rom_64x32_m2_bb.v"
  ],
  "prefer": [
-  "rtl/qwen_sys/kv_pc_r8_positionbank_1025/qkd_kvs_grp_r2c_r8pos.sv",
-  "rtl/qwen_sys/kv_pc_r8_positionbank_1025/qkd_kvs_grp_h_r2c_r8pos.sv",
+  "rtl/qwen_sys/kv_pc_r8_positionbank_cland_r3/qkd_kvs_grp_r2c_r8pos.sv",
+  "rtl/qwen_sys/kv_pc_r8_positionbank_cland_r3/qkd_kvs_grp_h_r2c_r8pos.sv",
   "rtl/physical/kv_pc_r8_position_bank.sv",
   "rtl/qwen_sys/kv_plan_leaves_1025/qkd_astk_zn_head_p.sv",
   "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
@@ -4601,7 +4601,7 @@
  "param_regen": {
   "file": "physical/die_plan/qwen_kvsys/bind/kvbind1025/regen_kv_2350.py"
  },
- "position_banks": "kv_pc_r8_position_bank_v1",
+ "position_banks": "kv_pc_r8_position_bank_v2_cland",
  "land_r8_extra": [
   "physical/die_plan/qwen_kvsys/bind/kvland_r3/r8/vport_request_extra_cland_r3.json",
   "physical/die_plan/qwen_kvsys/bind/kvland_r3/r8/pv_calendar_restore_cland_r3.json"

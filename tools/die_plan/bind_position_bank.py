@@ -7,19 +7,25 @@ phase selector is added. RTL proof/model lives in kv_pc_r8_position_bank_1025.
 import re
 
 ABI = 'kv_pc_r8_position_bank_v1'
+# KV-BIND-R3 10-26: the landed plan (+3/crossing, die_plan_cland_r3) lands replica slg_EN_1/slg_ES_1 x__tep (one
+# as-built depth 72) at +9/+6 -> R8 pads ES_1 by 4 (v1: 1).  Same position-ID selector, epoch chain EPOCH_D = 4
+# (rtl/qwen_sys/kv_pc_r8_positionbank_cland_r3 wrappers pass .EPOCH_D(4)).
+ABI2 = 'kv_pc_r8_position_bank_v2_cland'
+EPOCH_D = {ABI: 1, ABI2: 4}
 WRAPPERS = {'kv3_pc': 'qkd_kvs_grp_h_r2c_r8pos', 'kv3_pc_v1': 'qkd_kvs_grp_r2c_r8pos'}
 
 
-def decode(stack, group, port):
+def decode(stack, group, port, abi=ABI):
     if port == 'x__tok':
         return 2 if stack == 3 and group in (2, 3, 4, 6) else 0
     if port == 'x__tep':
-        return 1 if stack == 2 and group == 1 else 0
+        return EPOCH_D[abi] if stack == 2 and group == 1 else 0
     raise ValueError(f'not a position-bank port: {port}')
 
 
 def spec(b, ci, port):
-    if getattr(b, 'ab', {}).get('position_banks') != ABI or port not in ('x__tok', 'x__tep'):
+    abi = getattr(b, 'ab', {}).get('position_banks')
+    if abi not in EPOCH_D or port not in ('x__tok', 'x__tep'):
         return None
     c = b.F.cells[ci]
     part = b.cpart.get(ci)
@@ -39,8 +45,8 @@ def spec(b, ci, port):
     width = 18 if port == 'x__tok' else 16
     if len(c.ports[port]) != width or len(c.ports.get('slg__cfg_stack', [])) != 2 or len(c.ports.get('slg__cfg_group', [])) != 3:
         raise ValueError(f'{c.path}: position bank ABI width mismatch')
-    return dict(abi=ABI, port=port, stack=stack, group=group, pad=decode(stack, group, port),
-                max_depth=2 if port == 'x__tok' else 1, width=width,
+    return dict(abi=abi, port=port, stack=stack, group=group, pad=decode(stack, group, port, abi),
+                max_depth=2 if port == 'x__tok' else EPOCH_D[abi], width=width,
                 selector='existing_slg_cfg_stack_and_cfg_group')
 
 
@@ -56,7 +62,7 @@ def layout(b):
         if wrapped:
             raise ValueError('position-bank wrapper is present without its timing declaration')
         return None
-    if mode != ABI:
+    if mode not in EPOCH_D:
         raise ValueError(f'unknown position-bank declaration {mode}')
     cells = []
     for ci, c in enumerate(b.F.cells):
@@ -64,23 +70,25 @@ def layout(b):
         if s:
             cells.append(dict(inst=c.path, partition=b.cpart[ci], module=c.module,
                               stack=s['stack'], group=s['group'],
-                              token_cycles=s['pad'], epoch_cycles=decode(s['stack'], s['group'], 'x__tep')))
+                              token_cycles=s['pad'], epoch_cycles=decode(s['stack'], s['group'], 'x__tep', mode)))
     if len(cells) != 28:
         raise ValueError(f'position-bank cohort has {len(cells)} replicas, expected 28')
-    return dict(abi=ABI, instances=cells, kept_flops_per_instance=52, kept_flops_total=52*len(cells),
+    kept = 36 + 16 * EPOCH_D[mode]
+    return dict(abi=mode, instances=cells, kept_flops_per_instance=kept, kept_flops_total=kept*len(cells),
                 new_partition_pins=0, arbitrary_delay_selectors=0)
 
 
 def physical_key(meta, landed_pad):
-    if meta.get('abi') != ABI or meta.get('selector') != 'existing_slg_cfg_stack_and_cfg_group':
+    abi = meta.get('abi')
+    if abi not in EPOCH_D or meta.get('selector') != 'existing_slg_cfg_stack_and_cfg_group':
         raise ValueError('unknown position-bank implementation')
     port = meta['port']
-    maximum, width = (2, 18) if port == 'x__tok' else (1, 16) if port == 'x__tep' else (-1, -1)
+    maximum, width = (2, 18) if port == 'x__tok' else (EPOCH_D[abi], 16) if port == 'x__tep' else (-1, -1)
     if meta.get('max_depth') != maximum or meta.get('width') != width:
         raise ValueError('position-bank physical shape mismatch')
     if type(meta.get('stack')) is not int or type(meta.get('group')) is not int or not 0 <= meta['stack'] < 4 or not 0 <= meta['group'] < 7:
         raise ValueError('position-bank ID outside declared physical positions')
-    expected = decode(meta['stack'], meta['group'], port)
+    expected = decode(meta['stack'], meta['group'], port, abi)
     if meta.get('pad') != expected or landed_pad != expected:
         raise ValueError('position-bank timing differs from its declared position-ID decode')
-    return (ABI, port, maximum, width)
+    return (abi, port, maximum, width)

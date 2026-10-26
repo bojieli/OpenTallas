@@ -84,6 +84,19 @@ def main():
                 st["infeasible"].append(dict(id=m["id"], lane=m["lane"], d=d, pad=m["pad"], landed_was=m["landed"],
                                              landed_now=m["bound"] + m["pad"]))
                 m["landed"] = m["bound"] + m["pad"]
+        if x.get("kind") != "pv_exact_asbuilt_calendar":
+            # R8 (1)+(3) inside the extra: one as-built word (sink leaf <- source leaf, e.g. vport pr_t + pr_valid
+            # <- pvw u_ctl req_t + req_valid) lands at ONE depth: the latest member after the move
+            grp = {}
+            for m in x["members"]:
+                grp.setdefault((m["sink"], m["source"].rpartition(".")[0]), []).append(m)
+            st["word_aligned"] = 0
+            for ms in grp.values():
+                tgt = max(m["bound"] + m["pad"] for m in ms)
+                for m in ms:
+                    if m["bound"] + m["pad"] != tgt:
+                        st["word_aligned"] += 1
+                    m["pad"], m["landed"] = tgt - m["bound"], tgt
         x["note"] = x.get("note", "") + f" | KV-BIND-R3 rebased onto {NEW.name}: {st["moved"]} moved, " \
                                         f"{st["pad_absorbed"]} pad-absorbed, {len(st["infeasible"])} infeasible"
         o = OUT / (f.stem.replace("_b31", "").replace("_2144", "") + "_cland_r3.json")

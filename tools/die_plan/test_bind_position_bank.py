@@ -6,7 +6,8 @@ import bind_position_bank as P
 def bank(path='slg_EN_4', typ='kv3_pc', module='qkd_kvs_grp_h_r2c_r8pos'):
     cell=SimpleNamespace(path=path,module=module,ports={'x__tok':list(range(18)), 'x__tep':list(range(16)),
         'slg__cfg_stack':[0,1], 'slg__cfg_group':[0,1,2]})
-    return SimpleNamespace(ab={'position_banks':P.ABI}, F=SimpleNamespace(cells=[cell]), cpart={0:'part'}, parts={'part':{'type':typ}})
+    return SimpleNamespace(ab={'position_banks':P.ABI}, F=SimpleNamespace(cells=[cell]), cpart={0:'part'}, parts={'part':{'type':typ}},
+                           plan={'partition_types':{}})
 
 
 def test_physical_bank_reuses_one_shape_for_bypass_and_delayed_position():
@@ -44,3 +45,15 @@ def test_unknown_timing_declaration_fails_closed():
     b=bank();b.ab['position_banks']='phase_selector_v0'
     with pytest.raises(ValueError,match='unknown position-bank declaration'):
         P.layout(b)
+
+
+def test_v2_cland_epoch_depth_four_only_at_es1():
+    """KV-BIND-R3: the landed plan's ABI keeps the tok decode and deepens only the ES_1 epoch chain to 4"""
+    b=bank('slg_ES_1',typ='kv3_pc_v1',module='qkd_kvs_grp_r2c_r8pos');b.ab={'position_banks':P.ABI2}
+    m=P.spec(b,0,'x__tep')
+    assert m['pad']==4 and m['max_depth']==4
+    assert P.physical_key(m,4)==(P.ABI2,'x__tep',4,16)
+    o=bank('slg_EN_1',typ='kv3_pc_v1',module='qkd_kvs_grp_r2c_r8pos');o.ab={'position_banks':P.ABI2}
+    assert P.spec(o,0,'x__tep')['pad']==0
+    with pytest.raises(ValueError,match='timing differs'):
+        P.physical_key(m,1)
