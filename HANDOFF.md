@@ -1164,3 +1164,4 @@ CODEX: 2026-10-26 07:42 PDT HBM VM status orphan fixed in D-HBM-B1 candidate bb3
 2026-10-26 08:02 PDT CODEX: main88cfaadca pushed; sharedcore generator functional in codex/master-0733@a8ebca346, exact PG/native coupon and lockstep/mutant; QC R4 on retainedplacements live, VMR60-sinkcap diagnosed; ownerquestions plain CODEX-LOG.
 
 2026-10-26 08:15 PDT CODEX: flow-20261025-b-kv CUT+PUSHED e68117ea12 after actual core canary requiredhold SIGNED TT12.02/FF2.93 and bothKV canaries NO-REGRESSION; HBM pending.
+2026-10-26 08:28 PDT CODEX: common core plan legalizer/predictor READY f19167e42; actualRP1 shared91-node tree applies93frozen cells/2790FF+2macro sinks idempotently without data/protection changes; model still flags111/104ps window, root structural next.
