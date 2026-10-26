@@ -1010,3 +1010,7 @@ CLAUDE: 2026-10-25 23:29 PDT AUTOPILOT-FIX flowfp: READY URGENT claude/autopilot
 CODEX: 2026-10-26 02:07 PDT CP1 R3 GRT-RC component TT+455.256/FF+4.386, pair32.82/25.82,385receiverchainsPASS collected; qhub reset skeleton TT+271.24/FF+11.99 but22slewFAIL max442.45 diagnosed406um receiverleg under450limit; HBM correctedplan owns next trial. No SIGNED/new jobs.
 
 CODEX: 2026-10-26 02:09 PDT takeover all lanes active; authoritative hub bd41cae2ec. Collected KV strict/R8PASS+mesh73.16/73.50 and S81 signal50itGRT0; final infra-first gates remain open. Canary spill fix being integrated; no inherited jobs cancelled.
+
+CODEX: 2026-10-26 02:10 PDT FLOW canary staging READY99154991a hub codex/flow-1026; actual ot-run spill/copyback epyc2 PASS. Collected3 NO-REGRESSION known design failures;4 active gating dies retained, bd41 replacement QC/head/SRAM launched automatically02:07.
+
+CODEX: 2026-10-26 02:10 PDT HBM resumed all lanes; M5 FT bands clear all>.55 cuts (H0.624->0.478); current M5-aware station repair live4098105; clock diagnostics FAIL147/154, regional remedy owned; v8 TKM WAIT-CANARY, current stable-sort root successor in progress.
