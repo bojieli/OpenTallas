@@ -3403,6 +3403,7 @@ def _write_provenance(a, step):
     rec["inputs"] = [x for x in (rec["plan"], rec["manifest"]) if x]
     Path(a.out).mkdir(parents=True, exist_ok=True)
     (Path(a.out) / f"provenance_{step}.json").write_text(json.dumps(dict(provenance=rec), indent=1) + "\n")
+    return rec
 
 
 def cmd_elab(a):
@@ -3415,7 +3416,7 @@ def cmd_elab(a):
 
 def cmd_bind(a):
     raw = load_plan(a.plan)
-    _write_provenance(a, "bind")
+    prov = _write_provenance(a, "bind")
     out = Path(a.out)
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
@@ -3501,6 +3502,7 @@ def cmd_bind(a):
     bg = B.bus_groups()
     rep["bus_groups"] = bg["summary"]
     (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
+    rep["provenance"] = prov       # rule 3: the report itself names its commit (manifest_paths.py --result)
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
     (out / "bind_latency.json").write_text(json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
                                                            note="per crossing bus: as-built stages (relays / landings "
@@ -4063,11 +4065,14 @@ def main(argv=None):
             return cmd_portbind(a)
         if a.cmd == "verify":
             import bind_verify
+            _write_provenance(a, "verify")
             return bind_verify.cmd_verify(a)
         if a.cmd == "all":
             import bind_verify
             r = cmd_elab(a)
             r = r or cmd_bind(a)
+            if not r:
+                _write_provenance(a, "verify")
             return r or bind_verify.cmd_verify(a)
     except (BindError, E.ElabError) as e:
         print(f"bind: ERROR {e}")

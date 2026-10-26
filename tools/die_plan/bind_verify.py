@@ -254,6 +254,12 @@ def cmd_verify(a):
     ok = (cnt["mismatched"] == 0 and cnt["unbound"] == 0 and cnt["tied"] == 0 and cnt["multiply_driven"] == 0 and
           not missing and not errs and rep["n_errors"] == 0 and (not lt.get("ran") or lt.get("errors") == 0))
     v["verdict"] = "PASS" if ok else "FAIL"
+    pv = out / "provenance_verify.json"   # rule 3: bind.py verify writes it from the checkout the tools ran from
+    if pv.exists():
+        v["provenance"] = json.loads(pv.read_text())["provenance"]
+    else:
+        import manifest_paths
+        v["provenance"] = dict(manifest_paths.provenance(E.REPO), step="verify")
     (out / "verify_report.json").write_text(json.dumps(v, indent=1))
     print(json.dumps(dict(verdict=v["verdict"], **cnt, leaves_missing=len(missing), lint=lt.get("errors"),
                           asbuilt_errors=rep["n_errors"])))
