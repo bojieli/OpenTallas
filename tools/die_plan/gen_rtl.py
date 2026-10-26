@@ -114,6 +114,29 @@ endmodule
 module ot_dp_rrelay (input wire clk, input wire d, output reg q);
     always @(posedge clk) q <= d;
 endmodule
+// Opt-in internal relay driver, reset.relay_driver. Boundary pin registers remain
+// ot_dp_rrelay with direct flop Q. The non-inverting technology driver is kept
+// through synthesis; it adds no register stage or boot/schedule cycle.
+(* keep_hierarchy, keep *)
+module ot_dp_rrelay_drive (input wire clk, input wire d, output wire q);
+    (* keep *) reg state;
+    always @(posedge clk) state <= d;
+`ifdef SYNTHESIS
+    (* keep, dont_touch *) BUFx4f_ASAP7_75t_R u_drive (.A(state), .Y(q));
+`else
+    assign q = state;
+`endif
+endmodule
+(* keep_hierarchy, keep *)
+module ot_dp_rgate_drive (input wire clk, input wire d, input wire run, output wire q);
+    (* keep *) reg state;
+    always @(posedge clk) state <= d & run;
+`ifdef SYNTHESIS
+    (* keep, dont_touch *) BUFx4f_ASAP7_75t_R u_drive (.A(state), .Y(q));
+`else
+    assign q = state;
+`endif
+endmodule
 // ot_dp_rgate: the consumer-tap reset relay of a START-broadcast plan (OWNER DECISION 13c): one flop of
 // (reset AND run).  Releases with the same depth as ot_dp_rrelay, measured from the later of reset and START.
 (* keep_hierarchy, keep *)

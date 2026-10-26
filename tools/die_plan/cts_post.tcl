@@ -6,3 +6,8 @@
 set cp_dir [file dirname [file normalize [info script]]]
 uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]
 if {![info exists ::env(OT_LEAF_AFFINITY)] || $::env(OT_LEAF_AFFINITY) ne "0"} { uplevel #0 [list source [file join $cp_dir leaf_affinity.tcl]] }
+# Optional reset FF/driver pairs must retain the registered405um reach after CTS.
+if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "1"} {
+  uplevel #0 [list source [file join $cp_dir reset_pair_place.tcl]]
+  ot_reset_pair_verify_hops [ord::get_db_block] 405
+}
