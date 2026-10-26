@@ -85,3 +85,145 @@ def test_snapshot_tcl_list_parser_without_python_tk(tmp_path,monkeypatch):
     data=CP.read_technology(p)
     assert data['obstacles'][0]['name']==r'g_bank\[0\].u_m'
     assert data['obstacles'][0]['rect']==[1,2,3,4]
+
+
+# ---- PLAN-ICG-MODEL: gated leaves + CTS-open subtrees -------------------------------------------------------------
+import json
+import math
+from pathlib import Path
+from test_core_infra import icg_tree
+
+VALIDATION = Path(__file__).resolve().parents[2] / "results/plan_icg_model_1026/validation_points.json"
+
+
+def _lin(cap):
+    return dict(delay=([0, 100], [0, 100], [[10, 30], [20, 40]]), trans=([0, 100], [0, 100], [[10, 30], [20, 40]]), cap=cap)
+
+
+def _icg_slice():
+    s = icg_tree()
+    s["core_tree"]["leaves"][0]["region_rect_um"] = [0, 216, 432, 648]
+    s["core_tree"]["leaves"][1]["region_rect_um"] = [432, 216, 864, 648]
+    return s
+
+
+def _icg_inputs():
+    libs = {c: {m: _lin(1.) for m in ("BUFx16f_ASAP7_75t_R", "BUFx12_ASAP7_75t_R", "BUFx8_ASAP7_75t_R",
+                                      "ICGx1_ASAP7_75t_R", CP.CTS_ROOT_MASTER)} for c in ("TT", "FF")}
+    pts = {"a/CLK": [200, 420], "b/CLK": [230, 440], "c/CLK": [634, 420], "d/CLK": [664, 440]}
+    return libs, pts, {p: .5 for p in pts}
+
+
+def test_gated_leaf_is_parent_plus_icg_arc_plus_open_subtree():
+    s = _icg_slice(); libs, pts, caps = _icg_inputs()
+    r = CP.predict_tree(s, libs, pts, caps, .02, .1, input_slew_ps=0.)
+    tt = r["corners"]["TT"]
+    leaf = {l["node"]: l for l in tt["leaf_means"]}
+    g0 = leaf["u_e.g_cgr.u_cg_r0.u_icg"]
+    assert g0["kind"] == "gated_domain" and g0["sinks"] == 6000 and g0["modelled_subtree"]
+    sub = CP.open_subtree(6000, [0, 216, 432, 648], "TT", [216, 430])
+    assert g0["mean_ps"] == pytest.approx(g0["driver_out_ps"] + sub["mean_ps"])
+    assert g0["min_ps"] < g0["mean_ps"] < g0["max_ps"] and sub["levels"] == 3
+    # the ICG is a timed stage: its net is in the report with the gate as driver
+    icg_net = [n for n in tt["nets"] if n["driver"] == "u_e.g_cgr.u_cg_r0.u_icg"][0]
+    assert icg_net["kind"] == "icg" and icg_net["input_arrival_ps"] > 0
+    assert g0["driver_out_ps"] == pytest.approx(icg_net["input_arrival_ps"] + icg_net["cell_delay_ps"] +
+                                                0, abs=1e-6)  # root buffer at the driver: zero wire
+    # symmetric plan -> symmetric gated domains; cts_open ungated leaves are modelled too
+    g1 = leaf["u_e.g_cgr.u_cg_r1.u_icg"]
+    assert g1["mean_ps"] == pytest.approx(g0["mean_ps"] - (sub["mean_ps"] - CP.open_subtree(5800, [432, 216, 864, 648], "TT", [648, 430])["mean_ps"]))
+    assert leaf["tw"]["kind"] == "cts_open" and leaf["tw"]["sinks"] == 1500
+    assert tt["sinks"] == 6000 + 5800 + 1500 + 1500
+    assert r["corners"]["FF"]["mean_ps"] < tt["mean_ps"]        # FF calibration is faster than TT
+    assert "liberty CLK->GCLK" in r["basis"]
+
+
+def test_gated_prediction_refuses_without_geometry_or_tables():
+    libs, pts, caps = _icg_inputs()
+    s = icg_tree()                                               # no region_rect_um / island on the gates
+    with pytest.raises(CI.InfraError, match="region_rect_um"):
+        CP.predict_tree(s, libs, pts, caps, .02, .1)
+    s = _icg_slice(); bad = copy.deepcopy(libs); del bad["TT"]["ICGx1_ASAP7_75t_R"]
+    with pytest.raises(CI.InfraError, match="liberty table for ICGx1"):
+        CP.predict_tree(s, bad, pts, caps, .02, .1)
+    bad = copy.deepcopy(libs); del bad["TT"][CP.CTS_ROOT_MASTER]
+    with pytest.raises(CI.InfraError, match="CTS-open leaf"):
+        CP.predict_tree(s, bad, pts, caps, .02, .1)
+
+
+def test_open_subtree_grows_with_stages_and_region_and_is_plan_only():
+    a = CP.open_subtree(500, [0, 0, 100, 100], "TT")
+    assert a["levels"] == 2 and a["region_d_um"] == pytest.approx(100)
+    assert CP.open_subtree(5000, [0, 0, 100, 100], "TT")["mean_ps"] > a["mean_ps"]
+    assert CP.open_subtree(500, [0, 0, 200, 200], "TT")["mean_ps"] > a["mean_ps"]
+    off = CP.open_subtree(500, [0, 0, 100, 100], "TT", [0, 0])           # driver at a corner reaches farther
+    assert off["region_d_um"] == pytest.approx(200) and off["mean_ps"] > a["mean_ps"]
+    assert CP.open_subtree(500, [0, 0, 100, 100], "FF")["mean_ps"] < a["mean_ps"]
+    for c in ("TT", "FF"):
+        assert set(CP.OPEN_SUBTREE_CAL[c]) == {"stage_ps", "region_ps_per_um", "lo_ps_per_um", "hi_ps_per_um"}
+
+
+def test_icg_liberty_arc_parser(tmp_path):
+    tab = 'index_1 ("5, 10");\n index_2 ("1, 2");\n values ( \\\n "10, 12", \\\n "14, 16");'
+    lib = ("library (x) {\n  cell (ICGx1_ASAP7_75t_R) {\n    pin (GCLK) {\n      timing () {\n        related_pin : \"CLK\";\n"
+           "        timing_type : combinational_fall;\n        cell_fall (t) {\n " + tab.replace("10, 12", "99, 99") + "\n }\n      }\n"
+           "      timing () {\n        related_pin : \"CLK\";\n        cell_rise (t) {\n " + tab + "\n }\n"
+           "        rise_transition (t) {\n " + tab + "\n }\n      }\n    }\n"
+           "    pin (CLK) {\n      clock : true;\n      rise_capacitance : 2.13873;\n    }\n  }\n}\n")
+    (tmp_path / "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib").write_text(lib)
+    c = CP.icg_lib_cells("TT", tmp_path)["ICGx1_ASAP7_75t_R"]
+    assert c["cap"] == pytest.approx(2.13873) and c["delay"][2] == [[10, 12], [14, 16]]
+
+
+def _measured_domain_prediction(p, libs, cal=None):
+    """Same chain as predict_tree for one gated leaf, started from the MEASURED arrival/slew at the ICG CLK pin
+    (the upstream tree of these cores is CTS-grown, not plan-built): ICG NLDM arc at one CTS root buffer + subtree."""
+    import die_clock_128 as C128
+    lib = libs[p["corner"]]
+    icg = C128._bilin(lib[p["master"]]["delay"], p["clk_slew"], lib[CP.CTS_ROOT_MASTER]["cap"])
+    sub = CP.open_subtree(p["n"], p["rect"], p["corner"], p["icg_xy"], cal=cal)
+    return p["clk_arr"] + icg + sub["mean_ps"], p["clk_arr"] + icg + sub["max_ps"]
+
+
+@pytest.mark.skipif(not VALIDATION.exists(), reason="validation fixture not in this checkout")
+def test_validation_against_measured_gated_cores():
+    """Residual of the calibrated model on routed signed-off gated cores (PLAN-ICG-MODEL 10-26 table)."""
+    fx = json.loads(VALIDATION.read_text())
+    libs = {c: {m: dict(delay=tuple(v["delay"]), trans=tuple(v["trans"]), cap=v["cap"]) for m, v in t.items()} for c, t in fx["libs"].items()}
+    band = {("bfcol", "TT"): 16, ("bfcol", "FF"): 12, ("qxpq", "TT"): 3, ("qxpq", "FF"): 2}
+    for (core, corner), lim in band.items():
+        P = [p for p in fx["points"] if p["core"] == core and p["corner"] == corner]
+        w = sum(p["n"] for p in P)
+        pred = sum(_measured_domain_prediction(p, libs)[0] * p["n"] for p in P) / w
+        meas = sum(p["mean"] * p["n"] for p in P) / w
+        assert abs(pred - meas) <= lim, (core, corner, pred, meas)
+        rms = math.sqrt(sum((_measured_domain_prediction(p, libs)[0] - p["mean"]) ** 2 for p in P) / len(P))
+        assert rms <= (16 if core == "bfcol" else 3), (core, corner, rms)
+
+
+def test_plan_sta_model_emits_icg_stage_and_combines_open_subtrees(tmp_path):
+    import core_infra_sta as CS
+    s = _icg_slice(); _, pts, _ = _icg_inputs()
+    prof = dict(horizontal_rc=[.02, .1], vertical_rc=[.02, .1], merge_collinear=True)
+    ff = [dict(name="CLK", direction="input", clock=True), dict(name="D", direction="input", clock=False),
+          dict(name="QN", direction="output", clock=False)]
+    icg = [dict(name="GCLK", direction="output", clock=False), dict(name="CLK", direction="input", clock=True),
+           dict(name="ENA", direction="input", clock=False), dict(name="SE", direction="input", clock=False)]
+    data = dict(routing_model=dict(nonleaf=prof, leaf=prof), points=pts,
+                terminal_cells={p: dict(master="DFFHQNx1_ASAP7_75t_R", pin="CLK") for p in pts},
+                master_pins={"DFFHQNx1_ASAP7_75t_R": ff, "ICGx1_ASAP7_75t_R": icg})
+    meta = CS.emit_model(s, data, tmp_path)
+    v = (tmp_path / "model.v").read_text()
+    assert "ICGx1_ASAP7_75t_R g0 (.GCLK(gn0), .CLK(n1), .ENA(1'b1), .SE(1'b0));" in v
+    assert f"{CP.CTS_ROOT_MASTER} r0 (.A(gn0), .Y(rn0));" in v
+    # cts_open ungated leaves are not wired to their planned driver: no listed sink in the model netlist
+    assert meta["sinks"] == [] and len(meta["open_domains"]) == 4
+    spef = (tmp_path / "plan.spef").read_text()
+    assert "*D_NET gn0 " in spef and "*I g0:CLK I" in spef
+    tcl = (tmp_path / "model.tcl").read_text()
+    assert "open:u_e.g_cgr.u_cg_r0.u_icg" in tcl and "get_pins {r0/A}" in tcl
+    arr = {c: {"open:" + o["node"]: 100. for o in meta["open_domains"]} for c in ("TT", "FF")}
+    out = CS.combine_arrivals(meta, arr)
+    o0 = [o for o in meta["open_domains"] if o["node"] == "u_e.g_cgr.u_cg_r0.u_icg"][0]
+    g0 = [g for g in out["TT"]["open_domains"] if g["node"] == o0["node"]][0]
+    assert g0["mean_ps"] == pytest.approx(100 + o0["subtree"]["TT"]["mean_ps"]) and out["TT"]["sinks"] == 14800
