@@ -85,7 +85,8 @@ def _psm(log):
 def verdict(a):
     budget = BUDGET_FRAC * VDD * 1e3; psm = {}
     for name, d, nets in (("core_centre", a.core, ["VDD"]), ("io_ucie_kv_u_ucie_kv", a.ucie, ["VDD", "VDDPHY"])):
-        r, conn, done = _psm(Path(d) / "psm/psm.log")
+        lg = Path(d) / "psm/psm.log"
+        r, conn, done = _psm(lg if lg.exists() else Path(d) / "psm.log")   # run dir or its results/ copy
         for n in nets:
             key = name if n == "VDD" and name == "core_centre" else (f"{name}:{n}")
             ok = done and n in r and conn.get(n)
