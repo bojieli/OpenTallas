@@ -240,3 +240,15 @@ Sources: B = ~/coord/BRIEFING.md "OWNER DECISIONS 2026-10-24" #n; A = AGENTS.md 
 - 9.13 Only die-plan kits are signable; ref_tile legacy kits are re-kitted in die-plan form.
 - 9.14 10-23 top-down rework supersedes the 10-22 freeze.
 - 9.15 "localhost" in BRIEFING = epyc1 period; the coordinator host is rtx-pro and runs no heavy jobs.
+
+## 11. Die method: infrastructure first [OWNER D-INFRA-FIRST 2026-10-26 01:37 PDT; COORD additions 01:4x; tool lane lanes/INFRA-FIRST.md]
+Per die, in order (supersedes "route signals, then fit the clock"; amends 7 and 3 where they differ):
+- 11.1 PG first: die grid on M9 + part of M8, sized from per-region IR (PDNSim per region; published PHY power, owner 10-26 4.37 W per 112G macro; core power per type). Report the % of M8/M9 tracks taken.
+- 11.2 Clock: equal-length H-tree feeding one mesh per clock region; LANDED (forwarded-clock) crossings at region seams (COORD 01:22); mesh drivers / H-tree buffers in reserved driver islands in tiles (apply_clkmesh_sites.py), never on hard cores.
+- 11.3 Reset: die wavefront (B#13): rst_n -> root partition; parent rst_o_<k> -> child arst_n die hops; START beside it.
+- 11.4 PG, clock and reset are frozen as FIXED pre-routes (special nets / fixed wires + NDR footprint obstructions in the die kit) so die GRT sees the exact leftover capacity; skew gate (like-edge related pairs, CPPR, TT+FF, <= 80 ps) on the pre-routed clock alone.
+- 11.5 Die signal GRT on the leftover (M4-M7; plus leftover M8/M9 only if FT-M89-PROBE justifies), >= 50 iterations.
+- 11.6 Die plan freezes on GRT0 incl. clock + related-pair skew <= 80 TT/FF.
+- 11.7 THE DIE ABSORBS RESIDUALS: a tile's measured clock insertion that differs from plan is compensated at die level (per-tile mesh stub trim / declared core-latency offset in the die clock tool), never by a tile rebuild. Boundary timing rests on registered pins + channel repeaters. A tile is rebuilt only for its own internal failures.
+- 11.8 PRE-FREEZE TRIAL PLACEMENT: every tile type gets a quick place with its clock islands and pre-route keep-outs in, showing fit, pin access and an r2r reach census, before the die plan freezes.
+- 11.9 Order: QC (prototype) -> S81-HEAD -> KV / S81 / HBM inside their current batches.
