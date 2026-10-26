@@ -57,7 +57,15 @@ def repair_type(raw,tn):
     # Full footprints must clear the halo, not merely cell centres.
     alloc=RowAllocator((4.32,4.32,w-4.32,h-4.32),blocked=boxes,cell_size=CELL,
                        column_pitch=2.16,row_pitch=.27,origin=(4.32,4.32))
-    xs=np.arange(8.64,w-4.32,8.64);ys=np.arange(8.64,h-4.32,8.64)
+    # Include legal cell columns beside each halo; a coarse8.64um grid
+    # misses physically usable strips narrower than one grid step.
+    cols=set(range(alloc.ix0,alloc.ix1+1,4))
+    for a,b,c,d in boxes:
+        for bound in (a-CELL[0]/2,c+CELL[0]/2):
+            k=round((bound-alloc.ox-CELL[0]/2)/alloc.cp)
+            cols.update(range(max(alloc.ix0,k-2),min(alloc.ix1,k+2)+1))
+    xs=np.array([alloc.ox+k*alloc.cp+CELL[0]/2 for k in sorted(cols)])
+    ys=np.arange(8.64,h-4.32,8.64)
     x,y=np.meshgrid(xs,ys);targets=np.column_stack((x.ravel(),y.ravel()))
     ok=np.ones(len(targets),bool)
     for a,b,c,d in boxes:
@@ -104,11 +112,12 @@ def main():
     raw=json.loads((a.src/'die_plan.json').read_text());before=S.Plan(copy.deepcopy(raw));rep={}
     if a.bank_corridors:
         # Open W and two internal strips, without changing the outline or cores.
-        # 241.92 column pitch leaves23.328um between218.592um cores.
+        # Origins preserve M4/M5 track phases (0.192um common lattice).
+        # Narrow strips include actual row-legal FF columns, not grid centroids.
         t=raw['partition_types']['q_b100']
         for c in t['hard_cores']:
             col=round((c['origin_um'][0]-8.64)/233.28)
-            c['origin_um'][0]=round(17.28+241.92*col,6)
+            c['origin_um'][0]=[18.24,256.32,494.016][col]
             c['origin_um'][1]=round(c['origin_um'][1]+17.28,6)
     for tn in a.types.split(','):rep[tn]=repair_type(raw,tn)
     model=S.Plan(raw);raw['latency']['lanes']={lid:model.lane_latency(lid) for lid in model.lanes}
